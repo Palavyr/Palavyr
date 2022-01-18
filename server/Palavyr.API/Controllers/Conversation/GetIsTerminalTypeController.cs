@@ -1,58 +1,29 @@
-using System;
-using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Conversation
 {
     public class GetIsTerminalTypeController : PalavyrBaseController
     {
+        private readonly IMediator mediator;
         private ILogger<GetIsTerminalTypeController> logger;
-        string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";
-        private DashContext dashContext;
+        public const string Route = "configure-conversations/check-terminal/{nodeType}";
 
-        public GetIsTerminalTypeController(
-            ILogger<GetIsTerminalTypeController> logger,
-            DashContext dashContext
+        public GetIsTerminalTypeController(IMediator mediator
         )
         {
-            this.logger = logger;
-            this.dashContext = dashContext;
+            this.mediator = mediator;
         }
 
-        [HttpGet("configure-conversations/check-terminal/{nodeType}")]
-        public async Task<bool> Get(string nodeType)
+        [HttpGet(Route)]
+        public async Task<bool> Get(string nodeType, CancellationToken cancellationToken)
         {
-            foreach (var defaultNodeType in DefaultNodeTypeOptions.DefaultNodeTypeOptionsList)
-            {
-                if (nodeType == defaultNodeType.Value)
-                {
-                    return defaultNodeType.IsTerminalType;
-                }
-            }
-            
-            // node is a dynamic table node type
-            // Comes in as e.g. SelectOneFlat-234234-324-2342-324
-            foreach (var dynamicTableType in DynamicTableTypes.GetDynamicTableTypes())
-            {
-                if (nodeType.StartsWith(dynamicTableType.TableType))
-                {
-                    var tableId = Regex.Match(nodeType, GUIDPattern, RegexOptions.IgnoreCase).Value;
-                    var table = await dashContext
-                        .DynamicTableMetas
-                        .SingleOrDefaultAsync(row => row.TableId == tableId);
-                    if (table != null)
-                    {
-                        return false;
-                    }
-                }
-            }
-                
-            throw new Exception("DefaultNodeType not found.");
+            var response = await mediator.Send(new GetIsTerminalTypeRequest(nodeType), cancellationToken);
+            return response.Response;
         }
     }
 }

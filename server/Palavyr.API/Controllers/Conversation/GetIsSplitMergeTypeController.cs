@@ -9,21 +9,22 @@ using Palavyr.Core.Models.Configuration.Constant;
 
 namespace Palavyr.API.Controllers.Conversation
 {
-    
-    [Route("api")]
+    [Obsolete]
     public class GetIsSplitMergeTypeController : PalavyrBaseController
     {
+        public const string Route = "configure-conversations/check-is-split-merge/{nodeType}";
+
         string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";
         private DashContext dashContext;
+
         public GetIsSplitMergeTypeController(
             ILogger<GetIsSplitMergeTypeController> logger,
             DashContext dashContext
-            )
+        )
         {
-            
         }
 
-        [HttpGet("configure-conversations/check-is-split-merge/{nodeType}")]
+        [HttpGet(Route)]
         public async Task<bool> Get(string nodeType)
         {
             foreach (var defaultNodeType in DefaultNodeTypeOptions.DefaultNodeTypeOptionsList)
@@ -33,7 +34,7 @@ namespace Palavyr.API.Controllers.Conversation
                     return defaultNodeType.IsSplitMergeType;
                 }
             }
-            
+
             // node is a dynamic table node type
             // Comes in as e.g. SelectOneFlat-234234-324-2342-324
             foreach (var dynamicTableType in DynamicTableTypes.GetDynamicTableTypes())
@@ -50,9 +51,8 @@ namespace Palavyr.API.Controllers.Conversation
                     }
                 }
             }
-                
+
             throw new Exception("DefaultNodeType not found.");
         }
-        
     }
 }

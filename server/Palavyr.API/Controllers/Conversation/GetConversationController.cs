@@ -1,35 +1,29 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Conversation
 {
-
     public class GetConversationByAreaIdController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private ILogger<GetConversationByAreaIdController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "configure-conversations/{areaId}";
 
         public GetConversationByAreaIdController(
-            
-            IConfigurationRepository configurationRepository,
-            ILogger<GetConversationByAreaIdController> logger
-        )
+            IMediator mediator)
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
-        
-        [HttpGet("configure-conversations/{areaId}")]
-        public async Task<List<ConversationNode>> Get([FromRoute] string areaId)
+
+        [HttpGet(Route)]
+        public async Task<List<ConversationNode>> Get([FromRoute] string areaId, CancellationToken cancellationToken)
         {
-            var conversation = await configurationRepository.GetAreaConversationNodes(areaId);
-            return conversation;
+            var response = await mediator.Send(new GetConversationRequest(areaId), cancellationToken);
+            return response.Response;
         }
     }
-    
-    
 }

@@ -1,50 +1,30 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
     public class GetNodeTypeOptionsController : PalavyrBaseController
     {
-        private ILogger<GetNodeTypeOptionsController> logger;
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly IDynamicTableCompilerOrchestrator dynamicTableCompilerOrchestrator;
+        private readonly IMediator mediator;
+        public const string Route = "configure-conversations/{intentId}/node-type-options";
+
 
         public GetNodeTypeOptionsController(
-            ILogger<GetNodeTypeOptionsController> logger,
-            IConfigurationRepository configurationRepository,
-            IDynamicTableCompilerOrchestrator dynamicTableCompilerOrchestrator
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.configurationRepository = configurationRepository;
-            this.dynamicTableCompilerOrchestrator = dynamicTableCompilerOrchestrator;
+            this.mediator = mediator;
         }
 
-        [HttpGet("configure-conversations/{areaId}/node-type-options")]
-        public async Task<NodeTypeOption[]> Get([FromRoute] string areaId)
+        [HttpGet(Route)]
+        public async Task<NodeTypeOption[]> Get([FromRoute] string intentId, CancellationToken cancellationToken)
         {
-            var dynamicTableMetas = await configurationRepository.GetDynamicTableMetas(areaId);
-            var dynamicTableData = await dynamicTableCompilerOrchestrator.CompileTablesToConfigurationNodes(dynamicTableMetas, areaId);
-            var defaultNodeTypeOptions = DefaultNodeTypeOptions.DefaultNodeTypeOptionsList;
-
-            var fullNodeTypeOptionsList = defaultNodeTypeOptions.AddAdditionalNodes(dynamicTableData);
-
-            return fullNodeTypeOptionsList.ToArray();
+            var response = await mediator.Send(new GetNodeTypeOptionsRequest(intentId), cancellationToken);
+            return response.Response;
         }
-
-        [HttpGet("configure-intro/{introId}/node-type-options")]
-        public async Task<NodeTypeOption[]> GetIntro([FromRoute] string introId, CancellationToken cancellationToken)
-        {
-            await Task.CompletedTask;
-            var introOptionList = DefaultNodeTypeOptions.IntroNodeOptionList;
-            return introOptionList.ToArray();
-        }
-
     }
 }

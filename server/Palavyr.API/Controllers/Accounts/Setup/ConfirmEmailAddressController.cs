@@ -1,25 +1,27 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 {
-
     public class ConfirmEmailAddressController : PalavyrBaseController
     {
-        private readonly IEmailVerificationService emailVerificationService;
+        private readonly IMediator mediator;
+        public const string Route = "account/confirmation/{authToken}/action/setup";
 
-        public ConfirmEmailAddressController(IEmailVerificationService emailVerificationService)
+
+        public ConfirmEmailAddressController(IMediator mediator)
         {
-            this.emailVerificationService = emailVerificationService;
+            this.mediator = mediator;
         }
 
-        [HttpPost("account/confirmation/{authToken}/action/setup")]
+        [HttpPost(Route)]
         public async Task<bool> Post([FromRoute] string authToken, CancellationToken cancellationToken)
         {
-            var confirmed = await emailVerificationService.ConfirmEmailAddressAsync(authToken.Trim(), cancellationToken);
-            return confirmed;
+            var response = await mediator.Send(new ConfirmEmailAddressRequest(authToken), cancellationToken);
+            return response.Response;
         }
     }
 }

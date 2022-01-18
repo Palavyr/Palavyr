@@ -33,11 +33,11 @@ namespace Palavyr.Core.Handlers
 
     public class GetAllAreasResponse
     {
-        public List<Area> AllAreasShallow { get; }
+        public List<Area> Response { get; }
 
-        public GetAllAreasResponse(List<Area> allAreasShallow)
+        public GetAllAreasResponse(List<Area> response)
         {
-            AllAreasShallow = allAreasShallow;
+            Response = response;
         }
     }
 }

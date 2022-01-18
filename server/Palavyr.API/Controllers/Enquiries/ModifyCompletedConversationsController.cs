@@ -1,32 +1,27 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.ConversationServices;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
-
     public class ModifyCompletedConversationsController : PalavyrBaseController
     {
-        private readonly ICompletedConversationModifier completedConversationModifier;
-        private ILogger<ModifyCompletedConversationsController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "enquiries/update/{conversationId}";
 
-        public ModifyCompletedConversationsController(
-            ICompletedConversationModifier completedConversationModifier,
-            ILogger<ModifyCompletedConversationsController> logger
-        )
+        public ModifyCompletedConversationsController(IMediator mediator)
         {
-            this.completedConversationModifier = completedConversationModifier;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpPut("enquiries/update/{conversationId}")]
-        public async Task<Enquiry[]> UpdateCompletedConversation(string conversationId,CancellationToken cancellationToken)
+        [HttpPut(Route)]
+        public async Task<Enquiry[]> UpdateCompletedConversation(string conversationId, CancellationToken cancellationToken)
         {
-            var modifiedCompletedConversation = await completedConversationModifier.ModifyCompletedConversation(conversationId);
-            return modifiedCompletedConversation;
+            var response = await mediator.Send(new ModifyCompletedConversationsRequest(conversationId), cancellationToken);
+            return response.Response;
         }
     }
 }

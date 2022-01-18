@@ -30,7 +30,7 @@ export class PalavyrWidgetRepository {
         precheck: (secretKey: SecretKey, isDemo: boolean) => `widget/pre-check?key=${secretKey}&demo=${isDemo}`,
         widgetPreferences: (secretKey: SecretKey) => `widget/preferences?key=${secretKey}`,
         locale: (secretKey: SecretKey) => `account/settings/locale/widget?key=${secretKey}`,
-        areas: (secretKey: SecretKey) => `widget/areas?key=${secretKey}`,
+        intents: (secretKey: SecretKey) => `widget/intents?key=${secretKey}`,
         newConversationHistory: (secretKey: SecretKey) => `widget/create?key=${secretKey}`,
         updateConvoHistory: (secretKey: SecretKey) => `widget/conversation?key=${secretKey}`,
         updateConvoRecord: (secretKey: SecretKey) => `widget/record?key=${secretKey}`,
@@ -46,7 +46,7 @@ export class PalavyrWidgetRepository {
             PreCheck: async (isDemo: boolean) => this.client.get<PreCheckResult>(this.Routes.precheck(this.secretKey, isDemo)),
             WidgetPreferences: async () => this.client.get<WidgetPreferences>(this.Routes.widgetPreferences(this.secretKey)),
             Locale: async () => this.client.get<LocaleResponse>(this.Routes.locale(this.secretKey)),
-            Areas: async () => this.client.get<Array<AreaTable>>(this.Routes.areas(this.secretKey)),
+            Areas: async () => this.client.get<Array<AreaTable>>(this.Routes.intents(this.secretKey)),
             NewConversationHistory: async (recordUpdateDto: Partial<ConversationRecordUpdate>) =>
                 this.client.post<NewConversation, {}>(this.Routes.newConversationHistory(this.secretKey), recordUpdateDto),
             NodeImage: async (nodeId: string) => this.client.get<string>(this.Routes.nodeImage(this.secretKey, nodeId)),

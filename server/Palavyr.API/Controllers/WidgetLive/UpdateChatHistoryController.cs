@@ -1,34 +1,28 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-
     public class UpdateChatHistoryController : PalavyrBaseController
     {
-        private ConvoContext convoContext;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IMediator mediator;
+        public const string Route = "widget/conversation";
 
-        public UpdateChatHistoryController(ConvoContext convoContext, ILogger<UpdateChatHistoryController> logger, IHoldAnAccountId accountIdHolder)
+        public UpdateChatHistoryController(IMediator mediator)
         {
-            this.convoContext = convoContext;
-            this.accountIdHolder = accountIdHolder;
+            this.mediator = mediator;
         }
 
-        [HttpPost("widget/conversation")]
-        public async Task<IActionResult> Modify(ConversationHistory history)
+        [HttpPost(Route)]
+        public async Task Modify(UpdateChatHistoryRequest request, CancellationToken cancellationToken)
         {
-            var conversationUpdate = history.CreateFromPartial(accountIdHolder.AccountId);
-            convoContext.ConversationHistories.Add(conversationUpdate);
-            await convoContext.SaveChangesAsync();
-            return NoContent();
+            await mediator.Publish(request, cancellationToken);
         }
     }
 }

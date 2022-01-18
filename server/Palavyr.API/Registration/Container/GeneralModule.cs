@@ -7,6 +7,7 @@ using Palavyr.API.CustomMiddleware;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Nodes;
@@ -27,6 +28,7 @@ using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.EmailService.EmailResponse;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
+using Palavyr.Core.Services.EnquiryServices;
 using Palavyr.Core.Services.ImageServices;
 using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Services.PdfService;
@@ -63,7 +65,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<DynamicTableCompilerRetriever>().As<IDynamicTableCompilerRetriever>();
 
             builder.RegisterGeneric(typeof(GenericDynamicTableRepository<>)).As(typeof(IGenericDynamicTableRepository<>)).InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(DynamicTableCommandHandler<>)).As(typeof(IDynamicTableCommandHandler<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(DynamicTableCommandExecutor<>)).As(typeof(IDynamicTableCommandExecutor<>)).InstancePerLifetimeScope();
 
             builder.RegisterType<JwtAuthenticationService>().As<IJwtAuthenticationService>();
             builder.RegisterType<AccountSetupService>().As<IAccountSetupService>();
@@ -117,16 +119,14 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ConversationNodeUpdater>().As<IConversationNodeUpdater>();
             builder.RegisterType<SelectOneFlatNodeUpdater>().As<ISelectOneFlatNodeUpdater>();
             builder.RegisterType<NodeGetter>().As<INodeGetter>();
-            builder.RegisterType<UpdateConversationRecordHandler>().As<IUpdateConversationRecordHandler>();
             builder.RegisterType<LocaleDefinitions>().As<ILocaleDefinitions>();
             builder.RegisterType<EnquiryInsightComputer>().As<IEnquiryInsightComputer>();
             builder.RegisterType<NodeBranchLengthCalculator>().As<INodeBranchLengthCalculator>();
 
             builder.RegisterType<DetermineCurrentOperatingSystem>().As<IDetermineCurrentOperatingSystem>();
             builder.RegisterType<ResponseRetriever>().As<IResponseRetriever>().InstancePerDependency();
-
-            builder.RegisterType<SendWidgetResponseEmailHandler>().As<ISendWidgetResponseEmailHandler>().InstancePerLifetimeScope();
-
+            
+            builder.RegisterType<CurrentLocaleAndLocalMapRetriever>().As<ICurrentLocaleAndLocalMapRetriever>().InstancePerLifetimeScope();
             
             
             
@@ -139,7 +139,7 @@ namespace Palavyr.API.Registration.Container
             
             
             
-            
+            // Experimental
             
             ///////!!! SPECIAL DANGER ZONE !!!//////////
             builder.RegisterType<AccountIdTransport>().As<IHoldAnAccountId>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE

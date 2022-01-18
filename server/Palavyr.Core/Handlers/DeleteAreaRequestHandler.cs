@@ -5,7 +5,7 @@ using Palavyr.Core.Services.Deletion;
 
 namespace Palavyr.Core.Handlers
 {
-    public class DeleteAreaRequestHandler : IRequestHandler<DeleteAreaRequest>
+    public class DeleteAreaRequestHandler : INotificationHandler<DeleteAreaRequest>
     {
         private readonly IAreaDeleter areaDeleter;
 
@@ -14,14 +14,13 @@ namespace Palavyr.Core.Handlers
             this.areaDeleter = areaDeleter;
         }
 
-        public async Task<Unit> Handle(DeleteAreaRequest request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteAreaRequest request, CancellationToken cancellationToken)
         {
             await areaDeleter.DeleteArea(request.AreaId, cancellationToken);
-            return default;
         }
     }
-    
-    public class DeleteAreaRequest : IRequest
+
+    public class DeleteAreaRequest : INotification
     {
         public string AreaId { get; set; }
     }

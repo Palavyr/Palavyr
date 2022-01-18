@@ -1,7 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
@@ -9,22 +10,21 @@ namespace Palavyr.API.Controllers.Accounts.Settings
 {
     public class GetCurrentPlanMetaController : PalavyrBaseController
     {
+        private readonly IMediator mediator;
         private const string Route = "account/settings/current-plan-meta";
-        private readonly IBusinessRules businessRules;
-        private ILogger<GetCurrentPlanMetaController> logger;
 
-        public GetCurrentPlanMetaController(IBusinessRules businessRules, ILogger<GetCurrentPlanMetaController> logger)
+
+        public GetCurrentPlanMetaController(IMediator mediator)
         {
-            this.businessRules = businessRules;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
         [HttpGet(Route)]
         public async Task<PlanTypeMeta> GetCurrentPlan(
             CancellationToken cancellationToken)
         {
-            var currentPlan = await businessRules.GetPlanTypeMeta();
-            return currentPlan;
+            var response = await mediator.Send(new GetCurrentPlanMetaRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

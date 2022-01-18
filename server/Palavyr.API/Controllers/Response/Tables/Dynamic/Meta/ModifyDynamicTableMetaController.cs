@@ -1,33 +1,27 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Data;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
 {
-
     public class ModifyDynamicTableMetaController : PalavyrBaseController
     {
-        private DashContext dashContext;
+        private readonly IMediator mediator;
+        public const string Route = "tables/dynamic/modify";
 
-        public ModifyDynamicTableMetaController(DashContext dashContext)
+        public ModifyDynamicTableMetaController(IMediator mediator)
         {
-            this.dashContext = dashContext;
+            this.mediator = mediator;
         }
 
-        [HttpPut("tables/dynamic/modify")]
-        public async Task<IActionResult> Modify(
-            [FromBody] DynamicTableMeta dynamicTableMeta, CancellationToken cancellationToken)
+        [HttpPut(Route)]
+        public async Task<DynamicTableMeta> Modify([FromBody] ModifyDynamicTableMetaRequest request, CancellationToken cancellationToken)
         {
-            if (dynamicTableMeta.Id == null)
-            {
-                return BadRequest();
-            }
-
-            dashContext.DynamicTableMetas.Update(dynamicTableMeta);
-            await dashContext.SaveChangesAsync();
-            return Ok(dynamicTableMeta);
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

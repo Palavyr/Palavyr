@@ -1,45 +1,27 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Repositories;
-
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
     public class SelectAllController : PalavyrBaseController
     {
-        private readonly IConvoHistoryRepository convoHistoryRepository;
+        private readonly IMediator mediator;
+        public const string Route = "enquiries/selectall";
 
         public SelectAllController(
-            IConvoHistoryRepository convoHistoryRepository
-            )
+            IMediator mediator
+        )
         {
-            this.convoHistoryRepository = convoHistoryRepository;
+            this.mediator = mediator;
         }
 
-        [HttpPost("enquiries/selectall")]
-        public async Task SelectAll()
+        [HttpPost(Route)]
+        public async Task SelectAll(CancellationToken cancellationToken)
         {
-            var allRecords = await convoHistoryRepository.GetAllConversationRecords();
-            foreach (var conversationRecord in allRecords)
-            {
-                conversationRecord.Seen = true;
-            }
-
-            await convoHistoryRepository.CommitChangesAsync();
-        }
-
-
-
-        [HttpPost("enquiries/unselectall")]
-        public async Task UnSelectAll()
-        {
-            var allRecords = await convoHistoryRepository.GetAllConversationRecords();
-            foreach (var conversationRecord in allRecords)
-            {
-                conversationRecord.Seen = false;
-            }
-
-            await convoHistoryRepository.CommitChangesAsync();
+            await mediator.Publish(new SelectAllRequest(), cancellationToken);
         }
     }
 }

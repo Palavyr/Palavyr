@@ -1,37 +1,32 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.ConversationServices;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
     public class DeleteEnquiryController : PalavyrBaseController
     {
-        private readonly IEnquiryDeleter enquiryDeleter;
-        private readonly IConversationRecordRetriever conversationRecordRetriever;
+        private readonly IMediator mediator;
+
+        public const string Route = "enquiries/selected";
 
         public DeleteEnquiryController(
-            IEnquiryDeleter enquiryDeleter,
-            IConversationRecordRetriever conversationRecordRetriever
+            IMediator mediator
         )
         {
-            this.enquiryDeleter = enquiryDeleter;
-            this.conversationRecordRetriever = conversationRecordRetriever;
+            this.mediator = mediator;
         }
 
-        [HttpPut("enquiries/selected")]
+        [HttpPut(Route)]
         public async Task<Enquiry[]> DeleteSelected(
-            DeleteEnquiriesRequest request,
+            DeleteEnquiryRequest request,
             CancellationToken cancellationToken)
         {
-            await enquiryDeleter.DeleteEnquiries(request.FileReferences, cancellationToken);
-            return await conversationRecordRetriever.RetrieveConversationRecords();
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
-    }
-
-    public class DeleteEnquiriesRequest
-    {
-        public string[] FileReferences { get; set; }
     }
 }

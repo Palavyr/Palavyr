@@ -1,25 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Response.Tables.Static
 {
     public class GetStaticTablesMetasTemplateController : PalavyrBaseController
     {
-        private ILogger<GetStaticTablesMetasTemplateController> logger;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IMediator mediator;
+        public const string Route = "response/configuration/{intentId}/static/tables/template";
 
-        public GetStaticTablesMetasTemplateController(ILogger<GetStaticTablesMetasTemplateController> logger, IHoldAnAccountId accountIdHolder)
+
+        public GetStaticTablesMetasTemplateController(IMediator mediator)
         {
-            this.logger = logger;
-            this.accountIdHolder = accountIdHolder;
+            this.mediator = mediator;
         }
         
-        [HttpGet("response/configuration/{areaId}/static/tables/template")]
-        public StaticTablesMeta CreateNewStaticTablesMeta(string areaId)
+        [HttpGet(Route)]
+        public async Task<StaticTablesMeta> CreateNewStaticTablesMeta(string intentId, CancellationToken cancellationToken)
         {
-            return StaticTablesMeta.CreateNewMetaTemplate(areaId, accountIdHolder.AccountId);
+            var response = await mediator.Send(new GetStaticTablesMetasTemplateRequest(intentId), cancellationToken);
+            return response.Response;
         }
     }
 }

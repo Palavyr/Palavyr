@@ -1,33 +1,26 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-
     public class ModifyCompanyNameController : PalavyrBaseController
     {
-        private readonly IAccountRepository accountRepository;
-        private ILogger<ModifyCompanyNameController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "account/settings/company-name";
 
-        public ModifyCompanyNameController(IAccountRepository  accountRepository, ILogger<ModifyCompanyNameController> logger)
+        public ModifyCompanyNameController(IMediator mediator)
         {
-            this.accountRepository = accountRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
-        
-        [HttpPut("account/settings/company-name")]
-        public async Task<string> Modify(CompanyNameSettingsRequest settingsRequest)
+
+        [HttpPut(Route)]
+        public async Task<string> Modify(ModifyCompanyNameRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
-            account.CompanyName = settingsRequest.CompanyName;
-            await accountRepository.CommitChangesAsync();
-            return account.CompanyName;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

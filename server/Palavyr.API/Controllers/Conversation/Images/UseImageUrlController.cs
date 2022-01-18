@@ -1,54 +1,34 @@
-﻿using System.Linq;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
-using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Conversation.Images
 {
+    [Obsolete]
     public class UseImageUrlController : PalavyrBaseController
     {
-        private readonly DashContext dashContext;
-        private readonly IHoldAnAccountId accountIdHolder;
-        private const string Route = "images/use-link/{nodeId}";
+        private readonly IMediator mediator;
+        private const string Route = "images/use-link";
 
-        public UseImageUrlController(DashContext dashContext, IHoldAnAccountId accountIdHolder)
+        public UseImageUrlController(IMediator mediator)
         {
-            this.dashContext = dashContext;
-            this.accountIdHolder = accountIdHolder;
+            this.mediator = mediator;
         }
 
 
         [HttpPost(Route)]
         public async Task<FileLink[]> SaveImageUrl(
-            string nodeId,
-            [FromBody] UrlRequest request,
+            [FromBody]
+            UseImageUrlRequest request,
             CancellationToken cancellationToken
         )
         {
-            var image = Image.CreateImageUrlRecord(request.Url, accountIdHolder.AccountId);
-            dashContext.Images.Add(image);
-         
-            
-            var node = dashContext.ConversationNodes.SingleOrDefault(x => x.NodeId == nodeId);
-            if (node == null)
-            {
-                throw new DomainException("Duplicate node ids detected.");
-            }
-            node.ImageId = image.ImageId;
-
-            await dashContext.SaveChangesAsync();
-            return image.ImageUrlToFileLinks();
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
-    }
-
-    public class UrlRequest
-    {
-        public string Url { get; set; }
     }
 }

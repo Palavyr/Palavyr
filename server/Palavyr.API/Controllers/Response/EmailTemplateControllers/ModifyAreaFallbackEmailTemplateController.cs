@@ -1,43 +1,28 @@
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
-
     public class ModifyAreaFallbackEmailTemplateController : PalavyrBaseController
     {
-        private DashContext dashContext;
-        private readonly IConfigurationRepository repository;
-        private ILogger<ModifyAreaFallbackEmailTemplateController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "email/fallback/email-template";
 
         public ModifyAreaFallbackEmailTemplateController(
-            ILogger<ModifyAreaFallbackEmailTemplateController> logger,
-            DashContext dashContext,
-            IConfigurationRepository repository
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.dashContext = dashContext;
-            this.repository = repository;
+            this.mediator = mediator;
         }
 
-        [HttpPut("email/fallback/{areaId}/email-template")]
-        public async Task<string> Modify([FromRoute] string areaId, [FromBody] FallbackEmailTemplateRequest request)
+        [HttpPut(Route)]
+        public async Task<string> Modify([FromBody] ModifyAreaFallbackEmailTemplateRequest request, CancellationToken cancellationToken)
         {
-            var currentArea = await repository.GetAreaById(areaId);
-            currentArea.FallbackEmailTemplate = request.EmailTemplate;
-            await dashContext.SaveChangesAsync();
-            return currentArea.FallbackEmailTemplate;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
-
-    }
-
-    public class FallbackEmailTemplateRequest
-    {
-        public string EmailTemplate { get; set; }
     }
 }

@@ -1,42 +1,30 @@
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
-
     public class GetDemoWidgetPreCheckController : PalavyrBaseController
     {
-        private ILogger<GetDemoWidgetPreCheckController> logger;
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly IWidgetStatusChecker widgetStatusChecker;
+        private readonly IMediator mediator;
+        public const string Route = "widget-config/demo/pre-check";
+
 
         public GetDemoWidgetPreCheckController(
-            ILogger<GetDemoWidgetPreCheckController> logger,
-            IConfigurationRepository configurationRepository,
-            IWidgetStatusChecker widgetStatusChecker
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.configurationRepository = configurationRepository;
-            this.widgetStatusChecker = widgetStatusChecker;
+            this.mediator = mediator;
         }
 
-        [HttpGet("widget-config/demo/pre-check")]
-        public async Task<PreCheckResult> Get()
+        [HttpGet(Route)]
+        public async Task<PreCheckResult> Get(CancellationToken cancellationToken)
         {
-            var widgetPrefs = await configurationRepository.GetWidgetPreferences();
-            var areas = await configurationRepository.GetActiveAreasWithConvoAndDynamicAndStaticTables();
-
-            var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(areas, widgetPrefs, true, logger);
-            logger.LogDebug($"Pre-check run successful.");
-            logger.LogDebug($"Ready result:{result.IsReady}");
-            logger.LogDebug($"Incomplete areas: {result.PreCheckErrors.Select(x => x.AreaName).ToList()}");
-            return result;
+            var response = await mediator.Send(new GetDemoWidgetPreCheckRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

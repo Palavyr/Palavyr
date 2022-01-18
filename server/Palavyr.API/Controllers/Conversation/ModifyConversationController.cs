@@ -1,37 +1,34 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Conversation;
-using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.API.Controllers.Conversation
 {
     public class ModifyConversationController : PalavyrBaseController
     {
-        private ILogger<ModifyConversationController> logger;
-        private readonly IConversationNodeUpdater conversationNodeUpdater;
+        public const string Route = "configure-conversations";
+        private readonly IMediator mediator;
 
         public ModifyConversationController(
-            ILogger<ModifyConversationController> logger,
-            IConversationNodeUpdater conversationNodeUpdater
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.conversationNodeUpdater = conversationNodeUpdater;
+            this.mediator = mediator;
         }
 
-        [HttpPut("configure-conversations/{areaId}")]
+        [HttpPut(Route)]
         public async Task<List<ConversationNode>> Modify(
-            [FromRoute] string areaId,
-            [FromBody] ConversationNodeDto update,
+            [FromBody]
+            ModifyConversationRequest request,
             CancellationToken cancellationToken
-            )
+        )
         {
-            var updatedConvo = await conversationNodeUpdater.UpdateConversation(areaId, update.Transactions, cancellationToken);
-            return updatedConvo;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

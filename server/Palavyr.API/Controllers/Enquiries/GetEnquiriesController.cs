@@ -1,29 +1,29 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.ConversationServices;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
     public class GetEnquiriesController : PalavyrBaseController
     {
-        private readonly ILogger<GetEnquiriesController> logger;
-        private readonly IConversationRecordRetriever conversationRecordRetriever;
+        private readonly IMediator mediator;
+        public const string Route = "enquiries";
 
         public GetEnquiriesController(
-            ILogger<GetEnquiriesController> logger,
-            IConversationRecordRetriever conversationRecordRetriever
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.conversationRecordRetriever = conversationRecordRetriever;
+            this.mediator = mediator;
         }
 
-        [HttpGet("enquiries")]
-        public async Task<Enquiry[]> Get()
+        [HttpGet(Route)]
+        public async Task<Enquiry[]> Get(CancellationToken cancellationToken)
         {
-            return await conversationRecordRetriever.RetrieveConversationRecords();
+            var response = await mediator.Send(new GetEnquiriesRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

@@ -1,29 +1,26 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
-    public class CustomerPortalRequest
-    {
-        public string CustomerId { get; set; }
-        public string ReturnUrl { get; set; }
-    }
-    
     public class CreateCustomerPortalSessionController : PalavyrBaseController
     {
-        private readonly IStripeCustomerManagementPortalService stripeCustomerManagementPortalService;
+        private readonly IMediator mediator;
+        public const string Route = "payments/customer-portal";
 
-        public CreateCustomerPortalSessionController(IStripeCustomerManagementPortalService stripeCustomerManagementPortalService)
+        public CreateCustomerPortalSessionController(IMediator mediator)
         {
-            this.stripeCustomerManagementPortalService = stripeCustomerManagementPortalService;
+            this.mediator = mediator;
         }
 
-        [HttpPost("payments/customer-portal")]
-        public async Task<string> Create([FromBody] CustomerPortalRequest request)
+        [HttpPost(Route)]
+        public async Task<string> Create([FromBody] CreateCustomerPortalSessionRequest request, CancellationToken cancellationToken)
         {
-            var portalUrl = await stripeCustomerManagementPortalService.FormCustomerSubscriptionManagementPortalUrl(request.CustomerId, request.ReturnUrl);
-            return portalUrl;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

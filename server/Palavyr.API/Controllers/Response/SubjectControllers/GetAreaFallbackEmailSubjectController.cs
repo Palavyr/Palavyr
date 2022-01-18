@@ -1,33 +1,28 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
-
     public class GetAreaFallbackEmailSubjectController : PalavyrBaseController
     {
-        private ILogger<GetAreaFallbackEmailSubjectController> logger;
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IMediator mediator;
 
-        public GetAreaFallbackEmailSubjectController(
-            ILogger<GetAreaFallbackEmailSubjectController> logger,
-            IConfigurationRepository configurationRepository
-        )
+        public const string Route = "email/fallback/subject/{intentId}";
+
+
+        public GetAreaFallbackEmailSubjectController(IMediator mediator)
         {
-            this.logger = logger;
-            this.configurationRepository = configurationRepository;
+            this.mediator = mediator;
         }
 
-        [HttpGet("email/fallback/subject/{areaId}")]
-        public async Task<string> Modify([FromRoute] string areaId)
+        [HttpGet(Route)]
+        public async Task<string> Modify([FromRoute] string intentId, CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(areaId);
-            var subject = area.FallbackSubject;
-            return subject;
+            var response = await mediator.Send(new GetAreaFallbackEmailSubjectRequest(intentId), cancellationToken);
+            return response.Response;
         }
     }
 }

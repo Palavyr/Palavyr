@@ -1,27 +1,27 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
-
     public class GetWidgetPreferencesController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private ILogger<GetWidgetPreferencesController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "widget-config/preferences";
 
-        public GetWidgetPreferencesController(IConfigurationRepository configurationRepository, ILogger<GetWidgetPreferencesController> logger)
+        public GetWidgetPreferencesController(IMediator mediator)
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpGet("widget-config/preferences")]
-        public async Task<WidgetPreference> GetWidgetPreferences()
+        [HttpGet(Route)]
+        public async Task<WidgetPreference> GetWidgetPreferences(CancellationToken cancellationToken)
         {
-            return await configurationRepository.GetWidgetPreferences();
+            var response = await mediator.Send(new GetWidgetPreferencesRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

@@ -1,34 +1,37 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
-
     public class ModifyWidgetActiveStateController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private ILogger<GetWidgetPreferencesController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "widget-config/widget-active-state";
+
 
         public ModifyWidgetActiveStateController(
-            IConfigurationRepository configurationRepository, 
-            ILogger<GetWidgetPreferencesController> logger)
-        {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
-        }
-
-        [HttpPost("widget-config/widget-active-state")]
-        public async Task<bool> ModifyWidgetActiveState(
-            [FromQuery] bool state
+            IMediator mediator
         )
         {
-            logger.LogDebug("Modifying widget preference");
-            var widgetPrefs = await configurationRepository.GetWidgetPreferences();
-            widgetPrefs.WidgetState = state;
-            await configurationRepository.CommitChangesAsync();
-            return state;
+            this.mediator = mediator;
+        }
+
+        [HttpPost(Route)]
+        public async Task<bool> ModifyWidgetActiveState(
+            [FromQuery]
+            bool state,
+            CancellationToken cancellationToken
+        )
+        {
+            if (state == null)
+            {
+                state = true;
+            }
+            var response = await mediator.Send(new ModifyWidgetActiveStateRequest(state), cancellationToken);
+            return response.Response;
         }
     }
 }

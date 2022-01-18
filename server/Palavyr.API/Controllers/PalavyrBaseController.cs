@@ -7,6 +7,5 @@ namespace Palavyr.API.Controllers
     [ApiController]
     public abstract class PalavyrBaseController : ControllerBase
     {
-        public IMediator Mediator { get; set; }
     }
 }

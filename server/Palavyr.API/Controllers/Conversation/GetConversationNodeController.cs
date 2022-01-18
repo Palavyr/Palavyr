@@ -1,32 +1,30 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Conversation
 {
-
     public class GetConversationNodeController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private ILogger<GetConversationNodeController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "configure-conversations/nodes/{nodeId}";
+
 
         public GetConversationNodeController(
-            IConfigurationRepository configurationRepository,
-            ILogger<GetConversationNodeController> logger
+            IMediator mediator
         )
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
-        
-        [HttpGet("configure-conversations/nodes/{nodeId}")]
-        public async Task<ConversationNode> Get([FromRoute] string nodeId)
+
+        [HttpGet(Route)]
+        public async Task<ConversationNode> Get([FromRoute] string nodeId, CancellationToken cancellationToken)
         {
-            // node Ids are globally unique - don't need account Id Filter
-            var node = await configurationRepository.GetConversationNodeById(nodeId);
-            return node;
+            var response = await mediator.Send(new GetConversationNodeRequest(nodeId), cancellationToken);
+            return response.Response;
         }
     }
 }

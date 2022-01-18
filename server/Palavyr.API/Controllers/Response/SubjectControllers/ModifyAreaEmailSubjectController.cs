@@ -1,47 +1,32 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
-    
-    [Authorize]
-
     public class ModifyAreaEmailSubjectController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository repository;
-        private readonly ILogger<ModifyAreaEmailSubjectController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "email/subject";
 
         public ModifyAreaEmailSubjectController(
-            IConfigurationRepository repository,
-            ILogger<ModifyAreaEmailSubjectController> logger
-        )
+            IMediator mediator)
         {
-            this.repository = repository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpPut("email/subject/{areaId}")]
+        [HttpPut(Route)]
         public async Task<string> Modify(
-            [FromBody] SubjectText subjectText,
-            string areaId,
+            [FromBody]
+            ModifyAreaEmailSubjectRequest request,
             CancellationToken cancellationToken
         )
         {
-            var curArea = await repository.GetAreaById(areaId);
-            if (subjectText.Subject != curArea.Subject)
-            {
-                curArea.Subject = subjectText.Subject;
-                await repository.CommitChangesAsync();
-            }
-            return subjectText.Subject;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

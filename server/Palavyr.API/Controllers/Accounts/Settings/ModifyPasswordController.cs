@@ -1,36 +1,26 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Resources.Requests.Registration;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-
     public class ModifyPasswordController : PalavyrBaseController
     {
-        private readonly IAccountRepository accountRepository;
-        private ILogger<ModifyPasswordController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "account/settings/password";
 
-        public ModifyPasswordController(IAccountRepository accountRepository, ILogger<ModifyPasswordController> logger)
+        public ModifyPasswordController(IMediator mediator)
         {
-            this.accountRepository = accountRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
-        
-        [HttpPut("account/settings/password")]
-        public async Task<bool> UpdatePassword(AccountDetails accountDetails)
-        {
-            var account = await accountRepository.GetAccount();
-            var oldHashedPassword = accountDetails.OldPassword;
-            if (oldHashedPassword != accountDetails.Password)
-            {
-                return false;
-            }
 
-            account.Password = accountDetails.Password;
-            await accountRepository.CommitChangesAsync();
-            return true;
+        [HttpPut(Route)]
+        public async Task<bool> Modify([FromBody] ModifyPasswordRequest request, CancellationToken cancellationToken)
+        {
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

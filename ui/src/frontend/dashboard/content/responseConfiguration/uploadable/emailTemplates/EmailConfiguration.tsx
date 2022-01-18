@@ -6,7 +6,6 @@ import { HeaderStrip } from "@common/components/HeaderStrip";
 import { OsTypeToggle } from "../../areaSettings/enableAreas/OsTypeToggle";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { EmailConfigurationComponent } from "./EmailConfigurationComponent";
-import { IntroSteps } from "frontend/dashboard/content/welcome/OnboardingTour/IntroSteps";
 
 export const EmailConfiguration = () => {
     const { repository } = useContext(DashboardContext);

@@ -1,49 +1,33 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Services.EmailService.Verification;
 
 namespace Palavyr.API.Controllers.Verification
 {
-
     public class EmailVerificationController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly IEmailVerificationStatus emailVerificationStatus;
-        private ILogger<EmailVerificationController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "verification/email";
 
         public EmailVerificationController(
-            IConfigurationRepository configurationRepository,
-            IEmailVerificationStatus emailVerificationStatus,
-            ILogger<EmailVerificationController> logger
+            IMediator mediator
         )
         {
-            this.configurationRepository = configurationRepository;
-            this.emailVerificationStatus = emailVerificationStatus;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpPost("verification/email/{areaId}")]
+        [HttpPost(Route)]
         public async Task<EmailVerificationResponse> RequestNewEmailVerification(
-            [FromRoute] string areaId,
-            [FromBody] EmailVerificationRequest emailRequest
+            [FromBody]
+            EmailAddressVerificationRequest request,
+            CancellationToken cancellationToken
         )
         {
-            var area = await configurationRepository.GetAreaById(areaId);
-            var verificationResponse = await emailVerificationStatus.GetVerificationResponse(emailRequest.EmailAddress);
-
-            area.EmailIsVerified = verificationResponse.IsVerified();
-            area.AwaitingVerification = verificationResponse.IsPending();
-
-            if (!verificationResponse.IsFailed())
-            {
-                area.AreaSpecificEmail = emailRequest.EmailAddress;
-            }
-
-            await configurationRepository.CommitChangesAsync();
-            return verificationResponse;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

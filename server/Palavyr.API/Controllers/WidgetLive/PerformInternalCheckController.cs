@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Aliases;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.Core.Services.DynamicTableService;
 
 
 namespace Palavyr.API.Controllers.WidgetLive
@@ -13,35 +12,21 @@ namespace Palavyr.API.Controllers.WidgetLive
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
     public class PerformInternalCheckController : PalavyrBaseController
     {
-        private readonly ILogger<PerformInternalCheckController> logger;
-        private readonly IDynamicResponseComponentExtractor dynamicResponseComponentExtractor;
+        private readonly IMediator mediator;
+        public const string Route = "widget/internal-check";
 
         public PerformInternalCheckController(
-            ILogger<PerformInternalCheckController> logger,
-            IDynamicResponseComponentExtractor dynamicResponseComponentExtractor
-            )
+            IMediator mediator
+        )
         {
-            this.logger = logger;
-            this.dynamicResponseComponentExtractor = dynamicResponseComponentExtractor;
+            this.mediator = mediator;
         }
-        
-        [HttpPost("widget/internal-check")]
-        public async Task<bool> FetchPreferences([FromBody] PreformInternalCheckControllerRequestBody internalCheckComponents)
+
+        [HttpPost(Route)]
+        public async Task<bool> FetchPreferences([FromBody] PerformInternalCheckRequest request, CancellationToken cancellationToken)
         {
-            var dynamicResponseComponents = dynamicResponseComponentExtractor.ExtractDynamicTableComponents(internalCheckComponents.CurrentDynamicResponseState);
-            var result = await dynamicResponseComponents.Compiler.PerformInternalCheck(
-                internalCheckComponents.Node,
-                internalCheckComponents.Response,
-                dynamicResponseComponents
-            );
-            return result;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
-    }
-    
-    public class PreformInternalCheckControllerRequestBody
-    {
-        public ConversationNode Node { get; set; }
-        public string Response { get; set; }
-        public DynamicResponse CurrentDynamicResponseState { get; set; }
     }
 }

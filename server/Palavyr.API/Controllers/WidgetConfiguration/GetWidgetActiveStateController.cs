@@ -20,7 +20,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         public async Task<bool> GetWidgetActiveState(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetWidgetActiveStateRequest());
-            return response.ActiveState;
+            return response.Response;
         }
     }
 }

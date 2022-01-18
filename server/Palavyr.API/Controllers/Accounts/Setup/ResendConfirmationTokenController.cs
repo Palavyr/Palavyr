@@ -1,50 +1,34 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Data;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Services.AccountServices;
-using Palavyr.Core.Sessions;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 {
     public class ResendConfirmationTokenController : PalavyrBaseController
     {
-        private readonly IEmailVerificationService emailVerificationService;
-        private readonly AccountsContext accountsContext;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IMediator mediator;
+        public const string Route = "account/confirmation/token/resend";
+
 
         public ResendConfirmationTokenController(
-            IEmailVerificationService emailVerificationService,
-            AccountsContext accountsContext,
-            IHoldAnAccountId accountIdHolder
+            IMediator mediator
         )
         {
-            this.emailVerificationService = emailVerificationService;
-            this.accountsContext = accountsContext;
-            this.accountIdHolder = accountIdHolder;
+            this.mediator = mediator;
         }
 
 
-        [HttpPost("account/confirmation/token/resend")]
+        [HttpPost(Route)]
         public async Task<bool> Post(
-            [FromBody] EmailVerificationRequest emailRequest,
+            [FromBody]
+            ResendConfirmationTokenRequest request,
             CancellationToken cancellationToken
         )
         {
-            // delete any old records
-            var maybeCurrentRecord = accountsContext.EmailVerifications
-                .SingleOrDefault(x => x.EmailAddress == emailRequest.EmailAddress && x.AccountId == accountIdHolder.AccountId);
-            if (maybeCurrentRecord != null)
-            {
-                accountsContext.EmailVerifications.Remove(maybeCurrentRecord);
-                await accountsContext.SaveChangesAsync(cancellationToken);
-            }
-
-            // resend
-            var result = await emailVerificationService.SendConfirmationTokenEmail(emailRequest.EmailAddress, cancellationToken);
-            return result;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

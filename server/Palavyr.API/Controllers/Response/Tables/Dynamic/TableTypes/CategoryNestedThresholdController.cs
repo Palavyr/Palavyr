@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
 {
@@ -7,7 +8,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
     [ApiController]
     public class CategoryNestedThresholdController : DynamicControllerBase<CategoryNestedThreshold>
     {
-        public CategoryNestedThresholdController(IDynamicTableCommandHandler<CategoryNestedThreshold> handler) : base(handler)
+        public CategoryNestedThresholdController(IDynamicTableCommandExecutor<CategoryNestedThreshold> executor) : base(executor)
         {
         }
     }
