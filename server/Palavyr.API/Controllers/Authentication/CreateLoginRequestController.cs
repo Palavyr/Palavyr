@@ -1,14 +1,10 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Palavyr.Core.Handlers;
-using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.Authentication
 {

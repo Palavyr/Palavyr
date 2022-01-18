@@ -10,7 +10,6 @@ namespace Palavyr.API.Controllers.Conversation.Images
     public class GetImagesController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-
         private const string Route = "images";
 
         public GetImagesController(IMediator mediator)
@@ -21,10 +20,10 @@ namespace Palavyr.API.Controllers.Conversation.Images
         [HttpGet(Route)]
         public async Task<FileLink[]> GetImages(
             [FromQuery]
-            string imageIds,
+            string? imageIds,
             CancellationToken cancellationToken) // should be comma separated
         {
-            var ids = imageIds.Split(',');
+            var ids = imageIds?.Split(',') ?? new string[] { };
             var response = await mediator.Send(new GetImagesRequest(ids), cancellationToken);
             return response.Response;
         }

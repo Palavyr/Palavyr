@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.CustomMiddleware
@@ -20,7 +21,7 @@ namespace Palavyr.API.CustomMiddleware
 
         private Dictionary<string, string> ResponseHeaders = new Dictionary<string, string>
         {
-            {"Access-Control-Allow-Origin", "*"}
+            { "Access-Control-Allow-Origin", "*" }
         };
 
         public SetHeadersMiddleware(RequestDelegate next, ILogger<SetHeadersMiddleware> logger)
@@ -31,9 +32,9 @@ namespace Palavyr.API.CustomMiddleware
 
         public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext, IMediator mediator, IAccountRepository accountRepository)
         {
-            // This must co
-
+            
             logger.LogDebug("Settings magic string headers...");
+
             var action = context.Request.Headers[ApplicationConstants.MagicUrlStrings.Action].ToString();
 
             if (action == ApplicationConstants.MagicUrlStrings.SessionAction)

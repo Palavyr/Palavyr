@@ -33,7 +33,7 @@ import { ApiErrors } from "frontend/dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "frontend/dashboard/subscriptionFilters/filterConvoNodeTypes";
 import { SessionStorage } from "@localStorage/sessionStorage";
 import { AxiosClient, CacheIds } from "./FrontendAxiosClient";
-import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage, googleYoutubeApikey } from "./clientUtils";
+import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
 import { Loaders } from "./Loaders";
 
 export class PalavyrRepository {
@@ -202,7 +202,7 @@ export class PalavyrRepository {
 
         Attachments: {
             GetAttachmentLinks: async (intentId: string) => this.client.get<FileLink[]>(`attachments/${intentId}`, CacheIds.Attachments),
-            removeAttachment: async (areaIdentifier: string, fileId: string) => this.client.delete<FileLink[]>(`attachments/${areaIdentifier}/file-link`, CacheIds.Attachments, { data: { fileId: fileId } }),
+            removeAttachment: async (intentId: string, fileId: string) => this.client.delete<FileLink[]>(`attachments/file-link`, CacheIds.Attachments, { data: { fileId: fileId, IntentId: intentId } }),
 
             saveSingleAttachment: async (areaIdentifier: string, formData: FormData) =>
                 this.client.post<FileLink[], {}>(`attachments/${areaIdentifier}/save-one`, formData, CacheIds.Attachments, {

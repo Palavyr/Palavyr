@@ -130,7 +130,7 @@ namespace Palavyr.Core.Handlers
             {
                 verificationResponse = EmailVerificationResponse.CreateNew(
                     Failed,
-                    "Could not submit email verification request to AWS.",
+                    "Could not submit email verification request the email service provider.",
                     "Failed to create Email Verification Request. Please contact info.palavyr@gmail.com"
                 );
                 return new ModifyDefaultEmailAddressResponse(verificationResponse);

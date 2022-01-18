@@ -1,7 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.Core.Handlers
 {
@@ -18,13 +20,13 @@ namespace Palavyr.Core.Handlers
         public async Task<ModifyPasswordResponse> Handle(ModifyPasswordRequest request, CancellationToken cancellationToken)
         {
             var account = await accountRepository.GetAccount();
-            var oldHashedPassword = request.OldPassword;
-            if (oldHashedPassword != request.Password)
+            if (!PasswordHashing.ComparePasswords(account.Password, request.OldPassword))
             {
-                return new ModifyPasswordResponse(false);
+                throw new DomainException("Original password does not match that on record");
             }
 
-            account.Password = request.Password;
+            var hashedNewPassword = PasswordHashing.CreateHashedPassword(request.Password);
+            account.Password = hashedNewPassword;
             await accountRepository.CommitChangesAsync();
             return new ModifyPasswordResponse(true);
         }

@@ -7,9 +7,9 @@ namespace Palavyr.Core.Handlers
 {
     public class CreateCustomerPortalSessionHandler : IRequestHandler<CreateCustomerPortalSessionRequest, CreateCustomerPortalSessionResponse>
     {
-        private readonly StripeCustomerManagementPortalService stripeCustomerManagementPortalService;
+        private readonly IStripeCustomerManagementPortalService stripeCustomerManagementPortalService;
 
-        public CreateCustomerPortalSessionHandler(StripeCustomerManagementPortalService stripeCustomerManagementPortalService)
+        public CreateCustomerPortalSessionHandler(IStripeCustomerManagementPortalService stripeCustomerManagementPortalService)
         {
             this.stripeCustomerManagementPortalService = stripeCustomerManagementPortalService;
         }

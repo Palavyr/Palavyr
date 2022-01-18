@@ -26,6 +26,10 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
             CancellationToken cancellationToken
         )
         {
+            if (state == null)
+            {
+                state = true;
+            }
             var response = await mediator.Send(new ModifyWidgetActiveStateRequest(state), cancellationToken);
             return response.Response;
         }

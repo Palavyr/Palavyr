@@ -16,7 +16,6 @@ namespace Palavyr.Core.Services.AuthenticationServices
     public interface IAuthService
     {
         public Task<Credentials> PerformLoginAction(CreateLoginRequest loginCredentialsRequest);
-        // public Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string? accessToken);
     }
 
     public class AuthService : IAuthService
@@ -156,41 +155,10 @@ namespace Palavyr.Core.Services.AuthenticationServices
             return loginType switch
             {
                 (LoginType.Default) => await RequestAccountViaDefault(loginCredentialsRequest),
-                // (LoginType.Google) => await RequestAccountViaGoogle(loginCredentialsRequest),
                 LoginType.Error => AccountReturn.Return(null, null),
                 _ => AccountReturn.Return(null, message: null)
             };
         }
-
-        // private async Task<AccountReturn> RequestAccountViaGoogle(CreateLoginRequest credentialRequest)
-        // {
-        //     logger.LogDebug("Requesting account via Google...");
-        //     var payload = await ValidateGoogleTokenId(credentialRequest.OneTimeCode);
-        //     if (payload == null)
-        //     {
-        //         logger.LogError(CouldNotValidateGoogleAuthToken);
-        //         logger.LogError($"OneTimeCode: {credentialRequest.OneTimeCode}");
-        //
-        //         return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
-        //     }
-        //
-        //     if (payload.Subject != credentialRequest.TokenId)
-        //     {
-        //         return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
-        //     }
-        //
-        //     // now verify the user exists in the Accounts database
-        //     var account = await accountRepository.GetAccountByEmailOrNull(payload.Email);
-        //     if (account == null)
-        //     {
-        //         return AccountReturn.Return(null, CouldNotFindAccountWithGoogle);
-        //     }
-        //
-        //     if (account.AccountType != AccountType.Google)
-        //         return AccountReturn.Return(null, "Google " + DifferentAccountType);
-        //
-        //     return AccountReturn.Return(account, null);
-        // }
 
         private async Task<AccountReturn> RequestAccountViaDefault(CreateLoginRequest credentialsRequest)
         {

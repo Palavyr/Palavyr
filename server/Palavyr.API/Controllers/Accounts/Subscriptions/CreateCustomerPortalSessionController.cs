@@ -9,7 +9,6 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
     public class CreateCustomerPortalSessionController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-
         public const string Route = "payments/customer-portal";
 
         public CreateCustomerPortalSessionController(IMediator mediator)

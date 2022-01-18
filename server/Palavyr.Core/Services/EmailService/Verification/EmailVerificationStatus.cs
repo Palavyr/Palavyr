@@ -91,7 +91,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
             var result = await requestEmailVerification.VerifyEmailAddressAsync(emailAddress);
             if (!result)
                 return EmailVerificationResponse.CreateFailed(
-                    "Could not submit email verification request to AWS.",
+                    "Could not submit email verification request to the email service provider.",
                     "Failed to create Email Verification Request. Please contact info.palavyr@gmail.com"
                 );
 

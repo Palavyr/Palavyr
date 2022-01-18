@@ -10,12 +10,10 @@ namespace Palavyr.API.Controllers.Enquiries
     public class EnquiryInsightsController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-
         public const string Route = "enquiry-insights";
 
 
-        public EnquiryInsightsController(
-            IMediator mediator)
+        public EnquiryInsightsController(IMediator mediator)
         {
             this.mediator = mediator;
         }

@@ -28,7 +28,8 @@ namespace Palavyr.API.Controllers.Conversation.Images
             CancellationToken cancellationToken
         )
         {
-            var response = await mediator.Send(new DeleteImagesRequest(imageIds.Split(",")), cancellationToken);
+            var ids = imageIds?.Split(",") ?? new string[] { };
+            var response = await mediator.Send(new DeleteImagesRequest(ids), cancellationToken);
             return response.Response;
         }
     }

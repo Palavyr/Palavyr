@@ -46,6 +46,7 @@ namespace Palavyr.API.CustomMiddleware
                     case StripeException stripeException:
                         logger.LogInformation("Encountered an exception with Stripe");
                         logger.LogError($"{stripeException.Message}");
+                        message = ex.Message;
                         break;
 
                     case IOException ioException:
@@ -105,7 +106,7 @@ namespace Palavyr.API.CustomMiddleware
                         logger.LogError($"{ex.Message}");
                         logger.LogError($"{ex.InnerException}");
                         logger.LogError($"{ex.GetBaseException()}");
-                        message = ex.Message;
+                        message = "Oops! We've made a mistake. Please consider reporting this to info.palavyr.com, or you can visit https://github.com/Palavyr/Palavyr-Issues";
                         break;
                 }
 

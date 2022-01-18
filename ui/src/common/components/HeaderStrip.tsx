@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     container: (props: StyleProps) => ({
         backgroundColor: props.light ? theme.palette.common.white : theme.palette.background.default,
         paddingTop: "1.2rem",
-        borderRadius: "10px"
+        // borderRadius: "10px"
     }),
     subtitle: {
         padding: "1rem 3rem 0rem 3rem",
