@@ -334,11 +334,15 @@ namespace Palavyr.Core.Repositories
             {
                 foreach (var row in meta.StaticTableRows)
                 {
-                    dashContext.StaticFees.Remove(await dashContext.StaticFees.FindAsync(row.Fee.Id, cancellationTokenTransport.CancellationToken));
-                    dashContext.StaticTablesRows.Remove(await dashContext.StaticTablesRows.FindAsync(row.Id, cancellationTokenTransport.CancellationToken));
+                    var fee = await dashContext.StaticFees.FindAsync(row.Fee.Id);
+                    dashContext.StaticFees.Remove(fee);
+
+                    var staticRow = await dashContext.StaticTablesRows.FindAsync(row.Id);
+                    dashContext.StaticTablesRows.Remove(staticRow);
                 }
 
-                dashContext.StaticTablesMetas.Remove(await dashContext.StaticTablesMetas.FindAsync(meta.Id, cancellationTokenTransport.CancellationToken));
+                var staticMeta = await dashContext.StaticTablesMetas.FindAsync(meta.Id);
+                dashContext.StaticTablesMetas.Remove(staticMeta);
             }
         }
     }

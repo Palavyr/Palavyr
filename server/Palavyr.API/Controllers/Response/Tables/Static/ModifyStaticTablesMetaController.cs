@@ -13,7 +13,8 @@ namespace Palavyr.API.Controllers.Response.Tables.Static
         private readonly IMediator mediator;
         public const string Route = "response/configuration/static/tables/save";
 
-        public ModifyStaticTablesMetaController(IMediator mediator
+        public ModifyStaticTablesMetaController(
+            IMediator mediator
         )
         {
             this.mediator = mediator;
@@ -21,7 +22,8 @@ namespace Palavyr.API.Controllers.Response.Tables.Static
 
         [HttpPut(Route)]
         public async Task<List<StaticTablesMeta>> Modify(
-            ModifyStaticTablesMetaRequest request, CancellationToken cancellationToken
+            ModifyStaticTablesMetaRequest request,
+            CancellationToken cancellationToken
         )
         {
             var response = await mediator.Send(request, cancellationToken);
