@@ -62,7 +62,7 @@ namespace Palavyr.Core.Handlers
     {
         public CreateDynamicTableRequest(string intentId)
         {
-            IntentId = IntentId;
+            IntentId = intentId;
         }
 
         public string IntentId { get; set; }
