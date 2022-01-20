@@ -30,7 +30,7 @@ namespace Palavyr.Core.Handlers
             currentMeta.TableTag = request.TableTag;
             currentMeta.TableType = request.TableType;
             currentMeta.TableId = request.TableId;
-            currentMeta.AreaIdentifier = request.AreaId;
+            currentMeta.AreaIdentifier = request.AreaIdentifier;
             currentMeta.ValuesAsPaths = request.ValueAsPaths;
             currentMeta.PrettyName = request.PrettyName;
 
@@ -53,7 +53,7 @@ namespace Palavyr.Core.Handlers
         public string TableType { get; set; }
         public string TableId { get; set; }
         public string AccountId { get; set; }
-        public string AreaId { get; set; }
+        public string AreaIdentifier { get; set; }
         public bool ValueAsPaths { get; set; }
         public string PrettyName { get; set; }
     }

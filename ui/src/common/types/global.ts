@@ -242,7 +242,7 @@ export type DynamicTableMeta = {
     tableType: string;
     tableId: string;
     accountId: string;
-    areaId: string;
+    areaIdentifier: string;
     valuesAsPaths: boolean;
     prettyName: string;
 };

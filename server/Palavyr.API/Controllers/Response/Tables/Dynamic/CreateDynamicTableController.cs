@@ -18,12 +18,6 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             this.mediator = mediator;
         }
 
-        // One controller for getting each table type. A separate call to get the type. Each table has a different
-        // structure, and thus a different type. So we can't return multiple types from the same controller without
-        // further generalization. This can be done later if its worth it. Adding a new controller for each type
-        // isn't that big of a deal since we'll only have dozens of types probably. If we make money, then we can switch
-        // to a generic pattern. Its just too complex to implement right now.
-
         [HttpPost(Route)]
         public async Task<DynamicTableMeta> Create(
             [FromRoute]
