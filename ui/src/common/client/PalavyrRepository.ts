@@ -139,7 +139,7 @@ export class PalavyrRepository {
 
                 modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta) => {
                     const response = this.client.put<DynamicTableMeta, {}>(`tables/dynamic/modify`, dynamicTableMeta);
-                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, dynamicTableMeta.areaId].join("-"));
+                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, dynamicTableMeta.areaIdentifier].join("-"));
                     return response;
                 },
 
