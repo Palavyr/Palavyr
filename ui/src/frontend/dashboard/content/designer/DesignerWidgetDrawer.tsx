@@ -97,6 +97,7 @@ const initializer = async (context: IAppContext, repository: PalavyrRepository) 
     render("CollectDetails", "Here is your details collector.", "6", "7", context, client);
     render("ProvideInfoWithPdfLink", "Here is your pdf link.", "7", "8", context, client);
     render("ProvideInfo", "Thanks so much for using Palavyr!", "8", "9", context, client);
+    render("TakeNumber", "Give us a number.", "9", "10", context, client);
 };
 
 export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawerProps) => {

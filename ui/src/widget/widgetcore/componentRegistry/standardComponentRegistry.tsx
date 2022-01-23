@@ -265,7 +265,8 @@ export class StandardComponents {
             const cls = useStyles(preferences);
 
             const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-                setResponse(parseNumericResponse(event.target.value));
+                const onlyNums = event.target.value.replace(/[^0-9]/g, "");
+                setResponse(onlyNums);
                 setDisabled(false);
             };
 
@@ -279,7 +280,7 @@ export class StandardComponents {
             return (
                 <BotResponse
                     message={node.text}
-                    input={<TextInput label="" type="number" inputPropsClassName={cls.textField} inputLabelPropsClassName={cls.textLabel} onChange={onChange} />}
+                    input={<TextInput value={response} label="" type="number" inputPropsClassName={cls.textField} inputLabelPropsClassName={cls.textLabel} onChange={onChange} />}
                     button={<ResponseButton disabled={disabled} onClick={onClick} />}
                 />
             );
@@ -388,6 +389,7 @@ export class StandardComponents {
                     message={node.text}
                     input={
                         <TextInput
+                            value={response}
                             inputPropsClassName={cls.textField}
                             inputLabelPropsClassName={cls.textLabel}
                             disabled={inputDisabled}
@@ -513,7 +515,6 @@ export class StandardComponents {
 
     makeRestart({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         return () => {
-            const { context } = useContext(WidgetContext);
 
             useEffect(() => {
                 (async () => {
