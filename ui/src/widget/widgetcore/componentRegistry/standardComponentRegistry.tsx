@@ -17,6 +17,7 @@ import { renderNextBotMessage } from "../BotResponse/utils/renderBotMessage";
 import { ChoiceList } from "@widgetcore/BotResponse/optionFormats/ChoiceList";
 import { MiniContactForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { CurrencyTextField } from "@widgetcore/BotResponse/numbers/CurrencyTextField";
+import { widgetSelection } from "@common/Analytics/gtag";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -72,13 +73,13 @@ export class StandardComponents {
                     setOpen(true);
                 }
                 loadAreas();
-                context.enableReset()
+                context.enableReset();
             }, [loadAreas]);
 
             const onChange = async (_: any, newOption: SelectedOption) => {
                 if (designer) return;
 
-                const newConversation = await client.Widget.Get.NewConversationHistory({IntentId: newOption.areaId, Name: context.name, Email: context.emailAddress });
+                const newConversation = await client.Widget.Get.NewConversationHistory({ IntentId: newOption.areaId, Name: context.name, Email: context.emailAddress });
                 const nodes = newConversation.conversationNodes;
                 const convoId = newConversation.conversationId;
                 const rootNode = getRootNode(nodes);
@@ -91,6 +92,8 @@ export class StandardComponents {
                 //
                 //
 
+                let secretKey = new URLSearchParams(location.search).get("key") as string;
+                widgetSelection(secretKey, newOption.areaDisplay, newOption.areaId);
                 renderNextBotMessage(context, rootNode, nodes, client, convoId);
             };
 
@@ -262,7 +265,8 @@ export class StandardComponents {
             const cls = useStyles(preferences);
 
             const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-                setResponse(parseNumericResponse(event.target.value));
+                const onlyNums = event.target.value.replace(/[^0-9]/g, "");
+                setResponse(onlyNums);
                 setDisabled(false);
             };
 
@@ -276,7 +280,7 @@ export class StandardComponents {
             return (
                 <BotResponse
                     message={node.text}
-                    input={<TextInput label="" type="number" inputPropsClassName={cls.textField} inputLabelPropsClassName={cls.textLabel} onChange={onChange} />}
+                    input={<TextInput value={response} label="" type="number" inputPropsClassName={cls.textField} inputLabelPropsClassName={cls.textLabel} onChange={onChange} />}
                     button={<ResponseButton disabled={disabled} onClick={onClick} />}
                 />
             );
@@ -385,6 +389,7 @@ export class StandardComponents {
                     message={node.text}
                     input={
                         <TextInput
+                            value={response}
                             inputPropsClassName={cls.textField}
                             inputLabelPropsClassName={cls.textLabel}
                             disabled={inputDisabled}
@@ -510,7 +515,6 @@ export class StandardComponents {
 
     makeRestart({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         return () => {
-            const { context } = useContext(WidgetContext);
 
             useEffect(() => {
                 (async () => {

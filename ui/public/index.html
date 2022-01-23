@@ -13,11 +13,18 @@
         rel="stylesheet" />
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=#{Palavyr.Google.Analytics.Configuration}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=#{PalavyrWidget.Google.Analytics}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         window.gtag = gtag;
+
         gtag('js', new Date());
+
+
+        gtag('config', '#{Palavyr.Google.Analytics.Configuration}', {send_page_view: true});
+        gtag('config', '#{PalavyrWidget.Google.Analytics}', {send_page_view: true});
+
     </script>
 
 
