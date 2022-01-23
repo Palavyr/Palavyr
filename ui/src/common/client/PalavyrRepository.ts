@@ -124,8 +124,8 @@ export class PalavyrRepository {
 
     public Configuration = {
         getEstimateConfiguration: async (intentId: string) => this.client.get<ResponseConfigurationType>(`response/configuration/${intentId}`),
-        updatePrologue: async (intentId: string, prologue: string) => this.client.put<string, {}>(`response/configuration/prologue`, { prologue: prologue, IntentId: intentId}),
-        updateEpilogue: async (intentId: string, epilogue: string) => this.client.put<string, {}>(`response/configuration/epilogue`, { epilogue: epilogue, IntentId: intentId}),
+        updatePrologue: async (intentId: string, prologue: string) => this.client.put<string, {}>(`response/configuration/prologue`, { prologue: prologue, IntentId: intentId }),
+        updateEpilogue: async (intentId: string, epilogue: string) => this.client.put<string, {}>(`response/configuration/epilogue`, { epilogue: epilogue, IntentId: intentId }),
 
         WidgetState: {
             GetWidgetState: async () => this.client.get<boolean>(`widget-config/widget-active-state`),
@@ -169,7 +169,7 @@ export class PalavyrRepository {
             },
             Static: {
                 updateStaticTablesMetas: async (intentId: string, staticTablesMetas: StaticTableMetas) =>
-                    this.client.put<StaticTableMetas, {}>(`response/configuration/static/tables/save`, {StaticTableMetaUpdate: staticTablesMetas, IntentId: intentId}),
+                    this.client.put<StaticTableMetas, {}>(`response/configuration/static/tables/save`, { StaticTableMetaUpdate: staticTablesMetas, IntentId: intentId }),
                 getStaticTablesMetaTemplate: async (intentId: string) => this.client.get<StaticTableMetaTemplate>(`response/configuration/${intentId}/static/tables/template`),
                 getStaticTableRowTemplate: async (areaIdentifier: string, tableOrder: number) =>
                     this.client.get<StaticTableRow>(`response/configuration/${areaIdentifier}/static/tables/${tableOrder}/row/template`),
@@ -284,7 +284,6 @@ export class PalavyrRepository {
             }
             return Promise.resolve(result);
         },
-
     };
 
     public WidgetDemo = {
@@ -337,8 +336,7 @@ export class PalavyrRepository {
             CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`),
         },
         EmailVerification: {
-            RequestEmailVerification: async (emailAddress: string, intentId: string) =>
-                this.client.post<EmailVerificationResponse, {}>(`verification/email`, { EmailAddress: emailAddress, IntentId: intentId}),
+            RequestEmailVerification: async (emailAddress: string, intentId: string) => this.client.post<EmailVerificationResponse, {}>(`verification/email`, { EmailAddress: emailAddress, IntentId: intentId }),
             CheckEmailVerificationStatus: async (emailAddress: string) => this.client.post<boolean, {}>(`verification/email/status`, { EmailAddress: emailAddress }),
         },
     };
