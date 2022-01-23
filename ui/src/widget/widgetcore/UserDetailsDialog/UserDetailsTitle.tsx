@@ -14,8 +14,7 @@ export const UserDetailsTitle = ({ paddingBottom, title, disablePadding }: IDial
         paddingBottom: paddingBottom ? (paddingBottom && disablePadding ? 0 : paddingBottom) : theme.spacing(2),
         paddingTop: disablePadding ? 0 : theme.spacing(2),
         width: "100%",
-        backgroundColor: "#1A3467",
-        color: theme.palette.common.white
+        color: theme.palette.common.black
     };
 
     if (disablePadding) {

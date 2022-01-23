@@ -30,7 +30,13 @@ const useStyles = makeStyles(theme => ({
         position: "absolute",
     },
     dialogBackgroundCollectionForm: {
-        backgroundColor: "rgba(255, 255, 255, 30)",
+        // backgroundColor: "rgba(255, 255, 255, 30)",
+        border: "none",
+        boxShadow: "none",
+        shadow: "none",
+        backgroundColor: theme.palette.info.main
+
+
         // zIndex: 9999,
     },
     dialogPaperCollectionForm: {
@@ -40,20 +46,36 @@ const useStyles = makeStyles(theme => ({
         alignItems: "center",
         paddingBottom: theme.spacing(3),
         maxWidth: 420,
-        backgroundColor: "rgba(255, 255, 255, 50)",
+        backgroundColor: theme.palette.info.main,
+        // backgroundColor: "rgba(255, 255, 255, 50)",
+        border: "none",
+        boxShadow: "none",
+        shadow: "none"
     },
     dialogPaperScrollPaperCollectionForm: {
         maxHeight: "none",
+        border: "none",
+        boxShadow: "none",
+        shadow: "none"
     },
     dialogContentCollectionForm: {
         paddingTop: 0,
         paddingBottom: 0,
+        border: "none",
+        boxShadow: "none",
+        shadow: "none"
     },
     buttonCollectionForm: {
         margin: "0.5rem",
         textAlign: "center",
         marginTop: "1.3rem",
+        border: "none",
+        boxShadow: "none",
+        shadow: "none"
     },
+    backgropPropsClassName: {
+        backgroundColor: theme.palette.info.main
+    }
 }));
 
 export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
@@ -63,7 +85,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     const [phonePattern, setphonePattern] = useState<string>("");
     const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
-    const { chatStarted, setChatStarted, convoId, context} = useContext(WidgetContext);
+    const { chatStarted, setChatStarted, convoId, context } = useContext(WidgetContext);
 
     useEffect(() => {
         (async () => {
@@ -99,42 +121,51 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     };
 
     return (
-        <Dialog
-            open={context.userDetailsVisible && chatStarted}
-            className={cls.baseDialogCollectionForm}
-            classes={{
-                root: cls.dialogBackgroundCollectionForm,
-                paper: cls.dialogPaperCollectionForm,
-                paperScrollPaper: cls.dialogPaperScrollPaperCollectionForm,
-            }}
-            disableBackdropClick
-            hideBackdrop={false}
-            disableEscapeKeyDown
-        >
-            <UserDetailsTitle title="Update your Contact Details" />
-            <DialogContent className={cls.dialogContentCollectionForm}>
-                <ContactForm
-                    disabled={false}
-                    localeOptions={options}
-                    onFormSubmit={onFormSubmit}
-                    formProps={{ ...formProps }}
-                    setDetailsSet={setDetailsSet}
-                    phonePattern={phonePattern}
-                    onChange={onChange}
-                    detailsSet={detailsSet}
-                    submitButton={
-                        <Button
-                            disabled={status === INVALID_PHONE || status === INVALID_EMAIL || status === INVALID_NAME}
-                            className={cls.buttonCollectionForm}
-                            endIcon={detailsSet && <CheckCircleOutlineIcon />}
-                            type="submit"
-                        >
-                            <Typography variant="h5">{chatStarted ? "Continue" : "Begin"}</Typography>
-                        </Button>
-                    }
-                />
-            </DialogContent>
-        </Dialog>
+        <>
+            {/* <video>
+                <source src="./public/background-gif.mp4" type="video/mp4" />
+            </video> */}
+
+            {/* <img src="./background-gif.mp4" alt="background" height={"100%"} width={"100%"} style={{ height: "100vh", width: "100%" }} /> */}
+            <Dialog
+                open={context.userDetailsVisible && chatStarted}
+                className={cls.baseDialogCollectionForm}
+                classes={{
+                    root: cls.dialogBackgroundCollectionForm,
+                    paper: cls.dialogPaperCollectionForm,
+                    paperScrollPaper: cls.dialogPaperScrollPaperCollectionForm,
+                    scrollPaper: cls.dialogPaperScrollPaperCollectionForm,
+                }}
+                BackdropProps={{ className: cls.backgropPropsClassName }}
+                disableBackdropClick
+                hideBackdrop={false}
+                disableEscapeKeyDown
+            >
+                <UserDetailsTitle title="Update your Contact Details" />
+                <DialogContent className={cls.dialogContentCollectionForm}>
+                    <ContactForm
+                        disabled={false}
+                        localeOptions={options}
+                        onFormSubmit={onFormSubmit}
+                        formProps={{ ...formProps }}
+                        setDetailsSet={setDetailsSet}
+                        phonePattern={phonePattern}
+                        onChange={onChange}
+                        detailsSet={detailsSet}
+                        submitButton={
+                            <Button
+                                disabled={status === INVALID_PHONE || status === INVALID_EMAIL || status === INVALID_NAME}
+                                className={cls.buttonCollectionForm}
+                                endIcon={detailsSet && <CheckCircleOutlineIcon />}
+                                type="submit"
+                            >
+                                <Typography variant="h5">{chatStarted ? "Continue" : "Begin"}</Typography>
+                            </Button>
+                        }
+                    />
+                </DialogContent>
+            </Dialog>
+        </>
     );
 };
 
