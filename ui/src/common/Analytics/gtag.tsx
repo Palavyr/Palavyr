@@ -10,7 +10,7 @@ export enum GTagEvents {
     WidgetSelection = "widget_selection",
 }
 
-export enum GragLabels {}
+export enum GTagLabels {}
 
 export const AppPageView = (url: string) => {
     window.gtag(GTagMethod.Event, GTagEvents.PageView, {
