@@ -17,6 +17,7 @@ import { renderNextBotMessage } from "../BotResponse/utils/renderBotMessage";
 import { ChoiceList } from "@widgetcore/BotResponse/optionFormats/ChoiceList";
 import { MiniContactForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { CurrencyTextField } from "@widgetcore/BotResponse/numbers/CurrencyTextField";
+import { widgetSelection } from "@common/Analytics/gtag";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -72,13 +73,13 @@ export class StandardComponents {
                     setOpen(true);
                 }
                 loadAreas();
-                context.enableReset()
+                context.enableReset();
             }, [loadAreas]);
 
             const onChange = async (_: any, newOption: SelectedOption) => {
                 if (designer) return;
 
-                const newConversation = await client.Widget.Get.NewConversationHistory({IntentId: newOption.areaId, Name: context.name, Email: context.emailAddress });
+                const newConversation = await client.Widget.Get.NewConversationHistory({ IntentId: newOption.areaId, Name: context.name, Email: context.emailAddress });
                 const nodes = newConversation.conversationNodes;
                 const convoId = newConversation.conversationId;
                 const rootNode = getRootNode(nodes);
@@ -91,6 +92,8 @@ export class StandardComponents {
                 //
                 //
 
+                let secretKey = new URLSearchParams(location.search).get("key") as string;
+                widgetSelection(secretKey, newOption.areaDisplay, newOption.areaId);
                 renderNextBotMessage(context, rootNode, nodes, client, convoId);
             };
 

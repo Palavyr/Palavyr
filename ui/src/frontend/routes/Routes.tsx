@@ -70,14 +70,14 @@ import { ActivityDashboardHelp } from "frontend/dashboard/content/help/DataDashb
 import { ToursPage } from "frontend/dashboard/content/welcome/OnboardingTour/tours/ToursPage";
 import { ToursPageHelp } from "frontend/dashboard/content/help/ToursPageHelp";
 import { WidgetDesignerPage } from "frontend/dashboard/content/designer/WidgetDesigner";
-import { pageview } from "@common/Analytics/gtag";
+import { AppPageView } from "@common/Analytics/gtag";
 import { IntentSettingsHelp } from "@frontend/dashboard/content/help/IntentSettingsHelp";
 import { SignupPage } from "@landing/SignupPage";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
         const location = useLocation();
-        pageview(location.pathname);
+        AppPageView(location.pathname);
         return (
             <AuthContext.Provider value={{ isActive: Auth.accountIsActive, isAuthenticated: Auth.accountIsAuthenticated }}>
                 <DashboardLayout helpComponent={helpComponent}>
@@ -89,8 +89,16 @@ const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Elem
     return ComponentWithHelp;
 };
 
-const withAreaTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => <IntentContent>{ContentComponent}</IntentContent>;
-const withSettingsTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => <SettingsContent>{ContentComponent}</SettingsContent>;
+const withAreaTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => {
+    const location = useLocation();
+    AppPageView(location.pathname);
+    return <IntentContent>{ContentComponent}</IntentContent>;
+};
+const withSettingsTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => {
+    const location = useLocation();
+    AppPageView(location.pathname);
+    return <SettingsContent>{ContentComponent}</SettingsContent>;
+};
 
 export const Routes = () => {
     return (
