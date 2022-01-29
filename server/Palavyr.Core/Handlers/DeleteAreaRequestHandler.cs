@@ -16,12 +16,12 @@ namespace Palavyr.Core.Handlers
 
         public async Task Handle(DeleteAreaRequest request, CancellationToken cancellationToken)
         {
-            await areaDeleter.DeleteArea(request.AreaId, cancellationToken);
+            await areaDeleter.DeleteArea(request.IntentId, cancellationToken);
         }
     }
 
     public class DeleteAreaRequest : INotification
     {
-        public string AreaId { get; set; }
+        public string IntentId { get; set; }
     }
 }

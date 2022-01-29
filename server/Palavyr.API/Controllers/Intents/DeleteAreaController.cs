@@ -23,7 +23,7 @@ namespace Palavyr.API.Controllers.Areas
             CancellationToken cancellationToken
         )
         {
-            await mediator.Send(request, cancellationToken);
+            await mediator.Publish(request, cancellationToken);
         }
     }
 }

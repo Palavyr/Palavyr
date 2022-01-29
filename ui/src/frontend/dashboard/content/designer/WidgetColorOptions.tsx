@@ -70,10 +70,10 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
                                     {picker.variable && (
                                         <>
                                             <Hidden lgUp>
-                                                <SketchPicker presetColors={colors} color={picker.variable} width={"130px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <SketchPicker disableAlpha presetColors={colors} color={picker.variable} width={"130px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                             <Hidden mdDown>
-                                                <SketchPicker presetColors={colors} color={picker.variable} width={"170px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <SketchPicker disableAlpha presetColors={colors} color={picker.variable} width={"170px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                         </>
                                     )}
@@ -95,10 +95,10 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
                                     {picker.variable && (
                                         <>
                                             <Hidden lgUp>
-                                                <SketchPicker presetColors={colors} color={picker.variable} width={"130px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <SketchPicker disableAlpha presetColors={colors} color={picker.variable} width={"130px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                             <Hidden mdDown>
-                                                <SketchPicker presetColors={colors} color={picker.variable} width={"170px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <SketchPicker disableAlpha presetColors={colors} color={picker.variable} width={"170px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                         </>
                                     )}
