@@ -1,5 +1,6 @@
 import { Category, Font, FONT_FAMILY_DEFAULT, FontManager, Options, OPTIONS_DEFAULTS, Script, SortOption, Variant } from "./fontManager";
-import React, { KeyboardEvent, PureComponent, ReactElement } from "react";
+import React, { ChangeEvent, KeyboardEvent, PureComponent, ReactElement } from "react";
+import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 
 type LoadingStatus = "loading" | "finished" | "error";
 
@@ -18,6 +19,7 @@ interface Props {
     filter: (font: Font) => boolean;
     limit: number;
     sort: SortOption;
+    className?: string;
 }
 
 interface State {
@@ -47,6 +49,7 @@ export default class FontPicker extends PureComponent<Props, State> {
         filter: OPTIONS_DEFAULTS.filter,
         limit: OPTIONS_DEFAULTS.limit,
         sort: OPTIONS_DEFAULTS.sort,
+        className: "",
     };
 
     state: Readonly<State> = {
@@ -220,15 +223,18 @@ export default class FontPicker extends PureComponent<Props, State> {
             fonts.sort((font1: Font, font2: Font): number => font1.family.localeCompare(font2.family));
         }
 
-        // Render font picker button and attach font list to it
         return (
-            <div id={`font-picker${this.fontManager.selectorSuffix}`} className={expanded ? "expanded" : ""}>
-                <button type="button" className="dropdown-button" onClick={this.toggleExpanded} onKeyPress={this.toggleExpanded}>
-                    <p className="dropdown-font-family">{activeFontFamily}</p>
-                    <p className={`dropdown-icon ${loadingStatus}`} />
-                </button>
-                {loadingStatus === "finished" && this.generateFontList(fonts)}
-            </div>
+            <PalavyrAutoComplete
+                label={activeFontFamily}
+                options={fonts}
+                shouldDisableSelect={false}
+                onChange={this.props.onChange}
+                groupby={(font: Font) => font.family.slice(0, 1).toUpperCase()}
+                getOptionLabel={(option: Font) => option.family}
+                getOptionSelected={(option: Font, value: Font) => option.family === value.family}
+                size="medium"
+                className={this.props.className && this.props.className}
+            />
         );
     };
 }

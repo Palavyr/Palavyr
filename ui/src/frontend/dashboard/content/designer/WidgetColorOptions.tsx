@@ -2,7 +2,7 @@ import React from "react";
 import { Hidden, makeStyles } from "@material-ui/core";
 import { SetState, WidgetPreferences } from "@Palavyr-Types";
 import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
-import { BlockPicker } from "react-color";
+import { SketchPicker } from "react-color";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { LineSpacer } from "@common/components/typography/LineSpacer";
 
@@ -24,8 +24,8 @@ export const widgetStyles = makeStyles(theme => ({
         flexDirection: "row",
         justifyContent: "space-between",
         paddingBottom: "4rem",
-        paddingLeft: "10%",
-        paddingRight: "10%",
+        paddingLeft: "8%",
+        paddingRight: "8%",
     },
 
     pickerTitle: {
@@ -70,10 +70,10 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
                                     {picker.variable && (
                                         <>
                                             <Hidden lgUp>
-                                                <BlockPicker colors={colors} color={picker.variable} width={"110px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <SketchPicker presetColors={colors} color={picker.variable} width={"130px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                             <Hidden mdDown>
-                                                <BlockPicker colors={colors} color={picker.variable} width={"150px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <SketchPicker presetColors={colors} color={picker.variable} width={"170px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                         </>
                                     )}
@@ -95,10 +95,10 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
                                     {picker.variable && (
                                         <>
                                             <Hidden lgUp>
-                                                <BlockPicker colors={colors} color={picker.variable} width={"110px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <SketchPicker presetColors={colors} color={picker.variable} width={"130px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                             <Hidden mdDown>
-                                                <BlockPicker colors={colors} color={picker.variable} width={"150px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <SketchPicker presetColors={colors} color={picker.variable} width={"170px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                         </>
                                     )}

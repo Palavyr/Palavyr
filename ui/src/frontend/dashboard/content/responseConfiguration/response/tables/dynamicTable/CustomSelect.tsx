@@ -89,9 +89,12 @@ export const CustomSelect = ({ toolTipTitle, disabled, onChange, option, options
         <FormControl fullWidth={fullWidth} className={classNames(cls.formControl, cls.form)} style={styles}>
             <Tooltip className={cls.toolTip} title={toolTipTitle ? toolTipTitle : ""} arrow placement="top-start">
                 <FormHelperText>
-                    <PalavyrText align="center" varient="body2">{helperText}</PalavyrText>
+                    <PalavyrText align="center" varient="body2">
+                        {helperText}
+                    </PalavyrText>
                 </FormHelperText>
             </Tooltip>
+
             <Select
                 disableUnderline
                 inputProps={{ className: cls.input }}

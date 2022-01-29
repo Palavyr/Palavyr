@@ -1,19 +1,22 @@
 import { CHAT_DEMO_LISTBOX_zINDEX } from "@constants";
 import { FormControl, FormHelperText, InputLabel, makeStyles, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
+import classNames from "classnames";
 import React from "react";
 
 export interface PalavyrAutoCompleteProps<T> {
     label: string;
     options: T[];
     shouldDisableSelect: boolean;
+    size?: "small" | "medium" | undefined;
+    className?: string;
     onChange: (event: any, option: T) => void;
     groupby?(option: T): string;
     getOptionLabel?(option: T): string;
     getOptionSelected?(option: T, value: T): boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     formControl: {
         minWidth: 120,
         width: "100%",
@@ -53,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const PalavyrAutoComplete = <T extends {}>({ label, options, shouldDisableSelect, onChange, groupby, getOptionLabel, getOptionSelected }: PalavyrAutoCompleteProps<T>) => {
+export const PalavyrAutoComplete = <T extends {}>({ label, options, shouldDisableSelect, onChange, groupby, getOptionLabel, getOptionSelected, size = "small", className }: PalavyrAutoCompleteProps<T>) => {
     const cls = useStyles();
     return (
         <div>
@@ -61,18 +64,18 @@ export const PalavyrAutoComplete = <T extends {}>({ label, options, shouldDisabl
                 <InputLabel id="autocomplete-label"></InputLabel>
                 {options && (
                     <Autocomplete
-                        size="small"
+                        size={size}
                         disabled={shouldDisableSelect}
                         getOptionSelected={getOptionSelected ? getOptionSelected : undefined}
                         disableClearable
                         clearOnEscape
-                        className={cls.autocomplete}
+                        className={classNames(cls.autocomplete, className)}
                         classes={{ root: cls.otherbox, popper: cls.popper }}
                         onChange={onChange}
                         options={options}
                         groupBy={groupby && groupby}
                         getOptionLabel={getOptionLabel}
-                        renderInput={(params) => <TextField {...params} InputLabelProps={{ className: cls.inputLabel }} className={cls.inputLabel} data-lpignore="true" label={label} />}
+                        renderInput={params => <TextField {...params} InputLabelProps={{ className: cls.inputLabel }} className={cls.inputLabel} data-lpignore="true" label={label} />}
                     />
                 )}
                 <FormHelperText className={cls.formControl}>Select</FormHelperText>
