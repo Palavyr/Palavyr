@@ -31,7 +31,7 @@ namespace Palavyr.API.Registration.Container
             var loggerFactory = new LoggerFactory().AddLambdaLogger();
             var logger = loggerFactory.CreateLogger<AmazonModule>();
             logger.LogDebug("LOGGING!");
-            //
+
             // logger.LogDebug("====================================");
             // Console.WriteLine("====================================");
             //

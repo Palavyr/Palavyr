@@ -1,3 +1,4 @@
+import { Font } from "@common/fonts/fontManager/types";
 import { DeSerializedImageMeta, RememberMe } from "@Palavyr-Types";
 
 class SessionStorageAccess {
@@ -135,6 +136,22 @@ class SessionStorageAccess {
                 fileId,
             })
         );
+    }
+
+    setFonts(fonts: Font[]) {
+        this._setItem("palavyr-fonts", JSON.stringify(fonts));
+    }
+
+    getFonts(): Font[] | null {
+        const serialized = this._getItem("palavyr-fonts");
+        if (serialized) {
+            return JSON.parse(serialized);
+        }
+        return null;
+    }
+
+    clearFonts() {
+        this._setItem("palavyr-fonts", "");
     }
 
     getImageData(imageId: string): DeSerializedImageMeta | null {

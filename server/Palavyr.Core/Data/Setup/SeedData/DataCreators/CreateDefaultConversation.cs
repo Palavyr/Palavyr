@@ -16,9 +16,9 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
         {
             var node1Id = StaticGuidUtils.CreateNewId(); // Do you love dogs?
             var node2Id = StaticGuidUtils.CreateNewId(); // No / Too Complicated
-            var node3Id = StaticGuidUtils.CreateNewId(); // Yes / Do you love cavvies?
+            var node3Id = StaticGuidUtils.CreateNewId(); // Yes / Do you love dogs?
             var node4Id = StaticGuidUtils.CreateNewId(); // No / Too Complicated
-            var node5Id = StaticGuidUtils.CreateNewId(); // Yes / What kind of Cavvy would you like?
+            var node5Id = StaticGuidUtils.CreateNewId(); // Yes / What kind of dog would you like?
             var node6Id = StaticGuidUtils.CreateNewId(); // SelectOneFlat
 
             return new List<ConversationNode>()
@@ -47,7 +47,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                 ),
                 DefaultNodeTypeOptions.CreateYesNo().MapNodeTypeOptionToConversationNode(
                     node3Id,
-                    "Do you love Cavvies?",
+                    "Do you love dogs?",
                     false,
                     TreeUtils.CreateNodeChildrenString(node4Id, node5Id),
                     DefaultNodeTypeOptions.YesNo.StringName,
@@ -59,7 +59,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
 
                 DefaultNodeTypeOptions.CreateTooComplicated().MapNodeTypeOptionToConversationNode(
                     node4Id,
-                    "How can you not love cavvies?? We MUST talk!",
+                    "How can you not love dogs!? We MUST talk!",
                     false,
                     "",
                     DefaultNodeTypeOptions.TooComplicated.StringName,
@@ -73,7 +73,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                 {
                     NodeId = node5Id,
                     AreaIdentifier = areaIdentifier,
-                    Text = "Which kind of cavvy do you prefer!",
+                    Text = "Which kind of dog do you prefer!",
                     IsRoot = false,
                     NodeChildrenString = node6Id,
                     NodeType = $"SelectOneFlat-{dynamicTableId}",

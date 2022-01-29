@@ -1,13 +1,16 @@
 import React, { useContext } from "react";
 import cn from "classnames";
 
-import "./styles.scss";
-import { Box, makeStyles } from "@material-ui/core";
+// import "./styles.scss";
+import { makeStyles } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
+
+import clss from "./Loader.module.scss";
 
 type Props = {
-    typing: boolean;
+    typing?: boolean;
 };
 
 const useStyles = makeStyles(theme => ({
@@ -17,9 +20,21 @@ const useStyles = makeStyles(theme => ({
         padding: "15px",
         maxWidth: "215px",
         textAlign: "left",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
     }),
     dotColor: (props: WidgetPreferences) => ({
-        backgroundColor: props.chatBubbleColor ? theme.palette.getContrastText(props.chatBubbleColor) : props.chatBubbleColor,
+        backgroundColor: theme.palette.getContrastText(props.chatBubbleColor),
+    }),
+    invisible: {
+        opacity: 0,
+    },
+    text: (props: WidgetPreferences) => ({
+        color: theme.palette.getContrastText(props.chatBubbleColor),
+        marginRight: ".5rem",
+        fontSize: ".8rem",
     }),
 }));
 
@@ -28,13 +43,16 @@ export const Loader = ({ typing }: Props) => {
     const cls = useStyles(preferences);
 
     return (
-        <div className={cn("loader", { active: typing })}>
-            <Box boxShadow={0} className={cls.loaderContainer}>
-                <i style={{fontSize: "10px", marginRight: ".5rem"}}>Typing</i>{"   "}
-                <span className={cn("loader-dots", cls.dotColor)}></span>
-                <span className={cn("loader-dots", cls.dotColor)}></span>
-                <span className={cn("loader-dots", cls.dotColor)}></span>
-            </Box>
+        <div className={cls.loaderContainer}>
+            <PalavyrText display="inline-block" className={cls.text}>
+                <i>
+                    Typing
+                    {"   "}
+                </i>
+            </PalavyrText>
+            <div className={cn(clss.dots, cls.dotColor)}></div>
+            <div className={cn(clss.dots, cls.dotColor)}></div>
+            <div className={cn(clss.dots, cls.dotColor)}></div>
         </div>
     );
 };

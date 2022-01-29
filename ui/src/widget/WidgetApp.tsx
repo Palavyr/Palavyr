@@ -8,6 +8,9 @@ import { CollectDetailsForm } from "@widgetcore/UserDetailsDialog/CollectDetails
 import { Widget } from "@widgetcore/widget/Widget";
 import { useAppContext } from "./hook";
 import { Dialog } from "@material-ui/core";
+import { FontManager, Options, OPTIONS_DEFAULTS, Variant } from "@common/fonts/fontManager";
+import { uuid } from "uuidv4";
+import { googleFontApikey } from "@api-client/clientUtils";
 
 export const WidgetApp = () => {
     const [chatStarted, setChatStarted] = useState<boolean>(false);
@@ -18,6 +21,7 @@ export const WidgetApp = () => {
     const isDemo = new URLSearchParams(useLocation().search).get("demo");
 
     const context = useAppContext();
+
     const Client = new PalavyrWidgetRepository(secretKey);
 
     const runAppPrecheck = useCallback(async () => {
@@ -41,6 +45,12 @@ export const WidgetApp = () => {
                 const prefs = await Client.Widget.Get.WidgetPreferences();
                 setIsReady(preCheckResult.isReady);
                 setWidgetPrefs(prefs);
+
+                // Initialize FontManager object
+                const fontManager = new FontManager(googleFontApikey, prefs.fontFamily, OPTIONS_DEFAULTS);
+                fontManager.init();
+
+                fontManager.setActiveFont(prefs.fontFamily);
             }
         })();
     }, [runAppPrecheck]);

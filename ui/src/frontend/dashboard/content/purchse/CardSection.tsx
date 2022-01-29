@@ -8,6 +8,7 @@ const CARD_ELEMENT_OPTIONS = {
             color: "#32325d",
             fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
             fontSmoothing: "antialiased",
+            "-webkit-font-smoothing": "antialiased",
             fontSize: "16px",
             "::placeholder": {
                 color: "#aab7c4",

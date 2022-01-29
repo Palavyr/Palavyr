@@ -36,6 +36,7 @@ export const landingWidgetApiKey = process.env.LANDING_WIDGET_APIKEY as string;
 export const googleYoutubeApikey = process.env.GOOGLE_YOUTUBE_KEY as string;
 export const googleAnalyticsTrackingId = process.env.GOOGLE_ANALYTICS_KEY as string;
 export const googleWidgetAnalyticsTrackingId = process.env.GOOGLE_ANALYTICS_WIDGET_KEY as string;
+export const googleFontApikey = process.env.GOOGLE_FONTS_APIKEY as string;
 
 export enum Environments {
     Development,
