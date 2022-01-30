@@ -10,6 +10,7 @@ export interface TextInputProps extends StandardTextFieldProps {
 export const TextInput = ({ inputPropsClassName, inputLabelPropsClassName, ...rest }: TextInputProps) => {
     return (
         <TextField
+            className={rest.className}
             InputProps={{
                 type: rest.type,
                 className: inputPropsClassName,

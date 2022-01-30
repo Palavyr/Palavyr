@@ -16,6 +16,10 @@ export interface IResponseButton {
 
 const useStyles = makeStyles(theme => ({
     button: (prefs: WidgetPreferences) => ({
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         color: prefs.buttonFontColor,
         borderRadius: "0px",
         backgroundColor: prefs.buttonColor,

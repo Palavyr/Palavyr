@@ -998,6 +998,7 @@ export type WidgetPreferences = {
     chatBubbleColor: string;
     buttonColor: string;
     buttonFontColor: string;
+    selectionLabel: string;
 };
 
 export type WidgetConversationUpdate = {

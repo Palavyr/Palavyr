@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { DialogTitle, Typography, Box, useTheme } from "@material-ui/core";
+import { WidgetContext } from "@widgetcore/context/WidgetContext";
 
 export interface IDialogTitleWithCloseIcon {
     title: string;
@@ -14,7 +15,7 @@ export const UserDetailsTitle = ({ paddingBottom, title, disablePadding }: IDial
         paddingBottom: paddingBottom ? (paddingBottom && disablePadding ? 0 : paddingBottom) : theme.spacing(2),
         paddingTop: disablePadding ? 0 : theme.spacing(2),
         width: "100%",
-        color: theme.palette.common.black
+        color: theme.palette.common.black,
     };
 
     if (disablePadding) {
@@ -29,7 +30,7 @@ export const UserDetailsTitle = ({ paddingBottom, title, disablePadding }: IDial
 
     return (
         <DialogTitle style={dialogTitleStyles} disableTypography>
-            <Box >
+            <Box>
                 <Typography align="center" variant="h5">
                     {title}
                 </Typography>

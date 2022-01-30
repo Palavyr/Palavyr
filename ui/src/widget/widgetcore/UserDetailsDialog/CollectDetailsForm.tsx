@@ -10,7 +10,7 @@ import { NameForm } from "./FormInputs/NameForm";
 import { EmailForm } from "./FormInputs/EmailForm";
 import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
-import { LocaleMap, LocaleResource, SetState } from "@Palavyr-Types";
+import { LocaleMap, LocaleResource, SetState, WidgetPreferences } from "@Palavyr-Types";
 import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
@@ -29,41 +29,35 @@ const useStyles = makeStyles(theme => ({
     baseDialogCollectionForm: {
         position: "absolute",
     },
-    dialogBackgroundCollectionForm: {
-        // backgroundColor: "rgba(255, 255, 255, 30)",
+    dialogBackgroundCollectionForm: (props: WidgetPreferences) => ({
         border: "none",
         boxShadow: "none",
         shadow: "none",
-        backgroundColor: theme.palette.info.main
-
-
-        // zIndex: 9999,
-    },
-    dialogPaperCollectionForm: {
-        // zIndex: 9999,
+        backgroundColor: props.chatBubbleColor,
+    }),
+    dialogPaperCollectionForm: (props: WidgetPreferences) => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         paddingBottom: theme.spacing(3),
         maxWidth: 420,
-        backgroundColor: theme.palette.info.main,
-        // backgroundColor: "rgba(255, 255, 255, 50)",
+        backgroundColor: props.chatBubbleColor,
         border: "none",
         boxShadow: "none",
-        shadow: "none"
-    },
+        shadow: "none",
+    }),
     dialogPaperScrollPaperCollectionForm: {
         maxHeight: "none",
         border: "none",
         boxShadow: "none",
-        shadow: "none"
+        shadow: "none",
     },
     dialogContentCollectionForm: {
         paddingTop: 0,
         paddingBottom: 0,
         border: "none",
         boxShadow: "none",
-        shadow: "none"
+        shadow: "none",
     },
     buttonCollectionForm: {
         margin: "0.5rem",
@@ -71,11 +65,11 @@ const useStyles = makeStyles(theme => ({
         marginTop: "1.3rem",
         border: "none",
         boxShadow: "none",
-        shadow: "none"
+        shadow: "none",
     },
     backgropPropsClassName: {
-        backgroundColor: theme.palette.info.main
-    }
+        backgroundColor: theme.palette.info.main,
+    },
 }));
 
 export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
@@ -85,7 +79,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     const [phonePattern, setphonePattern] = useState<string>("");
     const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
-    const { chatStarted, setChatStarted, convoId, context } = useContext(WidgetContext);
+    const { chatStarted, setChatStarted, convoId, context, preferences } = useContext(WidgetContext);
 
     useEffect(() => {
         (async () => {
@@ -96,7 +90,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
         })();
     }, []);
 
-    const cls = useStyles();
+    const cls = useStyles(preferences);
     const [status, setStatus] = useState<string | null>(null);
 
     const onChange = (event: any, newOption: LocaleResource) => {
@@ -182,7 +176,6 @@ export interface ContactFormProps {
 }
 
 export const ContactForm = ({ disabled, onFormSubmit, submitButton, localeOptions, formProps, setDetailsSet, phonePattern, onChange, detailsSet }: ContactFormProps) => {
-    const cls = useStyles();
     return (
         <form onSubmit={onFormSubmit}>
             <NameForm {...formProps} disabled={disabled} />
@@ -202,7 +195,6 @@ export interface MiniContactFormProps {
     disabled: boolean;
 }
 export const MiniContactForm = ({ disabled, onFormSubmit, setDetailsSet, submitButton, formProps }: MiniContactFormProps) => {
-    const cls = useStyles();
     return (
         <form onSubmit={onFormSubmit}>
             <NameForm {...formProps} disabled={disabled} />

@@ -51,7 +51,29 @@ const useStyles = makeStyles(theme => ({
             cursor: "pointer",
         },
     },
-
+    inputLabel: (props: WidgetPreferences) => ({
+        borderBottom: "1px solid " + props.chatFontColor,
+        fontFamily: props.fontFamily,
+        color: props.chatFontColor,
+        "& .MuiFormLabel-root": {
+            fontFamily: props.fontFamily,
+            color: props.chatFontColor,
+            fontSize: "10pt",
+            justifyContent: "center",
+        },
+        "& .MuiInputBase-input": {
+            color: props.chatFontColor,
+        },
+        "& .MuiInput-underline:before": {
+            borderBottomColor: props.chatFontColor, // Semi-transparent underline
+        },
+        "& .MuiInput-underline:hover:before": {
+            borderBottomColor: props.chatFontColor, // Solid underline on hover
+        },
+        "& .MuiInput-underline:after": {
+            borderBottomColor: props.chatFontColor, // Solid underline on focus
+        },
+    }),
 }));
 
 export class StandardComponents {
@@ -286,7 +308,7 @@ export class StandardComponents {
             return (
                 <BotResponse
                     message={node.text}
-                    input={<TextInput value={response} label="" type="number" inputPropsClassName={cls.textField} inputLabelPropsClassName={cls.textLabel} onChange={onChange} />}
+                    input={<TextInput className={cls.inputLabel} value={response} label="" type="number" inputPropsClassName={cls.textField} inputLabelPropsClassName={cls.textLabel} onChange={onChange} />}
                     button={<ResponseButton disabled={disabled} onClick={onClick} />}
                 />
             );
@@ -395,6 +417,7 @@ export class StandardComponents {
                     message={node.text}
                     input={
                         <TextInput
+                            className={cls.inputLabel}
                             value={response}
                             inputPropsClassName={cls.textField}
                             inputLabelPropsClassName={cls.textLabel}
@@ -437,6 +460,7 @@ export class StandardComponents {
                     message={node.text}
                     input={
                         <TextInput
+                            className={cls.inputLabel}
                             inputPropsClassName={cls.textField}
                             inputLabelPropsClassName={cls.textLabel}
                             disabled={inputDisabled}

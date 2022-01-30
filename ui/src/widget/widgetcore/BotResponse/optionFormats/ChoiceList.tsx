@@ -2,8 +2,10 @@ import { PopperProps, Popper, TextField, CircularProgress, makeStyles, Paper, Pa
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
 import { SelectedOption, SetState, WidgetPreferences } from "@Palavyr-Types";
 import classNames from "classnames";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 const useStyles = makeStyles(() => ({
     selectListBgColor: (prefs: WidgetPreferences) => ({
@@ -26,20 +28,41 @@ const useStyles = makeStyles(() => ({
     paper: {
         boxShadow: "none",
     },
-    inputLabel: (prefs: WidgetPreferences) => ({
-        fontFamily: prefs.fontFamily,
+    inputLabel: (props: WidgetPreferences) => ({
+        borderBottom: "1px solid " + props.chatFontColor,
+        fontFamily: props.fontFamily,
+        color: props.chatFontColor,
         "& .MuiFormLabel-root": {
-            fontFamily: prefs.fontFamily,
-            color: prefs.chatFontColor,
+            fontFamily: props.fontFamily,
+            color: props.chatFontColor,
             fontSize: "10pt",
+            justifyContent: "center",
+        },
+
+        "& .MuiInputBase-input": {
+            color: props.chatFontColor,
+        },
+        "& .MuiInput-underline:before": {
+            borderBottomColor: props.chatFontColor, // Semi-transparent underline
+        },
+        "& .MuiInput-underline:hover:before": {
+            borderBottomColor: props.chatFontColor, // Solid underline on hover
+        },
+        "& .MuiInput-underline:after": {
+            borderBottomColor: props.chatFontColor, // Solid underline on focus
         },
     }),
     listbox: (prefs: WidgetPreferences) => ({
+        color: prefs.chatFontColor,
         // the dropdown menu styles
         fontFamily: prefs.fontFamily,
         backgroundColor: prefs.selectListColor, // TODO: make customizable with new option
         padding: "0rem",
         boxShadow: "none",
+    }),
+
+    icon: (prefs: WidgetPreferences) => ({
+        color: prefs.chatFontColor,
     }),
 }));
 
@@ -60,8 +83,17 @@ const PopperComponent = ({ children, ...rest }: { children: React.ReactNode } & 
 export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open = false }: ChoiceListProps) => {
     const { preferences } = useContext(WidgetContext);
     const cls = useStyles(preferences);
-    const [label, setLabel] = useState<string>("What can I help you with today?");
+    const [label, setLabel] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (preferences && preferences.selectionLabel) {
+            // TODO: make this a preference in the server DBs
+            setLabel(preferences.selectionLabel);
+        } else {
+            setLabel("What can I help you with today?");
+        }
+    }, []);
 
     const PaperComponent = ({ children, ...rest }: { children: React.ReactNode } & PaperProps) => {
         return (
@@ -75,6 +107,8 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
         <>
             {options && (
                 <Autocomplete
+                    popupIcon={<ArrowDropDownIcon className={cls.icon} />}
+                    closeIcon={<ArrowDropUpIcon className={cls.icon} />}
                     disabled={disabled}
                     size="small"
                     open={open !== undefined ? open : true}
@@ -117,7 +151,7 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
                             InputProps={{
                                 ...params.InputProps,
                                 disableUnderline: true,
-                                style: { borderBottom: "1px solid black" },
+                                // style: { borderBottom: "1px solid black" },
                                 endAdornment: (
                                     <>
                                         {loading ? <CircularProgress color="inherit" size={20} /> : null}
