@@ -39,6 +39,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 
         public bool WidgetState { get; set; }
 
+        // public string SelectionLabel { get; set; }
+
         public WidgetPreference()
         {
         }
