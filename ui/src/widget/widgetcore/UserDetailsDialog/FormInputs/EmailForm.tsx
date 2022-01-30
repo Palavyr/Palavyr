@@ -1,4 +1,5 @@
-import { TextInput } from "@widgetcore/BotResponse/number/TextInput";
+import { makeStyles, TextField } from "@material-ui/core";
+import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import React, { Dispatch, SetStateAction, useContext } from "react";
 import { BaseFormProps } from "../CollectDetailsForm";
@@ -9,8 +10,41 @@ export interface EmailFormProps extends BaseFormProps {
     disabled: boolean;
 }
 
+const useStyles = makeStyles(theme => ({
+    input: (props: WidgetPreferences) => ({
+        border: "none",
+        // borderBottom: `1px solid ${props.chatFontColor}`,
+        color: props.chatFontColor,
+        "&:hover": {
+            border: "none",
+        },
+    }),
+    label: (props: WidgetPreferences) => ({
+        color: props.chatFontColor,
+        border: "none",
+        "&:hover": {
+            border: "none",
+        },
+    }),
+    helperText: (props: WidgetPreferences) => ({
+        color: props.chatFontColor,
+        border: "none",
+        "&:hover": {
+            border: "none",
+        },
+    }),
+    error: (props: WidgetPreferences) => ({
+        color: props.chatFontColor,
+        border: "none",
+        "&:hover": {
+            border: "none",
+        },
+    }),
+}));
+
 export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailFormProps) => {
     const {
+        preferences,
         context: { name, emailAddress, setEmailAddress, phoneNumber, setPhoneNumber },
     } = useContext(WidgetContext);
     const checkUserDetailsAreSet = () => {
@@ -27,11 +61,18 @@ export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailF
         return true;
     };
 
+    const cls = useStyles(preferences);
+
     return (
-        <TextInput
-            disabled={disabled}
+        <TextField
+            disabled={false}
             margin="normal"
             error={status === INVALID_EMAIL}
+            inputProps={{ className: cls.input }}
+            InputLabelProps={{ className: cls.label }}
+            InputProps={{ className: cls.input }}
+            FormHelperTextProps={{ error: true, className: cls.helperText }}
+            classes={{ root: cls.input }}
             required
             fullWidth
             value={emailAddress}
@@ -48,7 +89,7 @@ export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailF
                 }
             }}
             helperText={status === INVALID_EMAIL && "Email is not formatted."}
-            FormHelperTextProps={{ error: true }}
+            variant="standard"
         />
     );
 };

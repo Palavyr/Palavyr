@@ -4,7 +4,6 @@ import { SelectedOption, SetState, WidgetPreferences } from "@Palavyr-Types";
 import classNames from "classnames";
 import React, { useContext, useState } from "react";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
-// import Fade from "react-reveal/Fade";
 
 const useStyles = makeStyles(() => ({
     selectListBgColor: (prefs: WidgetPreferences) => ({
@@ -18,15 +17,10 @@ const useStyles = makeStyles(() => ({
     selectbox: {
         margin: "0px",
         padding: "0px",
-
-        // paddingLeft: "1rem",
-        // paddingRight: "1rem",
     },
     autocomplete: {
         padding: "0px",
         margin: "0px",
-
-        // paddingTop: "0rem",
     },
 
     paper: {
@@ -36,7 +30,7 @@ const useStyles = makeStyles(() => ({
         fontFamily: prefs.fontFamily,
         "& .MuiFormLabel-root": {
             fontFamily: prefs.fontFamily,
-            color: prefs.listFontColor,
+            color: prefs.chatFontColor,
             fontSize: "10pt",
         },
     }),
@@ -56,27 +50,24 @@ export interface ChoiceListProps {
     open?: boolean;
     setOpen: SetState<boolean> | null;
 }
+const PopperComponent = ({ children, ...rest }: { children: React.ReactNode } & PopperProps) => {
+    return (
+        <Popper popperOptions={{ placement: "bottom" }} style={{ boxShadow: "none" }} {...rest}>
+            {children}
+        </Popper>
+    );
+};
 export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open = false }: ChoiceListProps) => {
     const { preferences } = useContext(WidgetContext);
     const cls = useStyles(preferences);
     const [label, setLabel] = useState<string>("What can I help you with today?");
     const [loading, setLoading] = useState<boolean>(false);
 
-    const PopperComponent = ({ children, ...rest }: { children: React.ReactNode } & PopperProps) => {
-        return (
-            <Popper popperOptions={{ placement: "bottom" }} style={{ boxShadow: "none" }} {...rest}>
-                {children}
-            </Popper>
-        );
-    };
-
     const PaperComponent = ({ children, ...rest }: { children: React.ReactNode } & PaperProps) => {
         return (
-            <Fade in>
-                <Paper style={{ boxShadow: "none", backgroundColor: "white", margin: "0px", padding: "0px", marginTop: "0.3rem" }} {...rest}>
-                    {children}
-                </Paper>
-            </Fade>
+            <Paper style={{ boxShadow: "none", backgroundColor: cls.selectListBgColor, border: "1px solid lightgray", margin: "0px", padding: "0px", marginTop: "0.3rem" }} {...rest}>
+                {children}
+            </Paper>
         );
     };
 

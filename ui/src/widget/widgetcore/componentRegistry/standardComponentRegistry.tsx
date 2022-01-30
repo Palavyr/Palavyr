@@ -1,4 +1,4 @@
-import { assembleEmailRecordData, getOrderedChildNodes, getRootNode, MinNumeric, parseNumericResponse } from "../BotResponse/utils/utils";
+import { assembleEmailRecordData, getOrderedChildNodes, getRootNode, MinNumeric } from "../BotResponse/utils/utils";
 import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import { responseAction } from "@widgetcore/BotResponse/utils/responseAction";
