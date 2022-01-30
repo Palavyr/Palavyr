@@ -9,6 +9,9 @@ import { DesignerWidgetDrawer } from "./DesignerWidgetDrawer";
 import { FontSelector } from "./fonts/FontSelector";
 import { DesignChatHeader } from "./headers/ChatHeader";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
+import { FontManager, OPTIONS_DEFAULTS } from "@common/fonts/fontManager";
+import { googleFontApikey } from "@api-client/clientUtils";
+import { InitializeFonts } from "./fonts/Initializer";
 
 const drawerWidth = 440;
 
@@ -103,13 +106,20 @@ export const WidgetDesignerPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        // Initialize FontManager object
+        if (widgetPreferences) {
+            InitializeFonts(widgetPreferences);
+        }
+    }, [widgetPreferences]);
+
     return (
         <>
             {widgetPreferences && (
                 <div className={cls.root}>
                     <div className={cls.content}>
                         <div style={{ position: "fixed" }}>
-                            <Align direction={"flex-end"}>
+                            <Align direction="flex-end">
                                 <SaveOrCancel zIndex={3000} size="large" onSave={saveWidgetPreferences} />
                             </Align>
                         </div>

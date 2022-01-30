@@ -7,6 +7,8 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { SnackbarPositions } from "@Palavyr-Types";
+import { PalavyrText } from "./typography/PalavyrTypography";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 export type AlertMessage = {
     title: string;
@@ -92,41 +94,65 @@ export const SaveOrCancel = ({
         const anchorPosition = positionMap[position];
         setSnackPosition(anchorPosition);
     };
+
+    const onSaveClick = async (e: any) => {
+        setIsSaving(true);
+        setTimeout(async () => {
+            if (onSave) {
+                try {
+                    const res = await onSave(e);
+                    if (res === true || res === null) {
+                        setPosition();
+                        if (warningOpen) setWarningOpen(false);
+                        setSuccessText(customSaveMessage ?? "Save Successful");
+                        setSuccessOpen(true);
+                    } else {
+                        setPosition();
+                        setWarningText(customCancelMessage ?? "Cancelled");
+                        setWarningOpen(true);
+                    }
+                } catch {
+                    setIsSaving(false);
+                }
+            }
+            setIsSaving(false);
+        }, timeout);
+    };
+
+    const onCancelClick = async () => {
+        if (onCancel) {
+            setPosition();
+            await onCancel();
+            if (successOpen) setSuccessOpen(false);
+            setWarningText(customCancelMessage ?? "Cancelled");
+            setWarningOpen(true);
+        }
+    };
+
+    const onDeleteClick = async () => {
+        if (onDelete) {
+            setPosition();
+            await onDelete();
+            setWarningText("Delete Successful");
+            setWarningOpen(true);
+        }
+    };
+
     return (
         <>
             {
                 <Button
                     style={{ zIndex: zIndex }}
                     type={buttonType}
-                    startIcon={isSaving ? <CircularProgress size={20} /> : useSaveIcon ? <SaveIcon /> : <></>}
+                    startIcon={isSaving ? <CircularProgress size={20} /> : useSaveIcon ? <SaveIcon onClick={onSaveClick} style={{ background: "transparent" }} /> : <></>}
                     variant="outlined"
                     className={classNames(cls.button, cls.saveButton)}
-                    onClick={async e => {
-                        setIsSaving(true);
-                        setTimeout(async () => {
-                            if (onSave) {
-                                try {
-                                    const res = await onSave(e);
-                                    if (res === true || res === null) {
-                                        setPosition();
-                                        if (warningOpen) setWarningOpen(false);
-                                        setSuccessText(customSaveMessage ?? "Save Successful");
-                                        setSuccessOpen(true);
-                                    } else {
-                                        setPosition();
-                                        setWarningText(customCancelMessage ?? "Cancelled");
-                                        setWarningOpen(true);
-                                    }
-                                } catch {
-                                    setIsSaving(false);
-                                }
-                            }
-                            setIsSaving(false);
-                        }, timeout);
-                    }}
+                    onClick={onSaveClick}
                     size={size}
                 >
-                    {saveText}
+                    <PalavyrText onClick={onSaveClick} style={{ background: "transparent" }}>
+                        {saveText}
+                    </PalavyrText>
                 </Button>
             }
             {onCancel && (
@@ -134,33 +160,27 @@ export const SaveOrCancel = ({
                     style={{ zIndex: zIndex }}
                     variant="outlined"
                     className={classNames(cls.button, cls.cancelButton)}
-                    onClick={async () => {
-                        setPosition();
-                        await onCancel();
-                        if (successOpen) setSuccessOpen(false);
-                        setWarningText(customCancelMessage ?? "Cancelled");
-                        setWarningOpen(true);
-                    }}
+                    onClick={onCancelClick}
                     size={size}
+                    startIcon={<CancelIcon onClick={onCancelClick} className={classNames(cls.button, cls.cancelButton)} />}
                 >
-                    {cancelText}
+                    <PalavyrText onClick={onCancelClick} className={classNames(cls.button, cls.cancelButton)}>
+                        {cancelText}
+                    </PalavyrText>
                 </Button>
             )}
             {onDelete && (
                 <Button
                     style={{ zIndex: zIndex }}
-                    startIcon={<DeleteOutlineIcon />}
+                    startIcon={<DeleteOutlineIcon className={classNames(cls.button, cls.delButton)} onClick={onDeleteClick} />}
                     variant="outlined"
                     className={classNames(cls.button, cls.delButton)}
-                    onClick={async () => {
-                        setPosition();
-                        await onDelete();
-                        setWarningText("Delete Successful");
-                        setWarningOpen(true);
-                    }}
+                    onClick={onDeleteClick}
                     size={size}
                 >
-                    {deleteText}
+                    <PalavyrText onClick={onDeleteClick} className={classNames(cls.button, cls.delButton)}>
+                        {deleteText}
+                    </PalavyrText>
                 </Button>
             )}
         </>

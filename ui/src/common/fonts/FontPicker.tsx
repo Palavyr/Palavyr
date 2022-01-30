@@ -1,4 +1,4 @@
-import { Category, Font, FONT_FAMILY_DEFAULT, FontManager, Options, OPTIONS_DEFAULTS, Script, SortOption, Variant } from "./fontManager";
+import { Category, Font, DEFAULT_FONT_FAMILY, FontManager, Options, OPTIONS_DEFAULTS, Script, SortOption, Variant } from "./fontManager";
 import React, { ChangeEvent, KeyboardEvent, PureComponent, ReactElement } from "react";
 import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 
@@ -10,7 +10,7 @@ interface Props {
 
     // Optional props
     activeFontFamily: string;
-    onChange: (font: Font) => void;
+    onChange: (event: any, option: Font) => void;
     pickerId: string;
     families: string[];
     categories: Category[];
@@ -39,7 +39,7 @@ export default class FontPicker extends PureComponent<Props, State> {
     fontManager: FontManager;
 
     static defaultProps = {
-        activeFontFamily: FONT_FAMILY_DEFAULT,
+        activeFontFamily: DEFAULT_FONT_FAMILY,
         onChange: (): void => {}, // eslint-disable-line @typescript-eslint/no-empty-function
         pickerId: OPTIONS_DEFAULTS.pickerId,
         families: OPTIONS_DEFAULTS.families,

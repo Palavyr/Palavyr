@@ -5,8 +5,9 @@ import React, { useEffect, useState } from "react";
 import { googleFontApikey } from "@api-client/clientUtils";
 import FontPicker from "@common/fonts/FontPicker";
 import { cloneDeep } from "lodash";
-import { Options, OPTIONS_DEFAULTS } from "@common/fonts/fontManager";
+import { Font, Options, OPTIONS_DEFAULTS } from "@common/fonts/fontManager";
 import { makeStyles } from "@material-ui/core";
+import { getFontManager } from "./Initializer";
 
 export interface FontSelector {
     widgetPreferences: WidgetPreferences;
@@ -24,6 +25,7 @@ export const FontSelector = ({ widgetPreferences, setWidgetPreferences }: FontSe
     const [options, setOptions] = useState<Options>(OPTIONS_DEFAULTS);
     const [loaded, setLoaded] = useState<boolean>(false);
     const cls = useStyles();
+
     useEffect(() => {
         (async () => {
             setOptions(options);
@@ -32,6 +34,7 @@ export const FontSelector = ({ widgetPreferences, setWidgetPreferences }: FontSe
             } else {
                 setFont(widgetPreferences.fontFamily);
             }
+
             setLoaded(true);
         })();
     }, []);
@@ -49,8 +52,10 @@ export const FontSelector = ({ widgetPreferences, setWidgetPreferences }: FontSe
                         apiKey={googleFontApikey}
                         activeFontFamily={font}
                         className={cls.fontPicker}
-                        onChange={nextFont => {
+                        onChange={(event: any, nextFont: Font) => {
                             widgetPreferences.fontFamily = nextFont.family;
+                            const fontManager = getFontManager(widgetPreferences);
+                            fontManager.setActiveFont(nextFont.family);
                             setWidgetPreferences(cloneDeep(widgetPreferences));
                             setFont(nextFont.family);
                         }}

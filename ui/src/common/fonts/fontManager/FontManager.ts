@@ -2,7 +2,7 @@ import "./picker-styles/styles.scss";
 
 import getFontList from "./google-fonts/fontList";
 import { loadActiveFont, loadFontPreviews } from "./loadFonts";
-import { Font, FONT_FAMILY_DEFAULT, FontList, Options, OPTIONS_DEFAULTS } from "./types";
+import { Font, DEFAULT_FONT_FAMILY, FontList, Options, OPTIONS_DEFAULTS } from "./types";
 import { getFontId, validatePickerId } from "./utils/ids";
 import { Session } from "inspector";
 import { SessionStorage } from "@frontend/localStorage/sessionStorage";
@@ -18,7 +18,7 @@ export default class FontManager {
 
     private readonly options: Options;
 
-    private onChange: (font: Font) => void;
+    private onChange: (event: any, font: Font) => void;
 
     // Other class variables
 
@@ -38,7 +38,7 @@ export default class FontManager {
      */
     constructor(
         apiKey: string,
-        defaultFamily: string = FONT_FAMILY_DEFAULT,
+        defaultFamily: string = DEFAULT_FONT_FAMILY,
         {
             pickerId = OPTIONS_DEFAULTS.pickerId,
             families = OPTIONS_DEFAULTS.families,
@@ -50,7 +50,7 @@ export default class FontManager {
             sort = OPTIONS_DEFAULTS.sort,
         }: Options,
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onChange: (font: Font) => void = (): void => {}
+        onChange: (event: any, font: Font) => void = (event, font) => {}
     ) {
         // Validate pickerId parameter
         validatePickerId(pickerId);
@@ -130,7 +130,6 @@ export default class FontManager {
             } else {
                 // console.log("Skipping: " + font.family);
             }
-
         }
         // Download previews for all fonts in list except for default font (its full font has already
         // been downloaded)
@@ -200,7 +199,7 @@ export default class FontManager {
         this.activeFontFamily = fontFamily;
         loadActiveFont(activeFont, previousFontFamily, this.options.scripts, this.options.variants, this.selectorSuffix).then((): void => {
             if (runOnChange) {
-                this.onChange(activeFont);
+                this.onChange("", activeFont);
             }
         });
     }
@@ -208,7 +207,7 @@ export default class FontManager {
     /**
      * Update the onChange function (executed when changing the active font)
      */
-    public setOnChange(onChange: (font: Font) => void): void {
+    public setOnChange(onChange: (event: any, font: Font) => void): void {
         this.onChange = onChange;
     }
 }

@@ -67,7 +67,7 @@ export interface Font {
     files?: Record<Variant, string>; // Font file for each variant
 }
 
-export const FONT_FAMILY_DEFAULT = "Open Sans";
+export const DEFAULT_FONT_FAMILY = "Open Sans";
 
 export type FontList = Map<string, Font>;
 

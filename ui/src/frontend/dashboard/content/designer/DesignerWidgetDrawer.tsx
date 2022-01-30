@@ -2,7 +2,7 @@ import { Drawer, makeStyles, useTheme } from "@material-ui/core";
 import { WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { WidgetLayout } from "@widgetcore/widget/WidgetLayout";
-import React from "react";
+import React, { useEffect } from "react";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import classNames from "classnames";
 import PalavyrChatWidget from "palavyr-chat-widget";
@@ -15,6 +15,7 @@ import { useWindowDimensions } from "@common/hooks/useWindowDimensions";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { MessageTypes } from "@widgetcore/components/Messages/Messages";
 import { CSS_LINKER_and_NODE_TYPE } from "@widgetcore/BotResponse/utils/responseAction";
+import scrollToTop from "@common/utils/scrollToTop";
 
 const drawerWidth = 400;
 
@@ -126,6 +127,10 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
     } else {
         chatHeight = windowHeight;
     }
+
+    useEffect(() => {
+        scrollToTop();
+    }, []);
 
     return (
         <Drawer
