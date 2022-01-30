@@ -12,5 +12,6 @@ export const testWidgetPreferences = {
     chatFontColor: "#0C0C0C",
     chatBubbleColor: "#F4F4F4",
     buttonColor: "#8CCBE5",
-    buttonFontColor: "#0C0C0C"
+    buttonFontColor: "#0C0C0C",
+    sectionLabel: ""
 };
