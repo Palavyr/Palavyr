@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import format from "date-fns/format";
-import { UserMessageData } from "@Palavyr-Types";
+import { UserMessageData, WidgetPreferences } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import "./styles.scss";
+import { WidgetContext } from "@widgetcore/context/WidgetContext";
 
 const useStyles = makeStyles(theme => ({
-    timeStamp: {
+    timeStamp: (prefs: WidgetPreferences) => ({
         fontSize: "9px",
         borderTop: "1px dashed gray",
         float: "right",
         background: "none",
-    },
+        fontFamily: prefs.fontFamily,
+    }),
 }));
 
 export type MessageProps = {
@@ -21,8 +23,9 @@ export type MessageProps = {
 };
 
 // User Uses this message component
-export const UserMeess = ({ message, showTimeStamp = true }: MessageProps) => {
-    const cls = useStyles();
+export const UserMessage = ({ message, showTimeStamp = true }: MessageProps) => {
+    const { preferences } = useContext(WidgetContext);
+    const cls = useStyles(preferences);
     return (
         <div className="pca-user-response">
             <PalavyrText>{message.text}</PalavyrText>

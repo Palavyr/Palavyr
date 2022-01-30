@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import format from "date-fns/format";
 import { Link, makeStyles, Table, Typography } from "@material-ui/core";
 import classNames from "classnames";
 import { HtmlTextMessage } from "@widgetcore/BotResponse/HtmlTextMessage";
 import { SingleRowSingleCell } from "@widgetcore/BotResponse/TableCell";
 import Fade from "react-reveal/Fade";
+import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import { WidgetPreferences } from "@Palavyr-Types";
 
 const useStyles = makeStyles(theme => ({
     textField: {},
-    timeStamp: {
+    timeStamp: (props: WidgetPreferences) => ({
         fontSize: "9px",
         marginTop: "0.6rem",
         marginBottom: "0.6rem",
         borderTop: "1px dashed grey",
         float: "left",
         background: "none",
-    },
+        fontFamily: props.fontFamily,
+    }),
     container: {
         display: "flex",
         background: "none",
@@ -54,14 +57,14 @@ const useStyles = makeStyles(theme => ({
             borderRadius: "10px",
         },
     },
-    link: {
+    link: (props: WidgetPreferences) => ({
+        fontFamily: props.fontFamily,
         textDecoration: "none",
         textAlign: "center",
         "&:active": {
             textDecoration: "none",
         },
-
-    },
+    }),
 }));
 
 export interface BotResponseProps {
@@ -72,8 +75,9 @@ export interface BotResponseProps {
     pdfLink?: string | null;
 }
 
-export const BotResponse = ({ message, input, button, buttons, pdfLink = null}: BotResponseProps) => {
-    const cls = useStyles();
+export const BotResponse = ({ message, input, button, buttons, pdfLink = null }: BotResponseProps) => {
+    const { preferences } = useContext(WidgetContext);
+    const cls = useStyles(preferences);
     return (
         <div className={cls.container}>
             <div className={cls.marker} />

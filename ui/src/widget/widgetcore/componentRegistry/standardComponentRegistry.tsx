@@ -33,12 +33,14 @@ const useStyles = makeStyles(theme => ({
         textDecoration: "none",
         color: prefs.chatFontColor,
         borderColor: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
+        fontFamily: prefs.fontFamily,
     }),
     textLabel: (prefs: WidgetPreferences) => ({
         color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
         "&:focus": {
             color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
         },
+        fontFamily: prefs.fontFamily,
     }),
     image: {
         height: "100%",
@@ -49,6 +51,7 @@ const useStyles = makeStyles(theme => ({
             cursor: "pointer",
         },
     },
+
 }));
 
 export class StandardComponents {
@@ -58,6 +61,9 @@ export class StandardComponents {
             const [options, setOptions] = useState<Array<SelectedOption>>();
             const [disabled, setDisabled] = useState<boolean>(false);
             const [open, setOpen] = useState<boolean>(false);
+
+            const { preferences } = useContext(WidgetContext);
+            const cls = useStyles(preferences);
 
             const loadAreas = useCallback(async () => {
                 var areas = await client.Widget.Get.Areas();
@@ -515,7 +521,6 @@ export class StandardComponents {
 
     makeRestart({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         return () => {
-
             useEffect(() => {
                 (async () => {
                     if (designer) return;

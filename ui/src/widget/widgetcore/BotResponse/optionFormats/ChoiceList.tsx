@@ -9,8 +9,10 @@ import { WidgetContext } from "@widgetcore/context/WidgetContext";
 const useStyles = makeStyles(() => ({
     selectListBgColor: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.selectListColor,
+        fontFamily: prefs.fontFamily,
     }),
     selectListFontColor: (prefs: WidgetPreferences) => ({
+        fontFamily: prefs.fontFamily,
         color: prefs.listFontColor,
     }),
     selectbox: {
@@ -31,13 +33,16 @@ const useStyles = makeStyles(() => ({
         boxShadow: "none",
     },
     inputLabel: (prefs: WidgetPreferences) => ({
+        fontFamily: prefs.fontFamily,
         "& .MuiFormLabel-root": {
+            fontFamily: prefs.fontFamily,
             color: prefs.listFontColor,
             fontSize: "10pt",
         },
     }),
     listbox: (prefs: WidgetPreferences) => ({
         // the dropdown menu styles
+        fontFamily: prefs.fontFamily,
         backgroundColor: prefs.selectListColor, // TODO: make customizable with new option
         padding: "0rem",
         boxShadow: "none",

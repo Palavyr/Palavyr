@@ -11,7 +11,7 @@ export interface IResponseButton {
     text?: string;
     color?: PropTypes.Color;
     variant?: "outlined" | "contained";
-    type?: "button" | "submit"
+    type?: "button" | "submit";
 }
 
 const useStyles = makeStyles(theme => ({
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
         transion: "all ease-in-out 0.2s",
         border: "none",
         marginRight: "0.3rem",
-
+        fontFamily: prefs.fontFamily,
         "&:hover": {
             color: prefs.buttonFontColor,
             backgroundColor: prefs.buttonColor,
@@ -32,10 +32,6 @@ const useStyles = makeStyles(theme => ({
             border: "none",
         },
     }),
-    buttonFocus: (prefs: WidgetPreferences) => ({
-        // color: prefs.chatFontColor,
-        // borderColor: prefs.chatFontColor,
-    }),
 }));
 
 export const ResponseButton = ({ onClick, onSubmit, disabled = false, variant = "outlined", text = "Submit", type = "button" }: IResponseButton) => {
@@ -43,7 +39,7 @@ export const ResponseButton = ({ onClick, onSubmit, disabled = false, variant = 
 
     const cls = useStyles(preferences);
     return (
-        <Button type={type} disableElevation focusVisibleClassName={cls.buttonFocus} className={cls.button} disabled={disabled} variant={variant} size="small" onClick={onClick} onSubmit={onSubmit}>
+        <Button type={type} disableElevation className={cls.button} disabled={disabled} variant={variant} size="small" onClick={onClick} onSubmit={onSubmit}>
             {text}
         </Button>
     );

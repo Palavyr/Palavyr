@@ -6,7 +6,7 @@ import { ConvoContextProperties } from "@widgetcore/componentRegistry/registry";
 import { renderNextBotMessage } from "./renderBotMessage";
 import { setDynamicResponse } from "./setDynamicResponse";
 import { IAppContext } from "widget/hook";
-import { UserMeess } from "@widgetcore/components/Messages/components/Message/Message";
+import { UserMessage } from "@widgetcore/components/Messages/components/Message/Message";
 
 const WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN = 22;
 
@@ -106,7 +106,7 @@ export const CSS_LINKER_and_NODE_TYPE = {
 export const createUserResponseComponent = (text: string, id: string | null): UserMessageData => {
     return {
         type: "user",
-        component: UserMeess,
+        component: UserMessage,
         text,
         sender: CSS_LINKER_and_NODE_TYPE.USER,
         timestamp: new Date(),
