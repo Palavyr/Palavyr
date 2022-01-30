@@ -10,12 +10,14 @@ export interface IDialogTitleWithCloseIcon {
 
 export const UserDetailsTitle = ({ paddingBottom, title, disablePadding }: IDialogTitleWithCloseIcon) => {
     const theme = useTheme();
+    const { preferences } = useContext(WidgetContext);
 
     var dialogTitleStyles = {
         paddingBottom: paddingBottom ? (paddingBottom && disablePadding ? 0 : paddingBottom) : theme.spacing(2),
         paddingTop: disablePadding ? 0 : theme.spacing(2),
         width: "100%",
-        color: theme.palette.common.black,
+        color: preferences.chatFontColor,
+
     };
 
     if (disablePadding) {

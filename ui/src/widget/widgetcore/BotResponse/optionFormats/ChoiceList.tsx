@@ -56,7 +56,7 @@ const useStyles = makeStyles(() => ({
         color: prefs.chatFontColor,
         // the dropdown menu styles
         fontFamily: prefs.fontFamily,
-        backgroundColor: prefs.selectListColor, // TODO: make customizable with new option
+        backgroundColor: prefs.selectListColor, // TODO: make customizable with new  option
         padding: "0rem",
         boxShadow: "none",
     }),

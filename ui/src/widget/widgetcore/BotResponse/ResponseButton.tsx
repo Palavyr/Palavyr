@@ -23,10 +23,11 @@ const useStyles = makeStyles(theme => ({
         color: prefs.buttonFontColor,
         borderRadius: "0px",
         backgroundColor: prefs.buttonColor,
-        marginBottom: "0.4rem",
+        marginBottom: "0.7rem",
         transion: "all ease-in-out 0.2s",
         border: "none",
         marginRight: "0.3rem",
+
         fontFamily: prefs.fontFamily,
         "&:hover": {
             color: prefs.buttonFontColor,

@@ -59,17 +59,20 @@ const useStyles = makeStyles(theme => ({
         boxShadow: "none",
         shadow: "none",
     },
-    buttonCollectionForm: {
+    buttonCollectionForm: (props: WidgetPreferences) => ({
         margin: "0.5rem",
+
         textAlign: "center",
-        marginTop: "1.3rem",
+        marginTop: "2.0rem",
         border: "none",
         boxShadow: "none",
         shadow: "none",
-    },
-    backgropPropsClassName: {
-        backgroundColor: theme.palette.info.main,
-    },
+        color: props.buttonFontColor,
+        backgroundColor: props.buttonColor,
+    }),
+    backgropPropsClassName: (props: WidgetPreferences) => ({
+        backgroundColor: props.chatBubbleColor,
+    }),
 }));
 
 export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {

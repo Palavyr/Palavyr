@@ -21,6 +21,8 @@ const useStyles = makeStyles(theme => ({
     message: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.chatBubbleColor,
         overflowY: "hidden",
+        marginTop: ".6rem",
+        marginBottom: ".6rem"
     }),
     messageTubeContainer: (prefs: WidgetPreferences) => ({
         paddingTop: "2rem",

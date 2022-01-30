@@ -1,71 +1,35 @@
-import { makeStyles } from "@material-ui/core";
+import { TextInput } from "@common/components/TextField/TextInput";
+import { makeStyles, TextField } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
+import { TextInputProps } from "@widgetcore/BotResponse/number/TextInput";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import React, { useContext } from "react";
 import NumberFormat from "react-number-format";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserPhone, INVALID_PHONE } from "../UserDetailsCheck";
 
-const MASKCHAR = "_";
+const MASKCHAR = "#";
 
 export interface PhoneFormProps extends BaseFormProps {
     phonePattern: string;
 }
 
 const useStyles = makeStyles(theme => ({
-    phone: {
+    phone: (props: WidgetPreferences) => ({
         width: "100%",
-        marginTop: "2.3rem",
+        marginTop: "1.3rem",
+        color: props.chatFontColor,
         position: "relative",
         backgroundColor: "transparent",
         border: "none",
-        borderBottom: "1px solid gray",
         fontSize: 16,
         padding: "6px 6px 0.3px 0px",
         transition: theme.transitions.create(["border-color", "box-shadow"]),
         fontFamily: ["-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "Roboto", '"Helvetica Neue"', "Arial", "sans-serif", '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"'].join(","),
         "&:focus": {
-            borderBottom: "1px solid gray",
+            borderBottom: `1px solid ${props.chatFontColor}`,
             outline: "none",
         },
-    },
-
-    helperTextRoot: (props: WidgetPreferences) => ({
-        color: props.chatFontColor,
-        border: "none",
-        "&.Mui-error": {
-            color: props.chatFontColor,
-            border: "none",
-        },
-    }),
-    formHelperTextProps: (props: WidgetPreferences) => ({
-        color: props.chatFontColor,
-    }),
-    classesRoot: (props: WidgetPreferences) => ({
-        border: "none",
-    }),
-    inputProps: (props: WidgetPreferences) => ({
-        color: props.chatFontColor,
-    }),
-    InputLabelProps: (props: WidgetPreferences) => ({
-        color: props.chatFontColor,
-    }),
-    InputLabelPropsRoot: (props: WidgetPreferences) => ({
-        color: props.chatFontColor,
-        borderBottomColor: props.chatFontColor,
-        "&.Mui-focused": {
-            color: props.chatFontColor,
-            borderBottomColor: props.chatFontColor,
-        },
-        "&.Mui-error": {
-            color: props.chatFontColor,
-            borderBottomColor: props.chatFontColor,
-        },
-    }),
-    InputPropsClassName: (props: WidgetPreferences) => ({
-        color: props.chatFontColor,
-    }),
-    textField: (props: WidgetPreferences) => ({
         "&.Mui-error": {
             color: props.chatFontColor,
             borderBottomColor: props.chatFontColor,
@@ -99,17 +63,31 @@ const useStyles = makeStyles(theme => ({
             borderBottomColor: props.chatFontColor, // Solid underline on focus
         },
     }),
+    placeholder: (props: WidgetPreferences) => ({
+        color: props.chatFontColor,
+
+        "&::placeholder": {
+            color: props.chatFontColor,
+            fontStyle: "italic",
+        },
+    }),
 }));
+
+const CustomInput = (props: TextInputProps) => {
+    const { preferences } = useContext(WidgetContext);
+    const cls = useStyles(preferences);
+    return <TextInput {...props} placeholder="Phone number (optional)" InputProps={{ classes: { input: cls.placeholder } }} />;
+};
 
 export const PhoneForm = ({ phonePattern, status, setStatus }: PhoneFormProps) => {
     const { context, preferences } = useContext(WidgetContext);
     const cls = useStyles(preferences);
     return (
         <NumberFormat
+            customInput={CustomInput}
             style={status === INVALID_PHONE ? { border: "3px solid red" } : {}}
-            placeholder="Phone number (optional)"
             onError={() => setStatus(INVALID_PHONE)}
-            error={status === INVALID_PHONE ? "WOW" : ""}
+            error={status === INVALID_PHONE ? "Error" : ""}
             className={cls.phone}
             format={phonePattern}
             mask={MASKCHAR}
