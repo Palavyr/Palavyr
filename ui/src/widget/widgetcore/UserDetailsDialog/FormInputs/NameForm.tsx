@@ -46,9 +46,6 @@ const useStyles = makeStyles(theme => ({
     InputPropsClassName: (props: WidgetPreferences) => ({
         color: props.chatFontColor,
     }),
-    asterisk: (props: WidgetPreferences) => ({
-        color: props.chatFontColor,
-    }),
     textField: (props: WidgetPreferences) => ({
         "&.Mui-error": {
             color: props.chatFontColor,

@@ -11,33 +11,73 @@ export interface EmailFormProps extends BaseFormProps {
 }
 
 const useStyles = makeStyles(theme => ({
-    input: (props: WidgetPreferences) => ({
-        border: "none",
-        // borderBottom: `1px solid ${props.chatFontColor}`,
+    helperTextRoot: (props: WidgetPreferences) => ({
         color: props.chatFontColor,
-        "&:hover": {
+        border: "none",
+        "&.Mui-error": {
+            color: props.chatFontColor,
             border: "none",
         },
     }),
-    label: (props: WidgetPreferences) => ({
+    formHelperTextProps: (props: WidgetPreferences) => ({
         color: props.chatFontColor,
+    }),
+    classesRoot: (props: WidgetPreferences) => ({
         border: "none",
-        "&:hover": {
-            border: "none",
+    }),
+    inputProps: (props: WidgetPreferences) => ({
+        color: props.chatFontColor,
+    }),
+    InputLabelProps: (props: WidgetPreferences) => ({
+        color: props.chatFontColor,
+    }),
+    InputLabelPropsRoot: (props: WidgetPreferences) => ({
+        color: props.chatFontColor,
+        borderBottomColor: props.chatFontColor,
+        "&.Mui-focused": {
+            color: props.chatFontColor,
+            borderBottomColor: props.chatFontColor,
+        },
+        "&.Mui-error": {
+            color: props.chatFontColor,
+            borderBottomColor: props.chatFontColor,
         },
     }),
-    helperText: (props: WidgetPreferences) => ({
+    InputPropsClassName: (props: WidgetPreferences) => ({
         color: props.chatFontColor,
-        border: "none",
-        "&:hover": {
-            border: "none",
-        },
     }),
-    error: (props: WidgetPreferences) => ({
-        color: props.chatFontColor,
-        border: "none",
-        "&:hover": {
-            border: "none",
+    textField: (props: WidgetPreferences) => ({
+        "&.Mui-error": {
+            color: props.chatFontColor,
+            borderBottomColor: props.chatFontColor,
+        },
+        "&.MuiFormHelperText": {
+            color: props.chatFontColor,
+            borderBottomColor: props.chatFontColor,
+        },
+        "&.MuiFormHelperText-root": {
+            color: props.chatFontColor,
+            borderBottomColor: props.chatFontColor,
+        },
+        "&.MuiInputBase-input:invalid": {
+            color: props.chatFontColor,
+        },
+        "&.focus": {
+            color: props.chatFontColor,
+            borderBottomColor: props.chatFontColor,
+        },
+
+        "& .MuiInputBase-input": {
+            color: props.chatFontColor,
+        },
+        "& .MuiInput-underline:before": {
+            borderBottomColor: props.chatFontColor, // Semi-transparent underline
+        },
+        "& .MuiInput-underline:hover:before": {
+            borderBottomColor: props.chatFontColor, // Solid underline on hover
+        },
+        "& .MuiInput-underline:after": {
+            borderBottomColor: props.chatFontColor, // Solid underline on focus
         },
     }),
 }));
@@ -45,7 +85,7 @@ const useStyles = makeStyles(theme => ({
 export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailFormProps) => {
     const {
         preferences,
-        context: { name, emailAddress, setEmailAddress, phoneNumber, setPhoneNumber },
+        context: { name, emailAddress, setEmailAddress, setPhoneNumber },
     } = useContext(WidgetContext);
     const checkUserDetailsAreSet = () => {
         const userNameResult = checkUserName(name, setStatus);
@@ -68,11 +108,15 @@ export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailF
             disabled={false}
             margin="normal"
             error={status === INVALID_EMAIL}
-            inputProps={{ className: cls.input }}
-            InputLabelProps={{ className: cls.label }}
-            InputProps={{ className: cls.input }}
-            FormHelperTextProps={{ error: true, className: cls.helperText }}
-            classes={{ root: cls.input }}
+            className={cls.textField}
+            inputProps={{ className: cls.inputProps }}
+            InputLabelProps={{
+                className: cls.InputLabelProps,
+                classes: { root: cls.InputLabelPropsRoot },
+            }}
+            InputProps={{ className: cls.InputPropsClassName }}
+            FormHelperTextProps={{ error: true, className: cls.formHelperTextProps, classes: { root: cls.helperTextRoot } }}
+            classes={{ root: cls.classesRoot }}
             required
             fullWidth
             value={emailAddress}
