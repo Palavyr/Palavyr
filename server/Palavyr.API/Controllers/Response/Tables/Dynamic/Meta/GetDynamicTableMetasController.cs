@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
         }
 
         [HttpGet(Route)]
-        public async Task<DynamicTableMeta[]> Get(string intentId, CancellationToken cancellationToken)
+        public async Task<DynamicTableMetaResource[]> Get(string intentId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetDynamicTableMetasRequest(intentId), cancellationToken);
             return response.Response;

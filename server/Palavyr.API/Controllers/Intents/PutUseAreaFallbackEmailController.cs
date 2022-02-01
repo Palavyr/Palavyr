@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers;
 using Palavyr.Core.Repositories;
 
-namespace Palavyr.API.Controllers.Areas
+namespace Palavyr.API.Controllers.Intents
 {
 
     public class PutUseAreaFallbackEmailController : PalavyrBaseController

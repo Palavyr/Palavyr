@@ -6,6 +6,7 @@ import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
+import { UnitInput } from "../../components/UnitInput";
 
 type StyleProps = {
     isTrue: boolean;
@@ -66,19 +67,19 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier }: IBasic
                 )}
             </TableCell>
             <TableCell align={cellAlignment}>
-                <CurrencyTextField
+                <UnitInput
+                    unitType={}
+                    unitId={}
+                    unitHelperText={}
                     disabled={rowIndex === 0}
                     label="Threshold"
                     value={row.threshold}
                     currencySymbol={currencySymbol}
-                    minimumValue="0"
-                    decimalCharacter="."
-                    digitGroupSeparator=","
                     onBlur={() => {
                         modifier.reorderThresholdData(tableData);
                         modifier.setTables(tableData);
                     }}
-                    onValueChange={(values: NumberFormatValues) => {
+                    onCurrencyChange={(values: NumberFormatValues) => {
                         if (values.floatValue !== undefined) {
                             modifier.setThresholdValue(tableData, row.rowId, values.floatValue);
                         }

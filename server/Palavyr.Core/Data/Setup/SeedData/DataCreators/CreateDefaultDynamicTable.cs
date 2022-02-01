@@ -34,7 +34,8 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     DynamicTableTypes.DefaultTable.TableType,
                     tableId,
                     areaIdentifier,
-                    accountId),
+                    accountId,
+                    UnitIds.Currency),
             };
             return dynamicTableMetas;
         }

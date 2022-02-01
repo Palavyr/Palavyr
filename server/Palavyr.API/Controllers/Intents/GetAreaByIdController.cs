@@ -8,7 +8,7 @@ using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.EmailService.Verification;
 
-namespace Palavyr.API.Controllers.Areas
+namespace Palavyr.API.Controllers.Intents
 {
     // TODO: Wtf is going on in this controller. This must be really old.
     // I Don't think this is even being used any more by the client.

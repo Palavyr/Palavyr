@@ -40,7 +40,8 @@ namespace Palavyr.Core.Handlers
                 DynamicTableTypes.DefaultTable.TableType,
                 tableId,
                 request.IntentId,
-                accountIdHolder.AccountId);
+                accountIdHolder.AccountId,
+                UnitIds.Currency);
 
             dynamicTables.Add(newTableMeta);
             area.DynamicTableMetas = dynamicTables;

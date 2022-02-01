@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Repositories;
 
-namespace Palavyr.API.Controllers.Areas
+namespace Palavyr.API.Controllers.Intents
 {
     public class ModifySendResponsePdfController : PalavyrBaseController
     {

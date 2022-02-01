@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers.Areas
+namespace Palavyr.API.Controllers.Intents
 {
     public class CreateAreaController : PalavyrBaseController
     {

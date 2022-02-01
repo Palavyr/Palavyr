@@ -20,7 +20,7 @@ namespace Palavyr.Core.Services.DynamicTableService
 
         protected async Task<List<TEntity>> GetTableRows(DynamicTableMeta dynamicTableMeta)
         {
-            var (accountId, areaId, tableId) = dynamicTableMeta;
+            var (areaId, tableId) = dynamicTableMeta;
             var rows = await repository.GetAllRows(areaId, tableId);
 
             var indexArray = new List<int> { };

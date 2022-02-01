@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 
-namespace Palavyr.API.Controllers.Areas
+namespace Palavyr.API.Controllers.Intents
 {
     [Authorize]
 

@@ -8,7 +8,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 {
     public class DynamicTableMeta : ITable
     {
-        [Key] public int? Id { get; set; }
+        [Key]
+        public int? Id { get; set; }
+
         public string TableTag { get; set; }
         public string PrettyName { get; set; }
         public string TableType { get; set; }
@@ -17,15 +19,16 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public string AreaIdentifier { get; set; }
         public bool ValuesAsPaths { get; set; } = false; // for tables that specify various options, whether or not to use each option to create a new tree path.
         public bool UseTableTagAsResponseDescription { get; set; } = false;
-        
-        
+        public UnitIds UnitId { get; set; }
+
         public static DynamicTableMeta CreateNew(
             string tableTag,
             string prettyName,
             string tableType,
             string tableId,
             string areaId,
-            string accountId
+            string accountId,
+            UnitIds unitId
         )
         {
             return new DynamicTableMeta()
@@ -36,6 +39,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 AreaIdentifier = areaId,
                 AccountId = accountId,
                 PrettyName = prettyName,
+                UnitId = unitId
             };
         }
 
@@ -46,16 +50,16 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 CreateNew(
                     "default",
                     DynamicTableTypes.DefaultTable.PrettyName,
-                    DynamicTableTypes.DefaultTable.TableType, 
-                    Guid.NewGuid().ToString(), 
-                    areaId, 
-                    accountId)
+                    DynamicTableTypes.DefaultTable.TableType,
+                    Guid.NewGuid().ToString(),
+                    areaId,
+                    accountId,
+                    UnitIds.Currency)
             };
         }
 
-        public void Deconstruct(out string accountId, out string areaId, out string tableId)
+        public void Deconstruct(out string areaId, out string tableId)
         {
-            accountId = AccountId;
             areaId = AreaIdentifier;
             tableId = TableId;
         }

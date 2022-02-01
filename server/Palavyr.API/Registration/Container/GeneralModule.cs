@@ -9,6 +9,7 @@ using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Handlers;
 using Palavyr.Core.Models;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Models.Resources.Responses;
@@ -34,6 +35,7 @@ using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.TemporaryPaths;
+using Palavyr.Core.Services.Units;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Registration.Container
@@ -127,9 +129,9 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ResponseRetriever>().As<IResponseRetriever>().InstancePerDependency();
             
             builder.RegisterType<CurrentLocaleAndLocalMapRetriever>().As<ICurrentLocaleAndLocalMapRetriever>().InstancePerLifetimeScope();
-            
-            
-            
+
+            builder.RegisterType<Units>().AsSelf().SingleInstance();
+            builder.RegisterType<UnitRetriever>().As<IUnitRetriever>().InstancePerLifetimeScope();
             
             
             

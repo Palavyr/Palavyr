@@ -62,6 +62,29 @@ export type AreaMeta = {
     areaName: string;
 };
 
+export enum UnitTypes {
+
+    Length = "length",
+    Area = "area",
+    Weight = "weight",
+    Currency = "currency",
+}
+export enum UnitIds {
+    Meter = "m",
+    Foot = "ft",
+    SquareMeters = "m^2",
+    SquareFeet = "f^2",
+    Grams = "g",
+    KiloGrams = "kg",
+    Pounds = "lbs",
+    Tons = "tons",
+}
+
+export type UnitDefinition = {
+    UnitType: UnitTypes
+    UnitId: UnitIds;
+}
+
 // Client
 export type GroupNodeType = {
     text: string;
@@ -245,6 +268,8 @@ export type DynamicTableMeta = {
     areaIdentifier: string;
     valuesAsPaths: boolean;
     prettyName: string;
+    unitId: UnitIds;
+    unitType: UnitTypes;
 };
 
 export type DynamicTableMetas = Array<DynamicTableMeta>;
