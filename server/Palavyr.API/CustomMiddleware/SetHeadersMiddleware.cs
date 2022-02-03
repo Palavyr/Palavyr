@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Repositories;
-using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.CustomMiddleware

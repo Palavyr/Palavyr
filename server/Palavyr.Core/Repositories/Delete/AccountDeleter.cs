@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -15,7 +14,6 @@ namespace Palavyr.Core.Repositories.Delete
         private readonly StripeCustomerService stripeCustomerService;
         private readonly ILogger<AccountDeleter> logger;
         private readonly IHoldAnAccountId accountIdHolder;
-        private readonly CancellationTokenTransport cancellationTokenTransport;
 
         public AccountDeleter(
             AccountsContext accountsContext,
@@ -24,7 +22,7 @@ namespace Palavyr.Core.Repositories.Delete
             ILogger<AccountDeleter> logger,
             IGuidUtils guidUtils,
             IHoldAnAccountId accountIdHolder,
-            CancellationTokenTransport cancellationTokenTransport
+            ITransportACancellationToken cancellationTokenTransport
         )
             : base(accountsContext, logger, removeStaleSessions, guidUtils, accountIdHolder, cancellationTokenTransport)
         {
@@ -32,7 +30,6 @@ namespace Palavyr.Core.Repositories.Delete
             this.stripeCustomerService = stripeCustomerService;
             this.logger = logger;
             this.accountIdHolder = accountIdHolder;
-            this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
         public async Task DeleteAccount()

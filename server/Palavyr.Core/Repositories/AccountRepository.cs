@@ -25,9 +25,8 @@ namespace Palavyr.Core.Repositories
             this.logger = logger;
             this.removeStaleSessions = removeStaleSessions;
             this.guidUtils = guidUtils;
-            this.ctTransport = cancellationToken;
+            ctTransport = cancellationToken;
             AccountIdHolder = accountIdHolder;
-            
         }
 
         public async Task CommitChangesAsync()
@@ -53,7 +52,7 @@ namespace Palavyr.Core.Repositories
             return await accountsContext.Accounts.SingleOrDefaultAsync(row => row.EmailAddress == emailAddress, ctTransport.CancellationToken);
         }
 
-        public async Task<Account> GetAccountByEmailAddressOrNull(string emailAddress)
+        public async Task<Account?> GetAccountByEmailAddressOrNull(string emailAddress)
         {
             logger.LogInformation($"Retrieving user account by email: {emailAddress}");
             return await accountsContext.Accounts.SingleOrDefaultAsync(row => row.EmailAddress == emailAddress, ctTransport.CancellationToken);

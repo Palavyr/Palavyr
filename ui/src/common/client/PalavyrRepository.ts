@@ -129,7 +129,7 @@ export class PalavyrRepository {
         updateEpilogue: async (intentId: string, epilogue: string) => this.client.put<string, {}>(`response/configuration/epilogue`, { epilogue: epilogue, IntentId: intentId }),
 
         Units: {
-            GetSupportedUnitIds: async () => this.client.get<QuantUnitDefinition[]>(`configuration/unit-types`)//, CacheIds.SupportedUnitIds),
+            GetSupportedUnitIds: async () => this.client.get<QuantUnitDefinition[]>(`configuration/unit-types`), //, CacheIds.SupportedUnitIds),
         },
 
         WidgetState: {
@@ -303,6 +303,8 @@ export class PalavyrRepository {
         },
 
         Account: {
+            CancelRegistration: async (emailAddress: string) => this.client.post<{}, {}>("account/cancel-registration", { EmailAddress: emailAddress }),
+
             getApiKey: async () => this.client.get<string>(`account/settings/api-key`),
             confirmEmailAddress: async (authToken: string) => this.client.post<boolean, {}>(`account/confirmation/${authToken}/action/setup`),
             resendConfirmationToken: async (emailAddress: string) => this.client.post<boolean, {}>(`account/confirmation/token/resend`, { EmailAddress: emailAddress }),
