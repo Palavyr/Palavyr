@@ -67,12 +67,11 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier }: IBasic
                 )}
             </TableCell>
             <TableCell align={cellAlignment}>
-                <UnitInput
-                    unitType={}
-                    unitId={}
-                    unitHelperText={}
+                <CurrencyTextField
                     disabled={rowIndex === 0}
                     label="Threshold"
+                    decimalCharacter="."
+                    digitGroupSeparator=","
                     value={row.threshold}
                     currencySymbol={currencySymbol}
                     onBlur={() => {
