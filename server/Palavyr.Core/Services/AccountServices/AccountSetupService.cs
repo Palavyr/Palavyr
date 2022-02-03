@@ -1,18 +1,13 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
-using Palavyr.Core.Exceptions;
-using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Models.Resources.Requests.Registration;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.AccountServices
 {
@@ -25,6 +20,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IJwtAuthenticationService jwtAuthService;
         private readonly IGuidUtils guidUtils;
         private readonly IAccountRegistrationMaker accountRegistrationMaker;
+        private readonly IHoldAnAccountId accountIdHolder;
 
 
         private const string CouldNotValidateGoogleAuthToken = "Could not validate the Google Authentication token";
@@ -36,11 +32,10 @@ namespace Palavyr.Core.Services.AccountServices
             AccountsContext accountsContext,
             INewAccountUtils newAccountUtils,
             ILogger<AuthService> logger,
-            IAuthService authService,
             IJwtAuthenticationService jwtService,
-            StripeCustomerService stripeCustomerService,
             IGuidUtils guidUtils,
-            IAccountRegistrationMaker accountRegistrationMaker
+            IAccountRegistrationMaker accountRegistrationMaker,
+            IHoldAnAccountId accountIdHolder
         )
         {
             this.dashContext = dashContext;
@@ -50,6 +45,7 @@ namespace Palavyr.Core.Services.AccountServices
             jwtAuthService = jwtService;
             this.guidUtils = guidUtils;
             this.accountRegistrationMaker = accountRegistrationMaker;
+            this.accountIdHolder = accountIdHolder;
         }
 
         private string CreateNewJwtToken(Account account)
@@ -78,6 +74,8 @@ namespace Palavyr.Core.Services.AccountServices
             // Add the new account
             logger.LogDebug("Creating a new account");
             var accountId = newAccountUtils.GetNewAccountId();
+            accountIdHolder.Assign(accountId);
+            
             var apiKey = guidUtils.CreateNewId();
             var account = Account.CreateAccount(
                 emailAddress,
