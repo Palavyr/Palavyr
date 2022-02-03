@@ -46,11 +46,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: DynamicTableProps) => {
+export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tableTag, tableRows, setTableRows, areaIdentifier, deleteAction }: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
-    const modifier = new SelectOneFlatModifier(setTableData);
+    const modifier = new SelectOneFlatModifier(setTableRows);
 
     const useOptionsAsPathsOnChange = async (event: { target: { checked: boolean } }) => {
         tableMeta.valuesAsPaths = event.target.checked;
@@ -58,27 +58,27 @@ export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tab
     };
 
     const onSave = async () => {
-        const result = modifier.validateTable(tableData);
+        const result = modifier.validateTable(tableRows);
 
         if (result) {
             const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
-            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<SelectOneFlatModifier[]>(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<SelectOneFlatModifier[]>(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableRows, tableId, tableTag);
             setTableMeta(newTableMeta);
-            setTableData(savedData);
+            setTableRows(savedData);
             return true;
         } else {
             return false;
         }
     };
 
-    const addOptionOnClick = () => modifier.addOption(tableData, repository, areaIdentifier, tableId);
+    const addOptionOnClick = () => modifier.addOption(tableRows, repository, areaIdentifier, tableId);
 
     return (
         <>
             <TableContainer className={cls.tableStyles} component={Paper}>
                 <Table className={cls.table}>
                     <SelectOneFlatHeader />
-                    <SelectOneFlatBody tableData={tableData} modifier={modifier} />
+                    <SelectOneFlatBody tableData={tableRows} modifier={modifier} />
                 </Table>
             </TableContainer>
             <AccordionActions>
@@ -94,7 +94,7 @@ export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tab
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableData} properties={["option", "valueMin", "valueMax", "range", "rowOrder"]} />}
+            {showDebug && <DisplayTableData tableData={tableRows} properties={["option", "valueMin", "valueMax", "range", "rowOrder"]} />}
         </>
     );
 };

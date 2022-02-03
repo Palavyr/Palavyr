@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers;
+using Palavyr.Core.Services.Units;
 
 namespace Palavyr.API.Controllers.Response
 {
@@ -18,7 +19,7 @@ namespace Palavyr.API.Controllers.Response
         }
 
         [HttpGet(Route)]
-        public async Task<List<string>> Get(CancellationToken cancellationToken)
+        public async Task<List<QuantUnit>> Get(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetSupportedUnitIdsRequest(), cancellationToken);
             return response.Response;

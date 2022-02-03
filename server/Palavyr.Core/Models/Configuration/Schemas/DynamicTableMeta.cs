@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Contracts;
+using Palavyr.Core.Services.Units;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
@@ -45,7 +47,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 
         public static List<DynamicTableMeta> CreateDefaultMetas(string areaId, string accountId)
         {
-            return new List<DynamicTableMeta>()
+            return new List<DynamicTableMeta>
             {
                 CreateNew(
                     "default",
@@ -62,6 +64,15 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         {
             areaId = AreaIdentifier;
             tableId = TableId;
+        }
+
+        public void UpdateProperties(ModifyDynamicTableMetaRequest metaUpdate, IUnitRetriever unitRetriever)
+        {           
+            TableTag = metaUpdate.TableTag;
+            TableType = metaUpdate.TableType;
+            ValuesAsPaths = metaUpdate.ValueAsPaths;
+            PrettyName = metaUpdate.PrettyName;
+            UnitId = unitRetriever.ConvertToUnitId(metaUpdate.UnitId.ToString());
         }
     }
 }

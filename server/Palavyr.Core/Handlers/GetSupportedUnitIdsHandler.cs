@@ -21,7 +21,7 @@ namespace Palavyr.Core.Handlers
         {
             await Task.CompletedTask;
 
-            var supportedUnitIds = unitRetriever.GetUnitIds();
+            var supportedUnitIds = unitRetriever.GetUnitDefinitions();
             return new GetSupportedUnitIdsResponse(supportedUnitIds);
         }
     }
@@ -32,7 +32,7 @@ namespace Palavyr.Core.Handlers
 
     public class GetSupportedUnitIdsResponse
     {
-        public List<string> Response { get; set; }
-        public GetSupportedUnitIdsResponse(List<string> response) => Response = response;
+        public List<QuantUnit> Response { get; set; }
+        public GetSupportedUnitIdsResponse(List<QuantUnit> response) => Response = response;
     }
 }

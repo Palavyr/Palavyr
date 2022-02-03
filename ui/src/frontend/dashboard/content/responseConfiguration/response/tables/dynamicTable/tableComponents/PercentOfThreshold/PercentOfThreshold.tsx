@@ -8,9 +8,8 @@ import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-    },
+const useStyles = makeStyles(theme => ({
+    root: {},
     tableStyles: {
         background: "transparent",
     },
@@ -26,22 +25,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableRows, setTableRows, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
-    const modifier = new PercentOfThresholdModifier(setTableData);
+    const modifier = new PercentOfThresholdModifier(setTableRows);
 
-    const addItemOnClick = () => modifier.addItem(tableData, repository, areaIdentifier, tableId);
-    const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableData, repository, areaIdentifier, tableId, itemId);
+    const addItemOnClick = () => modifier.addItem(tableRows, repository, areaIdentifier, tableId);
+    const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableRows, repository, areaIdentifier, tableId, itemId);
 
     const onSave = async () => {
-        const reorderedData = modifier.reorderThresholdData(tableData);
+        const reorderedData = modifier.reorderThresholdData(tableRows);
         const result = modifier.validateTable(reorderedData);
 
         if (result) {
             const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<PercentOfThresholdData[]>(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
-            setTableData(savedData);
+            setTableRows(savedData);
             return true;
         } else {
             return false;
@@ -50,7 +49,7 @@ export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, se
 
     return (
         <>
-            <PercentOfThresholdContainer tableData={tableData} modifier={modifier} addRowOnClickFactory={addRowOnClickFactory} />
+            <PercentOfThresholdContainer tableData={tableRows} modifier={modifier} addRowOnClickFactory={addRowOnClickFactory} />
             <AccordionActions>
                 <div className={classes.trayWrapper}>
                     <div className={classes.alignLeft}>
@@ -63,7 +62,7 @@ export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, se
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableData} />}
+            {showDebug && <DisplayTableData tableData={tableRows} />}
         </>
     );
 };

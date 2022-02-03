@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { DynamicTableProps, TwoNestedCategoryData } from "@Palavyr-Types";
@@ -28,21 +27,21 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
+export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableRows, setTableRows, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
-    const modifier = new TwoNestedCategoriesModifier(setTableData);
+    const modifier = new TwoNestedCategoriesModifier(setTableRows);
 
-    const addOuterCategory = () => modifier.addOuterCategory(tableData, repository, areaIdentifier, tableId);
-    const addInnerCategory = () => modifier.addInnerCategory(tableData, repository, areaIdentifier, tableId);
+    const addOuterCategory = () => modifier.addOuterCategory(tableRows, repository, areaIdentifier, tableId);
+    const addInnerCategory = () => modifier.addInnerCategory(tableRows, repository, areaIdentifier, tableId);
 
     const onSave = async () => {
-        const result = modifier.validateTable(tableData);
+        const result = modifier.validateTable(tableRows);
 
         if (result) {
-            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<TwoNestedCategoryData[]>(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableData, tableId, tableTag);
-            setTableData(savedData);
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<TwoNestedCategoryData[]>(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableRows, tableId, tableTag);
+            setTableRows(savedData);
             return true;
         } else {
             return false;
@@ -51,7 +50,7 @@ export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, s
 
     return (
         <>
-            <TwoNestedCategoriesContainer addInnerCategory={addInnerCategory} tableData={tableData} modifier={modifier} />
+            <TwoNestedCategoriesContainer addInnerCategory={addInnerCategory} tableData={tableRows} modifier={modifier} />
             <AccordionActions>
                 <div className={cls.trayWrapper}>
                     <div className={cls.alignLeft}>
@@ -64,7 +63,7 @@ export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, s
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableData} properties={["category", "subCategory"]} />}
+            {showDebug && <DisplayTableData tableData={tableRows} properties={["category", "subCategory"]} />}
         </>
     );
 };

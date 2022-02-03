@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, Suspense, useContext } from "react";
-import { DynamicTableMetas, TableNameMap } from "@Palavyr-Types";
+import { DynamicTableMetas, QuantUnitDefinition, TableNameMap } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Typography, Button, FormControlLabel, Checkbox } from "@material-ui/core";
 import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
@@ -26,11 +26,13 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
     const [availableTables, setAvailableTables] = useState<Array<string>>([]);
     const [tableNameMap, setTableNameMap] = useState<TableNameMap>({});
     const [showTotals, setShowTotals] = useState<boolean | null>(null);
+    const [unitTypes, setUnitTypes] = useState<QuantUnitDefinition[]>([]);
 
     const loadTableData = useCallback(async () => {
         const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
         const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
         const showTotals = await repository.Area.getShowDynamicTotals(areaIdentifier);
+        const quantTypes = await repository.Configuration.Units.GetSupportedUnitIds();
 
         // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
         const availableTablePrettyNames = Object.keys(tableNameMap);
@@ -39,6 +41,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
         setTableMetas(cloneDeep(dynamicTableMetas));
         setAvailableTables(availableTablePrettyNames);
         setTableNameMap(tableNameMap);
+        setUnitTypes(quantTypes);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
@@ -103,12 +106,12 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
                         <Fade key={["Fade", index, tableMeta.tableId].join("-")}>
                             <SingleDynamicFeeTable
                                 key={[index, tableMeta.tableId].join("-")}
-                                tableNumber={index}
+                                unitTypes={unitTypes}
                                 setLoaded={setLoaded}
                                 tableMetas={tableMetas}
                                 setTableMetas={setTableMetas}
                                 tableMetaIndex={index}
-                                defaultTableMeta={tableMeta}
+                                tableMeta={tableMeta}
                                 availablDynamicTableOptions={availableTables}
                                 tableNameMap={tableNameMap}
                                 parentState={parentState}

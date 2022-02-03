@@ -30,7 +30,7 @@ namespace Palavyr.Core.Handlers
             var tableResources = tableTypes.Select(
                 x =>
                 {
-                    // var unitDefinition = unitRetriever.GetUnitDefinitionById(x.UnitId);
+                    var unitDefinition = unitRetriever.GetUnitDefinitionById(x.UnitId);
                     return new DynamicTableMetaResource
                     {
                         Id = x.Id,
@@ -40,8 +40,9 @@ namespace Palavyr.Core.Handlers
                         AreaIdentifier = x.AreaIdentifier,
                         ValuesAsPaths = x.ValuesAsPaths,
                         PrettyName = x.PrettyName,
-                        // UnitId = unitDefinition.UnitId,
-                        // UnitType = unitDefinition.UnitType
+                        UnitPrettyName = unitDefinition.UnitPrettyName,
+                        UnitGroup = unitDefinition.UnitGroup,
+                        UnitId = unitDefinition.UnitId
                     };
                 });
 
@@ -58,10 +59,9 @@ namespace Palavyr.Core.Handlers
         public string AreaIdentifier { get; set; }
         public bool ValuesAsPaths { get; set; }
         public string PrettyName { get; set; }
-        public string UnitId { get; set; }
-        public string UnitType { get; set; }
-
-        // public string AccountId { get; set; }
+        public string UnitPrettyName { get; set; }
+        public string UnitGroup { get; set; }
+        public UnitIds UnitId { get; set; }
     }
 
 

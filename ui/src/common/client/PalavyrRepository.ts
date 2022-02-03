@@ -28,6 +28,7 @@ import {
     DynamicTableData,
     EnquiryActivtyResource,
     LocaleResponse,
+    QuantUnitDefinition,
 } from "@Palavyr-Types";
 import { ApiErrors } from "frontend/dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "frontend/dashboard/subscriptionFilters/filterConvoNodeTypes";
@@ -126,6 +127,10 @@ export class PalavyrRepository {
         getEstimateConfiguration: async (intentId: string) => this.client.get<ResponseConfigurationType>(`response/configuration/${intentId}`),
         updatePrologue: async (intentId: string, prologue: string) => this.client.put<string, {}>(`response/configuration/prologue`, { prologue: prologue, IntentId: intentId }),
         updateEpilogue: async (intentId: string, epilogue: string) => this.client.put<string, {}>(`response/configuration/epilogue`, { epilogue: epilogue, IntentId: intentId }),
+
+        Units: {
+            GetSupportedUnitIds: async () => this.client.get<QuantUnitDefinition[]>(`configuration/unit-types`)//, CacheIds.SupportedUnitIds),
+        },
 
         WidgetState: {
             GetWidgetState: async () => this.client.get<boolean>(`widget-config/widget-active-state`),

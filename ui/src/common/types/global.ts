@@ -62,14 +62,13 @@ export type AreaMeta = {
     areaName: string;
 };
 
-export enum UnitTypes {
-
+export enum UnitGroups {
     Length = "length",
     Area = "area",
     Weight = "weight",
     Currency = "currency",
 }
-export enum UnitIds {
+export enum UnitPrettyNames {
     Meter = "m",
     Foot = "ft",
     SquareMeters = "m^2",
@@ -80,10 +79,11 @@ export enum UnitIds {
     Tons = "tons",
 }
 
-export type UnitDefinition = {
-    UnitType: UnitTypes
-    UnitId: UnitIds;
-}
+export type QuantUnitDefinition = {
+    unitGroup: UnitGroups;
+    unitPrettyName: UnitPrettyNames;
+    unitId: number;
+};
 
 // Client
 export type GroupNodeType = {
@@ -268,8 +268,9 @@ export type DynamicTableMeta = {
     areaIdentifier: string;
     valuesAsPaths: boolean;
     prettyName: string;
-    unitId: UnitIds;
-    unitType: UnitTypes;
+    unitPrettyName: UnitPrettyNames;
+    unitGroup: UnitGroups;
+    unitId: number;
 };
 
 export type DynamicTableMetas = Array<DynamicTableMeta>;
@@ -792,11 +793,13 @@ export type DynamicTableData = {
 export interface IDynamicTableBody {
     tableData: TableData;
     modifier: any;
+    unitGroup?: UnitGroups;
+    unitPrettyName?: UnitPrettyNames;
 }
 
 export type DynamicTableProps = {
-    tableData: Array<TableData>;
-    setTableData: SetState<TableData>;
+    tableRows: Array<TableData>;
+    setTableRows: SetState<TableData>;
     areaIdentifier: string;
     tableId: string;
     tableTag: string;

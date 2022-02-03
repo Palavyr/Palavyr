@@ -9,7 +9,7 @@ import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifi
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     root: {
         borderTop: "3px solid red",
     },
@@ -28,14 +28,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
+export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableRows, setTableRows, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
     const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
-    const modifier = new CategoryNestedThresholdModifier(setTableData);
+    const modifier = new CategoryNestedThresholdModifier(setTableRows);
 
     const onSave = async () => {
-        const reorderedData = modifier.reorderThresholdData(tableData);
+        const reorderedData = modifier.reorderThresholdData(tableRows);
 
         const result = modifier.validateTable(reorderedData);
 
@@ -47,7 +47,7 @@ export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableDat
                 tableId,
                 tableTag
             );
-            setTableData(savedData);
+            setTableRows(savedData);
             return true;
         } else {
             return false;
@@ -56,11 +56,11 @@ export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableDat
 
     return (
         <>
-            <CategoryNestedThresholdContainer tableData={tableData} modifier={modifier} tableId={tableId} areaIdentifier={areaIdentifier} />
+            <CategoryNestedThresholdContainer tableData={tableRows} modifier={modifier} tableId={tableId} areaIdentifier={areaIdentifier} />
             <AccordionActions>
                 <div className={classes.trayWrapper}>
                     <div className={classes.alignLeft}>
-                        <Button className={classes.add} onClick={() => modifier.addCategory(tableData, repository, areaIdentifier, tableId)} color="primary" variant="contained">
+                        <Button className={classes.add} onClick={() => modifier.addCategory(tableRows, repository, areaIdentifier, tableId)} color="primary" variant="contained">
                             Add Category
                         </Button>
                     </div>
@@ -69,7 +69,7 @@ export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableDat
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableData} properties={["category", "triggerFallback", "threshold", "valueMin", "valueMax", "rowOrder", "rowId", "itemOrder", "itemId"]} />}
+            {showDebug && <DisplayTableData tableData={tableRows} properties={["category", "triggerFallback", "threshold", "valueMin", "valueMax", "rowOrder", "rowId", "itemOrder", "itemId"]} />}
         </>
     );
 };

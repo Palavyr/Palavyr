@@ -48,26 +48,26 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const BasicThreshold = ({ showDebug, tableId, tableTag, tableRows, setTableRows, areaIdentifier, deleteAction, tableMeta }: Omit<DynamicTableProps, "setTableMeta">) => {
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
     const [name, setItemName] = useState<string>("");
 
-    const modifier = new BasicThresholdModifier(setTableData);
+    const modifier = new BasicThresholdModifier(setTableRows);
 
     const onSave = async () => {
-        const reorderedData = modifier.reorderThresholdData(tableData);
+        const reorderedData = modifier.reorderThresholdData(tableRows);
         const result = modifier.validateTable(reorderedData);
 
         if (result) {
             const saveBasicThreshold = await repository.Configuration.Tables.Dynamic.saveDynamicTable<BasicThresholdData[]>(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
-            setTableData(saveBasicThreshold);
+            setTableRows(saveBasicThreshold);
             return true;
         } else {
             return false;
         }
     };
-    const addThresholdOnClick = () => modifier.addThreshold(tableData, areaIdentifier, tableId, repository);
+    const addThresholdOnClick = () => modifier.addThreshold(tableRows, areaIdentifier, tableId, repository);
 
     return (
         <>
@@ -78,20 +78,20 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
                         variant="standard"
                         label="Name to use in PDF fee table"
                         type="text"
-                        value={tableData[0].itemName}
+                        value={tableRows[0].itemName}
                         InputLabelProps={{ className: cls.inputPropsCls }}
                         color="primary"
                         onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
                             event.preventDefault();
-                            modifier.setItemName(tableData, event.target.value);
+                            modifier.setItemName(tableRows, event.target.value);
                             setItemName(event.target.value);
                         }}
                     />
                 </Align>
                 <TableContainer>
                     <Table>
-                        <BasicThresholdHeader tableData={tableData} modifier={modifier} />
-                        <BasicThresholdBody tableData={tableData} modifier={modifier} />
+                        <BasicThresholdHeader tableData={tableRows} modifier={modifier} />
+                        <BasicThresholdBody tableData={tableRows} modifier={modifier} unitPrettyName={tableMeta.unitPrettyName} unitGroup={tableMeta.unitGroup} />
                     </Table>
                 </TableContainer>
             </div>
@@ -107,7 +107,7 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableData} />}
+            {showDebug && <DisplayTableData tableData={tableRows} />}
         </>
     );
 };

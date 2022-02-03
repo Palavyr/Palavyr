@@ -1,16 +1,20 @@
-﻿namespace Palavyr.Core.Services.Units
+﻿using Palavyr.Core.Models.Configuration.Schemas;
+
+namespace Palavyr.Core.Services.Units
 {
     public class QuantUnit
     {
-        public string UnitType { get; set; } // length, area, weight, currency
-        public string UnitId { get; set; } // m, ft, m^2...
+        public string UnitGroup { get; set; } // length, area, weight, currency
+        public string UnitPrettyName { get; set; } // m, ft, m^2...
+        public UnitIds UnitId { get; set; }
 
-        public static QuantUnit Create(string type, string id)
+        public static QuantUnit Create(string prettyName, string groupName, UnitIds unitId)
         {
             return new QuantUnit
             {
-                UnitId = id,
-                UnitType = type
+                UnitPrettyName = prettyName,
+                UnitGroup = groupName,
+                UnitId = unitId
             };
         }
     }
