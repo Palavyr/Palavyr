@@ -75,8 +75,6 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
                     unitHelperText={unitGroup}
                     disabled={rowIndex === 0}
                     label="Threshold"
-                    decimalCharacter="."
-                    digitGroupSeparator=","
                     value={row.threshold}
                     currencySymbol={currencySymbol}
                     onBlur={() => {
