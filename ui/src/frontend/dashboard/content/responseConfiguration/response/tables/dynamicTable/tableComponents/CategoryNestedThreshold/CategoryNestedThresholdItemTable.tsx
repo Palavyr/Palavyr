@@ -1,6 +1,6 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
-import { CategoryNestedThresholdData } from "@Palavyr-Types";
+import { CategoryNestedThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
 import { useState } from "react";
@@ -19,6 +19,8 @@ interface CategoryNestedThresholdItemTableProps {
     categoryId: string;
     modifier: CategoryNestedThresholdModifier;
     areaIdentifier: string;
+    unitGroup?: UnitGroups;
+    unitPrettyName?: UnitPrettyNames;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -42,7 +44,18 @@ const getter = (x: CategoryNestedThresholdData) => x.rowOrder;
 
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
-export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tableId, categoryData, categoryName, categoryId, modifier, areaIdentifier }: CategoryNestedThresholdItemTableProps) => {
+export const CategoryNestedThresholdItemTable = ({
+    categoryIndex,
+    tableData,
+    tableId,
+    categoryData,
+    categoryName,
+    categoryId,
+    modifier,
+    areaIdentifier,
+    unitPrettyName,
+    unitGroup,
+}: CategoryNestedThresholdItemTableProps) => {
     const [name, setCategoryName] = useState<string>("");
 
     const cls = useStyles();
@@ -60,19 +73,28 @@ export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tab
                     {sortByPropertyNumeric(getter, categoryData).map((row: CategoryNestedThresholdData, rowIndex: number) => {
                         row.rowOrder = rowIndex;
                         return (
-                            <CategoryNestedThresholdRow
-                                key={row.rowId}
-                                categorySize={categoryData.length}
-                                categoryId={categoryId}
-                                setCategoryName={setCategoryName}
-                                categoryName={name}
-                                rowIndex={rowIndex}
-                                tableData={tableData}
-                                row={row}
-                                modifier={modifier}
-                            />
+                            <React.Fragment key={rowIndex}>
+                                {unitGroup && unitPrettyName ? (
+                                    <CategoryNestedThresholdRow
+                                        key={row.rowId}
+                                        categorySize={categoryData.length}
+                                        categoryId={categoryId}
+                                        setCategoryName={setCategoryName}
+                                        categoryName={name}
+                                        rowIndex={rowIndex}
+                                        tableData={tableData}
+                                        row={row}
+                                        modifier={modifier}
+                                        unitGroup={unitGroup}
+                                        unitPrettyName={unitPrettyName}
+                                    />
+                                ) : (
+                                    <></>
+                                )}
+                            </React.Fragment>
                         );
                     })}
+                    ;
                 </TableBody>
             </TableContainer>
             <ButtonBar
@@ -90,5 +112,3 @@ export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tab
         </>
     );
 };
-
-

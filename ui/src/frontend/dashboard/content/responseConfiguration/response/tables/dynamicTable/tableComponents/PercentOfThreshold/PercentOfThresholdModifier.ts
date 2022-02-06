@@ -38,11 +38,11 @@ export class PercentOfThresholdModifier {
     }
 
     removeRow(tableData: PercentOfThresholdData[], rowId: string) {
-        const curRow = tableData.filter((x) => x.rowId === rowId)[0];
+        const curRow = tableData.filter(x => x.rowId === rowId)[0];
         const itemId = curRow.itemId;
 
-        if (tableData.filter((x) => x.itemId === itemId).length > 1) {
-            const rows = tableData.filter((x) => x.rowId !== rowId);
+        if (tableData.filter(x => x.itemId === itemId).length > 1) {
+            const rows = tableData.filter(x => x.rowId !== rowId);
             this.setTables(rows);
         } else {
             alert("Table must have at least one option.");
@@ -101,7 +101,7 @@ export class PercentOfThresholdModifier {
 
     removeItem(tableData: PercentOfThresholdData[], itemId: string) {
         const itemIds: string[] = [];
-        tableData.forEach((x) => itemIds.push(x.itemId));
+        tableData.forEach(x => itemIds.push(x.itemId));
 
         const unique = uniq(itemIds);
         if (unique.length > 1) {

@@ -72,6 +72,12 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
         const newMeta = await repository.Configuration.Tables.Dynamic.createDynamicTable(areaIdentifier);
         const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, newMeta.tableType, newMeta.tableId);
 
+        const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
+        const availableTables = Object.keys(tableNameMap);
+        setAvailableTables(availableTables);
+        // map of pricing trategy pretty names
+        setTableNameMap(tableNameMap);
+
         const newTable: DynamicTable = {
             tableMeta: newMeta,
             tableRows: tableRows as TableData,
@@ -99,7 +105,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
     const actions = (
         <>
-            {showTotals !== null && <FormControlLabel label="Show Totals" control={<Checkbox disabled={showTotals === null} checked={showTotals} onChange={changeShowTotals} />} />}
+            {showTotals !== null && tables.length > 0 && <FormControlLabel label="Show Totals" control={<Checkbox disabled={showTotals === null} checked={showTotals} onChange={changeShowTotals} />} />}
             {planTypeMeta && tables.length >= planTypeMeta.allowedDynamicTables ? (
                 <>
                     <PalavyrText display="inline">
@@ -138,26 +144,26 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
                     </PalavyrText>
                 )}
 
-                {tables.map((table: DynamicTable, tableMetaIndex: number) => {
+                {tables.map((table: DynamicTable, tableIndex: number) => {
                     const onDelete = async () => {
                         // delete table from DB
                         await repository.Configuration.Tables.Dynamic.deleteDynamicTable(areaIdentifier, table.tableMeta.tableType, table.tableMeta.tableId);
 
                         // delete table from UI
                         const newTables = cloneDeep(tables);
-                        newTables.splice(tableMetaIndex, 1);
+                        newTables.splice(tableIndex, 1);
                         setTables(newTables);
                     };
 
                     return (
-                        <Fade key={["Fade", tableMetaIndex, table.tableMeta.tableId].join("-")}>
+                        <Fade key={["Fade", tableIndex, table.tableMeta.tableId].join("-")}>
                             <PricingStrategyTable
-                                key={[tableMetaIndex, table.tableMeta.tableId].join("-")}
+                                key={[tableIndex, table.tableMeta.tableId].join("-")}
                                 table={table}
                                 tables={tables}
                                 setTables={setTables}
                                 unitTypes={unitTypes}
-                                tableMetaIndex={tableMetaIndex}
+                                tableIndex={tableIndex}
                                 availableDynamicTableOptions={availableTables}
                                 tableNameMap={tableNameMap}
                                 areaIdentifier={areaIdentifier}

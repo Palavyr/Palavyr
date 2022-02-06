@@ -45,6 +45,7 @@ export const BasicThresholdHeader = ({ tableData, modifier }: IBasicThresholdHea
                 <TableCell align="center"></TableCell>
                 <TableCell align="center">
                     <Button
+                        variant="contained"
                         onClick={() => {
                             modifier.reorderThresholdData(tableData);
                             modifier.setTables(tableData);

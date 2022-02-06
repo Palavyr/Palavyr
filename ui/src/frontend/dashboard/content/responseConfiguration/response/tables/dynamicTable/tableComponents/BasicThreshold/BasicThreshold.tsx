@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { BasicThresholdData, DynamicTableProps } from "@Palavyr-Types";
+import { BasicThresholdData, DynamicTable, DynamicTableProps } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
@@ -12,8 +12,8 @@ import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { TextInput } from "@common/components/TextField/TextInput";
 import { Align } from "@common/positioning/Align";
-import { cloneDeep } from "lodash";
 import { DynamicTableHeader } from "../../DynamicTableHeader";
+import { cloneDeep } from "lodash";
 
 const useStyles = makeStyles(theme => ({
     alignLeft: {
@@ -50,43 +50,56 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const BasicThreshold = ({
-    showDebug,
-    tableId,
-    tables,
-    setTables,
-    tableMetaIndex,
-    areaIdentifier,
-    deleteAction,
-    onSaveFactory,
-    availableDynamicTableOptions,
-    tableNameMap,
-    unitTypes,
-    tableTag,
-    setTableTag,
-    inUse,
-    setLocalTable,
-    localTable,
-}: DynamicTableProps) => {
+export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, deleteAction, tables, tableIndex, availableDynamicTableOptions, tableNameMap, unitTypes, inUse, table }: DynamicTableProps) => {
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
     const [name, setItemName] = useState<string>("");
+    const [localTable, setLocalTable] = useState<DynamicTable>();
 
-    const [tableRows, setTableRows] = useState<BasicThresholdData[]>([]);
     useEffect(() => {
-        const tableRows = tables[tableMetaIndex].tableRows;
-        setTableRows(tableRows);
-    }, []);
+        setLocalTable(table);
+    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName, localTable?.tableMeta.tableType, localTable?.tableRows, localTable?.tableMeta.unitGroup]);
 
     const modifier = new BasicThresholdModifier(updatedRows => {
-        setTableRows(updatedRows);
+        if (localTable) {
+            localTable.tableRows = updatedRows;
+        }
+        setLocalTable(cloneDeep(localTable));
     });
 
-    const onSave = onSaveFactory(modifier, DynamicTableTypes.BasicThreshold, () => {});
+    const addThresholdOnClick = async () => {
+        if (localTable) await modifier.addThreshold(localTable.tableRows, areaIdentifier, tableId, repository);
+    };
 
-    const addThresholdOnClick = () => modifier.addThreshold(tableRows, areaIdentifier, tableId, repository);
+    const onSave = async () => {
+        if (localTable) {
+            const result = modifier.validateTable(localTable.tableRows);
 
-    return (
+            if (result) {
+                const currentMeta = localTable.tableMeta;
+
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<BasicThresholdData[]>(
+                    areaIdentifier,
+                    DynamicTableTypes.BasicThreshold,
+                    localTable.tableRows,
+                    localTable.tableMeta.tableId,
+                    localTable.tableMeta.tableTag
+                );
+
+                tables[tableIndex].tableRows = updatedRows;
+                tables[tableIndex].tableMeta = newTableMeta;
+                setTables(cloneDeep(tables));
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    };
+
+    return localTable ? (
         <>
             <DynamicTableHeader
                 localTable={localTable}
@@ -96,8 +109,6 @@ export const BasicThreshold = ({
                 tableNameMap={tableNameMap}
                 unitTypes={unitTypes}
                 inUse={inUse}
-                tableTag={tableTag}
-                setTableTag={setTableTag}
             />
             <div className={cls.container}>
                 <Align direction="flex-start">
@@ -106,20 +117,20 @@ export const BasicThreshold = ({
                         variant="standard"
                         label="Name to use in PDF fee table"
                         type="text"
-                        value={tables[tableMetaIndex].tableRows[0].itemName}
+                        value={name}
                         InputLabelProps={{ className: cls.inputPropsCls }}
                         color="primary"
                         onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
                             event.preventDefault();
-                            modifier.setItemName(tableRows, event.target.value);
+                            modifier.setItemName(localTable.tableRows, event.target.value);
                             setItemName(event.target.value);
                         }}
                     />
                 </Align>
                 <TableContainer>
                     <Table>
-                        <BasicThresholdHeader tableData={tableRows} modifier={modifier} />
-                        <BasicThresholdBody tableData={tableRows} modifier={modifier} unitPrettyName={tables[tableMetaIndex].tableMeta.unitPrettyName} unitGroup={tables[tableMetaIndex].tableMeta.unitGroup} />
+                        <BasicThresholdHeader tableData={localTable.tableRows} modifier={modifier} />
+                        <BasicThresholdBody tableData={localTable.tableRows} modifier={modifier} unitPrettyName={localTable.tableMeta.unitPrettyName} unitGroup={localTable.tableMeta.unitGroup} />
                     </Table>
                 </TableContainer>
             </div>
@@ -135,7 +146,9 @@ export const BasicThreshold = ({
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableRows} />}
+            {showDebug && <DisplayTableData tableData={localTable.tableRows} />}
         </>
+    ) : (
+        <></>
     );
 };

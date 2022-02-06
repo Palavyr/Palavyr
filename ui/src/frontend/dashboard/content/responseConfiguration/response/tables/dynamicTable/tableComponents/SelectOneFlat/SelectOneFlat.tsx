@@ -4,12 +4,13 @@ import { TableContainer, Paper, Table, Button, FormControlLabel, Checkbox, Accor
 import { SelectOneFlatHeader } from "./SelectOneFlatHeader";
 import { SelectOneFlatBody } from "./SelectOneFlatBody";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { DynamicTableProps, SelectOneFlatData } from "@Palavyr-Types";
+import { DynamicTable, DynamicTableProps, SelectOneFlatData } from "@Palavyr-Types";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { DynamicTableHeader } from "../../DynamicTableHeader";
+import { cloneDeep } from "lodash";
 
 const useStyles = makeStyles(theme => ({
     tableStyles: {
@@ -46,39 +47,24 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SelectOneFlat = ({
-    showDebug,
-    tableId,
-    tables,
-    setTables,
-    tableMetaIndex,
-    areaIdentifier,
-    deleteAction,
-    onSaveFactory,
-    availableDynamicTableOptions,
-    tableNameMap,
-    unitTypes,
-    tableTag,
-    setTableTag,
-    inUse,
-    setLocalTable,
-    localTable,
-}: DynamicTableProps) => {
+export const SelectOneFlat = ({ showDebug, tableId, setTables, areaIdentifier, deleteAction, tables, tableIndex, availableDynamicTableOptions, tableNameMap, unitTypes, inUse, table }: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
-    const [tableRows, setTableRows] = useState<SelectOneFlatData[]>([]);
+    const [localTable, setLocalTable] = useState<DynamicTable>();
     const [useOptionsAsPaths, setUseOptionsAsPaths] = useState<boolean>(false);
 
     useEffect(() => {
-        const tableRows = tables[tableMetaIndex].tableRows;
-        const useOptionsAsPaths = tables[tableMetaIndex].tableMeta.valuesAsPaths;
-        setTableRows(tableRows);
+        setLocalTable(table);
+        const useOptionsAsPaths = table.tableMeta.valuesAsPaths;
         setUseOptionsAsPaths(useOptionsAsPaths);
-    }, []);
+    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName, localTable?.tableMeta.tableType, localTable?.tableRows]);
 
     const modifier = new SelectOneFlatModifier(updatedRows => {
-        setTableRows(updatedRows);
+        if (localTable) {
+            localTable.tableRows = updatedRows;
+        }
+        setLocalTable(cloneDeep(localTable));
     });
 
     const useOptionsAsPathsOnChange = async (event: { target: { checked: boolean } }) => {
@@ -86,13 +72,40 @@ export const SelectOneFlat = ({
         setUseOptionsAsPaths(checked);
     };
 
-    const onSave = onSaveFactory(modifier, DynamicTableTypes.SelectOneFlat, () => {
-        localTable.tableMeta.valuesAsPaths = useOptionsAsPaths;
-    });
+    const addOptionOnClick = async () => {
+        if (localTable) await modifier.addOption(localTable.tableRows, repository, areaIdentifier, tableId);
+    };
 
-    const addOptionOnClick = () => modifier.addOption(tableRows, repository, areaIdentifier, tableId);
+    const onSave = async () => {
+        if (localTable) {
+            const result = modifier.validateTable(localTable.tableRows);
 
-    return (
+            if (result) {
+                const currentMeta = localTable.tableMeta;
+
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<SelectOneFlatData[]>(
+                    areaIdentifier,
+                    DynamicTableTypes.SelectOneFlat,
+                    localTable.tableRows,
+                    localTable.tableMeta.tableId,
+                    localTable.tableMeta.tableTag
+                );
+
+                tables[tableIndex].tableRows = updatedRows;
+                tables[tableIndex].tableMeta = newTableMeta;
+                tables[tableIndex].tableMeta.valuesAsPaths = useOptionsAsPaths;
+                setTables(cloneDeep(tables));
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    };
+
+    return localTable ? (
         <>
             <DynamicTableHeader
                 localTable={localTable}
@@ -102,13 +115,11 @@ export const SelectOneFlat = ({
                 tableNameMap={tableNameMap}
                 unitTypes={unitTypes}
                 inUse={inUse}
-                tableTag={tableTag}
-                setTableTag={setTableTag}
             />
             <TableContainer className={cls.tableStyles} component={Paper}>
                 <Table className={cls.table}>
                     <SelectOneFlatHeader />
-                    <SelectOneFlatBody tableData={tableRows} modifier={modifier} />
+                    <SelectOneFlatBody tableData={localTable.tableRows} modifier={modifier} />
                 </Table>
             </TableContainer>
             <AccordionActions>
@@ -124,7 +135,9 @@ export const SelectOneFlat = ({
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableRows} properties={["option", "valueMin", "valueMax", "range", "rowOrder"]} />}
+            {showDebug && <DisplayTableData tableData={localTable.tableRows} properties={["option", "valueMin", "valueMax", "range", "rowOrder"]} />}
         </>
+    ) : (
+        <></>
     );
 };

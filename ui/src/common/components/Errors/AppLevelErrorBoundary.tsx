@@ -4,14 +4,14 @@ import React from "react";
 
 const useStyles = makeStyles({
     error: {
-        marginBottom: "1rem",
+        margin: "2rem",
     },
 });
 
 export const ErrorFallback = ({ error, resetErrorBoundary }) => {
     const cls = useStyles();
     return (
-        <Align>
+        <Align extraClassNames={cls.error}>
             <div>
                 <Typography align="center" variant="h4">
                     Oh my gosh... Somethings gone wrong. We're terribly sorry!

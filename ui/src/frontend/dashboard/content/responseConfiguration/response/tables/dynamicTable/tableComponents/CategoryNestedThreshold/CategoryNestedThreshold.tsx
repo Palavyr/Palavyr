@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { CategoryNestedThresholdData, DynamicTableProps } from "@Palavyr-Types";
+import { CategoryNestedThresholdData, DynamicTable, DynamicTableProps } from "@Palavyr-Types";
 
 import { DisplayTableData } from "../DisplayTableData";
 import { CategoryNestedThresholdContainer } from "./CategoryNestedThresholdContainer";
@@ -9,6 +9,7 @@ import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifi
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { DynamicTableHeader } from "../../DynamicTableHeader";
+import { cloneDeep } from "lodash";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -32,37 +33,65 @@ const useStyles = makeStyles(theme => ({
 export const CategoryNestedThreshold = ({
     showDebug,
     tableId,
-    tables,
     setTables,
-    tableMetaIndex,
     areaIdentifier,
     deleteAction,
-    onSaveFactory,
+    tables,
+    tableIndex,
     availableDynamicTableOptions,
     tableNameMap,
     unitTypes,
-    tableTag,
-    setTableTag,
     inUse,
-    setLocalTable,
-    localTable,
+    table,
 }: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
-    const classes = useStyles();
+    const cls = useStyles();
 
-    const [tableRows, setTableRows] = useState<CategoryNestedThresholdData[]>([]);
+    const [localTable, setLocalTable] = useState<DynamicTable>();
     useEffect(() => {
-        const tableRows = tables[tableMetaIndex].tableRows;
-        setTableRows(tableRows);
-    }, []);
+        setLocalTable(table);
+    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName, localTable?.tableMeta.tableType, localTable?.tableRows]);
 
     const modifier = new CategoryNestedThresholdModifier(updatedRows => {
-        setTableRows(updatedRows);
+        if (localTable) {
+            localTable.tableRows = updatedRows;
+        }
+        setLocalTable(cloneDeep(localTable));
     });
 
-    const onSave = onSaveFactory(modifier, DynamicTableTypes.BasicThreshold, () => {});
+    const addCategory = async () => {
+        if (localTable) await modifier.addCategory(localTable.tableRows, repository, areaIdentifier, tableId);
+    };
 
-    return (
+    const onSave = async () => {
+        if (localTable) {
+            const result = modifier.validateTable(localTable.tableRows);
+
+            if (result) {
+                const currentMeta = localTable.tableMeta;
+
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<CategoryNestedThresholdData[]>(
+                    areaIdentifier,
+                    DynamicTableTypes.CategoryNestedThreshold,
+                    localTable.tableRows,
+                    localTable.tableMeta.tableId,
+                    localTable.tableMeta.tableTag
+                );
+
+                tables[tableIndex].tableRows = updatedRows;
+                tables[tableIndex].tableMeta = newTableMeta;
+                setTables(cloneDeep(tables));
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    };
+
+    return localTable ? (
         <>
             <DynamicTableHeader
                 localTable={localTable}
@@ -72,23 +101,30 @@ export const CategoryNestedThreshold = ({
                 tableNameMap={tableNameMap}
                 unitTypes={unitTypes}
                 inUse={inUse}
-                tableTag={tableTag}
-                setTableTag={setTableTag}
             />
-            <CategoryNestedThresholdContainer tableData={tableRows} modifier={modifier} tableId={tableId} areaIdentifier={areaIdentifier} />
+            <CategoryNestedThresholdContainer
+                tableData={localTable.tableRows}
+                modifier={modifier}
+                tableId={tableId}
+                areaIdentifier={areaIdentifier}
+                unitPrettyName={localTable.tableMeta.unitPrettyName}
+                unitGroup={localTable.tableMeta.unitGroup}
+            />
             <AccordionActions>
-                <div className={classes.trayWrapper}>
-                    <div className={classes.alignLeft}>
-                        <Button className={classes.add} onClick={() => modifier.addCategory(tableRows, repository, areaIdentifier, tableId)} color="primary" variant="contained">
+                <div className={cls.trayWrapper}>
+                    <div className={cls.alignLeft}>
+                        <Button className={cls.add} onClick={addCategory} color="primary" variant="contained">
                             Add Category
                         </Button>
                     </div>
-                    <div className={classes.alignRight}>
+                    <div className={cls.alignRight}>
                         <SaveOrCancel onDelete={deleteAction} onSave={onSave} onCancel={async () => window.location.reload()} />
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableRows} properties={["category", "triggerFallback", "threshold", "valueMin", "valueMax", "rowOrder", "rowId", "itemOrder", "itemId"]} />}
+            {showDebug && <DisplayTableData tableData={localTable.tableRows} properties={["category", "triggerFallback", "threshold", "valueMin", "valueMax", "rowOrder", "rowId", "itemOrder", "itemId"]} />}
         </>
+    ) : (
+        <></>
     );
 };

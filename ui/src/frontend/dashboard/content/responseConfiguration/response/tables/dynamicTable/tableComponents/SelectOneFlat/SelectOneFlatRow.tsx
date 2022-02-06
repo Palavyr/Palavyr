@@ -108,8 +108,18 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
             </TableCell>
             <TableCell align={cellAlignment}>
                 <Button
-                    startIcon={row.range ? <ChevronLeftIcon /> : <RemoveIcon />}
-                    endIcon={row.range ? <ChevronRightIcon /> : null}
+                    startIcon={
+                        row.range ? (
+                            <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                                <ChevronLeftIcon />
+                                {/* <RemoveIcon />  */}
+                                <ChevronRightIcon />
+                            </div>
+                        ) : (
+                            <RemoveIcon />
+                        )
+                    }
+                    // endIcon={row.range ? <ChevronRightIcon /> : null}
                     variant="contained"
                     style={{ width: "18ch" }}
                     color={row.range ? "primary" : "secondary"}

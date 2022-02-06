@@ -1,13 +1,13 @@
 import React from "react";
 import { TableRow, TableCell, Button, makeStyles, TextField, FormControlLabel, Checkbox, Typography } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { CategoryNestedThresholdData, TableData } from "@Palavyr-Types";
+import { CategoryNestedThresholdData, TableData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { SetState } from "@Palavyr-Types";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
-import { valuesIn } from "lodash";
 import { NumberFormatValues } from "react-number-format";
+import { UnitInput } from "../../components/UnitInput";
 
 export interface CategoryNestedThresholdProps {
     rowIndex: number;
@@ -18,6 +18,8 @@ export interface CategoryNestedThresholdProps {
     tableData: TableData;
     row: CategoryNestedThresholdData;
     modifier: CategoryNestedThresholdModifier;
+    unitGroup: UnitGroups;
+    unitPrettyName: UnitPrettyNames;
 }
 
 type StyleProps = {
@@ -57,7 +59,7 @@ const useStyles = makeStyles(theme => ({
 
 const cellAlignment = "center";
 
-export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName, categorySize, setCategoryName, tableData, row, modifier }: CategoryNestedThresholdProps) => {
+export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName, categorySize, setCategoryName, tableData, row, modifier, unitGroup, unitPrettyName }: CategoryNestedThresholdProps) => {
     const cls = useStyles({ isTrue: !row.range });
 
     const onTriggerFallbackChange = event => {
@@ -90,20 +92,30 @@ export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName,
         <TableRow>
             {categoryColumn}
             <TableCell align={cellAlignment}>
-                <CurrencyTextField
+                <UnitInput
+                    unitGroup={unitGroup}
+                    unitPrettyName={unitPrettyName}
+                    unitHelperText={unitGroup}
                     disabled={rowIndex === 0}
                     label="Threshold"
                     value={row.threshold}
                     currencySymbol={currencySymbol}
-                    decimalCharacter="."
-                    digitGroupSeparator=","
                     onBlur={() => {
                         modifier.reorderThresholdData(tableData);
                         modifier.setTables(tableData);
                     }}
-                    onValueChange={(values: NumberFormatValues) => {
+                    onCurrencyChange={(values: NumberFormatValues) => {
                         if (values.floatValue !== undefined) {
                             modifier.setThreshold(tableData, row.rowId, values.floatValue);
+                        }
+                    }}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                        const val = event.target.value;
+                        if (val !== "") {
+                            const result = parseFloat(val);
+                            if (result) {
+                                modifier.setThreshold(tableData, row.rowId, result);
+                            }
                         }
                     }}
                 />

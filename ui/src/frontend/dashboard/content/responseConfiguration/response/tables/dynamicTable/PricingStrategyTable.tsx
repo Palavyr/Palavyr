@@ -1,10 +1,8 @@
-import React, { useContext } from "react";
-import { DynamicTable, DynamicTableProps, Modifier, QuantUnitDefinition, TableNameMap } from "@Palavyr-Types";
+import React from "react";
+import { DynamicTable, DynamicTableProps, QuantUnitDefinition, TableNameMap } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
 import { cloneDeep } from "lodash";
-import { useState } from "react";
-import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { dynamicTableComponentMap, DynamicTableTypes } from "./DynamicTableRegistry";
+import { dynamicTableComponentMap } from "./DynamicTableRegistry";
 
 export const useStyles = makeStyles(theme => ({
     headerCol: {
@@ -49,7 +47,6 @@ export interface PricingStrategyTableProps {
     availableDynamicTableOptions: Array<string>;
     tableNameMap: TableNameMap;
     areaIdentifier: string;
-    tableMetaIndex: number;
     showDebug: boolean;
     unitTypes: QuantUnitDefinition[];
     table: DynamicTable;
@@ -57,6 +54,7 @@ export interface PricingStrategyTableProps {
     inUse: boolean;
     setTables: any;
     deleteAction: () => Promise<void>;
+    tableIndex: number;
 }
 
 export const PricingStrategyTable = ({
@@ -65,54 +63,27 @@ export const PricingStrategyTable = ({
     setTables,
     inUse,
     showDebug,
-    tableMetaIndex,
+    tableIndex,
     availableDynamicTableOptions,
     tableNameMap,
     areaIdentifier,
     unitTypes,
     deleteAction,
 }: PricingStrategyTableProps) => {
-    const { repository } = useContext(DashboardContext);
     const cls = useStyles();
-    const [tableTag, setTableTag] = useState<string>("");
-
-    const [localTable, setLocalTable] = useState<DynamicTable>();
-
-    const onSaveFactory = <T,>(modifier: Modifier, saveType: DynamicTableTypes, propertySetter: () => void) => async (tableRows: T) => {
-        const result = modifier.validateTable(tableRows);
-
-        if (result) {
-            const currentMeta = tables[tableMetaIndex].tableMeta;
-            propertySetter();
-
-            const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
-            const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<T>(areaIdentifier, saveType, tableRows, localTable!.tableMeta.tableId, tableTag);
-            tables[tableMetaIndex].tableRows = updatedRows;
-            tables[tableMetaIndex].tableMeta = newTableMeta;
-            setTables(cloneDeep(tables));
-
-            return true;
-        } else {
-            return false;
-        }
-    };
 
     const tableProps: DynamicTableProps = {
-        setLocalTable,
-        localTable: table,
+        table,
+        tableIndex, // required for save action
+        tables, // required for save action
+        setTables, // required for save action
         availableDynamicTableOptions,
         tableNameMap,
         unitTypes,
         inUse,
-        tableTag,
-        setTableTag,
         tableId: table.tableMeta.tableId,
-        tables,
         areaIdentifier,
         showDebug,
-        tableMetaIndex,
-        setTables,
-        onSaveFactory,
         deleteAction,
     };
 

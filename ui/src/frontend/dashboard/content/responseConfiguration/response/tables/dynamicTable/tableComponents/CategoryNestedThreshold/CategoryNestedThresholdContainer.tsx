@@ -20,7 +20,7 @@ export interface CategoryNestedThresholdProps extends IDynamicTableBody {
     modifier: CategoryNestedThresholdModifier;
 }
 
-export const CategoryNestedThresholdContainer = ({ tableData, modifier, tableId, areaIdentifier }: CategoryNestedThresholdProps) => {
+export const CategoryNestedThresholdContainer = ({ tableData, modifier, tableId, areaIdentifier, unitGroup, unitPrettyName }: CategoryNestedThresholdProps) => {
     const cls = useStyles();
     const sortedByCategory = sortByPropertyNumeric(modifier.itemOrderGetter, tableData);
 
@@ -42,6 +42,8 @@ export const CategoryNestedThresholdContainer = ({ tableData, modifier, tableId,
                         categoryName={categoryName}
                         categoryId={categoryId}
                         modifier={modifier}
+                        unitPrettyName={unitPrettyName}
+                        unitGroup={unitGroup}
                     />
                 );
             })}

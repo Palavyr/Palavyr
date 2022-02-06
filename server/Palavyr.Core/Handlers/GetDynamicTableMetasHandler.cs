@@ -44,10 +44,10 @@ namespace Palavyr.Core.Handlers
                         UnitGroup = unitDefinition.UnitGroup,
                         UnitId = unitDefinition.UnitId
                     };
-                });
+                })
+                .ToArray();
 
-            var asArray = tableResources.ToArray();
-            return new GetDynamicTableMetasResponse(asArray);
+            return new GetDynamicTableMetasResponse(tableResources);
         }
     }
 

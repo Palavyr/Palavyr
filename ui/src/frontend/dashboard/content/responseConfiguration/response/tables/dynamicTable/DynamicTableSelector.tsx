@@ -12,16 +12,6 @@ export interface PricingStrategySelectorProps {
     toolTipTitle?: string;
     helperText?: string;
 }
-export interface PricingStrategyAutoProps {
-    selection: QuantUnitDefinition;
-    options: Array<QuantUnitDefinition>;
-    handleChange: (event: ChangeEvent<{ name?: string | undefined; value: unknown }>, value: QuantUnitDefinition) => void;
-    disabled?: boolean;
-    toolTipTitle?: string;
-    helperText?: string;
-    groupBy: (option: QuantUnitDefinition) => string;
-    getOptionLabel: (option: QuantUnitDefinition) => string;
-}
 
 const useStyles = makeStyles(theme => ({
     selector: {
@@ -36,6 +26,7 @@ export const PricingStrategySelector = ({ toolTipTitle, disabled, pricingStrateg
     return (
         <div className={cls.selector}>
             <Autocomplete
+                disableClearable
                 disabled={disabled}
                 value={pricingStrategySelection}
                 options={tableOptions}
@@ -47,12 +38,25 @@ export const PricingStrategySelector = ({ toolTipTitle, disabled, pricingStrateg
         </div>
     );
 };
-export const PricingStrategyAuto = ({ disabled, selection, handleChange, options, getOptionLabel, groupBy, helperText }: PricingStrategyAutoProps) => {
+
+export interface PricingStrategyAutoProps {
+    selection: QuantUnitDefinition;
+    options: Array<QuantUnitDefinition>;
+    handleChange: (event: ChangeEvent<{ name?: string | undefined; value: unknown }>, value: QuantUnitDefinition) => void;
+    disabled?: boolean;
+    toolTipTitle?: string;
+    helperText?: string;
+    groupBy: (option: QuantUnitDefinition) => string;
+    getOptionLabel: (option: QuantUnitDefinition) => string;
+}
+
+export const UnitSelector = ({ disabled, selection, handleChange, options, getOptionLabel, groupBy, helperText }: PricingStrategyAutoProps) => {
     const cls = useStyles();
 
     return (
         <div className={cls.selector}>
             <Autocomplete
+                disableClearable
                 value={selection}
                 options={options}
                 getOptionLabel={getOptionLabel}

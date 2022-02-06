@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { DynamicTableProps, TwoNestedCategoryData } from "@Palavyr-Types";
+import { DynamicTable, DynamicTableProps, TwoNestedCategoryData } from "@Palavyr-Types";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesContainer } from "./TwoNestedCategoriesContainer";
 import { DisplayTableData } from "../DisplayTableData";
@@ -32,38 +32,68 @@ const useStyles = makeStyles(theme => ({
 export const TwoNestedCategories = ({
     showDebug,
     tableId,
-    tables,
     setTables,
-    tableMetaIndex,
     areaIdentifier,
     deleteAction,
-    onSaveFactory,
+    tables,
+    tableIndex,
     availableDynamicTableOptions,
     tableNameMap,
     unitTypes,
-    tableTag,
-    setTableTag,
     inUse,
-    setLocalTable,
-    localTable,
+    table,
 }: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
-    const [tableRows, setTableRows] = useState<TwoNestedCategoryData[]>([]);
+    const [localTable, setLocalTable] = useState<DynamicTable>();
+
     useEffect(() => {
-        const tableRows = tables[tableMetaIndex].tableRows;
-        setTableRows(tableRows);
-    }, []);
+        setLocalTable(table);
+    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName, localTable?.tableMeta.tableType, localTable?.tableRows]);
+
     const modifier = new TwoNestedCategoriesModifier(updatedRows => {
-        setTableRows(updatedRows);
+        if (localTable) {
+            localTable.tableRows = updatedRows;
+            localTable.tableMeta = localTable.tableMeta;
+        }
+        setLocalTable(cloneDeep(localTable));
     });
 
-    const addOuterCategory = () => modifier.addOuterCategory(tableRows, repository, areaIdentifier, tableId);
-    const addInnerCategory = () => modifier.addInnerCategory(tableRows, repository, areaIdentifier, tableId);
+    const addOuterCategory = async () => {
+        if (localTable) await modifier.addOuterCategory(localTable.tableRows, repository, areaIdentifier, tableId);
+    };
 
-    const onSave = onSaveFactory(modifier, DynamicTableTypes.TwoNestedCategory, () => {});
+    const addInnerCategory = async () => {
+        if (localTable) await modifier.addInnerCategory(localTable.tableRows, repository, areaIdentifier, tableId);
+    };
 
-    return (
+    const onSave = async () => {
+        if (localTable) {
+            const result = modifier.validateTable(localTable.tableRows);
+
+            if (result) {
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(localTable.tableMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<TwoNestedCategoryData[]>(
+                    areaIdentifier,
+                    DynamicTableTypes.TwoNestedCategory,
+                    localTable.tableRows,
+                    localTable.tableMeta.tableId,
+                    localTable.tableMeta.tableTag
+                );
+
+                tables[tableIndex].tableRows = updatedRows;
+                tables[tableIndex].tableMeta = newTableMeta;
+                setTables(cloneDeep(tables));
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    };
+
+    return localTable ? (
         <>
             <DynamicTableHeader
                 localTable={localTable}
@@ -73,10 +103,14 @@ export const TwoNestedCategories = ({
                 tableNameMap={tableNameMap}
                 unitTypes={unitTypes}
                 inUse={inUse}
-                tableTag={tableTag}
-                setTableTag={setTableTag}
             />
-            <TwoNestedCategoriesContainer addInnerCategory={addInnerCategory} tableData={tableRows} modifier={modifier} />
+            <TwoNestedCategoriesContainer
+                addInnerCategory={addInnerCategory}
+                tableData={localTable.tableRows}
+                modifier={modifier}
+                unitPrettyName={localTable.tableMeta.unitPrettyName}
+                unitGroup={localTable.tableMeta.unitGroup}
+            />
             <AccordionActions>
                 <div className={cls.trayWrapper}>
                     <div className={cls.alignLeft}>
@@ -89,7 +123,9 @@ export const TwoNestedCategories = ({
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableRows} properties={["category", "subCategory"]} />}
+            {showDebug && <DisplayTableData tableData={localTable.tableRows} properties={["category", "subCategory"]} />}
         </>
+    ) : (
+        <></>
     );
 };

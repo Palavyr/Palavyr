@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
         borderBottom: `4px solid ${theme.palette.primary.main}`,
     },
 }));
-interface IPercentOfThresholdContainer extends IDynamicTableBody {
+interface PercentOfThresholdContainerProps extends IDynamicTableBody {
     addRowOnClickFactory(itemId: string): () => void;
 }
 
@@ -18,7 +18,7 @@ type TableGroup = {
     [itemGroup: string]: PercentOfThresholdData[];
 };
 
-export const PercentOfThresholdContainer = ({ tableData, modifier, addRowOnClickFactory }: IPercentOfThresholdContainer) => {
+export const PercentOfThresholdContainer = ({ tableData, modifier, addRowOnClickFactory, unitGroup, unitPrettyName }: PercentOfThresholdContainerProps) => {
     const tableGroups: TableGroup = groupBy(tableData, x => x.itemId);
     const cls = useStyles();
     return (
@@ -35,6 +35,8 @@ export const PercentOfThresholdContainer = ({ tableData, modifier, addRowOnClick
                         itemName={itemData[0].itemName} // TODO: is there a better way to get this?
                         modifier={modifier}
                         addRowOnClick={addRowOnClickFactory(itemId)}
+                        unitGroup={unitGroup}
+                        unitPrettyName={unitPrettyName}
                     />
                 );
             })}

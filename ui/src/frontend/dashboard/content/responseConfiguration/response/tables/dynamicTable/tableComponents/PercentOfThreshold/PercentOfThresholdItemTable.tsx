@@ -1,14 +1,13 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
-import { Button, makeStyles, TableBody, TableContainer, TextField, Paper } from "@material-ui/core";
+import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { PercentOfThresholdData } from "@Palavyr-Types";
+import { PercentOfThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { PercentOfThresholdHeader } from "./PercentOfThresholdHeader";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdRow } from "./PercentOfThresholdRow";
 import { TextInput } from "@common/components/TextField/TextInput";
-import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { Align } from "@common/positioning/Align";
 import { ButtonBar } from "../../components/SaveBar";
 
@@ -19,6 +18,8 @@ interface IPercentOfThreshold {
     itemId: string;
     modifier: PercentOfThresholdModifier;
     addRowOnClick(): void;
+    unitGroup?: UnitGroups;
+    unitPrettyName?: UnitPrettyNames;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -41,7 +42,7 @@ const getter = (x: PercentOfThresholdData) => x.rowOrder;
 
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
-export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, itemId, modifier, addRowOnClick }: IPercentOfThreshold) => {
+export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, itemId, modifier, addRowOnClick, unitGroup, unitPrettyName }: IPercentOfThreshold) => {
     const [name, setItemName] = useState<string>("");
 
     const removeItem = (itemId: string) => {
@@ -77,7 +78,25 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                     {sortByPropertyNumeric(getter, itemData).map((row: PercentOfThresholdData, index: number) => {
                         row.rowOrder = index;
                         const itemLength = itemData.length;
-                        return <PercentOfThresholdRow key={row.rowId} itemData={itemData} itemLength={itemLength} tableData={tableData} row={row} modifier={modifier} baseValue={index === 0 ? true : false} />;
+                        return (
+                            <React.Fragment key={index}>
+                                {unitGroup && unitPrettyName ? (
+                                    <PercentOfThresholdRow
+                                        unitGroup={unitGroup}
+                                        unitPrettyName={unitPrettyName}
+                                        key={row.rowId}
+                                        itemData={itemData}
+                                        itemLength={itemLength}
+                                        tableData={tableData}
+                                        row={row}
+                                        modifier={modifier}
+                                        baseValue={index === 0 ? true : false}
+                                    />
+                                ) : (
+                                    <></>
+                                )}
+                            </React.Fragment>
+                        );
                     })}
                 </TableBody>
             </TableContainer>

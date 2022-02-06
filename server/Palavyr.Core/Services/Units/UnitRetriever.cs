@@ -9,7 +9,7 @@ namespace Palavyr.Core.Services.Units
     public interface IUnitRetriever
     {
         List<string> GetUnitTypes();
-        List<string> GetUnitIds();
+        List<UnitIds> GetUnitIds();
         List<QuantUnit> GetUnitDefinitions();
         
         List<QuantUnit> GetUnitDefinitionsByType(string type);
@@ -33,9 +33,9 @@ namespace Palavyr.Core.Services.Units
             return unitTypes;
         }
 
-        public List<string> GetUnitIds()
+        public List<UnitIds> GetUnitIds()
         {
-            var unitIds = units.UnitDefinitions.Select(x => x.UnitPrettyName).ToList();
+            var unitIds = units.UnitDefinitions.Select(x => x.UnitId).ToList();
             return unitIds;
         }
 
@@ -58,24 +58,28 @@ namespace Palavyr.Core.Services.Units
 
         public QuantUnit GetUnitDefinitionById(UnitIds id)
         {
-            var unitIdStringName = Enum.GetName(typeof(UnitIds), id);
+            // var unitIdStringName = Enum.GetName(typeof(UnitIds), id);
 
-            if (unitIdStringName == null) throw new DomainException("The unit Id provided is not supported");
-
-            return GetUnitDefinitionById(unitIdStringName.ToLowerInvariant());
-        }
-
-        public QuantUnit GetUnitDefinitionById(string id)
-        {
-            var ids = GetUnitIds();
-            if (!ids.Contains(id.ToString()))
+            if (!Enum.IsDefined(typeof(UnitIds), id))
             {
-                throw new DomainException($"The id: {id} was not found in our supported definitions");
+                throw new DomainException("The unit Id provided is not supported");
             }
 
-            var definition = units.UnitDefinitions.Single(x => x.UnitPrettyName == id.ToString());
+            var definition = units.UnitDefinitions.Single(x => x.UnitId == id);
             return definition;
+            // return GetUnitDefinitionById(unitIdStringName.ToLowerInvariant());
         }
+
+        // public QuantUnit GetUnitDefinitionById(string id)
+        // {
+        //     if (!Enum.IsDefined(typeof(UnitIds), id))
+        //     {
+        //         throw new DomainException($"The id: {id} was not found in our supported definitions");
+        //     }
+        //
+        //     var definition = units.UnitDefinitions.Single(x => x.UnitId == id);
+        //     return definition;
+        // }
 
         public UnitIds ConvertToUnitId(string id)
         {

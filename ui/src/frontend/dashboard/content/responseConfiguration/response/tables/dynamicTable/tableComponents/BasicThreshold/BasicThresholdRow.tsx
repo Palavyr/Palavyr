@@ -86,6 +86,15 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
                             modifier.setThresholdValue(tableData, row.rowId, values.floatValue);
                         }
                     }}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                        const val = event.target.value;
+                        if (val !== "") {
+                            const result = parseFloat(val);
+                            if (result) {
+                                modifier.setThresholdValue(tableData, row.rowId, result);
+                            }
+                        }
+                    }}
                 />
             </TableCell>
             {!row.triggerFallback ? (

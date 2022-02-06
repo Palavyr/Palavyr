@@ -811,20 +811,15 @@ export type DynamicTableProps = {
     availableDynamicTableOptions: string[];
     tableNameMap: TableNameMap;
     unitTypes: QuantUnitDefinition[];
-    tableTag: string;
-    setTableTag: SetState<string>;
     inUse: boolean;
-
-    setLocalTable: SetState<DynamicTable>;
     areaIdentifier: string;
     tableId: string;
     deleteAction(): Promise<void>;
     showDebug: boolean;
-    tableMetaIndex: number;
     setTables: SetState<DynamicTable[]>;
+    table: DynamicTable;
     tables: DynamicTable[];
-    localTable: DynamicTable;
-    onSaveFactory: (modifier: Modifier, saveType: DynamicTableTypes, propertySetter: () => void) => (tableRows: TableData) => Promise<TableData>;
+    tableIndex: number;
 };
 
 export type DynamicTableComponentMap = {

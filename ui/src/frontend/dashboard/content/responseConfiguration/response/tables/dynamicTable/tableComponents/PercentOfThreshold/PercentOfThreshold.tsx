@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { DynamicTableProps, PercentOfThresholdData } from "@Palavyr-Types";
+import { DynamicTable, DynamicTableProps, PercentOfThresholdData } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { DynamicTableHeader } from "../../DynamicTableHeader";
+import { cloneDeep } from "lodash";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -29,39 +30,69 @@ const useStyles = makeStyles(theme => ({
 export const PercentOfThreshold = ({
     showDebug,
     tableId,
-    tables,
     setTables,
-    tableMetaIndex,
     areaIdentifier,
     deleteAction,
-    onSaveFactory,
+    tables,
+    tableIndex,
     availableDynamicTableOptions,
     tableNameMap,
     unitTypes,
-    tableTag,
-    setTableTag,
     inUse,
-    setLocalTable,
-    localTable,
+    table,
 }: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
-    const [tableRows, setTableRows] = useState<PercentOfThresholdData[]>([]);
+    const [localTable, setLocalTable] = useState<DynamicTable>();
     useEffect(() => {
-        const tableRows = tables[tableMetaIndex].tableRows;
-        setTableRows(tableRows);
-    }, []);
+        setLocalTable(table);
+    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName, localTable?.tableMeta.tableType, localTable?.tableRows]);
+
     const modifier = new PercentOfThresholdModifier(updatedRows => {
-        setTableRows(updatedRows);
+        if (localTable) {
+            localTable.tableRows = updatedRows;
+        }
+        setLocalTable(cloneDeep(localTable));
     });
 
-    const addItemOnClick = () => modifier.addItem(tableRows, repository, areaIdentifier, tableId);
-    const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableRows, repository, areaIdentifier, tableId, itemId);
+    const addItemOnClick = async () => {
+        if (localTable) await modifier.addItem(localTable.tableRows, repository, areaIdentifier, tableId);
+    };
 
-    const onSave = onSaveFactory(modifier, DynamicTableTypes.PercentOfThreshold, () => {});
+    const addRowOnClickFactory = (itemId: string) => async () => {
+        if (localTable) await modifier.addRow(localTable.tableRows, repository, areaIdentifier, tableId, itemId);
+    };
 
-    return (
+    const onSave = async () => {
+        if (localTable) {
+            const result = modifier.validateTable(localTable.tableRows);
+
+            if (result) {
+                const currentMeta = localTable.tableMeta;
+
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<PercentOfThresholdData[]>(
+                    areaIdentifier,
+                    DynamicTableTypes.PercentOfThreshold,
+                    localTable.tableRows,
+                    localTable.tableMeta.tableId,
+                    localTable.tableMeta.tableTag
+                );
+
+                tables[tableIndex].tableRows = updatedRows;
+                tables[tableIndex].tableMeta = newTableMeta;
+                setTables(cloneDeep(tables));
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    };
+
+    return localTable ? (
         <>
             <DynamicTableHeader
                 localTable={localTable}
@@ -71,10 +102,14 @@ export const PercentOfThreshold = ({
                 tableNameMap={tableNameMap}
                 unitTypes={unitTypes}
                 inUse={inUse}
-                tableTag={tableTag}
-                setTableTag={setTableTag}
             />
-            <PercentOfThresholdContainer tableData={tableRows} modifier={modifier} addRowOnClickFactory={addRowOnClickFactory} />
+            <PercentOfThresholdContainer
+                tableData={localTable.tableRows}
+                modifier={modifier}
+                addRowOnClickFactory={addRowOnClickFactory}
+                unitPrettyName={localTable.tableMeta.unitPrettyName}
+                unitGroup={localTable.tableMeta.unitGroup}
+            />
             <AccordionActions>
                 <div className={classes.trayWrapper}>
                     <div className={classes.alignLeft}>
@@ -87,7 +122,9 @@ export const PercentOfThreshold = ({
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableRows} />}
+            {showDebug && <DisplayTableData tableData={localTable.tableRows} />}
         </>
+    ) : (
+        <></>
     );
 };
