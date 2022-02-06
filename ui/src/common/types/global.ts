@@ -3,6 +3,7 @@ import { COULD_NOT_FIND_SERVER, INVALID_EMAIL, INVALID_PASSWORD, NOT_A_DEFAULT_A
 import { PalavyrLinkedList } from "frontend/dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
 import React, { Dispatch, ElementType, SetStateAction } from "react";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
+import { DynamicTableTypes } from "@frontend/dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableRegistry";
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />
@@ -797,16 +798,33 @@ export interface IDynamicTableBody {
     unitPrettyName?: UnitPrettyNames;
 }
 
+export type DynamicTable = {
+    tableMeta: DynamicTableMeta;
+    tableRows: TableData;
+};
+
+export interface Modifier {
+    validateTable: (tableRows: TableData) => boolean;
+}
+
 export type DynamicTableProps = {
-    tableRows: Array<TableData>;
-    setTableRows: SetState<TableData>;
+    availableDynamicTableOptions: string[];
+    tableNameMap: TableNameMap;
+    unitTypes: QuantUnitDefinition[];
+    tableTag: string;
+    setTableTag: SetState<string>;
+    inUse: boolean;
+
+    setLocalTable: SetState<DynamicTable>;
     areaIdentifier: string;
     tableId: string;
-    tableTag: string;
-    tableMeta: DynamicTableMeta;
-    setTableMeta: any;
-    deleteAction(): Promise<any>;
+    deleteAction(): Promise<void>;
     showDebug: boolean;
+    tableMetaIndex: number;
+    setTables: SetState<DynamicTable[]>;
+    tables: DynamicTable[];
+    localTable: DynamicTable;
+    onSaveFactory: (modifier: Modifier, saveType: DynamicTableTypes, propertySetter: () => void) => (tableRows: TableData) => Promise<TableData>;
 };
 
 export type DynamicTableComponentMap = {

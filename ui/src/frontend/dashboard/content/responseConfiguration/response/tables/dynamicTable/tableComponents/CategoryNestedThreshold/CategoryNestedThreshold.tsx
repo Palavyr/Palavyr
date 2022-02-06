@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { CategoryNestedThresholdData, DynamicTableProps } from "@Palavyr-Types";
@@ -8,6 +8,7 @@ import { CategoryNestedThresholdContainer } from "./CategoryNestedThresholdConta
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { DynamicTableHeader } from "../../DynamicTableHeader";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,34 +29,52 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableRows, setTableRows, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
+export const CategoryNestedThreshold = ({
+    showDebug,
+    tableId,
+    tables,
+    setTables,
+    tableMetaIndex,
+    areaIdentifier,
+    deleteAction,
+    onSaveFactory,
+    availableDynamicTableOptions,
+    tableNameMap,
+    unitTypes,
+    tableTag,
+    setTableTag,
+    inUse,
+    setLocalTable,
+    localTable,
+}: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
-    const modifier = new CategoryNestedThresholdModifier(setTableRows);
+    const [tableRows, setTableRows] = useState<CategoryNestedThresholdData[]>([]);
+    useEffect(() => {
+        const tableRows = tables[tableMetaIndex].tableRows;
+        setTableRows(tableRows);
+    }, []);
 
-    const onSave = async () => {
-        const reorderedData = modifier.reorderThresholdData(tableRows);
+    const modifier = new CategoryNestedThresholdModifier(updatedRows => {
+        setTableRows(updatedRows);
+    });
 
-        const result = modifier.validateTable(reorderedData);
-
-        if (result) {
-            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<CategoryNestedThresholdData[]>(
-                areaIdentifier,
-                DynamicTableTypes.CategoryNestedThreshold,
-                reorderedData,
-                tableId,
-                tableTag
-            );
-            setTableRows(savedData);
-            return true;
-        } else {
-            return false;
-        }
-    };
+    const onSave = onSaveFactory(modifier, DynamicTableTypes.BasicThreshold, () => {});
 
     return (
         <>
+            <DynamicTableHeader
+                localTable={localTable}
+                setLocalTable={setLocalTable}
+                setTables={setTables}
+                availableDynamicTableOptions={availableDynamicTableOptions}
+                tableNameMap={tableNameMap}
+                unitTypes={unitTypes}
+                inUse={inUse}
+                tableTag={tableTag}
+                setTableTag={setTableTag}
+            />
             <CategoryNestedThresholdContainer tableData={tableRows} modifier={modifier} tableId={tableId} areaIdentifier={areaIdentifier} />
             <AccordionActions>
                 <div className={classes.trayWrapper}>

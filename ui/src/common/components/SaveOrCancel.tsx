@@ -150,9 +150,7 @@ export const SaveOrCancel = ({
                     onClick={onSaveClick}
                     size={size}
                 >
-                    <PalavyrText onClick={onSaveClick} style={{ background: "transparent" }}>
-                        {saveText}
-                    </PalavyrText>
+                    {saveText}
                 </Button>
             }
             {onCancel && (
@@ -162,25 +160,21 @@ export const SaveOrCancel = ({
                     className={classNames(cls.button, cls.cancelButton)}
                     onClick={onCancelClick}
                     size={size}
-                    startIcon={<CancelIcon onClick={onCancelClick} className={classNames(cls.button, cls.cancelButton)} />}
+                    startIcon={isSaving ? <CircularProgress size={20} /> : useSaveIcon ? <CancelIcon onClick={onCancelClick} style={{ background: "transparent" }} /> : <></>}
                 >
-                    <PalavyrText onClick={onCancelClick} className={classNames(cls.button, cls.cancelButton)}>
-                        {cancelText}
-                    </PalavyrText>
+                    {cancelText}
                 </Button>
             )}
             {onDelete && (
                 <Button
                     style={{ zIndex: zIndex }}
-                    startIcon={<DeleteOutlineIcon className={classNames(cls.button, cls.delButton)} onClick={onDeleteClick} />}
+                    startIcon={isSaving ? <CircularProgress size={20} /> : useSaveIcon ? <DeleteOutlineIcon onClick={onSaveClick} style={{ background: "transparent" }} /> : <></>}
                     variant="outlined"
                     className={classNames(cls.button, cls.delButton)}
                     onClick={onDeleteClick}
                     size={size}
                 >
-                    <PalavyrText onClick={onDeleteClick} className={classNames(cls.button, cls.delButton)}>
-                        {deleteText}
-                    </PalavyrText>
+                    {deleteText}
                 </Button>
             )}
         </>

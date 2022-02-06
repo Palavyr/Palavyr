@@ -17,7 +17,7 @@ namespace Palavyr.Core.Data.Setup.SeedData
         public readonly List<SelectOneFlat> DefaultDynamicTables = new List<SelectOneFlat>();
         
 
-        public const string AreaName = "Buying a Dpg";
+        public const string AreaName = "Buying a Dog";
         private const string TableTag = "Dog Color Types";
         public string EmailTemplate => CreateEmailTemplate.Create();
 

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { DynamicTableProps, PercentOfThresholdData } from "@Palavyr-Types";
@@ -7,6 +7,7 @@ import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { DynamicTableHeader } from "../../DynamicTableHeader";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -25,30 +26,54 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableRows, setTableRows, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const PercentOfThreshold = ({
+    showDebug,
+    tableId,
+    tables,
+    setTables,
+    tableMetaIndex,
+    areaIdentifier,
+    deleteAction,
+    onSaveFactory,
+    availableDynamicTableOptions,
+    tableNameMap,
+    unitTypes,
+    tableTag,
+    setTableTag,
+    inUse,
+    setLocalTable,
+    localTable,
+}: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
-    const modifier = new PercentOfThresholdModifier(setTableRows);
+    const [tableRows, setTableRows] = useState<PercentOfThresholdData[]>([]);
+    useEffect(() => {
+        const tableRows = tables[tableMetaIndex].tableRows;
+        setTableRows(tableRows);
+    }, []);
+    const modifier = new PercentOfThresholdModifier(updatedRows => {
+        setTableRows(updatedRows);
+    });
 
     const addItemOnClick = () => modifier.addItem(tableRows, repository, areaIdentifier, tableId);
     const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableRows, repository, areaIdentifier, tableId, itemId);
 
-    const onSave = async () => {
-        const reorderedData = modifier.reorderThresholdData(tableRows);
-        const result = modifier.validateTable(reorderedData);
-
-        if (result) {
-            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<PercentOfThresholdData[]>(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
-            setTableRows(savedData);
-            return true;
-        } else {
-            return false;
-        }
-    };
+    const onSave = onSaveFactory(modifier, DynamicTableTypes.PercentOfThreshold, () => {});
 
     return (
         <>
+            <DynamicTableHeader
+                localTable={localTable}
+                setLocalTable={setLocalTable}
+                setTables={setTables}
+                availableDynamicTableOptions={availableDynamicTableOptions}
+                tableNameMap={tableNameMap}
+                unitTypes={unitTypes}
+                inUse={inUse}
+                tableTag={tableTag}
+                setTableTag={setTableTag}
+            />
             <PercentOfThresholdContainer tableData={tableRows} modifier={modifier} addRowOnClickFactory={addRowOnClickFactory} />
             <AccordionActions>
                 <div className={classes.trayWrapper}>

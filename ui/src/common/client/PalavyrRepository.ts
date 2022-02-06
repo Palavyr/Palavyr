@@ -138,7 +138,7 @@ export class PalavyrRepository {
         },
         Tables: {
             Dynamic: {
-                getDynamicTableMetas: async (areaIdentifier: string) => this.client.get<DynamicTableMetas>(`tables/dynamic/type/${areaIdentifier}`), // todo - cache
+                getDynamicTableMetas: async (areaIdentifier: string) => this.client.get<DynamicTableMetas>(`tables/dynamic/metas/${areaIdentifier}`), // todo - cache
 
                 getDynamicTableTypes: async () => this.client.get<TableNameMap>(`tables/dynamic/table-name-map`),
 

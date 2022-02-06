@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { DynamicTableProps, TwoNestedCategoryData } from "@Palavyr-Types";
@@ -7,6 +7,8 @@ import { TwoNestedCategoriesContainer } from "./TwoNestedCategoriesContainer";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { cloneDeep } from "lodash";
+import { DynamicTableHeader } from "../../DynamicTableHeader";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -27,29 +29,53 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableRows, setTableRows, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
+export const TwoNestedCategories = ({
+    showDebug,
+    tableId,
+    tables,
+    setTables,
+    tableMetaIndex,
+    areaIdentifier,
+    deleteAction,
+    onSaveFactory,
+    availableDynamicTableOptions,
+    tableNameMap,
+    unitTypes,
+    tableTag,
+    setTableTag,
+    inUse,
+    setLocalTable,
+    localTable,
+}: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
-
-    const modifier = new TwoNestedCategoriesModifier(setTableRows);
+    const [tableRows, setTableRows] = useState<TwoNestedCategoryData[]>([]);
+    useEffect(() => {
+        const tableRows = tables[tableMetaIndex].tableRows;
+        setTableRows(tableRows);
+    }, []);
+    const modifier = new TwoNestedCategoriesModifier(updatedRows => {
+        setTableRows(updatedRows);
+    });
 
     const addOuterCategory = () => modifier.addOuterCategory(tableRows, repository, areaIdentifier, tableId);
     const addInnerCategory = () => modifier.addInnerCategory(tableRows, repository, areaIdentifier, tableId);
 
-    const onSave = async () => {
-        const result = modifier.validateTable(tableRows);
-
-        if (result) {
-            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<TwoNestedCategoryData[]>(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableRows, tableId, tableTag);
-            setTableRows(savedData);
-            return true;
-        } else {
-            return false;
-        }
-    };
+    const onSave = onSaveFactory(modifier, DynamicTableTypes.TwoNestedCategory, () => {});
 
     return (
         <>
+            <DynamicTableHeader
+                localTable={localTable}
+                setLocalTable={setLocalTable}
+                setTables={setTables}
+                availableDynamicTableOptions={availableDynamicTableOptions}
+                tableNameMap={tableNameMap}
+                unitTypes={unitTypes}
+                inUse={inUse}
+                tableTag={tableTag}
+                setTableTag={setTableTag}
+            />
             <TwoNestedCategoriesContainer addInnerCategory={addInnerCategory} tableData={tableRows} modifier={modifier} />
             <AccordionActions>
                 <div className={cls.trayWrapper}>

@@ -106,7 +106,8 @@ namespace Palavyr.API.CustomMiddleware
                         logger.LogError($"{ex.Message}");
                         logger.LogError($"{ex.InnerException}");
                         logger.LogError($"{ex.GetBaseException()}");
-                        message = "Oops! We've made a mistake. Please consider reporting this to info.palavyr.com, or you can visit https://github.com/Palavyr/Palavyr-Issues";
+                        message = ex.Message;
+                        // message = "Oops! We've made a mistake. Please consider reporting this to info.palavyr.com, or you can visit https://github.com/Palavyr/Palavyr-Issues";
                         break;
                 }
 

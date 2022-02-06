@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
 import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -9,6 +9,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import RemoveIcon from "@material-ui/icons/Remove";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
+import { uuid } from "uuidv4";
 
 export interface ISelectOneFlatRow {
     dataIndex: number;

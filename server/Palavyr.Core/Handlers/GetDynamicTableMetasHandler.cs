@@ -46,7 +46,8 @@ namespace Palavyr.Core.Handlers
                     };
                 });
 
-            return new GetDynamicTableMetasResponse(tableResources.ToArray());
+            var asArray = tableResources.ToArray();
+            return new GetDynamicTableMetasResponse(asArray);
         }
     }
 

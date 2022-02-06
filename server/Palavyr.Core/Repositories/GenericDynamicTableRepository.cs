@@ -88,8 +88,11 @@ namespace Palavyr.Core.Repositories
 
         public async Task DeleteTable(string areaIdentifier, string tableId)
         {
-            metaQueryExecutor.Remove(await metaQueryExecutor.SingleAsync(row => row.TableId == tableId));
-            queryExecutor.RemoveRange(await GetAllRows(areaIdentifier, tableId));
+            var table = await metaQueryExecutor.SingleAsync(row => row.TableId == tableId);
+            metaQueryExecutor.Remove(table);
+
+            var allRows = await GetAllRows(areaIdentifier, tableId);
+            queryExecutor.RemoveRange(allRows);
             await dashContext.SaveChangesAsync(cancellationTokenTransport.CancellationToken);
         }
 
