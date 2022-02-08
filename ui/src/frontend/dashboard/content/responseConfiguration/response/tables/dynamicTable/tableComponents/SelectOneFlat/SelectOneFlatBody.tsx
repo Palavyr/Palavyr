@@ -17,7 +17,9 @@ export const SelectOneFlatBody = ({ tableData, modifier }: IDynamicTableBody) =>
         <TableBody className={cls.body}>
             {sortByPropertyNumeric((x: SelectOneFlatData) => x.rowOrder, tableData).map((row: SelectOneFlatData, index: number) => {
                 const rowId = row.tableId.toString() + index.toString();
-                return <SelectOneFlatRow key={rowId} dataIndex={index} tableData={tableData} row={row} modifier={modifier} />;
+                return (
+                    <React.Fragment key={rowId}>{row && row.option ? <SelectOneFlatRow key={"row" + rowId} dataIndex={index} tableData={tableData} row={row} modifier={modifier} /> : <></>}</React.Fragment>
+                );
             })}
         </TableBody>
     );

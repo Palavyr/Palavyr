@@ -61,6 +61,7 @@ export const PercentOfThresholdHeader = ({ tableData, modifier }: IPercentOfThre
                         <PalavyrText variant="body1">Reorder thresholds</PalavyrText>
                     </Button>
                 </TableCell>
+                <TableCell></TableCell>
             </TableRow>
         </TableHead>
     );

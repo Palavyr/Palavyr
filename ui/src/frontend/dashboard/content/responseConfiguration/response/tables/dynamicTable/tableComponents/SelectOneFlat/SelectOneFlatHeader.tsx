@@ -22,20 +22,20 @@ const useStyles = makeStyles(theme => ({
 
 export const SelectOneFlatHeader = () => {
     const cls = useStyles();
-    const variantHeader = "h5";
+    const variantHeader = "h4";
 
     return (
         <TableHead className={cls.head}>
             <TableRow className={cls.row}>
                 <TableCell align="center"></TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText variant={variantHeader}>Option Name</PalavyrText>
+                    <h4>Option Name</h4>
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText variant={variantHeader}>Amount</PalavyrText>
+                    <h4>Amount</h4>
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell, cls.noRight)}>
-                    <PalavyrText variant={variantHeader}>Max Amount</PalavyrText>
+                    <h4>Max Amount</h4>
                 </TableCell>
                 <TableCell align="center"></TableCell>
             </TableRow>

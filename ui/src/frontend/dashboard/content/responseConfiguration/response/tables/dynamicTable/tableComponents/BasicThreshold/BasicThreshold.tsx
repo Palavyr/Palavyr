@@ -14,6 +14,7 @@ import { TextInput } from "@common/components/TextField/TextInput";
 import { Align } from "@common/positioning/Align";
 import { DynamicTableHeader } from "../../DynamicTableHeader";
 import { cloneDeep } from "lodash";
+import { useIsMounted } from "@common/hooks/useIsMounted";
 
 const useStyles = makeStyles(theme => ({
     alignLeft: {
@@ -55,10 +56,25 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, 
     const { repository } = useContext(DashboardContext);
     const [name, setItemName] = useState<string>("");
     const [localTable, setLocalTable] = useState<DynamicTable>();
+    const isMounted = useIsMounted();
 
     useEffect(() => {
-        setLocalTable(table);
-    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName, localTable?.tableMeta.tableType, localTable?.tableRows, localTable?.tableMeta.unitGroup]);
+        if (isMounted) {
+            setLocalTable(table);
+        }
+    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+
+    useEffect(() => {
+        if (isMounted) {
+            (async () => {
+                if (localTable) {
+                    const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.areaIdentifier, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                    localTable.tableRows = tableRows;
+                    setLocalTable(cloneDeep(localTable));
+                }
+            })();
+        }
+    }, [localTable?.tableMeta.tableType]);
 
     const modifier = new BasicThresholdModifier(updatedRows => {
         if (localTable) {
@@ -87,9 +103,10 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, 
                     localTable.tableMeta.tableTag
                 );
 
-                tables[tableIndex].tableRows = updatedRows;
-                tables[tableIndex].tableMeta = newTableMeta;
-                setTables(cloneDeep(tables));
+                const updatedTable = cloneDeep(localTable);
+                updatedTable.tableRows = updatedRows;
+                updatedTable.tableMeta = newTableMeta;
+                setLocalTable(updatedTable);
 
                 return true;
             } else {
@@ -127,12 +144,10 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, 
                         }}
                     />
                 </Align>
-                <TableContainer>
-                    <Table>
-                        <BasicThresholdHeader tableData={localTable.tableRows} modifier={modifier} />
-                        <BasicThresholdBody tableData={localTable.tableRows} modifier={modifier} unitPrettyName={localTable.tableMeta.unitPrettyName} unitGroup={localTable.tableMeta.unitGroup} />
-                    </Table>
-                </TableContainer>
+                <Table>
+                    <BasicThresholdHeader tableData={localTable.tableRows} modifier={modifier} />
+                    <BasicThresholdBody tableData={localTable.tableRows} modifier={modifier} unitPrettyName={localTable.tableMeta.unitPrettyName} unitGroup={localTable.tableMeta.unitGroup} />
+                </Table>
             </div>
             <AccordionActions>
                 <div className={cls.trayWrapper}>

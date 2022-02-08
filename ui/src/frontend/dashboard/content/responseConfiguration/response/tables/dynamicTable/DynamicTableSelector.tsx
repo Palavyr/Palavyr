@@ -25,16 +25,18 @@ export const PricingStrategySelector = ({ toolTipTitle, disabled, pricingStrateg
     const cls = useStyles();
     return (
         <div className={cls.selector}>
-            <Autocomplete
-                disableClearable
-                disabled={disabled}
-                value={pricingStrategySelection}
-                options={tableOptions}
-                getOptionLabel={getOptionLabel}
-                onChange={handleChange}
-                style={{ width: 300, marginTop: "1rem" }}
-                renderInput={params => <TextField {...params} label={helperText} variant="standard" />}
-            />
+            {pricingStrategySelection && (
+                <Autocomplete
+                    disableClearable
+                    disabled={disabled}
+                    value={pricingStrategySelection}
+                    options={tableOptions}
+                    getOptionLabel={getOptionLabel}
+                    onChange={handleChange}
+                    style={{ width: 300, marginTop: "1rem" }}
+                    renderInput={params => <TextField {...params} label={helperText} variant="standard" />}
+                />
+            )}
         </div>
     );
 };
@@ -55,16 +57,18 @@ export const UnitSelector = ({ disabled, selection, handleChange, options, getOp
 
     return (
         <div className={cls.selector}>
-            <Autocomplete
-                disableClearable
-                value={selection}
-                options={options}
-                getOptionLabel={getOptionLabel}
-                groupBy={groupBy}
-                onChange={handleChange}
-                style={{ width: 300, marginTop: "1rem" }}
-                renderInput={params => <TextField {...params} label="Unit selector" variant="standard" />}
-            />
+            {selection && (
+                <Autocomplete
+                    disableClearable
+                    value={selection}
+                    options={options}
+                    getOptionLabel={getOptionLabel}
+                    groupBy={groupBy}
+                    onChange={handleChange}
+                    style={{ width: 300, marginTop: "1rem" }}
+                    renderInput={params => <TextField {...params} label="Unit selector" variant="standard" />}
+                />
+            )}
         </div>
     );
 };

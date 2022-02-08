@@ -1,5 +1,5 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
-import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
+import { Button, makeStyles, TableBody, TableContainer, Paper, Table } from "@material-ui/core";
 import { CategoryNestedThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
@@ -67,14 +67,14 @@ export const CategoryNestedThresholdItemTable = ({
     const addThresholdOnClick = () => modifier.addThreshold(tableData, categoryId, repository, areaIdentifier, tableId);
     return (
         <>
-            <TableContainer className={cls.tableStyles} component={Paper}>
+            <Table className={cls.tableStyles}>
                 {categoryIndex === 0 && <CategoryNestedThresholdHeader tableData={tableData} modifier={modifier} />}
                 <TableBody className={cls.body}>
                     {sortByPropertyNumeric(getter, categoryData).map((row: CategoryNestedThresholdData, rowIndex: number) => {
                         row.rowOrder = rowIndex;
                         return (
                             <React.Fragment key={rowIndex}>
-                                {unitGroup && unitPrettyName ? (
+                                {unitGroup && unitPrettyName && row.threshold && row.valueMax && row.valueMin ? (
                                     <CategoryNestedThresholdRow
                                         key={row.rowId}
                                         categorySize={categoryData.length}
@@ -94,9 +94,8 @@ export const CategoryNestedThresholdItemTable = ({
                             </React.Fragment>
                         );
                     })}
-                    ;
                 </TableBody>
-            </TableContainer>
+            </Table>
             <ButtonBar
                 addInnerButton={
                     <Button onClick={addThresholdOnClick} color="primary" variant="contained">

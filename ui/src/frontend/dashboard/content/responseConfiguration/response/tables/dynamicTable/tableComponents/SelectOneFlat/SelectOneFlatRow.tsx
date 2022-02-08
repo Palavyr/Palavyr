@@ -9,7 +9,6 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import RemoveIcon from "@material-ui/icons/Remove";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
-import { uuid } from "uuidv4";
 
 export interface ISelectOneFlatRow {
     dataIndex: number;

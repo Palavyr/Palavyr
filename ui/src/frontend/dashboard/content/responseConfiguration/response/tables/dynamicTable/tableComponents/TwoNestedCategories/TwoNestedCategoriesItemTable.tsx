@@ -1,5 +1,5 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
-import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
+import { Button, makeStyles, TableBody, TableContainer, Paper, Table } from "@material-ui/core";
 import { TwoNestedCategoryData } from "@Palavyr-Types";
 import React from "react";
 import { useState } from "react";
@@ -51,26 +51,30 @@ export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, ou
 
     return (
         <>
-            <TableContainer className={cls.tableStyles} component={Paper}>
+            <Table className={cls.tableStyles}>
                 {outerCategoryIndex === 0 && <TwoNestedCategoriesHeader />}
                 <TableBody>
                     {sortByPropertyNumeric(getter, outerCategoryData).map((row: TwoNestedCategoryData, index: number) => {
                         return (
-                            <TwoNestedCategoriesRow
-                                key={row.rowId}
-                                shouldDisableInnerCategory={outerCategoryIndex > 0}
-                                outerCategoryId={outerCategoryId}
-                                setOuterCategoryName={setOuterCategoryName}
-                                outerCategoryName={name}
-                                index={index}
-                                tableData={tableData}
-                                row={row}
-                                modifier={modifier}
-                            />
+                            <React.Fragment key={index}>
+                                {row && row.itemName && (
+                                    <TwoNestedCategoriesRow
+                                        key={row.rowId}
+                                        shouldDisableInnerCategory={outerCategoryIndex > 0}
+                                        outerCategoryId={outerCategoryId}
+                                        setOuterCategoryName={setOuterCategoryName}
+                                        outerCategoryName={name}
+                                        index={index}
+                                        tableData={tableData}
+                                        row={row}
+                                        modifier={modifier}
+                                    />
+                                )}
+                            </React.Fragment>
                         );
                     })}
                 </TableBody>
-            </TableContainer>
+            </Table>
             <ButtonBar
                 addInnerButton={
                     outerCategoryIndex === 0 ? (
@@ -82,7 +86,7 @@ export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, ou
                     )
                 }
                 deleteButton={
-                    <Button variant="contained" style={{ width: "38ch"}} color="primary" onClick={() => removeOuterCategory(outerCategoryId)}>
+                    <Button variant="contained" style={{ width: "38ch" }} color="primary" onClick={() => removeOuterCategory(outerCategoryId)}>
                         Delete Outer Category
                     </Button>
                 }
@@ -90,5 +94,3 @@ export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, ou
         </>
     );
 };
-
-

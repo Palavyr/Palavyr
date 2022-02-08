@@ -49,7 +49,23 @@ export const TwoNestedCategories = ({
 
     useEffect(() => {
         setLocalTable(table);
-    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName, localTable?.tableMeta.tableType, localTable?.tableRows]);
+    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+
+    useEffect(() => {
+        (async () => {
+            if (localTable) {
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.areaIdentifier, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                localTable.tableRows = tableRows;
+                setLocalTable(cloneDeep(localTable));
+            }
+        })();
+        return () => {
+            if (localTable) {
+                localTable.tableRows = [];
+                setLocalTable(cloneDeep(localTable));
+            }
+        };
+    }, [localTable?.tableMeta.tableType]);
 
     const modifier = new TwoNestedCategoriesModifier(updatedRows => {
         if (localTable) {
@@ -81,9 +97,10 @@ export const TwoNestedCategories = ({
                     localTable.tableMeta.tableTag
                 );
 
-                tables[tableIndex].tableRows = updatedRows;
-                tables[tableIndex].tableMeta = newTableMeta;
-                setTables(cloneDeep(tables));
+                const updatedTable = cloneDeep(localTable);
+                updatedTable.tableRows = updatedRows;
+                updatedTable.tableMeta = newTableMeta;
+                setLocalTable(updatedTable);
 
                 return true;
             } else {

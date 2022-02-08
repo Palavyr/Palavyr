@@ -1,4 +1,3 @@
-import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { TableHead, TableRow, TableCell, makeStyles, Tooltip } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
@@ -17,28 +16,27 @@ const useStyles = makeStyles(theme => ({
 
 export const TwoNestedCategoriesHeader = () => {
     const cls = useStyles();
-    const headerVariant = "h5";
 
     return (
         <TableHead>
             <TableRow>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText variant={headerVariant}> Outer Category</PalavyrText>
+                    <h5> Outer Category</h5>
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText variant={headerVariant}>Inner Category</PalavyrText>
+                    <h5>Inner Category</h5>
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText variant={headerVariant}>Amount</PalavyrText>
+                    <h5>Amount</h5>
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell, cls.noRight)}>
                     <Tooltip title="If Range">
-                        <PalavyrText variant={headerVariant}>Max Amount</PalavyrText>
+                        <h5>Max Amount</h5>
                     </Tooltip>
                 </TableCell>
                 <TableCell align="center"></TableCell>
                 <TableCell align="center">
-                    <PalavyrText variant={headerVariant}>Delete</PalavyrText>
+                    <h5>Delete</h5>
                 </TableCell>
                 <TableCell align="center"></TableCell>
             </TableRow>

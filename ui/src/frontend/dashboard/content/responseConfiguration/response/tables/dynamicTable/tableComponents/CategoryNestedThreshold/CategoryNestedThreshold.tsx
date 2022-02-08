@@ -10,6 +10,7 @@ import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { DynamicTableHeader } from "../../DynamicTableHeader";
 import { cloneDeep } from "lodash";
+import { useIsMounted } from "@common/hooks/useIsMounted";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -46,11 +47,22 @@ export const CategoryNestedThreshold = ({
 }: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
+    const isMounted = useIsMounted();
 
     const [localTable, setLocalTable] = useState<DynamicTable>();
     useEffect(() => {
-        setLocalTable(table);
-    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName, localTable?.tableMeta.tableType, localTable?.tableRows]);
+        if (isMounted) setLocalTable(table);
+    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+
+    useEffect(() => {
+        (async () => {
+            if (localTable && isMounted) {
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.areaIdentifier, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                localTable.tableRows = tableRows;
+                setLocalTable(cloneDeep(localTable));
+            }
+        })();
+    }, [localTable?.tableMeta.tableType]);
 
     const modifier = new CategoryNestedThresholdModifier(updatedRows => {
         if (localTable) {
@@ -79,9 +91,10 @@ export const CategoryNestedThreshold = ({
                     localTable.tableMeta.tableTag
                 );
 
-                tables[tableIndex].tableRows = updatedRows;
-                tables[tableIndex].tableMeta = newTableMeta;
-                setTables(cloneDeep(tables));
+                const updatedTable = cloneDeep(localTable);
+                updatedTable.tableRows = updatedRows;
+                updatedTable.tableMeta = newTableMeta;
+                setLocalTable(updatedTable);
 
                 return true;
             } else {

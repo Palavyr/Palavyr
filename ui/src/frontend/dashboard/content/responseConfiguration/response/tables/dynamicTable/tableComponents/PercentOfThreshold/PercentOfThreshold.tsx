@@ -42,12 +42,26 @@ export const PercentOfThreshold = ({
     table,
 }: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
-    const classes = useStyles();
+    const cls = useStyles();
 
     const [localTable, setLocalTable] = useState<DynamicTable>();
+    const [loaded, setLoaded] = useState(false);
+
     useEffect(() => {
         setLocalTable(table);
-    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName, localTable?.tableMeta.tableType, localTable?.tableRows]);
+        setLoaded(true);
+    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+
+    useEffect(() => {
+        (async () => {
+            if (localTable && loaded) {
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.areaIdentifier, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                localTable.tableRows = tableRows;
+                setLocalTable(cloneDeep(localTable));
+            }
+        })();
+
+    }, [localTable?.tableMeta.tableType]);
 
     const modifier = new PercentOfThresholdModifier(updatedRows => {
         if (localTable) {
@@ -80,9 +94,10 @@ export const PercentOfThreshold = ({
                     localTable.tableMeta.tableTag
                 );
 
-                tables[tableIndex].tableRows = updatedRows;
-                tables[tableIndex].tableMeta = newTableMeta;
-                setTables(cloneDeep(tables));
+                const updatedTable = cloneDeep(localTable);
+                updatedTable.tableRows = updatedRows;
+                updatedTable.tableMeta = newTableMeta;
+                setLocalTable(updatedTable);
 
                 return true;
             } else {
@@ -111,13 +126,13 @@ export const PercentOfThreshold = ({
                 unitGroup={localTable.tableMeta.unitGroup}
             />
             <AccordionActions>
-                <div className={classes.trayWrapper}>
-                    <div className={classes.alignLeft}>
-                        <Button className={classes.add} onClick={addItemOnClick} color="primary" variant="contained">
+                <div className={cls.trayWrapper}>
+                    <div className={cls.alignLeft}>
+                        <Button className={cls.add} onClick={addItemOnClick} color="primary" variant="contained">
                             Add Item
                         </Button>
                     </div>
-                    <div className={classes.alignRight}>
+                    <div className={cls.alignRight}>
                         <SaveOrCancel onDelete={deleteAction} onSave={onSave} onCancel={async () => window.location.reload()} />
                     </div>
                 </div>

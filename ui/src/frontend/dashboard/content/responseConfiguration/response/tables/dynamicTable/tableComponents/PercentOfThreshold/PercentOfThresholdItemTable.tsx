@@ -1,5 +1,5 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
-import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
+import { Button, makeStyles, TableBody, TableContainer, Paper, Table } from "@material-ui/core";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -63,7 +63,7 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                     label="Name to use in PDF fee table"
                     variant="standard"
                     type="text"
-                    value={itemName}
+                    value={itemName || ""}
                     InputLabelProps={{ className: cls.inputPropsCls }}
                     onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
                         event.preventDefault();
@@ -72,7 +72,7 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                     }}
                 />
             </Align>
-            <TableContainer className={cls.tableStyles} component={Paper}>
+            <Table>
                 <PercentOfThresholdHeader tableData={tableData} modifier={modifier} />
                 <TableBody className={cls.tableStyles}>
                     {sortByPropertyNumeric(getter, itemData).map((row: PercentOfThresholdData, index: number) => {
@@ -80,7 +80,7 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                         const itemLength = itemData.length;
                         return (
                             <React.Fragment key={index}>
-                                {unitGroup && unitPrettyName ? (
+                                {unitGroup && unitPrettyName && row && row.threshold ? (
                                     <PercentOfThresholdRow
                                         unitGroup={unitGroup}
                                         unitPrettyName={unitPrettyName}
@@ -99,7 +99,7 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                         );
                     })}
                 </TableBody>
-            </TableContainer>
+            </Table>
             <ButtonBar
                 addInnerButton={
                     <Button variant="contained" style={{ width: "25ch" }} color="primary" onClick={addRowOnClick}>

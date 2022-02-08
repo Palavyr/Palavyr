@@ -1,17 +1,15 @@
-import { Dispatch, SetStateAction } from "react";
-
+import { SetState } from "@Palavyr-Types";
 
 export class LogueModifier {
     // this modifies the prologue and epilogue (look to deprecate this in the future)
 
-    onClick: Dispatch<SetStateAction<string>>
+    onClick: SetState<string>;
 
-    constructor(onClick: Dispatch<SetStateAction<string>>) {
+    constructor(onClick: SetState<string>) {
         this.onClick = onClick;
     }
 
     simpleUpdateState(newLogue: string) {
-        this.onClick(newLogue)
+        this.onClick(newLogue);
     }
 }
-

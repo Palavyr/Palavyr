@@ -32,6 +32,9 @@ export const DynamicTableHeader = ({ availableDynamicTableOptions, tableNameMap,
 
     useEffect(() => {
         setDisabledSelector(inUse);
+        return () => {
+            setDisabledSelector(false);
+        };
     }, [localTable, unitTypes]);
 
     const onPricingStrategyChange = async (_: any, value: string) => {
@@ -52,9 +55,6 @@ export const DynamicTableHeader = ({ availableDynamicTableOptions, tableNameMap,
         localTable.tableMeta.unitGroup = quantDef.unitGroup;
         localTable.tableMeta.unitPrettyName = quantDef.unitPrettyName;
 
-        const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(updatedTableMeta.areaIdentifier, updatedTableMeta.tableType, updatedTableMeta.tableId);
-
-        localTable.tableRows = tableRows;
         setLocalTable(cloneDeep(localTable));
     };
 
