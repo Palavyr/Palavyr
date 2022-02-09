@@ -94,7 +94,7 @@ export const DynamicTableHeader = ({ availableDynamicTableOptions, tableNameMap,
                 )}
                 <TextInput
                     className={cls.textinput}
-                    label="Short table description (2 or 3 words)"
+                    label="Table Name (used in the chat configuration)"
                     value={localTable.tableMeta.tableTag}
                     onChange={e => {
                         e.preventDefault();

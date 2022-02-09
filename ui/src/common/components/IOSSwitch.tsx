@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { makeStyles, Switch, SwitchProps } from '@material-ui/core';
+import * as React from "react";
+import { makeStyles, Switch, SwitchProps } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -10,23 +10,20 @@ const useStyles = makeStyles(theme => ({
     },
     switchBase: {
         padding: 1,
-        '&$checked': {
-            transform: 'translateX(16px)',
+        "&$checked": {
+            transform: "translateX(16px)",
             color: theme.palette.common.white,
-            '& + $track': {
-                backgroundColor: '#52d869',
+            "& + $track": {
+                backgroundColor: "#52d869",
                 opacity: 1,
-                border: 'none',
+                border: "none",
             },
         },
-        '&$focusVisible $thumb': {
-            color: '#52d869',
-            border: '6px solid #fff',
+        "&$focusVisible $thumb": {
+            color: "#52d869",
+            border: "6px solid #fff",
         },
     },
-
-
-
 
     thumb: {
         width: 24,
@@ -37,28 +34,26 @@ const useStyles = makeStyles(theme => ({
         border: `1px solid ${theme.palette.grey[400]}`,
         backgroundColor: theme.palette.grey[50],
         opacity: 1,
-        transition: theme.transitions.create(['background-color', 'border']),
+        transition: theme.transitions.create(["background-color", "border"]),
     },
     checked: {},
     focusVisible: {},
-}))
-
-
+}));
 
 export const IOSSwitch = ({ ...props }: SwitchProps) => {
-    const classes = useStyles();
+    const cls = useStyles();
     return (
         <Switch
-            focusVisibleClassName={classes.focusVisible}
+            focusVisibleClassName={cls.focusVisible}
             disableRipple
             classes={{
-                root: classes.root,
-                switchBase: classes.switchBase,
-                thumb: classes.thumb,
-                track: classes.track,
-                checked: classes.checked,
+                root: cls.root,
+                switchBase: cls.switchBase,
+                thumb: cls.thumb,
+                track: cls.track,
+                checked: cls.checked,
             }}
             {...props}
         />
     );
-}
+};

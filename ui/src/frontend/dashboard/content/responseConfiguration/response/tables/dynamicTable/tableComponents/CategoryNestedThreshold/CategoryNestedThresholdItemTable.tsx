@@ -56,14 +56,10 @@ export const CategoryNestedThresholdItemTable = ({
     unitPrettyName,
     unitGroup,
 }: CategoryNestedThresholdItemTableProps) => {
-    const [name, setCategoryName] = useState<string>("");
 
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
 
-    useEffect(() => {
-        setCategoryName(categoryName);
-    }, []);
     const addThresholdOnClick = () => modifier.addThreshold(tableData, categoryId, repository, areaIdentifier, tableId);
     return (
         <>
@@ -74,13 +70,12 @@ export const CategoryNestedThresholdItemTable = ({
                         row.rowOrder = rowIndex;
                         return (
                             <React.Fragment key={rowIndex}>
-                                {unitGroup && unitPrettyName && row.threshold && row.valueMax && row.valueMin ? (
+                                {unitGroup && unitPrettyName && row ? (
                                     <CategoryNestedThresholdRow
                                         key={row.rowId}
                                         categorySize={categoryData.length}
                                         categoryId={categoryId}
-                                        setCategoryName={setCategoryName}
-                                        categoryName={name}
+                                        categoryName={categoryName}
                                         rowIndex={rowIndex}
                                         tableData={tableData}
                                         row={row}
@@ -104,7 +99,7 @@ export const CategoryNestedThresholdItemTable = ({
                 }
                 deleteButton={
                     <Button variant="contained" style={{ width: "38ch" }} color="primary" onClick={() => modifier.removeCategory(tableData, categoryId)}>
-                        Delete Category
+                        Delete {categoryName}
                     </Button>
                 }
             />

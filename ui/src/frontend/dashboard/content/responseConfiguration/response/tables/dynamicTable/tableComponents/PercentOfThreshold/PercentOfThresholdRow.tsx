@@ -1,5 +1,5 @@
 import React from "react";
-import { TableRow, TableCell, Button, makeStyles, FormControlLabel, Checkbox, Typography } from "@material-ui/core";
+import { TableRow, Button, makeStyles, FormControlLabel, Checkbox, Typography } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { PercentOfThresholdData, TableData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
@@ -7,6 +7,7 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { UnitInput } from "../../components/UnitInput";
+import { Cell } from "../../components/Cell";
 
 export interface IPercentOfThresholdRow {
     tableData: TableData;
@@ -53,8 +54,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const cellAlignment = "center";
-
 export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, modifier, baseValue, unitGroup, unitPrettyName }: IPercentOfThresholdRow) => {
     const cls = useStyles({ isTrue: !row.range });
 
@@ -66,12 +65,12 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
 
     return (
         <TableRow className={cls.tableRow}>
-            <TableCell align={cellAlignment}>
+            <Cell>
                 <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeRow(tableData, row.rowId)}>
                     Delete
                 </Button>
-            </TableCell>
-            <TableCell align={cellAlignment}>
+            </Cell>
+            <Cell>
                 <UnitInput
                     unitGroup={unitGroup}
                     unitPrettyName={unitPrettyName}
@@ -99,10 +98,10 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                         }
                     }}
                 />
-            </TableCell>
+            </Cell>
             {!row.triggerFallback ? (
                 <>
-                    <TableCell align={cellAlignment}>
+                    <Cell>
                         {!row.triggerFallback && (
                             <Button
                                 variant="contained"
@@ -115,8 +114,8 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                                 {row.posNeg === true ? "Add" : "Subtract"}
                             </Button>
                         )}
-                    </TableCell>
-                    <TableCell align={cellAlignment}>
+                    </Cell>
+                    <Cell>
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 label="(5% is 0.05)"
@@ -131,8 +130,8 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                                 }}
                             />
                         )}
-                    </TableCell>
-                    <TableCell align={cellAlignment}>
+                    </Cell>
+                    <Cell>
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 label="Amount"
@@ -147,8 +146,8 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                                 }}
                             />
                         )}
-                    </TableCell>
-                    <TableCell align={cellAlignment}>
+                    </Cell>
+                    <Cell>
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 className={cls.maxValInput}
@@ -165,8 +164,8 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                                 }}
                             />
                         )}
-                    </TableCell>
-                    <TableCell align={cellAlignment}>
+                    </Cell>
+                    <Cell>
                         {!row.triggerFallback && (
                             <Button
                                 variant="contained"
@@ -179,25 +178,25 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                                 {row.range ? "Range" : "Single Value"}
                             </Button>
                         )}
-                    </TableCell>
+                    </Cell>
                 </>
             ) : (
                 <>
-                    <TableCell>
+                    <Cell>
                         <Typography align="center" style={{ paddingTop: "10px" }}>
                             If this threshold value is exceeded in the chat,
                         </Typography>
                         <Typography align="center">then a 'Too Complicated' response will be executed.</Typography>
-                    </TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
+                    </Cell>
+                    <Cell></Cell>
+                    <Cell></Cell>
                 </>
             )}
-            <TableCell>
+            <Cell>
                 {itemLength > 1 && row.rowOrder === itemLength - 1 && (
                     <FormControlLabel label="Trigger Too Complicated" control={<Checkbox checked={row.triggerFallback} onChange={onTriggerFallbackChange} />} />
                 )}
-            </TableCell>
+            </Cell>
         </TableRow>
     );
 };

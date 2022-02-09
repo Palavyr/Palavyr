@@ -25,7 +25,6 @@ export const PercentOfThresholdContainer = ({ tableData, modifier, addRowOnClick
         <div className={cls.container}>
             {Object.keys(tableGroups).map((itemId: string, index: number) => {
                 const itemData: PercentOfThresholdData[] = tableGroups[itemId];
-
                 return (
                     <PercentOfThresholdItemTable
                         key={index}

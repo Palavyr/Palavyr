@@ -18,7 +18,7 @@ export class TwoNestedCategoriesModifier {
     }
 
     groupByOuterCategory(tableData: TwoNestedCategoryData[]): TableGroup<TwoNestedCategoryData[]> {
-        return groupBy(tableData, (x) => x.itemId);
+        return groupBy(tableData, x => x.itemId);
     }
 
     getItemRows(tableData: TwoNestedCategoryData[], rowId: String) {
@@ -164,14 +164,14 @@ export class TwoNestedCategoriesModifier {
 
     removeOuterCategory(tableData: TwoNestedCategoryData[], itemId: string) {
         const itemIds: string[] = [];
-        tableData.forEach((x) => itemIds.push(x.itemId));
+        tableData.forEach(x => itemIds.push(x.itemId));
 
         const unique = uniq(itemIds);
         if (unique.length > 1) {
             const updatedTable = tableData.filter((x: TwoNestedCategoryData) => x.itemId !== itemId);
             this.setTables(updatedTable);
         } else {
-            alert("Table must have at least one item.");
+            alert("Table must have at least one outer category.");
         }
     }
 

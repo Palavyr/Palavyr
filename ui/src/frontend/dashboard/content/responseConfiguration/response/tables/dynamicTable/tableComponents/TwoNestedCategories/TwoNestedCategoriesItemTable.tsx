@@ -1,9 +1,8 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
-import { Button, makeStyles, TableBody, TableContainer, Paper, Table } from "@material-ui/core";
+import { takeNCharacters } from "@common/utils/textSlicing";
+import { Button, makeStyles, TableBody, Table } from "@material-ui/core";
 import { TwoNestedCategoryData } from "@Palavyr-Types";
 import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
 import { ButtonBar } from "../../components/SaveBar";
 import { TwoNestedCategoriesHeader } from "./TwoNestedCategoriesHeader";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
@@ -37,33 +36,26 @@ const getter = (x: TwoNestedCategoryData) => x.rowOrder;
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
 export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, outerCategoryData, outerCategoryName, outerCategoryId, modifier, addInnerCategory }: ITwoNestedCategoriesItemTable) => {
-    const [name, setOuterCategoryName] = useState<string>("");
-
     const removeOuterCategory = (outerCategoryId: string) => {
         modifier.removeOuterCategory(tableData, outerCategoryId);
     };
 
     const cls = useStyles();
 
-    useEffect(() => {
-        setOuterCategoryName(outerCategoryName);
-    }, []);
-
     return (
         <>
             <Table className={cls.tableStyles}>
-                {outerCategoryIndex === 0 && <TwoNestedCategoriesHeader />}
+                <TwoNestedCategoriesHeader show={outerCategoryIndex === 0} />
                 <TableBody>
                     {sortByPropertyNumeric(getter, outerCategoryData).map((row: TwoNestedCategoryData, index: number) => {
                         return (
                             <React.Fragment key={index}>
-                                {row && row.itemName && (
+                                {row && (
                                     <TwoNestedCategoriesRow
                                         key={row.rowId}
                                         shouldDisableInnerCategory={outerCategoryIndex > 0}
                                         outerCategoryId={outerCategoryId}
-                                        setOuterCategoryName={setOuterCategoryName}
-                                        outerCategoryName={name}
+                                        outerCategoryName={outerCategoryName}
                                         index={index}
                                         tableData={tableData}
                                         row={row}
@@ -87,7 +79,7 @@ export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, ou
                 }
                 deleteButton={
                     <Button variant="contained" style={{ width: "38ch" }} color="primary" onClick={() => removeOuterCategory(outerCategoryId)}>
-                        Delete Outer Category
+                        Delete {takeNCharacters(outerCategoryName)}
                     </Button>
                 }
             />

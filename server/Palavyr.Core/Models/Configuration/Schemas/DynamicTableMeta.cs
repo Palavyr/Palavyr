@@ -70,10 +70,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public void UpdateProperties(ModifyDynamicTableMetaRequest metaUpdate, IUnitRetriever unitRetriever)
         {
             if (string.IsNullOrEmpty(metaUpdate.TableType) || string.IsNullOrWhiteSpace(metaUpdate.TableType)) throw new DomainException("Table Type is a required field");
-            
+
             if (string.IsNullOrEmpty(metaUpdate.PrettyName) || string.IsNullOrWhiteSpace(metaUpdate.PrettyName)) throw new DomainException("Table Pretty Name is a required field");
-            
-            
+
             TableTag = metaUpdate.TableTag;
             TableType = metaUpdate.TableType;
             ValuesAsPaths = metaUpdate.ValueAsPaths;

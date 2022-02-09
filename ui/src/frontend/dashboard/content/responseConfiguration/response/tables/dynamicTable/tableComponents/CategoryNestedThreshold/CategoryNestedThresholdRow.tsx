@@ -1,20 +1,20 @@
 import React from "react";
-import { TableRow, TableCell, Button, makeStyles, TextField, FormControlLabel, Checkbox, Typography } from "@material-ui/core";
+import { TableRow, Button, makeStyles, TextField, FormControlLabel, Checkbox } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { CategoryNestedThresholdData, TableData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { SetState } from "@Palavyr-Types";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { UnitInput } from "../../components/UnitInput";
+import { Cell } from "../../components/Cell";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 export interface CategoryNestedThresholdProps {
     rowIndex: number;
     categoryId: string;
     categoryName: string;
     categorySize: number;
-    setCategoryName: SetState<string>;
     tableData: TableData;
     row: CategoryNestedThresholdData;
     modifier: CategoryNestedThresholdModifier;
@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
 
 const cellAlignment = "center";
 
-export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName, categorySize, setCategoryName, tableData, row, modifier, unitGroup, unitPrettyName }: CategoryNestedThresholdProps) => {
+export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName, categorySize, tableData, row, modifier, unitGroup, unitPrettyName }: CategoryNestedThresholdProps) => {
     const cls = useStyles({ isTrue: !row.range });
 
     const onTriggerFallbackChange = event => {
@@ -67,31 +67,26 @@ export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName,
     };
 
     const { currencySymbol } = React.useContext(DashboardContext);
-    const categoryColumn =
-        rowIndex === 0 ? (
-            <TableCell align={cellAlignment}>
-                <TextField
-                    className={cls.categoryInput}
-                    variant="standard"
-                    label="Category name"
-                    type="text"
-                    value={categoryName}
-                    color="primary"
-                    onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
-                        event.preventDefault();
-                        modifier.setCategoryName(tableData, categoryId, event.target.value);
-                        setCategoryName(event.target.value);
-                    }}
-                />
-            </TableCell>
-        ) : (
-            <TableCell></TableCell>
-        );
 
     return (
         <TableRow>
-            {categoryColumn}
-            <TableCell align={cellAlignment}>
+            <Cell>
+                {rowIndex === 0 && (
+                    <TextField
+                        className={cls.categoryInput}
+                        variant="standard"
+                        label="Category name"
+                        type="text"
+                        value={categoryName}
+                        color="primary"
+                        onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
+                            event.preventDefault();
+                            modifier.setCategoryName(tableData, categoryId, event.target.value);
+                        }}
+                    />
+                )}
+            </Cell>
+            <Cell>
                 <UnitInput
                     unitGroup={unitGroup}
                     unitPrettyName={unitPrettyName}
@@ -119,10 +114,10 @@ export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName,
                         }
                     }}
                 />
-            </TableCell>
+            </Cell>
             {!row.triggerFallback ? (
                 <>
-                    <TableCell align={cellAlignment}>
+                    <Cell>
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 label="Amount"
@@ -137,8 +132,8 @@ export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName,
                                 }}
                             />
                         )}
-                    </TableCell>
-                    <TableCell align={cellAlignment}>
+                    </Cell>
+                    <Cell>
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 className={cls.maxValInput}
@@ -155,8 +150,8 @@ export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName,
                                 }}
                             />
                         )}
-                    </TableCell>
-                    <TableCell align={cellAlignment}>
+                    </Cell>
+                    <Cell>
                         {!row.triggerFallback && (
                             <Button
                                 variant="contained"
@@ -169,31 +164,28 @@ export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName,
                                 {row.range ? "Range" : "Single Value"}
                             </Button>
                         )}
-                    </TableCell>
-                    <TableCell align={cellAlignment}>
+                    </Cell>
+                    <Cell>
                         <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeThreshold(tableData, row.rowId)}>
                             Delete Threshold
                         </Button>
-                    </TableCell>
+                    </Cell>
                 </>
             ) : (
                 <>
                     <>
-                        <Typography align="center" style={{ paddingTop: "10px" }}>
-                            If this threshold value is exceeded in the chat,
-                        </Typography>
-                        <Typography align="center">then a 'Too Complicated' response will be executed.</Typography>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
+                        If this threshold value is exceeded in the chat, then a <strong>'Too Complicated'</strong> response will be executed.
+                        <Cell></Cell>
+                        <Cell></Cell>
+                        <Cell></Cell>
                     </>
                 </>
             )}
-            <TableCell>
+            <Cell>
                 {row.rowOrder === categorySize - 1 && categorySize > 1 && (
                     <FormControlLabel label="Trigger Too Complicated" control={<Checkbox checked={row.triggerFallback} onChange={onTriggerFallbackChange} />} />
                 )}
-            </TableCell>
+            </Cell>
         </TableRow>
     );
 };

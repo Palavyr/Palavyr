@@ -10,6 +10,7 @@ import { PercentOfThresholdRow } from "./PercentOfThresholdRow";
 import { TextInput } from "@common/components/TextField/TextInput";
 import { Align } from "@common/positioning/Align";
 import { ButtonBar } from "../../components/SaveBar";
+import { takeNCharacters } from "@common/utils/textSlicing";
 
 interface IPercentOfThreshold {
     tableData: PercentOfThresholdData[];
@@ -80,7 +81,7 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                         const itemLength = itemData.length;
                         return (
                             <React.Fragment key={index}>
-                                {unitGroup && unitPrettyName && row && row.threshold ? (
+                                {unitGroup && unitPrettyName && row ? (
                                     <PercentOfThresholdRow
                                         unitGroup={unitGroup}
                                         unitPrettyName={unitPrettyName}
@@ -107,8 +108,8 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                     </Button>
                 }
                 deleteButton={
-                    <Button variant="contained" style={{ width: "18ch" }} color="primary" onClick={() => removeItem(itemId)}>
-                        Delete Item
+                    <Button variant="contained" style={{ width: "25ch" }} color="primary" onClick={() => removeItem(itemId)}>
+                        Delete {takeNCharacters(itemName, 12)}
                     </Button>
                 }
             />
