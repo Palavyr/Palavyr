@@ -1,5 +1,4 @@
-import { PalavyrText } from "@common/components/typography/PalavyrTypography";
-import { TableHead, TableRow, TableCell, makeStyles, Tooltip } from "@material-ui/core";
+import { TableHead, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
 
@@ -15,33 +14,30 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const TwoNestedCategoriesHeader = () => {
+export const TwoNestedCategoriesHeader = ({ show }: { show: boolean }) => {
     const cls = useStyles();
-    const headerVariant = "h5";
 
-    return (
+    return show ? (
         <TableHead>
             <TableRow>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText variant={headerVariant}> Outer Category</PalavyrText>
+                    {show && <h5> Outer Category</h5>}
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText variant={headerVariant}>Inner Category</PalavyrText>
+                    {show && <h5>Inner Category</h5>}
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText variant={headerVariant}>Amount</PalavyrText>
+                    {show && <h5>Amount</h5>}
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell, cls.noRight)}>
-                    <Tooltip title="If Range">
-                        <PalavyrText variant={headerVariant}>Max Amount</PalavyrText>
-                    </Tooltip>
+                    {show && <h5>Max Amount</h5>}
                 </TableCell>
                 <TableCell align="center"></TableCell>
-                <TableCell align="center">
-                    <PalavyrText variant={headerVariant}>Delete</PalavyrText>
-                </TableCell>
+                <TableCell align="center">{show && <h5>Delete</h5>}</TableCell>
                 <TableCell align="center"></TableCell>
             </TableRow>
         </TableHead>
+    ) : (
+        <></>
     );
 };

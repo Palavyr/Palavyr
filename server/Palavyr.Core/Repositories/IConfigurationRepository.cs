@@ -33,6 +33,7 @@ namespace Palavyr.Core.Repositories
 
         Task<List<DynamicTableMeta>> GetDynamicTableMetas(string areaIdentifier);
         Task<DynamicTableMeta> GetDynamicTableMetaByTableId(string tableId);
+        Task<DynamicTableMeta> UpdateDynamicTableMeta(DynamicTableMeta dynamicTableMeta);
 
         Task<Image> GetImageById(string imageId);
         Task<Image[]> GetImagesByIds(string[] imageIds);

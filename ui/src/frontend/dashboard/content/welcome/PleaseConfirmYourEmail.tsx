@@ -1,6 +1,6 @@
 import * as React from "react";
 import classNames from "classnames";
-import { Card, Typography, FormControl, OutlinedInput, makeStyles, useTheme, Divider } from "@material-ui/core";
+import { Card, FormControl, OutlinedInput, makeStyles } from "@material-ui/core";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { useContext, useState } from "react";
@@ -11,10 +11,13 @@ import { Align } from "@common/positioning/Align";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { ALL_COOKIE_NAMES } from "@constants";
+import Cookies from "js-cookie";
+import Auth from "@auth/Auth";
+import { useHistory } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     contentRoot: {
-        width: "100%",
         display: "flex",
         justifyContent: "center",
         background: "transparent",
@@ -31,9 +34,18 @@ const useStyles = makeStyles((theme) => ({
     },
     margin: {
         margin: theme.spacing(1),
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
     },
     inputLabel: { background: "white", borderRadius: "5px", boxShadow: "0px 0px 12px 5px white" },
-    outlinedInput: { background: "white" },
+    outlinedInput: { background: "white", width: "35ch", marginRight: "1rem" },
+    alignment: {
+        justifyContent: "space-around",
+        display: "flex",
+        flexDirection: "row",
+        marginTop: "4rem",
+    },
 }));
 
 export const PleaseConfirmYourEmail = () => {
@@ -48,6 +60,7 @@ export const PleaseConfirmYourEmail = () => {
     const [resentOpen, setResentOpen] = useState<boolean>(false);
     const [resendFailed, setResendFailed] = useState<boolean>(false);
     const [resendIsLoading, setResendIsLoading] = useState<boolean>(false);
+    const history = useHistory();
     const cls = useStyles();
 
     const confirmAccount = async () => {
@@ -92,44 +105,44 @@ export const PleaseConfirmYourEmail = () => {
         setAuthToken(event.target.value);
     };
 
+    const handleAccountDelete = async () => {
+        if (emailAddress) {
+            await repository.Settings.Account.CancelRegistration(emailAddress);
+            Auth.ClearAuthentication();
+            ALL_COOKIE_NAMES.forEach((x: string) => Cookies.remove(x));
+            history.push("/");
+        }
+    };
+
     return (
         <>
             <div className={classNames(cls.contentRoot, cls.centerText)}>
                 <div style={{ width: "100%" }}>
                     <HeaderStrip title="Confirm your email" subtitle={`Please provide the access token emailed to: ${emailAddress}`} />
-                    <Align>
+                    <Align direction="center">
                         <Card className={cls.card}>
                             <FormControl fullWidth className={cls.margin} variant="outlined">
-                                <OutlinedInput
-                                    className={cls.outlinedInput}
-                                    placeholder="Paste your confirmation code here"
-                                    value={authToken}
-                                    id="outlined-adornment-confirmation-code"
-                                    onChange={outlinedInputOnChange}
-                                />
-                                <br />
-                                <Align direction="flex-end">
-                                    <ColoredButton type="submit" variant="contained" color="primary" disabled={isLoading} onClick={confirmAccount}>
-                                        Submit
-                                        {isLoading && <ButtonCircularProgress />}
-                                    </ColoredButton>
-                                </Align>
-                            </FormControl>
-                        </Card>
-                    </Align>
-                    <Align>
-                        <Align direction="center">
-                            <div>
-                                <Typography variant="body2" gutterBottom>
-                                    If you need us to resend the confirmation token to your email address, click the button below
-                                </Typography>
-                                <br></br>
-                                <ColoredButton type="submit" variant="contained" color="primary" disabled={resendIsLoading} onClick={resendAuthToken}>
-                                    Resend Confirmation Token
-                                    {resendIsLoading && <ButtonCircularProgress />}
+                                <OutlinedInput className={cls.outlinedInput} placeholder="Confirmation Token" value={authToken} id="outlined-adornment-confirmation-code" onChange={outlinedInputOnChange} />
+                                <ColoredButton type="submit" variant="contained" color="primary" disabled={isLoading} onClick={confirmAccount}>
+                                    Submit
+                                    {isLoading && <ButtonCircularProgress />}
                                 </ColoredButton>
+                            </FormControl>
+                            <div className={cls.alignment}>
+                                <div>
+                                    <ColoredButton type="submit" variant="contained" color="primary" disabled={resendIsLoading} onClick={resendAuthToken}>
+                                        Resend Confirmation Token
+                                        {resendIsLoading && <ButtonCircularProgress />}
+                                    </ColoredButton>
+                                </div>
+                                <div>
+                                    <ColoredButton type="submit" variant="contained" color="primary" disabled={resendIsLoading} onClick={handleAccountDelete}>
+                                        Cancel Registration
+                                        {resendIsLoading && <ButtonCircularProgress />}
+                                    </ColoredButton>
+                                </div>
                             </div>
-                        </Align>
+                        </Card>
                     </Align>
                 </div>
             </div>

@@ -1,14 +1,15 @@
 import React, { useState, useCallback, useEffect, Suspense, useContext } from "react";
-import { DynamicTableMetas, TableNameMap } from "@Palavyr-Types";
+import { DynamicTable, QuantUnitDefinition, TableData, TableNameMap } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { Typography, Button, FormControlLabel, Checkbox } from "@material-ui/core";
-import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
+import { Button, FormControlLabel, Checkbox } from "@material-ui/core";
+import { PricingStrategyTable } from "./PricingStrategyTable";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { isDevelopmentStage } from "@common/client/clientUtils";
 import { OsTypeToggle } from "frontend/dashboard/content/responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import Fade from "react-reveal/Fade";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 export interface IDynamicTable {
     title: string;
@@ -20,25 +21,48 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
     const { repository, planTypeMeta, setSuccessOpen } = useContext(DashboardContext);
 
     const [loaded, setLoaded] = useState<boolean>(false);
-    const [parentState, changeParentState] = useState<boolean>(false);
-    const [showDebug, setShowDebug] = useState<boolean>(isDevelopmentStage() ? true : false);
-    const [tableMetas, setTableMetas] = useState<DynamicTableMetas>([]);
+    const [showDebug, setShowDebug] = useState<boolean>(false);
     const [availableTables, setAvailableTables] = useState<Array<string>>([]);
     const [tableNameMap, setTableNameMap] = useState<TableNameMap>({});
     const [showTotals, setShowTotals] = useState<boolean | null>(null);
+    const [unitTypes, setUnitTypes] = useState<QuantUnitDefinition[]>([]);
+    const [inUse, setInUse] = useState<boolean>(false);
+
+    const [tables, setTables] = useState<DynamicTable[]>([]);
 
     const loadTableData = useCallback(async () => {
         const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
         const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
         const showTotals = await repository.Area.getShowDynamicTotals(areaIdentifier);
+        const quantTypes = await repository.Configuration.Units.GetSupportedUnitIds();
 
-        // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
-        const availableTablePrettyNames = Object.keys(tableNameMap);
+        // TODO - seend array of all table metas and retrive in a single request.
+        let tables: DynamicTable[] = [];
+        let counter: number = 0;
+        dynamicTableMetas.forEach(async tableMeta => {
+            const { tableRows, isInUse } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
+            tables.push({ tableMeta, tableRows: tableRows as TableData });
+            counter++;
+            if (counter === dynamicTableMetas.length) {
+                setTables(tables);
+                setLoaded(true);
 
-        setShowTotals(showTotals);
-        setTableMetas(cloneDeep(dynamicTableMetas));
-        setAvailableTables(availableTablePrettyNames);
-        setTableNameMap(tableNameMap);
+                // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
+                setAvailableTables(Object.keys(tableNameMap));
+
+                // show fee totals totals row
+                setShowTotals(showTotals);
+
+                // map of pricing trategy pretty names
+                setTableNameMap(tableNameMap);
+
+                // Set array of quant unit types to select from
+                setUnitTypes(quantTypes);
+
+                // enable / disable the selector depending on if the current pricing strategy has been included in the conversation nodes
+                setInUse(isInUse);
+            }
+        });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
@@ -46,9 +70,20 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
     const addDynamicTable = async () => {
         // We always add the default dynamic table - the Select One Flat table
         const newMeta = await repository.Configuration.Tables.Dynamic.createDynamicTable(areaIdentifier);
-        tableMetas.push(newMeta);
-        setTableMetas(cloneDeep(tableMetas));
-        changeParentState(!parentState); // TODO: Reload the tables...
+        const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, newMeta.tableType, newMeta.tableId);
+
+        const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
+        const availableTables = Object.keys(tableNameMap);
+        setAvailableTables(availableTables);
+        // map of pricing trategy pretty names
+        setTableNameMap(tableNameMap);
+
+        const newTable: DynamicTable = {
+            tableMeta: newMeta,
+            tableRows: tableRows as TableData,
+        };
+
+        setTables([...tables, newTable]);
     };
 
     useEffect(() => {
@@ -70,51 +105,71 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
     const actions = (
         <>
-            {showTotals !== null && <FormControlLabel label="Show Totals" control={<Checkbox disabled={showTotals === null} checked={showTotals} onChange={changeShowTotals} />} />}
-            {planTypeMeta && tableMetas.length >= planTypeMeta.allowedDynamicTables ? (
+            {showTotals !== null && tables.length > 0 && <FormControlLabel label="Show Totals" control={<Checkbox disabled={showTotals === null} checked={showTotals} onChange={changeShowTotals} />} />}
+            {planTypeMeta && tables.length >= planTypeMeta.allowedDynamicTables ? (
                 <>
-                    <Typography display="inline">
+                    <PalavyrText display="inline">
                         <strong>Upgrade your subscription to add more dynamic tables</strong>
-                    </Typography>
+                    </PalavyrText>
                     <Button disabled={true} startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
-                        <Typography>Add Pricing Strategy</Typography>
+                        <PalavyrText>Add Pricing Strategy</PalavyrText>
                     </Button>
                 </>
             ) : (
                 <Button startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
-                    <Typography>Add Pricing Strategy</Typography>
+                    <PalavyrText>Add Pricing Strategy</PalavyrText>
                 </Button>
             )}
         </>
     );
+
     return (
         <PalavyrAccordian title={title} initialState={true} actions={actions}>
             {children}
-            {isDevelopmentStage() && <OsTypeToggle controlledState={showDebug} onChange={() => setShowDebug(!showDebug)} enabledLabel="Show Debug" disabledLabel="Show Debug" />}
+            {isDevelopmentStage() && (
+                <OsTypeToggle
+                    controlledState={showDebug}
+                    onChange={() => {
+                        setShowDebug(!showDebug);
+                        setTables(cloneDeep(tables));
+                    }}
+                    enabledLabel="Show Debug"
+                    disabledLabel="Show Debug"
+                />
+            )}
             <Suspense fallback={<h1>Loading Dynamic Tables...</h1>}>
-                {tableMetas.length === 0 && (
-                    <Typography align="center" color="secondary" style={{ padding: "0.8rem" }} variant="h5">
+                {tables.length === 0 && (
+                    <PalavyrText align="center" color="secondary" style={{ padding: "0.8rem" }} variant="h5">
                         No dynamic tables configured for this area.
-                    </Typography>
+                    </PalavyrText>
                 )}
 
-                {tableMetas.map((tableMeta, index) => {
+                {tables.map((table: DynamicTable, tableIndex: number) => {
+                    const onDelete = async () => {
+                        // delete table from DB
+                        await repository.Configuration.Tables.Dynamic.deleteDynamicTable(areaIdentifier, table.tableMeta.tableType, table.tableMeta.tableId);
+
+                        // delete table from UI
+                        const newTables = cloneDeep(tables);
+                        newTables.splice(tableIndex, 1);
+                        setTables(newTables);
+                    };
+
                     return (
-                        <Fade key={["Fade", index, tableMeta.tableId].join("-")}>
-                            <SingleDynamicFeeTable
-                                key={[index, tableMeta.tableId].join("-")}
-                                tableNumber={index}
-                                setLoaded={setLoaded}
-                                tableMetas={tableMetas}
-                                setTableMetas={setTableMetas}
-                                tableMetaIndex={index}
-                                defaultTableMeta={tableMeta}
-                                availablDynamicTableOptions={availableTables}
+                        <Fade key={["Fade", tableIndex, table.tableMeta.tableId].join("-")}>
+                            <PricingStrategyTable
+                                key={[tableIndex, table.tableMeta.tableId].join("-")}
+                                table={table}
+                                tables={tables}
+                                setTables={setTables}
+                                unitTypes={unitTypes}
+                                tableIndex={tableIndex}
+                                availableDynamicTableOptions={availableTables}
                                 tableNameMap={tableNameMap}
-                                parentState={parentState}
-                                changeParentState={changeParentState}
                                 areaIdentifier={areaIdentifier}
                                 showDebug={showDebug}
+                                inUse={inUse}
+                                deleteAction={onDelete}
                             />
                         </Fade>
                     );

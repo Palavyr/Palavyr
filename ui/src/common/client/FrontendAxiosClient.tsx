@@ -31,6 +31,7 @@ export enum CacheIds {
     WidgetState = "WidgetState",
     Images = "Images",
     S3Key = "S3Key",
+    SupportedUnitIds = "SupportedUnitIds",
 }
 
 export class AxiosClient implements IAxiosClient {

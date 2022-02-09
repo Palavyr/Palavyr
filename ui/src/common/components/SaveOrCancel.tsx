@@ -7,7 +7,6 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { SnackbarPositions } from "@Palavyr-Types";
-import { PalavyrText } from "./typography/PalavyrTypography";
 import CancelIcon from "@material-ui/icons/Cancel";
 
 export type AlertMessage = {
@@ -84,10 +83,12 @@ export const SaveOrCancel = ({
     deleteText = "Delete",
     useSaveIcon = true,
     buttonType = "button",
-    zIndex = 1,
+    zIndex = 1000,
 }: ISaveOrCancel) => {
     const cls = useStyles();
     const [isSaving, setIsSaving] = useState<boolean>(false);
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
+    const [isCancelling, setIsCancelling] = useState<boolean>(false);
 
     const { setSuccessText, successOpen, setSuccessOpen, setWarningText, warningOpen, setWarningOpen, setSnackPosition } = React.useContext(DashboardContext);
     const setPosition = () => {
@@ -121,20 +122,24 @@ export const SaveOrCancel = ({
 
     const onCancelClick = async () => {
         if (onCancel) {
+            setIsCancelling(true);
             setPosition();
             await onCancel();
             if (successOpen) setSuccessOpen(false);
             setWarningText(customCancelMessage ?? "Cancelled");
             setWarningOpen(true);
+            setIsCancelling(false);
         }
     };
 
     const onDeleteClick = async () => {
         if (onDelete) {
+            setIsDeleting(true);
             setPosition();
             await onDelete();
             setWarningText("Delete Successful");
             setWarningOpen(true);
+            setIsDeleting(false);
         }
     };
 
@@ -150,9 +155,7 @@ export const SaveOrCancel = ({
                     onClick={onSaveClick}
                     size={size}
                 >
-                    <PalavyrText onClick={onSaveClick} style={{ background: "transparent" }}>
-                        {saveText}
-                    </PalavyrText>
+                    {saveText}
                 </Button>
             }
             {onCancel && (
@@ -162,25 +165,21 @@ export const SaveOrCancel = ({
                     className={classNames(cls.button, cls.cancelButton)}
                     onClick={onCancelClick}
                     size={size}
-                    startIcon={<CancelIcon onClick={onCancelClick} className={classNames(cls.button, cls.cancelButton)} />}
+                    startIcon={isCancelling ? <CircularProgress size={20} /> : useSaveIcon ? <CancelIcon onClick={onCancelClick} style={{ background: "transparent" }} /> : <></>}
                 >
-                    <PalavyrText onClick={onCancelClick} className={classNames(cls.button, cls.cancelButton)}>
-                        {cancelText}
-                    </PalavyrText>
+                    {cancelText}
                 </Button>
             )}
             {onDelete && (
                 <Button
                     style={{ zIndex: zIndex }}
-                    startIcon={<DeleteOutlineIcon className={classNames(cls.button, cls.delButton)} onClick={onDeleteClick} />}
+                    startIcon={isDeleting ? <CircularProgress size={20} /> : useSaveIcon ? <DeleteOutlineIcon onClick={onSaveClick} style={{ background: "transparent" }} /> : <></>}
                     variant="outlined"
                     className={classNames(cls.button, cls.delButton)}
                     onClick={onDeleteClick}
                     size={size}
                 >
-                    <PalavyrText onClick={onDeleteClick} className={classNames(cls.button, cls.delButton)}>
-                        {deleteText}
-                    </PalavyrText>
+                    {deleteText}
                 </Button>
             )}
         </>

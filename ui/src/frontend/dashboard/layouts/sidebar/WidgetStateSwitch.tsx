@@ -1,5 +1,5 @@
 import React, { memo, useContext, useEffect, useState } from "react";
-import { ListItem, ListItemText, FormControlLabel, Typography, makeStyles, Tooltip } from "@material-ui/core";
+import { ListItem, ListItemText, FormControlLabel, makeStyles, Tooltip } from "@material-ui/core";
 import { IOSSwitch } from "@common/components/IOSSwitch";
 import { DashboardContext } from "../DashboardContext";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
@@ -42,7 +42,15 @@ export const WidgetStateSwitch = memo(({ isActive, menuOpen }: WidgetStateSwitch
         })();
     }, []);
 
-    const Switch = <IOSSwitch className="widget-state-switch" disabled={!isActive || widgetState === undefined} checked={widgetState === undefined ? true : widgetState ? true : false} onChange={updatewidgetState} name="Active" />;
+    const Switch = (
+        <IOSSwitch
+            className="widget-state-switch"
+            disabled={!isActive || widgetState === undefined}
+            checked={widgetState === undefined ? true : widgetState ? true : false}
+            onChange={updatewidgetState}
+            name="Active"
+        />
+    );
 
     return (
         <ListItem className={classNames(cls.item)} disabled={!isActive}>
@@ -54,7 +62,10 @@ export const WidgetStateSwitch = memo(({ isActive, menuOpen }: WidgetStateSwitch
                 )}
             </ListItemText>
             <FormControlLabel
-                control={menuOpen ? Switch : <Tooltip title="Widget On / Off toggle">{Switch}</Tooltip>}
+                control={
+                    Switch
+                    // menuOpen ? Switch : <Tooltip title="Widget On / Off toggle">{Switch}</Tooltip>
+                }
                 className={cls.text}
                 label={menuOpen && (widgetState === undefined ? <PalavyrText>loading...</PalavyrText> : widgetState ? <PalavyrText>Enabled</PalavyrText> : <PalavyrText>Disabled</PalavyrText>)}
             />

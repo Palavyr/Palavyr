@@ -1,9 +1,8 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
-import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
+import { takeNCharacters } from "@common/utils/textSlicing";
+import { Button, makeStyles, TableBody, Table } from "@material-ui/core";
 import { TwoNestedCategoryData } from "@Palavyr-Types";
 import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
 import { ButtonBar } from "../../components/SaveBar";
 import { TwoNestedCategoriesHeader } from "./TwoNestedCategoriesHeader";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
@@ -37,40 +36,37 @@ const getter = (x: TwoNestedCategoryData) => x.rowOrder;
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
 export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, outerCategoryData, outerCategoryName, outerCategoryId, modifier, addInnerCategory }: ITwoNestedCategoriesItemTable) => {
-    const [name, setOuterCategoryName] = useState<string>("");
-
     const removeOuterCategory = (outerCategoryId: string) => {
         modifier.removeOuterCategory(tableData, outerCategoryId);
     };
 
     const cls = useStyles();
 
-    useEffect(() => {
-        setOuterCategoryName(outerCategoryName);
-    }, []);
-
     return (
         <>
-            <TableContainer className={cls.tableStyles} component={Paper}>
-                {outerCategoryIndex === 0 && <TwoNestedCategoriesHeader />}
+            <Table className={cls.tableStyles}>
+                <TwoNestedCategoriesHeader show={outerCategoryIndex === 0} />
                 <TableBody>
                     {sortByPropertyNumeric(getter, outerCategoryData).map((row: TwoNestedCategoryData, index: number) => {
                         return (
-                            <TwoNestedCategoriesRow
-                                key={row.rowId}
-                                shouldDisableInnerCategory={outerCategoryIndex > 0}
-                                outerCategoryId={outerCategoryId}
-                                setOuterCategoryName={setOuterCategoryName}
-                                outerCategoryName={name}
-                                index={index}
-                                tableData={tableData}
-                                row={row}
-                                modifier={modifier}
-                            />
+                            <React.Fragment key={index}>
+                                {row && (
+                                    <TwoNestedCategoriesRow
+                                        key={row.rowId}
+                                        shouldDisableInnerCategory={outerCategoryIndex > 0}
+                                        outerCategoryId={outerCategoryId}
+                                        outerCategoryName={outerCategoryName}
+                                        index={index}
+                                        tableData={tableData}
+                                        row={row}
+                                        modifier={modifier}
+                                    />
+                                )}
+                            </React.Fragment>
                         );
                     })}
                 </TableBody>
-            </TableContainer>
+            </Table>
             <ButtonBar
                 addInnerButton={
                     outerCategoryIndex === 0 ? (
@@ -82,13 +78,11 @@ export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, ou
                     )
                 }
                 deleteButton={
-                    <Button variant="contained" style={{ width: "38ch"}} color="primary" onClick={() => removeOuterCategory(outerCategoryId)}>
-                        Delete Outer Category
+                    <Button variant="contained" style={{ width: "38ch" }} color="primary" onClick={() => removeOuterCategory(outerCategoryId)}>
+                        Delete {takeNCharacters(outerCategoryName)}
                     </Button>
                 }
             />
         </>
     );
 };
-
-

@@ -3,6 +3,7 @@ import { COULD_NOT_FIND_SERVER, INVALID_EMAIL, INVALID_PASSWORD, NOT_A_DEFAULT_A
 import { PalavyrLinkedList } from "frontend/dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
 import React, { Dispatch, ElementType, SetStateAction } from "react";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
+import { DynamicTableTypes } from "@frontend/dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableRegistry";
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />
@@ -62,14 +63,13 @@ export type AreaMeta = {
     areaName: string;
 };
 
-export enum UnitTypes {
-
+export enum UnitGroups {
     Length = "length",
     Area = "area",
     Weight = "weight",
     Currency = "currency",
 }
-export enum UnitIds {
+export enum UnitPrettyNames {
     Meter = "m",
     Foot = "ft",
     SquareMeters = "m^2",
@@ -80,10 +80,11 @@ export enum UnitIds {
     Tons = "tons",
 }
 
-export type UnitDefinition = {
-    UnitType: UnitTypes
-    UnitId: UnitIds;
-}
+export type QuantUnitDefinition = {
+    unitGroup: UnitGroups;
+    unitPrettyName: UnitPrettyNames;
+    unitId: number;
+};
 
 // Client
 export type GroupNodeType = {
@@ -268,8 +269,9 @@ export type DynamicTableMeta = {
     areaIdentifier: string;
     valuesAsPaths: boolean;
     prettyName: string;
-    unitId: UnitIds;
-    unitType: UnitTypes;
+    unitPrettyName: UnitPrettyNames;
+    unitGroup: UnitGroups;
+    unitId: number;
 };
 
 export type DynamicTableMetas = Array<DynamicTableMeta>;
@@ -792,18 +794,36 @@ export type DynamicTableData = {
 export interface IDynamicTableBody {
     tableData: TableData;
     modifier: any;
+    unitGroup?: UnitGroups;
+    unitPrettyName?: UnitPrettyNames;
+}
+
+export type DynamicTable = {
+    tableMeta: DynamicTableMeta;
+    tableRows: TableData;
+};
+
+export type PricingStrategyValidationResult = {
+    isValid: boolean;
+    tableRows: TableData;
+};
+export interface Modifier {
+    validateTable: (tableRows: TableData) => PricingStrategyValidationResult;
 }
 
 export type DynamicTableProps = {
-    tableData: Array<TableData>;
-    setTableData: SetState<TableData>;
+    availableDynamicTableOptions: string[];
+    tableNameMap: TableNameMap;
+    unitTypes: QuantUnitDefinition[];
+    inUse: boolean;
     areaIdentifier: string;
     tableId: string;
-    tableTag: string;
-    tableMeta: DynamicTableMeta;
-    setTableMeta: any;
-    deleteAction(): Promise<any>;
+    deleteAction(): Promise<void>;
     showDebug: boolean;
+    setTables: SetState<DynamicTable[]>;
+    table: DynamicTable;
+    tables: DynamicTable[];
+    tableIndex: number;
 };
 
 export type DynamicTableComponentMap = {

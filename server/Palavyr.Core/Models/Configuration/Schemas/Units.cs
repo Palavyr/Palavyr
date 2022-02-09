@@ -13,7 +13,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         KiloGrams = 6,
         Pounds = 7,
         Tons = 8,
-        Currency = 9
+        Currency = 0
     }
 
     public class Units
@@ -33,17 +33,17 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public const string Pounds = "lbs";
         public const string Tons = "tons";
 
-        public List<QuantUnit> UnitDefinitions { get; set; } = new List<QuantUnit>()
+        public List<QuantUnit> UnitDefinitions { get; set; } = new List<QuantUnit>
         {
-            QuantUnit.Create(Length, Meter),
-            QuantUnit.Create(Length, Foot),
-            QuantUnit.Create(Area, SquareMeters),
-            QuantUnit.Create(Area, SquareFeet),
-            QuantUnit.Create(Weight, Grams),
-            QuantUnit.Create(Weight, KiloGrams),
-            QuantUnit.Create(Weight, Pounds),
-            QuantUnit.Create(Weight, Tons),
-            QuantUnit.Create(Currency, Currency)
+            QuantUnit.Create(Meter, Length, UnitIds.Meter),
+            QuantUnit.Create(Foot, Length, UnitIds.Foot),
+            QuantUnit.Create(SquareMeters, Area, UnitIds.SquareMeters),
+            QuantUnit.Create(SquareFeet, Area, UnitIds.SquareFeet),
+            QuantUnit.Create(Grams, Weight, UnitIds.Grams),
+            QuantUnit.Create(KiloGrams, Weight, UnitIds.KiloGrams),
+            QuantUnit.Create(Pounds, Weight, UnitIds.Pounds),
+            QuantUnit.Create(Tons, Weight, UnitIds.Tons),
+            QuantUnit.Create(Currency, Currency, UnitIds.Currency)
         };
     }
 }

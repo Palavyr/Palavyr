@@ -1,9 +1,9 @@
-import { SelectOneFlatData, SetState } from "@Palavyr-Types";
+import { Modifier, SelectOneFlatData, SetState } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
-export class SelectOneFlatModifier {
+export class SelectOneFlatModifier implements Modifier {
     onClick: SetState<SelectOneFlatData[]>;
     tableType: string;
 
@@ -62,6 +62,9 @@ export class SelectOneFlatModifier {
     }
 
     validateTable(tableData: SelectOneFlatData[]) {
-        return true; // TODO: validation logic
+        const tableRows = tableData;
+        const isValid = true;
+
+        return { isValid, tableRows };
     }
 }

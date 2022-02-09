@@ -1,16 +1,17 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { DynamicTableProps, PercentOfThresholdData } from "@Palavyr-Types";
+import { DynamicTable, DynamicTableProps, PercentOfThresholdData } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { DynamicTableHeader } from "../../DynamicTableHeader";
+import { cloneDeep } from "lodash";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-    },
+const useStyles = makeStyles(theme => ({
+    root: {},
     tableStyles: {
         background: "transparent",
     },
@@ -26,44 +27,118 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const PercentOfThreshold = ({
+    showDebug,
+    tableId,
+    setTables,
+    areaIdentifier,
+    deleteAction,
+    tables,
+    tableIndex,
+    availableDynamicTableOptions,
+    tableNameMap,
+    unitTypes,
+    inUse,
+    table,
+}: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
-    const classes = useStyles();
+    const cls = useStyles();
 
-    const modifier = new PercentOfThresholdModifier(setTableData);
+    const [localTable, setLocalTable] = useState<DynamicTable>();
+    const [loaded, setLoaded] = useState(false);
 
-    const addItemOnClick = () => modifier.addItem(tableData, repository, areaIdentifier, tableId);
-    const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableData, repository, areaIdentifier, tableId, itemId);
+    useEffect(() => {
+        setLocalTable(table);
+        setLoaded(true);
+    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
 
-    const onSave = async () => {
-        const reorderedData = modifier.reorderThresholdData(tableData);
-        const result = modifier.validateTable(reorderedData);
+    useEffect(() => {
+        (async () => {
+            if (localTable && loaded) {
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.areaIdentifier, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                localTable.tableRows = tableRows;
+                setLocalTable(cloneDeep(localTable));
+            }
+        })();
+    }, [localTable?.tableMeta.tableType]);
 
-        if (result) {
-            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<PercentOfThresholdData[]>(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
-            setTableData(savedData);
-            return true;
-        } else {
-            return false;
+    const modifier = new PercentOfThresholdModifier(updatedRows => {
+        if (localTable) {
+            localTable.tableRows = updatedRows;
         }
+        setLocalTable(cloneDeep(localTable));
+    });
+
+    const addItemOnClick = async () => {
+        if (localTable) await modifier.addItem(localTable.tableRows, repository, areaIdentifier, tableId);
     };
 
-    return (
+    const addRowOnClickFactory = (itemId: string) => async () => {
+        if (localTable) await modifier.addRow(localTable.tableRows, repository, areaIdentifier, tableId, itemId);
+    };
+
+    const onSave = async () => {
+        if (localTable) {
+            const { isValid, tableRows } = modifier.validateTable(localTable.tableRows);
+
+            if (isValid) {
+                const currentMeta = localTable.tableMeta;
+
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<PercentOfThresholdData[]>(
+                    areaIdentifier,
+                    DynamicTableTypes.PercentOfThreshold,
+                    tableRows,
+                    localTable.tableMeta.tableId,
+                    localTable.tableMeta.tableTag
+                );
+
+                const updatedTable = cloneDeep(localTable);
+                updatedTable.tableRows = updatedRows;
+                updatedTable.tableMeta = newTableMeta;
+                setLocalTable(updatedTable);
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    };
+
+    return localTable ? (
         <>
-            <PercentOfThresholdContainer tableData={tableData} modifier={modifier} addRowOnClickFactory={addRowOnClickFactory} />
+            <DynamicTableHeader
+                localTable={localTable}
+                setLocalTable={setLocalTable}
+                setTables={setTables}
+                availableDynamicTableOptions={availableDynamicTableOptions}
+                tableNameMap={tableNameMap}
+                unitTypes={unitTypes}
+                inUse={inUse}
+            />
+            <PercentOfThresholdContainer
+                tableData={localTable.tableRows}
+                modifier={modifier}
+                addRowOnClickFactory={addRowOnClickFactory}
+                unitPrettyName={localTable.tableMeta.unitPrettyName}
+                unitGroup={localTable.tableMeta.unitGroup}
+            />
             <AccordionActions>
-                <div className={classes.trayWrapper}>
-                    <div className={classes.alignLeft}>
-                        <Button className={classes.add} onClick={addItemOnClick} color="primary" variant="contained">
+                <div className={cls.trayWrapper}>
+                    <div className={cls.alignLeft}>
+                        <Button className={cls.add} onClick={addItemOnClick} color="primary" variant="contained">
                             Add Item
                         </Button>
                     </div>
-                    <div className={classes.alignRight}>
+                    <div className={cls.alignRight}>
                         <SaveOrCancel onDelete={deleteAction} onSave={onSave} onCancel={async () => window.location.reload()} />
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableData} />}
+            {showDebug && <DisplayTableData tableData={localTable.tableRows} />}
         </>
+    ) : (
+        <></>
     );
 };

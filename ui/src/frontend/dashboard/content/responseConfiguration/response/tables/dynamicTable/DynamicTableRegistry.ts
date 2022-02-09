@@ -6,13 +6,13 @@ import { TwoNestedCategories } from "./tableComponents/TwoNestedCategories/TwoNe
 import { DynamicTableComponentMap } from "@Palavyr-Types";
 
 //These must be kept in sync
-export const DynamicTableTypes = {
-    SelectOneFlat: "SelectOneFlat",
-    PercentOfThreshold: "PercentOfThreshold",
-    BasicThreshold: "BasicThreshold",
-    TwoNestedCategory: "TwoNestedCategory",
-    CategoryNestedThreshold: "CategoryNestedThreshold",
-};
+export enum DynamicTableTypes {
+    SelectOneFlat = "SelectOneFlat",
+    PercentOfThreshold = "PercentOfThreshold",
+    BasicThreshold = "BasicThreshold",
+    TwoNestedCategory = "TwoNestedCategory",
+    CategoryNestedThreshold = "CategoryNestedThreshold",
+}
 
 export const dynamicTableComponentMap: DynamicTableComponentMap = {
     [DynamicTableTypes.SelectOneFlat]: SelectOneFlat,

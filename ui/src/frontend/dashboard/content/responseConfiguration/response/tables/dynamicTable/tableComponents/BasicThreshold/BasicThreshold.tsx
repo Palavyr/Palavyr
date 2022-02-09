@@ -1,17 +1,20 @@
-import React, { useContext } from "react";
-import { BasicThresholdData, DynamicTableProps } from "@Palavyr-Types";
+import React, { useContext, useEffect } from "react";
+import { BasicThresholdData, DynamicTable, DynamicTableProps } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { BasicThresholdHeader } from "./BasicThresholdHeader";
 import { BasicThresholdBody } from "./BasicThresholdBody";
 import { useState } from "react";
-import { Button, makeStyles, Table, TableContainer, TextField, AccordionActions } from "@material-ui/core";
+import { Button, makeStyles, Table, TableContainer, AccordionActions } from "@material-ui/core";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { TextInput } from "@common/components/TextField/TextInput";
 import { Align } from "@common/positioning/Align";
+import { DynamicTableHeader } from "../../DynamicTableHeader";
+import { cloneDeep } from "lodash";
+import { useIsMounted } from "@common/hooks/useIsMounted";
 
 const useStyles = makeStyles(theme => ({
     alignLeft: {
@@ -48,29 +51,82 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, deleteAction, tables, tableIndex, availableDynamicTableOptions, tableNameMap, unitTypes, inUse, table }: DynamicTableProps) => {
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
     const [name, setItemName] = useState<string>("");
+    const [localTable, setLocalTable] = useState<DynamicTable>();
+    const isMounted = useIsMounted();
 
-    const modifier = new BasicThresholdModifier(setTableData);
+    useEffect(() => {
+        if (isMounted) {
+            setLocalTable(table);
+        }
+    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+
+    useEffect(() => {
+        if (isMounted) {
+            (async () => {
+                if (localTable) {
+                    const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.areaIdentifier, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                    localTable.tableRows = tableRows;
+                    setLocalTable(cloneDeep(localTable));
+                }
+            })();
+        }
+    }, [localTable?.tableMeta.tableType]);
+
+    const modifier = new BasicThresholdModifier(updatedRows => {
+        if (localTable) {
+            localTable.tableRows = updatedRows;
+        }
+        setLocalTable(cloneDeep(localTable));
+    });
+
+    const addThresholdOnClick = async () => {
+        if (localTable) await modifier.addThreshold(localTable.tableRows, areaIdentifier, tableId, repository);
+    };
 
     const onSave = async () => {
-        const reorderedData = modifier.reorderThresholdData(tableData);
-        const result = modifier.validateTable(reorderedData);
+        if (localTable) {
+            const { isValid, tableRows } = modifier.validateTable(localTable.tableRows);
 
-        if (result) {
-            const saveBasicThreshold = await repository.Configuration.Tables.Dynamic.saveDynamicTable<BasicThresholdData[]>(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
-            setTableData(saveBasicThreshold);
-            return true;
-        } else {
-            return false;
+            if (isValid) {
+                const currentMeta = localTable.tableMeta;
+
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<BasicThresholdData[]>(
+                    areaIdentifier,
+                    DynamicTableTypes.BasicThreshold,
+                    tableRows,
+                    localTable.tableMeta.tableId,
+                    localTable.tableMeta.tableTag
+                );
+
+                const updatedTable = cloneDeep(localTable);
+                updatedTable.tableRows = updatedRows;
+                updatedTable.tableMeta = newTableMeta;
+                setLocalTable(updatedTable);
+
+                return true;
+            } else {
+                return false;
+            }
         }
+        return false;
     };
-    const addThresholdOnClick = () => modifier.addThreshold(tableData, areaIdentifier, tableId, repository);
 
-    return (
+    return localTable ? (
         <>
+            <DynamicTableHeader
+                localTable={localTable}
+                setLocalTable={setLocalTable}
+                setTables={setTables}
+                availableDynamicTableOptions={availableDynamicTableOptions}
+                tableNameMap={tableNameMap}
+                unitTypes={unitTypes}
+                inUse={inUse}
+            />
             <div className={cls.container}>
                 <Align direction="flex-start">
                     <TextInput
@@ -78,22 +134,20 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
                         variant="standard"
                         label="Name to use in PDF fee table"
                         type="text"
-                        value={tableData[0].itemName}
+                        value={name}
                         InputLabelProps={{ className: cls.inputPropsCls }}
                         color="primary"
                         onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
                             event.preventDefault();
-                            modifier.setItemName(tableData, event.target.value);
+                            modifier.setItemName(localTable.tableRows, event.target.value);
                             setItemName(event.target.value);
                         }}
                     />
                 </Align>
-                <TableContainer>
-                    <Table>
-                        <BasicThresholdHeader tableData={tableData} modifier={modifier} />
-                        <BasicThresholdBody tableData={tableData} modifier={modifier} />
-                    </Table>
-                </TableContainer>
+                <Table>
+                    <BasicThresholdHeader tableData={localTable.tableRows} modifier={modifier} />
+                    <BasicThresholdBody tableData={localTable.tableRows} modifier={modifier} unitPrettyName={localTable.tableMeta.unitPrettyName} unitGroup={localTable.tableMeta.unitGroup} />
+                </Table>
             </div>
             <AccordionActions>
                 <div className={cls.trayWrapper}>
@@ -107,7 +161,9 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableData} />}
+            {showDebug && <DisplayTableData tableData={localTable.tableRows} />}
         </>
+    ) : (
+        <></>
     );
 };

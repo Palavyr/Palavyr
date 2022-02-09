@@ -2,9 +2,10 @@ import { DashboardContext } from "@frontend/dashboard/layouts/DashboardContext";
 import React from "react";
 import { NumberFormatValues } from "react-number-format";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
-import { UnitIds, UnitTypes } from "@Palavyr-Types";
+import { UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { FormControl, FormHelperText, Input, InputAdornment, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
+import { uuid } from "uuidv4";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -30,25 +31,25 @@ export interface UnitInputProps {
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onCurrencyChange?: (values: NumberFormatValues) => void;
     currencySymbol?: string;
-    unitType: UnitTypes;
-    unitId: UnitIds;
+    unitGroup: UnitGroups;
+    unitPrettyName: UnitPrettyNames;
     unitHelperText?: string;
 }
 
-export const UnitInput = ({ label, value, disabled, onBlur, onChange, onCurrencyChange, unitType, unitId, unitHelperText }: UnitInputProps) => {
+export const UnitInput = ({ label, value, disabled, onBlur, onChange, onCurrencyChange, unitGroup, unitPrettyName, unitHelperText }: UnitInputProps) => {
     const { currencySymbol } = React.useContext(DashboardContext);
     const cls = useStyles();
 
-    if (unitType === UnitTypes.Currency && onCurrencyChange === undefined) {
+    if (unitGroup === UnitGroups.Currency && onCurrencyChange === undefined) {
         throw new Error("UnitInput onCurrencyChange is undefined");
     }
 
-    if (unitType !== UnitTypes.Currency && onChange === undefined) {
+    if (unitGroup !== UnitGroups.Currency && onChange === undefined) {
         throw new Error("UnitInput onChange is undefined");
     }
 
-    switch (unitType) {
-        case UnitTypes.Currency:
+    switch (unitGroup) {
+        case UnitGroups.Currency:
             return (
                 <CurrencyTextField
                     disabled={disabled}
@@ -65,7 +66,7 @@ export const UnitInput = ({ label, value, disabled, onBlur, onChange, onCurrency
         default:
             return (
                 <FormControl className={classNames(cls.margin, cls.withoutLabel, cls.textField)}>
-                    <Input value={value} onChange={onChange} endAdornment={<InputAdornment position="end">Kg</InputAdornment>} />
+                    <Input disabled={disabled} value={value} onChange={onChange} endAdornment={<InputAdornment position="end">{unitPrettyName}</InputAdornment>} />
                     <FormHelperText>{unitHelperText}</FormHelperText>
                 </FormControl>
             );

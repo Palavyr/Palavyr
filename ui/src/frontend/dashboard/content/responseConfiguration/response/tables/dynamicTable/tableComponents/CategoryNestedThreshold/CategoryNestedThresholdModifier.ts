@@ -1,12 +1,12 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
-import { SetState, TableGroup } from "@Palavyr-Types";
+import { Modifier, SetState, TableGroup } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, uniq } from "lodash";
 import { v4 as uuid } from "uuid";
 import { CategoryNestedThresholdData, TableData } from "@Palavyr-Types";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
-export class CategoryNestedThresholdModifier {
+export class CategoryNestedThresholdModifier implements Modifier {
     onClick: SetState<TableData>;
     tableType: string = DynamicTableTypes.CategoryNestedThreshold;
 
@@ -19,7 +19,7 @@ export class CategoryNestedThresholdModifier {
     }
 
     groupByOuterCategory(tableData: CategoryNestedThresholdData[]): TableGroup<CategoryNestedThresholdData[]> {
-        return groupBy(tableData, (x) => x.itemId);
+        return groupBy(tableData, x => x.itemId);
     }
 
     async addCategory(tableData: CategoryNestedThresholdData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
@@ -156,7 +156,10 @@ export class CategoryNestedThresholdModifier {
     }
 
     public validateTable(tableData: CategoryNestedThresholdData[]) {
-        return true; // TODO: going to need to check things like row orders.
+        const tableRows = this.reorderThresholdData(tableData);
+        const isValid = true;
+
+        return { isValid, tableRows };
     }
 
     public reorderThresholdData(tableData: CategoryNestedThresholdData[]) {

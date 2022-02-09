@@ -1,6 +1,6 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
-import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
-import { CategoryNestedThresholdData } from "@Palavyr-Types";
+import { Button, makeStyles, TableBody, TableContainer, Paper, Table } from "@material-ui/core";
+import { CategoryNestedThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
 import { useState } from "react";
@@ -19,6 +19,8 @@ interface CategoryNestedThresholdItemTableProps {
     categoryId: string;
     modifier: CategoryNestedThresholdModifier;
     areaIdentifier: string;
+    unitGroup?: UnitGroups;
+    unitPrettyName?: UnitPrettyNames;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -42,39 +44,53 @@ const getter = (x: CategoryNestedThresholdData) => x.rowOrder;
 
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
-export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tableId, categoryData, categoryName, categoryId, modifier, areaIdentifier }: CategoryNestedThresholdItemTableProps) => {
-    const [name, setCategoryName] = useState<string>("");
+export const CategoryNestedThresholdItemTable = ({
+    categoryIndex,
+    tableData,
+    tableId,
+    categoryData,
+    categoryName,
+    categoryId,
+    modifier,
+    areaIdentifier,
+    unitPrettyName,
+    unitGroup,
+}: CategoryNestedThresholdItemTableProps) => {
 
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
 
-    useEffect(() => {
-        setCategoryName(categoryName);
-    }, []);
     const addThresholdOnClick = () => modifier.addThreshold(tableData, categoryId, repository, areaIdentifier, tableId);
     return (
         <>
-            <TableContainer className={cls.tableStyles} component={Paper}>
+            <Table className={cls.tableStyles}>
                 {categoryIndex === 0 && <CategoryNestedThresholdHeader tableData={tableData} modifier={modifier} />}
                 <TableBody className={cls.body}>
                     {sortByPropertyNumeric(getter, categoryData).map((row: CategoryNestedThresholdData, rowIndex: number) => {
                         row.rowOrder = rowIndex;
                         return (
-                            <CategoryNestedThresholdRow
-                                key={row.rowId}
-                                categorySize={categoryData.length}
-                                categoryId={categoryId}
-                                setCategoryName={setCategoryName}
-                                categoryName={name}
-                                rowIndex={rowIndex}
-                                tableData={tableData}
-                                row={row}
-                                modifier={modifier}
-                            />
+                            <React.Fragment key={rowIndex}>
+                                {unitGroup && unitPrettyName && row ? (
+                                    <CategoryNestedThresholdRow
+                                        key={row.rowId}
+                                        categorySize={categoryData.length}
+                                        categoryId={categoryId}
+                                        categoryName={categoryName}
+                                        rowIndex={rowIndex}
+                                        tableData={tableData}
+                                        row={row}
+                                        modifier={modifier}
+                                        unitGroup={unitGroup}
+                                        unitPrettyName={unitPrettyName}
+                                    />
+                                ) : (
+                                    <></>
+                                )}
+                            </React.Fragment>
                         );
                     })}
                 </TableBody>
-            </TableContainer>
+            </Table>
             <ButtonBar
                 addInnerButton={
                     <Button onClick={addThresholdOnClick} color="primary" variant="contained">
@@ -83,12 +99,10 @@ export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tab
                 }
                 deleteButton={
                     <Button variant="contained" style={{ width: "38ch" }} color="primary" onClick={() => modifier.removeCategory(tableData, categoryId)}>
-                        Delete Category
+                        Delete {categoryName}
                     </Button>
                 }
             />
         </>
     );
 };
-
-

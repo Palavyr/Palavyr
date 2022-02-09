@@ -7,13 +7,14 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { SetState } from "@Palavyr-Types";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
+import { Cell } from "../../components/Cell";
 
-export interface ITwoNestedCategoriesRow {
+export interface TwoNestedCategoriesRowProps {
     index: number;
     shouldDisableInnerCategory: boolean;
     outerCategoryId: string;
     outerCategoryName: string;
-    setOuterCategoryName: SetState<string>;
+    // setOuterCategoryName: SetState<string>;
     tableData: TableData;
     row: TwoNestedCategoryData;
     modifier: TwoNestedCategoriesModifier;
@@ -36,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     },
     input: {
         margin: "0.6rem",
-        width: "25ch",
+        width: "30ch",
     },
     maxValInput: (props: StyleProps) => {
         if (props.isTrue === true) {
@@ -49,61 +50,51 @@ const useStyles = makeStyles(theme => ({
     },
     outerCategoryInput: {
         margin: "0.6rem",
-        width: "25ch",
-        paddingLeft: "0.4rem",
+        width: "30ch",
     },
 }));
 
-const cellAlignment = "center";
-
-export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, outerCategoryId, outerCategoryName, setOuterCategoryName, tableData, row, modifier }: ITwoNestedCategoriesRow) => {
+export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, outerCategoryId, outerCategoryName, tableData, row, modifier }: TwoNestedCategoriesRowProps) => {
     const cls = useStyles({ isTrue: !row.range });
-
     const { currencySymbol } = React.useContext(DashboardContext);
-
-    const outerCategoryColumn =
-        index === 0 ? (
-            <TableCell align={cellAlignment}>
-                <TextField
-                    className={cls.outerCategoryInput}
-                    variant="standard"
-                    label="Category name"
-                    type="text"
-                    value={outerCategoryName}
-                    color="primary"
-                    onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
-                        event.preventDefault();
-                        modifier.setOuterCategoryName(tableData, outerCategoryId, event.target.value);
-                        setOuterCategoryName(event.target.value);
-                    }}
-                />
-            </TableCell>
-        ) : (
-            <TableCell></TableCell>
-        );
 
     return (
         <TableRow>
-            {outerCategoryColumn}
-            <TableCell align={cellAlignment}>
+            <Cell>
+                {index === 0 && (
+                    <TextField
+                        className={cls.outerCategoryInput}
+                        variant="standard"
+                        label="Category name"
+                        type="text"
+                        value={outerCategoryName || ""}
+                        color="primary"
+                        onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
+                            event.preventDefault();
+                            modifier.setOuterCategoryName(tableData, outerCategoryId, event.target.value);
+                        }}
+                    />
+                )}
+            </Cell>
+            <Cell>
                 <TextField
                     disabled={shouldDisableInnerCategory}
                     className={cls.input}
                     variant="standard"
                     label="Inner Category Name"
                     type="text"
-                    value={row.innerItemName}
+                    value={row.innerItemName || ""}
                     color="primary"
                     onChange={(event: { preventDefault: () => void; target: { value: any } }) => {
                         event.preventDefault();
                         modifier.setInnerCategoryName(tableData, row.rowOrder, event.target.value);
                     }}
                 />
-            </TableCell>
-            <TableCell align={cellAlignment}>
+            </Cell>
+            <Cell>
                 <CurrencyTextField
                     label="Amount"
-                    value={row.valueMin}
+                    value={row.valueMin || 0}
                     currencySymbol={currencySymbol}
                     decimalCharacter="."
                     digitGroupSeparator=","
@@ -113,8 +104,8 @@ export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, oute
                         }
                     }}
                 />
-            </TableCell>
-            <TableCell align={cellAlignment}>
+            </Cell>
+            <Cell>
                 <CurrencyTextField
                     className={cls.maxValInput}
                     label="Amount"
@@ -129,8 +120,8 @@ export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, oute
                         }
                     }}
                 />
-            </TableCell>
-            <TableCell align={cellAlignment}>
+            </Cell>
+            <Cell>
                 {!shouldDisableInnerCategory ? (
                     <Button
                         disabled={shouldDisableInnerCategory}
@@ -144,19 +135,19 @@ export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, oute
                         {row.range ? "Range" : "Single Value"}
                     </Button>
                 ) : (
-                    <></>
+                    <div style={{ width: "18ch" }}></div>
                 )}
-            </TableCell>
-            <TableCell align={cellAlignment}>
+            </Cell>
+            <Cell>
                 {shouldDisableInnerCategory ? (
-                    <></>
+                    <div style={{ width: "22ch" }}></div>
                 ) : (
-                    <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeInnerCategory(tableData, row.rowOrder)}>
-                        Delete Inner Category
+                    <Button style={{ width: "22ch" }} size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeInnerCategory(tableData, row.rowOrder)}>
+                        Delete {row.innerItemName}
                     </Button>
                 )}
-            </TableCell>
-            <TableCell></TableCell>
+            </Cell>
+            <Cell></Cell>
         </TableRow>
     );
 };

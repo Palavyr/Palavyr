@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Palavyr.Core.Exceptions;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Contracts;
+using Palavyr.Core.Services.Units;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
@@ -45,7 +48,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 
         public static List<DynamicTableMeta> CreateDefaultMetas(string areaId, string accountId)
         {
-            return new List<DynamicTableMeta>()
+            return new List<DynamicTableMeta>
             {
                 CreateNew(
                     "default",
@@ -62,6 +65,19 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         {
             areaId = AreaIdentifier;
             tableId = TableId;
+        }
+
+        public void UpdateProperties(ModifyDynamicTableMetaRequest metaUpdate, IUnitRetriever unitRetriever)
+        {
+            if (string.IsNullOrEmpty(metaUpdate.TableType) || string.IsNullOrWhiteSpace(metaUpdate.TableType)) throw new DomainException("Table Type is a required field");
+
+            if (string.IsNullOrEmpty(metaUpdate.PrettyName) || string.IsNullOrWhiteSpace(metaUpdate.PrettyName)) throw new DomainException("Table Pretty Name is a required field");
+
+            TableTag = metaUpdate.TableTag;
+            TableType = metaUpdate.TableType;
+            ValuesAsPaths = metaUpdate.ValueAsPaths;
+            PrettyName = metaUpdate.PrettyName;
+            UnitId = unitRetriever.ConvertToUnitId(metaUpdate.UnitId.ToString());
         }
     }
 }

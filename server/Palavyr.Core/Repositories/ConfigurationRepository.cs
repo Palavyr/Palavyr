@@ -9,7 +9,6 @@ using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Services.AmazonServices.S3Service;
-using Palavyr.Core.Services.Units;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Repositories
@@ -43,6 +42,12 @@ namespace Palavyr.Core.Repositories
                 .DynamicTableMetas
                 .Where(row => row.TableId == tableId)
                 .SingleAsync(cancellationTokenTransport.CancellationToken);
+        }
+
+        public async Task<DynamicTableMeta> UpdateDynamicTableMeta(DynamicTableMeta dynamicTableMeta)
+        {
+            var meta = dashContext.DynamicTableMetas.Update(dynamicTableMeta);
+            return meta.Entity;
         }
 
         public async Task<Image> GetImageById(string imageId)

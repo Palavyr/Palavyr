@@ -27,7 +27,7 @@ namespace Palavyr.Core.Handlers
 
         public async Task<CreateDynamicTableResponse> Handle(CreateDynamicTableRequest request, CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(request.IntentId);
+            var area = await configurationRepository.GetAreaComplete(request.IntentId);
 
             var dynamicTables = area.DynamicTableMetas.ToList();
 

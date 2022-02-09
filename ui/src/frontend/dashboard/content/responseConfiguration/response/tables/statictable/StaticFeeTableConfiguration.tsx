@@ -46,21 +46,24 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
     const { repository, planTypeMeta } = useContext(DashboardContext);
     const cls = useStyles();
 
-    const actions = (
-        <SaveOrCancel
-            onSave={async () => {
-                const result = await tableSaver(staticTables);
-                if (result) {
+    const actions =
+        staticTables.length > 0 ? (
+            <SaveOrCancel
+                onSave={async () => {
+                    const result = await tableSaver(staticTables);
+                    if (result) {
+                        return true;
+                    }
+                    return false;
+                }}
+                onCancel={async () => {
+                    await tableCanceler();
                     return true;
-                }
-                return false;
-            }}
-            onCancel={async () => {
-                await tableCanceler();
-                return true;
-            }}
-        />
-    );
+                }}
+            />
+        ) : (
+            <></>
+        );
 
     const addTableButton =
         planTypeMeta && staticTables.length >= planTypeMeta.allowedStaticTables ? (

@@ -23,6 +23,7 @@ export interface CurrencyTextFieldProps extends NumberFormatProps {
 }
 
 export const CurrencyTextField = ({
+    id,
     className,
     label,
     disabled,
@@ -39,6 +40,7 @@ export const CurrencyTextField = ({
 
     return (
         <CurrencyFormat
+            id={id}
             fixedDecimalScale={true}
             className={classNames(className, cls.styles)}
             min={minimumValue}

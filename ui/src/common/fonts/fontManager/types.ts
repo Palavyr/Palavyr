@@ -1,4 +1,4 @@
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 
 export type Category = "sans-serif" | "serif" | "display" | "handwriting" | "monospace";
 

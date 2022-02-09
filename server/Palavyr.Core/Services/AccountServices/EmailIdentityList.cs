@@ -6,7 +6,9 @@ namespace Palavyr.Core.Services.AccountServices
     {
         public static List<string> AllowedEmailsInDevelopment { get; set; } = new List<string>()
         {
-            "paul.e.gradie@gmail.com"
+            "paul.e.gradie@gmail.com",
+            "palavyr@gmail.com"
+            
         };
 
         public static List<string> AllowedEmailsInStaging { get; set; } = new List<string>()

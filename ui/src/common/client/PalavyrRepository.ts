@@ -28,6 +28,7 @@ import {
     DynamicTableData,
     EnquiryActivtyResource,
     LocaleResponse,
+    QuantUnitDefinition,
 } from "@Palavyr-Types";
 import { ApiErrors } from "frontend/dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "frontend/dashboard/subscriptionFilters/filterConvoNodeTypes";
@@ -127,13 +128,17 @@ export class PalavyrRepository {
         updatePrologue: async (intentId: string, prologue: string) => this.client.put<string, {}>(`response/configuration/prologue`, { prologue: prologue, IntentId: intentId }),
         updateEpilogue: async (intentId: string, epilogue: string) => this.client.put<string, {}>(`response/configuration/epilogue`, { epilogue: epilogue, IntentId: intentId }),
 
+        Units: {
+            GetSupportedUnitIds: async () => this.client.get<QuantUnitDefinition[]>(`configuration/unit-types`), //, CacheIds.SupportedUnitIds),
+        },
+
         WidgetState: {
             GetWidgetState: async () => this.client.get<boolean>(`widget-config/widget-active-state`),
             SetWidgetState: async (updatedWidgetState: boolean) => this.client.post<boolean, {}>(`widget-config/widget-active-state?state=${updatedWidgetState}`),
         },
         Tables: {
             Dynamic: {
-                getDynamicTableMetas: async (areaIdentifier: string) => this.client.get<DynamicTableMetas>(`tables/dynamic/type/${areaIdentifier}`), // todo - cache
+                getDynamicTableMetas: async (areaIdentifier: string) => this.client.get<DynamicTableMetas>(`tables/dynamic/metas/${areaIdentifier}`), // todo - cache
 
                 getDynamicTableTypes: async () => this.client.get<TableNameMap>(`tables/dynamic/table-name-map`),
 
@@ -298,6 +303,8 @@ export class PalavyrRepository {
         },
 
         Account: {
+            CancelRegistration: async (emailAddress: string) => this.client.post<{}, {}>("account/cancel-registration", { EmailAddress: emailAddress }),
+
             getApiKey: async () => this.client.get<string>(`account/settings/api-key`),
             confirmEmailAddress: async (authToken: string) => this.client.post<boolean, {}>(`account/confirmation/${authToken}/action/setup`),
             resendConfirmationToken: async (emailAddress: string) => this.client.post<boolean, {}>(`account/confirmation/token/resend`, { EmailAddress: emailAddress }),

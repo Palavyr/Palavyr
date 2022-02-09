@@ -1,12 +1,12 @@
 import { cloneDeep, findIndex } from "lodash";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
-import { BasicThresholdData } from "@Palavyr-Types";
+import { BasicThresholdData, Modifier } from "@Palavyr-Types";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 
-export class BasicThresholdModifier {
+export class BasicThresholdModifier implements Modifier {
     onClick: Dispatch<SetStateAction<BasicThresholdData[]>>;
     tableType: string;
 
@@ -99,6 +99,9 @@ export class BasicThresholdModifier {
     }
 
     public validateTable(tableData: BasicThresholdData[]) {
-        return true; // TODO: Validate this table
+        const tableRows = this.reorderThresholdData(tableData);
+        const isValid = true;
+
+        return { isValid, tableRows };
     }
 }
