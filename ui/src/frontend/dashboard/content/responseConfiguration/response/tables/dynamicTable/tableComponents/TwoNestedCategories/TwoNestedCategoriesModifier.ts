@@ -1,11 +1,11 @@
-import { SetState, TableData, TwoNestedCategoryData } from "@Palavyr-Types";
+import { Modifier, SetState, TableData, TwoNestedCategoryData } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, max, uniq } from "lodash";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { TableGroup } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
-export class TwoNestedCategoriesModifier {
+export class TwoNestedCategoriesModifier implements Modifier {
     onClick: SetState<TableData>;
     tableType: string;
 
@@ -184,6 +184,9 @@ export class TwoNestedCategoriesModifier {
     }
 
     validateTable(tableData: TwoNestedCategoryData[]) {
-        return true; // TODO: validation logic
+        const tableRows = tableData;
+        const isValid = true;
+
+        return { isValid, tableRows };
     }
 }

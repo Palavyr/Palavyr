@@ -3,7 +3,6 @@ import { cloneDeep } from "lodash";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
-
 export class SelectOneFlatModifier implements Modifier {
     onClick: SetState<SelectOneFlatData[]>;
     tableType: string;
@@ -63,6 +62,9 @@ export class SelectOneFlatModifier implements Modifier {
     }
 
     validateTable(tableData: SelectOneFlatData[]) {
-        return true; // TODO: validation logic
+        const tableRows = tableData;
+        const isValid = true;
+
+        return { isValid, tableRows };
     }
 }

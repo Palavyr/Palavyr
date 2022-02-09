@@ -803,8 +803,12 @@ export type DynamicTable = {
     tableRows: TableData;
 };
 
+export type PricingStrategyValidationResult = {
+    isValid: boolean;
+    tableRows: TableData;
+};
 export interface Modifier {
-    validateTable: (tableRows: TableData) => boolean;
+    validateTable: (tableRows: TableData) => PricingStrategyValidationResult;
 }
 
 export type DynamicTableProps = {

@@ -85,14 +85,14 @@ export const TwoNestedCategories = ({
 
     const onSave = async () => {
         if (localTable) {
-            const result = modifier.validateTable(localTable.tableRows);
+            const { isValid, tableRows } = modifier.validateTable(localTable.tableRows);
 
-            if (result) {
+            if (isValid) {
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(localTable.tableMeta);
                 const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<TwoNestedCategoryData[]>(
                     areaIdentifier,
                     DynamicTableTypes.TwoNestedCategory,
-                    localTable.tableRows,
+                    tableRows,
                     localTable.tableMeta.tableId,
                     localTable.tableMeta.tableTag
                 );

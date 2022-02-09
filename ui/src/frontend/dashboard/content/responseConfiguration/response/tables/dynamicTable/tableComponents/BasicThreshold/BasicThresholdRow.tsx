@@ -151,11 +151,9 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
                 </>
             ) : (
                 <>
-                    <Typography align="center" style={{ paddingTop: "10px" }}>
-                        If this threshold value is exceeded in the chat,
-                    </Typography>
-                    <Typography align="center">then a 'Too Complicated' response will be executed.</Typography>
-                    <TableCell></TableCell>
+                    <TableCell>
+                        If this threshold value is exceeded in the chat, then a <strong>'Too Complicated'</strong> response will be executed.
+                    </TableCell>
                     <TableCell></TableCell>
                     <TableCell></TableCell>
                 </>

@@ -60,7 +60,6 @@ export const PercentOfThreshold = ({
                 setLocalTable(cloneDeep(localTable));
             }
         })();
-
     }, [localTable?.tableMeta.tableType]);
 
     const modifier = new PercentOfThresholdModifier(updatedRows => {
@@ -80,16 +79,16 @@ export const PercentOfThreshold = ({
 
     const onSave = async () => {
         if (localTable) {
-            const result = modifier.validateTable(localTable.tableRows);
+            const { isValid, tableRows } = modifier.validateTable(localTable.tableRows);
 
-            if (result) {
+            if (isValid) {
                 const currentMeta = localTable.tableMeta;
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
                 const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<PercentOfThresholdData[]>(
                     areaIdentifier,
                     DynamicTableTypes.PercentOfThreshold,
-                    localTable.tableRows,
+                    tableRows,
                     localTable.tableMeta.tableId,
                     localTable.tableMeta.tableTag
                 );

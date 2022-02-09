@@ -68,7 +68,6 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, areaIdentifier, d
                 setLocalTable(cloneDeep(localTable));
             }
         })();
-
     }, [localTable?.tableMeta.tableType]);
 
     const modifier = new SelectOneFlatModifier(updatedRows => {
@@ -89,16 +88,16 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, areaIdentifier, d
 
     const onSave = async () => {
         if (localTable) {
-            const result = modifier.validateTable(localTable.tableRows);
+            const { isValid, tableRows } = modifier.validateTable(localTable.tableRows);
 
-            if (result) {
+            if (isValid) {
                 const currentMeta = localTable.tableMeta;
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
                 const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<SelectOneFlatData[]>(
                     areaIdentifier,
                     DynamicTableTypes.SelectOneFlat,
-                    localTable.tableRows,
+                    tableRows,
                     localTable.tableMeta.tableId,
                     localTable.tableMeta.tableTag
                 );
@@ -142,7 +141,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, areaIdentifier, d
                         <FormControlLabel label="Use Options as Paths" control={<Checkbox checked={useOptionsAsPaths} onChange={useOptionsAsPathsOnChange} />} />
                     </div>
                     <div className={cls.alignRight}>
-                        <SaveOrCancel position="right" onDelete={deleteAction} onSave={onSave} onCancel={async () => window.location.reload()} />
+                        <SaveOrCancel position="center" onDelete={deleteAction} onSave={onSave} onCancel={async () => window.location.reload()} />
                     </div>
                 </div>
             </AccordionActions>

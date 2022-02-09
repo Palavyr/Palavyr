@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction } from "react";
-import { PercentOfThresholdData, SetState } from "@Palavyr-Types";
+import { Modifier, PercentOfThresholdData, SetState } from "@Palavyr-Types";
 import { cloneDeep, findIndex, uniq, uniqBy } from "lodash";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 
-export class PercentOfThresholdModifier {
+export class PercentOfThresholdModifier implements Modifier {
     onClick: SetState<PercentOfThresholdData[]>;
     tableType: string;
 
@@ -174,6 +174,9 @@ export class PercentOfThresholdModifier {
     }
 
     validateTable(tableData: PercentOfThresholdData[]) {
-        return true; // TODO: validation logic.
+        const tableRows = this.reorderThresholdData(tableData);
+        const isValid = true;
+
+        return { isValid, tableRows };
     }
 }
