@@ -52,7 +52,7 @@ export const CategoryNestedThreshold = ({
     const [localTable, setLocalTable] = useState<DynamicTable>();
     useEffect(() => {
         if (isMounted) setLocalTable(table);
-    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [areaIdentifier, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {
@@ -62,7 +62,7 @@ export const CategoryNestedThreshold = ({
                 setLocalTable(cloneDeep(localTable));
             }
         })();
-    }, [localTable?.tableMeta.tableType]);
+    }, [areaIdentifier, localTable?.tableMeta.tableType]);
 
     const modifier = new CategoryNestedThresholdModifier(updatedRows => {
         if (localTable) {

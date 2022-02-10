@@ -50,7 +50,7 @@ export const PercentOfThreshold = ({
     useEffect(() => {
         setLocalTable(table);
         setLoaded(true);
-    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [areaIdentifier, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {
@@ -60,7 +60,7 @@ export const PercentOfThreshold = ({
                 setLocalTable(cloneDeep(localTable));
             }
         })();
-    }, [localTable?.tableMeta.tableType]);
+    }, [areaIdentifier, localTable?.tableMeta.tableType]);
 
     const modifier = new PercentOfThresholdModifier(updatedRows => {
         if (localTable) {

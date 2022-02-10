@@ -49,7 +49,7 @@ export const TwoNestedCategories = ({
 
     useEffect(() => {
         setLocalTable(table);
-    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [areaIdentifier, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {
@@ -65,7 +65,7 @@ export const TwoNestedCategories = ({
                 setLocalTable(cloneDeep(localTable));
             }
         };
-    }, [localTable?.tableMeta.tableType]);
+    }, [areaIdentifier, localTable?.tableMeta.tableType]);
 
     const modifier = new TwoNestedCategoriesModifier(updatedRows => {
         if (localTable) {

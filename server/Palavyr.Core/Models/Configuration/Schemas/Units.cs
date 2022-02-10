@@ -5,6 +5,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 {
     public enum UnitIds
     {
+        Currency = 0,
         Meter = 1,
         Foot = 2,
         SquareMeters = 3,
@@ -12,8 +13,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         Grams = 5,
         KiloGrams = 6,
         Pounds = 7,
-        Tons = 8,
-        Currency = 0
+        Tons = 8
     }
 
     public class Units

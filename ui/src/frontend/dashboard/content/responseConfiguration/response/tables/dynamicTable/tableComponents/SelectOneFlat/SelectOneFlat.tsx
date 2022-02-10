@@ -58,7 +58,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, areaIdentifier, d
         setLocalTable(table);
         const useOptionsAsPaths = table.tableMeta.valuesAsPaths;
         setUseOptionsAsPaths(useOptionsAsPaths);
-    }, [table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [areaIdentifier, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {
@@ -68,7 +68,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, areaIdentifier, d
                 setLocalTable(cloneDeep(localTable));
             }
         })();
-    }, [localTable?.tableMeta.tableType]);
+    }, [areaIdentifier, localTable?.tableMeta.tableType]);
 
     const modifier = new SelectOneFlatModifier(updatedRows => {
         if (localTable) {

@@ -9,7 +9,7 @@ import { AddOrCancel } from "@common/components/AddOrCancel";
 import { DashboardContext } from "../DashboardContext";
 import { ADD_NEW_AREA_BACKDROP_zINDEX, ADD_NEW_AREA_DIALOG_BOX_zINDEX } from "@constants";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     dialog: {
         zIndex: ADD_NEW_AREA_DIALOG_BOX_zINDEX,
     },
@@ -44,7 +44,7 @@ export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaMo
 
     const onAdd = async () => {
         setButtonDisabled(true);
-        if (areaName !== "") {
+        if (areaName.trim() !== "") {
             const newArea = await repository.Area.createArea(areaName);
             setNewArea(newArea);
         }

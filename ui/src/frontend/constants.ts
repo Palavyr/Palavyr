@@ -48,7 +48,7 @@ export const HELP_DRAWER_WIDTH: number = 300;
 export const DEFAULT_NODE_TEXT_LIST = ["Add some meaningful text.", "Asking questions periodically is a good way to keep your customers engaged."];
 export const DEFAULT_NODE_TEXT = () => (Math.ceil(Math.random()) % 2 == 0 ? DEFAULT_NODE_TEXT_LIST[0] : DEFAULT_NODE_TEXT_LIST[1]);
 
-export const defaultUrlForNewArea = (areaIdentifier: string) => `/dashboard/editor/email/${areaIdentifier}?tab=0`;
+export const defaultUrlForNewArea = (areaIdentifier: string) => `/dashboard/editor/pricing/${areaIdentifier}?tab=0`;
 
 // layers
 export const ADD_NEW_AREA_DIALOG_BOX_zINDEX = 150;

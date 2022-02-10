@@ -32,9 +32,10 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
     const loadTableData = useCallback(async () => {
         const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
-        const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
         const showTotals = await repository.Area.getShowDynamicTotals(areaIdentifier);
-        const quantTypes = await repository.Configuration.Units.GetSupportedUnitIds();
+
+        // show fee totals totals row
+        setShowTotals(showTotals);
 
         // TODO - seend array of all table metas and retrive in a single request.
         let tables: DynamicTable[] = [];
@@ -47,18 +48,6 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
                 setTables(tables);
                 setLoaded(true);
 
-                // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
-                setAvailableTables(Object.keys(tableNameMap));
-
-                // show fee totals totals row
-                setShowTotals(showTotals);
-
-                // map of pricing trategy pretty names
-                setTableNameMap(tableNameMap);
-
-                // Set array of quant unit types to select from
-                setUnitTypes(quantTypes);
-
                 // enable / disable the selector depending on if the current pricing strategy has been included in the conversation nodes
                 setInUse(isInUse);
             }
@@ -66,6 +55,20 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
+
+    useEffect(() => {
+        (async () => {
+            const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
+            const quantTypes = await repository.Configuration.Units.GetSupportedUnitIds();
+
+            // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
+            setAvailableTables(Object.keys(tableNameMap));
+            // map of pricing trategy pretty names
+            setTableNameMap(tableNameMap);
+            // Set array of quant unit types to select from
+            setUnitTypes(quantTypes);
+        })();
+    }, []);
 
     const addDynamicTable = async () => {
         // We always add the default dynamic table - the Select One Flat table
@@ -87,13 +90,13 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
     };
 
     useEffect(() => {
-        if (!loaded) {
-            loadTableData();
-            setLoaded(true);
-        }
-        return () => {
-            return setLoaded(false);
-        };
+        // if (!loaded) {
+        loadTableData();
+        // setLoaded(true);
+        // }
+        // return () => {
+        //     return setLoaded(false);
+        // };
     }, [areaIdentifier, loadTableData]);
 
     const changeShowTotals = async (e: { target: { checked: any } }) => {
@@ -144,36 +147,37 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
                     </PalavyrText>
                 )}
 
-                {tables.map((table: DynamicTable, tableIndex: number) => {
-                    const onDelete = async () => {
-                        // delete table from DB
-                        await repository.Configuration.Tables.Dynamic.deleteDynamicTable(areaIdentifier, table.tableMeta.tableType, table.tableMeta.tableId);
+                {unitTypes &&
+                    tables.map((table: DynamicTable, tableIndex: number) => {
+                        const onDelete = async () => {
+                            // delete table from DB
+                            await repository.Configuration.Tables.Dynamic.deleteDynamicTable(areaIdentifier, table.tableMeta.tableType, table.tableMeta.tableId);
 
-                        // delete table from UI
-                        const newTables = cloneDeep(tables);
-                        newTables.splice(tableIndex, 1);
-                        setTables(newTables);
-                    };
+                            // delete table from UI
+                            const newTables = cloneDeep(tables);
+                            newTables.splice(tableIndex, 1);
+                            setTables(newTables);
+                        };
 
-                    return (
-                        <Fade key={["Fade", tableIndex, table.tableMeta.tableId].join("-")}>
-                            <PricingStrategyTable
-                                key={[tableIndex, table.tableMeta.tableId].join("-")}
-                                table={table}
-                                tables={tables}
-                                setTables={setTables}
-                                unitTypes={unitTypes}
-                                tableIndex={tableIndex}
-                                availableDynamicTableOptions={availableTables}
-                                tableNameMap={tableNameMap}
-                                areaIdentifier={areaIdentifier}
-                                showDebug={showDebug}
-                                inUse={inUse}
-                                deleteAction={onDelete}
-                            />
-                        </Fade>
-                    );
-                })}
+                        return (
+                            <Fade key={["Fade", tableIndex, table.tableMeta.tableId].join("-")}>
+                                <PricingStrategyTable
+                                    key={[tableIndex, table.tableMeta.tableId].join("-")}
+                                    table={table}
+                                    tables={tables}
+                                    setTables={setTables}
+                                    unitTypes={unitTypes}
+                                    tableIndex={tableIndex}
+                                    availableDynamicTableOptions={availableTables}
+                                    tableNameMap={tableNameMap}
+                                    areaIdentifier={areaIdentifier}
+                                    showDebug={showDebug}
+                                    inUse={inUse}
+                                    deleteAction={onDelete}
+                                />
+                            </Fade>
+                        );
+                    })}
             </Suspense>
         </PalavyrAccordian>
     );
