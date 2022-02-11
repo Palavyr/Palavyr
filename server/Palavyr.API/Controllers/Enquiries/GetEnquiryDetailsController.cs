@@ -13,15 +13,13 @@ namespace Palavyr.API.Controllers.Enquiries
         public const string Route = "enquiries/review/{conversationId}";
 
 
-        public GetCompleteConversationDetailsController(
-            IMediator mediator
-        )
+        public GetCompleteConversationDetailsController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
         [HttpGet(Route)]
-        public async Task<ConversationHistory[]> Get([FromRoute] string conversationId, CancellationToken cancellationToken)
+        public async Task<ConversationRowsResource[]> Get([FromRoute] string conversationId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetCompleteConversationDetailsRequest(conversationId), cancellationToken);
             return response.Response;

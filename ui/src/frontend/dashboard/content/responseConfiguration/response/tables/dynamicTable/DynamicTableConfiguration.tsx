@@ -20,7 +20,6 @@ export interface IDynamicTable {
 export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: IDynamicTable) => {
     const { repository, planTypeMeta, setSuccessOpen } = useContext(DashboardContext);
 
-    const [loaded, setLoaded] = useState<boolean>(false);
     const [showDebug, setShowDebug] = useState<boolean>(false);
     const [availableTables, setAvailableTables] = useState<Array<string>>([]);
     const [tableNameMap, setTableNameMap] = useState<TableNameMap>({});
@@ -46,7 +45,6 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
             counter++;
             if (counter === dynamicTableMetas.length) {
                 setTables(tables);
-                setLoaded(true);
 
                 // enable / disable the selector depending on if the current pricing strategy has been included in the conversation nodes
                 setInUse(isInUse);
@@ -90,13 +88,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
     };
 
     useEffect(() => {
-        // if (!loaded) {
         loadTableData();
-        // setLoaded(true);
-        // }
-        // return () => {
-        //     return setLoaded(false);
-        // };
     }, [areaIdentifier, loadTableData]);
 
     const changeShowTotals = async (e: { target: { checked: any } }) => {
