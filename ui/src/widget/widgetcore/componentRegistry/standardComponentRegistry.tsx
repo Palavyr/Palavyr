@@ -18,6 +18,7 @@ import { ChoiceList } from "@widgetcore/BotResponse/optionFormats/ChoiceList";
 import { MiniContactForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { CurrencyTextField } from "@widgetcore/BotResponse/numbers/CurrencyTextField";
 import { widgetSelection } from "@common/Analytics/gtag";
+import { UnitInput } from "@frontend/dashboard/content/responseConfiguration/response/tables/dynamicTable/components/UnitInput";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -308,7 +309,33 @@ export class StandardComponents {
             return (
                 <BotResponse
                     message={node.text}
-                    input={<TextInput className={cls.inputLabel} value={response} label="" type="number" inputPropsClassName={cls.textField} inputLabelPropsClassName={cls.textLabel} onChange={onChange} />}
+                    input={
+                        // TODO: Get this happening on the widget side.
+                        // <UnitInput
+                        //     unitGroup={node.unitGroup}
+                        //     unitPrettyName={node.unitPrettyName}
+                        //     unitHelperText={node.unitGroup}
+                        //     disabled={disabled}
+                        //     value={response}
+                        //     currencySymbol={node.currencySymbol}
+                        //     onCurrencyChange={(values: NumberFormatValues) => {
+                        //         if (values.floatValue !== undefined) {
+                        //             setResponse(values.floatValue.toString());
+                        //         }
+                        //     }}
+                        //     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                        //         const val = event.target.value;
+                        //         if (val !== "") {
+                        //             const result = parseFloat(val);
+                        //             if (result) {
+                        //                 setResponse(result.toString());
+                        //             }
+                        //         }
+                        //     }}
+                        // />
+                        // }
+                        <TextInput className={cls.inputLabel} value={response} label="" type="number" inputPropsClassName={cls.textField} inputLabelPropsClassName={cls.textLabel} onChange={onChange} />
+                    }
                     button={<ResponseButton disabled={disabled} onClick={onClick} />}
                 />
             );

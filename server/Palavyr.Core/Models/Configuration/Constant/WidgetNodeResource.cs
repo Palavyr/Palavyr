@@ -15,5 +15,9 @@
         public bool IsDynamicTableNode { get; set; }
         public string DynamicType { get; set; }
         public int? ResolveOrder { get; set; }
+        public int? UnitId { get; set; }
+        // public string? UnitGroup { get; set; }
+        // public string? UnitPrettyName { get; set; }
+        // public string? CurrencySymbol { get; set; }
     }
 }

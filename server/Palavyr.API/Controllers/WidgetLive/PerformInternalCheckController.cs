@@ -23,7 +23,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         }
 
         [HttpPost(Route)]
-        public async Task<bool> FetchPreferences([FromBody] PerformInternalCheckRequest request, CancellationToken cancellationToken)
+        public async Task<bool> Check([FromBody] PerformInternalCheckRequest request, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;

@@ -1009,6 +1009,9 @@ export type WidgetNodeResource = {
     isDynamicTableNode: boolean;
     dynamicType: string | null;
     resolveOrder: number | null;
+    // unitGroup: UnitGroups | null;
+    // unitPrettyName: UnitPrettyNames | null;
+    // currencySymbol: string | null;
 };
 
 export type WidgetNodes = WidgetNodeResource[];

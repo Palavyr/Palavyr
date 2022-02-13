@@ -1,4 +1,8 @@
+using System;
+using System.Linq;
+using System.Reflection;
 using Autofac;
+using Microsoft.AspNetCore.Mvc;
 using Palavyr.API.Controllers.Enquiries;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
@@ -8,6 +12,7 @@ using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Handlers;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation;
@@ -37,6 +42,7 @@ using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.TemporaryPaths;
 using Palavyr.Core.Services.Units;
 using Palavyr.Core.Sessions;
+using Module = Autofac.Module;
 
 namespace Palavyr.API.Registration.Container
 {
@@ -127,13 +133,23 @@ namespace Palavyr.API.Registration.Container
 
             builder.RegisterType<DetermineCurrentOperatingSystem>().As<IDetermineCurrentOperatingSystem>();
             builder.RegisterType<ResponseRetriever>().As<IResponseRetriever>().InstancePerDependency();
-            
+
             builder.RegisterType<CurrentLocaleAndLocalMapRetriever>().As<ICurrentLocaleAndLocalMapRetriever>().InstancePerLifetimeScope();
 
             builder.RegisterType<Units>().AsSelf().SingleInstance();
             builder.RegisterType<UnitRetriever>().As<IUnitRetriever>().InstancePerLifetimeScope();
-            
-            
+
+
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            builder.RegisterAssemblyTypes(assemblies)
+                .AsClosedTypesOf(typeof(IMapToNew<,>))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(assemblies)
+                .AsClosedTypesOf(typeof(IMapToPreExisting<,>))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
             
             
             
@@ -142,12 +158,11 @@ namespace Palavyr.API.Registration.Container
             
             
             // Experimental
-            
+
             ///////!!! SPECIAL DANGER ZONE !!!//////////
             builder.RegisterType<AccountIdTransport>().As<IHoldAnAccountId>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
             builder.RegisterType<CancellationTokenTransport>().As<ITransportACancellationToken>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
             ///////////// ///////////// ////////// ////////// ////////// /////////// ///////////// ///////////// ////////// ////////// ////////// /////////// 
-
         }
     }
 }

@@ -76,9 +76,9 @@ namespace Palavyr.Core.Services.PdfService
             var fakeResponses = criticalResponses.Compile(
                 new List<Dictionary<string, string>>()
                 {
-                    new Dictionary<string, string>() {{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam"}},
-                    new Dictionary<string, string>() {{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam"}},
-                    new Dictionary<string, string>() {{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam"}},
+                    new Dictionary<string, string>() { { "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam" } },
+                    new Dictionary<string, string>() { { "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam" } },
+                    new Dictionary<string, string>() { { "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam" } },
                 });
 
             logger.LogDebug("Attempting to collect table data....");
@@ -111,8 +111,7 @@ namespace Palavyr.Core.Services.PdfService
             return fileLink;
         }
 
-        private async Task<List<Table>> CollectPreviewDynamicTables(Area area, CultureInfo culture
-        )
+        private async Task<List<Table>> CollectPreviewDynamicTables(Area area, CultureInfo culture)
         {
             var dynamicTableMetas = area.DynamicTableMetas;
 
@@ -125,7 +124,7 @@ namespace Palavyr.Core.Services.PdfService
             }
 
             var table = new Table("Variable estimates determined by your responses", rows, culture, area.IncludeDynamicTableTotals);
-            return new List<Table>() {table};
+            return new List<Table>() { table };
         }
     }
 }

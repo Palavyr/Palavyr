@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.DynamicTableService;

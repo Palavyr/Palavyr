@@ -39,13 +39,6 @@ namespace Palavyr.Core.Handlers
 
     public class PerformInternalCheckRequest : IRequest<PerformInternalCheckResponse>
     {
-        public PerformInternalCheckRequest(ConversationNode node, string response, DynamicResponse currentDynamicResponseState)
-        {
-            Node = node;
-            Response = response;
-            CurrentDynamicResponseState = currentDynamicResponseState;
-        }
-
         public ConversationNode Node { get; set; }
         public string Response { get; set; }
         public DynamicResponse CurrentDynamicResponseState { get; set; }
