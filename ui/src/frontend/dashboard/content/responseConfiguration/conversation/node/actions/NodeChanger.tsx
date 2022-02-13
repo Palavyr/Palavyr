@@ -404,7 +404,6 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.resolveOrder = nodeOption.resolveOrder; // IS this right?
         currentNode.shouldRenderChildren = nodeOption.shouldRenderChildren;
         currentNode.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
-        currentNode.dynamicType = nodeOption.dynamicType;
         currentNode.isAnabranchType = nodeOption.isAnabranchType;
         currentNode.isImageNode = nodeOption.isImageNode;
         currentNode.dynamicType = nodeOption.dynamicType;

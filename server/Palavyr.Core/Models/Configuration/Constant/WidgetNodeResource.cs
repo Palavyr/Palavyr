@@ -1,4 +1,6 @@
-﻿namespace Palavyr.Core.Models.Configuration.Constant
+﻿using Palavyr.Core.Models.Configuration.Schemas;
+
+namespace Palavyr.Core.Models.Configuration.Constant
 {
     public class WidgetNodeResource
     {
@@ -15,5 +17,6 @@
         public bool IsDynamicTableNode { get; set; }
         public string DynamicType { get; set; }
         public int? ResolveOrder { get; set; }
+        public UnitIds? UnitId { get; set; }
     }
 }

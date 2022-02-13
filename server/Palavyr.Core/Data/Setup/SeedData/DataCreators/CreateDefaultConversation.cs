@@ -85,7 +85,8 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     IsDynamicTableNode = true,
                     ShouldRenderChildren = true,
                     NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
-                    NodeTypeCode = NodeTypeCode.III
+                    NodeTypeCode = NodeTypeCode.III,
+                    DynamicType = $"SelectOneFlat-{dynamicTableId}"
                 },
                 DefaultNodeTypeOptions.CreateSendResponse().MapNodeTypeOptionToConversationNode(
                     node6Id,

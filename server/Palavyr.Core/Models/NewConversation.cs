@@ -20,5 +20,7 @@ namespace Palavyr.Core.Models
             var conversationId = Guid.NewGuid().ToString(); // this is the id of the response PDF
             return new NewConversation(conversationId, convoNodes);
         }
+        
+        
     }
 }

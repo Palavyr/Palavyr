@@ -1,9 +1,12 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Sessions;
@@ -15,32 +18,38 @@ namespace Palavyr.Core.Handlers
         private readonly IConfigurationRepository configurationRepository;
         private readonly IConvoHistoryRepository convoRepository;
         private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IMapToNew<ConversationNode, WidgetNodeResource> mapper;
         private readonly ILogger<CreateNewConversationHistoryHandler> logger;
 
         public CreateNewConversationHistoryHandler(
             IConfigurationRepository configurationRepository,
             IConvoHistoryRepository convoRepository,
             IHoldAnAccountId accountIdHolder,
+            IMapToNew<ConversationNode, WidgetNodeResource> mapper,
             ILogger<CreateNewConversationHistoryHandler> logger
-            )
+        )
         {
             this.configurationRepository = configurationRepository;
             this.convoRepository = convoRepository;
             this.accountIdHolder = accountIdHolder;
+            this.mapper = mapper;
             this.logger = logger;
         }
+
         public async Task<CreateNewConversationHistoryResponse> Handle(CreateNewConversationHistoryRequest recordUpdate, CancellationToken cancellationToken)
         {
             var (intentId, name, email) = recordUpdate;
-            
+
             logger.LogDebug("Fetching nodes...");
             var standardNodes = await configurationRepository.GetAreaConversationNodes(intentId);
             var completeConversation = EndingSequence.AttachEndingSequenceToNodeList(standardNodes, intentId, accountIdHolder.AccountId);
 
             logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
-            var widgetNodes = completeConversation.MapConversationToWidgetNodes();
 
-            var newConvo = NewConversation.CreateNew(widgetNodes);
+            var widgetNodes = await mapper.MapMany(completeConversation, cancellationToken);
+            // var widgetNodes = completeConversation.MapConversationToWidgetNodes();
+            
+            var newConvo = NewConversation.CreateNew(widgetNodes.ToList());
 
             var area = await configurationRepository.GetAreaById(intentId);
             var newConversationRecord = ConversationRecord.CreateDefault(newConvo.ConversationId, accountIdHolder.AccountId, area.AreaName, intentId);
