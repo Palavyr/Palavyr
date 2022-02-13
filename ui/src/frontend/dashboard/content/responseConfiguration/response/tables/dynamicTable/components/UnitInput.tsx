@@ -66,7 +66,7 @@ export const UnitInput = ({ label, value, disabled, onBlur, onChange, onCurrency
         default:
             return (
                 <FormControl className={classNames(cls.margin, cls.withoutLabel, cls.textField)}>
-                    <Input disabled={disabled} value={value} onChange={onChange} endAdornment={<InputAdornment position="end">{unitPrettyName}</InputAdornment>} />
+                    <Input disabled={disabled} type="number" value={value} onChange={onChange} endAdornment={<InputAdornment position="end">{unitPrettyName}</InputAdornment>} />
                     <FormHelperText>{unitHelperText}</FormHelperText>
                 </FormControl>
             );

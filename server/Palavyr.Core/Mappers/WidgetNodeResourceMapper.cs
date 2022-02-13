@@ -5,6 +5,7 @@ using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.Units;
 
 namespace Palavyr.Core.Mappers
 {
@@ -12,15 +13,20 @@ namespace Palavyr.Core.Mappers
     {
         private readonly GuidFinder guidFinder;
         private readonly IConfigurationRepository configurationRepository;
+        private readonly IUnitRetriever unitRetriever;
 
-        public WidgetNodeResourceMapper(GuidFinder guidFinder, IConfigurationRepository configurationRepository)
+        public WidgetNodeResourceMapper(GuidFinder guidFinder, IConfigurationRepository configurationRepository, IUnitRetriever unitRetriever)
         {
             this.guidFinder = guidFinder;
             this.configurationRepository = configurationRepository;
+            this.unitRetriever = unitRetriever;
         }
 
         public async Task<WidgetNodeResource> Map(ConversationNode @from, CancellationToken cancellationToken)
         {
+            
+            
+            
             return new WidgetNodeResource
             {
                 AreaIdentifier = @from.AreaIdentifier,
@@ -36,7 +42,7 @@ namespace Palavyr.Core.Mappers
                 IsDynamicTableNode = @from.IsDynamicTableNode,
                 DynamicType = @from.DynamicType,
                 ResolveOrder = @from.ResolveOrder,
-                UnitId = await AttachUnitIdOrNull(@from)
+                // UnitId = await AttachUnitIdOrNull(@from)
             };
         }
 
@@ -47,7 +53,11 @@ namespace Palavyr.Core.Mappers
                 if (@from.DynamicType == null) throw new DomainException("Dynamic Type not set.");
                 var tableId = guidFinder.FindFirstGuidSuffix(@from.DynamicType);
                 var pricingStrategyMeta = await configurationRepository.GetDynamicTableMetaByTableId(tableId);
-                return pricingStrategyMeta.UnitId;
+                var unitId = pricingStrategyMeta.UnitId;
+                return unitId;
+                // var qauntDef = unitRetriever.GetUnitDefinitionById(unitId);
+                
+
             }
             
             // TODO: Check if the non-pricingStrategy node is a numeric type and retrieve unitId
