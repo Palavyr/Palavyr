@@ -1,25 +1,4 @@
-﻿// using System.Data;
-// using System.Linq;
-// using System.Net.Http;
-// using System.Runtime.Serialization;
-// using System.Text;
-// using System.Threading.Tasks;
-// using Palavyr.API.Controllers.WidgetLive;
-// using Palavyr.Core.Handlers;
-// using Palavyr.Core.Models.Resources.Requests;
-// using Palavyr.Core.Models.Resources.Responses;
-// using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-// using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
-// using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
-// using Palavyr.IntegrationTests.DataCreators;
-// using Shouldly;
-// using Stripe;
-// using Test.Common.Builders;
-// using Test.Common.Random;
-// using Xunit;
-// using Xunit.Abstractions;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net.Http;
