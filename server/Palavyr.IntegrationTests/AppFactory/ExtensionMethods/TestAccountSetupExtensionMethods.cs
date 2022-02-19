@@ -10,12 +10,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
         public static async Task<Account> SetupProAccount(this BaseIntegrationFixture baseIntegrationFixture)
         {
             return await baseIntegrationFixture
-                .CreateDefaultAccountAndSessionBuilder()
-                .WithDefaultPassword()
-                .WithAccountId(baseIntegrationFixture.AccountId)
-                .WithDefaultAccountType()
-                .WithApiKey(baseIntegrationFixture.ApiKey)
-                .WithDefaultEmailAddress()
+                .SetStandardAccountProperties()
                 .WithProPlan()
                 .Build();
         }
@@ -23,12 +18,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
         public static async Task<Account> SetupLyteAccount(this BaseIntegrationFixture baseIntegrationFixture)
         {
             return await baseIntegrationFixture
-                .CreateDefaultAccountAndSessionBuilder()
-                .WithDefaultPassword()
-                .WithAccountId(baseIntegrationFixture.AccountId)
-                .WithDefaultAccountType()
-                .WithApiKey(baseIntegrationFixture.ApiKey)
-                .WithDefaultEmailAddress()
+                .SetStandardAccountProperties()
                 .WithLytePlan()
                 .Build();
         }
@@ -36,14 +26,21 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
         public static async Task<Account> SetupFreeAccount(this BaseIntegrationFixture baseIntegrationFixture)
         {
             return await baseIntegrationFixture
+                .SetStandardAccountProperties()
+                .WithFreePlan()
+                .Build();
+        }
+
+        private static DefaultAccountAndSessionBuilder SetStandardAccountProperties(this BaseIntegrationFixture baseIntegrationFixture)
+        {
+            return baseIntegrationFixture
                 .CreateDefaultAccountAndSessionBuilder()
                 .WithDefaultPassword()
                 .WithAccountId(baseIntegrationFixture.AccountId)
                 .WithDefaultAccountType()
                 .WithApiKey(baseIntegrationFixture.ApiKey)
                 .WithDefaultEmailAddress()
-                .WithFreePlan()
-                .Build();
+                .AsActive();
         }
     }
 }

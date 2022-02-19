@@ -10,7 +10,6 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
     {
         private readonly ILogger<SesEmail> logger;
         private readonly IDetermineCurrentOperatingSystem determineCurrentOperatingSystem;
-        private readonly ISmtpEmailClient smtpEmailClient;
         private readonly ITransportACancellationToken cancellationTokenTransport;
         private IAmazonSimpleEmailService EmailClient { get;}
         
@@ -18,13 +17,11 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             ILogger<SesEmail> logger,
             IAmazonSimpleEmailService client,
             IDetermineCurrentOperatingSystem determineCurrentOperatingSystem,
-            ISmtpEmailClient smtpEmailClient,
             ITransportACancellationToken cancellationTokenTransport
         )
         {
             this.logger = logger;
             this.determineCurrentOperatingSystem = determineCurrentOperatingSystem;
-            this.smtpEmailClient = smtpEmailClient;
             this.cancellationTokenTransport = cancellationTokenTransport;
             EmailClient = client;
         }

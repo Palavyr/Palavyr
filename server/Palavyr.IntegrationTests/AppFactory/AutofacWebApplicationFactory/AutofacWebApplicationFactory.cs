@@ -21,6 +21,8 @@ namespace Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory
         {
             client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.Action, ApplicationConstants.MagicUrlStrings.SessionAction);
             client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.SessionId, IntegrationConstants.SessionId);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+
             client.BaseAddress = new Uri(IntegrationConstants.BaseUri);
             base.ConfigureClient(client);
         }

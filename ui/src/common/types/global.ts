@@ -867,6 +867,7 @@ export type AnabranchContext = {
 };
 
 export interface IDashboardContext {
+    areaIdentifier: string;
     accountTypeNeedsPassword: boolean;
     checkAreaCount(): void;
     areaName: string;

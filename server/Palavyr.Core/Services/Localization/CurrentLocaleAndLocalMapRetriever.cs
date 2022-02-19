@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AccountServices;
 
-namespace Palavyr.Core.Handlers
+namespace Palavyr.Core.Services.Localization
 {
     public interface ICurrentLocaleAndLocalMapRetriever
     {
-        Task<CurrentLocaleAndLocalMapRetriever.LocaleResponse> GetLocaleDetails();
+        Task<CurrentLocaleAndLocalMapRetriever.LocaleResponse> GetLocaleDetails(bool read);
     }
 
     public class CurrentLocaleAndLocalMapRetriever : ICurrentLocaleAndLocalMapRetriever
@@ -24,23 +24,34 @@ namespace Palavyr.Core.Handlers
             this.localeDefinitions = localeDefinitions;
         }
 
-        public async Task<LocaleResponse> GetLocaleDetails()
+        public async Task<LocaleResponse> GetLocaleDetails(bool read)
         {
             var account = await accountRepository.GetAccount();
             var localeMeta = localeDefinitions.Parse(account.Locale);
-            var culture = new CultureInfo(localeMeta.Name);
 
-            return new LocaleResponse
+            var localeResponse = new LocaleResponse
             {
                 CurrentLocale = localeMeta,
-                LocaleMap = culture.CreateLocaleMap()
             };
+
+            if (!read)
+            {
+                var cultureMap = new CultureInfo(localeMeta.Name).CreateLocaleMap();
+                localeResponse.AddLocaleMap(cultureMap);
+            }
+
+            return localeResponse;
         }
 
         public class LocaleResponse
         {
             public LocaleResource CurrentLocale { get; set; }
             public LocaleResource[] LocaleMap { get; set; }
+
+            public void AddLocaleMap(LocaleResource[] localeMap)
+            {
+                LocaleMap = localeMap;
+            }
         }
     }
 }

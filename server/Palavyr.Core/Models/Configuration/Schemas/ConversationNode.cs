@@ -130,7 +130,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             bool isLoopbackAnchor = false
         )
         {
-            return new ConversationNode()
+            return new ConversationNode
             {
                 NodeId = nodeId,
                 NodeType = nodeType,

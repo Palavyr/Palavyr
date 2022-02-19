@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.IntegrationTests.AppFactory;
-using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 
 namespace Palavyr.IntegrationTests.DataCreators
@@ -25,10 +24,17 @@ namespace Palavyr.IntegrationTests.DataCreators
         private AccountType? accountType;
         private string? apikey;
         private Account.PlanTypeEnum? planType;
+        private bool? asActive;
 
         public DefaultAccountAndSessionBuilder(BaseIntegrationFixture test)
         {
             this.test = test;
+        }
+
+        public DefaultAccountAndSessionBuilder AsActive()
+        {
+            this.asActive = true;
+            return this;
         }
 
         public DefaultAccountAndSessionBuilder WithAccountId(string accountId)
@@ -92,11 +98,13 @@ namespace Palavyr.IntegrationTests.DataCreators
             var pass = this.password ?? "123456";
             var id = this.accountId ?? "account-123";
             var accType = this.accountType ?? AccountType.Default;
+            var active = this.asActive ?? false;
 
             var defaultAccount = Account.CreateAccount(email, pass, id, test.ApiKey, accType);
 
             defaultAccount.PlanType = this.planType ?? Account.PlanTypeEnum.Free;
-
+            defaultAccount.Active = active;
+            
             await test.AccountsContext.Accounts.AddAsync(defaultAccount);
             var session = Session.CreateNew(IntegrationConstants.SessionId, test.AccountId, test.ApiKey);
             await test.AccountsContext.Sessions.AddAsync(session);

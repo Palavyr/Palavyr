@@ -2,14 +2,14 @@ import { WidgetNodeResource, WidgetConversationUpdate, WidgetNodes, ContextPrope
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 
 import { floor, max, min } from "lodash";
-import { ConvoContextProperties } from "@widgetcore/componentRegistry/registry";
 import { renderNextBotMessage } from "./renderBotMessage";
 import { setDynamicResponse } from "./setDynamicResponse";
 import { IAppContext } from "widget/hook";
 import { UserMessage } from "@widgetcore/components/Messages/components/Message/Message";
 
 const WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN = 22;
-
+const MIN_SPEED_MILLISECONDS = 18000;
+const MAX_SPEED_MILLISECONDS = 2000;
 export const extractContent = (inputTextWithHtml: string, space: boolean = true) => {
     var span = document.createElement("span");
     span.innerHTML = inputTextWithHtml;
@@ -24,7 +24,7 @@ export const extractContent = (inputTextWithHtml: string, space: boolean = true)
 
 export const computeReadingTime = (node: WidgetNodeResource): number => {
     const typicalReadingSpeed = (node: WidgetNodeResource) => floor((extractContent(node.text).length / WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN) * 1000, 0);
-    const timeout = min([18000, max([2000, typicalReadingSpeed(node)])]);
+    const timeout = min([MIN_SPEED_MILLISECONDS, max([MAX_SPEED_MILLISECONDS, typicalReadingSpeed(node)])]);
     return timeout as number;
 };
 
@@ -101,7 +101,7 @@ export const responseAction = async (
 export const CSS_LINKER_and_NODE_TYPE = {
     BOT: "bot-response",
     USER: "user-response",
-}
+};
 
 export const createUserResponseComponent = (text: string, id: string | null): UserMessageData => {
     return {
@@ -113,6 +113,6 @@ export const createUserResponseComponent = (text: string, id: string | null): Us
         showAvatar: true,
         customId: id ?? "",
         unread: false,
-        nodeType: CSS_LINKER_and_NODE_TYPE.USER
+        nodeType: CSS_LINKER_and_NODE_TYPE.USER,
     };
 };

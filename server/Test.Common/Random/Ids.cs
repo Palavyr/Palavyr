@@ -8,5 +8,20 @@ namespace Test.Common.Random
         {
             return StaticGuidUtils.CreateShortenedGuid(1);
         }
+
+        public static string RandomAccount()
+        {
+            return StaticGuidUtils.CreateShortenedGuid(1);
+        }
+
+        public static string RandomId()
+        {
+            return StaticGuidUtils.CreateNewId();
+        }
+
+        public static string RandomString()
+        {
+            return $"{StaticGuidUtils.CreatePseudoRandomString(2)} {StaticGuidUtils.CreatePseudoRandomString(2)}";
+        }
     }
 }

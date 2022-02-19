@@ -38,14 +38,14 @@ const getStaticTableValidationResult = (staticTables: StaticTableMetas): StaticT
 };
 
 export const ResponseConfiguration = () => {
-    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
     const [, setLoaded] = useState(false);
     const [prologue, setPrologue] = useState<string>("");
     const [staticTables, setStaticTables] = useState<StaticTableMetas>([]);
     const [epilogue, setEpilogue] = useState<string>("");
 
-    const { repository } = useContext(DashboardContext);
+    const { repository, areaIdentifier } = useContext(DashboardContext);
+
     const staticTablesModifier = new StaticTablesModifier(setStaticTables, repository);
     const prologueModifier = new LogueModifier(setPrologue);
     const epilogueModifier = new LogueModifier(setEpilogue);
@@ -104,7 +104,6 @@ export const ResponseConfiguration = () => {
         setStaticTables(staticTablesMetas);
         setSendPdfWithResponse(sendPdfResponse);
         setLoaded(true);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 
     useEffect(() => {

@@ -6,7 +6,7 @@ namespace Palavyr.IntegrationTests.AppFactory
     {
         public const string SessionId = "abc123treu";
         public const string DefaultArea = "area-234";
-        public const string EmailAddress = "test@gmail.com";
+        public const string EmailAddress = "test.palavyr@gmail.com";
         public const string Password = "12345";
         public const string DbPassword = "0987654321";
         public const string DbUser = "postgres";

@@ -66,60 +66,38 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             string fromAddressLabel = "",
             string toAddressLabel = "")
         {
-            if (determineCurrentOperatingSystem.IsWindows())
+
+            logger.LogDebug("Emailing from windows -- using raw ses");
+            var message = GetMessage(
+                fromAddressLabel,
+                fromAddress,
+                toAddressLabel,
+                toAddress,
+                subject,
+                htmlBody,
+                textBody,
+                filePaths);
+
+            var rawSendRequest = new SendRawEmailRequest()
             {
-                logger.LogDebug("Emailing from windows -- using raw ses");
-                var message = GetMessage(
-                    fromAddressLabel,
-                    fromAddress,
-                    toAddressLabel,
-                    toAddress,
-                    subject,
-                    htmlBody,
-                    textBody,
-                    filePaths);
+                RawMessage = new RawMessage(GetMessageStream(message)),
+            };
 
-                var rawSendRequest = new SendRawEmailRequest()
-                {
-                    RawMessage = new RawMessage(GetMessageStream(message)),
-                };
+            LoggerExtensions.LogDebug(logger, "Trying to send email...");
 
-                LoggerExtensions.LogDebug(logger, "Trying to send email...");
-
-
-                try
-                {
-                    await EmailClient.SendRawEmailAsync(rawSendRequest);
-                    LoggerExtensions.LogDebug(logger, "Email Sent Successfully");
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    LoggerExtensions.LogDebug(logger, "Email (with attachments) was not sent. ");
-                    LoggerExtensions.LogDebug(logger, "Error: " + ex.Message);
-                    return false;
-                }
+            try
+            {
+                var response = await EmailClient.SendRawEmailAsync(rawSendRequest);
+                LoggerExtensions.LogDebug(logger, "Email Sent Successfully");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LoggerExtensions.LogDebug(logger, "Email (with attachments) was not sent. ");
+                LoggerExtensions.LogDebug(logger, "Error: " + ex.Message);
+                return false;
             }
 
-            if (determineCurrentOperatingSystem.IsLinux())
-            {
-                logger.LogDebug("Emailing from linux -- using smtp");
-                try
-                {
-                    await smtpEmailClient.SendSmtpEmailWithAttachments(
-                        fromAddress,
-                        toAddress,
-                        subject, 
-                        htmlBody, 
-                        filePaths);
-                }
-                catch (Exception ex)
-                {
-                    LoggerExtensions.LogDebug(logger, "Email (with attachments) was not sent. ");
-                    LoggerExtensions.LogDebug(logger, "Error: " + ex.Message);
-                    return false;
-                }
-            }
 
             throw new Exception("OS not supported for attachment emails. Sorry");
         }

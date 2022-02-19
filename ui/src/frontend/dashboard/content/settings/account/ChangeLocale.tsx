@@ -23,9 +23,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const LocaleId = "LocaleId";
-const CountryName = "CountryName";
-
 export const ChangeLocale = () => {
     const { repository } = useContext(DashboardContext);
 

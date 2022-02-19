@@ -89,6 +89,10 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
     useEffect(() => {
         loadTableData();
+        return () => {
+            setTables([]);
+            setInUse(false);
+        };
     }, [areaIdentifier, loadTableData]);
 
     const changeShowTotals = async (e: { target: { checked: any } }) => {
