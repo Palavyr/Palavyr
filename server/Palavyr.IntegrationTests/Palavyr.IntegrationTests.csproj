@@ -34,9 +34,11 @@
       <EmbeddedResource Include="xunit.runner.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Remove="Tests\Core\Services\AccountServices\**" />
+      <None Remove="Tests\Core\Services\AccountServices\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Tests\Core\Services\AccountServices" />
+      <Compile Remove="Tests\Core\Services\AccountServices\**" />
     </ItemGroup>
 </Project>

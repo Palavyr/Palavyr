@@ -41,7 +41,7 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
                 Source = fromAddress,
                 Destination = new Destination
                 {
-                    ToAddresses = new List<string> {toAddress}
+                    ToAddresses = new List<string> { toAddress }
                 },
                 Message = new Message
                 {
@@ -52,50 +52,50 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
 
             logger.LogDebug("Trying to send email...");
 
-            if (determineCurrentOperatingSystem.IsWindows())
+            // if (determineCurrentOperatingSystem.IsWindows())
+            // {
+            logger.LogDebug("Emailing from windows -- using raw ses");
+
+            try
             {
-                logger.LogDebug("Emailing from windows -- using raw ses");
-
-                try
-                {
-                    await EmailClient.SendEmailAsync(sendRequest);
-                    logger.LogDebug("SES Email send was successful!");
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    logger.LogDebug("SES Email was not sent. ");
-                    logger.LogDebug($"Error: {ex.Message}");
-                    //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
-                    return false;
-                }
+                await EmailClient.SendEmailAsync(sendRequest);
+                logger.LogDebug("SES Email send was successful!");
+                return true;
             }
-
-            if (determineCurrentOperatingSystem.IsLinux()) // Is Lambda
+            catch (Exception ex)
             {
-                logger.LogDebug("Emailing from linux -- using smtp");
-
-                try
-                {
-                    logger.LogDebug("TRYING");
-
-                    await smtpEmailClient.SendSmtpEmail(
-                        fromAddress,
-                        toAddress,
-                        subject,
-                        htmlBody
-                    );
-                    logger.LogDebug("SMTP Email send was successful!");
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    logger.LogDebug("SMTP Email was not sent. ");
-                    logger.LogDebug($"Error: {ex.Message}");
-                    //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
-                    return false;
-                }
+                logger.LogDebug("SES Email was not sent. ");
+                logger.LogDebug($"Error: {ex.Message}");
+                //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
+                return false;
             }
+            // }
+
+            // if (determineCurrentOperatingSystem.IsLinux()) // Is Lambda
+            // {
+            //     logger.LogDebug("Emailing from linux -- using smtp");
+            //
+            //     try
+            //     {
+            //         logger.LogDebug("TRYING");
+            //
+            //         await smtpEmailClient.SendSmtpEmail(
+            //             fromAddress,
+            //             toAddress,
+            //             subject,
+            //             htmlBody
+            //         );
+            //         logger.LogDebug("SMTP Email send was successful!");
+            //         return true;
+            //     }
+            //     catch (Exception ex)
+            //     {
+            //         logger.LogDebug("SMTP Email was not sent. ");
+            //         logger.LogDebug($"Error: {ex.Message}");
+            //         //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
+            //         return false;
+            //     }
+            // }
 
             throw new Exception("OS Not supported for sending emails");
         }

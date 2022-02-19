@@ -19,6 +19,7 @@ namespace Palavyr.Core.Handlers
         private readonly IConvoHistoryRepository convoRepository;
         private readonly IHoldAnAccountId accountIdHolder;
         private readonly IMapToNew<ConversationNode, WidgetNodeResource> mapper;
+        private readonly IEndingSequenceAttacher endingSequenceAttacher;
         private readonly ILogger<CreateNewConversationHistoryHandler> logger;
 
         public CreateNewConversationHistoryHandler(
@@ -26,6 +27,7 @@ namespace Palavyr.Core.Handlers
             IConvoHistoryRepository convoRepository,
             IHoldAnAccountId accountIdHolder,
             IMapToNew<ConversationNode, WidgetNodeResource> mapper,
+            IEndingSequenceAttacher endingSequenceAttacher,
             ILogger<CreateNewConversationHistoryHandler> logger
         )
         {
@@ -33,6 +35,7 @@ namespace Palavyr.Core.Handlers
             this.convoRepository = convoRepository;
             this.accountIdHolder = accountIdHolder;
             this.mapper = mapper;
+            this.endingSequenceAttacher = endingSequenceAttacher;
             this.logger = logger;
         }
 
@@ -42,12 +45,11 @@ namespace Palavyr.Core.Handlers
 
             logger.LogDebug("Fetching nodes...");
             var standardNodes = await configurationRepository.GetAreaConversationNodes(intentId);
-            var completeConversation = EndingSequence.AttachEndingSequenceToNodeList(standardNodes, intentId, accountIdHolder.AccountId);
+            var completeConversation = endingSequenceAttacher.AttachEndingSequenceToNodeList(standardNodes, intentId, accountIdHolder.AccountId);
 
             logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
 
             var widgetNodes = await mapper.MapMany(completeConversation, cancellationToken);
-            // var widgetNodes = completeConversation.MapConversationToWidgetNodes();
             
             var newConvo = NewConversation.CreateNew(widgetNodes.ToList());
 

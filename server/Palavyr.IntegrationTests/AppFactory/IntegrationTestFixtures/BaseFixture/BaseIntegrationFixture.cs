@@ -31,6 +31,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public WebApplicationFactory<Startup> WebHostFactory { get; set; } = null!;
 
         public HttpClient Client => WebHostFactory.ConfigureInMemoryClient();
+        public HttpClient ClientApiKey => WebHostFactory.ConfigureInMemoryApiKeyClient(ApiKey);
         public DashContext DashContext => WebHostFactory.Services.GetService<DashContext>();
         public AccountsContext AccountsContext => WebHostFactory.Services.GetService<AccountsContext>();
         public ConvoContext ConvoContext => WebHostFactory.Services.GetService<ConvoContext>();

@@ -13,7 +13,7 @@ namespace Palavyr.API.Controllers.WidgetLive
     public class SendWidgetResponseEmailController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "widget/area/{areaId}/email/send";
+        public const string Route = "widget/area/{intentId}/email/send";
 
         public SendWidgetResponseEmailController(IMediator mediator)
         {
@@ -24,13 +24,13 @@ namespace Palavyr.API.Controllers.WidgetLive
         [HttpPost(Route)]
         public async Task<SendEmailResultResponse> SendEmail(
             [FromRoute]
-            string areaId,
+            string intentId,
             [FromBody]
             EmailRequest emailRequest,
             CancellationToken cancellationToken
         )
         {
-            var response = await mediator.Send(new SendWidgetResponseEmailRequest(emailRequest, areaId), cancellationToken);
+            var response = await mediator.Send(new SendWidgetResponseEmailRequest(emailRequest, intentId), cancellationToken);
             return response.Response;
         }
     }

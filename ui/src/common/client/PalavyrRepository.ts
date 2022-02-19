@@ -327,7 +327,7 @@ export class PalavyrRepository {
             getEmail: async () => this.client.get<AccountEmailSettingsResponse>(`account/settings/email`),
             getPhoneNumber: async () => this.client.get<PhoneSettingsResponse>(`account/settings/phone-number`),
 
-            GetLocale: async () => this.client.get<LocaleResponse>(`account/settings/locale`),
+            GetLocale: async (readonly: boolean = false) => this.client.get<LocaleResponse>(`account/settings/locale?read=${readonly}`),
             getCompanyLogo: async () => this.client.get<string>(`account/settings/logo`),
 
             getIntroductionId: async () => this.client.get<string>(`account/settings/intro-id`),

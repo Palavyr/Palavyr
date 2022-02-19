@@ -108,7 +108,7 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
             {options && (
                 <Autocomplete
                     popupIcon={<ArrowDropDownIcon className={cls.icon} />}
-                    closeIcon={<ArrowDropUpIcon className={cls.icon} />}
+                    // closeIcon={<ArrowDropUpIcon className={cls.icon} />}
                     disabled={disabled}
                     size="small"
                     open={open !== undefined ? open : true}

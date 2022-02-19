@@ -1,4 +1,5 @@
 #nullable enable
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -24,24 +25,43 @@ namespace Palavyr.Core.Services.AccountServices
         CultureInfo DefaultLocale { get; set; }
         LocaleResource Parse(string localeId);
     }
+    
+    public static class LocaleDefinitionsExtensions
+    {
+        public static CultureInfo[] GetEnglishCulture(this CultureInfo[] cultures)
+        {
+            var englishLocales = new List<CultureInfo>();
+            
+            foreach (var cultureInfo in cultures)
+            {
+                if (cultureInfo.IetfLanguageTag.ToLowerInvariant().StartsWith("en") && cultureInfo.IetfLanguageTag.Length == 5)
+                {
+                    englishLocales.Add(cultureInfo);
+                }
+            }
+
+            return englishLocales.ToArray();
+        }
+    }
 
     public class LocaleDefinitions : ILocaleDefinitions
     {
         public LocaleDefinitions()
         {
-            SupportedLocales = CultureInfo.GetCultures(CultureTypes.AllCultures & ~CultureTypes.NeutralCultures);
+            SupportedLocales = GetEnglishCulture();
             DefaultLocale = SupportedLocales.Single(x => x.Name == "en-US");
         }
 
-        public LocaleDefinitions(string localeId)
-        {
-            SupportedLocales = CultureInfo.GetCultures(CultureTypes.AllCultures & ~CultureTypes.NeutralCultures);
-            DefaultLocale = SupportedLocales.Single(x => x.Name == "en-US");
-        }
 
         public CultureInfo[] SupportedLocales { get; set; }
         public CultureInfo DefaultLocale { get; set; }
 
+        private CultureInfo[] GetEnglishCulture()
+        {
+            var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures & ~CultureTypes.NeutralCultures);
+            return allCultures.GetEnglishCulture();
+        }
+        
         public LocaleResource Parse(string localeId)
         {
             if (!SupportedLocales.Select(x => x.Name).Contains(localeId))
@@ -50,7 +70,6 @@ namespace Palavyr.Core.Services.AccountServices
             }
 
             var culture = new CultureInfo(localeId);
-            var localeMap = culture.CreateLocaleMap();
             return culture.ConvertToResource();
         }
     }
@@ -61,6 +80,7 @@ namespace Palavyr.Core.Services.AccountServices
         {
             return CultureInfo
                 .GetCultures(CultureTypes.AllCultures & ~CultureTypes.NeutralCultures)
+                .GetEnglishCulture()
                 .Select(x => x.ConvertToResource()).ToArray();
         }
 

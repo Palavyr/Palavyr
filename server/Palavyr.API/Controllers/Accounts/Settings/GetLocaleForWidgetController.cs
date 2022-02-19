@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers;
 using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Services.Localization;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {

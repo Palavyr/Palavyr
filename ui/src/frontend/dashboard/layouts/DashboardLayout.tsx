@@ -200,7 +200,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         const areas = await repository.Area.GetAreas();
         setAreaNameDetails(sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, fetchSidebarInfo(areas)));
 
-        const locale = await repository.Settings.Account.GetLocale();
+        const locale = await repository.Settings.Account.GetLocale(true); // readonly == true
         setCurrencySymbol(locale.currentLocale.currencySymbol);
 
         const needsPassword = await repository.Settings.Account.CheckNeedsPassword();
@@ -239,7 +239,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     }, [areaIdentifier, loadAreas]);
 
     const setNewArea = (newArea: AreaTable) => {
-        var newNames = cloneDeep(areaNameDetails);
+        const newNames = cloneDeep(areaNameDetails);
 
         newNames.push({ areaName: newArea.areaName, areaIdentifier: newArea.areaIdentifier });
         setAreaNameDetails(newNames);
@@ -308,6 +308,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
             {planTypeMeta && (
                 <DashboardContext.Provider
                     value={{
+                        areaIdentifier,
                         reRenderDashboard,
                         accountTypeNeedsPassword,
                         successOpen,

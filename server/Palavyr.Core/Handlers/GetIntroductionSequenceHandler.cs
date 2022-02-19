@@ -24,7 +24,7 @@ namespace Palavyr.Core.Handlers
         {
             var account = await accountRepository.GetAccount();
             var introConvo = await configurationRepository.GetIntroductionSequence(account.IntroductionId);
-            var intro = EndingSequence.CleanTheIntroConvoEnding(introConvo);
+            var intro = EndingSequenceAttacher.CleanTheIntroConvoEnding(introConvo);
             return new GetIntroductionSequenceResponse(intro);
         }
     }

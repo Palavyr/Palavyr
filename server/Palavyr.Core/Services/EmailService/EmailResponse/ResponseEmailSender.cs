@@ -126,6 +126,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             
             logger.LogDebug("Sending Email...");
             var responseResult = await Send(senderDetails, attachments.Select(x => x.TempFilePath).ToArray(), pdfLink);
+            
             foreach (var attachment in attachments)
             {
                 logger.LogDebug($"Deleting locale temp file: {attachment.FileNameWithExtension}");
@@ -181,8 +182,8 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                     attachments.ToList()); // Attachments here should be local file paths that are temporary
             
             return ok
-                ? SendEmailResultResponse.CreateSuccess(EndingSequence.EmailSuccessfulNodeId, pdfUri)
-                : SendEmailResultResponse.CreateFailure(EndingSequence.EmailFailedNodeId);
+                ? SendEmailResultResponse.CreateSuccess(EndingSequenceAttacher.EmailSuccessfulNodeId, pdfUri)
+                : SendEmailResultResponse.CreateFailure(EndingSequenceAttacher.EmailFailedNodeId);
         }
 
         private async Task<CultureInfo> GetCulture()

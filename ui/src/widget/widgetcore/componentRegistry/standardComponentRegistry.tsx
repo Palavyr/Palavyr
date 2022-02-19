@@ -18,7 +18,6 @@ import { ChoiceList } from "@widgetcore/BotResponse/optionFormats/ChoiceList";
 import { MiniContactForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { CurrencyTextField } from "@widgetcore/BotResponse/numbers/CurrencyTextField";
 import { widgetSelection } from "@common/Analytics/gtag";
-import { UnitInput } from "@frontend/dashboard/content/responseConfiguration/response/tables/dynamicTable/components/UnitInput";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {

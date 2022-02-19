@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Services.Localization;
 
 namespace Palavyr.Core.Handlers
 {
@@ -15,7 +16,7 @@ namespace Palavyr.Core.Handlers
 
         public async Task<GetCurrentLocalAndLocaleMapResponse> Handle(GetCurrentLocalAndLocaleMapRequest request, CancellationToken cancellationToken)
         {
-            var localeDetails = await currentLocaleAndLocalMapRetriever.GetLocaleDetails();
+            var localeDetails = await currentLocaleAndLocalMapRetriever.GetLocaleDetails(request.Read);
             return new GetCurrentLocalAndLocaleMapResponse(localeDetails);
         }
     }
@@ -28,5 +29,6 @@ namespace Palavyr.Core.Handlers
 
     public class GetCurrentLocalAndLocaleMapRequest : IRequest<GetCurrentLocalAndLocaleMapResponse>
     {
+        public bool Read { get; set; }
     }
 }
