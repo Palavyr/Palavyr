@@ -43,15 +43,12 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
             }
             else
             {
-                var priceDetails = stripeSubscriptionService.GetPriceDetails(subscription);
-                var paymentInterval = stripeSubscriptionService.GetPaymentInterval(priceDetails);
-                var paymentIntervalEnum = paymentInterval.GetPaymentIntervalEnum();
-                var bufferedPeriodEnd = paymentIntervalEnum.AddEndTimeBuffer(subscription.CurrentPeriodEnd);
+                var bufferedPeriodEnd = await stripeSubscriptionService.GetBufferedEndTime(subscription);
                 account.CurrentPeriodEnd = bufferedPeriodEnd;
 
                 // check the updated subscription type and apply
-                var productId = stripeSubscriptionService.GetProductId(priceDetails);
-                var planTypeEnum = productRegistry.GetPlanTypeEnum(productId);
+                var planTypeEnum = await stripeSubscriptionService.GetPlanTypeEnum(subscription);
+                
                 account.PlanType = planTypeEnum;
             }
 
