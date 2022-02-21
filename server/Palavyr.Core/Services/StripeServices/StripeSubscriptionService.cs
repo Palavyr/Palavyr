@@ -2,22 +2,30 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Exceptions;
 using Stripe;
 using Stripe.Checkout;
 
 namespace Palavyr.Core.Services.StripeServices
 {
-    public class StripeSubscriptionService
+    public interface IStripeSubscriptionService
     {
-        private StripeClient stripeClient;
-        private ILogger<StripeSubscriptionService> logger;
-        private SubscriptionService subscriptionService;
+        Task<Subscription> GetSubscription(Session session);
+        Price GetPriceDetails(Subscription subscription);
+        string GetProductId(Price priceDetails);
+        string GetPaymentInterval(Price priceDetails);
+    }
 
-        public StripeSubscriptionService(ILogger<StripeSubscriptionService> logger)
+    public class StripeSubscriptionService : IStripeSubscriptionService
+    {
+        private ILogger<IStripeSubscriptionService> logger;
+        private readonly IStripeServiceLocatorProvider stripeServiceLocatorProvider;
+
+
+        public StripeSubscriptionService(ILogger<IStripeSubscriptionService> logger, IStripeServiceLocatorProvider stripeServiceLocatorProvider)
         {
-            this.stripeClient = new StripeClient(StripeConfiguration.ApiKey);
-            this.subscriptionService = new SubscriptionService(stripeClient);
             this.logger = logger;
+            this.stripeServiceLocatorProvider = stripeServiceLocatorProvider;
         }
 
         public async Task<Subscription> GetSubscription(Session session)
@@ -25,12 +33,12 @@ namespace Palavyr.Core.Services.StripeServices
             Subscription subscription;
             try
             {
-                subscription = await subscriptionService.GetAsync(session.SubscriptionId);
+                subscription = await stripeServiceLocatorProvider.SubscriptionService.GetAsync(session.SubscriptionId);
             }
             catch (StripeException ex)
             {
                 logger.LogDebug($"Could not find Stripe Subscription: {ex.Message}");
-                throw new Exception($"Could not find Stripe Subscription: {ex.Message}");
+                throw new DomainException($"Could not find Stripe Subscription: {ex.Message}");
             }
             return subscription;
         }

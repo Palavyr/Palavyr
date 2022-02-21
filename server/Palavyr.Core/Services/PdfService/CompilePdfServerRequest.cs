@@ -6,7 +6,7 @@ namespace Palavyr.Core.Services.PdfService
     {
         public static PdfServerRequest Compile(string bucket, string key, string accessKey, string secretKey, string region, string html, string identifier, Paper paperOptions)
         {
-            return new PdfServerRequest()
+            return new PdfServerRequest
             {
                 Bucket = bucket,
                 Key = key,

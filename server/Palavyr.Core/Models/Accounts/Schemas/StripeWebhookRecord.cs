@@ -1,19 +1,23 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
     public class StripeWebhookRecord
     {
+        [Key]
         public string Id { get; set; }
         public string PayloadSignature { get; set; }
-        
+
         public StripeWebhookRecord()
         {
         }
 
-        public static StripeWebhookRecord CreateNewRecord(string eventId)
+        public static StripeWebhookRecord CreateNewRecord(string id, string payloadSignature)
         {
-            return new StripeWebhookRecord()
+            return new StripeWebhookRecord
             {
-                PayloadSignature = eventId
+                Id = id,
+                PayloadSignature = payloadSignature
             };
         }
     }

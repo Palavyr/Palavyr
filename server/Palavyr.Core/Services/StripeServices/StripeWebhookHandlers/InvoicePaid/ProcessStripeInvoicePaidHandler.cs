@@ -1,5 +1,7 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
@@ -9,7 +11,7 @@ using Stripe;
 
 namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid
 {
-    public class ProcessStripeInvoicePaidHandler
+    public class ProcessStripeInvoicePaidHandler : INotificationHandler<InvoicePaidEvent>
     {
         private readonly ILogger<ProcessStripeInvoicePaidHandler> logger;
         private readonly AccountsContext accountsContext;
@@ -26,8 +28,9 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid
             this.emailClient = emailClient;
         }
 
-        public async Task ProcessInvoicePaid(Invoice invoice)
+        public async Task Handle(InvoicePaidEvent notification, CancellationToken cancellationToken)
         {
+            var invoice = notification.invoice;
             var account = await accountsContext
                 .Accounts
                 .SingleOrDefaultAsync(row => row.StripeCustomerId == invoice.CustomerId);
@@ -56,6 +59,16 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid
                     throw new Exception($"This email should be verified: {account.EmailAddress}");
                 }
             }
+        }
+    }
+
+    public class InvoicePaidEvent : INotification
+    {
+        public readonly Invoice invoice;
+
+        public InvoicePaidEvent(Invoice invoice)
+        {
+            this.invoice = invoice;
         }
     }
 }

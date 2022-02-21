@@ -10,7 +10,6 @@ using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.ExtensionsMethods;
 using Test.Common.Random;

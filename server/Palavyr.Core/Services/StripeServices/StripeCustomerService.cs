@@ -17,22 +17,22 @@ namespace Palavyr.Core.Services.StripeServices
         private readonly IDetermineCurrentEnvironment determineCurrentEnvironment;
 
         private readonly IPalavyrAccessChecker accessChecker;
+        private readonly IStripeServiceLocatorProvider stripeServiceLocatorProvider;
 
         private bool IsTest => StripeConfiguration.ApiKey.ToLowerInvariant().Contains("test");
 
-        public CustomerService customerService;
 
         public StripeCustomerService(
             ILogger<StripeCustomerService> logger,
             IDetermineCurrentEnvironment determineCurrentEnvironment,
-            IPalavyrAccessChecker accessChecker
+            IPalavyrAccessChecker accessChecker,
+            IStripeServiceLocatorProvider stripeServiceLocatorProvider
         )
         {
             this.logger = logger;
             this.determineCurrentEnvironment = determineCurrentEnvironment;
             this.accessChecker = accessChecker;
-            var stripeClient = new StripeClient(StripeConfiguration.ApiKey);
-            this.customerService = new CustomerService(stripeClient);
+            this.stripeServiceLocatorProvider = stripeServiceLocatorProvider;
         }
 
         public async Task<Customer> UpdateStripeCustomerEmail(string emailAddress, string customerId)
@@ -41,7 +41,7 @@ namespace Palavyr.Core.Services.StripeServices
             {
                 Email = emailAddress
             };
-            var customer = await customerService.UpdateAsync(customerId, options);
+            var customer = await stripeServiceLocatorProvider.CustomerService.UpdateAsync(customerId, options);
             return customer;
         }
 
@@ -51,7 +51,7 @@ namespace Palavyr.Core.Services.StripeServices
             {
                 try
                 {
-                    await customerService.DeleteAsync(stripeCustomerId);
+                    await stripeServiceLocatorProvider.CustomerService.DeleteAsync(stripeCustomerId);
                 }
                 catch
                 {
@@ -62,7 +62,7 @@ namespace Palavyr.Core.Services.StripeServices
             {
                 try
                 {
-                    await customerService.DeleteAsync(stripeCustomerId);
+                    await stripeServiceLocatorProvider.CustomerService.DeleteAsync(stripeCustomerId);
                 }
                 catch (StripeException stripeException)
                 {
@@ -73,14 +73,14 @@ namespace Palavyr.Core.Services.StripeServices
 
         public async Task DeleteStripeTestCustomerByEmailAddress(string emailAddress)
         {
-            var customers = (await customerService.ListAsync(new CustomerListOptions() {Email = emailAddress})).ToList();
+            var customers = (await stripeServiceLocatorProvider.CustomerService.ListAsync(new CustomerListOptions() { Email = emailAddress })).ToList();
             if (customers.Count != 1)
             {
                 throw new StripeException("Multiple customers were found during testing with the same email address. Please generate random unique test emails in your tests");
             }
 
             var customer = customers.Single();
-            await customerService.DeleteAsync(customer.Id);
+            await stripeServiceLocatorProvider.CustomerService.DeleteAsync(customer.Id);
         }
 
         public async Task DeleteStripeTestCustomers(List<string> customerIds)
@@ -103,10 +103,10 @@ namespace Palavyr.Core.Services.StripeServices
 
         public async Task DeleteSingleStripeTestCustomer(string customerId)
         {
-            var customer = await customerService.GetAsync(customerId, new CustomerGetOptions());
+            var customer = await stripeServiceLocatorProvider.CustomerService.GetAsync(customerId, new CustomerGetOptions());
             if (accessChecker.IsATestStripeEmail(customer.Email))
             {
-                await customerService.DeleteAsync(customer.Id);
+                await stripeServiceLocatorProvider.CustomerService.DeleteAsync(customer.Id);
             }
         }
 
@@ -123,19 +123,19 @@ namespace Palavyr.Core.Services.StripeServices
                 Description = $"Customer automatically added for {(IsTest ? "testing" : "production")}.",
                 Email = emailAddress
             };
-            var customer = await customerService.CreateAsync(createOptions);
+            var customer = await stripeServiceLocatorProvider.CustomerService.CreateAsync(createOptions);
             return customer;
         }
 
         public async Task<Customer> GetCustomerByCustomerId(string customerId, CancellationToken cancellationToken)
         {
-            var customer = await customerService.GetAsync(customerId, cancellationToken: cancellationToken);
+            var customer = await stripeServiceLocatorProvider.CustomerService.GetAsync(customerId, cancellationToken: cancellationToken);
             return customer;
         }
 
         public async Task<StripeList<Customer>> GetCustomerByEmailAddress(string emailAddress, CancellationToken cancellationToken)
         {
-            var customer = await customerService.ListAsync(new CustomerListOptions() {Email = emailAddress});
+            var customer = await stripeServiceLocatorProvider.CustomerService.ListAsync(new CustomerListOptions() { Email = emailAddress });
             if (customer.Count() > 1)
             {
                 throw new DomainException("Multiple stripe customers with the same email address found. This is not currently allowed.");
@@ -146,7 +146,7 @@ namespace Palavyr.Core.Services.StripeServices
 
         public async Task<List<Customer>> ListCustomers(CancellationToken cancellationToken)
         {
-            return (await customerService.ListAsync(cancellationToken: cancellationToken)).ToList();
+            return (await stripeServiceLocatorProvider.CustomerService.ListAsync(cancellationToken: cancellationToken)).ToList();
         }
     }
 }

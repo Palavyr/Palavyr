@@ -7,18 +7,17 @@ using Stripe.Checkout;
 
 namespace Palavyr.Core.Services.StripeServices
 {
-    
     public class StripeCheckoutService
     {
         private readonly ILogger<StripeCheckoutService> logger;
-        private StripeClient stripeClient;
+        private readonly IStripeServiceLocatorProvider stripeServiceLocatorProvider;
 
-        public StripeCheckoutService(ILogger<StripeCheckoutService> logger)
+        public StripeCheckoutService(ILogger<StripeCheckoutService> logger, IStripeServiceLocatorProvider stripeServiceLocatorProvider)
         {
-            this.stripeClient = new StripeClient(StripeConfiguration.ApiKey);
             this.logger = logger;
+            this.stripeServiceLocatorProvider = stripeServiceLocatorProvider;
         }
-        
+
         public async Task<string> CreateCheckoutSessionId(string stripeCustomerId, string successUrl, string cancelUrl, string priceId)
         {
             var options = new SessionCreateOptions
@@ -49,12 +48,10 @@ namespace Palavyr.Core.Services.StripeServices
                     },
                 },
             };
-
-            var sessionService = new SessionService(stripeClient);
             Session session;
             try
             {
-                session = await sessionService.CreateAsync(options);
+                session = await stripeServiceLocatorProvider.CheckoutSessionService.CreateAsync(options);
             }
             catch (StripeException ex)
             {

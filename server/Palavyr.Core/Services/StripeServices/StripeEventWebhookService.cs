@@ -1,6 +1,9 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers;
+using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed;
@@ -10,79 +13,53 @@ using Stripe.Checkout;
 
 namespace Palavyr.Core.Services.StripeServices
 {
-
-    public class StripeEventWebhookService
+    public interface IStripeEventWebhookRoutingService
     {
-        private ILogger<StripeEventWebhookService> logger;
-        private readonly ProcessStripeSubscriptionUpdatedHandler processStripeSubscriptionUpdatedHandler;
-        private IProcessStripeCheckoutSessionCompletedHandler processCheckoutSessionCompletedHandler;
-        private readonly ProcessStripeInvoicePaidHandler processStripeInvoicePaidHandler;
-        private readonly ProcessStripeInvoicePaymentFailedHandler processStripeInvoicePaymentFailedHandler;
-        private readonly ProcessStripeSubscriptionDeletedHandler processStripeSubscriptionDeletedHandler;
-        private readonly ProcessStripeSubscriptionCreatedHandler processStripeSubscriptionCreatedHandler;
-        private readonly ProcessStripePaymentMethodUpdatedHandler processStripePaymentMethodUpdatedHandler;
-        private readonly ProcessStripePlanUpdatedHandler processStripePlanUpdatedHandler;
-        private readonly ProcessStripeInvoiceCreatedHandler processStripeInvoiceCreatedHandler;
-        private readonly ProcessStripePriceUpdatedHandler processStripePriceUpdatedHandler;
+        Task ProcessStripeEvent(Event stripeEvent, string signature, CancellationToken cancellationToken);
+    }
 
-        public StripeEventWebhookService(
-            ILogger<StripeEventWebhookService> logger,
-            ProcessStripeSubscriptionUpdatedHandler processStripeSubscriptionUpdatedHandler,
-            ProcessStripeCheckoutSessionCompletedHandler processCheckoutSessionCompletedHandler,
-            ProcessStripeInvoicePaidHandler processStripeInvoicePaidHandler,
-            ProcessStripeInvoicePaymentFailedHandler processStripeInvoicePaymentFailedHandler,
-            ProcessStripeSubscriptionDeletedHandler processStripeSubscriptionDeletedHandler,
-            ProcessStripeSubscriptionCreatedHandler processStripeSubscriptionCreatedHandler,
-            ProcessStripePaymentMethodUpdatedHandler processStripePaymentMethodUpdatedHandler,
-            ProcessStripePlanUpdatedHandler processStripePlanUpdatedHandler,
-            ProcessStripeInvoiceCreatedHandler processStripeInvoiceCreatedHandler,
-            ProcessStripePriceUpdatedHandler processStripePriceUpdatedHandler
-        )
+    public class StripeEventWebhookRoutingService : IStripeEventWebhookRoutingService
+    {
+        private readonly IMediator mediator;
+
+        private ILogger<IStripeEventWebhookRoutingService> logger;
+
+        public StripeEventWebhookRoutingService(IMediator mediator, ILogger<IStripeEventWebhookRoutingService> logger)
         {
+            this.mediator = mediator;
             this.logger = logger;
-            this.processStripeSubscriptionUpdatedHandler = processStripeSubscriptionUpdatedHandler;
-            this.processCheckoutSessionCompletedHandler = processCheckoutSessionCompletedHandler;
-            this.processStripeInvoicePaidHandler = processStripeInvoicePaidHandler;
-            this.processStripeInvoicePaymentFailedHandler = processStripeInvoicePaymentFailedHandler;
-            this.processStripeSubscriptionDeletedHandler = processStripeSubscriptionDeletedHandler;
-            this.processStripeSubscriptionCreatedHandler = processStripeSubscriptionCreatedHandler;
-            this.processStripePaymentMethodUpdatedHandler = processStripePaymentMethodUpdatedHandler;
-            this.processStripePlanUpdatedHandler = processStripePlanUpdatedHandler;
-            this.processStripeInvoiceCreatedHandler = processStripeInvoiceCreatedHandler;
-            this.processStripePriceUpdatedHandler = processStripePriceUpdatedHandler;
         }
 
-        public async Task ProcessStripeEvent(Event stripeEvent)
+        public async Task ProcessStripeEvent(Event stripeEvent, string signature, CancellationToken cancellationToken)
         {
-            //TODO: write to store and early bail if this already exists
             // TODO: write a cleanup task to remove old stripe events (older than say a week?
-            
-            
+            var response = await mediator.Send(new NewStripeEventReceivedEvent(signature), cancellationToken);
+            if (response == null || (response != null && response.ShouldCancelProcessing))
+            {
+                // we've been hit with a replay -- we should not process this event
+                return;
+            }
+
             switch (stripeEvent.Type)
             {
                 case Events.CustomerSubscriptionUpdated:
-                    var subscriptionUpdated = (Subscription) stripeEvent.Data.Object;
-                    await processStripeSubscriptionUpdatedHandler.ProcessSubscriptionUpdated(subscriptionUpdated);
+                    await mediator.Publish(new SubscriptionUpdatedEvent(stripeEvent.To<Subscription>()), cancellationToken);
                     break;
-                
+
                 case Events.CustomerSubscriptionCreated:
-                    var subscriptionCreated = (Subscription) stripeEvent.Data.Object;
-                    await processStripeSubscriptionCreatedHandler.ProcessSubscriptionCreated(subscriptionCreated);
-                    break; 
-                
+                    await mediator.Publish(new SubscriptionCreatedEvent(stripeEvent.To<Subscription>()), cancellationToken);
+                    break;
+
                 case Events.CustomerSubscriptionDeleted:
-                    var subscriptionDeleted = (Subscription) stripeEvent.Data.Object;
-                    await processStripeSubscriptionDeletedHandler.ProcessSubscriptionDeleted(subscriptionDeleted);
+                    await mediator.Publish(new SubscriptionDeletedEvent(stripeEvent.To<Subscription>()), cancellationToken);
                     break;
 
                 case Events.CheckoutSessionCompleted:
-                    var session = (Session) stripeEvent.Data.Object;
-                    await processCheckoutSessionCompletedHandler.ProcessCheckoutSessionCompleted(session);
+                    await mediator.Publish(new CheckoutSessionCompletedEvent(stripeEvent.To<Session>()), cancellationToken);
                     break;
 
                 case Events.InvoicePaid:
-                    var invoicePaid = (Invoice) stripeEvent.Data.Object;
-                    await processStripeInvoicePaidHandler.ProcessInvoicePaid(invoicePaid);
+                    await mediator.Publish(new InvoicePaidEvent(stripeEvent.To<Invoice>()), cancellationToken);
 
                     // Continue to provision the subscription as payments continue to be made.
                     // Store the status in your database and check when a user accesses your service.
@@ -93,24 +70,22 @@ namespace Palavyr.Core.Services.StripeServices
                     break;
 
                 case Events.InvoicePaymentFailed: //"invoice.payment_failed":
+                    await mediator.Publish(new InvoicePaymentFailedEvent(stripeEvent.To<Invoice>()), cancellationToken);
+
                     // The payment failed or the customer does not have a valid payment method.
                     // The subscription becomes past_due. Notify your customer and send them to the
                     // customer portal to update their payment information.
                     // TODO: Request that the user update their payment information
                     // TODO: Let them know how long until service is shut off.
 
-                    var failedInvoice = (Invoice) stripeEvent.Data.Object;
-                    await processStripeInvoicePaymentFailedHandler.ProcessInvoicePaymentFailed(failedInvoice);
                     break;
 
                 case Events.PaymentMethodUpdated:
-                    var methodUpdated = (PaymentMethod) stripeEvent.Data.Object;
-                    await processStripePaymentMethodUpdatedHandler.ProcessPaymentMethodUpdate(methodUpdated);
+                    await mediator.Publish(new PaymentMethodUpdatedEvent(stripeEvent.To<PaymentMethod>()), cancellationToken);
                     break;
 
                 case Events.PlanUpdated:
-                    var plan = (Plan) stripeEvent.Data.Object;
-                    processStripePlanUpdatedHandler.ProcessStripePlanUpdate(plan);
+                    await mediator.Publish(new PlanUpdatedEvent(stripeEvent.To<Plan>()), cancellationToken);
                     // Modify the plan type used in the DB (plan type information is available is UserAccount
                     break;
 
@@ -123,32 +98,38 @@ namespace Palavyr.Core.Services.StripeServices
                     break;
 
                 case Events.InvoiceCreated:
+                    await mediator.Publish(new InvoiceCreatedEvent(stripeEvent.To<Invoice>()), cancellationToken);
                     // Send an email to the customer with information of their recent invoice
-                    var invoiceCreated = (Invoice) stripeEvent.Data.Object;
-                    await processStripeInvoiceCreatedHandler.ProcessInvoiceCreation(invoiceCreated);
                     break;
 
                 case Events.PlanDeleted:
-                    var deletePlan = (Plan) stripeEvent.Data.Object;
+                    // await mediator.Publish(new PlanDeletedEvent(stripeEvent.To<Plan>()), cancellationToken);
+                    // var deletePlan = (Plan)stripeEvent.Data.Object;
                     // NOT SURE IF THIS IS NEEDED.
                     // TODO: await processPlanUpdateHandler.DeletePlan(plan); // revert to Free tier at end of subscription.
                     // occurs when a customer downgrades to Free again and cancels their plan
                     break;
 
                 case Events.PriceUpdated:
-                    var priceUpdate = (Price) stripeEvent.Data.Object;
-                    await processStripePriceUpdatedHandler.ProcessPriceUpdated(priceUpdate);
+                    await mediator.Publish(new PriceUpdatedEvent(stripeEvent.To<Price>()), cancellationToken);
                     // use this to update customers that the price for their plan has been updated (hopefully to a lower price? But if we must... to a higher)
                     break;
 
                 default:
                     logger.LogDebug($"Event Type not recognized: {stripeEvent.Type}");
                     break;
-                
             }
 
-            var stripeEventId = stripeEvent.Id;
-            // todo - write to store?
+            await mediator.Publish(new StripeEventProcessedSuccessfullyEvent(stripeEvent.Id, signature));
+        }
+    }
+
+    public static class StriveEventExtensionMethods
+    {
+        public static TEvent To<TEvent>(this Event stripeEvent) where TEvent : class
+        {
+            var x = stripeEvent.Data.Object as TEvent;
+            return x;
         }
     }
 }

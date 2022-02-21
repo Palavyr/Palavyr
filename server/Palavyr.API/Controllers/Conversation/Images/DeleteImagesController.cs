@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Handlers;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.ImageServices;
 

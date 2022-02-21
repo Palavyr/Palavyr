@@ -7,15 +7,14 @@ namespace Palavyr.Core.Services.StripeServices
 {
     public class StripeProductService
     {
-        private StripeClient stripeClient;
         private ILogger<StripeProductService> logger;
-        private ProductService productService;
+        private readonly IStripeServiceLocatorProvider stripeServiceLocatorProvider;
 
-        public StripeProductService(ILogger<StripeProductService> logger)
+
+        public StripeProductService(ILogger<StripeProductService> logger, IStripeServiceLocatorProvider stripeServiceLocatorProvider)
         {
-            this.stripeClient = new StripeClient(StripeConfiguration.ApiKey);
-            this.productService = new ProductService(stripeClient);
             this.logger = logger;
+            this.stripeServiceLocatorProvider = stripeServiceLocatorProvider;
         }
 
         public async Task<Product> GetProduct(string productId)
@@ -23,7 +22,7 @@ namespace Palavyr.Core.Services.StripeServices
             Product stripeProduct;
             try
             {
-                stripeProduct = await productService.GetAsync(productId);
+                stripeProduct = await stripeServiceLocatorProvider.ProductService.GetAsync(productId);
             }
             catch (StripeException ex)
             {
@@ -33,6 +32,5 @@ namespace Palavyr.Core.Services.StripeServices
 
             return stripeProduct;
         }
-
     }
 }
