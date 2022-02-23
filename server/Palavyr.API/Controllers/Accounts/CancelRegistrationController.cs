@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Handlers;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Sessions;
 

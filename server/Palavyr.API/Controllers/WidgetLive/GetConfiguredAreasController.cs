@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AuthenticationServices;
 

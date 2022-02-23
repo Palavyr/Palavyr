@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Handlers;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;

@@ -25,6 +25,7 @@ namespace Palavyr.IntegrationTests.DataCreators
         private string? apikey;
         private Account.PlanTypeEnum? planType;
         private bool? asActive;
+        private string? customerId;
 
         public DefaultAccountAndSessionBuilder(BaseIntegrationFixture test)
         {
@@ -43,6 +44,8 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
+        
+        
         public DefaultAccountAndSessionBuilder WithDefaultEmailAddress()
         {
             this.emailAddress = IntegrationConstants.EmailAddress;
@@ -91,16 +94,23 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
+        public DefaultAccountAndSessionBuilder WithStripeCustomerId(string id)
+        {
+            this.customerId = id;
+            return this;
+        }
+
 
         public async Task<Account> Build()
         {
             var email = this.emailAddress ?? "test@gmail.com";
             var pass = this.password ?? "123456";
-            var id = this.accountId ?? "account-123";
+            var id = this.accountId ?? test.AccountId;
             var accType = this.accountType ?? AccountType.Default;
             var active = this.asActive ?? false;
-
-            var defaultAccount = Account.CreateAccount(email, pass, id, test.ApiKey, accType);
+            var custId = this.customerId ?? test.StripeCustomerId;
+            
+            var defaultAccount = Account.CreateAccount(email, pass, id, test.ApiKey, accType, custId);
 
             defaultAccount.PlanType = this.planType ?? Account.PlanTypeEnum.Free;
             defaultAccount.Active = active;

@@ -19,7 +19,13 @@ namespace Palavyr.Core.Repositories
         private readonly ITransportACancellationToken ctTransport;
         public IHoldAnAccountId AccountIdHolder { get; private set; }
 
-        public AccountRepository(AccountsContext accountsContext, ILogger<AccountRepository> logger, IRemoveStaleSessions removeStaleSessions, IGuidUtils guidUtils, IHoldAnAccountId accountIdHolder, ITransportACancellationToken cancellationToken)
+        public AccountRepository(
+            AccountsContext accountsContext,
+            ILogger<AccountRepository> logger,
+            IRemoveStaleSessions removeStaleSessions,
+            IGuidUtils guidUtils,
+            IHoldAnAccountId accountIdHolder,
+            ITransportACancellationToken cancellationToken)
         {
             this.accountsContext = accountsContext;
             this.logger = logger;
@@ -94,10 +100,17 @@ namespace Palavyr.Core.Repositories
             }
         }
 
-        public async Task<bool> SignedStripePayloadExists(string signedPayload)
+        public async Task<bool> SignedStripePayloadExists(string signature)
         {
-            var previousRecords = await accountsContext.StripeWebHookRecords.Where(row => row.PayloadSignature == signedPayload).ToArrayAsync(ctTransport.CancellationToken);
+            var previousRecords = await accountsContext.StripeWebHookRecords.Where(row => row.PayloadSignature == signature).ToArrayAsync(ctTransport.CancellationToken);
             return previousRecords.Length > 0;
+        }
+
+        public async Task AddStripeEvent(string id, string signature)
+        {
+            var newRecord = StripeWebhookRecord.CreateNewRecord(id, signature);
+            await accountsContext.StripeWebHookRecords.AddAsync(newRecord);
+            await accountsContext.SaveChangesAsync(ctTransport.CancellationToken);
         }
     }
 }

@@ -5,11 +5,6 @@ using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.Products;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.SubscriptionCreated;
 using Stripe;
 
 namespace Palavyr.API.Registration.Container
@@ -29,36 +24,33 @@ namespace Palavyr.API.Registration.Container
         {
             var currentEnv = configuration.GetCurrentEnvironment();
             var stripeKey = configuration.GetStripeKey();
-            if (currentEnv != DetermineCurrentEnvironment.Production)
+            if (currentEnv != DetermineCurrentEnvironment.Production && stripeKey.ToLowerInvariant().StartsWith("sk_live_"))
             {
-                if (stripeKey.ToLowerInvariant().StartsWith("sk_live_"))
-                {
-                    throw new Exception("CRITICAL - attempting to use a production stripe API key in test environment - CRITICAL");
-                } 
+                throw new Exception("CRITICAL ERROR - attempting to use a production stripe API key in test environment - CRITICAL");
             }
-            
+
             StripeConfiguration.ApiKey = stripeKey;
             StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
 
-            builder.RegisterType<StripeWebhookAuthService>().AsSelf();
-            builder.RegisterType<StripeEventWebhookService>().AsSelf();
-            builder.RegisterType<StripeCustomerService>().AsSelf();
-            builder.RegisterType<StripeSubscriptionService>().AsSelf();
-            builder.RegisterType<StripeProductService>().AsSelf();
-            builder.RegisterType<StripeCheckoutService>().AsSelf();
-
-            builder.RegisterType<ProcessStripeSubscriptionUpdatedHandler>().AsSelf();
-            builder.RegisterType<ProcessStripeSubscriptionDeletedHandler>().AsSelf();
-            builder.RegisterType<ProcessStripeCheckoutSessionCompletedHandler>().AsSelf();
-            builder.RegisterType<ProcessStripeInvoicePaidHandler>().AsSelf();
-            builder.RegisterType<ProcessStripeInvoicePaymentFailedHandler>().AsSelf();
-            builder.RegisterType<ProcessStripeSubscriptionCreatedHandler>().AsSelf();
-            builder.RegisterType<ProcessStripePaymentMethodUpdatedHandler>().AsSelf();
-            builder.RegisterType<ProcessStripePlanUpdatedHandler>().AsSelf();
-            builder.RegisterType<ProcessStripeInvoiceCreatedHandler>().AsSelf();
-            builder.RegisterType<ProcessStripePriceUpdatedHandler>().AsSelf();
-
+            builder.RegisterType<StripeEventWebhookRoutingService>().As<IStripeEventWebhookRoutingService>();
+            builder.RegisterType<StripeWebhookAuthService>().As<IStripeWebhookAuthService>();
+            builder.RegisterType<StripeSubscriptionService>().As<IStripeSubscriptionService>();
+            builder.RegisterType<BillingPortalSession>().As<IBillingPortalSession>().InstancePerLifetimeScope();
+            builder.RegisterType<StripeCheckoutServiceSession>().As<IStripeCheckoutServiceSession>().InstancePerLifetimeScope();
+            builder.RegisterType<StripeCustomerService>().As<IStripeCustomerService>().InstancePerDependency();
+            builder.RegisterType<CustomerSessionService>().As<ICustomerSessionService>().InstancePerLifetimeScope();
+            builder.RegisterType<StripeProductService>().As<IStripeProductService>().InstancePerDependency();
             builder.RegisterType<StripeCustomerManagementPortalService>().As<IStripeCustomerManagementPortalService>();
+
+            builder.Register(
+                    context =>
+                    {
+                        var determineCurrentEnvironment = new DetermineCurrentEnvironment(configuration);
+                        var baseUri = determineCurrentEnvironment.IsDevelopment() ? "https://localhost:12111" : StripeClient.DefaultApiBase;
+                        var stripeClient = new StripeClient(StripeConfiguration.ApiKey, apiBase: baseUri);
+                        return stripeClient;
+                    }).As<IStripeClient>()
+                .InstancePerLifetimeScope();
 
             builder.Register<IProductRegistry>(
                     context =>

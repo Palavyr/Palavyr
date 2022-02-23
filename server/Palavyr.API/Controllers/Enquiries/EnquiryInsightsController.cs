@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Services.EnquiryServices;
 
 namespace Palavyr.API.Controllers.Enquiries

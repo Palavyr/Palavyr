@@ -134,13 +134,34 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             string password,
             string accountId,
             string apiKey,
-            AccountType accountType
+            AccountType accountType)
+        {
+            return CreateAccount(
+                emailAddress,
+                password,
+                accountId,
+                apiKey,
+                accountType
+            );
+        }
+
+
+        public static Account CreateAccount(
+            string emailAddress,
+            string password,
+            string accountId,
+            string apiKey,
+            AccountType accountType,
+            string? stripeCustomerId
         )
         {
             return new Account(
                 emailAddress.ToLowerInvariant(), password, accountId, apiKey, null, null, false,
                 "en-AU",
-                accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
+                accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false)
+            {
+                StripeCustomerId = stripeCustomerId
+            };
         }
 
         public static Account CreateAccount(

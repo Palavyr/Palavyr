@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
     public class Session
     {
+        [Key]
         public string SessionId { get; set; }
         public string AccountId { get; set; }
         public string ApiKey { get; set; }
@@ -16,7 +18,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         {
         }
 
-        Session(string sessionId, string accountId, string apiKey)
+        private Session(string sessionId, string accountId, string apiKey)
         {
             SessionId = sessionId;
             AccountId = accountId;

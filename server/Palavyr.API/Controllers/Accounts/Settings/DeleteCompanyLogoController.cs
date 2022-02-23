@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Services.LogoServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings

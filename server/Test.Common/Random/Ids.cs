@@ -23,5 +23,11 @@ namespace Test.Common.Random
         {
             return $"{StaticGuidUtils.CreatePseudoRandomString(2)} {StaticGuidUtils.CreatePseudoRandomString(2)}";
         }
+
+        public static int RandomInt(int min, int max)
+        {
+            var rand = new System.Random(42);
+            return rand.Next(min, max);
+        }
     }
 }

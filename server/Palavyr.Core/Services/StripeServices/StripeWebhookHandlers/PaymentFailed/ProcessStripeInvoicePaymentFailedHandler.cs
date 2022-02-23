@@ -1,5 +1,7 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
@@ -10,12 +12,12 @@ using Stripe;
 
 namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed
 {
-    public interface IProcessStripeInvoicePaymentFailedHandler
+    public interface IProcessStripeInvoicePaymentFailedHandler 
     {
-        Task ProcessInvoicePaymentFailed(Invoice invoice);
+        Task Handle(Invoice invoice);
     }
 
-    public class ProcessStripeInvoicePaymentFailedHandler : IProcessStripeInvoicePaymentFailedHandler
+    public class ProcessStripeInvoicePaymentFailedHandler : INotificationHandler<InvoicePaymentFailedEvent>
     {
         private readonly ILogger<ProcessStripeInvoicePaidHandler> logger;
         private readonly AccountsContext accountsContext;
@@ -32,8 +34,9 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFail
             this.emailClient = emailClient;
         }
 
-        public async Task ProcessInvoicePaymentFailed(Invoice invoice)
+        public async Task Handle(InvoicePaymentFailedEvent notification, CancellationToken cancellationToken)
         {
+            var invoice = notification.invoice;
             var account = await accountsContext
                 .Accounts
                 .SingleOrDefaultAsync(row => row.StripeCustomerId == invoice.CustomerId);
@@ -46,7 +49,7 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFail
                 }
 
                 // if we don't get payment, we don't update the currentPeriodEnd. We check this at the beginning of each login, so
-                // if we don't udpate, then time moves forward, and eventually the login will set IsActive to false. If isActive is false,
+                // if we don't update, then time moves forward, and eventually the login will set IsActive to false. If isActive is false,
                 // then we freeze their account because they owe us money. From there, they can pay their bill, and then cancel if they prefer
                 // to not use the service.
                 var endDate = account.CurrentPeriodEnd;
@@ -76,6 +79,16 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFail
             // TODO Email the user and inform them that the payment failed. There will be a 2 day grace period before we cancel.
             // The cancel date will be the date provided by the stripe invoice paid webhook + 2 days worth (TODO: Add 2 days in the
             // invoice paid controller.
+        }
+    }
+
+    public class InvoicePaymentFailedEvent : INotification
+    {
+        public readonly Invoice invoice;
+
+        public InvoicePaymentFailedEvent(Invoice invoice)
+        {
+            this.invoice = invoice;
         }
     }
 }

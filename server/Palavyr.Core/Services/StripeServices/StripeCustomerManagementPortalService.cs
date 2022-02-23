@@ -12,10 +12,12 @@ namespace Palavyr.Core.Services.StripeServices
     public class StripeCustomerManagementPortalService : IStripeCustomerManagementPortalService
     {
         private readonly ILogger<StripeCustomerService> logger;
+        private readonly IBillingPortalSession billingPortalSession;
 
-        public StripeCustomerManagementPortalService(ILogger<StripeCustomerService> logger)
+        public StripeCustomerManagementPortalService(ILogger<StripeCustomerService> logger, IBillingPortalSession billingPortalSession)
         {
             this.logger = logger;
+            this.billingPortalSession = billingPortalSession;
         }
 
         public async Task<string> FormCustomerSubscriptionManagementPortalUrl(string customerId, string returnUrl)
@@ -28,9 +30,8 @@ namespace Palavyr.Core.Services.StripeServices
                 Customer = customerId,
                 ReturnUrl = returnUrl,
             };
-            var service = new SessionService();
-            var session = await service.CreateAsync(options);
-            
+            var session = await billingPortalSession.CreateAsync(options);
+
             logger.LogDebug($"Session Url: {session.Url}");
             return session.Url;
         }

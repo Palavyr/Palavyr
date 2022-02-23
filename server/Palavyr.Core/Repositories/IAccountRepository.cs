@@ -17,6 +17,8 @@ namespace Palavyr.Core.Repositories
         Task<Session> CreateAndAddNewSession(Account account);
         Task<Session> GetSessionOrNull(string token);
         Task RemoveSession(string sessionId);
-        Task<bool> SignedStripePayloadExists(string signedPayload);
+        Task<bool> SignedStripePayloadExists(string signature);
+
+        Task AddStripeEvent(string id, string signature);
     }
 }
