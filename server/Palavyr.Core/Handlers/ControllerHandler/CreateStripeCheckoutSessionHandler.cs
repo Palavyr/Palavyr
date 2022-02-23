@@ -13,17 +13,18 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly ILogger<CreateStripeCheckoutSessionHandler> logger;
         private readonly IAccountRepository accountRepository;
-        private readonly StripeCheckoutService stripeCheckoutService;
+
+        private readonly IStripeCheckoutServiceSession stripeCheckoutServiceSession;
 
         public CreateStripeCheckoutSessionHandler(
             ILogger<CreateStripeCheckoutSessionHandler> logger,
             IAccountRepository accountRepository,
-            StripeCheckoutService stripeCheckoutService
+            IStripeCheckoutServiceSession stripeCheckoutServiceSession
         )
         {
             this.logger = logger;
             this.accountRepository = accountRepository;
-            this.stripeCheckoutService = stripeCheckoutService;
+            this.stripeCheckoutServiceSession = stripeCheckoutServiceSession;
         }
 
         public async Task<CreateStripeCheckoutSessionResponse> Handle(CreateStripeCheckoutSessionRequest request, CancellationToken cancellationToken)
@@ -34,7 +35,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 throw new DomainException("Account and Stripe customer Id must be set");
             }
 
-            var sessionId = await stripeCheckoutService.CreateCheckoutSessionId(account.StripeCustomerId, request.SuccessUrl, request.CancelUrl, request.PriceId);
+            var sessionId = await stripeCheckoutServiceSession.CreateCheckoutSessionId(account.StripeCustomerId, request.SuccessUrl, request.CancelUrl, request.PriceId);
             await accountRepository.CreateAndAddNewSession(sessionId, account.ApiKey);
             await accountRepository.CommitChangesAsync();
             return new CreateStripeCheckoutSessionResponse(sessionId);

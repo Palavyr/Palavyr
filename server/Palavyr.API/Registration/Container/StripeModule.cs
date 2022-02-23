@@ -32,13 +32,14 @@ namespace Palavyr.API.Registration.Container
             StripeConfiguration.ApiKey = stripeKey;
             StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
 
-            builder.RegisterType<StripeWebhookAuthService>().AsSelf();
             builder.RegisterType<StripeEventWebhookRoutingService>().As<IStripeEventWebhookRoutingService>();
-            builder.RegisterType<StripeCustomerService>().AsSelf();
+            builder.RegisterType<StripeWebhookAuthService>().As<IStripeWebhookAuthService>();
             builder.RegisterType<StripeSubscriptionService>().As<IStripeSubscriptionService>();
-            builder.RegisterType<StripeProductService>().AsSelf();
-            builder.RegisterType<StripeCheckoutService>().AsSelf();
-
+            builder.RegisterType<BillingPortalSession>().As<IBillingPortalSession>().InstancePerLifetimeScope();
+            builder.RegisterType<StripeCheckoutServiceSession>().As<IStripeCheckoutServiceSession>().InstancePerLifetimeScope();
+            builder.RegisterType<StripeCustomerService>().As<IStripeCustomerService>().InstancePerDependency();
+            builder.RegisterType<CustomerSessionService>().As<ICustomerSessionService>().InstancePerLifetimeScope();
+            builder.RegisterType<StripeProductService>().As<IStripeProductService>().InstancePerDependency();
             builder.RegisterType<StripeCustomerManagementPortalService>().As<IStripeCustomerManagementPortalService>();
 
             builder.Register(
@@ -50,30 +51,6 @@ namespace Palavyr.API.Registration.Container
                         return stripeClient;
                     }).As<IStripeClient>()
                 .InstancePerLifetimeScope();
-
-
-            builder.Register(
-                    context =>
-                    {
-                        var client = context.Resolve<IStripeClient>();
-
-                        var billingSessionService = new Stripe.BillingPortal.SessionService(client);
-                        var checkSessionService = new Stripe.Checkout.SessionService(client);
-                        var customerService = new CustomerService(client);
-                        var productService = new ProductService(client);
-                        var subscriptionService = new SubscriptionService(client);
-
-                        var provider = new StripeServiceLocatorProvider(
-                            billingSessionService,
-                            checkSessionService,
-                            customerService,
-                            productService,
-                            subscriptionService);
-
-                        return provider;
-                    })
-                .As<IStripeServiceLocatorProvider>();
-
 
             builder.Register<IProductRegistry>(
                     context =>

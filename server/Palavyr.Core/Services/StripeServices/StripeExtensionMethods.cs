@@ -3,7 +3,7 @@ using Palavyr.Core.Models.Accounts.Schemas;
 
 namespace Palavyr.Core.Services.StripeServices
 {
-    public static class StripeExtensions
+    public static class StripeExtensionMethods
     {
         public static DateTime AddEndTimeBuffer(this Account.PaymentIntervalEnum paymentIntervalEnum, DateTime currentPeriodEnd)
         {

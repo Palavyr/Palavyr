@@ -5,16 +5,21 @@ using Stripe;
 
 namespace Palavyr.Core.Services.StripeServices
 {
-    public class StripeProductService
+    public interface IStripeProductService
+    {
+        Task<Product> GetProduct(string productId);
+    }
+
+    public class StripeProductService : IStripeProductService
     {
         private ILogger<StripeProductService> logger;
-        private readonly IStripeServiceLocatorProvider stripeServiceLocatorProvider;
+        private readonly ProductService productService;
 
 
-        public StripeProductService(ILogger<StripeProductService> logger, IStripeServiceLocatorProvider stripeServiceLocatorProvider)
+        public StripeProductService(ILogger<StripeProductService> logger, IStripeClient stripeClient)
         {
             this.logger = logger;
-            this.stripeServiceLocatorProvider = stripeServiceLocatorProvider;
+            productService = new  ProductService(stripeClient);
         }
 
         public async Task<Product> GetProduct(string productId)
@@ -22,7 +27,7 @@ namespace Palavyr.Core.Services.StripeServices
             Product stripeProduct;
             try
             {
-                stripeProduct = await stripeServiceLocatorProvider.ProductService.GetAsync(productId);
+                stripeProduct = await productService.GetAsync(productId);
             }
             catch (StripeException ex)
             {

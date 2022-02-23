@@ -5,9 +5,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using Palavyr.API;
 using Palavyr.Core.Data;
 using Palavyr.Core.Repositories;
@@ -25,7 +28,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
     {
         public readonly string AccountId = Guid.NewGuid().ToString();
         public readonly string ApiKey = Guid.NewGuid().ToString();
-
+        public readonly string StripeCustomerId = Guid.NewGuid().ToString();
 
         public ITestOutputHelper TestOutputHelper { get; set; }
         public readonly IntegrationTestAutofacWebApplicationFactory Factory;
@@ -39,6 +42,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public CancellationToken CancellationToken => new CancellationTokenSource(Timeout).Token;
         public TimeSpan Timeout => TimeSpan.FromMinutes(3);
 
+        public ILogger Logger => WebHostFactory.Services.GetService<ILogger>();
         public IAccountRepository AccountRepository => WebHostFactory.Services.GetService<IAccountRepository>();
         public IConfigurationRepository ConfigurationRepository => WebHostFactory.Services.GetService<IConfigurationRepository>();
         public IConvoHistoryRepository ConvoHistoryRepository => WebHostFactory.Services.GetService<IConvoHistoryRepository>();
@@ -66,15 +70,38 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
             cts.Assign(CancellationToken);
         }
 
+        public void UseFakeStripeCustomerService(ContainerBuilder builder)
+        {
+            builder.Register(
+                ctx =>
+                {
+                    var sub = Substitute.For<IStripeCustomerService>();
+                    sub.DeleteStripeTestCustomers(default);
+                    return sub;
+                });
+        }
+
 
         private protected virtual async Task DeleteTestStripeCustomers()
         {
             var customerId = await AccountsContext.Accounts.Select(x => x.StripeCustomerId).Where(x => !string.IsNullOrWhiteSpace(x)).ToListAsync(CancellationToken.None);
             if (customerId.Any())
             {
-                var customerService = Container.GetService<StripeCustomerService>();
+                var customerService = Container.GetService<IStripeCustomerService>();
                 await customerService.DeleteStripeTestCustomers(customerId);
             }
+        }
+
+        public void SetAccountId()
+        {
+            var accountId = Container!.GetService<IHoldAnAccountId>();
+            accountId.Assign(AccountId);
+        }
+
+        public void SetCancellationToken()
+        {
+            var token = Container!.GetService<ITransportACancellationToken>();
+            token.Assign(CancellationToken);
         }
 
         public virtual async Task InitializeAsync()

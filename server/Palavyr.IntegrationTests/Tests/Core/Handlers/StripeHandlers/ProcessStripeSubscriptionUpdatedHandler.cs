@@ -1,20 +1,17 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.Products;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Stripe;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
+namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeHandlers
 {
     public class StripeSubscriptionServiceFixture : BaseIntegrationFixture
     {

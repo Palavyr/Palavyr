@@ -10,7 +10,12 @@ using Stripe;
 
 namespace Palavyr.Core.Services.StripeServices
 {
-    public class StripeWebhookAuthService
+    public interface IStripeWebhookAuthService
+    {
+        Task<(Event eventPayload, string payloadSignature)> AuthenticateWebhookRequest(HttpContext context);
+    }
+
+    public class StripeWebhookAuthService : IStripeWebhookAuthService
     {
         private readonly IAccountRepository accountRepository;
         private ILogger<StripeWebhookAuthService> logger;
