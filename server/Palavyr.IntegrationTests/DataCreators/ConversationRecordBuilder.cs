@@ -4,7 +4,7 @@ using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Test.Common.Random;
 
-namespace Test.Common.Builders
+namespace Palavyr.IntegrationTests.DataCreators
 {
     public static partial class BuilderExtensionMethods
     {

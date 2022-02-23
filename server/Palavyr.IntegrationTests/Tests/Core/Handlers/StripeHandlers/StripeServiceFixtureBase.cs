@@ -7,6 +7,7 @@ using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.DataCreators;
+using Palavyr.IntegrationTests.DataCreators.StripeBuilders;
 using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeHandlers

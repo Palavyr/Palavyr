@@ -6,6 +6,7 @@ using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.Products;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.DataCreators;
+using Palavyr.IntegrationTests.DataCreators.StripeBuilders;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
