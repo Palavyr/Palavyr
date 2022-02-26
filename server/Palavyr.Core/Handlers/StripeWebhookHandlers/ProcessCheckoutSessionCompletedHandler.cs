@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.StripeServices.Products;
 using Stripe.Checkout;
 
@@ -51,18 +52,9 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 
             var subscription = await stripeSubscriptionService.GetSubscription(session);
 
-            // var planTypeEnum = await stripeSubscriptionService.GetPlanTypeEnum(subscription);
-            // var bufferedPeriodEnd = await stripeSubscriptionService.GetBufferedEndTime(subscription);
-
-            // var subscription = await stripeSubscriptionService.GetSubscription(session);
-            var priceDetails = stripeSubscriptionService.GetPriceDetails(subscription);
-            var productId = stripeSubscriptionService.GetProductId(priceDetails);
-            var planTypeEnum = productRegistry.GetPlanTypeEnum(productId);
-
-            var paymentInterval = stripeSubscriptionService.GetPaymentInterval(priceDetails);
-            var paymentIntervalEnum = paymentInterval.GetPaymentIntervalEnum();
-            var bufferedPeriodEnd = paymentIntervalEnum.AddEndTimeBuffer(subscription.CurrentPeriodEnd);
-
+            var planTypeEnum = await stripeSubscriptionService.GetPlanTypeEnum(subscription);
+            var bufferedPeriodEnd = await stripeSubscriptionService.GetBufferedEndTime(subscription);
+            
             account.PlanType = planTypeEnum;
             account.HasUpgraded = true;
             account.CurrentPeriodEnd = bufferedPeriodEnd;

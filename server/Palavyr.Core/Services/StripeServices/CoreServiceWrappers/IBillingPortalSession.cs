@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Palavyr.Core.Services.StripeServices
+namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
 {
     public interface IBillingPortalSession
     {

@@ -7,7 +7,7 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFail
     {
         public static string GetPaymentFailedEmailText(DateTime endDate)
         {
-            return $"Your subscription will lapse on {endDate.Humanize()}";
+            return $"Your subscription will lapse {endDate.Humanize()} on {endDate.ToString("D")}";
         }
 
         public static string GetPaymentFailedEmailHtml(DateTime endDate)
@@ -44,8 +44,8 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFail
             <p>
                 We typically allow a buffer period to allow you to update your payment method and try again. We'll continue trying to charge your current payment method just in case there was a temporary problem.
             </p>
-            <p> 
-                Your subscription will lapse on {endDate.Humanize()}
+            <p>
+                Your subscription will lapse {endDate.Humanize()} on {endDate.ToString("D")}
             </p>
             <p>
             <p>

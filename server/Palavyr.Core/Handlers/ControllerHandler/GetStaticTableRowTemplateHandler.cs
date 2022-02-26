@@ -8,16 +8,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetStaticTableRowTemplateHandler : IRequestHandler<GetStaticTableRowTemplateRequest, GetStaticTableRowTemplateResponse>
     {
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public GetStaticTableRowTemplateHandler(IHoldAnAccountId accountIdHolder)
+        public GetStaticTableRowTemplateHandler(IAccountIdTransport accountIdTransport)
         {
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<GetStaticTableRowTemplateResponse> Handle(GetStaticTableRowTemplateRequest request, CancellationToken cancellationToken)
         {
-            return new GetStaticTableRowTemplateResponse(StaticTableRow.CreateStaticTableRowTemplate(int.Parse(request.TableId), request.IntentId, accountIdHolder.AccountId));
+            return new GetStaticTableRowTemplateResponse(StaticTableRow.CreateStaticTableRowTemplate(int.Parse(request.TableId), request.IntentId, accountIdTransport.AccountId));
 
         }
     }

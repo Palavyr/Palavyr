@@ -20,7 +20,7 @@ namespace Palavyr.Core.Services.ImageServices
         private readonly IS3Saver s3Saver;
         private readonly IConfigurationRepository configurationRepository;
         private readonly DashContext dashContext;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public ImageSaver(
             IConfiguration configuration,
@@ -28,14 +28,14 @@ namespace Palavyr.Core.Services.ImageServices
             IS3Saver s3Saver,
             IConfigurationRepository configurationRepository,
             DashContext dashContext,
-            IHoldAnAccountId accountIdHolder)
+            IAccountIdTransport accountIdTransport)
         {
             this.configuration = configuration;
             this.s3KeyResolver = s3KeyResolver;
             this.s3Saver = s3Saver;
             this.configurationRepository = configurationRepository;
             this.dashContext = dashContext;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<FileLink> SaveImage(IFormFile imageFile, CancellationToken cancellationToken)
@@ -43,7 +43,7 @@ namespace Palavyr.Core.Services.ImageServices
             var userDataBucket = configuration.GetUserDataBucket();
             
             
-            var newImage = Image.CreateImageRecord(imageFile.FileName, s3KeyResolver, accountIdHolder.AccountId);
+            var newImage = Image.CreateImageRecord(imageFile.FileName, s3KeyResolver, accountIdTransport.AccountId);
 
             await s3Saver.StreamObjectToS3(userDataBucket, imageFile, newImage.S3Key);
 

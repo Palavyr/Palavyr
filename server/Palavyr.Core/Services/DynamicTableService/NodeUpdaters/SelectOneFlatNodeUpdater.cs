@@ -27,17 +27,17 @@ namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
     {
         private readonly IConversationOptionSplitter splitter;
         private readonly IConversationNodeUpdater nodeUpdater;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public SelectOneFlatNodeUpdater(
             IConversationOptionSplitter splitter,
             IConversationNodeUpdater nodeUpdater,
-            IHoldAnAccountId accountIdHolder
+            IAccountIdTransport accountIdTransport
         )
         {
             this.splitter = splitter;
             this.nodeUpdater = nodeUpdater;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task UpdateConversationNode(
@@ -52,7 +52,7 @@ namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
             List<ConversationNode> updatedNodes;
             if (tableMeta.ValuesAsPaths)
             {
-                updatedNodes = await ConvertToAsPaths(currentSelectOneFlatUpdate, node, areaIdentifier, accountIdHolder.AccountId, conversationNodes);
+                updatedNodes = await ConvertToAsPaths(currentSelectOneFlatUpdate, node, areaIdentifier, accountIdTransport.AccountId, conversationNodes);
             }
             else
             {

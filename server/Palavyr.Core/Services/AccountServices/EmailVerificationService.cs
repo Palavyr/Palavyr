@@ -29,7 +29,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly ISesEmail emailClient;
         private readonly IGuidUtils guidUtils;
         private readonly IEmailVerificationStatus emailVerificationStatus;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
         private StripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
@@ -40,7 +40,7 @@ namespace Palavyr.Core.Services.AccountServices
             ISesEmail emailClient,
             IGuidUtils guidUtils,
             IEmailVerificationStatus emailVerificationStatus,
-            IHoldAnAccountId accountIdHolder
+            IAccountIdTransport accountIdTransport
         )
         {
             this.stripeCustomerService = stripeCustomerService;
@@ -50,7 +50,7 @@ namespace Palavyr.Core.Services.AccountServices
             this.emailClient = emailClient;
             this.guidUtils = guidUtils;
             this.emailVerificationStatus = emailVerificationStatus;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken)
@@ -109,7 +109,7 @@ namespace Palavyr.Core.Services.AccountServices
             // prepare the account confirmation email
             logger.LogDebug("Provide an account setup confirmation token");
             var confirmationToken = guidUtils.CreateShortenedGuid(1);
-            await accountsContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, emailAddress, accountIdHolder.AccountId));
+            await accountsContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, emailAddress, accountIdTransport.AccountId));
             await accountsContext.SaveChangesAsync(cancellationToken);
 
             logger.LogDebug($"Sending emails from {EmailConstants.PalavyrMainEmailAddress}");

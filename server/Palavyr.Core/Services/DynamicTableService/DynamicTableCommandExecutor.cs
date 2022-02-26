@@ -62,7 +62,7 @@ namespace Palavyr.Core.Services.DynamicTableService
             {
                 tableRows = new List<TEntity>()
                 {
-                    (new TEntity()).CreateTemplate(accountRepository.AccountIdHolder.AccountId, areaIdentifier, tableId)
+                    (new TEntity()).CreateTemplate(accountRepository.AccountIdTransport.AccountId, areaIdentifier, tableId)
                 };
             }
 
@@ -93,7 +93,7 @@ namespace Palavyr.Core.Services.DynamicTableService
         {
             logger.LogInformation($"Getting dynamic table row template: {request.TableId}");
             var (areaIdentifier, tableId) = request;
-            return (new TEntity()).CreateTemplate(accountRepository.AccountIdHolder.AccountId, areaIdentifier, tableId);
+            return (new TEntity()).CreateTemplate(accountRepository.AccountIdTransport.AccountId, areaIdentifier, tableId);
         }
 
         public async Task<List<TEntity>> SaveDynamicTable(DynamicTableRequest request, DynamicTable dynamicTable)

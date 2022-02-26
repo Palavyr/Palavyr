@@ -83,16 +83,16 @@ namespace Palavyr.API.CustomMiddleware
 
     public class SetAccountHandler : INotificationHandler<SetAccountEvent>
     {
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public SetAccountHandler(IHoldAnAccountId accountIdHolder)
+        public SetAccountHandler(IAccountIdTransport accountIdTransport)
         {
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task Handle(SetAccountEvent notification, CancellationToken cancellationToken)
         {
-            accountIdHolder.Assign(notification.SessionAccountId);
+            accountIdTransport.Assign(notification.SessionAccountId);
             await Task.CompletedTask;
         }
     }

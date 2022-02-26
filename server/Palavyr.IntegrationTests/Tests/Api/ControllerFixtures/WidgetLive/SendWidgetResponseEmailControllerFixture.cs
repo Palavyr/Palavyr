@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
@@ -21,6 +20,7 @@ using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.DataCreators;
+using Palavyr.IntegrationTests.Tests.Mocks;
 using Shouldly;
 using Test.Common.Builders;
 using Test.Common.Random;
@@ -78,27 +78,5 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             return base.CustomizeContainer(builder);
         }
 
-        public class MockSeSEmail : ISesEmail
-        {
-            public async Task<bool> SendEmail(string fromAddress, string toAddress, string subject, string htmlBody, string textBody)
-            {
-                await Task.CompletedTask;
-                return true;
-            }
-
-            public async Task<bool> SendEmailWithAttachments(
-                string fromAddress,
-                string toAddress,
-                string subject,
-                string htmlBody,
-                string textBody,
-                List<string> filePaths,
-                string fromAddressLabel = "",
-                string toAddressLabel = "")
-            {
-                await Task.CompletedTask;
-                return true;
-            }
-        }
     }
 }

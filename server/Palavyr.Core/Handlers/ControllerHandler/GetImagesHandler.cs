@@ -18,14 +18,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly GuidFinder guidFinder;
         private readonly DashContext dashContext;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public GetImagesHandler(GuidFinder guidFinder, DashContext dashContext, IHoldAnAccountId accountIdHolder, IHttpContextAccessor httpContextAccessor)
+        public GetImagesHandler(GuidFinder guidFinder, DashContext dashContext, IAccountIdTransport accountIdTransport, IHttpContextAccessor httpContextAccessor)
         {
             this.guidFinder = guidFinder;
             this.dashContext = dashContext;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
             this.httpContextAccessor = httpContextAccessor;
         }
 
@@ -44,12 +44,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
                 records = await dashContext
                     .Images
-                    .Where(x => x.AccountId == accountIdHolder.AccountId && request.ImageIds.Contains(x.ImageId))
+                    .Where(x => x.AccountId == accountIdTransport.AccountId && request.ImageIds.Contains(x.ImageId))
                     .ToListAsync(cancellationToken);
             }
             else
             {
-                records = await dashContext.Images.Where(x => x.AccountId == accountIdHolder.AccountId).ToListAsync(cancellationToken);
+                records = await dashContext.Images.Where(x => x.AccountId == accountIdTransport.AccountId).ToListAsync(cancellationToken);
             }
 
             return new GetImagesResponse(records.ToFileLinks());

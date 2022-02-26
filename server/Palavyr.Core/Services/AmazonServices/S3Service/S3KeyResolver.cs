@@ -15,36 +15,36 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
 
     public class S3KeyResolver : IS3KeyResolver
     {
-        private readonly IHoldAnAccountId accountId;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public S3KeyResolver(IHoldAnAccountId accountId)
+        public S3KeyResolver(IAccountIdTransport accountIdTransport)
         {
-            this.accountId = accountId;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public string ResolveAttachmentKey(string areaId, string safeFileName)
         {
-            return Path.Combine(accountId.AccountId, "AreaData", areaId, "Attachments", safeFileName + ".pdf").ConvertToUnix();
+            return Path.Combine(accountIdTransport.AccountId, "AreaData", areaId, "Attachments", safeFileName + ".pdf").ConvertToUnix();
         }
 
         public string ResolvePreviewKey(string safeFileName)
         {
-            return Path.Combine(accountId.AccountId, "Previews", safeFileName + ".pdf").ConvertToUnix();
+            return Path.Combine(accountIdTransport.AccountId, "Previews", safeFileName + ".pdf").ConvertToUnix();
         }
 
         public string ResolveLogoKey(string safeFileName, string fileExtension)
         {
-            return Path.Combine(accountId.AccountId, "Logos", safeFileName + fileExtension).ConvertToUnix();
+            return Path.Combine(accountIdTransport.AccountId, "Logos", safeFileName + fileExtension).ConvertToUnix();
         }
 
         public string ResolveResponsePdfKey(string safeFileName)
         {
-            return Path.Combine(accountId.AccountId, "Responses", safeFileName + ".pdf").ConvertToUnix();
+            return Path.Combine(accountIdTransport.AccountId, "Responses", safeFileName + ".pdf").ConvertToUnix();
         }
 
         public string ResolveImageKey(string safeName) // safename includes extension
         {
-            return Path.Combine(accountId.AccountId, "Images", safeName).ConvertToUnix();
+            return Path.Combine(accountIdTransport.AccountId, "Images", safeName).ConvertToUnix();
         }
     }
 }

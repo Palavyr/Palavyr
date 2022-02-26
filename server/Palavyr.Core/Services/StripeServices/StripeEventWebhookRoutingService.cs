@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -59,7 +58,7 @@ namespace Palavyr.Core.Services.StripeServices
                     break;
 
                 case Events.InvoicePaid:
-                    await mediator.Publish(new InvoicePaidEvent(stripeEvent.To<Invoice>()), cancellationToken);
+                    await mediator.Publish(new InvoicePaymentSuccessfulEvent(stripeEvent.To<Invoice>()), cancellationToken);
 
                     // Continue to provision the subscription as payments continue to be made.
                     // Store the status in your database and check when a user accesses your service.
@@ -98,7 +97,7 @@ namespace Palavyr.Core.Services.StripeServices
                     break;
 
                 case Events.InvoiceCreated:
-                    await mediator.Publish(new InvoiceCreatedEvent(stripeEvent.To<Invoice>()), cancellationToken);
+                    await mediator.Publish(new StripeInvoiceCreatedEvent(stripeEvent.To<Invoice>()), cancellationToken);
                     // Send an email to the customer with information of their recent invoice
                     break;
 

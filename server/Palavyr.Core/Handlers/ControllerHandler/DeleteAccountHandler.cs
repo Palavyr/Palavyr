@@ -31,7 +31,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         }
         public async Task Handle(DeleteAccountNotification notification, CancellationToken _)
         {
-            logger.LogInformation($"Deleting details for account: {accountRepository.AccountIdHolder.AccountId}");
+            logger.LogInformation($"Deleting details for account: {accountRepository.AccountIdTransport.AccountId}");
 
             logger.LogInformation("Deleting from the convo database...");
             convoDeleter.DeleteAccount();

@@ -11,11 +11,10 @@ namespace Palavyr.Core.Services.Units
         List<string> GetUnitTypes();
         List<UnitIds> GetUnitIds();
         List<QuantUnit> GetUnitDefinitions();
-        
+
         List<QuantUnit> GetUnitDefinitionsByType(string type);
         QuantUnit GetUnitDefinitionById(UnitIds id);
         public UnitIds ConvertToUnitId(string id);
-
     }
 
     public class UnitRetriever : IUnitRetriever
@@ -58,8 +57,6 @@ namespace Palavyr.Core.Services.Units
 
         public QuantUnit GetUnitDefinitionById(UnitIds id)
         {
-            // var unitIdStringName = Enum.GetName(typeof(UnitIds), id);
-
             if (!Enum.IsDefined(typeof(UnitIds), id))
             {
                 throw new DomainException("The unit Id provided is not supported");
@@ -67,19 +64,8 @@ namespace Palavyr.Core.Services.Units
 
             var definition = units.UnitDefinitions.Single(x => x.UnitId == id);
             return definition;
-            // return GetUnitDefinitionById(unitIdStringName.ToLowerInvariant());
         }
 
-        // public QuantUnit GetUnitDefinitionById(string id)
-        // {
-        //     if (!Enum.IsDefined(typeof(UnitIds), id))
-        //     {
-        //         throw new DomainException($"The id: {id} was not found in our supported definitions");
-        //     }
-        //
-        //     var definition = units.UnitDefinitions.Single(x => x.UnitId == id);
-        //     return definition;
-        // }
 
         public UnitIds ConvertToUnitId(string id)
         {

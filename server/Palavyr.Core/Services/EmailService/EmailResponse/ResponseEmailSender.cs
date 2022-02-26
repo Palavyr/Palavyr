@@ -43,7 +43,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         private readonly ILocaleDefinitions localeDefinitions;
         private readonly ILinkCreator linkCreator;
         private readonly IConvoHistoryRepository convoHistoryRepository;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public ResponseEmailSender(
             ILogger<ResponseEmailSender> logger,
@@ -59,7 +59,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             ILocaleDefinitions localeDefinitions,
             ILinkCreator linkCreator,
             IConvoHistoryRepository convoHistoryRepository,
-            IHoldAnAccountId accountIdHolder
+            IAccountIdTransport accountIdTransport
         )
         {
             this.logger = logger;
@@ -75,7 +75,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             this.localeDefinitions = localeDefinitions;
             this.linkCreator = linkCreator;
             this.convoHistoryRepository = convoHistoryRepository;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<SendEmailResultResponse> SendEmail(string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)

@@ -32,7 +32,7 @@ namespace Palavyr.Core.Services.AttachmentServices
         private readonly ITemporaryPath temporaryPath;
         private readonly ILocalIo localIo;
         private readonly IGuidUtils guidUtils;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public AttachmentSaver(
             IS3Saver s3Saver,
@@ -44,7 +44,7 @@ namespace Palavyr.Core.Services.AttachmentServices
             ITemporaryPath temporaryPath,
             ILocalIo localIo,
             IGuidUtils guidUtils,
-            IHoldAnAccountId accountIdHolder
+            IAccountIdTransport accountIdTransport
         )
         {
             this.s3Saver = s3Saver;
@@ -56,7 +56,7 @@ namespace Palavyr.Core.Services.AttachmentServices
             this.temporaryPath = temporaryPath;
             this.localIo = localIo;
             this.guidUtils = guidUtils;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<FileLink> SaveAttachment(string areaId, IFormFile attachmentFile)
@@ -66,7 +66,7 @@ namespace Palavyr.Core.Services.AttachmentServices
             var riskyFileName = attachmentFile.FileName;
             var s3AttachmentKey = s3KeyResolver.ResolveAttachmentKey(areaId, safeFileName);
 
-            var fileNameMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, s3AttachmentKey, accountIdHolder.AccountId, areaId);
+            var fileNameMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, s3AttachmentKey, accountIdTransport.AccountId, areaId);
             var localTempSafeFile = temporaryPath.CreateLocalTempSafeFile();
 
             await localIo.SaveFile(localTempSafeFile.S3Key, attachmentFile);

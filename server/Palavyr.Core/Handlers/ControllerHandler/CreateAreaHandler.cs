@@ -13,19 +13,19 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private readonly IConfigurationRepository configurationRepository;
         private readonly IAccountRepository accountRepository;
         private readonly ILogger<CreateAreaHandler> logger;
-        private readonly IHoldAnAccountId holdAnAccountId;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public CreateAreaHandler(
             IConfigurationRepository configurationRepository,
             IAccountRepository accountRepository,
             ILogger<CreateAreaHandler> logger,
-            IHoldAnAccountId holdAnAccountId
+            IAccountIdTransport accountIdTransport
         )
         {
             this.configurationRepository = configurationRepository;
             this.accountRepository = accountRepository;
             this.logger = logger;
-            this.holdAnAccountId = holdAnAccountId;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<CreateAreaResponse> Handle(CreateAreaRequest request, CancellationToken cancellationToken)

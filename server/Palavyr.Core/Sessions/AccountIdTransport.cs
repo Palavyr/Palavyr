@@ -1,8 +1,9 @@
+#nullable enable
 using Palavyr.Core.Exceptions;
 
 namespace Palavyr.Core.Sessions
 {
-    public class AccountIdTransport : IHoldAnAccountId
+    public class AccountIdTransport : IAccountIdTransport
     {
         private string? accountId;
 
@@ -12,15 +13,15 @@ namespace Palavyr.Core.Sessions
             set => Assign(value);
         }
 
-        public void Assign(string? accountId)
+        public void Assign(string? id)
         {
             if (string.IsNullOrEmpty(this.accountId))
             {
                 // TODO: perhaps regex match the accountId -- we don't have type guards for the accountId being an actual accountId
-                this.accountId = accountId;
+                this.accountId = id;
             }
 
-            if (!string.IsNullOrEmpty(this.accountId) && accountId != this.accountId) throw new DomainException("Oh no! Autofac has crossed wires! The account should only be set one time per request!");
+            if (!string.IsNullOrEmpty(this.accountId) && id != this.accountId) throw new DomainException("Oh no! Autofac has crossed wires! The account should only be set one time per request!");
         }
 
         private string Retrieve()

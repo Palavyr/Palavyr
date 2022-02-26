@@ -12,23 +12,23 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IEmailVerificationService emailVerificationService;
         private readonly AccountsContext accountsContext;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public ResendConfirmationTokenHandler(
             IEmailVerificationService emailVerificationService,
             AccountsContext accountsContext,
-            IHoldAnAccountId accountIdHolder)
+            IAccountIdTransport accountIdTransport)
         {
             this.emailVerificationService = emailVerificationService;
             this.accountsContext = accountsContext;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<ResendConfirmationTokenResponse> Handle(ResendConfirmationTokenRequest request, CancellationToken cancellationToken)
         {
             // delete any old records
             var maybeCurrentRecord = accountsContext.EmailVerifications
-                .SingleOrDefault(x => x.EmailAddress == request.EmailAddress && x.AccountId == accountIdHolder.AccountId);
+                .SingleOrDefault(x => x.EmailAddress == request.EmailAddress && x.AccountId == accountIdTransport.AccountId);
             if (maybeCurrentRecord != null)
             {
                 accountsContext.EmailVerifications.Remove(maybeCurrentRecord);

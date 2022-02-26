@@ -20,7 +20,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IJwtAuthenticationService jwtAuthService;
         private readonly IGuidUtils guidUtils;
         private readonly IAccountRegistrationMaker accountRegistrationMaker;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
 
         private const string CouldNotValidateGoogleAuthToken = "Could not validate the Google Authentication token";
@@ -35,7 +35,7 @@ namespace Palavyr.Core.Services.AccountServices
             IJwtAuthenticationService jwtService,
             IGuidUtils guidUtils,
             IAccountRegistrationMaker accountRegistrationMaker,
-            IHoldAnAccountId accountIdHolder
+            IAccountIdTransport accountIdTransport
         )
         {
             this.dashContext = dashContext;
@@ -45,7 +45,7 @@ namespace Palavyr.Core.Services.AccountServices
             jwtAuthService = jwtService;
             this.guidUtils = guidUtils;
             this.accountRegistrationMaker = accountRegistrationMaker;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         private string CreateNewJwtToken(Account account)
@@ -74,7 +74,7 @@ namespace Palavyr.Core.Services.AccountServices
             // Add the new account
             logger.LogDebug("Creating a new account");
             var accountId = newAccountUtils.GetNewAccountId();
-            accountIdHolder.Assign(accountId);
+            accountIdTransport.Assign(accountId);
             
             var apiKey = guidUtils.CreateNewId();
             var account = Account.CreateAccount(

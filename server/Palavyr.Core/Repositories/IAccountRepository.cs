@@ -6,7 +6,7 @@ namespace Palavyr.Core.Repositories
 {
     public interface IAccountRepository
     {
-        public IHoldAnAccountId AccountIdHolder { get; }
+        public IAccountIdTransport AccountIdTransport { get; }
 
         Task CommitChangesAsync();
         Task<Account> GetAccount();

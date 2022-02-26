@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.StripeServices.Products;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
@@ -109,7 +110,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
 
             await router.ProcessStripeEvent(@event, A.RandomId(), CancellationToken);
 
-            AssertEventIsRouted<InvoicePaidEvent>();
+            AssertEventIsRouted<InvoicePaymentSuccessfulEvent>();
         }
 
         [Fact]
@@ -171,7 +172,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
 
             await router.ProcessStripeEvent(@event, A.RandomId(), CancellationToken);
 
-            AssertEventIsRouted<InvoiceCreatedEvent>();
+            AssertEventIsRouted<StripeInvoiceCreatedEvent>();
         }
 
         [Fact]
@@ -193,12 +194,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
             await router.ProcessStripeEvent(@event, A.RandomId(), CancellationToken);
 
             AssertEventIsRouted<PriceUpdatedEvent>();
-        }
-
-
-        public override Task DisposeAsync()
-        {
-            return base.DisposeAsync();
         }
 
         public override Task InitializeAsync()

@@ -65,7 +65,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public void ManuallySetCancellationToken()
         {
-            var cts = Container.GetService<ITransportACancellationToken>();
+            var cts = Container.GetService<ICancellationTokenTransport>();
             cts.Assign(CancellationToken);
         }
 
@@ -93,13 +93,13 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public void SetAccountId()
         {
-            var accountId = Container!.GetService<IHoldAnAccountId>();
+            var accountId = Container!.GetService<IAccountIdTransport>();
             accountId.Assign(AccountId);
         }
 
         public void SetCancellationToken()
         {
-            var token = Container!.GetService<ITransportACancellationToken>();
+            var token = Container!.GetService<ICancellationTokenTransport>();
             token.Assign(CancellationToken);
         }
 

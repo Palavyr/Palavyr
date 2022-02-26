@@ -11,6 +11,7 @@
 
     <ItemGroup>
         <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="6.0.3" />
+        <PackageReference Include="Assent" Version="1.7.0" />
         <PackageReference Include="AsyncFixer" Version="1.5.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

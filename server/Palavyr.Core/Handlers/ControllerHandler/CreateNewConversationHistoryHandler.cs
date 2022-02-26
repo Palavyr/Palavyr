@@ -17,7 +17,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IConfigurationRepository configurationRepository;
         private readonly IConvoHistoryRepository convoRepository;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
         private readonly IMapToNew<ConversationNode, WidgetNodeResource> mapper;
         private readonly IEndingSequenceAttacher endingSequenceAttacher;
         private readonly ILogger<CreateNewConversationHistoryHandler> logger;
@@ -25,7 +25,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public CreateNewConversationHistoryHandler(
             IConfigurationRepository configurationRepository,
             IConvoHistoryRepository convoRepository,
-            IHoldAnAccountId accountIdHolder,
+            IAccountIdTransport accountIdTransport,
             IMapToNew<ConversationNode, WidgetNodeResource> mapper,
             IEndingSequenceAttacher endingSequenceAttacher,
             ILogger<CreateNewConversationHistoryHandler> logger
@@ -33,7 +33,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             this.configurationRepository = configurationRepository;
             this.convoRepository = convoRepository;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
             this.mapper = mapper;
             this.endingSequenceAttacher = endingSequenceAttacher;
             this.logger = logger;
@@ -45,7 +45,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             logger.LogDebug("Fetching nodes...");
             var standardNodes = await configurationRepository.GetAreaConversationNodes(intentId);
-            var completeConversation = endingSequenceAttacher.AttachEndingSequenceToNodeList(standardNodes, intentId, accountIdHolder.AccountId);
+            var completeConversation = endingSequenceAttacher.AttachEndingSequenceToNodeList(standardNodes, intentId, accountIdTransport.AccountId);
 
             logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
 
@@ -54,7 +54,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var newConvo = NewConversation.CreateNew(widgetNodes.ToList());
 
             var area = await configurationRepository.GetAreaById(intentId);
-            var newConversationRecord = ConversationRecord.CreateDefault(newConvo.ConversationId, accountIdHolder.AccountId, area.AreaName, intentId);
+            var newConversationRecord = ConversationRecord.CreateDefault(newConvo.ConversationId, accountIdTransport.AccountId, area.AreaName, intentId);
 
             if (!string.IsNullOrEmpty(recordUpdate.Email))
             {

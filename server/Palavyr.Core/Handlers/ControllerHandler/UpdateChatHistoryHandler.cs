@@ -13,18 +13,18 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly ConvoContext convoContext;
         private readonly ILogger<UpdateChatHistoryHandler> logger;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public UpdateChatHistoryHandler(ConvoContext convoContext, ILogger<UpdateChatHistoryHandler> logger, IHoldAnAccountId accountIdHolder)
+        public UpdateChatHistoryHandler(ConvoContext convoContext, ILogger<UpdateChatHistoryHandler> logger, IAccountIdTransport accountIdTransport)
         {
             this.convoContext = convoContext;
             this.logger = logger;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task Handle(UpdateChatHistoryRequest request, CancellationToken cancellationToken)
         {
-            var conversationUpdate = request.MapToConversationHistory(accountIdHolder.AccountId);
+            var conversationUpdate = request.MapToConversationHistory(accountIdTransport.AccountId);
             convoContext.ConversationHistories.Add(conversationUpdate);
             await convoContext.SaveChangesAsync();
         }

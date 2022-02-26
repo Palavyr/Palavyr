@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Stripe;
 
-namespace Palavyr.Core.Services.StripeServices
+namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
 {
     public class BillingPortalSession : IBillingPortalSession
     {

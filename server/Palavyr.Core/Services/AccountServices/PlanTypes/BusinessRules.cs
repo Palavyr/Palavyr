@@ -21,12 +21,12 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
     public class BusinessRules : IBusinessRules
     {
         private readonly IPlanTypeRetriever planTypeRetriever;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public BusinessRules(IPlanTypeRetriever planTypeRetriever, IHoldAnAccountId accountIdHolder)
+        public BusinessRules(IPlanTypeRetriever planTypeRetriever, IAccountIdTransport accountIdTransport)
         {
             this.planTypeRetriever = planTypeRetriever;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<PlanTypeMeta> GetPlanTypeMeta()

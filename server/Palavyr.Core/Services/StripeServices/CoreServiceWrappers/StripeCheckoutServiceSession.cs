@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Stripe;
 using Stripe.Checkout;
 
-namespace Palavyr.Core.Services.StripeServices
+namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
 {
     public class StripeCheckoutServiceSession : IStripeCheckoutServiceSession
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using Humanizer;
 
 namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated
 {
@@ -6,7 +7,7 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCrea
     {
         public static string GetInvoiceCreatedEmailText(string currency, string amountDue, string dueDate)
         {
-            return $"Your next invoice. Amount: {currency}{amountDue} - Due Date: {dueDate}";
+            return $"Your next invoice. Amount: {currency}{amountDue} - Due Date: {dueDate.Humanize()} on {dueDate}";
         }
 
         public static string GetInvoiceCreatedEmailHtml(string currency, string amountDue, string dueDate)
@@ -68,7 +69,7 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCrea
                 </div>
                 <p></p>
                 <p>
-                    Amount Due: {currency}{amountDue}
+                    Amount Due: {currency}{amountDue}.00
                 </p>
                 <p>
                     Due Date: {dueDate}

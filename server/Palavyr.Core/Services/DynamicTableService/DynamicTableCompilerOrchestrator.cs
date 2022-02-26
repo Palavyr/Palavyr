@@ -13,17 +13,17 @@ namespace Palavyr.Core.Services.DynamicTableService
     {
         private readonly IDynamicResponseComponentExtractor dynamicResponseComponentExtractor;
         private readonly IDynamicTableCompilerRetriever dynamicTableCompilerRetriever;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public DynamicTableCompilerOrchestrator(
             IDynamicResponseComponentExtractor dynamicResponseComponentExtractor,
             IDynamicTableCompilerRetriever dynamicTableCompilerRetriever,
-            IHoldAnAccountId accountIdHolder
+            IAccountIdTransport accountIdTransport
         )
         {
             this.dynamicResponseComponentExtractor = dynamicResponseComponentExtractor;
             this.dynamicTableCompilerRetriever = dynamicTableCompilerRetriever;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)

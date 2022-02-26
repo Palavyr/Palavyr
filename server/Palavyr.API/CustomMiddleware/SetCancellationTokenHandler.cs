@@ -7,9 +7,9 @@ namespace Palavyr.API.CustomMiddleware
 {
     public class SetCancellationTokenHandler : INotificationHandler<SetCancellationTokenRequest>
     {
-        private readonly ITransportACancellationToken cancellationTokenTransport;
+        private readonly ICancellationTokenTransport cancellationTokenTransport;
 
-        public SetCancellationTokenHandler(ITransportACancellationToken cancellationTokenTransport)
+        public SetCancellationTokenHandler(ICancellationTokenTransport cancellationTokenTransport)
         {
             this.cancellationTokenTransport = cancellationTokenTransport;
         }
