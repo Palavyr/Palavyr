@@ -26,18 +26,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
                                 (context, configBuilder) => { configBuilder.AddConfiguration(TestConfiguration.GetTestConfiguration()); })
                             .ConfigureTestContainer<ContainerBuilder>(builder => CustomizeContainer(builder))
                             .ConfigureAndCreateRealTestDatabase()
-                            .ConfigureLogging(
-                                (hostingContext, logging) =>
-                                {
-                                    logging.ClearProviders();
-                                    logging.AddConfiguration(hostingContext.Configuration.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
-                                    logging.SetMinimumLevel(LogLevel.Trace);
-                                    logging.AddConsole();
-                                    logging.AddDebug();
-                                    logging.AddEventSourceLogger();
-                                    logging.AddNLog();
-                                    // logging.AddSeq();
-                                })
                             .UseTestServer();
                     });
         }

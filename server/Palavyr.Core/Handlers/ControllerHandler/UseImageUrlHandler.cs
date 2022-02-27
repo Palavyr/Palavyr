@@ -16,17 +16,17 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class UseImageUrlHandler : IRequestHandler<UseImageUrlRequest, UseImageUrlResponse>
     {
         private readonly DashContext dashContext;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public UseImageUrlHandler(DashContext dashContext, IHoldAnAccountId accountIdHolder)
+        public UseImageUrlHandler(DashContext dashContext, IAccountIdTransport accountIdTransport)
         {
             this.dashContext = dashContext;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<UseImageUrlResponse> Handle(UseImageUrlRequest request, CancellationToken cancellationToken)
         {
-            var image = Image.CreateImageUrlRecord(request.Url, accountIdHolder.AccountId);
+            var image = Image.CreateImageUrlRecord(request.Url, accountIdTransport.AccountId);
             dashContext.Images.Add(image);
 
             var node = dashContext.ConversationNodes.SingleOrDefault(x => x.NodeId == request.NodeId);

@@ -20,7 +20,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                     var holder = new AccountIdTransport();
                     holder.Assign(accountId);
                     return holder;
-                }).As<IHoldAnAccountId>().InstancePerLifetimeScope();
+                }).As<IAccountIdTransport>().InstancePerLifetimeScope();
             return containerBuilder;
         }
 
@@ -33,7 +33,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                     var holder = new CancellationTokenTransport();
                     holder.Assign(ctx.Token);
                     return holder;
-                }).As<ITransportACancellationToken>().InstancePerLifetimeScope();
+                }).As<ICancellationTokenTransport>().InstancePerLifetimeScope();
 
             return containerBuilder;
         }

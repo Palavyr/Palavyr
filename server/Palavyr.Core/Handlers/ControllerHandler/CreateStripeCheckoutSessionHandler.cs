@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

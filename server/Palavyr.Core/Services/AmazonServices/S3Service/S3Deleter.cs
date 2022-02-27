@@ -19,9 +19,9 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
     {
         private readonly IAmazonS3 s3Client;
         private readonly ILogger<S3Deleter> logger;
-        private readonly ITransportACancellationToken cancellationTokenTransport;
+        private readonly ICancellationTokenTransport cancellationTokenTransport;
 
-        public S3Deleter(IAmazonS3 s3Client, ILogger<S3Deleter> logger, ITransportACancellationToken cancellationTokenTransport)
+        public S3Deleter(IAmazonS3 s3Client, ILogger<S3Deleter> logger, ICancellationTokenTransport cancellationTokenTransport)
         {
             this.s3Client = s3Client;
             this.logger = logger;

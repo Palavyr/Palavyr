@@ -1,9 +1,9 @@
 ﻿#nullable enable
 namespace Palavyr.Core.Sessions
 {
-    public interface IHoldAnAccountId
+    public interface IAccountIdTransport
     {
         public string AccountId { get; set; }
-        public void Assign(string accountId);
+        public void Assign(string id);
     }
 }

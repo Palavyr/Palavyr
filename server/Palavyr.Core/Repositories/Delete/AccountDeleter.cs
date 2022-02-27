@@ -13,7 +13,7 @@ namespace Palavyr.Core.Repositories.Delete
         private readonly AccountsContext accountsContext;
         private readonly StripeCustomerService stripeCustomerService;
         private readonly ILogger<AccountDeleter> logger;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public AccountDeleter(
             AccountsContext accountsContext,
@@ -21,15 +21,15 @@ namespace Palavyr.Core.Repositories.Delete
             IRemoveStaleSessions removeStaleSessions,
             ILogger<AccountDeleter> logger,
             IGuidUtils guidUtils,
-            IHoldAnAccountId accountIdHolder,
-            ITransportACancellationToken cancellationTokenTransport
+            IAccountIdTransport accountIdTransport,
+            ICancellationTokenTransport cancellationTokenTransport
         )
-            : base(accountsContext, logger, removeStaleSessions, guidUtils, accountIdHolder, cancellationTokenTransport)
+            : base(accountsContext, logger, removeStaleSessions, guidUtils, accountIdTransport, cancellationTokenTransport)
         {
             this.accountsContext = accountsContext;
             this.stripeCustomerService = stripeCustomerService;
             this.logger = logger;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task DeleteAccount()
@@ -52,29 +52,29 @@ namespace Palavyr.Core.Repositories.Delete
 
         public async Task DeleteAccountRecord()
         {
-            logger.LogInformation($"Deleting the account record for {accountIdHolder.AccountId}");
+            logger.LogInformation($"Deleting the account record for {accountIdTransport.AccountId}");
             var account = await GetAccount();
             accountsContext.Accounts.Remove(account);
         }
 
         public void DeleteEmailVerifications()
         {
-            logger.LogInformation($"Deleting email verifications from {accountIdHolder.AccountId}");
-            var emailVerifications = accountsContext.EmailVerifications.Where(row => row.AccountId == accountIdHolder.AccountId);
+            logger.LogInformation($"Deleting email verifications from {accountIdTransport.AccountId}");
+            var emailVerifications = accountsContext.EmailVerifications.Where(row => row.AccountId == accountIdTransport.AccountId);
             accountsContext.EmailVerifications.RemoveRange(emailVerifications);
         }
 
         public void DeleteSessionsByAccount()
         {
-            logger.LogInformation($"Deleting active sessions for {accountIdHolder.AccountId}");
-            var sessions = accountsContext.Sessions.Where(row => row.AccountId == accountIdHolder.AccountId);
+            logger.LogInformation($"Deleting active sessions for {accountIdTransport.AccountId}");
+            var sessions = accountsContext.Sessions.Where(row => row.AccountId == accountIdTransport.AccountId);
             accountsContext.Sessions.RemoveRange(sessions);
         }
 
         public void DeleteSubscriptionsByAccount()
         {
-            logger.LogInformation($"Deleting subscriptions for {accountIdHolder.AccountId}");
-            var subs = accountsContext.Subscriptions.Where(row => row.AccountId == accountIdHolder.AccountId);
+            logger.LogInformation($"Deleting subscriptions for {accountIdTransport.AccountId}");
+            var subs = accountsContext.Subscriptions.Where(row => row.AccountId == accountIdTransport.AccountId);
             accountsContext.Subscriptions.RemoveRange(subs);
         }
     }

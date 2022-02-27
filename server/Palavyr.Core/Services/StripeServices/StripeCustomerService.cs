@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Stripe;
 
 namespace Palavyr.Core.Services.StripeServices

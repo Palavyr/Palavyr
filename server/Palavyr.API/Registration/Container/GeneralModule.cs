@@ -163,8 +163,8 @@ namespace Palavyr.API.Registration.Container
             // Experimental
 
             ///////!!! SPECIAL DANGER ZONE !!!//////////
-            builder.RegisterType<AccountIdTransport>().As<IHoldAnAccountId>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
-            builder.RegisterType<CancellationTokenTransport>().As<ITransportACancellationToken>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
+            builder.RegisterType<AccountIdTransport>().As<IAccountIdTransport>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
+            builder.RegisterType<CancellationTokenTransport>().As<ICancellationTokenTransport>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
             ///////////// ///////////// ////////// ////////// ////////// /////////// ///////////// ///////////// ////////// ////////// ////////// /////////// 
         }
     }

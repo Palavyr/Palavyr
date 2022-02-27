@@ -10,17 +10,17 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetStaticTablesMetasTemplateHandler : IRequestHandler<GetStaticTablesMetasTemplateRequest, GetStaticTablesMetasTemplateResponse>
     {
         private readonly ILogger<GetStaticTablesMetasTemplateHandler> logger;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public GetStaticTablesMetasTemplateHandler(ILogger<GetStaticTablesMetasTemplateHandler> logger, IHoldAnAccountId accountIdHolder)
+        public GetStaticTablesMetasTemplateHandler(ILogger<GetStaticTablesMetasTemplateHandler> logger, IAccountIdTransport accountIdTransport)
         {
             this.logger = logger;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<GetStaticTablesMetasTemplateResponse> Handle(GetStaticTablesMetasTemplateRequest request, CancellationToken cancellationToken)
         {
-            return new GetStaticTablesMetasTemplateResponse(StaticTablesMeta.CreateNewMetaTemplate(request.IntentId, accountIdHolder.AccountId));
+            return new GetStaticTablesMetasTemplateResponse(StaticTablesMeta.CreateNewMetaTemplate(request.IntentId, accountIdTransport.AccountId));
         }
     }
 

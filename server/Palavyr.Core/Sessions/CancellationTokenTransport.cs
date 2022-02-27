@@ -3,9 +3,9 @@ using Palavyr.Core.Exceptions;
 
 namespace Palavyr.Core.Sessions
 {
-    public class CancellationTokenTransport : ITransportACancellationToken
+    public class CancellationTokenTransport : ICancellationTokenTransport
     {
-        private CancellationToken _cancellationToken;
+        private CancellationToken cancellationToken;
 
         private bool isSet;
 
@@ -19,15 +19,15 @@ namespace Palavyr.Core.Sessions
         {
             if (isSet) throw new DomainException("Cancellation token transport does not allow for resetting of cancellation tokens");
 
-            _cancellationToken = value;
+            cancellationToken = value;
             isSet = true;
-            if (_cancellationToken != null && _cancellationToken != value) throw new DomainException("Oh no! Cancellation Token Mismatch!");
+            if (cancellationToken != null && cancellationToken != value) throw new DomainException("Oh no! Cancellation Token Mismatch!");
         }
 
         private CancellationToken Retrieve()
         {
             if (!isSet) throw new DomainException("No Cancellation Token was ever set!");
-            return _cancellationToken;
+            return cancellationToken;
         }
     }
 }

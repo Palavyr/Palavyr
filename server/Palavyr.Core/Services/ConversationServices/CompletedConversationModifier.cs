@@ -15,18 +15,18 @@ namespace Palavyr.Core.Services.ConversationServices
     {
         private readonly ConvoContext convoContext;
         private readonly IConversationRecordRetriever conversationRecordRetriever;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public CompletedConversationModifier(ConvoContext convoContext, IConversationRecordRetriever conversationRecordRetriever, IHoldAnAccountId accountIdHolder )
+        public CompletedConversationModifier(ConvoContext convoContext, IConversationRecordRetriever conversationRecordRetriever, IAccountIdTransport accountIdTransport )
         {
             this.convoContext = convoContext;
             this.conversationRecordRetriever = conversationRecordRetriever;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<Enquiry[]> ModifyCompletedConversation(string conversationId)
         {
-            var convo = await convoContext.ConversationRecords.SingleOrDefaultAsync(row => row.AccountId == accountIdHolder.AccountId && row.ConversationId == conversationId);
+            var convo = await convoContext.ConversationRecords.SingleOrDefaultAsync(row => row.AccountId == accountIdTransport.AccountId && row.ConversationId == conversationId);
             convo.Seen = !convo.Seen;
             await convoContext.SaveChangesAsync();
 

@@ -9,13 +9,13 @@ namespace Palavyr.Core.Repositories.Delete
     {
         private readonly ConvoContext convoContext;
         private readonly ILogger<ConvoHistoryRepository> logger;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public ConvoDeleter(ConvoContext convoContext, ILogger<ConvoHistoryRepository> logger, IHoldAnAccountId accountIdHolder): base(convoContext, logger, accountIdHolder)
+        public ConvoDeleter(ConvoContext convoContext, ILogger<ConvoHistoryRepository> logger, IAccountIdTransport accountIdTransport): base(convoContext, logger, accountIdTransport)
         {
             this.convoContext = convoContext;
             this.logger = logger;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public void DeleteAccount()
@@ -26,15 +26,15 @@ namespace Palavyr.Core.Repositories.Delete
         
         public void DeleteAllConversationRecordsByAccount()
         {
-            logger.LogCritical($"Deleting conversations records from {accountIdHolder.AccountId}");
-            var allConvoRecords = convoContext.ConversationHistories.Where(row => row.AccountId == accountIdHolder.AccountId);
+            logger.LogCritical($"Deleting conversations records from {accountIdTransport.AccountId}");
+            var allConvoRecords = convoContext.ConversationHistories.Where(row => row.AccountId == accountIdTransport.AccountId);
             convoContext.ConversationHistories.RemoveRange(allConvoRecords);
         }
 
         public void DeleteAllCompletedConversationsByAccount()
         {
-            logger.LogCritical($"Deleting completed conversations from {accountIdHolder.AccountId}");
-            var allCompleted = convoContext.ConversationRecords.Where(row => row.AccountId == accountIdHolder.AccountId);
+            logger.LogCritical($"Deleting completed conversations from {accountIdTransport.AccountId}");
+            var allCompleted = convoContext.ConversationRecords.Where(row => row.AccountId == accountIdTransport.AccountId);
             convoContext.ConversationRecords.RemoveRange(allCompleted);
         }
     }

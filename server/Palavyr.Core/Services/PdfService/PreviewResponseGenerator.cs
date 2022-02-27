@@ -33,7 +33,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly ITemporaryPath temporaryPath;
         private readonly ICriticalResponses criticalResponses;
         private readonly IDynamicTableCompilerRetriever compilerRetriever;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public PreviewResponseGenerator(
             IConfiguration configuration,
@@ -48,7 +48,7 @@ namespace Palavyr.Core.Services.PdfService
             ITemporaryPath temporaryPath,
             ICriticalResponses criticalResponses,
             IDynamicTableCompilerRetriever compilerRetriever,
-            IHoldAnAccountId accountIdHolder
+            IAccountIdTransport accountIdTransport
         )
         {
             this.configuration = configuration;
@@ -63,7 +63,7 @@ namespace Palavyr.Core.Services.PdfService
             this.temporaryPath = temporaryPath;
             this.criticalResponses = criticalResponses;
             this.compilerRetriever = compilerRetriever;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<FileLink> CreatePdfResponsePreviewAsync(string areaId, CultureInfo culture)

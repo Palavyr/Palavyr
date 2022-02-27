@@ -23,7 +23,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         private readonly IConfigurationRepository configurationRepository;
         private readonly IWidgetStatusChecker widgetStatusChecker;
         private ILogger<GetWidgetPreCheckController> logger;
-        private readonly IHoldAnAccountId accountId;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public GetWidgetPreCheckController(
             IMediator mediator

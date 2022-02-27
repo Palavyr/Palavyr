@@ -16,60 +16,65 @@ namespace Palavyr.Core.Repositories
         private readonly ILogger<AccountRepository> logger;
         private readonly IRemoveStaleSessions removeStaleSessions;
         private readonly IGuidUtils guidUtils;
-        private readonly ITransportACancellationToken ctTransport;
-        public IHoldAnAccountId AccountIdHolder { get; private set; }
+        private readonly ICancellationTokenTransport ctCancellationTokenTransport;
+        public IAccountIdTransport AccountIdTransport { get; private set; }
 
         public AccountRepository(
             AccountsContext accountsContext,
             ILogger<AccountRepository> logger,
             IRemoveStaleSessions removeStaleSessions,
             IGuidUtils guidUtils,
-            IHoldAnAccountId accountIdHolder,
-            ITransportACancellationToken cancellationToken)
+            IAccountIdTransport accountIdTransport,
+            ICancellationTokenTransport cancellationTokenTransport)
         {
             this.accountsContext = accountsContext;
             this.logger = logger;
             this.removeStaleSessions = removeStaleSessions;
             this.guidUtils = guidUtils;
-            ctTransport = cancellationToken;
-            AccountIdHolder = accountIdHolder;
+            ctCancellationTokenTransport = cancellationTokenTransport;
+            AccountIdTransport = accountIdTransport;
         }
 
         public async Task CommitChangesAsync()
         {
-            await accountsContext.SaveChangesAsync(ctTransport.CancellationToken);
+            await accountsContext.SaveChangesAsync(ctCancellationTokenTransport.CancellationToken);
         }
 
         public async Task<Account> GetAccount()
         {
-            logger.LogInformation($"Retrieving user account: {AccountIdHolder.AccountId}");
-            return await accountsContext.Accounts.SingleAsync(row => row.AccountId == AccountIdHolder.AccountId, ctTransport.CancellationToken);
+            logger.LogInformation($"Retrieving user account: {AccountIdTransport.AccountId}");
+            return await accountsContext.Accounts.SingleAsync(row => row.AccountId == AccountIdTransport.AccountId, ctCancellationTokenTransport.CancellationToken);
         }
 
         public async Task<Account> GetAccountOrNull()
         {
-            logger.LogInformation($"Retrieving user account: {AccountIdHolder.AccountId}");
-            return await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == AccountIdHolder.AccountId, ctTransport.CancellationToken);
+            logger.LogInformation($"Retrieving user account: {AccountIdTransport.AccountId}");
+            return await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == AccountIdTransport.AccountId, ctCancellationTokenTransport.CancellationToken);
         }
 
         public async Task<Account?> GetAccountByEmailOrNull(string emailAddress)
         {
             logger.LogInformation($"Retrieving user account: {emailAddress}");
-            return await accountsContext.Accounts.SingleOrDefaultAsync(row => row.EmailAddress == emailAddress, ctTransport.CancellationToken);
+            return await accountsContext.Accounts.SingleOrDefaultAsync(row => row.EmailAddress == emailAddress, ctCancellationTokenTransport.CancellationToken);
         }
 
         public async Task<Account?> GetAccountByEmailAddressOrNull(string emailAddress)
         {
             logger.LogInformation($"Retrieving user account by email: {emailAddress}");
-            return await accountsContext.Accounts.SingleOrDefaultAsync(row => row.EmailAddress == emailAddress, ctTransport.CancellationToken);
+            return await accountsContext.Accounts.SingleOrDefaultAsync(row => row.EmailAddress == emailAddress, ctCancellationTokenTransport.CancellationToken);
         }
 
         public async Task<Session> CreateAndAddNewSession(string token, string apiKey)
         {
             await removeStaleSessions.CleanSessionDb();
-            var session = Session.CreateNew(token, AccountIdHolder.AccountId, apiKey);
-            var newSession = await accountsContext.Sessions.AddAsync(session, ctTransport.CancellationToken);
-            await accountsContext.SaveChangesAsync(ctTransport.CancellationToken);
+            var session = Session.CreateNew(token, AccountIdTransport.AccountId, apiKey);
+            return await CreateNewSession(session);
+        }
+
+        public async Task<Session> CreateNewSession(Session session)
+        {
+            var newSession = await accountsContext.Sessions.AddAsync(session, ctCancellationTokenTransport.CancellationToken);
+            await accountsContext.SaveChangesAsync(ctCancellationTokenTransport.CancellationToken);
             return newSession.Entity;
         }
 
@@ -77,14 +82,14 @@ namespace Palavyr.Core.Repositories
         {
             var token = guidUtils.CreateNewId();
             var session = Session.CreateNew(token, account.AccountId, account.ApiKey);
-            var newSession = await accountsContext.Sessions.AddAsync(session, ctTransport.CancellationToken);
-            await accountsContext.SaveChangesAsync(ctTransport.CancellationToken);
+            var newSession = await accountsContext.Sessions.AddAsync(session, ctCancellationTokenTransport.CancellationToken);
+            await accountsContext.SaveChangesAsync(ctCancellationTokenTransport.CancellationToken);
             return newSession.Entity;
         }
 
         public async Task<Session?> GetSessionOrNull(string token)
         {
-            var session = await accountsContext.Sessions.SingleOrDefaultAsync(row => row.SessionId == token, ctTransport.CancellationToken);
+            var session = await accountsContext.Sessions.SingleOrDefaultAsync(row => row.SessionId == token, ctCancellationTokenTransport.CancellationToken);
             return session;
         }
 
@@ -92,7 +97,7 @@ namespace Palavyr.Core.Repositories
         {
             var session = await accountsContext
                 .Sessions
-                .SingleOrDefaultAsync(row => row.SessionId == sessionId, ctTransport.CancellationToken);
+                .SingleOrDefaultAsync(row => row.SessionId == sessionId, ctCancellationTokenTransport.CancellationToken);
 
             if (session != null)
             {
@@ -102,7 +107,7 @@ namespace Palavyr.Core.Repositories
 
         public async Task<bool> SignedStripePayloadExists(string signature)
         {
-            var previousRecords = await accountsContext.StripeWebHookRecords.Where(row => row.PayloadSignature == signature).ToArrayAsync(ctTransport.CancellationToken);
+            var previousRecords = await accountsContext.StripeWebHookRecords.Where(row => row.PayloadSignature == signature).ToArrayAsync(ctCancellationTokenTransport.CancellationToken);
             return previousRecords.Length > 0;
         }
 
@@ -110,7 +115,14 @@ namespace Palavyr.Core.Repositories
         {
             var newRecord = StripeWebhookRecord.CreateNewRecord(id, signature);
             await accountsContext.StripeWebHookRecords.AddAsync(newRecord);
-            await accountsContext.SaveChangesAsync(ctTransport.CancellationToken);
+            await accountsContext.SaveChangesAsync(ctCancellationTokenTransport.CancellationToken);
+        }
+
+        public async Task<Account> CreateAccount(Account account)
+        {
+            var entity = await accountsContext.Accounts.AddAsync(account);
+            await accountsContext.SaveChangesAsync(ctCancellationTokenTransport.CancellationToken);
+            return entity.Entity;
         }
     }
 }

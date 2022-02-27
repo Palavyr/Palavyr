@@ -15,18 +15,18 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private readonly IConfigurationRepository configurationRepository;
         private readonly IWidgetStatusChecker widgetStatusChecker;
         private readonly ILogger<GetWidgetPrecheckHandler> logger;
-        private readonly IHoldAnAccountId accountId;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public GetWidgetPrecheckHandler(
             IConfigurationRepository configurationRepository,
             IWidgetStatusChecker widgetStatusChecker,
             ILogger<GetWidgetPrecheckHandler> logger,
-            IHoldAnAccountId accountId)
+            IAccountIdTransport accountIdTransport)
         {
             this.configurationRepository = configurationRepository;
             this.widgetStatusChecker = widgetStatusChecker;
             this.logger = logger;
-            this.accountId = accountId;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<GetWidgetPrecheckResponse> Handle(GetWidgetPrecheckRequest request, CancellationToken cancellationToken)
@@ -34,7 +34,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             logger.LogDebug($"Was the demo query param found? {request.Demo}");
             logger.LogDebug("Running live widget pre-check...");
             logger.LogDebug("Checking if account ID exists...");
-            if (accountId.AccountId == null)
+            if (accountIdTransport.AccountId == null)
             {
                 return new GetWidgetPrecheckResponse(PreCheckResult.CreateApiKeyResult(false));
             }

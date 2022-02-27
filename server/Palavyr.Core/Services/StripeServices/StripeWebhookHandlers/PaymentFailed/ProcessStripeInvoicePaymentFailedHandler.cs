@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
@@ -12,19 +13,19 @@ using Stripe;
 
 namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed
 {
-    public interface IProcessStripeInvoicePaymentFailedHandler 
+    public interface IProcessStripeInvoicePaymentFailedHandler
     {
         Task Handle(Invoice invoice);
     }
 
     public class ProcessStripeInvoicePaymentFailedHandler : INotificationHandler<InvoicePaymentFailedEvent>
     {
-        private readonly ILogger<ProcessStripeInvoicePaidHandler> logger;
+        private readonly ILogger<ProcessStripeInvoicePaymentFailedHandler> logger;
         private readonly AccountsContext accountsContext;
         private readonly ISesEmail emailClient;
 
         public ProcessStripeInvoicePaymentFailedHandler(
-            ILogger<ProcessStripeInvoicePaidHandler> logger,
+            ILogger<ProcessStripeInvoicePaymentFailedHandler> logger,
             AccountsContext accountsContext,
             ISesEmail emailClient
         )
@@ -41,27 +42,29 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFail
                 .Accounts
                 .SingleOrDefaultAsync(row => row.StripeCustomerId == invoice.CustomerId);
 
-            if (invoice.Livemode)
-            {
-                if (account == null)
-                {
-                    throw new Exception("ERROR TODO: EMAIL paul.e.gradie@gmail.com to manually set status");
-                }
+            // if (invoice.Livemode)
+            // {
+            //     if (account == null)
+            //     {
+            //         throw new Exception("ERROR TODO: EMAIL paul.e.gradie@gmail.com to manually set status");
+            //     }
 
-                // if we don't get payment, we don't update the currentPeriodEnd. We check this at the beginning of each login, so
-                // if we don't update, then time moves forward, and eventually the login will set IsActive to false. If isActive is false,
-                // then we freeze their account because they owe us money. From there, they can pay their bill, and then cancel if they prefer
-                // to not use the service.
-                var endDate = account.CurrentPeriodEnd;
-                var htmlBody = EmailPaymentFailed.GetPaymentFailedEmailHtml(endDate);
-                var textBody = EmailPaymentFailed.GetPaymentFailedEmailText(endDate);
-                await emailClient.SendEmail(
-                    EmailConstants.PalavyrMainEmailAddress,
-                    account.EmailAddress,
-                    EmailConstants.PalavyrPaymentFailedSubject,
-                    htmlBody,
-                    textBody);
-            }
+            // if we don't get payment, we don't update the currentPeriodEnd. We check this at the beginning of each login, so
+            // if we don't update, then time moves forward, and eventually the login will set IsActive to false. If isActive is false,
+            // then we freeze their account because they owe us money. From there, they can pay their bill, and then cancel if they prefer
+            // to not use the service.
+            var endDate = account.CurrentPeriodEnd;
+   
+
+            var htmlBody = EmailPaymentFailed.GetPaymentFailedEmailHtml(endDate);
+            var textBody = EmailPaymentFailed.GetPaymentFailedEmailText(endDate);
+            await emailClient.SendEmail(
+                EmailConstants.PalavyrMainEmailAddress,
+                account.EmailAddress,
+                EmailConstants.PalavyrPaymentFailedSubject,
+                htmlBody,
+                textBody);
+            // }
 
             // var emailAddress = account.EmailAddress;
             // var amountDue = invoice.AmountDue;

@@ -6,24 +6,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
 using Stripe;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
     public class ProcessStripePaymentMethodUpdatedHandler : INotificationHandler<PaymentMethodUpdatedEvent>
     {
-        private readonly ILogger<ProcessStripeInvoicePaidHandler> logger;
         private readonly AccountsContext accountsContext;
         private readonly ISesEmail emailClient;
 
         public ProcessStripePaymentMethodUpdatedHandler(
-            ILogger<ProcessStripeInvoicePaidHandler> processStripeInvoicePaidHandler,
             AccountsContext accountsContext,
             ISesEmail emailClient
         )
         {
-            this.logger = processStripeInvoicePaidHandler;
             this.accountsContext = accountsContext;
             this.emailClient = emailClient;
         }

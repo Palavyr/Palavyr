@@ -13,16 +13,16 @@ namespace Palavyr.Core.Repositories
     public class GenericDynamicTableRepository<TEntity> : IGenericDynamicTableRepository<TEntity> where TEntity : class, ITable
     {
         private readonly DashContext dashContext;
-        private readonly IHoldAnAccountId accountIdHolder;
-        private readonly ITransportACancellationToken cancellationTokenTransport;
+        private readonly IAccountIdTransport accountIdTransport;
+        private readonly ICancellationTokenTransport cancellationTokenTransport;
         private readonly IQueryable<TEntity> readonlyQueryExecutor;
         private readonly DbSet<TEntity> queryExecutor;
         private readonly DbSet<DynamicTableMeta> metaQueryExecutor;
 
-        public GenericDynamicTableRepository(DashContext dashContext, IHoldAnAccountId accountIdHolder, ITransportACancellationToken cancellationTokenTransport)
+        public GenericDynamicTableRepository(DashContext dashContext, IAccountIdTransport accountIdTransport, ICancellationTokenTransport cancellationTokenTransport)
         {
             this.dashContext = dashContext;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
             this.cancellationTokenTransport = cancellationTokenTransport;
             this.readonlyQueryExecutor = dashContext.Set<TEntity>().AsNoTracking();
             this.queryExecutor = dashContext.Set<TEntity>();
@@ -34,7 +34,7 @@ namespace Palavyr.Core.Repositories
             return await readonlyQueryExecutor
                 .Where(
                     row =>
-                        row.AccountId == accountIdHolder.AccountId
+                        row.AccountId == accountIdTransport.AccountId
                         && row.AreaIdentifier == areaIdentifier
                         && row.TableId == tableId)
                 .ToListAsync(cancellationTokenTransport.CancellationToken);
@@ -45,7 +45,7 @@ namespace Palavyr.Core.Repositories
             return await readonlyQueryExecutor
                 .Where(
                     row =>
-                        row.AccountId == accountIdHolder.AccountId
+                        row.AccountId == accountIdTransport.AccountId
                         && row.AreaIdentifier == areaIdentifier)
                 .ToListAsync(cancellationTokenTransport.CancellationToken);
         }

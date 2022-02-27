@@ -13,13 +13,13 @@ namespace Palavyr.Core.Repositories
     {
         private readonly ConvoContext convoContext;
         private readonly ILogger<ConvoHistoryRepository> logger;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public ConvoHistoryRepository(ConvoContext convoContext, ILogger<ConvoHistoryRepository> logger, IHoldAnAccountId accountIdHolder)
+        public ConvoHistoryRepository(ConvoContext convoContext, ILogger<ConvoHistoryRepository> logger, IAccountIdTransport accountIdTransport)
         {
             this.convoContext = convoContext;
             this.logger = logger;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task CommitChangesAsync(CancellationToken cancellationToken = default) // todo: remove default 
@@ -48,7 +48,7 @@ namespace Palavyr.Core.Repositories
         {
             return await convoContext
                 .ConversationRecords
-                .Where(row => row.AccountId == accountIdHolder.AccountId)
+                .Where(row => row.AccountId == accountIdTransport.AccountId)
                 .ToArrayAsync();
         }
 

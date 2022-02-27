@@ -13,16 +13,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IConfigurationRepository configurationRepository;
         private readonly ILogger<ModifyStaticTablesMetaHandler> logger;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public ModifyStaticTablesMetaHandler(
             IConfigurationRepository configurationRepository,
             ILogger<ModifyStaticTablesMetaHandler> logger,
-            IHoldAnAccountId accountIdHolder)
+            IAccountIdTransport accountIdTransport)
         {
             this.configurationRepository = configurationRepository;
             this.logger = logger;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<ModifyStaticTablesMetaResponse> Handle(ModifyStaticTablesMetaRequest request, CancellationToken cancellationToken)
@@ -30,7 +30,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var metasToDelete = await configurationRepository.GetStaticTables(request.IntentId);
             await configurationRepository.RemoveStaticTables(metasToDelete);
 
-            var clearedMetas = StaticTablesMeta.BindTemplateList(request.StaticTableMetaUpdate, accountIdHolder.AccountId);
+            var clearedMetas = StaticTablesMeta.BindTemplateList(request.StaticTableMetaUpdate, accountIdTransport.AccountId);
             var area = await configurationRepository.GetAreaById(request.IntentId);
             area.StaticTablesMetas = clearedMetas;
 

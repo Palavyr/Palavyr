@@ -3,13 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Stripe;
 
-namespace Palavyr.Core.Services.StripeServices
+namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
 {
-    public interface IStripeProductService
-    {
-        Task<Product> GetProduct(string productId);
-    }
-
     public class StripeProductService : IStripeProductService
     {
         private ILogger<StripeProductService> logger;

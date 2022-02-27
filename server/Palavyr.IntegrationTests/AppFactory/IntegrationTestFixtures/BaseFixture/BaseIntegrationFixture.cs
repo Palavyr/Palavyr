@@ -29,6 +29,12 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public readonly string ApiKey = Guid.NewGuid().ToString();
         public readonly string StripeCustomerId = Guid.NewGuid().ToString();
 
+        public readonly Lazy<DashContext> dashContext;
+        public readonly Lazy<AccountsContext> accountsContext;
+        public readonly Lazy<ConvoContext> convoContext;
+        public readonly Lazy<IServiceProvider> serviceProvider;
+        
+        
         public ITestOutputHelper TestOutputHelper { get; set; }
         public readonly IntegrationTestAutofacWebApplicationFactory Factory;
 
@@ -36,7 +42,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public HttpClient Client => WebHostFactory.ConfigureInMemoryClient();
         public HttpClient ClientApiKey => WebHostFactory.ConfigureInMemoryApiKeyClient(ApiKey);
-        public DashContext DashContext => WebHostFactory.Services.GetService<DashContext>();
 
         public CancellationToken CancellationToken => new CancellationTokenSource(Timeout).Token;
         public TimeSpan Timeout => TimeSpan.FromMinutes(3);
@@ -46,27 +51,44 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public IConfigurationRepository ConfigurationRepository => WebHostFactory.Services.GetService<IConfigurationRepository>();
         public IConvoHistoryRepository ConvoHistoryRepository => WebHostFactory.Services.GetService<IConvoHistoryRepository>();
 
-        public AccountsContext AccountsContext => WebHostFactory.Services.GetService<AccountsContext>();
-        public ConvoContext ConvoContext => WebHostFactory.Services.GetService<ConvoContext>();
-        public IServiceProvider Container => WebHostFactory.Services;
+        public AccountsContext AccountsContext => accountsContext.Value;
+        public DashContext DashContext => dashContext.Value;
+        public ConvoContext ConvoContext => convoContext.Value;
+        public IServiceProvider Container => serviceProvider.Value;
         public IConfiguration Configuration => TestConfiguration.GetTestConfiguration();
 
         protected BaseIntegrationFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory)
         {
             TestOutputHelper = testOutputHelper;
             Factory = factory;
+
+            serviceProvider = new Lazy<IServiceProvider>(
+                () =>
+                {
+                    return WebHostFactory.Services;
+                });
+
+            dashContext = new Lazy<DashContext>(
+                () =>
+                {
+                    return WebHostFactory.Services.GetService<DashContext>();
+                });
+            accountsContext = new Lazy<AccountsContext>(
+                () =>
+                {
+                    return WebHostFactory.Services.GetService<AccountsContext>();
+                });
+            convoContext = new Lazy<ConvoContext>(
+                () =>
+                {
+                    return WebHostFactory.Services.GetService<ConvoContext>();
+                });
         }
 
         public virtual ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
             builder.RegisterType<CreateS3TempFile>().As<ICreateS3TempFile>();
             return builder;
-        }
-
-        public void ManuallySetCancellationToken()
-        {
-            var cts = Container.GetService<ITransportACancellationToken>();
-            cts.Assign(CancellationToken);
         }
 
         public void UseFakeStripeCustomerService(ContainerBuilder builder)
@@ -93,24 +115,33 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public void SetAccountId()
         {
-            var accountId = Container!.GetService<IHoldAnAccountId>();
+            var accountId = Container.GetService<IAccountIdTransport>();
             accountId.Assign(AccountId);
         }
 
         public void SetCancellationToken()
         {
-            var token = Container!.GetService<ITransportACancellationToken>();
+            var token = Container.GetService<ICancellationTokenTransport>();
             token.Assign(CancellationToken);
         }
 
         public virtual async Task InitializeAsync()
         {
+            var token = Container!.GetService<ICancellationTokenTransport>();
+            if (token == null)
+            {
+                SetCancellationToken();
+            }
             await Task.CompletedTask;
         }
 
         public virtual async Task DisposeAsync()
         {
             await DeleteTestStripeCustomers();
+            await AccountsContext.DisposeAsync();
+            await DashContext.DisposeAsync();
+            await ConvoContext.DisposeAsync();
+            WebHostFactory.Dispose();
         }
     }
 }

@@ -1,9 +1,13 @@
 ﻿#nullable enable
+using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
@@ -26,7 +30,13 @@ namespace Palavyr.IntegrationTests.DataCreators
         private Account.PlanTypeEnum? planType;
         private bool? asActive;
         private string? customerId;
+        private DateTime? currentPeriodEnd;
+        private Account.PaymentIntervalEnum? paymentInterval;
+        private bool? hasUpgrade;
 
+        private readonly DateTime futureDate = DateTime.Parse("01/01/2200");
+        private readonly DateTime pastDate = DateTime.Parse("01/01/2200");
+        
         public DefaultAccountAndSessionBuilder(BaseIntegrationFixture test)
         {
             this.test = test;
@@ -73,24 +83,39 @@ namespace Palavyr.IntegrationTests.DataCreators
         public DefaultAccountAndSessionBuilder WithProPlan()
         {
             this.planType = Account.PlanTypeEnum.Pro;
+            this.currentPeriodEnd = Convert.ToDateTime(futureDate);
+            this.paymentInterval = Account.PaymentIntervalEnum.Month;
+            this.hasUpgrade = true;
             return this;
         }
 
         public DefaultAccountAndSessionBuilder WithPremiumPlan()
         {
             this.planType = Account.PlanTypeEnum.Premium;
+            this.currentPeriodEnd = Convert.ToDateTime(futureDate);
+            this.paymentInterval = Account.PaymentIntervalEnum.Month;
+            this.hasUpgrade = true;
+
             return this;
         }
 
         public DefaultAccountAndSessionBuilder WithLytePlan()
         {
             this.planType = Account.PlanTypeEnum.Lyte;
+            this.currentPeriodEnd = Convert.ToDateTime(futureDate);
+            this.paymentInterval = Account.PaymentIntervalEnum.Month;
+            this.hasUpgrade = true;
+
             return this;
         }
 
         public DefaultAccountAndSessionBuilder WithFreePlan()
         {
             this.planType = Account.PlanTypeEnum.Free;
+            this.currentPeriodEnd = Convert.ToDateTime(pastDate);
+            this.paymentInterval = Account.PaymentIntervalEnum.Null;
+            this.hasUpgrade = false;
+
             return this;
         }
 
@@ -109,16 +134,39 @@ namespace Palavyr.IntegrationTests.DataCreators
             var accType = this.accountType ?? AccountType.Default;
             var active = this.asActive ?? false;
             var custId = this.customerId ?? test.StripeCustomerId;
-            
-            var defaultAccount = Account.CreateAccount(email, pass, id, test.ApiKey, accType, custId);
+            var payinterval = this.paymentInterval ?? Account.PaymentIntervalEnum.Null;
+            var hasUpgraded = this.hasUpgrade ?? false;
+            var planT = this.planType ?? Account.PlanTypeEnum.Free;
+            var periodEnd = this.currentPeriodEnd ?? DateTime.UtcNow;
 
-            defaultAccount.PlanType = this.planType ?? Account.PlanTypeEnum.Free;
-            defaultAccount.Active = active;
+            var defaultAccount = new Account
+            {
+                EmailAddress = email,
+                Password = pass,
+                AccountId = id,
+                ApiKey = test.ApiKey,
+                AccountType = accType,
+                StripeCustomerId = custId,
+                PhoneNumber = null,
+                Locale = "en-AU",
+                HasUpgraded = hasUpgraded,
+                PaymentInterval = payinterval,
+                PlanType = planT,
+                Active = active,
+                CurrentPeriodEnd = periodEnd,
+                IntroductionId = A.RandomId()
+            };
+
+            var token = test.Container.GetService<ICancellationTokenTransport>();
+            if (token == null)
+            {
+                test.SetCancellationToken();
+            }
             
+
             await test.AccountsContext.Accounts.AddAsync(defaultAccount);
             var session = Session.CreateNew(IntegrationConstants.SessionId, test.AccountId, test.ApiKey);
-            await test.AccountsContext.Sessions.AddAsync(session);
-            await test.AccountsContext.SaveChangesAsync();
+            await test.AccountRepository.CreateNewSession(session);
             return defaultAccount;
         }
     }

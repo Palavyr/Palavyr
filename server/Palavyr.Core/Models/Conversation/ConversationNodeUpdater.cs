@@ -9,17 +9,17 @@ namespace Palavyr.Core.Models.Conversation
 {
     public class ConversationNodeUpdater : IConversationNodeUpdater
     {
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
         private readonly IConfigurationRepository configurationRepository;
         private readonly IOrphanRemover orphanRemover;
 
         public ConversationNodeUpdater(
-            IHoldAnAccountId accountIdHolder,
+            IAccountIdTransport accountIdTransport,
             IConfigurationRepository configurationRepository,
             IOrphanRemover orphanRemover
         )
         {
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
             this.configurationRepository = configurationRepository;
             this.orphanRemover = orphanRemover;
         }
@@ -45,7 +45,7 @@ namespace Palavyr.Core.Models.Conversation
                     node.NodeChildrenString,
                     node.OptionPath,
                     node.ValueOptions,
-                    accountIdHolder.AccountId,
+                    accountIdTransport.AccountId,
                     node.NodeComponentType,
                     node.NodeTypeCode,
                     node.IsRoot,

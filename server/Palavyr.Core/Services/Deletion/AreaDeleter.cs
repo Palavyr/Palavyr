@@ -22,27 +22,27 @@ namespace Palavyr.Core.Services.Deletion
         private readonly IS3Deleter s3Deleter;
         private readonly IConfiguration configuration;
         private readonly ILogger<IAreaDeleter> logger;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public AreaDeleter(
             DashContext dashContext,
             IS3Deleter s3Deleter,
             IConfiguration configuration,
             ILogger<IAreaDeleter> logger, 
-            IHoldAnAccountId accountIdHolder
+            IAccountIdTransport accountIdTransport
         )
         {
             this.dashContext = dashContext;
             this.s3Deleter = s3Deleter;
             this.configuration = configuration;
             this.logger = logger;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task DeleteArea(string areaId, CancellationToken cancellationToken)
         {
-            await DeleteS3Data(accountIdHolder.AccountId, areaId, cancellationToken);
-            DeleteDatabaseEntries( accountIdHolder.AccountId, areaId);
+            await DeleteS3Data(accountIdTransport.AccountId, areaId, cancellationToken);
+            DeleteDatabaseEntries( accountIdTransport.AccountId, areaId);
 
             try
             {
@@ -51,7 +51,7 @@ namespace Palavyr.Core.Services.Deletion
             catch
             {
                 logger.LogCritical($"Area Data NOT Deleted.");
-                logger.LogCritical($"Unable to delete the area folder for {accountIdHolder.AccountId} under areaId {areaId}.");
+                logger.LogCritical($"Unable to delete the area folder for {accountIdTransport.AccountId} under areaId {areaId}.");
             }
         }
 

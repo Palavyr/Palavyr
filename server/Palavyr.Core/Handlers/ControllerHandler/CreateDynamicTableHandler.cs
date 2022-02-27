@@ -16,13 +16,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IConfigurationRepository configurationRepository;
         private readonly ILogger<CreateDynamicTableHandler> logger;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public CreateDynamicTableHandler(IConfigurationRepository configurationRepository, ILogger<CreateDynamicTableHandler> logger, IHoldAnAccountId accountIdHolder)
+        public CreateDynamicTableHandler(IConfigurationRepository configurationRepository, ILogger<CreateDynamicTableHandler> logger, IAccountIdTransport accountIdTransport)
         {
             this.configurationRepository = configurationRepository;
             this.logger = logger;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<CreateDynamicTableResponse> Handle(CreateDynamicTableRequest request, CancellationToken cancellationToken)
@@ -40,7 +40,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 DynamicTableTypes.DefaultTable.TableType,
                 tableId,
                 request.IntentId,
-                accountIdHolder.AccountId,
+                accountIdTransport.AccountId,
                 UnitIds.Currency);
 
             dynamicTables.Add(newTableMeta);

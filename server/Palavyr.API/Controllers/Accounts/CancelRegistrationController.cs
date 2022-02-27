@@ -16,13 +16,13 @@ namespace Palavyr.API.Controllers.Accounts
         public const string Route = "account/cancel-registration";
 
         private readonly IMediator mediator;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IAccountIdTransport accountIdTransport;
         private readonly IAccountRepository accountRepository;
 
-        public CancelRegistrationController(IMediator mediator, IHoldAnAccountId accountIdHolder, IAccountRepository accountRepository)
+        public CancelRegistrationController(IMediator mediator, IAccountIdTransport accountIdTransport, IAccountRepository accountRepository)
         {
             this.mediator = mediator;
-            this.accountIdHolder = accountIdHolder;
+            this.accountIdTransport = accountIdTransport;
             this.accountRepository = accountRepository;
         }
 
@@ -35,7 +35,7 @@ namespace Palavyr.API.Controllers.Accounts
             var accountId = account.AccountId;
 
 
-            accountIdHolder.Assign(accountId);
+            accountIdTransport.Assign(accountId);
             await mediator.Publish(notification, cancellationToken);
         }
     }
