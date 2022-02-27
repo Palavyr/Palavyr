@@ -98,7 +98,8 @@ namespace Palavyr.IntegrationTests.DataCreators
                 Subscription = subscription,
                 Currency = currency,
                 AmountDue = amtDue,
-                DueDate = dDate
+                DueDate = dDate,
+                
             };
         }
     }

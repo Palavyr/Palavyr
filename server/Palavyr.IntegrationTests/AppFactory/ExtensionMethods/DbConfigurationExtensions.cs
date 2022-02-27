@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.UniqueIdentifiers;
@@ -37,9 +38,27 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 
         private static void AddRealDatabaseContexts(IServiceCollection services)
         {
-            services.AddDbContext<AccountsContext>(opt => { opt.UseNpgsql(IntegrationConstants.AccountDbConnString); });
-            services.AddDbContext<DashContext>(opt => { opt.UseNpgsql(IntegrationConstants.DashDbConnString); });
-            services.AddDbContext<ConvoContext>(opt => { opt.UseNpgsql(IntegrationConstants.ConvoDbConnString); });
+            services.AddDbContext<AccountsContext>(
+                opt =>
+                {
+                    opt.UseNpgsql(IntegrationConstants.AccountDbConnString);
+                    opt.ConfigureWarnings(
+                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                });
+            services.AddDbContext<DashContext>(
+                opt =>
+                {
+                    opt.UseNpgsql(IntegrationConstants.DashDbConnString);
+                    opt.ConfigureWarnings(
+                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                });
+            services.AddDbContext<ConvoContext>(
+                opt =>
+                {
+                    opt.UseNpgsql(IntegrationConstants.ConvoDbConnString);
+                    opt.ConfigureWarnings(
+                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                });
         }
 
         private static void CreateDatabases(this IServiceCollection services)
@@ -69,9 +88,27 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             var dashDbName = "TestDashDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
             var convoDbName = "TestConvoDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
 
-            services.AddDbContext<AccountsContext>(opt => { opt.UseInMemoryDatabase(accountDbName, dbRoot); });
-            services.AddDbContext<DashContext>(opt => { opt.UseInMemoryDatabase(dashDbName, dbRoot); });
-            services.AddDbContext<ConvoContext>(opt => { opt.UseInMemoryDatabase(convoDbName, dbRoot); });
+            services.AddDbContext<AccountsContext>(
+                opt =>
+                {
+                    opt.UseInMemoryDatabase(accountDbName, dbRoot);
+                    opt.ConfigureWarnings(
+                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                });
+            services.AddDbContext<DashContext>(
+                opt =>
+                {
+                    opt.UseInMemoryDatabase(dashDbName, dbRoot);
+                    opt.ConfigureWarnings(
+                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                });
+            services.AddDbContext<ConvoContext>(
+                opt =>
+                {
+                    opt.UseInMemoryDatabase(convoDbName, dbRoot);
+                    opt.ConfigureWarnings(
+                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                });
         }
 
         private static void ClearDescriptors(IServiceCollection services)

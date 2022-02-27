@@ -68,6 +68,11 @@ namespace Palavyr.Core.Repositories
         {
             await removeStaleSessions.CleanSessionDb();
             var session = Session.CreateNew(token, AccountIdTransport.AccountId, apiKey);
+            return await CreateNewSession(session);
+        }
+
+        public async Task<Session> CreateNewSession(Session session)
+        {
             var newSession = await accountsContext.Sessions.AddAsync(session, ctCancellationTokenTransport.CancellationToken);
             await accountsContext.SaveChangesAsync(ctCancellationTokenTransport.CancellationToken);
             return newSession.Entity;
@@ -111,6 +116,13 @@ namespace Palavyr.Core.Repositories
             var newRecord = StripeWebhookRecord.CreateNewRecord(id, signature);
             await accountsContext.StripeWebHookRecords.AddAsync(newRecord);
             await accountsContext.SaveChangesAsync(ctCancellationTokenTransport.CancellationToken);
+        }
+
+        public async Task<Account> CreateAccount(Account account)
+        {
+            var entity = await accountsContext.Accounts.AddAsync(account);
+            await accountsContext.SaveChangesAsync(ctCancellationTokenTransport.CancellationToken);
+            return entity.Entity;
         }
     }
 }

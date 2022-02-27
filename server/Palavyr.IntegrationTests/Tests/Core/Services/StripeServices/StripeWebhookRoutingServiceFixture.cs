@@ -199,7 +199,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
         public override Task InitializeAsync()
         {
             router = Container.GetService<IStripeEventWebhookRoutingService>();
-            ManuallySetCancellationToken();
+            SetCancellationToken();
             return base.InitializeAsync();
         }
 

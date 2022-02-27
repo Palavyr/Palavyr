@@ -3,7 +3,6 @@ using Palavyr.API.Controllers.Accounts.Settings;
 using Palavyr.Core.Exceptions;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;

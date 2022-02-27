@@ -31,7 +31,7 @@
                 We typically allow a buffer period to allow you to update your payment method and try again. We'll continue trying to charge your current payment method just in case there was a temporary problem.
             </p>
             <p>
-                Your subscription will lapse 27 days from now on Saturday, March 26, 2022
+                Your subscription will lapse 177 years from now on Wednesday, January 1, 2200
             </p>
             <p>
             <p>
