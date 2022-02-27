@@ -32,6 +32,8 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public readonly Lazy<DashContext> dashContext;
         public readonly Lazy<AccountsContext> accountsContext;
         public readonly Lazy<ConvoContext> convoContext;
+        public readonly Lazy<IServiceProvider> serviceProvider;
+        
         
         public ITestOutputHelper TestOutputHelper { get; set; }
         public readonly IntegrationTestAutofacWebApplicationFactory Factory;
@@ -52,13 +54,19 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public AccountsContext AccountsContext => accountsContext.Value;
         public DashContext DashContext => dashContext.Value;
         public ConvoContext ConvoContext => convoContext.Value;
-        public IServiceProvider Container => WebHostFactory.Services;
+        public IServiceProvider Container => serviceProvider.Value;
         public IConfiguration Configuration => TestConfiguration.GetTestConfiguration();
 
         protected BaseIntegrationFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory)
         {
             TestOutputHelper = testOutputHelper;
             Factory = factory;
+
+            serviceProvider = new Lazy<IServiceProvider>(
+                () =>
+                {
+                    return WebHostFactory.Services;
+                });
 
             dashContext = new Lazy<DashContext>(
                 () =>

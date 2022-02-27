@@ -42,22 +42,19 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                 opt =>
                 {
                     opt.UseNpgsql(IntegrationConstants.AccountDbConnString);
-                    opt.ConfigureWarnings(
-                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                    opt.SuppressWarnings();
                 });
             services.AddDbContext<DashContext>(
                 opt =>
                 {
                     opt.UseNpgsql(IntegrationConstants.DashDbConnString);
-                    opt.ConfigureWarnings(
-                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                    opt.SuppressWarnings();
                 });
             services.AddDbContext<ConvoContext>(
                 opt =>
                 {
                     opt.UseNpgsql(IntegrationConstants.ConvoDbConnString);
-                    opt.ConfigureWarnings(
-                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                    opt.SuppressWarnings();
                 });
         }
 
@@ -92,23 +89,25 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                 opt =>
                 {
                     opt.UseInMemoryDatabase(accountDbName, dbRoot);
-                    opt.ConfigureWarnings(
-                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                    opt.SuppressWarnings();
                 });
             services.AddDbContext<DashContext>(
                 opt =>
                 {
                     opt.UseInMemoryDatabase(dashDbName, dbRoot);
-                    opt.ConfigureWarnings(
-                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                    opt.SuppressWarnings();
                 });
             services.AddDbContext<ConvoContext>(
                 opt =>
                 {
                     opt.UseInMemoryDatabase(convoDbName, dbRoot);
-                    opt.ConfigureWarnings(
-                        x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+                    opt.SuppressWarnings();
                 });
+        }
+
+        private static void SuppressWarnings(this DbContextOptionsBuilder builder)
+        {
+            builder.ConfigureWarnings(x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
         }
 
         private static void ClearDescriptors(IServiceCollection services)
