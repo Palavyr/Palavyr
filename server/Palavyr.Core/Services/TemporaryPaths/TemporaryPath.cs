@@ -2,6 +2,7 @@
 using System.IO.IsolatedStorage;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Exceptions;
 
 namespace Palavyr.Core.Services.TemporaryPaths
 {
@@ -37,10 +38,16 @@ namespace Palavyr.Core.Services.TemporaryPaths
             };
         }
 
-        public SafeFile CreateLocalTempSafeFile(string fileStem, ExtensionTypes extension = ExtensionTypes.Pdf)
+        public SafeFile CreateLocalTempSafeFile(string fileNameStem, ExtensionTypes extension = ExtensionTypes.Pdf)
         {
+            if (Path.GetExtension(fileNameStem) != null)
+            {
+                throw new DomainException("An extension-less file name stem must be used with CreateLocalTempSafeFile. An extension may be specified separately");
+            }
+
+            
             var isolatedStorageDirectory = IsolatedStorageFile.GetMachineStoreForApplication().GetStorageDirectory();
-            var safeFileName = safeFileNameCreator.CreateSafeFileName(fileStem, extension);
+            var safeFileName = safeFileNameCreator.CreateSafeFileName(fileNameStem, extension);
             return new SafeFile
             {
                 FileStem = safeFileName.Stem,

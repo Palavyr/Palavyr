@@ -351,5 +351,10 @@ namespace Palavyr.Core.Repositories
                 dashContext.StaticTablesMetas.Remove(staticMeta);
             }
         }
+
+        public async Task AddFileMap(FileNameMap fileNameMap)
+        {
+            await dashContext.FileNameMaps.AddAsync(fileNameMap); // DB now has s3 key : risky name
+        }
     }
 }

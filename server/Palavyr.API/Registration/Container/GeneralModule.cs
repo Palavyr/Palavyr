@@ -1,17 +1,9 @@
 using System;
-using System.Linq;
-using System.Reflection;
 using Autofac;
-using Microsoft.AspNetCore.Mvc;
-using Palavyr.API.Controllers.Enquiries;
-using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
-using Palavyr.API.Controllers.WidgetLive;
-using Palavyr.API.CustomMiddleware;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Handlers;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -98,7 +90,6 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<NodeOrderChecker>().As<INodeOrderChecker>();
             builder.RegisterType<DynamicResponseComponentExtractor>().As<IDynamicResponseComponentExtractor>();
             builder.RegisterType<LinkCreator>().As<ILinkCreator>();
-            builder.RegisterType<AttachmentSaver>().As<IAttachmentSaver>();
             builder.RegisterType<S3KeyResolver>().As<IS3KeyResolver>();
             builder.RegisterType<TemporaryPath>().As<ITemporaryPath>();
             builder.RegisterType<AttachmentRetriever>().As<IAttachmentRetriever>();
@@ -142,7 +133,7 @@ namespace Palavyr.API.Registration.Container
 
             builder.RegisterType<EndingSequenceAttacher>().As<IEndingSequenceAttacher>().InstancePerLifetimeScope();
             builder.RegisterType<EndingSequenceNodes>().As<IEndingSequenceNodes>().InstancePerLifetimeScope();
-            
+
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             builder.RegisterAssemblyTypes(assemblies)
                 .AsClosedTypesOf(typeof(IMapToNew<,>))
@@ -153,15 +144,15 @@ namespace Palavyr.API.Registration.Container
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
-            
-            
-            
-            
-            
-            
-            
-            // Experimental
 
+            builder.RegisterType<AwsCloudFileSaver>().As<ICloudFileSaver>();
+            builder.RegisterDecorator<CloudSaverWritesToDatabaseDecorator, ICloudFileSaver>();
+
+            builder.RegisterType<AttachmentSaver>().As<IAttachmentSaver>();
+            builder.RegisterDecorator<AttachmentSaverDecorator, IAttachmentSaver>();
+
+
+            // Experimental
             ///////!!! SPECIAL DANGER ZONE !!!//////////
             builder.RegisterType<AccountIdTransport>().As<IAccountIdTransport>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
             builder.RegisterType<CancellationTokenTransport>().As<ICancellationTokenTransport>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE

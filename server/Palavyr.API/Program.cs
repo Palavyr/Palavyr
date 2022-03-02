@@ -1,3 +1,4 @@
+using System;
 using Amazon.Lambda.Core;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
@@ -5,7 +6,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using NLog.Web;
+using Palavyr.Core.Common.Environment;
 using Palavyr.Core.GlobalConstants;
+using Serilog;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
@@ -13,9 +16,32 @@ namespace Palavyr.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            // The initial "bootstrap" logger is able to log errors during start-up. It's completely replaced by the
+            // logger configured in `UseSerilog()` below, once configuration and dependency-injection have both been
+            // set up successfully.
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateBootstrapLogger();
+
+            Log.Information("Starting Palavyr Server!");
+
+            try
+            {
+                CreateHostBuilder(args).Build().Run();
+                Log.Information("Stopped cleanly");
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "An unhandled exception occured while starting up Palavyr...");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
@@ -23,22 +49,29 @@ namespace Palavyr.API
             var host = Host
                 .CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webBuilder => webBuilder
-                    .UseIIS()
-                    .UseStartup<Startup>())
                 .ConfigureLogging(
                     (hostingContext, logging) =>
                     {
+                        var envGetter = new DetermineCurrentEnvironment(hostingContext.Configuration);
+
                         logging.ClearProviders();
                         logging.AddConfiguration(hostingContext.Configuration.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
-                        logging.SetMinimumLevel(LogLevel.Trace);
-                        logging.AddConsole();
-                        logging.AddDebug();
-                        logging.AddEventSourceLogger();
-                        logging.AddNLog();
+
+                        if (envGetter.IsDevelopment())
+                        {
+                            logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+                            // logging.AddDebug();
+                            logging.AddSerilog();
+                            // logging.SetMinimumLevel(LogLevel.Trace);
+                            // logging.AddConsole();
+                        }
+
                         logging.AddSeq();
                     })
-                .UseNLog();
+                .ConfigureWebHostDefaults(
+                    webBuilder => webBuilder
+                        .UseIIS()
+                        .UseStartup<Startup>());
             return host;
         }
     }

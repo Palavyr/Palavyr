@@ -65,6 +65,8 @@
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.11" />
         <PackageReference Include="dbup-postgresql" Version="4.5.0" />
         <PackageReference Include="Seq.Extensions.Logging" Version="4.0.2" />
+        <PackageReference Include="Serilog" Version="2.10.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
         <PackageReference Include="Stripe.net" Version="39.38.0" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
         <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.51.0" />

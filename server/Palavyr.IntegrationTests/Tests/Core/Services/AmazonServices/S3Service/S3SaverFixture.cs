@@ -24,6 +24,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
         private IS3Retriever s3Retriever;
         private IS3Saver s3Saver;
         private string testUserDataBucket;
+        private string tempFile;
+        private string s3Key;
 
         public S3SaverFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
@@ -32,38 +34,29 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
         [Fact]
         public async Task WhenAnAttachmentFileIsUploadedToS3_ThatFileIsPresentInS3()
         {
-            var tempFile = Path.GetTempFileName();
+            tempFile = Path.GetTempFileName();
             using var stream = File.OpenRead(tempFile);
             var formFile = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
 
             var areaId = A.RandomName();
             var fileName = A.RandomName();
-            var s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
+            s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
 
-            try
-            {
-                await s3Saver.StreamObjectToS3(testUserDataBucket, formFile, s3Key);
-                var result = await s3Retriever.CheckIfFileExists(testUserDataBucket, s3Key);
-                result.ShouldBe(true);
-            }
-            finally
-            {
-                await s3Deleter.DeleteObjectFromS3Async(testUserDataBucket, s3Key);
-                stream.Close();
-                File.Delete(tempFile);
-            }
+            await s3Saver.StreamObjectToS3(testUserDataBucket, formFile, s3Key);
+            var result = await s3Retriever.CheckIfFileExists(testUserDataBucket, s3Key);
+            result.ShouldBe(true);
         }
 
         [Fact]
         public async Task WhenTheSaverFailsToUploadAFile_AFalseValueIsReturned()
         {
-            var tempFile = Path.GetTempFileName();
+            tempFile = Path.GetTempFileName();
             using var stream = File.OpenRead(tempFile);
             var formFile = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
 
             var areaId = A.RandomName();
             var fileName = A.RandomName();
-            var s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
+            s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
 
             Should.Throw<AmazonS3Exception>(async () => await s3Saver.StreamObjectToS3("Palavyr-does-not-exist", formFile, s3Key));
 
@@ -88,9 +81,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
             return Task.CompletedTask;
         }
 
-        public Task DisposeAsync()
+        public async Task DisposeAsync()
         {
-            return Task.CompletedTask;
+            await s3Deleter.DeleteObjectFromS3Async(testUserDataBucket, s3Key);
+            File.Delete(tempFile);
         }
     }
 }

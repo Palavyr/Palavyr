@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
-using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -12,7 +10,6 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
 {
     public interface IS3Saver
     {
-        // Task<bool> SaveObjectToS3(string bucket, string localFilePath, string fileKey);
         Task StreamObjectToS3(string bucket, IFormFile stream, string fileKey);
     }
 
@@ -26,29 +23,6 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
             this.s3Client = s3Client;
             this.logger = logger;
         }
-
-        // [Obsolete("SaveObjectToS3 no longer maintained. Use StreamObjectToS3 instead.")]
-        // public async Task<bool> SaveObjectToS3(string bucket, string localFilePath, string fileKey)
-        // {
-        //     var putRequest = new PutObjectRequest()
-        //     {
-        //         BucketName = bucket,
-        //         FilePath = localFilePath,
-        //         Key = fileKey
-        //     };
-        //     try
-        //     {
-        //         var response = await s3Client.PutObjectAsync(putRequest);
-        //         logger.LogInformation($"Response: {response}");
-        //         logger.LogInformation($"Saved {localFilePath} to {fileKey} in {bucket}");
-        //         return true;
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         logger.LogInformation("Failed to write snapshot files: " + ex.Message);
-        //         return false;
-        //     }
-        // }
 
         public async Task StreamObjectToS3(string bucket, IFormFile formFile, string fileKey)
         {

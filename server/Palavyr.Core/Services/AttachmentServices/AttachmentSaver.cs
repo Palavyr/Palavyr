@@ -1,17 +1,11 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices.S3Service;
-using Palavyr.Core.Services.TemporaryPaths;
+using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.AttachmentServices
@@ -23,63 +17,72 @@ namespace Palavyr.Core.Services.AttachmentServices
 
     public class AttachmentSaver : IAttachmentSaver
     {
-        private readonly IS3Saver s3Saver;
-        private readonly IConfiguration configuration;
-        private readonly ILogger<AttachmentSaver> logger;
-        private readonly IS3KeyResolver s3KeyResolver;
-        private readonly DashContext dashContext;
-        private readonly ILinkCreator linkCreator;
-        private readonly ITemporaryPath temporaryPath;
-        private readonly ILocalIo localIo;
         private readonly IGuidUtils guidUtils;
-        private readonly IAccountIdTransport accountIdTransport;
+        private readonly ICloudFileSaver cloudFileSaver;
 
-        public AttachmentSaver(
-            IS3Saver s3Saver,
-            IConfiguration configuration,
-            ILogger<AttachmentSaver> logger,
-            IS3KeyResolver s3KeyResolver,
-            DashContext dashContext,
-            ILinkCreator linkCreator,
-            ITemporaryPath temporaryPath,
-            ILocalIo localIo,
-            IGuidUtils guidUtils,
-            IAccountIdTransport accountIdTransport
-        )
+        public AttachmentSaver(IGuidUtils guidUtils, ICloudFileSaver cloudFileSaver)
         {
-            this.s3Saver = s3Saver;
-            this.configuration = configuration;
-            this.logger = logger;
-            this.s3KeyResolver = s3KeyResolver;
-            this.dashContext = dashContext;
-            this.linkCreator = linkCreator;
-            this.temporaryPath = temporaryPath;
-            this.localIo = localIo;
             this.guidUtils = guidUtils;
-            this.accountIdTransport = accountIdTransport;
+            this.cloudFileSaver = cloudFileSaver;
         }
 
-        public async Task<FileLink> SaveAttachment(string areaId, IFormFile attachmentFile)
+        public async Task<FileLink> SaveAttachment(string intentId, IFormFile attachmentFile)
         {
-            var userDataBucket = configuration.GetUserDataBucket();
             var safeFileName = guidUtils.CreateNewId();
-            var riskyFileName = attachmentFile.FileName;
-            var s3AttachmentKey = s3KeyResolver.ResolveAttachmentKey(areaId, safeFileName);
+            var preSignedUrl = await cloudFileSaver.SaveFileAndGetLink(safeFileName, attachmentFile);
+            var fileLink = FileLink.CreateUrlLink(attachmentFile.FileName, preSignedUrl, safeFileName);
+            return fileLink;
+        }
+    }
 
-            var fileNameMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, s3AttachmentKey, accountIdTransport.AccountId, areaId);
-            var localTempSafeFile = temporaryPath.CreateLocalTempSafeFile();
+    public interface IFileSaver
+    {
+        Task<string> SaveFileAndGetUri(string fileName, IFormFile fileData);
+    }
 
-            await localIo.SaveFile(localTempSafeFile.S3Key, attachmentFile);
-            
-            await s3Saver.StreamObjectToS3(userDataBucket, attachmentFile, s3AttachmentKey);
-            temporaryPath.DeleteLocalTempFile(localTempSafeFile.FileNameWithExtension);
-      
-            await dashContext.FileNameMaps.AddAsync(fileNameMap); // DB now has s3 key : risky name
-            await dashContext.SaveChangesAsync();
+    public class FileSaver : IFileSaver
+    {
+        private readonly ICloudFileSaver cloudFileSaver;
 
-            var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3AttachmentKey, userDataBucket);
+        public FileSaver(ICloudFileSaver cloudFileSaver)
+        {
+            this.cloudFileSaver = cloudFileSaver;
+        }
 
-            var fileLink = FileLink.CreateUrlLink(riskyFileName, preSignedUrl, safeFileName);
+        public async Task<string> SaveFileAndGetUri(string fileName, IFormFile fileData)
+        {
+            return await cloudFileSaver.SaveFileAndGetLink(fileName, fileData);
+        }
+    }
+
+    public class AttachmentSaverDecorator : IAttachmentSaver
+    {
+        private readonly IAttachmentSaver saver;
+        private readonly IConfigurationRepository configurationRepository;
+        private readonly IAccountIdTransport accountIdTransport;
+        private readonly IResolveS3Key<AttachmentKey> resolveS3Key;
+
+        public AttachmentSaverDecorator(
+            IAttachmentSaver saver,
+            IConfigurationRepository configurationRepository,
+            IAccountIdTransport accountIdTransport,
+            IResolveS3Key<AttachmentKey> resolveS3Key)
+        {
+            this.saver = saver;
+            this.configurationRepository = configurationRepository;
+            this.accountIdTransport = accountIdTransport;
+            this.resolveS3Key = resolveS3Key;
+        }
+
+        public async Task<FileLink> SaveAttachment(string intentId, IFormFile attachmentFile)
+        {
+            var fileLink = await saver.SaveAttachment(intentId, attachmentFile);
+
+            var fileName = FileName.ParseFileNameWithStemOverride(attachmentFile.FileName, fileLink.FileName);
+            var s3AttachmentKey = resolveS3Key.Resolve(fileName, intentId);
+            var fileNameMap = FileNameMap.CreateFileMap(fileLink.FileName, attachmentFile.FileName, s3AttachmentKey, accountIdTransport.AccountId, intentId);
+            await configurationRepository.AddFileMap(fileNameMap);
+
             return fileLink;
         }
     }

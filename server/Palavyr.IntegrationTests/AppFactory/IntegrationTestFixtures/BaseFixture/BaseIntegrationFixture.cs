@@ -33,8 +33,8 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public readonly Lazy<AccountsContext> accountsContext;
         public readonly Lazy<ConvoContext> convoContext;
         public readonly Lazy<IServiceProvider> serviceProvider;
-        
-        
+
+
         public ITestOutputHelper TestOutputHelper { get; set; }
         public readonly IntegrationTestAutofacWebApplicationFactory Factory;
 
@@ -63,26 +63,14 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
             Factory = factory;
 
             serviceProvider = new Lazy<IServiceProvider>(
-                () =>
-                {
-                    return WebHostFactory.Services;
-                });
+                () => { return WebHostFactory.Services; });
 
             dashContext = new Lazy<DashContext>(
-                () =>
-                {
-                    return WebHostFactory.Services.GetService<DashContext>();
-                });
+                () => { return WebHostFactory.Services.GetService<DashContext>(); });
             accountsContext = new Lazy<AccountsContext>(
-                () =>
-                {
-                    return WebHostFactory.Services.GetService<AccountsContext>();
-                });
+                () => { return WebHostFactory.Services.GetService<AccountsContext>(); });
             convoContext = new Lazy<ConvoContext>(
-                () =>
-                {
-                    return WebHostFactory.Services.GetService<ConvoContext>();
-                });
+                () => { return WebHostFactory.Services.GetService<ConvoContext>(); });
         }
 
         public virtual ContainerBuilder CustomizeContainer(ContainerBuilder builder)
@@ -132,6 +120,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
             {
                 SetCancellationToken();
             }
+
             await Task.CompletedTask;
         }
 

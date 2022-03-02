@@ -48,5 +48,6 @@ namespace Palavyr.Core.Repositories
         Task CreateIntroductionSequence(List<ConversationNode> newConversation);
         Task<ConversationNode[]> UpdateIntroductionSequence(string introId, List<ConversationNode> update);
         Task<ConversationNode[]> GetIntroductionSequence(string introId);
+        Task AddFileMap(FileNameMap fileNameMap);
     }
 }

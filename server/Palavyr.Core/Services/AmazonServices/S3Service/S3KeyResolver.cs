@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿#nullable enable
+using System.IO;
 using Palavyr.Core.Common.ExtensionMethods.PathExtensions;
+using Palavyr.Core.Exceptions;
+using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.AmazonServices.S3Service
@@ -10,7 +13,47 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
         string ResolvePreviewKey(string safeFileName);
         string ResolveLogoKey(string safeFileName, string fileExtension);
         string ResolveResponsePdfKey(string safeFileName);
-        string ResolveImageKey(string safeName);
+        string ResolveImageKey(string safeNameWithExtension);
+    }
+
+
+    public interface IResolveS3Key<TAttachmentKey>
+    {
+        string Resolve(FileName fileName, string? intentId = null);
+    }
+
+    public class AttachmentKey : IResolveS3Key<AttachmentKey>
+    {
+        private readonly IAccountIdTransport accountIdTransport;
+
+        public AttachmentKey(IAccountIdTransport accountIdTransport)
+        {
+            this.accountIdTransport = accountIdTransport;
+        }
+
+        public string Resolve(FileName fileName, string? intentId)
+        {
+            if (intentId == null) throw new DomainException("Intent Id required for resolving attachment save location.");
+
+            var safeFileName = fileName.FileStem;
+            var suffix = fileName.HasSuffix ? fileName.Suffix : ".pdf";
+            return Path.Combine(accountIdTransport.AccountId, "AreaData", intentId, "Attachments", Path.Join(".", safeFileName, suffix)).ConvertToUnix();
+        }
+    }
+
+    public class LogoKey : IResolveS3Key<LogoKey>
+    {
+        private readonly IAccountIdTransport accountIdTransport;
+
+        public LogoKey(IAccountIdTransport accountIdTransport)
+        {
+            this.accountIdTransport = accountIdTransport;
+        }
+
+        public string Resolve(FileName fileName, string? intentId)
+        {
+            return Path.Combine(accountIdTransport.AccountId, "Logos", Path.Join(".", fileName.FileStem, fileName.Suffix)).ConvertToUnix();
+        }
     }
 
     public class S3KeyResolver : IS3KeyResolver
@@ -32,6 +75,11 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
             return Path.Combine(accountIdTransport.AccountId, "Previews", safeFileName + ".pdf").ConvertToUnix();
         }
 
+        public string ResolveLogoKey(FileName fileName)
+        {
+            return ResolveLogoKey(fileName.FileStem, fileName.Suffix);
+        }
+        
         public string ResolveLogoKey(string safeFileName, string fileExtension)
         {
             return Path.Combine(accountIdTransport.AccountId, "Logos", safeFileName + fileExtension).ConvertToUnix();
@@ -42,9 +90,9 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
             return Path.Combine(accountIdTransport.AccountId, "Responses", safeFileName + ".pdf").ConvertToUnix();
         }
 
-        public string ResolveImageKey(string safeName) // safename includes extension
+        public string ResolveImageKey(string safeNameWithExtension) // safename includes extension
         {
-            return Path.Combine(accountIdTransport.AccountId, "Images", safeName).ConvertToUnix();
+            return Path.Combine(accountIdTransport.AccountId, "Images", safeNameWithExtension).ConvertToUnix();
         }
     }
 }
