@@ -35,6 +35,8 @@ namespace Palavyr.Core.Services.LogoServices
         }
     }
 
+    
+
     public interface ICloudFileSaver
     {
         Task<FileLocation> SaveFile(string fileNameWithSuffix, IFormFile fileData);

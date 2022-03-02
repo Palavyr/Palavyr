@@ -8,6 +8,9 @@ namespace Palavyr.Core.Repositories
     public interface IConfigurationRepository
     {
         Task CommitChangesAsync();
+
+        Task<List<FileAsset>> GetManyFileAssets(string[] fileIds);
+        Task<FileAsset> GetFileAsset(string fileId);
         Task<Area> CreateAndAddNewArea(string name, string emailAddress, bool isVerified);
         Task<List<Area>> GetAllAreasShallow();
         Task<Area> GetAreaById(string areaId);

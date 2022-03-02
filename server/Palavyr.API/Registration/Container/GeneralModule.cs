@@ -89,7 +89,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ThresholdEvaluator>().As<IThresholdEvaluator>();
             builder.RegisterType<NodeOrderChecker>().As<INodeOrderChecker>();
             builder.RegisterType<DynamicResponseComponentExtractor>().As<IDynamicResponseComponentExtractor>();
-            builder.RegisterType<LinkCreator>().As<ILinkCreator>();
+            builder.RegisterType<AwsS3LinkCreator>().As<ILinkCreator>();
             builder.RegisterType<S3KeyResolver>().As<IS3KeyResolver>();
             builder.RegisterType<TemporaryPath>().As<ITemporaryPath>();
             builder.RegisterType<AttachmentRetriever>().As<IAttachmentRetriever>();

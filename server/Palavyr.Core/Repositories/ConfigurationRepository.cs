@@ -28,6 +28,23 @@ namespace Palavyr.Core.Repositories
             this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
+        public async Task<List<FileAsset>> GetManyFileAssets(string[] fileIds)
+        {
+            var fileAssets = await dashContext
+                .FileAssets
+                .Where(x => fileIds.Contains(x.FileId))
+                .ToListAsync(cancellationTokenTransport.CancellationToken);
+            return fileAssets;
+        }
+
+        public async Task<FileAsset> GetFileAsset(string fileId)
+        {
+            var fileAsset = await dashContext
+                .FileAssets
+                .SingleAsync(x => x.AccountId == accountIdTransport.AccountId && x.FileId == fileId, cancellationTokenTransport.CancellationToken);
+            return fileAsset;
+        }
+
         public async Task<List<DynamicTableMeta>> GetDynamicTableMetas(string areaIdentifier)
         {
             return await dashContext
