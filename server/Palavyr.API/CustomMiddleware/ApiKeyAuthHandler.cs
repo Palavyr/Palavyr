@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Palavyr.API.CustomMiddleware.MiddlewareHandlers;
 using Palavyr.Core.Data;
 using Palavyr.Core.GlobalConstants;
 

@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
@@ -11,16 +13,23 @@ namespace Palavyr.Core.Services.PdfService
     public class StaticTableCompiler : IStaticTableCompiler
     {
         private readonly IBusinessRules businessRules;
+        private readonly IConfigurationEntityStore<Area> intentStore;
 
-        public StaticTableCompiler(IBusinessRules businessRules)
+        public StaticTableCompiler(
+            IBusinessRules businessRules,
+            IConfigurationEntityStore<Area> intentStore)
         {
             this.businessRules = businessRules;
+            this.intentStore = intentStore;
         }
 
-        public async Task<List<Table>> CollectStaticTables(Area areaData, CultureInfo culture, int numIndividuals)
+        public async Task<List<Table>> CollectStaticTables(string intentId, CultureInfo culture, int numIndividuals)
         {
+
             var tables = new List<Table>();
-            var tableMetas = areaData.StaticTablesMetas;
+
+            var intentComplete = await intentStore.GetIntentComplete(intentId);
+            var tableMetas = intentComplete.StaticTablesMetas;
 
             foreach (var meta in tableMetas)
             {

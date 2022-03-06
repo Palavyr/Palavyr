@@ -2,7 +2,6 @@
 using System.IO;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
@@ -39,19 +38,19 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             IsUrl = true;
         }
 
-        public static Image CreateImageRecord(string riskyName, IS3KeyResolver resolver, string accountId)
-        {
-            var newImageId = StaticGuidUtils.CreateNewId();
-            var extension = Path.GetExtension(riskyName);
-            var safeName = string.Join("", newImageId, extension.ToLowerInvariant());
-            var s3Key = resolver.ResolveImageKey(safeName);
-            return new Image(newImageId, safeName, riskyName, accountId, s3Key);
-        }
-
-        public static Image CreateImageUrlRecord(string url, string accountId)
-        {
-            var newImageId = StaticGuidUtils.CreateNewId();
-            return new Image(newImageId, accountId, url);
-        }
+        // public static Image CreateImageRecord(string riskyName, IS3KeyResolver resolver, string accountId)
+        // {
+        //     var newImageId = StaticGuidUtils.CreateNewId();
+        //     var extension = Path.GetExtension(riskyName);
+        //     var safeName = string.Join("", newImageId, extension.ToLowerInvariant());
+        //     var s3Key = resolver.ResolveImageKey(safeName);
+        //     return new Image(newImageId, safeName, riskyName, accountId, s3Key);
+        // }
+        //
+        // public static Image CreateImageUrlRecord(string url, string accountId)
+        // {
+        //     var newImageId = StaticGuidUtils.CreateNewId();
+        //     return new Image(newImageId, accountId, url);
+        // }
     }
 }

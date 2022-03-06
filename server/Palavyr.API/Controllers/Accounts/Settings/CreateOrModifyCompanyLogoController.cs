@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Handlers;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Services.LogoServices;
 
@@ -14,7 +13,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         private readonly IMediator mediator;
         public const string Route = "account/settings/logo";
 
-        private readonly ILogoSaver logoSaver;
+        private readonly ILogoAssetSaver logoAssetSaver;
 
         public CreateOrModifyCompanyLogoController(IMediator mediator)
         {

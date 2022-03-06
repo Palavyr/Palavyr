@@ -2,11 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Conversation.Schemas
 {
     // TODO: Rename to ConversationHistory
-    public class ConversationHistory
+    public class ConversationHistory : IEntity
     {
         [Key]
         public int? Id { get; set; }

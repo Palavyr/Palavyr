@@ -20,7 +20,9 @@ namespace Palavyr.Core.Data
         public DbSet<Image> Images { get; set; }
 
         public DbSet<FileAsset> FileAssets { get; set; }
-        
+        public DbSet<Logo> Logos { get; set; }
+        public DbSet<AttachmentLinkRecord> AttachmentRecords { get; set; }
+
         public DbSet<WidgetPreference> WidgetPreferences { get; set; }
         public DbSet<SelectOneFlat> SelectOneFlats { get; set; }
         public DbSet<PercentOfThreshold> PercentOfThresholds { get; set; }

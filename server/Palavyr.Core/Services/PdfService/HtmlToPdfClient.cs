@@ -1,9 +1,11 @@
 ﻿#nullable enable
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.PdfService.PdfServer;
+using Palavyr.Core.Services.TemporaryPaths;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.PdfService
 {
@@ -11,25 +13,58 @@ namespace Palavyr.Core.Services.PdfService
     {
         private readonly ILogger<HtmlToPdfClient> logger;
         private readonly IPdfServerClient pdfServerClient;
-        private readonly IConfiguration configuration;
+        private readonly ICompilePdfServerRequest compilePdfServerRequest;
 
-        public HtmlToPdfClient(ILogger<HtmlToPdfClient> logger, IPdfServerClient pdfServerClient, IConfiguration configuration)
+        public HtmlToPdfClient(
+            ILogger<HtmlToPdfClient> logger,
+            IPdfServerClient pdfServerClient,
+            ICompilePdfServerRequest compilePdfServerRequest)
         {
             this.logger = logger;
             this.pdfServerClient = pdfServerClient;
-            this.configuration = configuration;
+            this.compilePdfServerRequest = compilePdfServerRequest;
         }
 
-        public async Task<PdfServerResponse> GeneratePdfFromHtml(string htmlString, string bucket, string s3Key, string identifier, Paper paperOptions)
+        public async Task<PdfServerResponse> GeneratePdfFromHtml(string htmlString, string bucket, string locationKey, string identifier, Paper paperOptions)
         {
-            var accessKey = configuration.GetAccessKey();
-            var secretKey = configuration.GetSecretKey();
-            var region = configuration.GetRegion();
-            var request = CompilePdfServerRequest.Compile(bucket, s3Key, accessKey, secretKey, region, htmlString, identifier, paperOptions);
+            var request = compilePdfServerRequest.Compile(bucket, locationKey, htmlString, identifier, paperOptions);
             var pdfServerResponse = await pdfServerClient.PostToPdfServer(request);
 
-            logger.LogDebug($"Successfully wrote the pdf file to disk at {pdfServerResponse.S3Key}!");
+            logger.LogDebug($"Successfully wrote the pdf file to disk at {pdfServerResponse.FileAsset.LocationKey}!");
             return pdfServerResponse;
+        }
+    }
+
+    public class HtmlToPdfClientFileAssetCreatingDecorator : IHtmlToPdfClient
+    {
+        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IHtmlToPdfClient htmlToPdfClient;
+        private readonly IAccountIdTransport accountIdTransport;
+
+        public HtmlToPdfClientFileAssetCreatingDecorator(
+            IConfigurationEntityStore<FileAsset> fileAssetStore,
+            IHtmlToPdfClient htmlToPdfClient,
+            IAccountIdTransport accountIdTransport)
+        {
+            this.fileAssetStore = fileAssetStore;
+            this.htmlToPdfClient = htmlToPdfClient;
+            this.accountIdTransport = accountIdTransport;
+        }
+
+        public async Task<PdfServerResponse> GeneratePdfFromHtml(string htmlString, string bucket, string locationKey, string identifier, Paper paperOptions)
+        {
+            var response = await htmlToPdfClient.GeneratePdfFromHtml(htmlString, bucket, locationKey, identifier, paperOptions);
+            var newFileAsset = new FileAsset
+            {
+                AccountId = accountIdTransport.AccountId,
+                FileId = identifier,
+                LocationKey = response.FileAsset.LocationKey,
+                RiskyNameStem = identifier,
+                Extension = ExtensionTypes.Pdf
+            };
+
+            await fileAssetStore.Create(newFileAsset);
+            return response;
         }
     }
 }

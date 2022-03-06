@@ -84,8 +84,9 @@ namespace Palavyr.API
 
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseMiddleware<SetCancellationTokenTransportMiddleware>();
-            app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
+            app.UseMiddleware<SetAccountIdContextMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
 
             app.UseEndpoints(
                 endpoints =>

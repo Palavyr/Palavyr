@@ -8,17 +8,17 @@ using Palavyr.Core.Exceptions;
 
 namespace Palavyr.Core.Services.AmazonServices.S3Service
 {
-    public interface IS3Saver
+    public interface IS3FileUploader
     {
         Task StreamObjectToS3(string bucket, IFormFile stream, string fileKey);
     }
 
-    public class S3Saver : IS3Saver
+    public class Is3FileUploader : IS3FileUploader
     {
         private readonly IAmazonS3 s3Client;
-        private readonly ILogger<S3Saver> logger;
+        private readonly ILogger<Is3FileUploader> logger;
 
-        public S3Saver(IAmazonS3 s3Client, ILogger<S3Saver> logger)
+        public Is3FileUploader(IAmazonS3 s3Client, ILogger<Is3FileUploader> logger)
         {
             this.s3Client = s3Client;
             this.logger = logger;

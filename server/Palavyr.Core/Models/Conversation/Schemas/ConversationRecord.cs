@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Conversation.Schemas
 {
-    public class ConversationRecord
+    public class ConversationRecord : IEntity
     {
         [Key]
         public int? Id { get; set; }

@@ -14,14 +14,14 @@ namespace Palavyr.Core.Repositories.Delete
     {
         private readonly IConfiguration configuration;
         private readonly DashContext dashContext;
-        private readonly IS3Deleter s3Deleter;
+        private readonly IS3FileDeleter is3FileDeleter;
         private readonly ILogger<DashDeleter> logger;
         private readonly IAccountIdTransport accountIdTransport;
 
         public DashDeleter(
             IConfiguration configuration,
             DashContext dashContext,
-            IS3Deleter s3Deleter,
+            IS3FileDeleter is3FileDeleter,
             ILogger<DashDeleter> logger,
             IAccountIdTransport accountIdTransport,
             ICancellationTokenTransport cancellationTokenTransport
@@ -29,7 +29,7 @@ namespace Palavyr.Core.Repositories.Delete
         {
             this.configuration = configuration;
             this.dashContext = dashContext;
-            this.s3Deleter = s3Deleter;
+            this.is3FileDeleter = is3FileDeleter;
             this.logger = logger;
             this.accountIdTransport = accountIdTransport;
         }
@@ -42,7 +42,7 @@ namespace Palavyr.Core.Repositories.Delete
                 var s3Keys = dashContext.FileNameMaps.Where(x => x.AccountId == accountIdTransport.AccountId).Select(x => x.S3Key).ToArray();
                 if (s3Keys.Length > 0)
                 {
-                    await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
+                    await is3FileDeleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
                 }
             }
             catch (Exception)
@@ -55,7 +55,7 @@ namespace Palavyr.Core.Repositories.Delete
                 var s3Keys = dashContext.Images.Where(x => x.AccountId == accountIdTransport.AccountId).Select(x => x.S3Key).ToArray();
                 if (s3Keys.Length > 0)
                 {
-                    await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
+                    await is3FileDeleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
                 }
             }
             catch (Exception)

@@ -18,14 +18,39 @@ namespace Palavyr.Core.Repositories
         private readonly DashContext dashContext;
         private readonly ILogger<ConfigurationRepository> logger;
         private readonly IAccountIdTransport accountIdTransport;
-        public readonly ICancellationTokenTransport cancellationTokenTransport;
+
+        public readonly ICancellationTokenTransport CancellationTokenTransport;
 
         public ConfigurationRepository(DashContext dashContext, ILogger<ConfigurationRepository> logger, IAccountIdTransport accountIdTransport, ICancellationTokenTransport cancellationTokenTransport)
         {
             this.dashContext = dashContext;
             this.logger = logger;
             this.accountIdTransport = accountIdTransport;
-            this.cancellationTokenTransport = cancellationTokenTransport;
+            this.CancellationTokenTransport = cancellationTokenTransport;
+        }
+
+        public async Task<AttachmentLinkRecord> GetAttachmentRecord(string fileId)
+        {
+            return await dashContext
+                .AttachmentRecords
+                .Where(x => x.AccountId == accountIdTransport.AccountId)
+                .SingleAsync(x => x.FileId == fileId);
+        }
+
+        public async Task<AttachmentLinkRecord> CreateAttachmentLinkRecord(AttachmentLinkRecord attachmentLinkRecord)
+        {
+            var entity = await dashContext
+                .AttachmentRecords
+                .AddAsync(attachmentLinkRecord, CancellationTokenTransport.CancellationToken);
+            return entity.Entity;
+        }
+
+        public async Task<Logo> GetAccountLogo()
+        {
+            var logo = await dashContext
+                .Logos
+                .SingleAsync(x => x.AccountId == accountIdTransport.AccountId);
+            return logo;
         }
 
         public async Task<List<FileAsset>> GetManyFileAssets(string[] fileIds)
@@ -33,7 +58,7 @@ namespace Palavyr.Core.Repositories
             var fileAssets = await dashContext
                 .FileAssets
                 .Where(x => fileIds.Contains(x.FileId))
-                .ToListAsync(cancellationTokenTransport.CancellationToken);
+                .ToListAsync(CancellationTokenTransport.CancellationToken);
             return fileAssets;
         }
 
@@ -41,8 +66,13 @@ namespace Palavyr.Core.Repositories
         {
             var fileAsset = await dashContext
                 .FileAssets
-                .SingleAsync(x => x.AccountId == accountIdTransport.AccountId && x.FileId == fileId, cancellationTokenTransport.CancellationToken);
+                .SingleAsync(x => x.AccountId == accountIdTransport.AccountId && x.FileId == fileId, CancellationTokenTransport.CancellationToken);
             return fileAsset;
+        }
+
+        public Task<FileAsset> AddFileAsset(FileAsset fileAsset)
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task<List<DynamicTableMeta>> GetDynamicTableMetas(string areaIdentifier)
@@ -50,7 +80,7 @@ namespace Palavyr.Core.Repositories
             return await dashContext
                 .DynamicTableMetas
                 .Where(row => row.AccountId == accountIdTransport.AccountId && row.AreaIdentifier == areaIdentifier)
-                .ToListAsync(cancellationTokenTransport.CancellationToken);
+                .ToListAsync(CancellationTokenTransport.CancellationToken);
         }
 
         public async Task<DynamicTableMeta> GetDynamicTableMetaByTableId(string tableId)
@@ -58,7 +88,7 @@ namespace Palavyr.Core.Repositories
             return await dashContext
                 .DynamicTableMetas
                 .Where(row => row.TableId == tableId)
-                .SingleAsync(cancellationTokenTransport.CancellationToken);
+                .SingleAsync(CancellationTokenTransport.CancellationToken);
         }
 
         public async Task<DynamicTableMeta> UpdateDynamicTableMeta(DynamicTableMeta dynamicTableMeta)
@@ -70,7 +100,7 @@ namespace Palavyr.Core.Repositories
         public async Task<Image> GetImageById(string imageId)
         {
             // validate the image id
-            var image = await dashContext.Images.SingleOrDefaultAsync(x => x.ImageId == imageId, cancellationTokenTransport.CancellationToken);
+            var image = await dashContext.Images.SingleOrDefaultAsync(x => x.ImageId == imageId, CancellationTokenTransport.CancellationToken);
             if (image == null)
             {
                 throw new DomainException("Image Id was not found");
@@ -81,57 +111,62 @@ namespace Palavyr.Core.Repositories
 
         public async Task<Image[]> GetImagesByIds(string[] imageIds)
         {
-            var images = await dashContext.Images.Where(x => imageIds.Contains(x.ImageId)).ToArrayAsync(cancellationTokenTransport.CancellationToken);
+            var images = await dashContext.Images.Where(x => imageIds.Contains(x.ImageId)).ToArrayAsync(CancellationTokenTransport.CancellationToken);
             return images;
         }
 
         public async Task<ConversationNode[]> GetConvoNodesByImageIds(string[] imageIds)
         {
-            var convoNodes = await dashContext.ConversationNodes.Where(x => imageIds.Contains(x.ImageId)).ToArrayAsync(cancellationTokenTransport.CancellationToken); // this could be empty
+            var convoNodes = await dashContext.ConversationNodes.Where(x => imageIds.Contains(x.ImageId)).ToArrayAsync(CancellationTokenTransport.CancellationToken); // this could be empty
             return convoNodes;
         }
 
-        public async Task RemoveImagesByIds(string[] imageIds, IS3Deleter s3Deleter, string userDataBucket)
+        public Task RemoveImagesByIds(string[] imageIds, IS3FileDeleter is3FileDeleter, string userDataBucket)
         {
-            var images = dashContext.Images.Where(x => imageIds.Contains(x.ImageId));
-
-            var s3Keys = new List<string>();
-            foreach (var image in images)
-            {
-                s3Keys.Add(image.S3Key);
-            }
-
-            var result = await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray());
-            if (!result)
-            {
-                throw new DomainException("Could not delete files from the server");
-            }
-
-            dashContext.RemoveRange(images);
+            throw new System.NotImplementedException();
         }
+
+        // public async Task RemoveImagesByIds(string[] imageIds, IS3Deleter s3Deleter, string userDataBucket)
+        // {
+        //     var images = dashContext.Images.Where(x => imageIds.Contains(x.ImageId));
+        //
+        //     var s3Keys = new List<string>();
+        //     foreach (var image in images)
+        //     {
+        //         s3Keys.Add(image.S3Key);
+        //     }
+        //
+        //     var result = await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray());
+        //     if (!result)
+        //     {
+        //         throw new DomainException("Could not delete files from the server");
+        //     }
+        //
+        //     dashContext.RemoveRange(images);
+        // }
 
         public async Task<Image[]> GetImagesByAccountId()
         {
-            var images = await dashContext.Images.Where(x => x.AccountId == accountIdTransport.AccountId).ToArrayAsync(cancellationTokenTransport.CancellationToken);
+            var images = await dashContext.Images.Where(x => x.AccountId == accountIdTransport.AccountId).ToArrayAsync(CancellationTokenTransport.CancellationToken);
             return images;
         }
 
         public async Task CommitChangesAsync()
         {
-            await dashContext.SaveChangesAsync(cancellationTokenTransport.CancellationToken);
+            await dashContext.SaveChangesAsync(CancellationTokenTransport.CancellationToken);
         }
 
         public async Task<Area> CreateAndAddNewArea(string name, string emailAddress, bool isVerified)
         {
             logger.LogInformation($"Creating new area for account: {accountIdTransport.AccountId} called {name}");
             var defaultAreaTemplate = Area.CreateNewArea(name, accountIdTransport.AccountId, emailAddress, isVerified);
-            var newArea = await dashContext.Areas.AddAsync(defaultAreaTemplate, cancellationTokenTransport.CancellationToken);
+            var newArea = await dashContext.Areas.AddAsync(defaultAreaTemplate, CancellationTokenTransport.CancellationToken);
             return newArea.Entity;
         }
 
         public async Task<List<Area>> GetAllAreasShallow()
         {
-            return await dashContext.Areas.Where(row => row.AccountId == accountIdTransport.AccountId).ToListAsync(cancellationTokenTransport.CancellationToken);
+            return await dashContext.Areas.Where(row => row.AccountId == accountIdTransport.AccountId).ToListAsync(CancellationTokenTransport.CancellationToken);
         }
 
         public async Task<Area> GetAreaById(string areaId)
@@ -139,7 +174,17 @@ namespace Palavyr.Core.Repositories
             return await dashContext
                 .Areas
                 .Where(row => row.AccountId == accountIdTransport.AccountId)
-                .SingleAsync(row => row.AreaIdentifier == areaId, cancellationTokenTransport.CancellationToken);
+                .SingleAsync(row => row.AreaIdentifier == areaId, CancellationTokenTransport.CancellationToken);
+        }
+
+        public async Task<Area> GetAreaByIdWithAttachments(string intentId)
+        {
+            return await dashContext
+                .Areas
+                .Where(x => x.AccountId == accountIdTransport.AccountId)
+                .Where(x => x.AreaIdentifier == intentId)
+                .Include(x => x.AttachmentRecords)
+                .SingleAsync(CancellationTokenTransport.CancellationToken);
         }
 
         public async Task<List<ConversationNode>> GetAreaConversationNodes(string areaId)
@@ -148,7 +193,7 @@ namespace Palavyr.Core.Repositories
                 .ConversationNodes
                 .Where(row => row.AccountId == accountIdTransport.AccountId)
                 .Where(row => row.AreaIdentifier == areaId)
-                .ToListAsync(cancellationTokenTransport.CancellationToken);
+                .ToListAsync(CancellationTokenTransport.CancellationToken);
             return conversation;
         }
 
@@ -157,7 +202,7 @@ namespace Palavyr.Core.Repositories
             logger.LogDebug($"Retrieving Conversation Node {nodeId}");
             var result = await dashContext
                 .ConversationNodes
-                .SingleOrDefaultAsync(row => row.NodeId == nodeId && row.AccountId == accountIdTransport.AccountId, cancellationTokenTransport.CancellationToken);
+                .SingleOrDefaultAsync(row => row.NodeId == nodeId && row.AccountId == accountIdTransport.AccountId, CancellationTokenTransport.CancellationToken);
             return result;
         }
 
@@ -167,7 +212,7 @@ namespace Palavyr.Core.Repositories
             var result = await dashContext
                 .ConversationNodes
                 .Where(row => nodeIds.Contains(row.NodeId))
-                .ToListAsync(cancellationTokenTransport.CancellationToken);
+                .ToListAsync(CancellationTokenTransport.CancellationToken);
             return result;
         }
 
@@ -176,21 +221,21 @@ namespace Palavyr.Core.Repositories
             await dashContext
                 .ConversationNodes
                 .AddRangeAsync(newConversation);
-            await dashContext.SaveChangesAsync(cancellationTokenTransport.CancellationToken);
+            await dashContext.SaveChangesAsync(CancellationTokenTransport.CancellationToken);
         }
 
         public async Task<ConversationNode[]> UpdateIntroductionSequence(string introId, List<ConversationNode> update)
         {
             var currentIntroduction = dashContext.ConversationNodes.Where(x => x.AreaIdentifier == introId);
             dashContext.ConversationNodes.RemoveRange(currentIntroduction);
-            await dashContext.ConversationNodes.AddRangeAsync(update, cancellationTokenTransport.CancellationToken);
-            await dashContext.SaveChangesAsync(cancellationTokenTransport.CancellationToken);
+            await dashContext.ConversationNodes.AddRangeAsync(update, CancellationTokenTransport.CancellationToken);
+            await dashContext.SaveChangesAsync(CancellationTokenTransport.CancellationToken);
             return update.ToArray();
         }
 
         public async Task<ConversationNode[]> GetIntroductionSequence(string introId)
         {
-            var currentIntroduction = await dashContext.ConversationNodes.Where(x => x.AreaIdentifier == introId).ToArrayAsync(cancellationTokenTransport.CancellationToken);
+            var currentIntroduction = await dashContext.ConversationNodes.Where(x => x.AreaIdentifier == introId).ToArrayAsync(CancellationTokenTransport.CancellationToken);
             return currentIntroduction;
         }
 
@@ -204,10 +249,10 @@ namespace Palavyr.Core.Repositories
                 .SingleOrDefaultAsync();
 
             RemoveAreaNodes(areaId);
-            await dashContext.SaveChangesAsync(cancellationTokenTransport.CancellationToken);
+            await dashContext.SaveChangesAsync(CancellationTokenTransport.CancellationToken);
 
             area.ConversationNodes.AddRange(convoUpdate);
-            await dashContext.SaveChangesAsync(cancellationTokenTransport.CancellationToken);
+            await dashContext.SaveChangesAsync(CancellationTokenTransport.CancellationToken);
             return convoUpdate;
         }
 
@@ -218,7 +263,7 @@ namespace Palavyr.Core.Repositories
                 .Where(row => row.AccountId == accountIdTransport.AccountId)
                 .Where(row => row.AreaIdentifier == areaId)
                 .Include(p => p.ConversationNodes)
-                .SingleOrDefaultAsync(cancellationTokenTransport.CancellationToken);
+                .SingleOrDefaultAsync(CancellationTokenTransport.CancellationToken);
             return area;
         }
 
@@ -287,12 +332,12 @@ namespace Palavyr.Core.Repositories
 
         public async Task<List<DynamicTableMeta>> GetAllDynamicTableMetas()
         {
-            return await dashContext.DynamicTableMetas.ToListAsync(cancellationTokenTransport.CancellationToken);
+            return await dashContext.DynamicTableMetas.ToListAsync(CancellationTokenTransport.CancellationToken);
         }
 
         public async Task<List<ConversationNode>> GetAllConversationNodes()
         {
-            return await dashContext.ConversationNodes.ToListAsync(cancellationTokenTransport.CancellationToken);
+            return await dashContext.ConversationNodes.ToListAsync(CancellationTokenTransport.CancellationToken);
         }
 
         public async Task<Area> GetAreaComplete(string areaId)
@@ -305,7 +350,7 @@ namespace Palavyr.Core.Repositories
                 .Include(row => row.StaticTablesMetas)
                 .ThenInclude(meta => meta.StaticTableRows)
                 .ThenInclude(row => row.Fee)
-                .SingleAsync(row => row.AreaIdentifier == areaId, cancellationTokenTransport.CancellationToken);
+                .SingleAsync(row => row.AreaIdentifier == areaId, CancellationTokenTransport.CancellationToken);
             return areaData;
         }
 
@@ -318,7 +363,7 @@ namespace Palavyr.Core.Repositories
                 .Include(row => row.DynamicTableMetas)
                 .Include(row => row.StaticTablesMetas)
                 .ThenInclude(row => row.StaticTableRows)
-                .ToListAsync(cancellationTokenTransport.CancellationToken);
+                .ToListAsync(CancellationTokenTransport.CancellationToken);
         }
 
         public async Task<List<StaticTablesMeta>> GetStaticTables(string areaId)
@@ -329,7 +374,7 @@ namespace Palavyr.Core.Repositories
                 .Where(row => row.AreaIdentifier == areaId)
                 .Include(row => row.StaticTableRows)
                 .ThenInclude(x => x.Fee)
-                .ToListAsync(cancellationTokenTransport.CancellationToken);
+                .ToListAsync(CancellationTokenTransport.CancellationToken);
             return staticTables;
         }
 
@@ -341,14 +386,14 @@ namespace Palavyr.Core.Repositories
 
         public async Task<List<Area>> GetActiveAreas()
         {
-            return await dashContext.Areas.Where(row => row.AccountId == accountIdTransport.AccountId && row.IsEnabled).ToListAsync(cancellationTokenTransport.CancellationToken);
+            return await dashContext.Areas.Where(row => row.AccountId == accountIdTransport.AccountId && row.IsEnabled).ToListAsync(CancellationTokenTransport.CancellationToken);
         }
 
         public async Task SetDefaultDynamicTable(string areaId, string tableId)
         {
             var defaultDynamicTable = new SelectOneFlat();
             var defaultTable = defaultDynamicTable.CreateTemplate(accountIdTransport.AccountId, areaId, tableId);
-            await dashContext.SelectOneFlats.AddAsync(defaultTable, cancellationTokenTransport.CancellationToken);
+            await dashContext.SelectOneFlats.AddAsync(defaultTable, CancellationTokenTransport.CancellationToken);
         }
 
         public async Task RemoveStaticTables(List<StaticTablesMeta> staticTablesMetas)

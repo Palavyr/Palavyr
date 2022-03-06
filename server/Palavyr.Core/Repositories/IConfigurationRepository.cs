@@ -9,11 +9,16 @@ namespace Palavyr.Core.Repositories
     {
         Task CommitChangesAsync();
 
+        Task<AttachmentLinkRecord> GetAttachmentRecord(string fileId);
+        Task<AttachmentLinkRecord> CreateAttachmentLinkRecord(AttachmentLinkRecord attachmentLinkRecord);
+        Task<Logo> GetAccountLogo();
         Task<List<FileAsset>> GetManyFileAssets(string[] fileIds);
         Task<FileAsset> GetFileAsset(string fileId);
+        Task<FileAsset> AddFileAsset(FileAsset fileAsset);
         Task<Area> CreateAndAddNewArea(string name, string emailAddress, bool isVerified);
         Task<List<Area>> GetAllAreasShallow();
         Task<Area> GetAreaById(string areaId);
+        Task<Area> GetAreaByIdWithAttachments(string intentId);
         Task<ConversationNode> GetConversationNodeById(string nodeId);
         Task<List<ConversationNode>> GetConversationNodeByIds(List<string> nodeIds);
 
@@ -41,7 +46,7 @@ namespace Palavyr.Core.Repositories
         Task<Image> GetImageById(string imageId);
         Task<Image[]> GetImagesByIds(string[] imageIds);
         Task<ConversationNode[]> GetConvoNodesByImageIds(string[] imageIds);
-        Task RemoveImagesByIds(string[] imageIds, IS3Deleter s3Deleter, string userDataBucket);
+        Task RemoveImagesByIds(string[] imageIds, IS3FileDeleter is3FileDeleter, string userDataBucket);
         Task<Image[]> GetImagesByAccountId();
 
         // maintenance methods to delete

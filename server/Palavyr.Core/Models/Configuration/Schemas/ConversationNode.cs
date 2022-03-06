@@ -10,7 +10,7 @@ using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class ConversationNode : IRecord
+    public class ConversationNode : IRecord, IEntity
     {
         [Key]
         public int? Id { get; set; }

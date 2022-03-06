@@ -9,21 +9,21 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class SaveSingleAttachmentHandler : IRequestHandler<SaveSingleAttachmentRequest, SaveSingleAttachmentResponse>
     {
-        private readonly IAttachmentSaver attachmentSaver;
+        private readonly IAttachmentAssetSaver attachmentAssetSaver;
         private readonly IAttachmentRetriever attachmentRetriever;
 
         public SaveSingleAttachmentHandler(
-            IAttachmentSaver attachmentSaver,
+            IAttachmentAssetSaver attachmentAssetSaver,
             IAttachmentRetriever attachmentRetriever)
         {
-            this.attachmentSaver = attachmentSaver;
+            this.attachmentAssetSaver = attachmentAssetSaver;
             this.attachmentRetriever = attachmentRetriever;
         }
 
         public async Task<SaveSingleAttachmentResponse> Handle(SaveSingleAttachmentRequest request, CancellationToken cancellationToken)
         {
-            await attachmentSaver.SaveAttachment(request.IntentId, request.Attachment);
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(request.IntentId, cancellationToken);
+            await attachmentAssetSaver.SaveFile(request.IntentId, request.Attachment);
+            var attachmentFileLinks = await attachmentRetriever.GetAttachmentLinksForIntent(request.IntentId);
             return new SaveSingleAttachmentResponse(attachmentFileLinks);
         }
     }

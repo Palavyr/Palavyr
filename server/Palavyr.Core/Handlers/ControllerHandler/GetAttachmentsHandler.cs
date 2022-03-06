@@ -17,7 +17,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetAttachmentsResponse> Handle(GetAttachmentsRequest request, CancellationToken cancellationToken)
         {
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(request.IntentId, cancellationToken);
+            var attachmentFileLinks = await attachmentRetriever.GetAttachmentLinksForIntent(request.IntentId);
             return new GetAttachmentsResponse(attachmentFileLinks);
         }
     }

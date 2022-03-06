@@ -35,18 +35,18 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
             public async Task DownloadMetasLookCorrect()
             {
                 var retriever = Container.GetService<IAttachmentRetriever>();
-                var downloadRequests = new List<S3SDownloadRequestMeta>();
+                var downloadRequests = new List<CloudFileDownloadRequest>();
                 foreach (var meta in s3Metas)
                 {
                     downloadRequests.Add(
-                        new S3SDownloadRequestMeta()
+                        new CloudFileDownloadRequest()
                         {
                             FileNameWithExtension = meta.SafeName + ".pdf",
-                            S3Key = meta.Key
+                            LocationKey = meta.Key
                         });
                 }
 
-                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.DefaultArea, downloadRequests, default);
+                var result = await retriever.DownloadForAttachmentToEmail(IntegrationConstants.DefaultArea, downloadRequests, default);
 
                 // assert
                 result.Length.ShouldBe(5);
@@ -74,7 +74,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 
             public override async Task DisposeAsync()
             {
-                var s3Deleter = Container.GetService<IS3Deleter>();
+                var s3Deleter = Container.GetService<IS3FileDeleter>();
                 foreach (var s3Meta in s3Metas)
                 {
                     await s3Deleter.DeleteObjectFromS3Async(s3Meta.Bucket, s3Meta.Key);
@@ -104,7 +104,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
             public async Task NoAttachmentsAreReturned()
             {
                 var retriever = Container.GetService<IAttachmentRetriever>();
-                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.DefaultArea, new List<S3SDownloadRequestMeta>(), default);
+                var result = await retriever.DownloadForAttachmentToEmail(IntegrationConstants.DefaultArea, new List<CloudFileDownloadRequest>(), default);
 
                 result.Length.ShouldBe(0);
             }
@@ -128,7 +128,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 
             public override async Task DisposeAsync()
             {
-                var s3Deleter = Container.GetService<IS3Deleter>();
+                var s3Deleter = Container.GetService<IS3FileDeleter>();
                 foreach (var s3Meta in s3Metas)
                 {
                     await s3Deleter.DeleteObjectFromS3Async(s3Meta.Bucket, s3Meta.Key);

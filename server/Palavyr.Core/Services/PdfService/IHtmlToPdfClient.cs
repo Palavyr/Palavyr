@@ -6,6 +6,6 @@ namespace Palavyr.Core.Services.PdfService
 {
     public interface IHtmlToPdfClient
     {
-        Task<PdfServerResponse> GeneratePdfFromHtml(string htmlString, string bucket, string s3Key, string identifier, Paper paperOptions);
+        Task<PdfServerResponse> GeneratePdfFromHtml(string htmlString, string bucket, string locationKey, string identifier, Paper paperOptions);
     }
 }

@@ -10,14 +10,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class SaveMultipleAttachmentsHandler : IRequestHandler<SaveMultipleAttachmentsRequest, SaveMultipleAttachmentsResponse>
     {
-        private readonly IAttachmentSaver attachmentSaver;
+        private readonly IAttachmentAssetSaver attachmentAssetSaver;
         private readonly IAttachmentRetriever attachmentRetriever;
 
         public SaveMultipleAttachmentsHandler(
-            IAttachmentSaver attachmentSaver,
+            IAttachmentAssetSaver attachmentAssetSaver,
             IAttachmentRetriever attachmentRetriever)
         {
-            this.attachmentSaver = attachmentSaver;
+            this.attachmentAssetSaver = attachmentAssetSaver;
             this.attachmentRetriever = attachmentRetriever;
         }
 
@@ -25,10 +25,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             foreach (var attachmentFile in request.Attachments)
             {
-                await attachmentSaver.SaveAttachment(request.IntentId, attachmentFile);
+                await attachmentAssetSaver.SaveAttachment(request.IntentId, attachmentFile);
             }
 
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(request.IntentId, cancellationToken);
+            var attachmentFileLinks = await attachmentRetriever.GetAttachmentLinksForIntent(request.IntentId, cancellationToken);
             return new SaveMultipleAttachmentsResponse(attachmentFileLinks);
         }
     }

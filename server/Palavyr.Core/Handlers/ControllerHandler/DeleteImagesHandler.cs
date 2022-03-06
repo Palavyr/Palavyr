@@ -5,19 +5,19 @@ using Microsoft.AspNetCore.Http;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.ImageServices;
+using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class DeleteImagesHandler : IRequestHandler<DeleteImagesRequest, DeleteImagesResponse>
     {
-        private readonly IImageRemover imageRemover;
+        private readonly IFileAssetDeleter fileAssetDeleter;
         private readonly GuidFinder guidFinder;
         private readonly IHttpContextAccessor accessor;
 
-        public DeleteImagesHandler(IImageRemover imageRemover, GuidFinder guidFinder, IHttpContextAccessor accessor)
+        public DeleteImagesHandler(IFileAssetDeleter fileAssetDeleter, GuidFinder guidFinder, IHttpContextAccessor accessor)
         {
-            this.imageRemover = imageRemover;
+            this.fileAssetDeleter = fileAssetDeleter;
             this.guidFinder = guidFinder;
             this.accessor = accessor;
         }
@@ -38,7 +38,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 guidFinder.FindFirstGuidSuffix(id);
             }
 
-            var fileLinks = await imageRemover.RemoveImages(request.ImageIds, cancellationToken);
+            var fileLinks = await fileAssetDeleter.RemoveFiles(request.ImageIds, cancellationToken);
             return new DeleteImagesResponse(fileLinks);
         }
     }

@@ -12,23 +12,22 @@ using Palavyr.Core.Services.TemporaryPaths;
 
 namespace Palavyr.Core.Services.AmazonServices.S3Service
 {
-    public interface IS3Retriever
+    public interface IS3Downloader
     {
-        Task<bool> GetLatestDatabaseBackup(string bucket, string s3FileKey, string saveToPath);
-        Task<IHaveBeenDownloadedFromS3[]?> DownloadObjectsFromS3(string bucket, List<S3SDownloadRequestMeta> metas, CancellationToken cancellationToken);
+        Task<IHaveBeenDownloadedFromCloudToLocal[]?> DownloadObjectsFromS3(string? bucket, List<CloudFileDownloadRequest> metas, CancellationToken cancellationToken);
         Task<bool> CheckIfFileExists(string bucket, string key);
     }
 
-    public class S3Retriever : IS3Retriever
+    public class S3Downloader : IS3Downloader
     {
         private readonly ITemporaryPath temporaryPath;
         private readonly IAmazonS3 s3Client;
-        private readonly ILogger<IS3Retriever> logger;
+        private readonly ILogger<IS3Downloader> logger;
 
-        public S3Retriever(
+        public S3Downloader(
             ITemporaryPath temporaryPath,
             IAmazonS3 s3Client,
-            ILogger<IS3Retriever> logger
+            ILogger<IS3Downloader> logger
         )
         {
             this.temporaryPath = temporaryPath;
@@ -36,7 +35,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
             this.logger = logger;
         }
 
-        public async Task<IHaveBeenDownloadedFromS3[]?> DownloadObjectsFromS3(string bucket, List<S3SDownloadRequestMeta> metas, CancellationToken cancellationToken)
+        public async Task<IHaveBeenDownloadedFromCloudToLocal[]?> DownloadObjectsFromS3(string? bucket, List<CloudFileDownloadRequest> metas, CancellationToken cancellationToken)
         {
             var areComplete = new List<Task<GetObjectResponse>>();
             foreach (var meta in metas)
@@ -44,7 +43,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
                 var objectRequest = new GetObjectRequest()
                 {
                     BucketName = bucket,
-                    Key = meta.S3Key
+                    Key = meta.LocationKey
                 };
                 areComplete.Add(s3Client.GetObjectAsync(objectRequest));
             }
@@ -63,7 +62,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
             try
             {
                 var writesAreComplete = new List<Task>();
-                var localTempPaths = new List<IHaveBeenDownloadedFromS3>();
+                var localTempPaths = new List<IHaveBeenDownloadedFromCloudToLocal>();
 
                 for (var i = 0; i < responses.Length; i++)
                 {
@@ -97,7 +96,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
                         BucketName = bucket,
                         Key = key
                     });
-                
+
                 return true;
             }
             catch (AmazonS3Exception ex)
@@ -108,34 +107,6 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
                 }
 
                 throw;
-            }
-        }
-
-
-        public async Task<bool> GetLatestDatabaseBackup(string bucket, string s3FileKey, string saveToPath)
-        {
-            if (s3FileKey.Contains(@"\")) throw new Exception($"S3 file paths cannot have backslash: {s3FileKey}");
-
-            // s3FileKey should be full s3 path
-            var getRequest = new GetObjectRequest()
-            {
-                BucketName = bucket,
-                Key = s3FileKey,
-            };
-
-            try
-            {
-                var response = await s3Client.GetObjectAsync(getRequest);
-                await response.WriteResponseStreamToFileAsync(saveToPath, false, CancellationToken.None);
-                logger.LogInformation($"Response: {response}");
-                logger.LogInformation($"Retrieved {s3FileKey} from {bucket}");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                logger.LogInformation("Failed to write snapshot files: " + ex.Message);
-                Console.WriteLine(ex);
-                return false;
             }
         }
     }

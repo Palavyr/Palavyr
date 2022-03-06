@@ -21,17 +21,17 @@ namespace Palavyr.Core.Services.LogoServices
         private readonly IConfiguration configuration;
         private readonly IAccountRepository accountRepository;
 
-        private readonly IS3Deleter s3Deleter;
+        private readonly IS3FileDeleter is3FileDeleter;
 
         public LogoDeleter(
             IConfiguration configuration,
             IAccountRepository accountRepository,
-            IS3Deleter s3Deleter
+            IS3FileDeleter is3FileDeleter
         )
         {
             this.configuration = configuration;
             this.accountRepository = accountRepository;
-            this.s3Deleter = s3Deleter;
+            this.is3FileDeleter = is3FileDeleter;
         }
 
         public async Task DeleteLogo()
@@ -42,7 +42,7 @@ namespace Palavyr.Core.Services.LogoServices
             if (!string.IsNullOrWhiteSpace(s3Key))
             {
                 var userDataBucket = configuration.GetUserDataBucket();
-                var success = await s3Deleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
+                var success = await is3FileDeleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
                 if (!success)
                 {
                     throw new AmazonS3Exception("Unable to delete logo file from S3");

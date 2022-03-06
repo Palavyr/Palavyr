@@ -6,26 +6,19 @@ namespace Palavyr.Core.Services.PdfService.PdfSections
 {
     public static class TablesSection
     {
-        public static string GetEstimateTables(List<Table> staticTables, List<Table> dynamicTables)
+        public static string GetEstimateTables(List<Table> responseTables)
         {
-            return CreateEstimateTables(staticTables, dynamicTables);
+            return CreateEstimateTables(responseTables);
         }
 
-        private static string CreateEstimateTables(List<Table> staticTables, List<Table> dynamicTables)
+
+        private static string CreateEstimateTables(List<Table> responseTables)
         {
             var builder = new StringBuilder();
 
             builder.Append($@"<section id='TABLES' style='padding-left: .5in; padding-right: .5in;'>");
 
-            foreach (var table in dynamicTables)
-            {
-                if (table.Length > 0)
-                {
-                    builder.Append(table.GenerateTableHtml());
-                }
-            }
-            
-            foreach (var table in staticTables)
+            foreach (var table in responseTables)
             {
                 if (table.Length > 0)
                 {

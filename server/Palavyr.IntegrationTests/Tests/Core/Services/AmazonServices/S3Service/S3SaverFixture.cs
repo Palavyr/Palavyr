@@ -19,10 +19,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
 {
     public class S3SaverFixture : InMemoryIntegrationFixture, IAsyncLifetime
     {
-        private IS3Deleter s3Deleter;
+        private IS3FileDeleter is3FileDeleter;
         private IS3KeyResolver s3KeyResolver;
-        private IS3Retriever s3Retriever;
-        private IS3Saver s3Saver;
+        private IS3Downloader is3Downloader;
+        private IS3FileUploader is3FileUploader;
         private string testUserDataBucket;
         private string tempFile;
         private string s3Key;
@@ -42,8 +42,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
             var fileName = A.RandomName();
             s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
 
-            await s3Saver.StreamObjectToS3(testUserDataBucket, formFile, s3Key);
-            var result = await s3Retriever.CheckIfFileExists(testUserDataBucket, s3Key);
+            await is3FileUploader.StreamObjectToS3(testUserDataBucket, formFile, s3Key);
+            var result = await is3Downloader.CheckIfFileExists(testUserDataBucket, s3Key);
             result.ShouldBe(true);
         }
 
@@ -58,9 +58,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
             var fileName = A.RandomName();
             s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
 
-            Should.Throw<AmazonS3Exception>(async () => await s3Saver.StreamObjectToS3("Palavyr-does-not-exist", formFile, s3Key));
+            Should.Throw<AmazonS3Exception>(async () => await is3FileUploader.StreamObjectToS3("Palavyr-does-not-exist", formFile, s3Key));
 
-            var result = await s3Retriever.CheckIfFileExists(testUserDataBucket, s3Key);
+            var result = await is3Downloader.CheckIfFileExists(testUserDataBucket, s3Key);
             result.ShouldBe(false);
         }
 
@@ -72,10 +72,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
 
         public Task InitializeAsync()
         {
-            s3Saver = Container.GetService<IS3Saver>();
-            s3Retriever = Container.GetService<IS3Retriever>();
+            is3FileUploader = Container.GetService<IS3FileUploader>();
+            is3Downloader = Container.GetService<IS3Downloader>();
             s3KeyResolver = Container.GetService<IS3KeyResolver>();
-            s3Deleter = Container.GetService<IS3Deleter>();
+            is3FileDeleter = Container.GetService<IS3FileDeleter>();
             var config = Container.GetService<IConfiguration>();
             testUserDataBucket = config.GetUserDataBucket();
             return Task.CompletedTask;
@@ -83,7 +83,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
 
         public async Task DisposeAsync()
         {
-            await s3Deleter.DeleteObjectFromS3Async(testUserDataBucket, s3Key);
+            await is3FileDeleter.DeleteObjectFromS3Async(testUserDataBucket, s3Key);
             File.Delete(tempFile);
         }
     }

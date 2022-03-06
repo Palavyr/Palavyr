@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.AmazonServices;
-using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

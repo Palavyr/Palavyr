@@ -17,10 +17,10 @@ namespace Test.Common
 
     public class CreateS3TempFile : ICreateS3TempFile
     {
-        private readonly IS3Saver saver;
+        private readonly IS3FileUploader saver;
         private readonly IConfiguration configuration;
 
-        public CreateS3TempFile(IS3Saver saver, IConfiguration configuration)
+        public CreateS3TempFile(IS3FileUploader saver, IConfiguration configuration)
         {
             this.saver = saver;
             this.configuration = configuration;

@@ -19,21 +19,21 @@ namespace Palavyr.Core.Services.Deletion
     public class AreaDeleter : IAreaDeleter
     {
         private readonly DashContext dashContext;
-        private readonly IS3Deleter s3Deleter;
+        private readonly IS3FileDeleter is3FileDeleter;
         private readonly IConfiguration configuration;
         private readonly ILogger<IAreaDeleter> logger;
         private readonly IAccountIdTransport accountIdTransport;
 
         public AreaDeleter(
             DashContext dashContext,
-            IS3Deleter s3Deleter,
+            IS3FileDeleter is3FileDeleter,
             IConfiguration configuration,
             ILogger<IAreaDeleter> logger, 
             IAccountIdTransport accountIdTransport
         )
         {
             this.dashContext = dashContext;
-            this.s3Deleter = s3Deleter;
+            this.is3FileDeleter = is3FileDeleter;
             this.configuration = configuration;
             this.logger = logger;
             this.accountIdTransport = accountIdTransport;
@@ -62,7 +62,7 @@ namespace Palavyr.Core.Services.Deletion
                 .Where(x => x.AreaIdentifier == areaId && x.AccountId == accountId)
                 .Select(x => x.S3Key)
                 .ToArrayAsync(cancellationToken);
-            await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3KeysToDelete);
+            await is3FileDeleter.DeleteObjectsFromS3Async(userDataBucket, s3KeysToDelete);
         }
 
         private void DeleteDatabaseEntries(string accountId, string areaId)

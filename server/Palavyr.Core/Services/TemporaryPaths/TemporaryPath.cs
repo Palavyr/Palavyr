@@ -8,8 +8,8 @@ namespace Palavyr.Core.Services.TemporaryPaths
 {
     public interface ITemporaryPath
     {
-        SafeFile CreateLocalTempSafeFile(ExtensionTypes extension = ExtensionTypes.Pdf);
-        SafeFile CreateLocalTempSafeFile(string fileStem, ExtensionTypes extension = ExtensionTypes.Pdf);
+        SafeFile CreateLocalTempSafeFile(string extension = ExtensionTypes.Pdf);
+        SafeFile CreateLocalTempSafeFile(string fileStem, string extension = ExtensionTypes.Pdf);
         S3DownloadFile CreateLocalS3SavePath(string fileName);
         void DeleteLocalTempFile(string fileName);
     }
@@ -25,7 +25,7 @@ namespace Palavyr.Core.Services.TemporaryPaths
             this.safeFileNameCreator = safeFileNameCreator;
         }
 
-        public SafeFile CreateLocalTempSafeFile(ExtensionTypes extension = ExtensionTypes.Pdf)
+        public SafeFile CreateLocalTempSafeFile(string extension = ExtensionTypes.Pdf)
         {
             var safeFileName = safeFileNameCreator.CreateSafeFileName(extension);
             var isolatedStorageDirectory = IsolatedStorageFile.GetMachineStoreForApplication().GetStorageDirectory();
@@ -38,7 +38,7 @@ namespace Palavyr.Core.Services.TemporaryPaths
             };
         }
 
-        public SafeFile CreateLocalTempSafeFile(string fileNameStem, ExtensionTypes extension = ExtensionTypes.Pdf)
+        public SafeFile CreateLocalTempSafeFile(string fileNameStem, string extension = ExtensionTypes.Pdf)
         {
             if (Path.GetExtension(fileNameStem) != null)
             {

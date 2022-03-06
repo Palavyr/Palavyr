@@ -17,19 +17,19 @@ namespace Palavyr.Core.Services.EnquiryServices
 
     public class EnquiryDeleter : IEnquiryDeleter
     {
-        private readonly IS3Deleter s3Deleter;
+        private readonly IS3FileDeleter is3FileDeleter;
         private readonly IS3KeyResolver s3KeyResolver;
         private readonly IConfiguration configuration;
         private readonly ConvoContext convoContext;
 
         public EnquiryDeleter(
-            IS3Deleter s3Deleter,
+            IS3FileDeleter is3FileDeleter,
             IS3KeyResolver s3KeyResolver,
             IConfiguration configuration,
             ConvoContext convoContext
         )
         {
-            this.s3Deleter = s3Deleter;
+            this.is3FileDeleter = is3FileDeleter;
             this.s3KeyResolver = s3KeyResolver;
             this.configuration = configuration;
             this.convoContext = convoContext;
@@ -57,7 +57,7 @@ namespace Palavyr.Core.Services.EnquiryServices
             // Delete from S3
             var s3Key = s3KeyResolver.ResolveResponsePdfKey(fileReference);
             var userDataBucket = configuration.GetUserDataBucket();
-            var success = await s3Deleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
+            var success = await is3FileDeleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
             if (!success)
             {
                 throw new Exception("Failed to delete s3 file.");

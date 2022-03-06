@@ -1,38 +1,43 @@
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.Core.Models.Resources.Responses
 {
     public interface IResponseCustomizer
     {
-        string Customize(string html, EmailRequest request, Account account);
-        string CustomizeWithClientsName(string html, EmailRequest request);
-        string CustomizeCompany(string html, Account account);
+        Task<string> Customize(string html, EmailRequest request);
     }
 
     public class ResponseCustomizer : IResponseCustomizer
     {
+        private readonly IConfigurationEntityStore<Account> accountStore;
         private readonly ILinkCreator linkCreator;
-        private readonly IConfiguration configuration;
+        private readonly IConfigurationEntityStore<Logo> logoStore;
 
-        public ResponseCustomizer(ILinkCreator linkCreator, IConfiguration configuration)
+        public ResponseCustomizer(
+            IConfigurationEntityStore<Account> accountStore,
+            ILinkCreator linkCreator,
+            IConfigurationEntityStore<Logo> logoStore
+        )
         {
+            this.accountStore = accountStore;
             this.linkCreator = linkCreator;
-            this.configuration = configuration;
+            this.logoStore = logoStore;
         }
 
-        public string Customize(string html, EmailRequest request, Account account)
+        public async Task<string> Customize(string html, EmailRequest request)
         {
             html = CustomizeWithClientsName(html, request);
-            html = CustomizeCompany(html, account);
-            html = CustomizeLogo(html, account);
+            html = await CustomizeCompany(html);
+            html = await CustomizeLogo(html);
             return html;
         }
 
-        public string CustomizeWithClientsName(string html, EmailRequest request)
+        private string CustomizeWithClientsName(string html, EmailRequest request)
         {
             var nameElement = request.Name;
             var customName = "";
@@ -45,23 +50,27 @@ namespace Palavyr.Core.Models.Resources.Responses
             return html;
         }
 
-        public string CustomizeCompany(string html, Account account)
+
+        private async Task<string> CustomizeCompany(string html)
         {
+            var account = await accountStore.Get(accountStore.AccountId, x => x.AccountId);
             var companyName = string.IsNullOrWhiteSpace(account.CompanyName) ? "" : account.CompanyName;
             var updatedHtml = html.Replace(ResponseVariableDefinition.CompanyVariablePattern, companyName);
             return updatedHtml;
         }
 
-        private string CustomizeLogo(string html, Account account)
+        private async Task<string> CustomizeLogo(string html)
         {
-            if (string.IsNullOrWhiteSpace(account.AccountLogoUri))
+            var logo = await logoStore.Get(accountStore.AccountId, x => x.AccountId);
+            var link = await linkCreator.CreateLink(logo.AccountLogoFileId);
+
+
+            if (string.IsNullOrWhiteSpace(link))
             {
                 return html.Replace(ResponseVariableDefinition.LogoUriVariablePattern, string.Empty);
             }
             else
             {
-                var bucket = configuration.GetUserDataBucket();
-                var link = linkCreator.GenericCreatePreSignedUrl(account.AccountLogoUri, bucket);
                 var imgTag = $"<img src=\"{link}\" alt=\"Logo\" />";
                 var updatedHtml = html.Replace(ResponseVariableDefinition.LogoUriVariablePattern, imgTag);
                 return updatedHtml;

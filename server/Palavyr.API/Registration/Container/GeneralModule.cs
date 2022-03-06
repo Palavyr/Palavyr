@@ -27,7 +27,7 @@ using Palavyr.Core.Services.EmailService.EmailResponse;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.EnquiryServices;
-using Palavyr.Core.Services.ImageServices;
+using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Services.Localization;
 using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Services.PdfService;
@@ -61,7 +61,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<CategoryNestedThresholdCompiler>().AsSelf();
 
             builder.RegisterType<PreviewResponseGenerator>().As<IPreviewResponseGenerator>();
-            builder.RegisterType<PdfResponseGenerator>().As<IPdfResponseGenerator>();
+            builder.RegisterType<ResponsePdfGenerator>().As<IResponsePdfGenerator>();
             builder.RegisterType<StaticTableCompiler>().As<IStaticTableCompiler>();
             builder.RegisterType<DynamicTableCompilerRetriever>().As<IDynamicTableCompilerRetriever>();
 
@@ -74,9 +74,9 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<EmailVerificationService>().As<IEmailVerificationService>();
             builder.RegisterType<SesEmail>().As<ISesEmail>();
             builder.RegisterType<RequestEmailVerification>().As<IRequestEmailVerification>();
-            builder.RegisterType<PdfResponseGenerator>().As<IPdfResponseGenerator>();
-            builder.RegisterType<S3Saver>().As<IS3Saver>();
-            builder.RegisterType<S3Deleter>().As<IS3Deleter>();
+            builder.RegisterType<ResponsePdfGenerator>().As<IResponsePdfGenerator>();
+            builder.RegisterType<Is3FileUploader>().As<IS3FileUploader>();
+            builder.RegisterType<Is3FileDeleter>().As<IS3FileDeleter>();
 
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
             builder.RegisterType<WidgetStatusChecker>().As<IWidgetStatusChecker>();
@@ -94,13 +94,13 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<TemporaryPath>().As<ITemporaryPath>();
             builder.RegisterType<AttachmentRetriever>().As<IAttachmentRetriever>();
             builder.RegisterType<AttachmentDeleter>().As<IAttachmentDeleter>();
-            builder.RegisterType<LogoSaver>().As<ILogoSaver>();
+            builder.RegisterType<LogoAssetSaver>().As<ILogoAssetSaver>();
             builder.RegisterType<LogoDeleter>().As<ILogoDeleter>();
             builder.RegisterType<LogoRetriever>().As<ILogoRetriever>();
             builder.RegisterType<CriticalResponses>().As<ICriticalResponses>();
             builder.RegisterType<CompileSenderDetails>().As<ICompileSenderDetails>();
             builder.RegisterType<ResponseEmailSender>().As<IResponseEmailSender>();
-            builder.RegisterType<S3Retriever>().As<IS3Retriever>();
+            builder.RegisterType<Is3Downloader>().As<IS3Downloader>();
             builder.RegisterType<AreaDeleter>().As<IAreaDeleter>();
             builder.RegisterType<EnquiryDeleter>().As<IEnquiryDeleter>();
             builder.RegisterType<ConversationRecordRecordRetriever>().As<IConversationRecordRetriever>();
@@ -109,8 +109,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<SafeFileNameCreator>().As<ISafeFileNameCreator>();
             builder.RegisterType<LocalIo>().As<ILocalIo>();
             builder.RegisterType<PdfServerClient>().As<IPdfServerClient>();
-            builder.RegisterType<ImageSaver>().As<IImageSaver>();
-            builder.RegisterType<ImageRemover>().As<IImageRemover>();
+            builder.RegisterType<NodeFileAssetSaver>().As<INodeFileAssetSaver>();
+            builder.RegisterType<FileAssetDeleter>().As<IFileAssetDeleter>();
             builder.RegisterType<NewAccountUtils>().As<INewAccountUtils>();
             builder.RegisterType<GuidUtils>().As<IGuidUtils>();
             builder.RegisterType<PlanTypeRetriever>().As<IPlanTypeRetriever>();
@@ -148,8 +148,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<AwsCloudFileSaver>().As<ICloudFileSaver>();
             builder.RegisterDecorator<CloudSaverWritesToDatabaseDecorator, ICloudFileSaver>();
 
-            builder.RegisterType<AttachmentSaver>().As<IAttachmentSaver>();
-            builder.RegisterDecorator<AttachmentSaverDecorator, IAttachmentSaver>();
+            builder.RegisterType<AttachmentAssetSaver>().As<IAttachmentAssetSaver>();
+            builder.RegisterDecorator<AttachmentSaverDecorator, IAttachmentAssetSaver>();
 
 
             // Experimental

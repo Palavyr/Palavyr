@@ -6,14 +6,14 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Handlers;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.ImageServices;
+using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.API.Controllers.Conversation.Images
 {
     public class DeleteImagesController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        private readonly IImageRemover imageRemover;
+        private readonly IFileAssetDeleter fileAssetDeleter;
         private readonly GuidFinder guidFinder;
         private const string Route = "images";
 

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class Area
+    public class Area : IEntity, IHaveAccountId
     {
-        [Key] public int? Id { get; set; }
+        [Key]
+        public int? Id { get; set; }
+
         public string AreaIdentifier { get; set; }
         public string AreaName { get; set; }
         public string AreaDisplayTitle { get; set; }
@@ -22,6 +25,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public List<DynamicTableMeta> DynamicTableMetas { get; set; } = new List<DynamicTableMeta>();
         public string AreaSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
+        public List<AttachmentLinkRecord> AttachmentRecords { get; set; }
 
         public bool UseAreaFallbackEmail { get; set; }
         public string FallbackSubject { get; set; } = null!;
@@ -29,15 +33,17 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool SendAttachmentsOnFallback { get; set; }
         public bool SendPdfResponse { get; set; } = true;
         public bool IncludeDynamicTableTotals { get; set; }
-        
+
         [DefaultValue("Thank you for reaching out!")]
         public string Subject { get; set; } = null!;
 
-        [NotMapped] public bool AwaitingVerification { get; set; }
+        [NotMapped]
+        public bool AwaitingVerification { get; set; }
 
         public Area()
         {
         }
+
         public static Area CreateNewArea(string areaName, string accountId, string emailAddress, bool emailIsVerified)
         {
             var areaId = Guid.NewGuid().ToString();

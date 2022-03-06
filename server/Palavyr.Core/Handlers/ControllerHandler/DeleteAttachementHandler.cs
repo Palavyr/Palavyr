@@ -21,11 +21,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<DeleteAttachmentResponse> Handle(DeleteAttachmentRequest request, CancellationToken cancellationToken)
         {
-            await attachmentDeleter.DeleteAttachment(request.FileId, cancellationToken);
+            await attachmentDeleter.DeleteAttachment(request.FileId, request.IntentId);
 
             // this is currently pretty slow -- we should be caching the presigned URLs and only refreshing them once they are invalid.
             // this will always refresh the pre-signed URLs (not a huge problem, but still).
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(request.IntentId, cancellationToken);
+            var attachmentFileLinks = await attachmentRetriever.GetAttachmentLinksForIntent(request.IntentId);
             return new DeleteAttachmentResponse(attachmentFileLinks);
         }
     }

@@ -6,6 +6,7 @@ using Amazon.S3;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Services.AmazonServices
@@ -14,31 +15,37 @@ namespace Palavyr.Core.Services.AmazonServices
     {
         Task<string> CreateLink(string fileAssetId);
         Task<string[]> CreateManyLinks(string[] fileAssetIds);
+        Task<string[]> CreateManyLinks(IEnumerable<string> fileAssetIds);
     }
 
     public class AwsS3LinkCreator : ILinkCreator
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly IS3PreSignedUrlCreator preSignedUrlCreator;
+        private readonly ILinkCreator linkCreator;
+        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
 
-        public AwsS3LinkCreator(IConfigurationRepository configurationRepository, IS3PreSignedUrlCreator preSignedUrlCreator)
+
+        public AwsS3LinkCreator(ILinkCreator linkCreator, IConfigurationEntityStore<FileAsset> fileAssetStore)
         {
-            this.configurationRepository = configurationRepository;
-            this.preSignedUrlCreator = preSignedUrlCreator;
+            this.linkCreator = linkCreator;
+            this.fileAssetStore = fileAssetStore;
         }
 
         public async Task<string> CreateLink(string fileAssetId)
         {
-            var fileAsset = await configurationRepository.GetFileAsset(fileAssetId);
-            var link = preSignedUrlCreator.GenericCreatePreSignedUrl(fileAsset.LocationKey);
+            var link = await linkCreator.CreateLink(fileAssetId);
             return link;
         }
 
         public async Task<string[]> CreateManyLinks(string[] fileAssetIds)
         {
-            var fileAssets = await configurationRepository.GetManyFileAssets(fileAssetIds);
-            var links = fileAssets.Select(asset => preSignedUrlCreator.GenericCreatePreSignedUrl(asset.LocationKey));
-            return links.ToArray();
+            var tasks = fileAssetIds.Select(assetId => linkCreator.CreateLink(assetId));
+            var links = await Task.WhenAll(tasks);
+            return links;
+        }
+
+        public async Task<string[]> CreateManyLinks(IEnumerable<string> fileAssetIds)
+        {
+            return await CreateManyLinks(fileAssetIds.ToArray());
         }
     }
 

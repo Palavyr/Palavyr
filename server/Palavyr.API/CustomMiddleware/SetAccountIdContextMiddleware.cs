@@ -1,37 +1,41 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Palavyr.API.CustomMiddleware.MiddlewareHandlers;
 using Palavyr.Core.Data;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Repositories;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.CustomMiddleware
 {
-    public class SetHeadersMiddleware
+    public class SetAccountIdContextMiddleware
     {
         private readonly RequestDelegate next;
-        private ILogger<SetHeadersMiddleware> logger;
+        private ILogger<SetAccountIdContextMiddleware> logger;
 
         private Dictionary<string, string> ResponseHeaders = new Dictionary<string, string>
         {
             { "Access-Control-Allow-Origin", "*" }
         };
 
-        public SetHeadersMiddleware(RequestDelegate next, ILogger<SetHeadersMiddleware> logger)
+        public SetAccountIdContextMiddleware(RequestDelegate next, ILogger<SetAccountIdContextMiddleware> logger)
         {
             this.next = next;
             this.logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext, IMediator mediator, IAccountRepository accountRepository)
+        public async Task InvokeAsync(
+            HttpContext context,
+            IWebHostEnvironment env,
+            IMediator mediator,
+            IAccountRepository accountRepository,
+            AccountsContext accountContext,
+            IUnitOfWorkContextProvider unitOfWorkContextProvider)
         {
-            
             logger.LogDebug("Settings magic string headers...");
 
             var action = context.Request.Headers[ApplicationConstants.MagicUrlStrings.Action].ToString();
@@ -63,37 +67,12 @@ namespace Palavyr.API.CustomMiddleware
                             logger.LogDebug($"Adding Header: {key} with value: {value}");
                         }
                     }
+
+                    await unitOfWorkContextProvider.CloseUnitOfWork();
                 }, context);
 
             await next(context);
             Console.WriteLine("On the way out!");
-        }
-    }
-
-
-    public class SetAccountEvent : INotification
-    {
-        public string SessionAccountId { get; }
-
-        public SetAccountEvent(string sessionAccountId)
-        {
-            SessionAccountId = sessionAccountId;
-        }
-    }
-
-    public class SetAccountHandler : INotificationHandler<SetAccountEvent>
-    {
-        private readonly IAccountIdTransport accountIdTransport;
-
-        public SetAccountHandler(IAccountIdTransport accountIdTransport)
-        {
-            this.accountIdTransport = accountIdTransport;
-        }
-
-        public async Task Handle(SetAccountEvent notification, CancellationToken cancellationToken)
-        {
-            accountIdTransport.Assign(notification.SessionAccountId);
-            await Task.CompletedTask;
         }
     }
 }

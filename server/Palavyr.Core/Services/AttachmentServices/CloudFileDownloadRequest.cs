@@ -1,8 +1,8 @@
 ﻿namespace Palavyr.Core.Services.AttachmentServices
 {
-    public class S3SDownloadRequestMeta
+    public class CloudFileDownloadRequest
     {
-        public string S3Key { get; set; }
+        public string LocationKey { get; set; }
         public string FileNameWithExtension { get; set; }
     }
 }

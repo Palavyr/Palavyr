@@ -1,30 +1,30 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetImageFileLinkHandler : IRequestHandler<GetImageFileLinkRequest, GetImageFileLinkResponse>
     {
-        private readonly IConfiguration configuration;
+        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
         private readonly ILinkCreator linkCreator;
 
         public GetImageFileLinkHandler(
-            IConfiguration configuration,
+            IConfigurationEntityStore<FileAsset> fileAssetStore,
             ILinkCreator linkCreator)
         {
-            this.configuration = configuration;
+            this.fileAssetStore = fileAssetStore;
             this.linkCreator = linkCreator;
         }
 
         public async Task<GetImageFileLinkResponse> Handle(GetImageFileLinkRequest request, CancellationToken cancellationToken)
         {
-            var previewBucket = configuration.GetUserDataBucket();
-            var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(request.S3Key, previewBucket);
-            return new GetImageFileLinkResponse(preSignedUrl);
+            var imageAsset = await fileAssetStore.Get(request.FileId, x => x.FileId);
+            var link = await linkCreator.CreateLink(imageAsset.FileId);
+            return new GetImageFileLinkResponse(link);
         }
     }
 
@@ -36,6 +36,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetImageFileLinkRequest : IRequest<GetImageFileLinkResponse>
     {
-        public string S3Key { get; set; }
+        public string FileId { get; set; }
+        // public string S3Key { get; set; }
     }
 }

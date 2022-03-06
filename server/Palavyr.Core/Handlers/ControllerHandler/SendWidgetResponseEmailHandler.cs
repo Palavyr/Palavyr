@@ -27,11 +27,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var updatedRecord = convoRecord.ApplyEmailRequest(request.EmailRequest);
             await convoRepository.UpdateConversationRecord(updatedRecord);
 
-            var resultResponse = await responseEmailSender.SendEmail(
-                request.IntentId,
-                request.EmailRequest,
-                cancellationToken
-            );
+            var resultResponse = await responseEmailSender.SendEmail(request.IntentId, request.EmailRequest);
             await convoRepository.CommitChangesAsync();
             return new SendWidgetResponseEmailResponse(resultResponse);
         }

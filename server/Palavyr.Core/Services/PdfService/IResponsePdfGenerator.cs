@@ -5,14 +5,14 @@ using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.PdfService
 {
-    public interface IPdfResponseGenerator
+    public interface IResponsePdfGenerator
     {
-        Task<PdfServerResponse> GeneratePdfResponseAsync(
+        Task<PdfServerResponse> GeneratePdfResponse(
             CriticalResponses criticalResponses,
             EmailRequest emailRequest,
             CultureInfo culture,
-            string identifier,
-            string areaId
+            string uniqueId,
+            string intentId
         );
     }
 }

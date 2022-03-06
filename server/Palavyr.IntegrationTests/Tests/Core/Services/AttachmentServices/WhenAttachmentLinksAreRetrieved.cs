@@ -34,7 +34,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
                 .Build();
 
             var retriever = Container.GetService<IAttachmentRetriever>();
-            var result = await retriever.RetrieveAttachmentLinks(IntegrationConstants.DefaultArea, default);
+            var result = await retriever.GetAttachmentLinksForIntent(IntegrationConstants.DefaultArea, default);
 
             // assert
             result.Length.ShouldBe(1);
