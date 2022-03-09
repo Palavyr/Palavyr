@@ -1,10 +1,8 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Sessions;
@@ -55,14 +53,9 @@ namespace Palavyr.Core.Services.Deletion
             }
         }
 
-        private async Task DeleteS3Data(string accountId, string areaId, CancellationToken cancellationToken)
+        private async Task DeleteS3Data(string accountId, string intentId, CancellationToken cancellationToken)
         {
-            var userDataBucket = configuration.GetUserDataBucket();
-            var s3KeysToDelete = await dashContext.FileNameMaps
-                .Where(x => x.AreaIdentifier == areaId && x.AccountId == accountId)
-                .Select(x => x.S3Key)
-                .ToArrayAsync(cancellationToken);
-            await is3FileDeleter.DeleteObjectsFromS3Async(userDataBucket, s3KeysToDelete);
+
         }
 
         private void DeleteDatabaseEntries(string accountId, string areaId)
@@ -81,12 +74,7 @@ namespace Palavyr.Core.Services.Deletion
                 dashContext.ConversationNodes.Where(
                     row =>
                         row.AreaIdentifier == areaId && row.AccountId == accountId));
-
-            dashContext.FileNameMaps.RemoveRange(
-                dashContext.FileNameMaps.Where(
-                    row =>
-                        row.AreaIdentifier == areaId && row.AccountId == accountId));
-
+            
             dashContext.StaticFees.RemoveRange(
                 dashContext.StaticFees.Where(
                     row =>

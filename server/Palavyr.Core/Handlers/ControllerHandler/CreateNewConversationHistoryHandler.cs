@@ -15,28 +15,30 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class CreateNewConversationHistoryHandler : IRequestHandler<CreateNewConversationHistoryRequest, CreateNewConversationHistoryResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly IConvoHistoryRepository convoRepository;
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
+        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
         private readonly IAccountIdTransport accountIdTransport;
         private readonly IMapToNew<ConversationNode, WidgetNodeResource> mapper;
         private readonly IEndingSequenceAttacher endingSequenceAttacher;
         private readonly ILogger<CreateNewConversationHistoryHandler> logger;
+        private readonly IConfigurationEntityStore<Area> intentStore;
 
         public CreateNewConversationHistoryHandler(
-            IConfigurationRepository configurationRepository,
-            IConvoHistoryRepository convoRepository,
+            IConfigurationEntityStore<ConversationNode> convoNodeStore,
+            IConfigurationEntityStore<ConversationRecord> convoRecordStore,
             IAccountIdTransport accountIdTransport,
             IMapToNew<ConversationNode, WidgetNodeResource> mapper,
             IEndingSequenceAttacher endingSequenceAttacher,
-            ILogger<CreateNewConversationHistoryHandler> logger
-        )
+            ILogger<CreateNewConversationHistoryHandler> logger,
+            IConfigurationEntityStore<Area> intentStore)
         {
-            this.configurationRepository = configurationRepository;
-            this.convoRepository = convoRepository;
+            this.convoNodeStore = convoNodeStore;
+            this.convoRecordStore = convoRecordStore;
             this.accountIdTransport = accountIdTransport;
             this.mapper = mapper;
             this.endingSequenceAttacher = endingSequenceAttacher;
             this.logger = logger;
+            this.intentStore = intentStore;
         }
 
         public async Task<CreateNewConversationHistoryResponse> Handle(CreateNewConversationHistoryRequest recordUpdate, CancellationToken cancellationToken)
@@ -44,7 +46,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var (intentId, name, email) = recordUpdate;
 
             logger.LogDebug("Fetching nodes...");
-            var standardNodes = await configurationRepository.GetAreaConversationNodes(intentId);
+            var standardNodes = await convoNodeStore.GetMany(intentId, s => s.AreaIdentifier);
             var completeConversation = endingSequenceAttacher.AttachEndingSequenceToNodeList(standardNodes, intentId, accountIdTransport.AccountId);
 
             logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
@@ -53,8 +55,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             
             var newConvo = NewConversation.CreateNew(widgetNodes.ToList());
 
-            var area = await configurationRepository.GetAreaById(intentId);
-            var newConversationRecord = ConversationRecord.CreateDefault(newConvo.ConversationId, accountIdTransport.AccountId, area.AreaName, intentId);
+            var intent = await intentStore.Get(intentId, s => s.AreaIdentifier);
+            var newConversationRecord = ConversationRecord.CreateDefault(newConvo.ConversationId, accountIdTransport.AccountId, intent.AreaName, intentId);
 
             if (!string.IsNullOrEmpty(recordUpdate.Email))
             {
@@ -66,8 +68,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 newConversationRecord.Name = recordUpdate.Name;
             }
 
-            await convoRepository.CreateNewConversationRecord(newConversationRecord);
-            await convoRepository.CommitChangesAsync();
+            await convoRecordStore.Create(newConversationRecord);
 
             return new CreateNewConversationHistoryResponse(newConvo);
         }

@@ -3,18 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Palavyr.Core.Mappers;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class ConversationNode : IRecord, IEntity
+    public class ConversationNode : Entity, IRecord
     {
-        [Key]
-        public int? Id { get; set; }
-
         public string? AreaIdentifier { get; set; }
         public string? AccountId { get; set; }
         public string? NodeId { get; set; }

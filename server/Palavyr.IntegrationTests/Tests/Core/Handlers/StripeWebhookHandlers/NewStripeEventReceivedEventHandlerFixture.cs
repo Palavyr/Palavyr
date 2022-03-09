@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Shouldly;
 using Test.Common.Random;
@@ -18,9 +20,11 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
         public async Task HandlesStripeEventReceivedEvent_WhenExists()
         {
             var signature = A.RandomId();
-            await AccountRepository.AddStripeEvent(A.RandomId(), signature);
+            var stripeWebhookStore = ResolveStore<StripeWebhookRecord>();
+
+            await stripeWebhookStore.AddStripeEvent(A.RandomId(), signature);
             var @event = new NewStripeEventReceivedEvent(signature);
-            var handler = new NewStripeEventReceivedEventHandler(AccountRepository);
+            var handler = new NewStripeEventReceivedEventHandler(stripeWebhookStore);
 
             var result = await handler.Handle(@event, CancellationToken);
 
@@ -32,7 +36,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
         {
             var signature = A.RandomId();
             var @event = new NewStripeEventReceivedEvent(signature);
-            var handler = new NewStripeEventReceivedEventHandler(AccountRepository);
+            var stripeWebhookStore = ResolveStore<StripeWebhookRecord>();
+            var handler = new NewStripeEventReceivedEventHandler(stripeWebhookStore);
 
             var result = await handler.Handle(@event, CancellationToken);
 

@@ -2,23 +2,35 @@
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class PasswordRequestHandler : IRequestHandler<PasswordRequestRequest, PasswordRequestResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Session> sessionStore;
+        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IRemoveStaleSessions removeStaleSessions;
         private readonly ISesEmail client;
 
         public PasswordRequestHandler(
-            IAccountRepository accountRepository,
+            IConfigurationEntityStore<Session> sessionStore,
+            IConfigurationEntityStore<Area> intentStore,
+            IConfigurationEntityStore<Account> accountStore,
+            IRemoveStaleSessions removeStaleSessions,
             ISesEmail client)
         {
-            this.accountRepository = accountRepository;
+            this.sessionStore = sessionStore;
+            this.intentStore = intentStore;
+            this.accountStore = accountStore;
+            this.removeStaleSessions = removeStaleSessions;
             this.client = client;
         }
 
@@ -26,7 +38,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             var ambiguousMessage = "An email was sent to this address if an account for it exists.";
 
-            var account = await accountRepository.GetAccountByEmailAddressOrNull(request.EmailAddress);
+            var account = await accountStore.Get(request.EmailAddress, s => s.EmailAddress);
             if (account == null)
             {
                 return new PasswordRequestResponse(new ResetResponse(ambiguousMessage, false));
@@ -40,7 +52,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var token = string.Join("-", new[] { StaticGuidUtils.CreateNewId(), StaticGuidUtils.CreateNewId(), StaticGuidUtils.CreateNewId(), StaticGuidUtils.CreateNewId() }).Replace("-", "");
             var apiKey = account.ApiKey;
 
-            await accountRepository.CreateAndAddNewSession(token, apiKey);
+            await removeStaleSessions.CleanSessionDb();
+            var session = Session.CreateNew(token, accountStore.AccountId, account.ApiKey);
+            await sessionStore.Create(session);
 
             var link = request.ResetPasswordLinkTemplate + token;
 

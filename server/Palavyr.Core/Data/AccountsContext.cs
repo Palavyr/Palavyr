@@ -11,7 +11,6 @@ namespace Palavyr.Core.Data
         public DbSet<Session> Sessions { get; set; }
         public DbSet<EmailVerification> EmailVerifications { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
-        public DbSet<Backup> Backups { get; set; }
         public DbSet<StripeWebhookRecord> StripeWebHookRecords { get; set; }
 
         public AccountsContext()

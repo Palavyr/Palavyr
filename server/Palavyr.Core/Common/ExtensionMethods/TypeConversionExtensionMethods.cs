@@ -20,23 +20,6 @@ namespace Palavyr.Core.Common.ExtensionMethods
             };
         }
 
-        public static FileLink[] ToFileLinks(this Image[] images)
-        {
-            var fileLinks = new List<FileLink>();
-            foreach (var image in images)
-            {
-                var link = image.IsUrl ? FileLink.CreateUrlLink(image.RiskyName, image.Url, image.ImageId) : FileLink.CreateS3Link(image.RiskyName, image.ImageId);
-                fileLinks.Add(link);
-            }
-
-            return fileLinks.ToArray();
-        }
-
-        public static FileLink[] ToFileLinks(this List<Image> images)
-        {
-            return ToFileLinks(images.ToArray());
-        }
-
         public static async Task<FileLink[]> ToFileLinks(this FileAsset[] fileAssets, ILinkCreator linkCreator)
         {
             var fileLinks = await Task.WhenAll(
@@ -49,6 +32,16 @@ namespace Palavyr.Core.Common.ExtensionMethods
                             FileName = asset.RiskyNameWithExtension
                         }));
             return fileLinks.ToArray();
+        }
+
+        public static async Task<FileLink> ToFileLink(this FileAsset fileAsset, ILinkCreator linkCreator)
+        {
+            return new FileLink
+            {
+                Link = await linkCreator.CreateLink(fileAsset.FileId),
+                FileId = fileAsset.FileId,
+                FileName = fileAsset.RiskyNameWithExtension
+            };
         }
     }
 }

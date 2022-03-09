@@ -2,23 +2,25 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class VerifyPasswordResetRequestHandler : IRequestHandler<VerifyPasswordResetRequestRequest, VerifyPasswordResetRequestResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Session> sessionStore;
 
-        public VerifyPasswordResetRequestHandler(IAccountRepository accountRepository)
+        public VerifyPasswordResetRequestHandler(IConfigurationEntityStore<Session> sessionStore)
         {
-            this.accountRepository = accountRepository;
+            this.sessionStore = sessionStore;
         }
 
         public async Task<VerifyPasswordResetRequestResponse> Handle(VerifyPasswordResetRequestRequest request, CancellationToken cancellationToken)
         {
             // the return from this is presented in the redirect page. 
-            var session = await accountRepository.GetSessionOrNull(request.Token);
+            var session = await sessionStore.Get(request.Token, s => s.SessionId);
+
             if (session == null)
             {
                 return new VerifyPasswordResetRequestResponse(new VerificationResponse("Not Authorized.", false, ""));

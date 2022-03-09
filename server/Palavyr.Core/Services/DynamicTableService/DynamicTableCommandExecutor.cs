@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.DynamicTableService
 {
@@ -28,21 +31,25 @@ namespace Palavyr.Core.Services.DynamicTableService
         private ILogger<TEntity> logger;
         private readonly IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository;
         private readonly IDynamicTableCompilerRetriever retriever;
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
+        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IAccountIdTransport accountIdTransport;
+        private string AccountId => accountIdTransport.AccountId;
 
         public DynamicTableCommandExecutor(
             IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository,
             IDynamicTableCompilerRetriever retriever,
-            IConfigurationRepository configurationRepository,
-            IAccountRepository accountRepository,
+            IConfigurationEntityStore<ConversationNode> convoNodeStore,
+            IConfigurationEntityStore<Account> accountStore,
+            IAccountIdTransport accountIdTransport,
             ILogger<TEntity> logger
         )
         {
             this.genericDynamicTableRepository = genericDynamicTableRepository;
             this.retriever = retriever;
-            this.configurationRepository = configurationRepository;
-            this.accountRepository = accountRepository;
+            this.convoNodeStore = convoNodeStore;
+            this.accountStore = accountStore;
+            this.accountIdTransport = accountIdTransport;
             this.logger = logger;
         }
 
@@ -62,12 +69,14 @@ namespace Palavyr.Core.Services.DynamicTableService
             {
                 tableRows = new List<TEntity>()
                 {
-                    (new TEntity()).CreateTemplate(accountRepository.AccountIdTransport.AccountId, areaIdentifier, tableId)
+                    (new TEntity()).CreateTemplate(AccountId, areaIdentifier, tableId)
                 };
             }
 
             await genericDynamicTableRepository.UpdateRows(areaIdentifier, tableId, tableRows);
-            var convoNodes = await configurationRepository.GetAreaConversationNodes(areaIdentifier);
+
+            var convoNodes = await convoNodeStore.GetMany(areaIdentifier, s => s.AreaIdentifier);
+
             var currentDynamic = convoNodes.Where(
                 x =>
                 {
@@ -93,7 +102,7 @@ namespace Palavyr.Core.Services.DynamicTableService
         {
             logger.LogInformation($"Getting dynamic table row template: {request.TableId}");
             var (areaIdentifier, tableId) = request;
-            return (new TEntity()).CreateTemplate(accountRepository.AccountIdTransport.AccountId, areaIdentifier, tableId);
+            return (new TEntity()).CreateTemplate(AccountId, areaIdentifier, tableId);
         }
 
         public async Task<List<TEntity>> SaveDynamicTable(DynamicTableRequest request, DynamicTable dynamicTable)

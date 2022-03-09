@@ -63,7 +63,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         }
 
         [Fact]
-        public async Task CreatesEmailSendWasSuccessful()
+        public void CreatesEmailSendWasSuccessful()
         {
             var node = endingSequenceNodes.CreateEmailSendWasSuccessful(A.RandomId(), A.RandomAccount(), InternalNodeTypeOptions.Restart.StringName);
 
@@ -79,7 +79,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         }
 
         [Fact]
-        public async Task CreatesRestart()
+        public void CreatesRestart()
         {
             var node = endingSequenceNodes.CreateRestart(A.RandomId(), A.RandomAccount(), "Terminate");
 
@@ -112,7 +112,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         }
 
         [Fact]
-        public async Task CreateRetrySendEmailSecondAttempt()
+        public void CreateRetrySendEmailSecondAttempt()
         {
             var node = endingSequenceNodes.CreateRetrySendEmailSecondAttempt(A.RandomId(), A.RandomAccount(), "Placeholder");
 
@@ -129,7 +129,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         }
 
         [Fact]
-        public async Task CreatesFallbackEmailSendFailedFirstAttempt()
+        public void CreatesFallbackEmailSendFailedFirstAttempt()
         {
             var node = endingSequenceNodes.CreateFallbackEmailSendFailedFirstAttempt(A.RandomId(), A.RandomAccount(), "123", "456");
 
@@ -145,7 +145,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         }
 
         [Fact]
-        public async Task CreatesFallbackEmailSendFailedSecondAttempt()
+        public void CreatesFallbackEmailSendFailedSecondAttempt()
         {
             var node = endingSequenceNodes.CreateFallbackRetrySendEmailSecondAttempt(A.RandomId(), A.RandomAccount(), "Placeholder");
 
@@ -161,7 +161,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         }
 
         [Fact]
-        public async Task CreatesMyWeSendAnInformationalEmailForTooComplicated()
+        public void CreatesMyWeSendAnInformationalEmailForTooComplicated()
         {
             var node = endingSequenceNodes.CreateMayWeSendAnInformationalEmailForTooComplicated(A.RandomId(), A.RandomAccount(), "abc", "def");
 
@@ -177,7 +177,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         }
 
         [Fact]
-        public async Task CreatesSendFallbackEmail()
+        public void CreatesSendFallbackEmail()
         {
             var node = endingSequenceNodes.CreateSendFallbackEmail(A.RandomId(), A.RandomAccount(), "Placeholder");
 
@@ -193,7 +193,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         }
 
         [Fact]
-        public async Task CreatesGenericTooComplicated()
+        public void CreatesGenericTooComplicated()
         {
             var node = endingSequenceNodes.CreateGenericTooComplicated(A.RandomId(), A.RandomAccount());
 
@@ -212,10 +212,8 @@ namespace PalavyrServer.UnitTests.Core.Models
         public async Task InitializeAsync()
         {
             await Task.CompletedTask;
-            var configurationRepository = Substitute.For<IConfigurationRepository>();
-            endingSequenceNodes = new EndingSequenceNodes(configurationRepository, new GuidUtils());
+            endingSequenceNodes = new EndingSequenceNodes(new GuidUtils());
         }
-
 
         public async Task DisposeAsync()
         {

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
@@ -17,17 +16,17 @@ namespace Palavyr.Core.Services.ConversationServices
         Enquiry MapConvoWithEmailToResponse(ConversationRecord conversationRecord);
     }
 
-    public class ConversationRecordRecordRetriever : IConversationRecordRetriever
+    public class ConversationRecordRetriever : IConversationRecordRetriever
     {
-        private readonly IConvoHistoryRepository convoHistoryRepository;
+        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
         private readonly ILogger<IConversationRecordRetriever> logger;
 
-        public ConversationRecordRecordRetriever(
-            IConvoHistoryRepository convoHistoryRepository,
+        public ConversationRecordRetriever(
+            IConfigurationEntityStore<ConversationRecord> convoRecordStore,
             ILogger<IConversationRecordRetriever> logger
         )
         {
-            this.convoHistoryRepository = convoHistoryRepository;
+            this.convoRecordStore = convoRecordStore;
             this.logger = logger;
         }
 
@@ -35,9 +34,7 @@ namespace Palavyr.Core.Services.ConversationServices
         // A subset of these will have emails
         public async Task<Enquiry[]> RetrieveConversationRecords()
         {
-            var conversationRecords = await convoHistoryRepository.GetAllConversationRecords();
-
-
+            var conversationRecords = await convoRecordStore.GetAll();
             if (conversationRecords.Count() == 0)
             {
                 return new List<Enquiry>().ToArray();

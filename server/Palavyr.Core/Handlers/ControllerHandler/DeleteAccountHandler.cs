@@ -2,49 +2,33 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Repositories.Delete;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class DeleteAccountHandler: INotificationHandler<DeleteAccountNotification>
+    public class DeleteAccountHandler : INotificationHandler<DeleteAccountNotification>
     {
-        private readonly IAccountDeleter accountDeleter;
-        private readonly IDashDeleter dashDeleter;
-        private readonly IConvoDeleter convoDeleter;
+        private readonly IDangerousAccountDeleter dangerousAccountDeleter;
         private readonly ILogger<DeleteAccountHandler> logger;
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
 
         public DeleteAccountHandler(
-            IAccountDeleter accountDeleter,
-            IDashDeleter dashDeleter,
-            IConvoDeleter convoDeleter,
+            IDangerousAccountDeleter dangerousAccountDeleter,
             ILogger<DeleteAccountHandler> logger,
-            IAccountRepository accountRepository
-            )
+            IConfigurationEntityStore<Account> accountStore
+        )
         {
-            this.accountDeleter = accountDeleter;
-            this.dashDeleter = dashDeleter;
-            this.convoDeleter = convoDeleter;
+            this.dangerousAccountDeleter = dangerousAccountDeleter;
             this.logger = logger;
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
+
         public async Task Handle(DeleteAccountNotification notification, CancellationToken _)
         {
-            logger.LogInformation($"Deleting details for account: {accountRepository.AccountIdTransport.AccountId}");
-
-            logger.LogInformation("Deleting from the convo database...");
-            convoDeleter.DeleteAccount();
-
-            logger.LogInformation("Deleting from the dash database...");
-            await dashDeleter.DeleteAccount();
-
-            logger.LogDebug("Deleting from the Accounts database...");
-            await accountDeleter.DeleteAccount();
-
-            await accountDeleter.CommitChangesAsync();
-            await dashDeleter.CommitChangesAsync();
-            await convoDeleter.CommitChangesAsync();
+            logger.LogInformation($"Deleting details for account: {accountStore.AccountId}");
+            await dangerousAccountDeleter.DeleteAllThings();
         }
     }
 

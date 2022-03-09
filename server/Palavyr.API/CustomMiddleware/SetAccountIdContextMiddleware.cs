@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware.MiddlewareHandlers;
 using Palavyr.Core.Data;
 using Palavyr.Core.GlobalConstants;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.CustomMiddleware
@@ -32,7 +33,7 @@ namespace Palavyr.API.CustomMiddleware
             HttpContext context,
             IWebHostEnvironment env,
             IMediator mediator,
-            IAccountRepository accountRepository,
+            IConfigurationEntityStore<Session> sessionStore,
             AccountsContext accountContext,
             IUnitOfWorkContextProvider unitOfWorkContextProvider)
         {
@@ -47,7 +48,7 @@ namespace Palavyr.API.CustomMiddleware
                 if (!string.IsNullOrEmpty(sessionId))
                 {
                     logger.LogDebug("Session Id found - performing looking in the persistence store...");
-                    var session = await accountRepository.GetSessionOrNull(sessionId);
+                    var session = await sessionStore.Get(sessionId, s => s.SessionId);
                     if (session != null)
                     {
                         logger.LogDebug("Session found. Assigning account Id to the Request Header.");

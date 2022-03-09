@@ -36,7 +36,7 @@ namespace Palavyr.IntegrationTests.DataCreators
 
         private readonly DateTime futureDate = DateTime.Parse("01/01/2200");
         private readonly DateTime pastDate = DateTime.Parse("01/01/2200");
-        
+
         public DefaultAccountAndSessionBuilder(BaseIntegrationFixture test)
         {
             this.test = test;
@@ -54,8 +54,7 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
-        
-        
+
         public DefaultAccountAndSessionBuilder WithDefaultEmailAddress()
         {
             this.emailAddress = IntegrationConstants.EmailAddress;
@@ -162,11 +161,13 @@ namespace Palavyr.IntegrationTests.DataCreators
             {
                 test.SetCancellationToken();
             }
-            
+
+
+            var sessionStore = test.ResolveStore<Session>();
 
             await test.AccountsContext.Accounts.AddAsync(defaultAccount);
             var session = Session.CreateNew(IntegrationConstants.SessionId, test.AccountId, test.ApiKey);
-            await test.AccountRepository.CreateNewSession(session);
+            await sessionStore.Create(session);
             return defaultAccount;
         }
     }

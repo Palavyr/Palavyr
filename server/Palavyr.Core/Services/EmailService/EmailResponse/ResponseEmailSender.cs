@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
@@ -37,7 +38,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         private readonly ILogger<ResponseEmailSender> logger;
         private readonly ICriticalResponses criticalResponses;
         private readonly IAttachmentRetriever attachmentRetriever;
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
         private readonly ITemporaryPath temporaryPath;
         private readonly IResponsePdfGenerator responsePdfGenerator;
         private readonly ICompileSenderDetails compileSenderDetails;
@@ -45,7 +46,6 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         private readonly IConfiguration configuration;
         private readonly ILocaleDefinitions localeDefinitions;
         private readonly ILinkCreator linkCreator;
-        private readonly IConvoHistoryRepository convoHistoryRepository;
 
         public ResponseEmailSender(
             IConfigurationEntityStore<Area> intentStore,
@@ -53,23 +53,21 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             ILogger<ResponseEmailSender> logger,
             ICriticalResponses criticalResponses,
             IAttachmentRetriever attachmentRetriever,
-            IAccountRepository accountRepository,
+            IConfigurationEntityStore<Account> accountStore,
             ITemporaryPath temporaryPath,
             IResponsePdfGenerator responsePdfGenerator,
             ICompileSenderDetails compileSenderDetails,
             ISesEmail client,
             IConfiguration configuration,
             ILocaleDefinitions localeDefinitions,
-            ILinkCreator linkCreator,
-            IConvoHistoryRepository convoHistoryRepository
-        )
+            ILinkCreator linkCreator)
         {
             this.intentStore = intentStore;
             this.convoRecordStore = convoRecordStore;
             this.logger = logger;
             this.criticalResponses = criticalResponses;
             this.attachmentRetriever = attachmentRetriever;
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
             this.temporaryPath = temporaryPath;
             this.responsePdfGenerator = responsePdfGenerator;
             this.compileSenderDetails = compileSenderDetails;
@@ -77,7 +75,6 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             this.configuration = configuration;
             this.localeDefinitions = localeDefinitions;
             this.linkCreator = linkCreator;
-            this.convoHistoryRepository = convoHistoryRepository;
         }
 
         public async Task<SendEmailResultResponse> SendEmail(string intentId, EmailRequest emailRequest)
@@ -177,7 +174,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
         private async Task<CultureInfo> GetCulture()
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             var locale = account.Locale ?? localeDefinitions.DefaultLocale.Name;
             return new CultureInfo(locale);
         }

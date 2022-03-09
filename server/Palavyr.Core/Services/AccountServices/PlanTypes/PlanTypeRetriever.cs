@@ -3,23 +3,24 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.AccountServices.PlanTypes
 {
     public class PlanTypeRetriever : IPlanTypeRetriever
     {
-        private readonly IAccountRepository repository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
         private readonly ILogger<PlanTypeRetriever> logger;
 
-        public PlanTypeRetriever(IAccountRepository repository, ILogger<PlanTypeRetriever> logger)
+        public PlanTypeRetriever(IConfigurationEntityStore<Account> accountStore, ILogger<PlanTypeRetriever> logger)
         {
-            this.repository = repository;
+            this.accountStore = accountStore;
             this.logger = logger;
         }
 
         public async Task<string> GetCurrentPlanType()
         {
-            var account = await repository.GetAccount();
+            var account = await accountStore.GetAccount();
             string planStatus;
             switch (account.PlanType)
             {

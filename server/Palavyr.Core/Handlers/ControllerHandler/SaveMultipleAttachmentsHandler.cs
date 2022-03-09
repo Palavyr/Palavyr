@@ -25,10 +25,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             foreach (var attachmentFile in request.Attachments)
             {
-                await attachmentAssetSaver.SaveAttachment(request.IntentId, attachmentFile);
+                await attachmentAssetSaver.SaveFile(request.IntentId, attachmentFile);
             }
 
-            var attachmentFileLinks = await attachmentRetriever.GetAttachmentLinksForIntent(request.IntentId, cancellationToken);
+            var attachmentFileLinks = await attachmentRetriever.GetAttachmentLinksForIntent(request.IntentId);
             return new SaveMultipleAttachmentsResponse(attachmentFileLinks);
         }
     }

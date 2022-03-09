@@ -9,16 +9,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetConversationHandler : IRequestHandler<GetConversationRequest, GetConversationResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
 
-        public GetConversationHandler(IConfigurationRepository configurationRepository)
+        public GetConversationHandler(IConfigurationEntityStore<ConversationNode> convoNodeStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.convoNodeStore = convoNodeStore;
         }
 
         public async Task<GetConversationResponse> Handle(GetConversationRequest request, CancellationToken cancellationToken)
         {
-            var conversation = await configurationRepository.GetAreaConversationNodes(request.IntentId);
+            var conversation = await convoNodeStore.GetMany(request.IntentId, s => s.AreaIdentifier);
             return new GetConversationResponse(conversation);
         }
     }

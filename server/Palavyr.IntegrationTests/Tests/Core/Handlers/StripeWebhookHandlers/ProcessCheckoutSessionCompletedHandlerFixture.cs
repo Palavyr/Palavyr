@@ -36,8 +36,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 
             await handler.Handle(checkoutEvent, CancellationToken);
 
-            var account = await AccountRepository.GetAccount();
-
+            var accountStore = ResolveStore<Account>();
+            var account = await accountStore.Get(accountStore.AccountId, s => s.AccountId);
+            
             account.PlanType.ShouldBe(Account.PlanTypeEnum.Free);
             account.HasUpgraded.ShouldBeTrue();
             account.CurrentPeriodEnd.ShouldBeEquivalentTo(CreatedAt.AddMonths(1));

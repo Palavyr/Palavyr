@@ -42,6 +42,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<CustomerSessionService>().As<ICustomerSessionService>().InstancePerLifetimeScope();
             builder.RegisterType<StripeProductService>().As<IStripeProductService>().InstancePerDependency();
             builder.RegisterType<StripeCustomerManagementPortalService>().As<IStripeCustomerManagementPortalService>();
+            builder.RegisterType<StripeSubscriptionRetriever>().As<IStripeSubscriptionRetriever>();
 
             builder.Register(
                     context =>
@@ -54,19 +55,22 @@ namespace Palavyr.API.Registration.Container
                 .InstancePerLifetimeScope();
 
             builder.Register<IProductRegistry>(
-                    context =>
+                    ctx =>
                     {
-                        var determineCurrentEnvironment = new DetermineCurrentEnvironment(configuration);
-                        if (determineCurrentEnvironment.IsProduction())
+                        var envChecker = ctx.Resolve<IDetermineCurrentEnvironment>();
+                        if (envChecker.IsProduction())
                         {
                             return new ProductionProductRegistry();
                         }
-                        else
+                        else if (envChecker.IsStaging())
                         {
                             return new StagingProductRegistry();
                         }
+                        else
+                        {
+                            return new DevProductRegistery();
+                        }
                     })
-                .As<IProductRegistry>()
                 .InstancePerLifetimeScope();
         }
     }

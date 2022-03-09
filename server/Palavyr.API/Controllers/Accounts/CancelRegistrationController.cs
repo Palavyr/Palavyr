@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Handlers;
 using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Sessions;
 
@@ -17,20 +18,20 @@ namespace Palavyr.API.Controllers.Accounts
 
         private readonly IMediator mediator;
         private readonly IAccountIdTransport accountIdTransport;
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
 
-        public CancelRegistrationController(IMediator mediator, IAccountIdTransport accountIdTransport, IAccountRepository accountRepository)
+        public CancelRegistrationController(IMediator mediator, IAccountIdTransport accountIdTransport, IConfigurationEntityStore<Account> accountStore)
         {
             this.mediator = mediator;
             this.accountIdTransport = accountIdTransport;
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
 
         [AllowAnonymous]
         [HttpPost(Route)]
         public async Task Post(CancelRegistrationNotification notification, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccountByEmailAddressOrNull(notification.EmailAddress);
+            var account = await accountStore.Get(notification.EmailAddress, s => s.EmailAddress);
             if (account.Active) throw new DomainException("Can not delete an active account");
             var accountId = account.AccountId;
 

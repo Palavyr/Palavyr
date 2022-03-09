@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Repositories;
-using Palavyr.Core.Services.ConversationServices;
 
 namespace Palavyr.Core.Services.EnquiryServices
 {
@@ -15,27 +15,33 @@ namespace Palavyr.Core.Services.EnquiryServices
 
     public class EnquiryInsightComputer : IEnquiryInsightComputer
     {
-        private readonly IConvoHistoryRepository convoHistoryRepository;
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IConfigurationEntityStore<ConversationHistory> convoHistoryStore;
+        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
         private readonly INodeBranchLengthCalculator nodeBranchLengthCalculator;
 
         public EnquiryInsightComputer(
-            IConvoHistoryRepository convoHistoryRepository,
-            IConversationRecordRetriever conversationRecordRetriever,
-            IConfigurationRepository configurationRepository,
+            IConfigurationEntityStore<ConversationRecord> convoRecordStore,
+            IConfigurationEntityStore<ConversationHistory> convoHistoryStore,
+            IConfigurationEntityStore<Area> intentStore,
+            IConfigurationEntityStore<ConversationNode> convoNodeStore,
             INodeBranchLengthCalculator nodeBranchLengthCalculator
         )
         {
-            this.convoHistoryRepository = convoHistoryRepository;
-            this.configurationRepository = configurationRepository;
+            this.convoRecordStore = convoRecordStore;
+            this.convoHistoryStore = convoHistoryStore;
+            this.intentStore = intentStore;
+            this.convoNodeStore = convoNodeStore;
             this.nodeBranchLengthCalculator = nodeBranchLengthCalculator;
         }
 
         public async Task<EnquiryInsightsResource[]> GetEnquiryInsights()
         {
             var resources = new List<EnquiryInsightsResource>();
-            var allRecords = await convoHistoryRepository.GetAllConversationRecords();
-            var allIntents = await configurationRepository.GetAllAreasShallow();
+            var allRecords = await convoRecordStore.GetAll();
+            var allIntents = await intentStore.GetAll();
+
             foreach (var intent in allIntents)
             {
                 var intentRecords = allRecords.Where(x => x.AreaIdentifier == intent.AreaIdentifier).ToArray();
@@ -67,15 +73,15 @@ namespace Palavyr.Core.Services.EnquiryServices
 
             foreach (var intentRecord in intentRecords)
             {
-                var convo = await convoHistoryRepository.GetConversationById(intentRecord.ConversationId);
-                if (convo.Length == 0) continue;
+                var convo = await convoHistoryStore.GetMany(intentRecord.ConversationId, s => s.ConversationId);
+                if (convo.Count == 0) continue;
 
-                var totalConvo = await configurationRepository.GetAreaConversationNodes(intentRecord.AreaIdentifier);
+                var totalConvo = await convoNodeStore.GetMany(intentRecord.AreaIdentifier, s => s.AreaIdentifier);
 
                 var terminalNodes = totalConvo.Where(x => x.IsTerminalType).ToList();
                 var lengthOfLongestBranch = nodeBranchLengthCalculator.GetLengthOfLongestTerminatingPath(totalConvo.ToArray(), terminalNodes.ToArray());
 
-                var percentOfConversationCompleted = totalConvo.Count > 0 ? (double) convo.Length / (double) totalConvo.Count : -1;
+                var percentOfConversationCompleted = totalConvo.Count > 0 ? (double) convo.Count / (double) totalConvo.Count : -1;
 
 
                 completePerIntent.Add(percentOfConversationCompleted);

@@ -3,7 +3,12 @@ using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models.Nodes
 {
-    public class NodeCounter
+    public interface INodeCounter
+    {
+        int CountNumTerminal(ConversationNode[] nodeList);
+    }
+
+    public class NodeCounter : INodeCounter
     {
         public int CountNumTerminal(ConversationNode[] nodeList)
         {

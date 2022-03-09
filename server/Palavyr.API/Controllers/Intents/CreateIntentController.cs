@@ -20,7 +20,7 @@ namespace Palavyr.API.Controllers.Intents
         [HttpPost(Route)]
         public async Task<Area> Create(
             [FromBody]
-            CreateAreaRequest request,
+            CreateIntentRequest request,
             CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);

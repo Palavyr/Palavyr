@@ -20,7 +20,6 @@ namespace Palavyr.API.Controllers.WidgetLive
         private readonly IMediator mediator;
         public const string Route = "widget/pre-check";
 
-        private readonly IConfigurationRepository configurationRepository;
         private readonly IWidgetStatusChecker widgetStatusChecker;
         private ILogger<GetWidgetPreCheckController> logger;
         private readonly IAccountIdTransport accountIdTransport;
@@ -35,7 +34,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         [HttpGet(Route)]
         public async Task<PreCheckResult> Get([FromQuery] bool demo, CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetWidgetPrecheckRequest(), cancellationToken);
+            var response = await mediator.Send(new GetWidgetPreCheckRequest(), cancellationToken);
             return response.Response;
         }
     }

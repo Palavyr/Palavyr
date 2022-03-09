@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Palavyr.API;
 using Palavyr.Core.Data;
+using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Sessions;
@@ -47,9 +48,11 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public TimeSpan Timeout => TimeSpan.FromMinutes(3);
 
         public ILogger Logger => WebHostFactory.Services.GetService<ILogger>();
-        public IAccountRepository AccountRepository => WebHostFactory.Services.GetService<IAccountRepository>();
-        public IConfigurationRepository ConfigurationRepository => WebHostFactory.Services.GetService<IConfigurationRepository>();
-        public IConvoHistoryRepository ConvoHistoryRepository => WebHostFactory.Services.GetService<IConvoHistoryRepository>();
+
+        public IConfigurationEntityStore<TEntity> ResolveStore<TEntity>() where TEntity : class, IEntity
+        {
+            return (IConfigurationEntityStore<TEntity>)WebHostFactory.Services.GetService(typeof(IConfigurationEntityStore<TEntity>));
+        }
 
         public AccountsContext AccountsContext => accountsContext.Value;
         public DashContext DashContext => dashContext.Value;

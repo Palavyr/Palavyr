@@ -1,74 +1,41 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Sessions;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class GetImagesHandler : IRequestHandler<GetImagesRequest, GetImagesResponse>
+    public class GetFileAssetsHandler : IRequestHandler<GetFileAssetsRequest, GetFileAssetsResponse>
     {
-        private readonly GuidFinder guidFinder;
-        private readonly DashContext dashContext;
-        private readonly IAccountIdTransport accountIdTransport;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
 
-        public GetImagesHandler(GuidFinder guidFinder, DashContext dashContext, IAccountIdTransport accountIdTransport, IHttpContextAccessor httpContextAccessor)
+        public GetFileAssetsHandler(IConfigurationEntityStore<FileAsset> fileAssetStore)
         {
-            this.guidFinder = guidFinder;
-            this.dashContext = dashContext;
-            this.accountIdTransport = accountIdTransport;
-            this.httpContextAccessor = httpContextAccessor;
+            this.fileAssetStore = fileAssetStore;
         }
 
-        public async Task<GetImagesResponse> Handle(GetImagesRequest request, CancellationToken cancellationToken)
+        public async Task<GetFileAssetsResponse> Handle(GetFileAssetsRequest request, CancellationToken cancellationToken)
         {
-            // TODO: https://www.strathweb.com/2017/07/customizing-query-string-parameter-binding-in-asp-net-core-mvc/
-            List<Image> records;
-            if (httpContextAccessor.HttpContext.Request.QueryString.HasValue)
-            {
-                // ids should be guids
-                foreach (var id in request.ImageIds)
-                {
-                    // This throws if a GUID is not found.
-                    guidFinder.FindFirstGuidSuffix(id);
-                }
-
-                records = await dashContext
-                    .Images
-                    .Where(x => x.AccountId == accountIdTransport.AccountId && request.ImageIds.Contains(x.ImageId))
-                    .ToListAsync(cancellationToken);
-            }
-            else
-            {
-                records = await dashContext.Images.Where(x => x.AccountId == accountIdTransport.AccountId).ToListAsync(cancellationToken);
-            }
-
-            return new GetImagesResponse(records.ToFileLinks());
+            var fileAssets = await fileAssetStore.GetMany(request.FileIds, x => x.FileId);
+            return new GetFileAssetsResponse(fileAssets);
         }
     }
 
-    public class GetImagesResponse
+    public class GetFileAssetsResponse
     {
-        public GetImagesResponse(FileLink[] response) => Response = response;
-        public FileLink[] Response { get; set; }
+        public GetFileAssetsResponse(List<FileAsset> response) => Response = response.ToArray();
+        public FileAsset[] Response { get; set; }
     }
 
-    public class GetImagesRequest : IRequest<GetImagesResponse>
+    public class GetFileAssetsRequest : IRequest<GetFileAssetsResponse>
     {
-        public GetImagesRequest(string[] imageIds)
+        public GetFileAssetsRequest(string[] fileIds)
         {
-            ImageIds = imageIds;
+            FileIds = fileIds;
         }
 
-        public string[] ImageIds { get; set; }
+        public string[] FileIds { get; set; }
     }
 }

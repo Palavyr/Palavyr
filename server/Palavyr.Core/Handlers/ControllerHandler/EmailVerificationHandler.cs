@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.EmailService.Verification;
 
@@ -9,24 +10,24 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class EmailVerificationHandler : IRequestHandler<EmailAddressVerificationRequest, EmailAddressVerificationResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<Area> intentStore;
         private readonly IEmailVerificationStatus emailVerificationStatus;
         private readonly ILogger<EmailVerificationHandler> logger;
 
         public EmailVerificationHandler(
-            IConfigurationRepository configurationRepository,
+            IConfigurationEntityStore<Area> intentStore,
             IEmailVerificationStatus emailVerificationStatus,
             ILogger<EmailVerificationHandler> logger
         )
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
             this.emailVerificationStatus = emailVerificationStatus;
             this.logger = logger;
         }
 
         public async Task<EmailAddressVerificationResponse> Handle(EmailAddressVerificationRequest request, CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(request.IntentId);
+            var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(request.EmailAddress);
 
             area.EmailIsVerified = verificationResponse.IsVerified();
@@ -37,7 +38,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 area.AreaSpecificEmail = request.EmailAddress;
             }
 
-            await configurationRepository.CommitChangesAsync();
             return new EmailAddressVerificationResponse(verificationResponse);
         }
     }

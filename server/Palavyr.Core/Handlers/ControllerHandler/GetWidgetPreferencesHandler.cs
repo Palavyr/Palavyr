@@ -8,17 +8,17 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetWidgetPreferencesHandler : IRequestHandler<GetWidgetPreferencesRequest, GetWidgetPreferencesResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore;
 
-        public GetWidgetPreferencesHandler(IConfigurationRepository configurationRepository)
+        public GetWidgetPreferencesHandler(IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.widgetPreferenceStore = widgetPreferenceStore;
         }
 
         public async Task<GetWidgetPreferencesResponse> Handle(GetWidgetPreferencesRequest request, CancellationToken cancellationToken)
         {
-            var prefs = await configurationRepository.GetWidgetPreferences();
-            return new GetWidgetPreferencesResponse(prefs);
+            var widgetPreferences = await widgetPreferenceStore.Get(widgetPreferenceStore.AccountId, s => s.AccountId);
+            return new GetWidgetPreferencesResponse(widgetPreferences);
         }
     }
 

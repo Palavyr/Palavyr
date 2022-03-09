@@ -2,35 +2,39 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyIntroductionSequenceHandler : IRequestHandler<ModifyIntroductionSequenceRequest, ModifyIntroductionSequenceResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
+        private readonly IConfigurationEntityStore<Account> accountStore;
 
         public ModifyIntroductionSequenceHandler(
-            IConfigurationRepository configurationRepository,
-            IAccountRepository accountRepository
+            IConfigurationEntityStore<ConversationNode> convoNodeStore,
+            IConfigurationEntityStore<Account> accountStore
         )
         {
-            this.configurationRepository = configurationRepository;
-            this.accountRepository = accountRepository;
+            this.convoNodeStore = convoNodeStore;
+            this.accountStore = accountStore;
         }
 
         public async Task<ModifyIntroductionSequenceResponse> Handle(ModifyIntroductionSequenceRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             foreach (var node in request.Transactions)
             {
                 node.AccountId = account.AccountId;
             }
+            
+            await convoNodeStore.Delete(account.IntroductionId, s => s.AreaIdentifier);
+            await convoNodeStore.CreateMany(request.Transactions.ToArray());
 
-            var updatedConvo = await configurationRepository.UpdateIntroductionSequence(account.IntroductionId, request.Transactions);
-            return new ModifyIntroductionSequenceResponse(updatedConvo);
+            return new ModifyIntroductionSequenceResponse(request.Transactions.ToArray());
         }
     }
 

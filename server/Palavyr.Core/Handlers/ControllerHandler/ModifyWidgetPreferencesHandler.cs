@@ -9,92 +9,90 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyWidgetPreferencesHandler : IRequestHandler<ModifyWidgetPreferencesRequest, ModifyWidgetPreferencesResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore;
         private readonly ILogger<ModifyWidgetPreferencesHandler> logger;
 
-        public ModifyWidgetPreferencesHandler(IConfigurationRepository configurationRepository, ILogger<ModifyWidgetPreferencesHandler> logger)
+        public ModifyWidgetPreferencesHandler(IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore, ILogger<ModifyWidgetPreferencesHandler> logger)
         {
-            this.configurationRepository = configurationRepository;
+            this.widgetPreferenceStore = widgetPreferenceStore;
             this.logger = logger;
         }
 
         public async Task<ModifyWidgetPreferencesResponse> Handle(ModifyWidgetPreferencesRequest request, CancellationToken cancellationToken)
         {
-            var prefs = await configurationRepository.GetWidgetPreferences();
+            var widgetPreferences = await widgetPreferenceStore.Get(widgetPreferenceStore.AccountId, s => s.AccountId);
 
             if (!string.IsNullOrWhiteSpace(request.SelectListColor))
             {
-                prefs.SelectListColor = request.SelectListColor;
+                widgetPreferences.SelectListColor = request.SelectListColor;
             }
 
             if (!string.IsNullOrWhiteSpace(request.HeaderColor))
             {
-                prefs.HeaderColor = request.HeaderColor;
+                widgetPreferences.HeaderColor = request.HeaderColor;
             }
 
             if (!string.IsNullOrWhiteSpace(request.FontFamily))
             {
-                prefs.FontFamily = request.FontFamily;
+                widgetPreferences.FontFamily = request.FontFamily;
             }
 
             if (!string.IsNullOrWhiteSpace(request.LandingHeader))
             {
-                prefs.LandingHeader = request.LandingHeader;
+                widgetPreferences.LandingHeader = request.LandingHeader;
             }
 
             if (!string.IsNullOrWhiteSpace(request.ChatHeader))
             {
-                prefs.ChatHeader = request.ChatHeader;
+                widgetPreferences.ChatHeader = request.ChatHeader;
             }
 
             if (!string.IsNullOrWhiteSpace(request.Placeholder))
             {
-                prefs.Placeholder = request.Placeholder;
+                widgetPreferences.Placeholder = request.Placeholder;
             }
 
             if (!string.IsNullOrWhiteSpace(request.ListFontColor))
             {
-                prefs.ListFontColor = request.ListFontColor;
+                widgetPreferences.ListFontColor = request.ListFontColor;
             }
 
             if (!string.IsNullOrWhiteSpace(request.HeaderFontColor))
             {
-                prefs.HeaderFontColor = request.HeaderFontColor;
+                widgetPreferences.HeaderFontColor = request.HeaderFontColor;
             }
 
             if (!string.IsNullOrWhiteSpace(request.OptionsHeaderColor))
             {
-                prefs.OptionsHeaderColor = request.OptionsHeaderColor;
+                widgetPreferences.OptionsHeaderColor = request.OptionsHeaderColor;
             }
 
             if (!string.IsNullOrWhiteSpace(request.OptionsHeaderFontColor))
             {
-                prefs.OptionsHeaderFontColor = request.OptionsHeaderFontColor;
+                widgetPreferences.OptionsHeaderFontColor = request.OptionsHeaderFontColor;
             }
 
             if (!string.IsNullOrWhiteSpace(request.ChatFontColor))
             {
-                prefs.ChatFontColor = request.ChatFontColor;
+                widgetPreferences.ChatFontColor = request.ChatFontColor;
             }
 
             if (!string.IsNullOrWhiteSpace(request.ButtonColor))
             {
-                prefs.ButtonColor = request.ButtonColor;
+                widgetPreferences.ButtonColor = request.ButtonColor;
             }
 
             if (!string.IsNullOrWhiteSpace(request.ButtonFontColor))
             {
-                prefs.ButtonFontColor = request.ButtonFontColor;
+                widgetPreferences.ButtonFontColor = request.ButtonFontColor;
             }
 
             if (!string.IsNullOrWhiteSpace(request.ChatBubbleColor))
             {
-                prefs.ChatBubbleColor = request.ChatBubbleColor;
+                widgetPreferences.ChatBubbleColor = request.ChatBubbleColor;
             }
 
-            await configurationRepository.CommitChangesAsync();
-
-            return new ModifyWidgetPreferencesResponse(prefs);
+            return new ModifyWidgetPreferencesResponse(widgetPreferences);
         }
     }
 

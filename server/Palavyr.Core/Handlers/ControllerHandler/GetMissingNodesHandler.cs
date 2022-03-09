@@ -8,27 +8,28 @@ using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetMissingNodesHandler : IRequestHandler<GetMissingNodesRequest, GetMissingNodesResponse>
     {
         private readonly ILogger<GetMissingNodesHandler> logger;
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<Area> intentStore;
         private readonly RequiredNodeCalculator requiredNodeCalculator;
         private readonly MissingNodeCalculator missingNodeCalculator;
         private readonly INodeOrderChecker nodeOrderChecker;
 
         public GetMissingNodesHandler(
             ILogger<GetMissingNodesHandler> logger,
-            IConfigurationRepository configurationRepository,
+            IConfigurationEntityStore<Area> intentStore,
             RequiredNodeCalculator requiredNodeCalculator,
             MissingNodeCalculator missingNodeCalculator,
             INodeOrderChecker nodeOrderChecker
         )
         {
             this.logger = logger;
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
             this.requiredNodeCalculator = requiredNodeCalculator;
             this.missingNodeCalculator = missingNodeCalculator;
             this.nodeOrderChecker = nodeOrderChecker;
@@ -36,7 +37,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetMissingNodesResponse> Handle(GetMissingNodesRequest request, CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaComplete(request.IntentId);
+            var area = await intentStore.GetIntentComplete(request.IntentId);
 
             var dynamicTableMetas = area.DynamicTableMetas;
             var staticTableMetas = area.StaticTablesMetas;

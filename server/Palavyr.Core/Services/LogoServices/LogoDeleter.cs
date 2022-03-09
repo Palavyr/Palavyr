@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Sessions;
 
@@ -19,24 +21,24 @@ namespace Palavyr.Core.Services.LogoServices
     public class LogoDeleter : ILogoDeleter
     {
         private readonly IConfiguration configuration;
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
 
         private readonly IS3FileDeleter is3FileDeleter;
 
         public LogoDeleter(
             IConfiguration configuration,
-            IAccountRepository accountRepository,
+            IConfigurationEntityStore<Account> accountStore,
             IS3FileDeleter is3FileDeleter
         )
         {
             this.configuration = configuration;
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
             this.is3FileDeleter = is3FileDeleter;
         }
 
         public async Task DeleteLogo()
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
 
             var s3Key = account.AccountLogoUri;
             if (!string.IsNullOrWhiteSpace(s3Key))
@@ -50,7 +52,7 @@ namespace Palavyr.Core.Services.LogoServices
             }
             
             account.AccountLogoUri = "";
-            await accountRepository.CommitChangesAsync();
+            
         }
     }
 }

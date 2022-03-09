@@ -10,20 +10,20 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetAllAreasShallowRequestHandler : IRequestHandler<GetAllAreasRequest, GetAllAreasResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<Area> intentStore;
         private readonly ILogger<GetAllAreasShallowRequestHandler> logger;
 
-        public GetAllAreasShallowRequestHandler(IConfigurationRepository configurationRepository, ILogger<GetAllAreasShallowRequestHandler> logger)
+        public GetAllAreasShallowRequestHandler(IConfigurationEntityStore<Area> intentStore, ILogger<GetAllAreasShallowRequestHandler> logger)
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
             this.logger = logger;
         }
 
         public async Task<GetAllAreasResponse> Handle(GetAllAreasRequest request, CancellationToken cancellationToken)
         {
             logger.LogDebug("Return all areas");
-            var areas = await configurationRepository.GetAllAreasShallow();
-            return new GetAllAreasResponse(areas);
+            var intents = await intentStore.GetMany(intentStore.AccountId, s => s.AreaIdentifier);
+            return new GetAllAreasResponse(intents);
         }
     }
 

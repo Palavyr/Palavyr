@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet(Route)]
-        public async Task<CurrentLocaleAndLocalMapRetriever.LocaleResponse> Get([FromQuery] bool read, CancellationToken cancellationToken)
+        public async Task<CurrentLocaleAndLocaleMapRetriever.LocaleResponse> Get([FromQuery] bool read, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetCurrentLocalAndLocaleMapRequest(){ Read = read}, cancellationToken);
             return response.Response;

@@ -1,31 +1,33 @@
 ﻿using System.Threading.Tasks;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
 {
-    public class ImageLinker : IFileAssetLinker<ImageLinker>
+    public class FileAssetLinker : IFileAssetLinker<FileAssetLinker>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
+        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
 
-        public ImageLinker(IConfigurationRepository configurationRepository)
+        public FileAssetLinker(
+            IConfigurationEntityStore<ConversationNode> convoNodeStore,
+            IConfigurationEntityStore<FileAsset> fileAssetStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.convoNodeStore = convoNodeStore;
+            this.fileAssetStore = fileAssetStore;
         }
 
         public async Task LinkToNode(string fileId, string nodeId)
         {
-            var node = await configurationRepository.GetConversationNodeById(nodeId);
-            var fileAsset = await configurationRepository.GetFileAsset(fileId);
-
+            var node = await convoNodeStore.Get(nodeId, s => s.NodeId);
+            var fileAsset = await fileAssetStore.Get(fileId, s => s.FileId);
             node.ImageId = fileAsset.FileId;
         }
 
         public async Task UnLinkFromNode(string fileId, string nodeId)
         {
-            var node = await configurationRepository.GetConversationNodeById(nodeId);
-            var fileAsset = await configurationRepository.GetFileAsset(fileId);
-
-            node.ImageId = fileAsset.FileId;
+            var node = await convoNodeStore.Get(nodeId, s => s.NodeId);
+            node.ImageId = null;
         }
 
         public Task LinkToAccount(string fileId)

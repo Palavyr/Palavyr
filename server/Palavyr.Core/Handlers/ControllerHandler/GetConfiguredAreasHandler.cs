@@ -1,24 +1,34 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetConfiguredIntentsHandler : IRequestHandler<GetConfiguredIntentsRequest, GetConfiguredIntentsResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly ICancellationTokenTransport cancellationTokenTransport;
 
-        public GetConfiguredIntentsHandler(IConfigurationRepository configurationRepository)
+        private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
+
+        public GetConfiguredIntentsHandler(
+            IConfigurationEntityStore<Area> intentStore,
+            ICancellationTokenTransport cancellationTokenTransport
+        )
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
+            this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
         public async Task<GetConfiguredIntentsResponse> Handle(GetConfiguredIntentsRequest request, CancellationToken cancellationToken)
         {
-            var activeIntents = await configurationRepository.GetActiveAreas();
+            var activeIntents = await intentStore.Query().Where(x => x.IsEnabled).ToListAsync(CancellationToken);
             return new GetConfiguredIntentsResponse(activeIntents);
         }
     }

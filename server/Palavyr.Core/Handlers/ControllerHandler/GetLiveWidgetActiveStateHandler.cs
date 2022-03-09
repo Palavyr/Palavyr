@@ -1,22 +1,23 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetLiveWidgetActiveStateHandler : IRequestHandler<GetLiveWidgetActiveStateRequest, GetLiveWidgetActiveStateResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore;
 
-        public GetLiveWidgetActiveStateHandler(IConfigurationRepository configurationRepository)
+        public GetLiveWidgetActiveStateHandler(IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.widgetPreferenceStore = widgetPreferenceStore;
         }
 
         public async Task<GetLiveWidgetActiveStateResponse> Handle(GetLiveWidgetActiveStateRequest request, CancellationToken cancellationToken)
         {
-            var widgetPreferences = await configurationRepository.GetWidgetPreferences();
+            var widgetPreferences = await widgetPreferenceStore.Get(widgetPreferenceStore.AccountId, s => s.AccountId);
             return new GetLiveWidgetActiveStateResponse(widgetPreferences.WidgetState);
         }
     }

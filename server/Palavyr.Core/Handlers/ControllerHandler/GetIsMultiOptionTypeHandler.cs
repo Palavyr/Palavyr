@@ -42,7 +42,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             {
                 if (request.NodeType.StartsWith(dynamicTableType.TableType))
                 {
-                    var tableId = guidFinder.FindFirstGuidSuffix(request.NodeType);
+                    var tableId = guidFinder.FindFirstGuidSuffixOrNull(request.NodeType);
                     var table = await dashContext
                         .DynamicTableMetas
                         .SingleOrDefaultAsync(row => row.TableId == tableId);

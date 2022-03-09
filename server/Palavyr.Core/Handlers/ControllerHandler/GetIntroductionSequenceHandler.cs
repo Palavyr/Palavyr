@@ -2,29 +2,29 @@
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetIntroductionSequenceHandler : IRequestHandler<GetIntroductionSequenceRequest, GetIntroductionSequenceResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
 
-        public GetIntroductionSequenceHandler(
-            IConfigurationRepository configurationRepository,
-            IAccountRepository accountRepository)
+        public GetIntroductionSequenceHandler(IConfigurationEntityStore<Account> accountStore, IConfigurationEntityStore<ConversationNode> convoNodeStore)
         {
-            this.configurationRepository = configurationRepository;
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
+            this.convoNodeStore = convoNodeStore;
         }
 
         public async Task<GetIntroductionSequenceResponse> Handle(GetIntroductionSequenceRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
-            var introConvo = await configurationRepository.GetIntroductionSequence(account.IntroductionId);
-            var intro = EndingSequenceAttacher.CleanTheIntroConvoEnding(introConvo);
+            var account = await accountStore.GetAccount();
+            var introConvo = await convoNodeStore.GetMany(account.IntroductionId, s => s.AreaIdentifier);
+            var intro = EndingSequenceAttacher.CleanTheIntroConvoEnding(introConvo.ToArray());
             return new GetIntroductionSequenceResponse(intro);
         }
     }

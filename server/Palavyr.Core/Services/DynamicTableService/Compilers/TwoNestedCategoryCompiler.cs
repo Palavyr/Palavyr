@@ -16,22 +16,25 @@ using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
-    public class TwoNestedCategoryCompiler : BaseCompiler<TwoNestedCategory>, IDynamicTablesCompiler
+    public interface ITwoNestedCategoryCompiler : IDynamicTablesCompiler
     {
-        private readonly IConfigurationRepository configurationRepository;
+    }
+
+    public class TwoNestedCategoryCompiler : BaseCompiler<TwoNestedCategory>, ITwoNestedCategoryCompiler
+    {
         private readonly IConversationOptionSplitter splitter;
         private readonly IResponseRetriever responseRetriever;
+        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore;
 
         public TwoNestedCategoryCompiler(
             IGenericDynamicTableRepository<TwoNestedCategory> repository,
-            IConfigurationRepository configurationRepository,
             IConversationOptionSplitter splitter,
-            IResponseRetriever responseRetriever
-        ) : base(repository)
+            IResponseRetriever responseRetriever,
+            IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(repository)
         {
-            this.configurationRepository = configurationRepository;
             this.splitter = splitter;
             this.responseRetriever = responseRetriever;
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
         }
 
         public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
@@ -45,12 +48,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var innerCategory = GetResponseByResponseId(orderedResponseIds[1], dynamicResponseParts);
 
             var result = records.Single(rec => rec.ItemName == outerCategory && rec.InnerItemName == innerCategory);
-            var dynamicTableMeta = await configurationRepository.GetDynamicTableMetaByTableId(result.TableId);
+            var dynamicTableMeta = await dynamicTableMetaStore.Get(result.TableId, s => s.TableId);
 
             return new List<TableRow>()
             {
                 new TableRow(
-                    dynamicTableMeta.UseTableTagAsResponseDescription ? dynamicTableMeta.TableTag : string.Join(" & ", new[] {result.ItemName, result.InnerItemName}),
+                    dynamicTableMeta.UseTableTagAsResponseDescription ? dynamicTableMeta.TableTag : string.Join(" & ", new[] { result.ItemName, result.InnerItemName }),
                     result.ValueMin,
                     result.ValueMax,
                     false,
@@ -126,7 +129,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var currentRows = new List<TableRow>()
             {
                 new TableRow(
-                    tableMeta.UseTableTagAsResponseDescription ? tableMeta.TableTag : string.Join(" & ", new[] {availableTwoNested.First().ItemName, availableTwoNested.First().InnerItemName}),
+                    tableMeta.UseTableTagAsResponseDescription ? tableMeta.TableTag : string.Join(" & ", new[] { availableTwoNested.First().ItemName, availableTwoNested.First().InnerItemName }),
                     availableTwoNested.First().ValueMin,
                     availableTwoNested.First().ValueMax,
                     false,
@@ -186,7 +189,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Outer-Categories"),
                     dynamicTableMeta.ConvertToPrettyName("Outer"),
-                    new List<string>() {"Continue"},
+                    new List<string>() { "Continue" },
                     outerCategories,
                     true,
                     true,
@@ -205,7 +208,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Inner-Categories"),
                     dynamicTableMeta.ConvertToPrettyName("Inner"),
-                    new List<string>() {"Continue"},
+                    new List<string>() { "Continue" },
                     innerCategories,
                     true,
                     true,

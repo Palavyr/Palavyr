@@ -9,6 +9,9 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.StripeServices.Products;
@@ -41,7 +44,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
         public async Task EventReceivedIsFired()
         {
             var signature = A.RandomId();
-            var @event = await WriteAMockEvent(A.RandomName(), signature);
+            var stripeWebhookStore = ResolveStore<StripeWebhookRecord>();
+            var @event = await WriteAMockEvent(A.RandomName(), stripeWebhookStore, signature);
 
             await router.ProcessStripeEvent(@event, signature, CancellationToken.None);
 
@@ -53,7 +57,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
         public async Task SkipsEvent()
         {
             var signature = A.RandomId();
-            var @event = await WriteAMockEvent(A.RandomName(), signature);
+            var stripeWebhookStore = ResolveStore<StripeWebhookRecord>();
+            var @event = await WriteAMockEvent(A.RandomName(), stripeWebhookStore, signature);
 
             await router.ProcessStripeEvent(@event, signature, CancellationToken.None);
 
@@ -238,10 +243,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
             return @event;
         }
 
-        private async Task<Event> WriteAMockEvent(string eventType, string? signature = null)
+        private async Task<Event> WriteAMockEvent(string eventType, IConfigurationEntityStore<StripeWebhookRecord> stripeWebhookStore, string? signature = null)
         {
             var @event = CreateAMockEvent(eventType);
-            await AccountRepository.AddStripeEvent(@event.Id, signature);
+            await stripeWebhookStore.AddStripeEvent(@event.Id, signature);
             return @event;
         }
 

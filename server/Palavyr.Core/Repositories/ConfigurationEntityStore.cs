@@ -15,38 +15,6 @@ using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Repositories
 {
-    public interface IConfigurationEntityStore<TEntity> where TEntity : class, IEntity
-    {
-        Task<TEntity> Create(TEntity entity);
-
-
-        Task<TEntity> Get(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
-        Task<TEntity> Get(int id, Expression<Func<TEntity, string>> propertySelectorExpression);
-
-        Task<List<TEntity>> GetMany(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression);
-        Task<List<TEntity>> GetMany(int[] ids, Expression<Func<TEntity, string>> propertySelectorExpression);
-        Task<TEntity[]> GetAll();
-
-        Task DeleteMany(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression);
-
-
-        Task<TEntity> Update(TEntity entity);
-        Task Delete(TEntity entity);
-        Task Delete(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
-        Task DeleteMany(TEntity[] entities);
-
-        IQueryable<TEntity> Query();
-
-        CancellationToken CancellationToken { get; }
-        string AccountId { get; }
-    }
-
-
-    public interface IIntentEntityStore
-    {
-        Task<Area> GetIntentComplete(string intentId);
-    }
-
     public class ConfigurationEntityStore<TEntity> : IConfigurationEntityStore<TEntity> where TEntity : class, IEntity, IHaveAccountId
     {
         public readonly IAccountIdTransport AccountIdTransport;
@@ -60,7 +28,6 @@ namespace Palavyr.Core.Repositories
         private Type[] accountContextTypes = new[] // separated out because of a poor decision I made early on. All new tables will go into the configuration context
         {
             typeof(Account),
-            typeof(Backup),
             typeof(EmailVerification),
             typeof(Session),
             typeof(StripeWebhookRecord),
@@ -112,6 +79,12 @@ namespace Palavyr.Core.Repositories
             return entityEntry.Entity;
         }
 
+        public async Task CreateMany(TEntity[] entities)
+        {
+            await Task.CompletedTask;
+            await QueryExecutor.AddRangeAsync(entities, CancellationToken);
+        }
+
         public async Task<TEntity[]> Get(Expression<Func<TEntity, bool>> whereFilterPredicate)
         {
             if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
@@ -139,10 +112,18 @@ namespace Palavyr.Core.Repositories
             return entity;
         }
 
-        public Task<List<TEntity>> GetMany(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
+        public async Task<List<TEntity>> GetMany(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
             var fieldName = propertySelectorExpression.GetMember().Name;
-            return ReadonlyQueryExecutor
+            return await ReadonlyQueryExecutor
+                .Where(x => ids.Contains((string)x.GetType().GetProperty(fieldName).GetValue(typeof(TEntity))))
+                .ToListAsync(CancellationToken);
+        }
+
+        public async Task<List<TEntity>> GetMany(List<string> ids, Expression<Func<ConversationNode, string>> propertySelectorExpression)
+        {
+            var fieldName = propertySelectorExpression.GetMember().Name;
+            return await ReadonlyQueryExecutor
                 .Where(x => ids.Contains((string)x.GetType().GetProperty(fieldName).GetValue(typeof(TEntity))))
                 .ToListAsync(CancellationToken);
         }
@@ -154,6 +135,23 @@ namespace Palavyr.Core.Repositories
                 .Where(x => ids.Contains((int)x.GetType().GetProperty(fieldName).GetValue(typeof(TEntity))))
                 .ToListAsync(CancellationToken);
         }
+
+        public Task<List<TEntity>> GetMany(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
+        {
+            var fieldName = propertySelectorExpression.GetMember().Name;
+            return ReadonlyQueryExecutor
+                .Where(x => id == (string)x.GetType().GetProperty(fieldName).GetValue(typeof(TEntity)))
+                .ToListAsync(CancellationToken);
+        }
+
+        public Task<List<TEntity>> GetMany(int id, Expression<Func<TEntity, string>> propertySelectorExpression)
+        {
+            var fieldName = propertySelectorExpression.GetMember().Name;
+            return ReadonlyQueryExecutor
+                .Where(x => id == (int)x.GetType().GetProperty(fieldName).GetValue(typeof(TEntity)))
+                .ToListAsync(CancellationToken);
+        }
+
 
         public async Task<TEntity[]> GetAll()
         {
@@ -176,19 +174,23 @@ namespace Palavyr.Core.Repositories
             QueryExecutor.Remove(entity);
         }
 
-        public Task Delete(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
+        public async Task Delete(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            throw new NotImplementedException();
+            var fieldName = propertySelectorExpression.GetMember().Name;
+            var entities = await QueryExecutor
+                .Where(x => id == (string)x.GetType().GetProperty(fieldName).GetValue(typeof(TEntity)))
+                .ToListAsync(CancellationToken);
+            QueryExecutor.RemoveRange(entities);
         }
 
-        public async Task DeleteMany(TEntity[] entities)
+        public async Task Delete(TEntity[] entities)
         {
             await Task.CompletedTask;
             AssertAccountIsCorrect(entities.First());
             QueryExecutor.RemoveRange(entities);
         }
 
-        public async Task DeleteMany(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
+        public async Task Delete(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
             var entities = await GetMany(ids, propertySelectorExpression);
             QueryExecutor.RemoveRange(entities);

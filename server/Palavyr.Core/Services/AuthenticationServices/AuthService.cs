@@ -10,6 +10,7 @@ using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Sessions;
 
 
 namespace Palavyr.Core.Services.AuthenticationServices
@@ -21,7 +22,9 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
     public class AuthService : IAuthService
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IRemoveStaleSessions removeStaleSessions;
+        private readonly IConfigurationEntityStore<Session> sessionStore;
+        private readonly IConfigurationEntityStore<Account> accountStore;
         private readonly ILogger<AuthService> logger;
         private readonly IJwtAuthenticationService jwtAuthService;
         private IConfiguration configuration;
@@ -34,13 +37,17 @@ namespace Palavyr.Core.Services.AuthenticationServices
         private const int GracePeriod = 5;
 
         public AuthService(
-            IAccountRepository accountRepository,
+            IRemoveStaleSessions removeStaleSessions,
+            IConfigurationEntityStore<Session> sessionStore,
+            IConfigurationEntityStore<Account> accountStore,
             ILogger<AuthService> logger,
             IJwtAuthenticationService jwtService,
             IConfiguration configuration
         )
         {
-            this.accountRepository = accountRepository;
+            this.removeStaleSessions = removeStaleSessions;
+            this.sessionStore = sessionStore;
+            this.accountStore = accountStore;
             this.logger = logger;
 
             this.configuration = configuration;
@@ -98,10 +105,12 @@ namespace Palavyr.Core.Services.AuthenticationServices
             UpdateCurrentAccountState(account);
 
             logger.LogDebug("Creating and adding a new session...");
-            var session = await accountRepository.CreateAndAddNewSession(account);
 
+
+            await removeStaleSessions.CleanSessionDb();
+            var newSession = Session.CreateNew(token, accountStore.AccountId, account.ApiKey);
+            var session = await sessionStore.Create(newSession);
             logger.LogDebug("Committing the new session to the DB.");
-            await accountRepository.CommitChangesAsync();
 
             logger.LogDebug("Session saved to DB. Returning auth response.");
             return Credentials.CreateAuthenticatedResponse(
@@ -163,7 +172,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
         private async Task<AccountReturn> RequestAccountViaDefault(CreateLoginRequest credentialsRequest)
         {
-            var account = await accountRepository.GetAccountByEmailOrNull(credentialsRequest.EmailAddress.ToLowerInvariant());
+            var account = await accountStore.Get(credentialsRequest.EmailAddress.ToLowerInvariant(), s => s.EmailAddress);
             if (account == null)
             {
                 return AccountReturn.Return(account, CouldNotFindAccount);
@@ -193,9 +202,6 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
         private LoginType DetermineLoginType(CreateLoginRequest loginCredentialsRequest)
         {
-            // if (!string.IsNullOrWhiteSpace(loginCredentialsRequest.OneTimeCode) &&
-            //     !string.IsNullOrWhiteSpace(loginCredentialsRequest.TokenId))
-            //     return LoginType.Google;
             if (!string.IsNullOrWhiteSpace(loginCredentialsRequest.EmailAddress) &&
                 !string.IsNullOrWhiteSpace(loginCredentialsRequest.Password))
                 return LoginType.Default;

@@ -16,8 +16,6 @@ namespace Palavyr.Core.Data
         public DbSet<StaticTablesMeta> StaticTablesMetas { get; set; }
         public DbSet<StaticTableRow> StaticTablesRows { get; set; }
         public DbSet<DynamicTableMeta> DynamicTableMetas { get; set; }
-        public DbSet<FileNameMap> FileNameMaps { get; set; }
-        public DbSet<Image> Images { get; set; }
 
         public DbSet<FileAsset> FileAssets { get; set; }
         public DbSet<Logo> Logos { get; set; }

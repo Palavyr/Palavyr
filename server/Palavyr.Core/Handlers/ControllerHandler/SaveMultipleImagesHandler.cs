@@ -3,7 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -11,10 +13,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class SaveMultipleImagesHandler : IRequestHandler<SaveMultipleImagesRequest, SaveMultipleImagesResponse>
     {
         private readonly INodeFileAssetSaver nodeFileAssetSaver;
+        private readonly ILinkCreator linkCreator;
 
-        public SaveMultipleImagesHandler(INodeFileAssetSaver nodeFileAssetSaver)
+        public SaveMultipleImagesHandler(INodeFileAssetSaver nodeFileAssetSaver, ILinkCreator linkCreator)
         {
             this.nodeFileAssetSaver = nodeFileAssetSaver;
+            this.linkCreator = linkCreator;
         }
 
         public async Task<SaveMultipleImagesResponse> Handle(SaveMultipleImagesRequest request, CancellationToken cancellationToken)
@@ -22,8 +26,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var imageFileLinks = new List<FileLink>();
             foreach (var imageFile in request.ImageFiles)
             {
-                var fileLink = await nodeFileAssetSaver.SaveImage(imageFile, cancellationToken);
-                imageFileLinks.Add(fileLink);
+                var fileAsset = await nodeFileAssetSaver.SaveFile(imageFile);
+                imageFileLinks.Add(await fileAsset.ToFileLink(linkCreator));
             }
 
             return new SaveMultipleImagesResponse(imageFileLinks.ToArray());

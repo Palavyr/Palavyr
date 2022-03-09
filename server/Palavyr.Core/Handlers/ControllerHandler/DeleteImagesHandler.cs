@@ -35,10 +35,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             foreach (var id in request.ImageIds)
             {
                 // This throws if a GUID is not found.
-                guidFinder.FindFirstGuidSuffix(id);
+                guidFinder.FindFirstGuidSuffixOrNull(id);
             }
 
-            var fileLinks = await fileAssetDeleter.RemoveFiles(request.ImageIds, cancellationToken);
+            var fileLinks = await fileAssetDeleter.RemoveFiles(request.ImageIds);
             return new DeleteImagesResponse(fileLinks);
         }
     }

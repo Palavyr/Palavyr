@@ -4,24 +4,26 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.PdfService;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetResponsePreviewHandler : IRequestHandler<GetResponsePreviewRequest, GetResponsePreviewResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
         private readonly ILogger<GetResponsePreviewHandler> logger;
         private readonly IPreviewResponseGenerator previewPdfGenerator;
 
         public GetResponsePreviewHandler(
-            IAccountRepository accountRepository,
+            IConfigurationEntityStore<Account> accountStore,
             ILogger<GetResponsePreviewHandler> logger,
             IPreviewResponseGenerator previewPdfGenerator)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
             this.logger = logger;
             this.previewPdfGenerator = previewPdfGenerator;
         }
@@ -29,7 +31,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetResponsePreviewResponse> Handle(GetResponsePreviewRequest request, CancellationToken cancellationToken)
         {
             logger.LogDebug("Attempting to generate a new preview");
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             var locale = account.Locale;
             var culture = new CultureInfo(locale);
 

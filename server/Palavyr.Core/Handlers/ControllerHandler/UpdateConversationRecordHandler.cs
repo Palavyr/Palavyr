@@ -2,24 +2,26 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class UpdateConversationRecordHandler : INotificationHandler<UpdateConversationRecordRequest>
     {
+        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
         private readonly ILogger<UpdateConversationRecordHandler> logger;
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly IConvoHistoryRepository convoHistoryRepository;
 
         public UpdateConversationRecordHandler(
-            ILogger<UpdateConversationRecordHandler> logger,
-            IConfigurationRepository configurationRepository,
-            IConvoHistoryRepository convoHistoryRepository)
+            IConfigurationEntityStore<Area> intentStore,
+            IConfigurationEntityStore<ConversationRecord> convoRecordStore,
+            ILogger<UpdateConversationRecordHandler> logger)
         {
+            this.intentStore = intentStore;
+            this.convoRecordStore = convoRecordStore;
             this.logger = logger;
-            this.configurationRepository = configurationRepository;
-            this.convoHistoryRepository = convoHistoryRepository;
         }
 
         public async Task Handle(UpdateConversationRecordRequest request, CancellationToken cancellationToken)
@@ -31,11 +33,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var fallback = request.Fallback;
             var isComplete = request.IsComplete;
 
-            var record = await convoHistoryRepository.GetConversationRecordById(request.ConversationId);
+            var record = await convoRecordStore.Get(request.ConversationId, s => s.ConversationId);
 
             if (!string.IsNullOrEmpty(areaId)) // we set this already when we create the convo, but here we use it to indicate if we've sent an email.
             {
-                var area = await configurationRepository.GetAreaById(request.IntentId);
+                var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
                 record.EmailTemplateUsed = area.EmailTemplate;
             }
 
@@ -63,9 +65,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             {
                 record.IsComplete = isComplete;
             }
-
-            await configurationRepository.CommitChangesAsync();
-            await convoHistoryRepository.CommitChangesAsync();
         }
     }
 

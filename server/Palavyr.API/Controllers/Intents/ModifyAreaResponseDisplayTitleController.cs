@@ -2,38 +2,38 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Intents
 {
     [Authorize]
-
     public class ModifyAreaResponseDisplayTitleController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<Area> intentStore;
         private ILogger<ModifyAreaResponseDisplayTitleController> logger;
 
         public ModifyAreaResponseDisplayTitleController(
-            IConfigurationRepository configurationRepository,
+            IConfigurationEntityStore<Area> intentStore,
             ILogger<ModifyAreaResponseDisplayTitleController> logger
         )
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
             this.logger = logger;
         }
 
         [HttpPut("areas/update/display-title/{areaId}")]
         public async Task<string> Modify(
-            [FromBody] AreaDisplayTitleText areaDisplayTitleText,
+            [FromBody]
+            AreaDisplayTitleText areaDisplayTitleText,
             string areaId
         )
         {
-            var area = await configurationRepository.GetAreaById(areaId);
+            var area = await intentStore.Get(areaId, s => s.AreaIdentifier);
             if (areaDisplayTitleText.AreaDisplayTitle != null)
             {
                 area.AreaDisplayTitle = areaDisplayTitleText.AreaDisplayTitle;
-                await configurationRepository.CommitChangesAsync();
             }
 
             return areaDisplayTitleText.AreaDisplayTitle;

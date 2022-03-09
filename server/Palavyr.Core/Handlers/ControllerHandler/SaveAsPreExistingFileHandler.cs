@@ -1,29 +1,32 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class SaveAsPreExistingFileHandler : INotificationHandler<SaveAsPreExistingFileRequest>
     {
-        private readonly IConfigurationRepository repository;
+        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
 
-        public SaveAsPreExistingFileHandler(IConfigurationRepository repository)
+        public SaveAsPreExistingFileHandler(IConfigurationEntityStore<FileAsset> fileAssetStore, IConfigurationEntityStore<ConversationNode> convoNodeStore)
         {
-            this.repository = repository;
+            this.fileAssetStore = fileAssetStore;
+            this.convoNodeStore = convoNodeStore;
         }
 
         public async Task Handle(SaveAsPreExistingFileRequest request, CancellationToken cancellationToken)
         {
             // asserts this image exists
-            var image = await repository.GetImageById(request.ImageId);
-            var convoNode = await repository.GetConversationNodeById(request.NodeId);
+
+            var fileAsset = await fileAssetStore.Get(request.FileId, s => s.FileId);
+            var convoNode = await convoNodeStore.Get(request.NodeId, s => s.NodeId);
 
             if (convoNode != null)
             {
-                convoNode.ImageId = image.ImageId;
-                await repository.CommitChangesAsync();
+                convoNode.ImageId = fileAsset.FileId;
             }
         }
     }
@@ -31,12 +34,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class SaveAsPreExistingFileRequest : INotification
     {
-        public SaveAsPreExistingFileRequest(string imageId, string nodeId)
+        public SaveAsPreExistingFileRequest(string fileId, string nodeId)
         {
-            ImageId = imageId;
+            FileId = fileId;
             NodeId = nodeId;
         }
-        public string ImageId { get; set; }
+
+        public string FileId { get; set; }
         public string NodeId { get; set; }
     }
 }

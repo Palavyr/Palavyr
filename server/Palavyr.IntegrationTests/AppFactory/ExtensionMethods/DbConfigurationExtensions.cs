@@ -159,7 +159,6 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             var fees = dashContext.StaticFees.ToArray();
             var prefs = dashContext.WidgetPreferences.ToArray();
             var dynTables = dashContext.DynamicTableMetas.ToArray();
-            var nameMaps = dashContext.FileNameMaps.ToArray();
             var staticMetas = dashContext.StaticTablesMetas.ToArray();
             var staticRows = dashContext.StaticTablesRows.ToArray();
             var perc = dashContext.PercentOfThresholds.ToArray();
@@ -173,7 +172,6 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             dashContext.StaticFees.RemoveRange(fees);
             dashContext.WidgetPreferences.RemoveRange(prefs);
             dashContext.DynamicTableMetas.RemoveRange(dynTables);
-            dashContext.FileNameMaps.RemoveRange(nameMaps);
             dashContext.StaticTablesMetas.RemoveRange(staticMetas);
             dashContext.StaticTablesRows.RemoveRange(staticRows);
 

@@ -40,16 +40,15 @@ namespace PalavyrServer.UnitTests.Core.Models
 
             result.ShouldBeEquivalentTo(expected);
         }
-        
+
         public async Task InitializeAsync()
         {
             await Task.CompletedTask;
-            var configurationRepository = Substitute.For<IConfigurationRepository>();
             var guidSub = Substitute.For<IGuidUtils>();
             var range = Enumerable.Range(0, 20).Select(x => x.ToString()).ToArray();
             guidSub.CreateNewId().Returns("A", range);
 
-            var endingSequenceNodes = new EndingSequenceNodes(configurationRepository, guidSub);
+            var endingSequenceNodes = new EndingSequenceNodes(guidSub);
             sequenceAttacher = new EndingSequenceAttacher(endingSequenceNodes);
         }
 

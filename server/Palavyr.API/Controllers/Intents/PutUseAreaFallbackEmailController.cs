@@ -12,7 +12,6 @@ namespace Palavyr.API.Controllers.Intents
     public class PutUseAreaFallbackEmailController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        private readonly IConfigurationRepository configurationRepository;
 
         public PutUseAreaFallbackEmailController(IMediator mediator)
         {

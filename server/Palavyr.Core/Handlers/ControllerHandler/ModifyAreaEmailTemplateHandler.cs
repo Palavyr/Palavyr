@@ -1,24 +1,24 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyAreaEmailTemplateHandler : IRequestHandler<ModifyAreaEmailTemplateRequest, ModifyAreaEmailTemplateResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<Area> intentStore;
 
-        public ModifyAreaEmailTemplateHandler(IConfigurationRepository configurationRepository)
+        public ModifyAreaEmailTemplateHandler(IConfigurationEntityStore<Area> intentStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
         }
 
         public async Task<ModifyAreaEmailTemplateResponse> Handle(ModifyAreaEmailTemplateRequest request, CancellationToken cancellationToken)
         {
-            var currentArea = await configurationRepository.GetAreaById(request.IntentId);
+            var currentArea = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
             currentArea.EmailTemplate = request.EmailTemplate;
-            await configurationRepository.CommitChangesAsync();
             return new ModifyAreaEmailTemplateResponse(currentArea.EmailTemplate);
         }
     }

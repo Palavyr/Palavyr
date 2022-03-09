@@ -14,7 +14,8 @@ namespace Palavyr.Core.Services.AccountServices
 {
     public class AccountSetupService : IAccountSetupService
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Session> sessionStore;
+        private readonly IConfigurationEntityStore<Account> accountStore;
 
         private readonly INewAccountUtils newAccountUtils;
         private readonly ILogger<AuthService> logger;
@@ -29,7 +30,8 @@ namespace Palavyr.Core.Services.AccountServices
         private const string EmailAddressNotFound = "Email Address Not Found";
 
         public AccountSetupService(
-            IAccountRepository accountRepository,
+            IConfigurationEntityStore<Session> sessionStore,
+            IConfigurationEntityStore<Account> accountStore,
             INewAccountUtils newAccountUtils,
             ILogger<AuthService> logger,
             IJwtAuthenticationService jwtService,
@@ -38,7 +40,8 @@ namespace Palavyr.Core.Services.AccountServices
             IAccountIdTransport accountIdTransport
         )
         {
-            this.accountRepository = accountRepository;
+            this.sessionStore = sessionStore;
+            this.accountStore = accountStore;
             this.newAccountUtils = newAccountUtils;
             this.logger = logger;
             jwtAuthService = jwtService;
@@ -85,7 +88,7 @@ namespace Palavyr.Core.Services.AccountServices
                 AccountType.Default
             );
             logger.LogDebug("Adding new account via DEFAULT...");
-            await accountRepository.CreateAccount(account);
+            await accountStore.Create(account);
 
             var introId = account.IntroductionId;
             var ok = await accountRegistrationMaker.TryRegisterAccountAndSendEmailVerificationToken(accountId, apiKey, emailAddress, introId, cancellationToken);
@@ -95,14 +98,14 @@ namespace Palavyr.Core.Services.AccountServices
 
             var token = CreateNewJwtToken(account);
             var session = CreateNewSession(account);
-            await accountRepository.CreateNewSession(session);
+            await sessionStore.Create(session);
 
             return Credentials.CreateAuthenticatedResponse(session.SessionId, session.ApiKey, token, account.EmailAddress);
         }
 
         private async Task<bool> AccountExists(string emailAddress)
         {
-            var account = await accountRepository.GetAccountOrNull();
+            var account = await accountStore.Get(emailAddress, s => s.EmailAddress);
             return account != null;
         }
     }

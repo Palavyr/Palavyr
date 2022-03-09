@@ -5,7 +5,12 @@ using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models
 {
-    public class TreeWalker
+    public interface ITreeWalker
+    {
+        int CountAllTerminalNodes(ConversationNode[] nodeList, ConversationNode node, int count);
+    }
+
+    public class TreeWalker : ITreeWalker
     {
         private readonly IConversationOptionSplitter splitter;
 

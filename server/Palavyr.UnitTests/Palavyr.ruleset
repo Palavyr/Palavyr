@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Rules Unit Test" Description="Code analysis rules for UnitTest.csproj." ToolsVersion="15.0">
+    <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+        <Rule Id="CA1021" Action="Warning"/> <!-- Overrides CA1021 severity from child rule set -->
+    </Rules>
+    <Rules AnalyzerId="PalavyrCustom" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
+        <Rule Id="NU1701" Action="None"/>
+    </Rules>
+
+</RuleSet>

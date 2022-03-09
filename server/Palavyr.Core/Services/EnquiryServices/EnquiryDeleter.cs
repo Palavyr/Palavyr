@@ -1,36 +1,33 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.Core.Services.EnquiryServices
 {
     public interface IEnquiryDeleter
     {
         Task DeleteEnquiry(string fileId, CancellationToken cancellationToken);
-        Task DeleteEnquiries(string[] fileReferences, CancellationToken cancellationToken);   
+        Task DeleteEnquiries(string[] fileReferences, CancellationToken cancellationToken);
     }
 
     public class EnquiryDeleter : IEnquiryDeleter
     {
         private readonly IS3FileDeleter is3FileDeleter;
-        private readonly IS3KeyResolver s3KeyResolver;
+        private readonly IFileAssetDeleter fileAssetDeleter;
         private readonly IConfiguration configuration;
         private readonly ConvoContext convoContext;
 
         public EnquiryDeleter(
-            IS3FileDeleter is3FileDeleter,
-            IS3KeyResolver s3KeyResolver,
+            IFileAssetDeleter fileAssetDeleter,
             IConfiguration configuration,
             ConvoContext convoContext
         )
         {
-            this.is3FileDeleter = is3FileDeleter;
-            this.s3KeyResolver = s3KeyResolver;
+            this.fileAssetDeleter = fileAssetDeleter;
             this.configuration = configuration;
             this.convoContext = convoContext;
         }
@@ -52,16 +49,9 @@ namespace Palavyr.Core.Services.EnquiryServices
             await convoContext.SaveChangesAsync(cancellationToken);
         }
 
-        private async Task DeleteFromS3(string fileReference)
+        private async Task DeleteFromS3(string fileId)
         {
-            // Delete from S3
-            var s3Key = s3KeyResolver.ResolveResponsePdfKey(fileReference);
-            var userDataBucket = configuration.GetUserDataBucket();
-            var success = await is3FileDeleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
-            if (!success)
-            {
-                throw new Exception("Failed to delete s3 file.");
-            }
+            await fileAssetDeleter.RemoveFile(fileId);
         }
 
         public void TrackDeleteFromDb(string conversationId)

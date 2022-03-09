@@ -22,7 +22,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
         [HttpGet(Route)]
-        public async Task<CurrentLocaleAndLocalMapRetriever.LocaleResponse> GetForWidget(CancellationToken cancellationToken)
+        public async Task<CurrentLocaleAndLocaleMapRetriever.LocaleResponse> GetForWidget(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetCurrentLocalAndLocaleMapRequest(), cancellationToken);
             return response.Response;

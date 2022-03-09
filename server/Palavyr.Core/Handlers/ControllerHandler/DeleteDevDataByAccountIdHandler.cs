@@ -11,22 +11,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class DeleteDevDataByAccountIdHandler : INotificationHandler<DeleteDevDataByAccountIdRequest>
     {
         private readonly ILogger<DeleteDevDataByAccountIdHandler> logger;
-        private readonly IAccountDeleter accountDeleter;
-        private readonly IDashDeleter dashDeleter;
-        private readonly IConvoDeleter convoDeleter;
+        private readonly IDangerousAccountDeleter dangerousAccountDeleter;
         private readonly IDetermineCurrentEnvironment determineCurrentEnvironment;
 
         public DeleteDevDataByAccountIdHandler(
             ILogger<DeleteDevDataByAccountIdHandler> logger,
-            IAccountDeleter accountDeleter,
-            IDashDeleter dashDeleter,
-            IConvoDeleter convoDeleter,
+            IDangerousAccountDeleter dangerousAccountDeleter,
             IDetermineCurrentEnvironment determineCurrentEnvironment)
         {
             this.logger = logger;
-            this.accountDeleter = accountDeleter;
-            this.dashDeleter = dashDeleter;
-            this.convoDeleter = convoDeleter;
+            this.dangerousAccountDeleter = dangerousAccountDeleter;
             this.determineCurrentEnvironment = determineCurrentEnvironment;
         }
 
@@ -43,20 +37,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 return;
             }
 
-            logger.LogInformation($"Deleting details for account: {request.AccountId}");
-
-            logger.LogInformation("Deleting from the convo database...");
-            convoDeleter.DeleteAccount();
-
-            logger.LogInformation("Deleting from the dash database...");
-            await dashDeleter.DeleteAccount();
-
-            logger.LogDebug("Deleting from the Accounts database...");
-            await accountDeleter.DeleteAccount();
-
-            await accountDeleter.CommitChangesAsync();
-            await dashDeleter.CommitChangesAsync();
-            await convoDeleter.CommitChangesAsync();
+            await dangerousAccountDeleter.DeleteAllThings();
         }
     }
 

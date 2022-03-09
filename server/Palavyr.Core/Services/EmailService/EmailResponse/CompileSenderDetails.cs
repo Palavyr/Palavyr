@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
@@ -12,25 +15,26 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
     public class CompileSenderDetails : ICompileSenderDetails
     {
-        private readonly IAccountRepository accountRepository;
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IConfigurationEntityStore<Area> intentStore;
         private readonly IResponseCustomizer responseCustomizer;
 
         public CompileSenderDetails(
-            IAccountRepository accountRepository,
-            IConfigurationRepository configurationRepository,
+            IConfigurationEntityStore<Area> intentStore,
+            IConfigurationEntityStore<Account> accountStore,
             IResponseCustomizer responseCustomizer
         )
         {
-            this.accountRepository = accountRepository;
-            this.configurationRepository = configurationRepository;
+            this.accountStore = accountStore;
+            this.intentStore = intentStore;
+            this.accountStore = accountStore;
             this.responseCustomizer = responseCustomizer;
         }
 
-        public async Task<CompiledSenderDetails> Compile(string areaId, EmailRequest emailRequest)
+        public async Task<CompiledSenderDetails> Compile(string intentId, EmailRequest emailRequest)
         {
-            var account = await accountRepository.GetAccount();
-            var area = await configurationRepository.GetAreaById(areaId);
+            var account = await accountStore.GetAccount();
+            var area = await intentStore.Get(intentId, s => s.AreaIdentifier);
             var fromAddress = string.IsNullOrWhiteSpace(area.AreaSpecificEmail) ? account.EmailAddress : area.AreaSpecificEmail;
 
             var subject = area.UseAreaFallbackEmail ? account.GeneralFallbackSubject : area.Subject;
@@ -47,7 +51,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                 subject = "";
             }
 
-            htmlBody = responseCustomizer.Customize(htmlBody, emailRequest, account);
+            htmlBody = await responseCustomizer.Customize(htmlBody, emailRequest);
 
             return new CompiledSenderDetails
             {

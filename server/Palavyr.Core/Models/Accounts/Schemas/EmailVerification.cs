@@ -1,12 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Palavyr.Core.Models.Accounts.Schemas
+﻿namespace Palavyr.Core.Models.Accounts.Schemas
 {
-    public class EmailVerification
+    public class EmailVerification : Entity
     {
-        
-        [Key]
-        public int? Id { get; set; }
         public string AuthenticationToken { get; set; } = null!;
         public string EmailAddress { get; set; } = null!;
         public string AccountId { get; set; } = null!;
@@ -24,5 +19,6 @@ namespace Palavyr.Core.Models.Accounts.Schemas
                 AccountId = accountId
             };
         }
+
     }
 }

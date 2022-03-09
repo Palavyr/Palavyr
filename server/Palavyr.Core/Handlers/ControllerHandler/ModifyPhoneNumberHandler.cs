@@ -1,24 +1,26 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyPhoneNumberHandler : IRequestHandler<ModifyPhoneNumberRequest, ModifyPhoneNumberResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
 
-        public ModifyPhoneNumberHandler(IAccountRepository accountRepository)
+        public ModifyPhoneNumberHandler(IConfigurationEntityStore<Account> accountStore)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
 
         public async Task<ModifyPhoneNumberResponse> Handle(ModifyPhoneNumberRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             account.PhoneNumber = request.PhoneNumber ?? "";
-            await accountRepository.CommitChangesAsync();
+            
             return new ModifyPhoneNumberResponse(account.PhoneNumber);
         }
     }

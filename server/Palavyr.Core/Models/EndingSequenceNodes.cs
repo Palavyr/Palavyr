@@ -26,12 +26,10 @@ namespace Palavyr.Core.Models
 
     public class EndingSequenceNodes : IEndingSequenceNodes
     {
-        private readonly IConfigurationRepository configurationRepository;
         private readonly IGuidUtils guidUtils;
 
-        public EndingSequenceNodes(IConfigurationRepository configurationRepository, IGuidUtils guidUtils)
+        public EndingSequenceNodes(IGuidUtils guidUtils)
         {
-            this.configurationRepository = configurationRepository;
             this.guidUtils = guidUtils;
         }
 

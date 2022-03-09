@@ -3,21 +3,22 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetResponseConfigurationHandler : IRequestHandler<GetResponseConfigurationRequest, GetResponseConfigurationResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<Area> intentStore;
 
-        public GetResponseConfigurationHandler(IConfigurationRepository configurationRepository)
+        public GetResponseConfigurationHandler(IConfigurationEntityStore<Area> intentStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
         }
 
         public async Task<GetResponseConfigurationResponse> Handle(GetResponseConfigurationRequest request, CancellationToken cancellationToken)
         {
-            var areaWithAllData = await configurationRepository.GetAreaComplete(request.IntentId);
+            var areaWithAllData = await intentStore.GetIntentComplete(request.IntentId);
             return new GetResponseConfigurationResponse(areaWithAllData);
         }
     }

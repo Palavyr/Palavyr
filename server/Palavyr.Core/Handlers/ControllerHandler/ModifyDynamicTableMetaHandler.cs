@@ -11,17 +11,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyDynamicTableMetaHandler : IRequestHandler<ModifyDynamicTableMetaRequest, ModifyDynamicTableMetaResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly DashContext dashContext;
+        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly IUnitRetriever unitRetriever;
 
         public ModifyDynamicTableMetaHandler(
-            IConfigurationRepository configurationRepository,
-            DashContext dashContext,
+            IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore,
             IUnitRetriever unitRetriever)
         {
-            this.configurationRepository = configurationRepository;
-            this.dashContext = dashContext;
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
             this.unitRetriever = unitRetriever;
         }
 
@@ -32,12 +29,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 throw new DomainException("Model Id is needed at this time");
             }
 
-            var currentMeta = await configurationRepository.GetDynamicTableMetaByTableId(request.TableId);
+            var currentMeta = await dynamicTableMetaStore.Get(request.TableId, s => s.TableId);
             currentMeta.UpdateProperties(request, unitRetriever);
-            var updatedMeta = await configurationRepository.UpdateDynamicTableMeta(currentMeta);
 
-            await configurationRepository.CommitChangesAsync();
-            
+            var updatedMeta = await dynamicTableMetaStore.Update(currentMeta);
+
             return new ModifyDynamicTableMetaResponse(updatedMeta);
         }
     }

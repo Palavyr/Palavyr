@@ -2,24 +2,26 @@
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Exceptions;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyPasswordHandler : IRequestHandler<ModifyPasswordRequest, ModifyPasswordResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
 
         public ModifyPasswordHandler(
-            IAccountRepository accountRepository)
+            IConfigurationEntityStore<Account> accountStore)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
 
         public async Task<ModifyPasswordResponse> Handle(ModifyPasswordRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             if (!PasswordHashing.ComparePasswords(account.Password, request.OldPassword))
             {
                 throw new DomainException("Original password does not match that on record");
@@ -27,7 +29,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             var hashedNewPassword = PasswordHashing.CreateHashedPassword(request.Password);
             account.Password = hashedNewPassword;
-            await accountRepository.CommitChangesAsync();
+            
             return new ModifyPasswordResponse(true);
         }
     }

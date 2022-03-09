@@ -2,22 +2,24 @@
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Exceptions;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetApiKeyHandler : IRequestHandler<GetApiKeyRequest, GetApiKeyResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
 
-        public GetApiKeyHandler(IAccountRepository accountRepository)
+        public GetApiKeyHandler(IConfigurationEntityStore<Account> accountStore)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
 
         public async Task<GetApiKeyResponse> Handle(GetApiKeyRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             if (account.ApiKey == null) throw new DomainException("No Api Key Found For this account");
             return new GetApiKeyResponse(account.ApiKey);
         }

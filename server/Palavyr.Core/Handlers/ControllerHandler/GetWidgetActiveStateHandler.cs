@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -9,18 +10,18 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetWidgetActiveStateHandler : IRequestHandler<GetWidgetActiveStateRequest, GetWidgetActiveStateResponse>
     {
         private readonly ILogger<GetWidgetActiveStateHandler> logger;
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore;
 
-        public GetWidgetActiveStateHandler(ILogger<GetWidgetActiveStateHandler> logger, IConfigurationRepository configurationRepository)
+        public GetWidgetActiveStateHandler(ILogger<GetWidgetActiveStateHandler> logger, IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore)
         {
             this.logger = logger;
-            this.configurationRepository = configurationRepository;
+            this.widgetPreferenceStore = widgetPreferenceStore;
         }
 
         public async Task<GetWidgetActiveStateResponse> Handle(GetWidgetActiveStateRequest request, CancellationToken cancellationToken)
         {
             logger.LogDebug("Retrieving widget state.");
-            var widgetPreferences = await configurationRepository.GetWidgetPreferences();
+            var widgetPreferences = await widgetPreferenceStore.Get(widgetPreferenceStore.AccountId, s => s.AccountId);
             var activeState = widgetPreferences.WidgetState;
             
             return new GetWidgetActiveStateResponse(activeState);

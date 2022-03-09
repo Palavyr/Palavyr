@@ -16,20 +16,24 @@ using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
-    public class BasicThresholdCompiler : BaseCompiler<BasicThreshold>, IDynamicTablesCompiler
+    public interface IBasicThresholdCompiler : IDynamicTablesCompiler
     {
-        private readonly IConfigurationRepository configurationRepository;
+    }
+
+    public class BasicThresholdCompiler : BaseCompiler<BasicThreshold>, IBasicThresholdCompiler
+    {
+        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableStore;
         private readonly IThresholdEvaluator thresholdEvaluator;
         private readonly IResponseRetriever responseRetriever;
 
         public BasicThresholdCompiler(
+            IConfigurationEntityStore<DynamicTableMeta> dynamicTableStore,
             IGenericDynamicTableRepository<BasicThreshold> repository,
-            IConfigurationRepository configurationRepository,
             IThresholdEvaluator thresholdEvaluator,
             IResponseRetriever responseRetriever
         ) : base(repository)
         {
-            this.configurationRepository = configurationRepository;
+            this.dynamicTableStore = dynamicTableStore;
             this.thresholdEvaluator = thresholdEvaluator;
             this.responseRetriever = responseRetriever;
         }
@@ -44,8 +48,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var nodeTypeOption = NodeTypeOption.Create(
                 dynamicTableMeta.MakeUniqueIdentifier(),
                 dynamicTableMeta.ConvertToPrettyName(),
-                new List<string>() {"Continue"},
-                new List<string>() {"Continue"},
+                new List<string>() { "Continue" },
+                new List<string>() { "Continue" },
                 true,
                 false,
                 false,
@@ -67,7 +71,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var responseValueAsDouble = double.Parse(responseValue);
             var allRows = await RetrieveAllAvailableResponses(dynamicResponseId);
 
-            var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(allRows.First().TableId);
+            var dynamicMeta = await dynamicTableStore.Get(allRows.First().TableId, s => s.TableId);
 
             var itemsToCreateRowsFor = allRows.Where(x => !string.IsNullOrWhiteSpace(x.ItemName)).Select(row => row.ItemName).Distinct();
 
@@ -145,7 +149,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         {
             var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses<BasicThreshold>(tableMeta.TableId);
             var responseParts = DynamicTableTypes.CreateBasicThreshold().CreateDynamicResponseParts(availableBasicThreshold.First().TableId, availableBasicThreshold.First().Threshold.ToString());
-            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() {tableMeta.TableId}, culture);
+            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;
         }
 

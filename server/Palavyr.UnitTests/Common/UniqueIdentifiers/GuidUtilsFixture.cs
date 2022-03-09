@@ -13,7 +13,7 @@ namespace PalavyrServer.UnitTests.Common.UniqueIdentifiers
         {
             var guid = StaticGuidUtils.CreateNewId();
             var test = $"wow-thisisas-{guid}";
-            this.GetGuidFinder().FindFirstGuidSuffix(test).ShouldBe(guid);
+            this.GetGuidFinder().FindFirstGuidSuffixOrNull(test).ShouldBe(guid);
         }
 
         [Fact]
@@ -22,7 +22,7 @@ namespace PalavyrServer.UnitTests.Common.UniqueIdentifiers
             var guid = StaticGuidUtils.CreateNewId();
             var guidTwo = StaticGuidUtils.CreateNewId();
             var test = $"{guid}-wow-{guidTwo}";
-            var result= this.GetGuidFinder().FindFirstGuidSuffix(test);
+            var result= this.GetGuidFinder().FindFirstGuidSuffixOrNull(test);
             result.ShouldBe(guid);
         }
 

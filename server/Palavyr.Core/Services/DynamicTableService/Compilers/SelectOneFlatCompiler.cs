@@ -17,27 +17,31 @@ using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
-    public class SelectOneFlatCompiler : BaseCompiler<SelectOneFlat>, IDynamicTablesCompiler
+    public interface ISelectOneFlatCompiler : IDynamicTablesCompiler
     {
-        private readonly IConfigurationRepository configurationRepository;
+    }
+
+    public class SelectOneFlatCompiler : BaseCompiler<SelectOneFlat>, ISelectOneFlatCompiler
+    {
         private readonly IConversationOptionSplitter splitter;
         private readonly ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater;
         private readonly IResponseRetriever responseRetriever;
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
+        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore;
 
         public SelectOneFlatCompiler(
             IGenericDynamicTableRepository<SelectOneFlat> repository,
-            IConfigurationRepository configurationRepository,
             IConversationOptionSplitter splitter,
             ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater,
-            IResponseRetriever responseRetriever
-            
-
-        ) : base(repository)
+            IResponseRetriever responseRetriever,
+            IConfigurationEntityStore<ConversationNode> convoNodeStore,
+            IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(repository)
         {
-            this.configurationRepository = configurationRepository;
             this.splitter = splitter;
             this.selectOneFlatNodeUpdater = selectOneFlatNodeUpdater;
             this.responseRetriever = responseRetriever;
+            this.convoNodeStore = convoNodeStore;
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
         }
 
         public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier)
@@ -46,7 +50,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             var tableMeta = await context.DynamicTableMetas.SingleOrDefaultAsync(x => x.TableId == tableId);
 
-            var conversationNodes = await configurationRepository.GetAreaConversationNodes(areaIdentifier);
+            var conversationNodes = await convoNodeStore.GetMany(areaIdentifier, s => s.AreaIdentifier);
             var node = conversationNodes.SingleOrDefault(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId);
 
             if (node != null && currentSelectOneFlatUpdate != null)
@@ -67,7 +71,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var nodeTypeOption = NodeTypeOption.Create(
                 dynamicTableMeta.MakeUniqueIdentifier(),
                 dynamicTableMeta.ConvertToPrettyName(),
-                dynamicTableMeta.ValuesAsPaths ? valueOptions : new List<string>() {"Continue"},
+                dynamicTableMeta.ValuesAsPaths ? valueOptions : new List<string>() { "Continue" },
                 valueOptions,
                 true,
                 dynamicTableMeta.ValuesAsPaths,
@@ -89,7 +93,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var record = await RetrieveAllAvailableResponses(dynamicResponseId);
 
             var option = record.Single(tableRow => tableRow.Option == responseValue);
-            var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(option.TableId);
+            var dynamicMeta = await dynamicTableMetaStore.Get(option.TableId, s => s.TableId);
 
             var row = new TableRow(
                 dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : option.Option,
@@ -98,7 +102,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 false,
                 culture,
                 option.Range);
-            return new List<TableRow>() {row};
+            return new List<TableRow>() { row };
         }
 
         public Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
@@ -149,7 +153,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         {
             var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses<SelectOneFlat>(tableMeta.TableId);
             var responseParts = DynamicTableTypes.CreateSelectOneFlat().CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Option);
-            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() {tableMeta.TableId}, culture);
+            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;
         }
 

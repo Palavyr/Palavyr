@@ -163,7 +163,6 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             dashContext.StaticTablesMetas.RemoveRange(dashContext.StaticTablesMetas);
             dashContext.StaticTablesRows.RemoveRange(dashContext.StaticTablesRows);
             dashContext.StaticFees.RemoveRange(dashContext.StaticFees);
-            dashContext.FileNameMaps.RemoveRange(dashContext.FileNameMaps);
             dashContext.SelectOneFlats.RemoveRange(dashContext.SelectOneFlats);
             dashContext.DynamicTableMetas.RemoveRange(dashContext.DynamicTableMetas);
             await dashContext.SaveChangesAsync();

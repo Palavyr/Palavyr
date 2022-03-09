@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
 using Palavyr.Core.Sessions;
 
@@ -8,12 +9,23 @@ namespace Palavyr.Core.Services.AttachmentServices
 {
     public class AttachmentLinker : IFileAssetLinker<AttachmentLinker>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IConfigurationEntityStore<AttachmentLinkRecord> attachmentLinkRecordStore;
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
+        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
         private readonly IAccountIdTransport accountIdTransport;
 
-        public AttachmentLinker(IConfigurationRepository configurationRepository, IAccountIdTransport accountIdTransport)
+        public AttachmentLinker(
+            IConfigurationEntityStore<Area> intentStore,
+            IConfigurationEntityStore<AttachmentLinkRecord> attachmentLinkRecordStore,
+            IConfigurationEntityStore<ConversationNode> convoNodeStore,
+            IConfigurationEntityStore<FileAsset> fileAssetStore,
+            IAccountIdTransport accountIdTransport)
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
+            this.attachmentLinkRecordStore = attachmentLinkRecordStore;
+            this.convoNodeStore = convoNodeStore;
+            this.fileAssetStore = fileAssetStore;
             this.accountIdTransport = accountIdTransport;
         }
 
@@ -26,18 +38,15 @@ namespace Palavyr.Core.Services.AttachmentServices
                 IntentId = intentId
             };
 
-            await configurationRepository.CreateAttachmentLinkRecord(attachment);
-
-            var intent = await configurationRepository.GetAreaByIdWithAttachments(intentId);
-
+            await attachmentLinkRecordStore.Create(attachment);
+            var intent = await intentStore.GetIntentComplete(intentId);
             intent.AttachmentRecords.Add(attachment);
         }
 
         public async Task LinkToNode(string fileId, string nodeId)
         {
-            var node = await configurationRepository.GetConversationNodeById(nodeId);
-            var fileAsset = await configurationRepository.GetFileAsset(fileId);
-
+            var node = await convoNodeStore.Get(nodeId, s => s.NodeId);
+            var fileAsset = await fileAssetStore.Get(fileId, s => s.FileId);
             node.ImageId = fileAsset.FileId;
         }
 
@@ -48,17 +57,15 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task UnLinkFromIntent(string fileId, string intentId)
         {
-            var intent = await configurationRepository.GetAreaByIdWithAttachments(intentId);
-            var attachment = await configurationRepository.GetAttachmentRecord(fileId);
-
+            var intent = await intentStore.GetIntentComplete(intentId);
+            var attachment = await attachmentLinkRecordStore.Get(fileId, x => x.FileId);
             intent.AttachmentRecords.Remove(attachment);
         }
 
         public async Task UnLinkFromNode(string fileId, string nodeId)
         {
-            var node = await configurationRepository.GetConversationNodeById(nodeId);
-            var fileAsset = await configurationRepository.GetFileAsset(fileId);
-
+            var node = await convoNodeStore.Get(nodeId, t => t.NodeId);
+            var fileAsset = await fileAssetStore.Get(fileId, p => p.FileId);
             node.ImageId = fileAsset.FileId;
         }
 

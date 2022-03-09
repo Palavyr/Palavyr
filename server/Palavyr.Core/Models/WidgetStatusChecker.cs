@@ -2,11 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models
@@ -22,30 +24,30 @@ namespace Palavyr.Core.Models
 
     public class WidgetStatusChecker : IWidgetStatusChecker
     {
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
         private readonly IDynamicTableCompilerOrchestrator orchestrator;
         private readonly RequiredNodeCalculator requiredNodeCalculator;
         private readonly MissingNodeCalculator missingNodeCalculator;
         private readonly INodeOrderChecker nodeOrderChecker;
-        private readonly IAccountRepository accountRepository;
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<Account> accountStore;
 
         private readonly string introSequenceName = "Introduction Sequence";
         private readonly string generalName = "General";
 
         public WidgetStatusChecker(
+            IConfigurationEntityStore<ConversationNode> convoNodeStore,
             IDynamicTableCompilerOrchestrator orchestrator,
             RequiredNodeCalculator requiredNodeCalculator,
             MissingNodeCalculator missingNodeCalculator,
             INodeOrderChecker nodeOrderChecker,
-            IAccountRepository accountRepository,
-            IConfigurationRepository configurationRepository)
+            IConfigurationEntityStore<Account> accountStore)
         {
+            this.convoNodeStore = convoNodeStore;
             this.orchestrator = orchestrator;
             this.requiredNodeCalculator = requiredNodeCalculator;
             this.missingNodeCalculator = missingNodeCalculator;
             this.nodeOrderChecker = nodeOrderChecker;
-            this.accountRepository = accountRepository;
-            this.configurationRepository = configurationRepository;
+            this.accountStore = accountStore;
         }
 
         public async Task<PreCheckResult> ExecuteWidgetStatusCheck(
@@ -110,7 +112,7 @@ namespace Palavyr.Core.Models
                 var allImageNodesHaveImagesSet = AllImageNodesSet(nodeList, error);
                 var allCategoricalPricingStrategiesAreUnique = await AllCategoricalPricingStrategiesAreUnique(area, error);
 
-                var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered, allImageNodesHaveImagesSet, allCategoricalPricingStrategiesAreUnique};
+                var checks = new List<bool>() { nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered, allImageNodesHaveImagesSet, allCategoricalPricingStrategiesAreUnique };
 
                 var areaChecksPassed = checks.TrueForAll(x => x);
                 if (!areaChecksPassed)
@@ -173,10 +175,10 @@ namespace Palavyr.Core.Models
         private async Task<bool> AllIntroRequiredIntroNodesArePresent(PreCheckError error)
         {
             var isReady = true;
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             var introId = account.IntroductionId;
 
-            var introSequence = await configurationRepository.GetIntroductionSequence(introId);
+            var introSequence = await convoNodeStore.GetMany(introId, s => s.AreaIdentifier);
             if (!introSequence.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.Selection.StringName))
             {
                 isReady = false;

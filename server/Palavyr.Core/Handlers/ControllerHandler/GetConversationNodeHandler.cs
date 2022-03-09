@@ -8,17 +8,17 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetConversationNodeHandler : IRequestHandler<GetConversationNodeRequest, GetConversationNodeResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
 
-        public GetConversationNodeHandler(IConfigurationRepository configurationRepository)
+        public GetConversationNodeHandler(IConfigurationEntityStore<ConversationNode> convoNodeStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.convoNodeStore = convoNodeStore;
         }
 
         public async Task<GetConversationNodeResponse> Handle(GetConversationNodeRequest request, CancellationToken cancellationToken)
         {
             // node Ids are globally unique - don't need account Id Filter
-            var node = await configurationRepository.GetConversationNodeById(request.NodeId);
+            var node = await convoNodeStore.Get(request.NodeId, s => s.NodeId);
             return new GetConversationNodeResponse(node);
         }
     }

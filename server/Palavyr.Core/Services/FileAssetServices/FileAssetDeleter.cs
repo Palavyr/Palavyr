@@ -7,12 +7,12 @@ using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.Core.Services.FileAssetServices
 {
-    public class FileAssetDeleterDeleteDatabaseRecord : IFileAssetDeleter
+    public class FileAssetDeleterDeleteDatabaseRecordDecorator : IFileAssetDeleter
     {
         private readonly IFileAssetDeleter inner;
         private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
 
-        public FileAssetDeleterDeleteDatabaseRecord(
+        public FileAssetDeleterDeleteDatabaseRecordDecorator(
             IFileAssetDeleter inner,
             IConfigurationEntityStore<FileAsset> fileAssetStore)
         {
@@ -23,7 +23,7 @@ namespace Palavyr.Core.Services.FileAssetServices
         public async Task<FileLink[]> RemoveFiles(string[] fileIds)
         {
             var fileLinks = await inner.RemoveFiles(fileIds);
-            await fileAssetStore.DeleteMany(fileIds, x => x.FileId);
+            await fileAssetStore.Delete(fileIds, x => x.FileId);
             return fileLinks;
         }
 
