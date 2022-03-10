@@ -5,7 +5,7 @@ using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
-    public class Session : IEntity
+    public class Session : Entity
     {
         [Key]
         public int? Id { get; set; }

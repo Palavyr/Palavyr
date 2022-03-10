@@ -25,7 +25,7 @@ namespace Palavyr.Core.Stores
             typeof(Account),
             typeof(EmailVerification),
             typeof(Session),
-            typeof(StripeWebhookRecord),
+            typeof(StripeWebhookReceivedRecord),
             typeof(Subscription)
         };
 
@@ -65,6 +65,7 @@ namespace Palavyr.Core.Stores
 
         public async Task DANGER____DELETE_ALL_DEEP___DANGER()
         {
+            await Task.CompletedTask;
             var specificContext = ChooseContext();
             var entitiesDeep = specificContext
                 .Set<TEntity>()

@@ -5,7 +5,7 @@ using Palavyr.Core.Models.Contracts;
 namespace Palavyr.Core.Models.Conversation.Schemas
 {
     // TODO: Rename to ConversationHistory
-    public class ConversationHistory : IEntity
+    public class ConversationHistory : Entity
     {
         [Key]
         public int? Id { get; set; }

@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class Area : IEntity, IHaveAccountId
+    public class Area : Entity, IHaveAccountId
     {
-        
-        [Key]
-        public int? Id { get; set; }
         public string AreaIdentifier { get; set; }
         public string AreaName { get; set; }
         public string AreaDisplayTitle { get; set; }

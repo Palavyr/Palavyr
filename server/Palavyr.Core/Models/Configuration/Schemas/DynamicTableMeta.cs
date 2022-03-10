@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -9,10 +8,8 @@ using Palavyr.Core.Services.Units;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class DynamicTableMeta : IEntity, ITable
+    public class DynamicTableMeta : Entity, ITable
     {
-        [Key]
-        public int? Id { get; set; }
         public string TableTag { get; set; }
         public string PrettyName { get; set; }
         public string TableType { get; set; }

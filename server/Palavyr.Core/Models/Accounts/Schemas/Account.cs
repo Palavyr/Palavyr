@@ -8,7 +8,7 @@ using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
-    public class Account : IEntity, IHaveAccountId
+    public class Account : Entity, IHaveAccountId
     {
         [Key]
         public int? Id { get; set; }

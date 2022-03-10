@@ -8,16 +8,16 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
     public class StripeEventReceivedEventHandler : INotificationHandler<StripeEventProcessedSuccessfullyEvent>
     {
-        private readonly IEntityStore<StripeWebhookRecord> stripeWebhookStore;
+        private readonly IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore;
 
-        public StripeEventReceivedEventHandler(IEntityStore<StripeWebhookRecord> stripeWebhookStore)
+        public StripeEventReceivedEventHandler(IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore)
         {
             this.stripeWebhookStore = stripeWebhookStore;
         }
 
         public async Task Handle(StripeEventProcessedSuccessfullyEvent notification, CancellationToken cancellationToken)
         {
-            var newRecord = StripeWebhookRecord.CreateNewRecord(notification.Id, notification.Signature);
+            var newRecord = StripeWebhookReceivedRecord.CreateNewRecord(notification.Id, notification.Signature);
             await stripeWebhookStore.Create(newRecord);
         }
     }

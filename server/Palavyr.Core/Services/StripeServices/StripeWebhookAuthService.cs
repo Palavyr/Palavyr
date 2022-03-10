@@ -18,14 +18,14 @@ namespace Palavyr.Core.Services.StripeServices
 
     public class StripeWebhookAuthService : IStripeWebhookAuthService
     {
-        private readonly IEntityStore<StripeWebhookRecord> stripeWebhookStore;
+        private readonly IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore;
         private ILogger<StripeWebhookAuthService> logger;
         private IConfiguration configuration;
         private const string StripeSignature = "Stripe-Signature";
         private readonly string webhookKeySection = "Stripe:WebhookKey";
 
         public StripeWebhookAuthService(
-            IEntityStore<StripeWebhookRecord> stripeWebhookStore,
+            IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore,
             ILogger<StripeWebhookAuthService> logger,
             IConfiguration configuration
         )

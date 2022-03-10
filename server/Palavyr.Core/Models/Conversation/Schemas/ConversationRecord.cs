@@ -6,7 +6,7 @@ using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Conversation.Schemas
 {
-    public class ConversationRecord : IEntity
+    public class ConversationRecord : Entity
     {
         [Key]
         public int? Id { get; set; }

@@ -3,7 +3,7 @@ using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
-    public class Subscription : IEntity
+    public class Subscription : Entity
     {
         [Key]
         public int? Id { get; set; }

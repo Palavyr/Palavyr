@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Contracts;
@@ -9,10 +8,8 @@ using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class ConversationNode : IEntity, IRecord
+    public class ConversationNode : Entity, IRecord
     {
-        [Key]
-        public int? Id { get; set; }
         public string? AreaIdentifier { get; set; }
         public string? AccountId { get; set; }
         public string? NodeId { get; set; }

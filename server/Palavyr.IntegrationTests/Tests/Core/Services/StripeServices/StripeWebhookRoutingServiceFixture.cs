@@ -44,7 +44,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
         public async Task EventReceivedIsFired()
         {
             var signature = A.RandomId();
-            var stripeWebhookStore = ResolveStore<StripeWebhookRecord>();
+            var stripeWebhookStore = ResolveStore<StripeWebhookReceivedRecord>();
             var @event = await WriteAMockEvent(A.RandomName(), stripeWebhookStore, signature);
 
             await router.ProcessStripeEvent(@event, signature, CancellationToken.None);
@@ -57,7 +57,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
         public async Task SkipsEvent()
         {
             var signature = A.RandomId();
-            var stripeWebhookStore = ResolveStore<StripeWebhookRecord>();
+            var stripeWebhookStore = ResolveStore<StripeWebhookReceivedRecord>();
             var @event = await WriteAMockEvent(A.RandomName(), stripeWebhookStore, signature);
 
             await router.ProcessStripeEvent(@event, signature, CancellationToken.None);
@@ -243,7 +243,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
             return @event;
         }
 
-        private async Task<Event> WriteAMockEvent(string eventType, IEntityStore<StripeWebhookRecord> stripeWebhookStore, string? signature = null)
+        private async Task<Event> WriteAMockEvent(string eventType, IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore, string? signature = null)
         {
             var @event = CreateAMockEvent(eventType);
             await stripeWebhookStore.AddStripeEvent(@event.Id, signature);

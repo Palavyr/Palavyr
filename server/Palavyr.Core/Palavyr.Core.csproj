@@ -58,6 +58,12 @@
         <PackageReference Include="MimeKit" Version="2.11.0" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Validators" />
+      <Compile Remove="Validators\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Remove="Validators\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="Validators\**" />
     </ItemGroup>
 </Project>

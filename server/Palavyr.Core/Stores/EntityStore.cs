@@ -32,7 +32,7 @@ namespace Palavyr.Core.Stores
             typeof(Account),
             typeof(EmailVerification),
             typeof(Session),
-            typeof(StripeWebhookRecord),
+            typeof(StripeWebhookReceivedRecord),
             typeof(Subscription)
         };
 
