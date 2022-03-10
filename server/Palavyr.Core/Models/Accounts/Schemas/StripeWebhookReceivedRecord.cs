@@ -3,24 +3,28 @@ using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
-    public class StripeWebhookRecord : IEntity
+    public class StripeWebhookReveivedRecord : IEntity
     {
-        [Key]
-        public int? Id { get; set; }
         public string RecordId { get; set; }
         public string PayloadSignature { get; set; }
 
-        public StripeWebhookRecord()
+        public StripeWebhookReveivedRecord()
         {
         }
 
-        public static StripeWebhookRecord CreateNewRecord(string id, string payloadSignature)
+        public static StripeWebhookReveivedRecord CreateNewRecord(string id, string payloadSignature)
         {
-            return new StripeWebhookRecord
+            return new StripeWebhookReveivedRecord
             {
                 RecordId = id,
                 PayloadSignature = payloadSignature
             };
+        }
+
+        int? IId.Id
+        {
+            get => id;
+            set => id = value;
         }
     }
 }
