@@ -10,10 +10,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetAllAreasShallowRequestHandler : IRequestHandler<GetAllAreasRequest, GetAllAreasResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
         private readonly ILogger<GetAllAreasShallowRequestHandler> logger;
 
-        public GetAllAreasShallowRequestHandler(IConfigurationEntityStore<Area> intentStore, ILogger<GetAllAreasShallowRequestHandler> logger)
+        public GetAllAreasShallowRequestHandler(IEntityStore<Area> intentStore, ILogger<GetAllAreasShallowRequestHandler> logger)
         {
             this.intentStore = intentStore;
             this.logger = logger;

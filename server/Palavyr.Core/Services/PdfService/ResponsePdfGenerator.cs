@@ -20,7 +20,7 @@ namespace Palavyr.Core.Services.PdfService
 {
     public class ResponsePdfGenerator : IResponsePdfGenerator
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
         private readonly IPdfResponseKeyResolver pdfResponseKeyResolver;
         private readonly IHtmlToPdfClient htmlToPdfClient;
         private readonly IResponseHtmlBuilder responseHtmlBuilder;
@@ -30,7 +30,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IConfiguration configuration;
 
         public ResponsePdfGenerator(
-            IConfigurationEntityStore<Area> intentStore,
+            IEntityStore<Area> intentStore,
             IPdfResponseKeyResolver pdfResponseKeyResolver,
             IHtmlToPdfClient htmlToPdfClient,
             IResponseHtmlBuilder responseHtmlBuilder,
@@ -107,9 +107,9 @@ namespace Palavyr.Core.Services.PdfService
     public class ResponsePdfGeneratorUpdateConversationRecordDecorator : IResponsePdfGenerator
     {
         private readonly IResponsePdfGenerator inner;
-        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
 
-        public ResponsePdfGeneratorUpdateConversationRecordDecorator(IResponsePdfGenerator inner, IConfigurationEntityStore<ConversationRecord> convoRecordStore)
+        public ResponsePdfGeneratorUpdateConversationRecordDecorator(IResponsePdfGenerator inner, IEntityStore<ConversationRecord> convoRecordStore)
         {
             this.inner = inner;
             this.convoRecordStore = convoRecordStore;

@@ -9,10 +9,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetCompanyNameHandler : IRequestHandler<GetCompanyNameRequest, GetCompanyNameResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
         public GetCompanyNameHandler(
-            IConfigurationEntityStore<Account> accountStore)
+            IEntityStore<Account> accountStore)
         {
             this.accountStore = accountStore;
         }

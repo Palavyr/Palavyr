@@ -9,9 +9,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyConversationNodeTextHandler : IRequestHandler<ModifyConversationNodeTextRequest, ModifyConversationNodeTextResponse>
     {
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
 
-        public ModifyConversationNodeTextHandler(IConfigurationEntityStore<ConversationNode> convoNodeStore)
+        public ModifyConversationNodeTextHandler(IEntityStore<ConversationNode> convoNodeStore)
         {
             this.convoNodeStore = convoNodeStore;
         }

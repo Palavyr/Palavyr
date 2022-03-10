@@ -26,8 +26,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
     public class CategoryNestedThresholdCompiler : BaseCompiler<CategoryNestedThreshold>, ICategoryNestedThresholdCompiler
     {
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
-        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly IConversationOptionSplitter splitter;
         private readonly IThresholdEvaluator thresholdEvaluator;
         private readonly IResponseRetriever responseRetriever;
@@ -36,9 +36,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
 
         public CategoryNestedThresholdCompiler(
-            IConfigurationEntityStore<ConversationNode> convoNodeStore,
-            IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore,
-            IGenericDynamicTableRepository<CategoryNestedThreshold> repository,
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IPricingStrategyEntityStore<CategoryNestedThreshold> repository,
             IConversationOptionSplitter splitter,
             IThresholdEvaluator thresholdEvaluator,
             IResponseRetriever responseRetriever,

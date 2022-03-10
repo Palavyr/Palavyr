@@ -24,8 +24,8 @@ namespace Palavyr.Core.Services.AttachmentServices
 
     public class AttachmentRetriever : IAttachmentRetriever
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly ICloudFileDownloader cloudFileDownloader;
 
 
@@ -34,8 +34,8 @@ namespace Palavyr.Core.Services.AttachmentServices
         private readonly IBusinessRules businessRules;
 
         public AttachmentRetriever(
-            IConfigurationEntityStore<Area> intentStore,
-            IConfigurationEntityStore<FileAsset> fileAssetStore,
+            IEntityStore<Area> intentStore,
+            IEntityStore<FileAsset> fileAssetStore,
             ICloudFileDownloader cloudFileDownloader,
             IConfiguration configuration,
             ILinkCreator linkCreator,

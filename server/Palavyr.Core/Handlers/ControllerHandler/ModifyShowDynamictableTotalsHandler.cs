@@ -8,9 +8,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyShowDynamicTableTotalsHandler : IRequestHandler<ModifyShowDynamicTableTotalsRequest, ModifyShowDynamicTableTotalsResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
-        public ModifyShowDynamicTableTotalsHandler(IConfigurationEntityStore<Area> intentStore)
+        public ModifyShowDynamicTableTotalsHandler(IEntityStore<Area> intentStore)
         {
             this.intentStore = intentStore;
         }

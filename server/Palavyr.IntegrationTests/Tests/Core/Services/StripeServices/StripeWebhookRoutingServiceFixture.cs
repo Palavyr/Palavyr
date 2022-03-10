@@ -243,7 +243,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
             return @event;
         }
 
-        private async Task<Event> WriteAMockEvent(string eventType, IConfigurationEntityStore<StripeWebhookRecord> stripeWebhookStore, string? signature = null)
+        private async Task<Event> WriteAMockEvent(string eventType, IEntityStore<StripeWebhookRecord> stripeWebhookStore, string? signature = null)
         {
             var @event = CreateAMockEvent(eventType);
             await stripeWebhookStore.AddStripeEvent(@event.Id, signature);

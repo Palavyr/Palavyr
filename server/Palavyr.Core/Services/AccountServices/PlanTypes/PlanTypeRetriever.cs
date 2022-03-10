@@ -9,10 +9,10 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
 {
     public class PlanTypeRetriever : IPlanTypeRetriever
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<PlanTypeRetriever> logger;
 
-        public PlanTypeRetriever(IConfigurationEntityStore<Account> accountStore, ILogger<PlanTypeRetriever> logger)
+        public PlanTypeRetriever(IEntityStore<Account> accountStore, ILogger<PlanTypeRetriever> logger)
         {
             this.accountStore = accountStore;
             this.logger = logger;

@@ -10,7 +10,7 @@ using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Repositories
 {
-    public class GenericDynamicTableRepository<TEntity> : IGenericDynamicTableRepository<TEntity> where TEntity : class, ITable
+    public class PricingStrategyEntityStore<TEntity> : IPricingStrategyEntityStore<TEntity> where TEntity : class, ITable
     {
         private readonly DashContext dashContext;
         private readonly IAccountIdTransport accountIdTransport;
@@ -19,7 +19,7 @@ namespace Palavyr.Core.Repositories
         private readonly DbSet<TEntity> queryExecutor;
         private readonly DbSet<DynamicTableMeta> metaQueryExecutor;
 
-        public GenericDynamicTableRepository(DashContext dashContext, IAccountIdTransport accountIdTransport, ICancellationTokenTransport cancellationTokenTransport)
+        public PricingStrategyEntityStore(DashContext dashContext, IAccountIdTransport accountIdTransport, ICancellationTokenTransport cancellationTokenTransport)
         {
             this.dashContext = dashContext;
             this.accountIdTransport = accountIdTransport;
@@ -95,14 +95,6 @@ namespace Palavyr.Core.Repositories
             queryExecutor.RemoveRange(allRows);
             await dashContext.SaveChangesAsync(cancellationTokenTransport.CancellationToken);
         }
-
-        // public async Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string dynamicTypeId)
-        // {
-        //     var rows = await readonlyQueryExecutor
-        //         .Where(tableRow => tableRow.AccountId == accountIdHolder.AccountId && dynamicTypeId.EndsWith(tableRow.TableId)) //&& dynamicResponseId.EndsWith(tableRow.TableId)) // TODO: shhould be dynamicType?
-        //         .ToListAsync();
-        //     return rows;
-        // }
 
         public async Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string dynamicTypeId)
         {

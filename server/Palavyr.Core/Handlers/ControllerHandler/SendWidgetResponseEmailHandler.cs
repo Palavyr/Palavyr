@@ -11,11 +11,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class SendWidgetResponseEmailHandler : IRequestHandler<SendWidgetResponseEmailRequest, SendWidgetResponseEmailResponse>
     {
-        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
         private readonly IResponseEmailSender responseEmailSender;
 
         public SendWidgetResponseEmailHandler(
-            IConfigurationEntityStore<ConversationRecord> convoRecordStore,
+            IEntityStore<ConversationRecord> convoRecordStore,
             IResponseEmailSender responseEmailSender)
         {
             this.convoRecordStore = convoRecordStore;

@@ -12,8 +12,8 @@ namespace Palavyr.Core.Services.AccountServices
 {
     public class AccountSetupService : IAccountSetupService
     {
-        private readonly IConfigurationEntityStore<Session> sessionStore;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<Account> accountStore;
 
         private readonly INewAccountUtils newAccountUtils;
         private readonly ILogger<AuthService> logger;
@@ -28,8 +28,8 @@ namespace Palavyr.Core.Services.AccountServices
         private const string EmailAddressNotFound = "Email Address Not Found";
 
         public AccountSetupService(
-            IConfigurationEntityStore<Session> sessionStore,
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Session> sessionStore,
+            IEntityStore<Account> accountStore,
             INewAccountUtils newAccountUtils,
             ILogger<AuthService> logger,
             IJwtAuthenticationService jwtService,

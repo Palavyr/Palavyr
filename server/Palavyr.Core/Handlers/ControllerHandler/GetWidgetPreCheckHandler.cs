@@ -14,17 +14,17 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetWidgetPreCheckHandler : IRequestHandler<GetWidgetPreCheckRequest, GetWidgetPreCheckResponse>
     {
-        private readonly IConfigurationEntityStore<WidgetPreference> widgetStore;
+        private readonly IEntityStore<WidgetPreference> widgetStore;
         private readonly IWidgetStatusChecker widgetStatusChecker;
         private readonly ILogger<GetWidgetPreCheckHandler> logger;
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
         private readonly IAccountIdTransport accountIdTransport;
 
         public GetWidgetPreCheckHandler(
-            IConfigurationEntityStore<WidgetPreference> widgetStore,
+            IEntityStore<WidgetPreference> widgetStore,
             IWidgetStatusChecker widgetStatusChecker,
             ILogger<GetWidgetPreCheckHandler> logger,
-            IConfigurationEntityStore<Area> intentStore,
+            IEntityStore<Area> intentStore,
             IAccountIdTransport accountIdTransport)
         {
             this.widgetStore = widgetStore;

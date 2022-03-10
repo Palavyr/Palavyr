@@ -9,9 +9,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetFileAssetsHandler : IRequestHandler<GetFileAssetsRequest, GetFileAssetsResponse>
     {
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
 
-        public GetFileAssetsHandler(IConfigurationEntityStore<FileAsset> fileAssetStore)
+        public GetFileAssetsHandler(IEntityStore<FileAsset> fileAssetStore)
         {
             this.fileAssetStore = fileAssetStore;
         }

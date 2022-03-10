@@ -9,17 +9,17 @@ namespace Palavyr.Core.Services.AttachmentServices
 {
     public class AttachmentLinker : IFileAssetLinker<AttachmentLinker>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
-        private readonly IConfigurationEntityStore<AttachmentLinkRecord> attachmentLinkRecordStore;
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<AttachmentLinkRecord> attachmentLinkRecordStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly IAccountIdTransport accountIdTransport;
 
         public AttachmentLinker(
-            IConfigurationEntityStore<Area> intentStore,
-            IConfigurationEntityStore<AttachmentLinkRecord> attachmentLinkRecordStore,
-            IConfigurationEntityStore<ConversationNode> convoNodeStore,
-            IConfigurationEntityStore<FileAsset> fileAssetStore,
+            IEntityStore<Area> intentStore,
+            IEntityStore<AttachmentLinkRecord> attachmentLinkRecordStore,
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<FileAsset> fileAssetStore,
             IAccountIdTransport accountIdTransport)
         {
             this.intentStore = intentStore;

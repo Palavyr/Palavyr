@@ -11,12 +11,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyIntroductionSequenceHandler : IRequestHandler<ModifyIntroductionSequenceRequest, ModifyIntroductionSequenceResponse>
     {
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<Account> accountStore;
 
         public ModifyIntroductionSequenceHandler(
-            IConfigurationEntityStore<ConversationNode> convoNodeStore,
-            IConfigurationEntityStore<Account> accountStore
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<Account> accountStore
         )
         {
             this.convoNodeStore = convoNodeStore;

@@ -11,13 +11,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyStaticTablesMetaHandler : IRequestHandler<ModifyStaticTablesMetaRequest, ModifyStaticTablesMetaResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
-        private readonly IConfigurationEntityStore<StaticTablesMeta> staticTableMetaStore;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<StaticTablesMeta> staticTableMetaStore;
         private readonly IAccountIdTransport accountIdTransport;
 
         public ModifyStaticTablesMetaHandler(
-            IConfigurationEntityStore<Area> intentStore,
-            IConfigurationEntityStore<StaticTablesMeta> staticTableMetaStore,
+            IEntityStore<Area> intentStore,
+            IEntityStore<StaticTablesMeta> staticTableMetaStore,
             IAccountIdTransport accountIdTransport)
         {
             this.intentStore = intentStore;

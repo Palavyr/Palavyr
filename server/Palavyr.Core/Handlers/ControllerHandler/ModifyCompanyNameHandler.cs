@@ -10,9 +10,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyCompanyNameHandler : IRequestHandler<ModifyCompanyNameRequest, ModifyCompanyNameResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
-        public ModifyCompanyNameHandler(IConfigurationEntityStore<Account> accountStore, ILogger<ModifyCompanyNameHandler> logger)
+        public ModifyCompanyNameHandler(IEntityStore<Account> accountStore, ILogger<ModifyCompanyNameHandler> logger)
         {
             this.accountStore = accountStore;
         }

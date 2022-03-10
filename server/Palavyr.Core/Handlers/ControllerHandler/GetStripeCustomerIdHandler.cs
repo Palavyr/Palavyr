@@ -10,11 +10,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetStripeCustomerIdHandler : IRequestHandler<GetStripeCustomerIdRequest, GetStripeCustomerIdResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
         public GetStripeCustomerIdHandler(
             ILogger<GetStripeCustomerIdHandler> logger,
-            IConfigurationEntityStore<Account> accountStore)
+            IEntityStore<Account> accountStore)
         {
             this.accountStore = accountStore;
         }

@@ -9,9 +9,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyPhoneNumberHandler : IRequestHandler<ModifyPhoneNumberRequest, ModifyPhoneNumberResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
-        public ModifyPhoneNumberHandler(IConfigurationEntityStore<Account> accountStore)
+        public ModifyPhoneNumberHandler(IEntityStore<Account> accountStore)
         {
             this.accountStore = accountStore;
         }

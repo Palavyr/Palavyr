@@ -10,10 +10,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetNeedsPasswordHandler : IRequestHandler<GetNeedsPasswordRequest, GetNeedsPasswordResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
         private static readonly int[] NeedsPassword = new[] { 0 };
 
-        public GetNeedsPasswordHandler(IConfigurationEntityStore<Account> accountStore)
+        public GetNeedsPasswordHandler(IEntityStore<Account> accountStore)
         {
             this.accountStore = accountStore;
         }

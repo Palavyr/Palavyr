@@ -15,11 +15,11 @@ namespace Palavyr.Core.Services.Localization
 
     public class CurrentLocaleAndLocaleMapRetriever : ICurrentLocaleAndLocaleMapRetriever
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<CurrentLocaleAndLocaleMapRetriever> logger;
         private readonly LocaleDefinitions localeDefinitions;
 
-        public CurrentLocaleAndLocaleMapRetriever(IConfigurationEntityStore<Account> accountStore, ILogger<CurrentLocaleAndLocaleMapRetriever> logger, LocaleDefinitions localeDefinitions)
+        public CurrentLocaleAndLocaleMapRetriever(IEntityStore<Account> accountStore, ILogger<CurrentLocaleAndLocaleMapRetriever> logger, LocaleDefinitions localeDefinitions)
         {
             this.accountStore = accountStore;
             this.logger = logger;

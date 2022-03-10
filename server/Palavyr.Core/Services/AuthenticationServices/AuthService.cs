@@ -22,8 +22,8 @@ namespace Palavyr.Core.Services.AuthenticationServices
     public class AuthService : IAuthService
     {
         private readonly IRemoveStaleSessions removeStaleSessions;
-        private readonly IConfigurationEntityStore<Session> sessionStore;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<AuthService> logger;
         private readonly IJwtAuthenticationService jwtAuthService;
         private IConfiguration configuration;
@@ -37,8 +37,8 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
         public AuthService(
             IRemoveStaleSessions removeStaleSessions,
-            IConfigurationEntityStore<Session> sessionStore,
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Session> sessionStore,
+            IEntityStore<Account> accountStore,
             ILogger<AuthService> logger,
             IJwtAuthenticationService jwtService,
             IConfiguration configuration

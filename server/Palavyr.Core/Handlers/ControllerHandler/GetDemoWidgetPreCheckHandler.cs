@@ -14,14 +14,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetDemoWidgetPreCheckHandler : IRequestHandler<GetDemoWidgetPreCheckRequest, GetDemoWidgetPreCheckResponse>
     {
         private readonly ILogger<GetDemoWidgetPreCheckHandler> logger;
-        private readonly IConfigurationEntityStore<Area> intentStore;
-        private readonly IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
         private readonly IWidgetStatusChecker widgetStatusChecker;
 
         public GetDemoWidgetPreCheckHandler(
             ILogger<GetDemoWidgetPreCheckHandler> logger,
-            IConfigurationEntityStore<Area> intentStore,
-            IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore,
+            IEntityStore<Area> intentStore,
+            IEntityStore<WidgetPreference> widgetPreferenceStore,
             IWidgetStatusChecker widgetStatusChecker)
         {
             this.logger = logger;

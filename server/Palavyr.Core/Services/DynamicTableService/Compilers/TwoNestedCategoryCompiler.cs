@@ -24,13 +24,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
     {
         private readonly IConversationOptionSplitter splitter;
         private readonly IResponseRetriever responseRetriever;
-        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
 
         public TwoNestedCategoryCompiler(
-            IGenericDynamicTableRepository<TwoNestedCategory> repository,
+            IPricingStrategyEntityStore<TwoNestedCategory> repository,
             IConversationOptionSplitter splitter,
             IResponseRetriever responseRetriever,
-            IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(repository)
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(repository)
         {
             this.splitter = splitter;
             this.responseRetriever = responseRetriever;

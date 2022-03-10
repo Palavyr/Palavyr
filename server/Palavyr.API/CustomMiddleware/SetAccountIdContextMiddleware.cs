@@ -33,7 +33,7 @@ namespace Palavyr.API.CustomMiddleware
             HttpContext context,
             IWebHostEnvironment env,
             IMediator mediator,
-            IConfigurationEntityStore<Session> sessionStore,
+            IEntityStore<Session> sessionStore,
             AccountsContext accountContext,
             IUnitOfWorkContextProvider unitOfWorkContextProvider)
         {

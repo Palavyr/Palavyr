@@ -17,13 +17,13 @@ namespace Palavyr.Core.Services.LogoServices
     public class LogoDeleter : ILogoDeleter
     {
         private readonly IConfiguration configuration;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
         private readonly IS3FileDeleter is3FileDeleter;
 
         public LogoDeleter(
             IConfiguration configuration,
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Account> accountStore,
             IS3FileDeleter is3FileDeleter
         )
         {

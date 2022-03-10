@@ -12,12 +12,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyLocaleHandler : IRequestHandler<ModifyLocaleRequest, ModifyLocaleResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<ModifyLocaleHandler> logger;
         private readonly LocaleDefinitions localeDefinitions;
 
         public ModifyLocaleHandler(
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Account> accountStore,
             ILogger<ModifyLocaleHandler> logger,
             LocaleDefinitions localeDefinitions)
         {

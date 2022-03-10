@@ -5,7 +5,7 @@ namespace Palavyr.Core.Repositories.StoreExtensionMethods
 {
     public static class StripeStoreConfigurationMethods
     {
-        public static async Task AddStripeEvent(this IConfigurationEntityStore<StripeWebhookRecord> stripeWebhookStore, string id, string signature)
+        public static async Task AddStripeEvent(this IEntityStore<StripeWebhookRecord> stripeWebhookStore, string id, string signature)
         {
             var newRecord = StripeWebhookRecord.CreateNewRecord(id, signature);
             await stripeWebhookStore.Create(newRecord);

@@ -8,9 +8,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyPrologueConfigurationHandler : IRequestHandler<ModifyPrologueConfigurationRequest, ModifyPrologueConfigurationResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
-        public ModifyPrologueConfigurationHandler(IConfigurationEntityStore<Area> intentStore)
+        public ModifyPrologueConfigurationHandler(IEntityStore<Area> intentStore)
         {
             this.intentStore = intentStore;
         }

@@ -9,9 +9,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetDefaultFallbackEmailSubjectHandler : IRequestHandler<GetDefaultFallbackEmailSubjectRequest, GetDefaultFallbackEmailSubjectResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
-        public GetDefaultFallbackEmailSubjectHandler(IConfigurationEntityStore<Account> accountStore)
+        public GetDefaultFallbackEmailSubjectHandler(IEntityStore<Account> accountStore)
         {
             this.accountStore = accountStore;
         }

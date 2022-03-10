@@ -11,10 +11,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetPhoneNumberHandler : IRequestHandler<GetPhoneNumberRequest, GetPhoneNumberResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
         public GetPhoneNumberHandler(
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Account> accountStore,
             ILogger<GetPhoneNumberHandler> logger
         )
         {

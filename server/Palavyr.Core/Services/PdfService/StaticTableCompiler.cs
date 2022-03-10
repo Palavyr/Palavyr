@@ -13,11 +13,11 @@ namespace Palavyr.Core.Services.PdfService
     public class StaticTableCompiler : IStaticTableCompiler
     {
         private readonly IBusinessRules businessRules;
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
         public StaticTableCompiler(
             IBusinessRules businessRules,
-            IConfigurationEntityStore<Area> intentStore)
+            IEntityStore<Area> intentStore)
         {
             this.businessRules = businessRules;
             this.intentStore = intentStore;

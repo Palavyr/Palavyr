@@ -9,9 +9,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetShowSeenEnquiriesHandler : IRequestHandler<GetShowSeenEnquiriesRequest, GetShowSeenEnquiriesResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
-        public GetShowSeenEnquiriesHandler(IConfigurationEntityStore<Account> accountStore)
+        public GetShowSeenEnquiriesHandler(IEntityStore<Account> accountStore)
         {
             this.accountStore = accountStore;
         }

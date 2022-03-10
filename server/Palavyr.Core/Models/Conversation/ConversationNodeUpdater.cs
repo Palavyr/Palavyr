@@ -11,12 +11,12 @@ namespace Palavyr.Core.Models.Conversation
     public class ConversationNodeUpdater : IConversationNodeUpdater
     {
         private readonly IAccountIdTransport accountIdTransport;
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
         private readonly IOrphanRemover orphanRemover;
 
         public ConversationNodeUpdater(
             IAccountIdTransport accountIdTransport,
-            IConfigurationEntityStore<Area> intentStore,
+            IEntityStore<Area> intentStore,
             IOrphanRemover orphanRemover
         )
         {

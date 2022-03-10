@@ -9,11 +9,11 @@ namespace Palavyr.Core.Services.FileAssetServices
     public class FileAssetSaverDatabaseDecorator : IFileAssetSaver
     {
         private readonly IFileAssetSaver fileAssetSaver;
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
 
         public FileAssetSaverDatabaseDecorator(
             IFileAssetSaver fileAssetSaver,
-            IConfigurationEntityStore<FileAsset> fileAssetStore)
+            IEntityStore<FileAsset> fileAssetStore)
         {
             this.fileAssetSaver = fileAssetSaver;
             this.fileAssetStore = fileAssetStore;

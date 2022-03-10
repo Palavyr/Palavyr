@@ -8,9 +8,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyAreaEmailTemplateHandler : IRequestHandler<ModifyAreaEmailTemplateRequest, ModifyAreaEmailTemplateResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
-        public ModifyAreaEmailTemplateHandler(IConfigurationEntityStore<Area> intentStore)
+        public ModifyAreaEmailTemplateHandler(IEntityStore<Area> intentStore)
         {
             this.intentStore = intentStore;
         }

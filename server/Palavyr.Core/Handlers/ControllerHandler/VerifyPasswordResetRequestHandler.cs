@@ -9,9 +9,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class VerifyPasswordResetRequestHandler : IRequestHandler<VerifyPasswordResetRequestRequest, VerifyPasswordResetRequestResponse>
     {
-        private readonly IConfigurationEntityStore<Session> sessionStore;
+        private readonly IEntityStore<Session> sessionStore;
 
-        public VerifyPasswordResetRequestHandler(IConfigurationEntityStore<Session> sessionStore)
+        public VerifyPasswordResetRequestHandler(IEntityStore<Session> sessionStore)
         {
             this.sessionStore = sessionStore;
         }

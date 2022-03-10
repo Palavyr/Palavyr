@@ -18,11 +18,11 @@ namespace Palavyr.Core.Services.ConversationServices
 
     public class ConversationRecordRetriever : IConversationRecordRetriever
     {
-        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
         private readonly ILogger<IConversationRecordRetriever> logger;
 
         public ConversationRecordRetriever(
-            IConfigurationEntityStore<ConversationRecord> convoRecordStore,
+            IEntityStore<ConversationRecord> convoRecordStore,
             ILogger<IConversationRecordRetriever> logger
         )
         {

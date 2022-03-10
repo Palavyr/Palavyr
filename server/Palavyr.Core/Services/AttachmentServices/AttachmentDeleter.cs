@@ -16,15 +16,15 @@ namespace Palavyr.Core.Services.AttachmentServices
 
     public class AttachmentDeleter : IAttachmentDeleter
     {
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<Area> intentStore;
         private readonly IFileAssetDeleter fileAssetDeleter;
         private readonly IFileAssetLinker<AttachmentLinker> linker;
 
 
         public AttachmentDeleter(
-            IConfigurationEntityStore<FileAsset> fileAssetStore,
-            IConfigurationEntityStore<Area> intentStore,
+            IEntityStore<FileAsset> fileAssetStore,
+            IEntityStore<Area> intentStore,
             IFileAssetDeleter fileAssetDeleter,
             IFileAssetLinker<AttachmentLinker> linker)
         {

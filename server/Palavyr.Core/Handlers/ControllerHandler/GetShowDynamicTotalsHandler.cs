@@ -8,9 +8,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetShowDynamicTotalsHandlerHandler : IRequestHandler<GetShowDynamicTotalsHandlerRequest, GetShowDynamicTotalsHandlerResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
-        public GetShowDynamicTotalsHandlerHandler(IConfigurationEntityStore<Area> intentStore)
+        public GetShowDynamicTotalsHandlerHandler(IEntityStore<Area> intentStore)
         {
             this.intentStore = intentStore;
         }

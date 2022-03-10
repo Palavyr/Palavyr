@@ -49,9 +49,9 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public ILogger Logger => WebHostFactory.Services.GetService<ILogger>();
 
-        public IConfigurationEntityStore<TEntity> ResolveStore<TEntity>() where TEntity : class, IEntity
+        public IEntityStore<TEntity> ResolveStore<TEntity>() where TEntity : class, IEntity
         {
-            return (IConfigurationEntityStore<TEntity>)WebHostFactory.Services.GetService(typeof(IConfigurationEntityStore<TEntity>));
+            return (IEntityStore<TEntity>)WebHostFactory.Services.GetService(typeof(IEntityStore<TEntity>));
         }
 
         public AccountsContext AccountsContext => accountsContext.Value;

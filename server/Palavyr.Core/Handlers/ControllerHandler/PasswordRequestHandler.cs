@@ -14,16 +14,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class PasswordRequestHandler : IRequestHandler<PasswordRequestRequest, PasswordRequestResponse>
     {
-        private readonly IConfigurationEntityStore<Session> sessionStore;
-        private readonly IConfigurationEntityStore<Area> intentStore;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly IRemoveStaleSessions removeStaleSessions;
         private readonly ISesEmail client;
 
         public PasswordRequestHandler(
-            IConfigurationEntityStore<Session> sessionStore,
-            IConfigurationEntityStore<Area> intentStore,
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Session> sessionStore,
+            IEntityStore<Area> intentStore,
+            IEntityStore<Account> accountStore,
             IRemoveStaleSessions removeStaleSessions,
             ISesEmail client)
         {

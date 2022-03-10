@@ -9,11 +9,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetImageFileLinkHandler : IRequestHandler<GetImageFileLinkRequest, GetImageFileLinkResponse>
     {
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly ILinkCreator linkCreator;
 
         public GetImageFileLinkHandler(
-            IConfigurationEntityStore<FileAsset> fileAssetStore,
+            IEntityStore<FileAsset> fileAssetStore,
             ILinkCreator linkCreator)
         {
             this.fileAssetStore = fileAssetStore;

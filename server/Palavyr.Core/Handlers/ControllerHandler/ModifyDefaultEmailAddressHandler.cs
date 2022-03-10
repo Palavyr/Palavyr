@@ -23,7 +23,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         private ILogger<ModifyDefaultEmailAddressHandler> logger;
         private readonly IRequestEmailVerification requestEmailVerification;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
         private IAmazonSimpleEmailService sesClient;
         private StripeCustomerService stripeCustomerService;
 
@@ -32,7 +32,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             ILogger<ModifyDefaultEmailAddressHandler> logger,
             IAmazonSimpleEmailService sesClient,
             IRequestEmailVerification requestEmailVerification,
-            IConfigurationEntityStore<Account> accountStore
+            IEntityStore<Account> accountStore
         )
         {
             this.stripeCustomerService = stripeCustomerService;

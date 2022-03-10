@@ -8,9 +8,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetWidgetPreferencesHandler : IRequestHandler<GetWidgetPreferencesRequest, GetWidgetPreferencesResponse>
     {
-        private readonly IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore;
+        private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
 
-        public GetWidgetPreferencesHandler(IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore)
+        public GetWidgetPreferencesHandler(IEntityStore<WidgetPreference> widgetPreferenceStore)
         {
             this.widgetPreferenceStore = widgetPreferenceStore;
         }

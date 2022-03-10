@@ -14,12 +14,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetResponsePreviewHandler : IRequestHandler<GetResponsePreviewRequest, GetResponsePreviewResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<GetResponsePreviewHandler> logger;
         private readonly IPreviewResponseGenerator previewPdfGenerator;
 
         public GetResponsePreviewHandler(
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Account> accountStore,
             ILogger<GetResponsePreviewHandler> logger,
             IPreviewResponseGenerator previewPdfGenerator)
         {

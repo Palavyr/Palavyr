@@ -24,23 +24,23 @@ namespace Palavyr.Core.Models
 
     public class WidgetStatusChecker : IWidgetStatusChecker
     {
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IDynamicTableCompilerOrchestrator orchestrator;
         private readonly RequiredNodeCalculator requiredNodeCalculator;
         private readonly MissingNodeCalculator missingNodeCalculator;
         private readonly INodeOrderChecker nodeOrderChecker;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
         private readonly string introSequenceName = "Introduction Sequence";
         private readonly string generalName = "General";
 
         public WidgetStatusChecker(
-            IConfigurationEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<ConversationNode> convoNodeStore,
             IDynamicTableCompilerOrchestrator orchestrator,
             RequiredNodeCalculator requiredNodeCalculator,
             MissingNodeCalculator missingNodeCalculator,
             INodeOrderChecker nodeOrderChecker,
-            IConfigurationEntityStore<Account> accountStore)
+            IEntityStore<Account> accountStore)
         {
             this.convoNodeStore = convoNodeStore;
             this.orchestrator = orchestrator;

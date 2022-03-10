@@ -14,13 +14,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class CreateStripeCheckoutSessionHandler : IRequestHandler<CreateStripeCheckoutSessionRequest, CreateStripeCheckoutSessionResponse>
     {
         private readonly ILogger<CreateStripeCheckoutSessionHandler> logger;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
         private readonly IStripeCheckoutServiceSession stripeCheckoutServiceSession;
 
         public CreateStripeCheckoutSessionHandler(
             ILogger<CreateStripeCheckoutSessionHandler> logger,
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Account> accountStore,
             IStripeCheckoutServiceSession stripeCheckoutServiceSession
         )
         {

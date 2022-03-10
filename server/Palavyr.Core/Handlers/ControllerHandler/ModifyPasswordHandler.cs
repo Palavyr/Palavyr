@@ -11,10 +11,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyPasswordHandler : IRequestHandler<ModifyPasswordRequest, ModifyPasswordResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
         public ModifyPasswordHandler(
-            IConfigurationEntityStore<Account> accountStore)
+            IEntityStore<Account> accountStore)
         {
             this.accountStore = accountStore;
         }

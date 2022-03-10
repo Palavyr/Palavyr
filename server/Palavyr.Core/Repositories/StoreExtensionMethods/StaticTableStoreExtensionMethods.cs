@@ -8,7 +8,7 @@ namespace Palavyr.Core.Repositories.StoreExtensionMethods
 {
     public static class StaticTableStoreExtensionMethods
     {
-        public static async Task<List<StaticTablesMeta>> GetStaticTablesComplete(this IConfigurationEntityStore<StaticTablesMeta> staticTablesStore, string intentId)
+        public static async Task<List<StaticTablesMeta>> GetStaticTablesComplete(this IEntityStore<StaticTablesMeta> staticTablesStore, string intentId)
         {
             return await staticTablesStore
                 .Query()

@@ -12,13 +12,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetConfiguredIntentsHandler : IRequestHandler<GetConfiguredIntentsRequest, GetConfiguredIntentsResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
 
         private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
 
         public GetConfiguredIntentsHandler(
-            IConfigurationEntityStore<Area> intentStore,
+            IEntityStore<Area> intentStore,
             ICancellationTokenTransport cancellationTokenTransport
         )
         {

@@ -32,12 +32,12 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
     public class ResponseEmailSender : IResponseEmailSender
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
-        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
         private readonly ILogger<ResponseEmailSender> logger;
         private readonly ICriticalResponses criticalResponses;
         private readonly IAttachmentRetriever attachmentRetriever;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ITemporaryPath temporaryPath;
         private readonly IResponsePdfGenerator responsePdfGenerator;
         private readonly ICompileSenderDetails compileSenderDetails;
@@ -47,12 +47,12 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         private readonly ILinkCreator linkCreator;
 
         public ResponseEmailSender(
-            IConfigurationEntityStore<Area> intentStore,
-            IConfigurationEntityStore<ConversationRecord> convoRecordStore,
+            IEntityStore<Area> intentStore,
+            IEntityStore<ConversationRecord> convoRecordStore,
             ILogger<ResponseEmailSender> logger,
             ICriticalResponses criticalResponses,
             IAttachmentRetriever attachmentRetriever,
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Account> accountStore,
             ITemporaryPath temporaryPath,
             IResponsePdfGenerator responsePdfGenerator,
             ICompileSenderDetails compileSenderDetails,

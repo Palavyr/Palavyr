@@ -14,11 +14,11 @@ namespace Palavyr.Core.Services.LogoServices
 
     public class LogoRetriever : ILogoRetriever
     {
-        private readonly IConfigurationEntityStore<Logo> logoStore;
+        private readonly IEntityStore<Logo> logoStore;
         private readonly ILinkCreator linkCreator;
 
         public LogoRetriever(
-            IConfigurationEntityStore<Logo> logoStore,
+            IEntityStore<Logo> logoStore,
             ILinkCreator linkCreator
         )
         {

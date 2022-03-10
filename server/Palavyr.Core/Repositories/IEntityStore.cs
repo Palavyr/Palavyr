@@ -9,7 +9,8 @@ using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Repositories
 {
-    public interface IConfigurationEntityStore<TEntity> where TEntity : class, IEntity
+
+    public interface IEntityStore<TEntity> where TEntity : class, IEntity
     {
         Task<TEntity> Create(TEntity entity);
         Task CreateMany(TEntity[] entities);
@@ -21,11 +22,13 @@ namespace Palavyr.Core.Repositories
         Task<List<TEntity>> GetMany(int id, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<List<TEntity>> GetMany(List<string> convoNodeIds, Expression<Func<ConversationNode, string>> propertySelectorExpression);
         Task<TEntity[]> GetAll();
+        Task<TEntity[]> GetAllDeep();
         Task Delete(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<TEntity> Update(TEntity entity);
         Task Delete(TEntity entity);
         Task Delete(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task Delete(TEntity[] entities);
+
         IQueryable<TEntity> Query();
         CancellationToken CancellationToken { get; }
         string AccountId { get; }

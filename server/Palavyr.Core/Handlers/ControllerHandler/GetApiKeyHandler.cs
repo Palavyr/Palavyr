@@ -10,9 +10,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetApiKeyHandler : IRequestHandler<GetApiKeyRequest, GetApiKeyResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
-        public GetApiKeyHandler(IConfigurationEntityStore<Account> accountStore)
+        public GetApiKeyHandler(IEntityStore<Account> accountStore)
         {
             this.accountStore = accountStore;
         }

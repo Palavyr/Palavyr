@@ -11,12 +11,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetDynamicTableMetasHandler : IRequestHandler<GetDynamicTableMetasRequest, GetDynamicTableMetasResponse>
     {
-        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly ILogger<GetDynamicTableMetasHandler> logger;
         private readonly IUnitRetriever unitRetriever;
 
         public GetDynamicTableMetasHandler(
-            IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
             ILogger<GetDynamicTableMetasHandler> logger,
             IUnitRetriever unitRetriever)
         {

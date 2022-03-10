@@ -8,9 +8,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyEpilogueConfigurationHandler : IRequestHandler<ModifyEpilogueConfigurationRequest, ModifyEpilogueConfigurationResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
-        public ModifyEpilogueConfigurationHandler(IConfigurationEntityStore<Area> intentStore)
+        public ModifyEpilogueConfigurationHandler(IEntityStore<Area> intentStore)
         {
             this.intentStore = intentStore;
         }

@@ -10,13 +10,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetLiveWidgetImageUrlHandler : IRequestHandler<GetLiveWidgetImageUrlRequest, GetLiveWidgetImageUrlResponse>
     {
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly ILinkCreator linkCreator;
 
         public GetLiveWidgetImageUrlHandler(
-            IConfigurationEntityStore<ConversationNode> convoNodeStore,
-            IConfigurationEntityStore<FileAsset> fileAssetStore,
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<FileAsset> fileAssetStore,
             ILinkCreator linkCreator)
         {
             this.convoNodeStore = convoNodeStore;

@@ -6,12 +6,12 @@ namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
 {
     public class FileAssetLinker : IFileAssetLinker<FileAssetLinker>
     {
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
 
         public FileAssetLinker(
-            IConfigurationEntityStore<ConversationNode> convoNodeStore,
-            IConfigurationEntityStore<FileAsset> fileAssetStore)
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<FileAsset> fileAssetStore)
         {
             this.convoNodeStore = convoNodeStore;
             this.fileAssetStore = fileAssetStore;

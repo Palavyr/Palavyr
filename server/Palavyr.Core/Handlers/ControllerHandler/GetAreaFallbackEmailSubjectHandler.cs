@@ -8,9 +8,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetAreaFallbackEmailSubjectHandler : IRequestHandler<GetAreaFallbackEmailSubjectRequest, GetAreaFallbackEmailSubjectResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
-        public GetAreaFallbackEmailSubjectHandler(IConfigurationEntityStore<Area> intentStore)
+        public GetAreaFallbackEmailSubjectHandler(IEntityStore<Area> intentStore)
         {
             this.intentStore = intentStore;
         }

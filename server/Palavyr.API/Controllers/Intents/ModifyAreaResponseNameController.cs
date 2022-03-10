@@ -11,11 +11,11 @@ namespace Palavyr.API.Controllers.Intents
     [Authorize]
     public class ModifyIntentNameController : PalavyrBaseController
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
         private readonly ILogger<ModifyIntentNameController> logger;
 
         public ModifyIntentNameController(
-            IConfigurationEntityStore<Area> intentStore,
+            IEntityStore<Area> intentStore,
             ILogger<ModifyIntentNameController> logger
         )
         {

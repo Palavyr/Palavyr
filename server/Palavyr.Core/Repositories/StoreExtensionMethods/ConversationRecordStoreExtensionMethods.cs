@@ -6,7 +6,7 @@ namespace Palavyr.Core.Repositories.StoreExtensionMethods
 {
     public static class ConversationRecordStoreExtensionMethods
     {
-        public static async Task<ConversationRecord> GetSingleRecord(this IConfigurationEntityStore<ConversationRecord> convoRecordStore, string conversationRecordId)
+        public static async Task<ConversationRecord> GetSingleRecord(this IEntityStore<ConversationRecord> convoRecordStore, string conversationRecordId)
         {
             var record = await convoRecordStore
                 .Query()

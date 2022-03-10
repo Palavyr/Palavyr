@@ -11,9 +11,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyConversationNodeHandler : IRequestHandler<ModifyConversationNodeRequest, ModifyConversationNodeResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
-        public ModifyConversationNodeHandler(IConfigurationEntityStore<Area> intentStore)
+        public ModifyConversationNodeHandler(IEntityStore<Area> intentStore)
         {
             this.intentStore = intentStore;
         }

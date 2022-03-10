@@ -10,9 +10,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ResetMyPasswordHandler : IRequestHandler<ResetMyPasswordRequest, ResetMyPasswordResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
-        public ResetMyPasswordHandler(IConfigurationEntityStore<Account> accountStore)
+        public ResetMyPasswordHandler(IEntityStore<Account> accountStore)
         {
             this.accountStore = accountStore;
         }

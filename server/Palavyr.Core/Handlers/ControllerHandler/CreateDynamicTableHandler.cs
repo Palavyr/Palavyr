@@ -16,14 +16,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class CreateDynamicTableHandler : IRequestHandler<CreateDynamicTableRequest, CreateDynamicTableResponse>
     {
-        private readonly IConfigurationEntityStore<SelectOneFlat> selectOneFlatStore;
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<SelectOneFlat> selectOneFlatStore;
+        private readonly IEntityStore<Area> intentStore;
         private readonly ILogger<CreateDynamicTableHandler> logger;
         private readonly IAccountIdTransport accountIdTransport;
 
         public CreateDynamicTableHandler(
-            IConfigurationEntityStore<SelectOneFlat> selectOneFlatStore,
-            IConfigurationEntityStore<Area> intentStore,
+            IEntityStore<SelectOneFlat> selectOneFlatStore,
+            IEntityStore<Area> intentStore,
             ILogger<CreateDynamicTableHandler> logger,
             IAccountIdTransport accountIdTransport)
         {

@@ -15,22 +15,22 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class CreateNewConversationHistoryHandler : IRequestHandler<CreateNewConversationHistoryRequest, CreateNewConversationHistoryResponse>
     {
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
-        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
         private readonly IAccountIdTransport accountIdTransport;
         private readonly IMapToNew<ConversationNode, WidgetNodeResource> mapper;
         private readonly IEndingSequenceAttacher endingSequenceAttacher;
         private readonly ILogger<CreateNewConversationHistoryHandler> logger;
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
         public CreateNewConversationHistoryHandler(
-            IConfigurationEntityStore<ConversationNode> convoNodeStore,
-            IConfigurationEntityStore<ConversationRecord> convoRecordStore,
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<ConversationRecord> convoRecordStore,
             IAccountIdTransport accountIdTransport,
             IMapToNew<ConversationNode, WidgetNodeResource> mapper,
             IEndingSequenceAttacher endingSequenceAttacher,
             ILogger<CreateNewConversationHistoryHandler> logger,
-            IConfigurationEntityStore<Area> intentStore)
+            IEntityStore<Area> intentStore)
         {
             this.convoNodeStore = convoNodeStore;
             this.convoRecordStore = convoRecordStore;

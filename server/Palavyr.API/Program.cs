@@ -4,8 +4,6 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
-using NLog.Web;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.GlobalConstants;
 using Serilog;
@@ -97,10 +95,8 @@ namespace Palavyr.API
                         logging.AddConsole();
                         logging.AddDebug();
                         logging.AddEventSourceLogger();
-                        logging.AddNLog();
                         logging.AddSeq();
-                    })
-                .UseNLog();
+                    });
         }
 
         protected override void Init(IWebHostBuilder builder)

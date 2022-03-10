@@ -28,23 +28,23 @@ namespace Palavyr.Core.Services.DynamicTableService
     public class DynamicTableCommandExecutor<TEntity> : IDynamicTableCommandExecutor<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
     {
         private ILogger<TEntity> logger;
-        private readonly IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository;
+        private readonly IPricingStrategyEntityStore<TEntity> pricingStrategyEntityStore;
         private readonly IDynamicTableCompilerRetriever retriever;
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly IAccountIdTransport accountIdTransport;
         private string AccountId => accountIdTransport.AccountId;
 
         public DynamicTableCommandExecutor(
-            IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository,
+            IPricingStrategyEntityStore<TEntity> pricingStrategyEntityStore,
             IDynamicTableCompilerRetriever retriever,
-            IConfigurationEntityStore<ConversationNode> convoNodeStore,
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<Account> accountStore,
             IAccountIdTransport accountIdTransport,
             ILogger<TEntity> logger
         )
         {
-            this.genericDynamicTableRepository = genericDynamicTableRepository;
+            this.pricingStrategyEntityStore = pricingStrategyEntityStore;
             this.retriever = retriever;
             this.convoNodeStore = convoNodeStore;
             this.accountStore = accountStore;
@@ -56,14 +56,14 @@ namespace Palavyr.Core.Services.DynamicTableService
         {
             logger.LogInformation($"Deleting dynamic table: {request.TableId}");
             var (areaIdentifier, tableId) = request;
-            await genericDynamicTableRepository.DeleteTable(areaIdentifier, tableId);
+            await pricingStrategyEntityStore.DeleteTable(areaIdentifier, tableId);
         }
 
         public async Task<DynamicTableData<TEntity>> GetDynamicTableRows(DynamicTableRequest request)
         {
             logger.LogInformation($"Getting dynamic table rows: {request.TableId}");
             var (areaIdentifier, tableId) = request;
-            var tableRows = await genericDynamicTableRepository.GetAllRows(areaIdentifier, tableId);
+            var tableRows = await pricingStrategyEntityStore.GetAllRows(areaIdentifier, tableId);
             if (tableRows.Count == 0)
             {
                 tableRows = new List<TEntity>()
@@ -72,7 +72,7 @@ namespace Palavyr.Core.Services.DynamicTableService
                 };
             }
 
-            await genericDynamicTableRepository.UpdateRows(areaIdentifier, tableId, tableRows);
+            await pricingStrategyEntityStore.UpdateRows(areaIdentifier, tableId, tableRows);
 
             var convoNodes = await convoNodeStore.GetMany(areaIdentifier, s => s.AreaIdentifier);
 
@@ -120,7 +120,7 @@ namespace Palavyr.Core.Services.DynamicTableService
             }
 
             var mappedTableRows = workingEntity.UpdateTable(dynamicTable);
-            await genericDynamicTableRepository.SaveTable(
+            await pricingStrategyEntityStore.SaveTable(
                 areaIdentifier,
                 tableId,
                 mappedTableRows,
@@ -129,7 +129,7 @@ namespace Palavyr.Core.Services.DynamicTableService
                 async context => await entityCompiler.UpdateConversationNode(context, dynamicTable, tableId, areaIdentifier)
             );
 
-            return await genericDynamicTableRepository.GetAllRows(areaIdentifier, tableId);
+            return await pricingStrategyEntityStore.GetAllRows(areaIdentifier, tableId);
         }
     }
 }

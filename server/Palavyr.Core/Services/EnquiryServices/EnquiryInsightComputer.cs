@@ -15,17 +15,17 @@ namespace Palavyr.Core.Services.EnquiryServices
 
     public class EnquiryInsightComputer : IEnquiryInsightComputer
     {
-        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
-        private readonly IConfigurationEntityStore<ConversationHistory> convoHistoryStore;
-        private readonly IConfigurationEntityStore<Area> intentStore;
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<ConversationHistory> convoHistoryStore;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly INodeBranchLengthCalculator nodeBranchLengthCalculator;
 
         public EnquiryInsightComputer(
-            IConfigurationEntityStore<ConversationRecord> convoRecordStore,
-            IConfigurationEntityStore<ConversationHistory> convoHistoryStore,
-            IConfigurationEntityStore<Area> intentStore,
-            IConfigurationEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<ConversationRecord> convoRecordStore,
+            IEntityStore<ConversationHistory> convoHistoryStore,
+            IEntityStore<Area> intentStore,
+            IEntityStore<ConversationNode> convoNodeStore,
             INodeBranchLengthCalculator nodeBranchLengthCalculator
         )
         {

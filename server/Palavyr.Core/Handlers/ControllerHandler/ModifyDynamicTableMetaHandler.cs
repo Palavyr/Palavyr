@@ -10,11 +10,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyDynamicTableMetaHandler : IRequestHandler<ModifyDynamicTableMetaRequest, ModifyDynamicTableMetaResponse>
     {
-        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly IUnitRetriever unitRetriever;
 
         public ModifyDynamicTableMetaHandler(
-            IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
             IUnitRetriever unitRetriever)
         {
             this.dynamicTableMetaStore = dynamicTableMetaStore;

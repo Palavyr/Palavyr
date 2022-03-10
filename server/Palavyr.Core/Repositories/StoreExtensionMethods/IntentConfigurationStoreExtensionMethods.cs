@@ -8,7 +8,7 @@ namespace Palavyr.Core.Repositories.StoreExtensionMethods
 {
     public static class IntentStoreExtensionMethods
     {
-        public static async Task<Area> GetIntentComplete(this IConfigurationEntityStore<Area> intentStore, string intentId)
+        public static async Task<Area> GetIntentComplete(this IEntityStore<Area> intentStore, string intentId)
         {
             var intentComplete = await intentStore
                 .Query()
@@ -22,7 +22,7 @@ namespace Palavyr.Core.Repositories.StoreExtensionMethods
             return intentComplete;
         }
 
-        public static async Task<Area> GetIntentOnly(this IConfigurationEntityStore<Area> intentStore, string intentId)
+        public static async Task<Area> GetIntentOnly(this IEntityStore<Area> intentStore, string intentId)
         {
             var intentComplete = await intentStore
                 .Query()
@@ -30,7 +30,7 @@ namespace Palavyr.Core.Repositories.StoreExtensionMethods
             return intentComplete;
         }
 
-        public static async Task<List<Area>> GetActiveAreasWithConvoAndDynamicAndStaticTables(this IConfigurationEntityStore<Area> intentStore)
+        public static async Task<List<Area>> GetActiveAreasWithConvoAndDynamicAndStaticTables(this IEntityStore<Area> intentStore)
         {
             return await intentStore
                 .Query()

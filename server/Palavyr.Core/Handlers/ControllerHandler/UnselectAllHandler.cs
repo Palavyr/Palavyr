@@ -8,9 +8,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class UnselectAllHandler : INotificationHandler<UnselectAllRequest>
     {
-        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
 
-        public UnselectAllHandler(IConfigurationEntityStore<ConversationRecord> convoRecordStore)
+        public UnselectAllHandler(IEntityStore<ConversationRecord> convoRecordStore)
         {
             this.convoRecordStore = convoRecordStore;
         }

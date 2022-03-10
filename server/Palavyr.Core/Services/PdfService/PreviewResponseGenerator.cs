@@ -23,7 +23,7 @@ namespace Palavyr.Core.Services.PdfService
 {
     public class PreviewResponseGenerator : IPreviewResponseGenerator
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
         private readonly IConfiguration configuration;
         private readonly ILogger<PreviewResponseGenerator> logger;
         private readonly IHtmlToPdfClient htmlToPdfClient;
@@ -37,7 +37,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IGuidUtils guidUtils;
 
         public PreviewResponseGenerator(
-            IConfigurationEntityStore<Area> intentStore,
+            IEntityStore<Area> intentStore,
             IConfiguration configuration,
             ILogger<PreviewResponseGenerator> logger,
             IHtmlToPdfClient htmlToPdfClient,

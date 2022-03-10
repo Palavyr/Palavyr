@@ -18,14 +18,14 @@ namespace Palavyr.API.Controllers.Intents
     [Authorize]
     public class GetAreaByIdController : PalavyrBaseController
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly IEmailVerificationStatus emailVerificationStatus;
         private ILogger<GetAreaByIdController> logger;
 
         public GetAreaByIdController(
-            IConfigurationEntityStore<Area> intentStore,
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Area> intentStore,
+            IEntityStore<Account> accountStore,
             IEmailVerificationStatus emailVerificationStatus,
             ILogger<GetAreaByIdController> logger
         )

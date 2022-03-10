@@ -10,11 +10,11 @@ namespace Palavyr.Core.Mappers
 {
     public class WidgetNodeResourceMapper : IMapToNew<ConversationNode, WidgetNodeResource>
     {
-        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly IGuidFinder guidFinder;
 
         public WidgetNodeResourceMapper(
-            IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
             IGuidFinder guidFinder)
         {
             this.dynamicTableMetaStore = dynamicTableMetaStore;

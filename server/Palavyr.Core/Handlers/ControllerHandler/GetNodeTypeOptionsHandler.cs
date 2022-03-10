@@ -14,12 +14,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly ILogger<GetNodeTypeOptionsHandler> logger;
         private readonly IDynamicTableCompilerOrchestrator dynamicTableCompilerOrchestrator;
-        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
 
         public GetNodeTypeOptionsHandler(
             ILogger<GetNodeTypeOptionsHandler> logger,
             IDynamicTableCompilerOrchestrator dynamicTableCompilerOrchestrator,
-            IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore)
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore)
         {
             this.logger = logger;
             this.dynamicTableCompilerOrchestrator = dynamicTableCompilerOrchestrator;

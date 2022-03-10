@@ -8,7 +8,7 @@ namespace Palavyr.Core.Repositories.StoreExtensionMethods
 {
     public static class ConversationNodeExtensionMethods
     {
-        public static async Task<List<ConversationNode>> UpdateConversation(this IConfigurationEntityStore<Area> intentStore, string intentId, List<ConversationNode> convoUpdate)
+        public static async Task<List<ConversationNode>> UpdateConversation(this IEntityStore<Area> intentStore, string intentId, List<ConversationNode> convoUpdate)
         {
             var intent = await intentStore
                 .Query()
@@ -21,7 +21,7 @@ namespace Palavyr.Core.Repositories.StoreExtensionMethods
             return convoUpdate;
         }
 
-        public static async Task<ConversationNode?> UpdateConversationNodeText(this IConfigurationEntityStore<ConversationNode> convoNodeStore, string areaId, string nodeId, string nodeTextUpdate)
+        public static async Task<ConversationNode?> UpdateConversationNodeText(this IEntityStore<ConversationNode> convoNodeStore, string areaId, string nodeId, string nodeTextUpdate)
         {
             var node = await convoNodeStore.Get(nodeId, s => s.NodeId);
             if (node != null)

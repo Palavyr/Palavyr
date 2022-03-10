@@ -17,18 +17,18 @@ namespace Palavyr.Core.Services.PdfService
 {
     public class ResponseHtmlBuilder : IResponseHtmlBuilder
     {
-        private readonly IConfigurationEntityStore<Logo> logoStore;
+        private readonly IEntityStore<Logo> logoStore;
         private readonly ILinkCreator linkCreator;
         private readonly IConfiguration configuration;
-        private readonly IConfigurationEntityStore<Account> accountStore;
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Account> accountStore;
+        private readonly IEntityStore<Area> intentStore;
 
         public ResponseHtmlBuilder(
             ILinkCreator linkCreator,
             IConfiguration configuration,
-            IConfigurationEntityStore<Logo> logoStore,
-            IConfigurationEntityStore<Account> accountStore,
-            IConfigurationEntityStore<Area> intentStore)
+            IEntityStore<Logo> logoStore,
+            IEntityStore<Account> accountStore,
+            IEntityStore<Area> intentStore)
         {
             this.logoStore = logoStore;
             this.linkCreator = linkCreator;

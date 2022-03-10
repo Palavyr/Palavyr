@@ -11,16 +11,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class CreateIntentHandler : IRequestHandler<CreateIntentRequest, CreateIntentResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<CreateIntentHandler> logger;
         private readonly IAccountIdTransport accountIdTransport;
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
         public CreateIntentHandler(
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Account> accountStore,
             ILogger<CreateIntentHandler> logger,
             IAccountIdTransport accountIdTransport,
-            IConfigurationEntityStore<Area> intentStore)
+            IEntityStore<Area> intentStore)
         {
             this.accountStore = accountStore;
             this.logger = logger;

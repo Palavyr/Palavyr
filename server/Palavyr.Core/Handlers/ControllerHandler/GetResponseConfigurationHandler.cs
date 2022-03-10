@@ -9,9 +9,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetResponseConfigurationHandler : IRequestHandler<GetResponseConfigurationRequest, GetResponseConfigurationResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
-        public GetResponseConfigurationHandler(IConfigurationEntityStore<Area> intentStore)
+        public GetResponseConfigurationHandler(IEntityStore<Area> intentStore)
         {
             this.intentStore = intentStore;
         }

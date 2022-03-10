@@ -37,12 +37,12 @@ namespace Palavyr.Core.Services.PdfService
 
     public class HtmlToPdfClientFileAssetCreatingDecorator : IHtmlToPdfClient
     {
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly IHtmlToPdfClient htmlToPdfClient;
         private readonly IAccountIdTransport accountIdTransport;
 
         public HtmlToPdfClientFileAssetCreatingDecorator(
-            IConfigurationEntityStore<FileAsset> fileAssetStore,
+            IEntityStore<FileAsset> fileAssetStore,
             IHtmlToPdfClient htmlToPdfClient,
             IAccountIdTransport accountIdTransport)
         {

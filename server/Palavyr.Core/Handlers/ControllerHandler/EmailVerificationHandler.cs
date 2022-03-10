@@ -10,12 +10,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class EmailVerificationHandler : IRequestHandler<EmailAddressVerificationRequest, EmailAddressVerificationResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
         private readonly IEmailVerificationStatus emailVerificationStatus;
         private readonly ILogger<EmailVerificationHandler> logger;
 
         public EmailVerificationHandler(
-            IConfigurationEntityStore<Area> intentStore,
+            IEntityStore<Area> intentStore,
             IEmailVerificationStatus emailVerificationStatus,
             ILogger<EmailVerificationHandler> logger
         )

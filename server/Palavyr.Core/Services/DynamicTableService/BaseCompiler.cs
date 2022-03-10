@@ -11,9 +11,9 @@ namespace Palavyr.Core.Services.DynamicTableService
 {
     public abstract class BaseCompiler<TEntity> where TEntity : class, IDynamicTable<TEntity>
     {
-        protected readonly IGenericDynamicTableRepository<TEntity> repository;
+        protected readonly IPricingStrategyEntityStore<TEntity> repository;
 
-        public BaseCompiler(IGenericDynamicTableRepository<TEntity> repository)
+        public BaseCompiler(IPricingStrategyEntityStore<TEntity> repository)
         {
             this.repository = repository;
         }

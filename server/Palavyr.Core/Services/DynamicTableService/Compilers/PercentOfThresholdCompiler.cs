@@ -22,13 +22,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
     public class PercentOfThresholdCompiler : BaseCompiler<PercentOfThreshold>, IPercentOfThresholdCompiler
     {
-        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly IThresholdEvaluator thresholdEvaluator;
         private readonly IResponseRetriever responseRetriever;
 
         public PercentOfThresholdCompiler(
-            IGenericDynamicTableRepository<PercentOfThreshold> repository,
-            IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IPricingStrategyEntityStore<PercentOfThreshold> repository,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
             IThresholdEvaluator thresholdEvaluator,
             IResponseRetriever responseRetriever
         ) : base(repository)

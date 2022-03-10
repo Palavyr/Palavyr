@@ -11,13 +11,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetIntroductionIdHandler : IRequestHandler<GetIntroductionIdRequest, GetIntroductionIdResponse>
     {
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly IGuidUtils guidUtils;
 
         public GetIntroductionIdHandler(
-            IConfigurationEntityStore<ConversationNode> convoNodeStore,
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<Account> accountStore,
             IGuidUtils guidUtils
         )
         {

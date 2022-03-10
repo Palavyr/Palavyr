@@ -6,10 +6,10 @@ namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
 {
     public class LogoLinker : IFileAssetLinker<LogoLinker>
     {
-        private readonly IConfigurationEntityStore<Logo> logoStore;
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<Logo> logoStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
 
-        public LogoLinker(IConfigurationEntityStore<Logo> logoStore, IConfigurationEntityStore<FileAsset> fileAssetStore)
+        public LogoLinker(IEntityStore<Logo> logoStore, IEntityStore<FileAsset> fileAssetStore)
         {
             this.logoStore = logoStore;
             this.fileAssetStore = fileAssetStore;

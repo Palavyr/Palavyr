@@ -15,13 +15,13 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
     public class CompileSenderDetails : ICompileSenderDetails
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Account> accountStore;
+        private readonly IEntityStore<Area> intentStore;
         private readonly IResponseCustomizer responseCustomizer;
 
         public CompileSenderDetails(
-            IConfigurationEntityStore<Area> intentStore,
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Area> intentStore,
+            IEntityStore<Account> accountStore,
             IResponseCustomizer responseCustomizer
         )
         {

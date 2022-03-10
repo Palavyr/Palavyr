@@ -22,13 +22,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
     public class BasicThresholdCompiler : BaseCompiler<BasicThreshold>, IBasicThresholdCompiler
     {
-        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableStore;
         private readonly IThresholdEvaluator thresholdEvaluator;
         private readonly IResponseRetriever responseRetriever;
 
         public BasicThresholdCompiler(
-            IConfigurationEntityStore<DynamicTableMeta> dynamicTableStore,
-            IGenericDynamicTableRepository<BasicThreshold> repository,
+            IEntityStore<DynamicTableMeta> dynamicTableStore,
+            IPricingStrategyEntityStore<BasicThreshold> repository,
             IThresholdEvaluator thresholdEvaluator,
             IResponseRetriever responseRetriever
         ) : base(repository)

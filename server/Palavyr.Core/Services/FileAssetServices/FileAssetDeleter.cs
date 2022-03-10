@@ -10,11 +10,11 @@ namespace Palavyr.Core.Services.FileAssetServices
     public class FileAssetDeleterDeleteDatabaseRecordDecorator : IFileAssetDeleter
     {
         private readonly IFileAssetDeleter inner;
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
 
         public FileAssetDeleterDeleteDatabaseRecordDecorator(
             IFileAssetDeleter inner,
-            IConfigurationEntityStore<FileAsset> fileAssetStore)
+            IEntityStore<FileAsset> fileAssetStore)
         {
             this.inner = inner;
             this.fileAssetStore = fileAssetStore;
@@ -38,11 +38,11 @@ namespace Palavyr.Core.Services.FileAssetServices
     public class FileAssetDeleterDereferenceConvoNodesDecorator : IFileAssetDeleter
     {
         private readonly IFileAssetDeleter fileAssetDeleter;
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
 
         public FileAssetDeleterDereferenceConvoNodesDecorator(
             IFileAssetDeleter fileAssetDeleter,
-            IConfigurationEntityStore<ConversationNode> convoNodeStore)
+            IEntityStore<ConversationNode> convoNodeStore)
         {
             this.fileAssetDeleter = fileAssetDeleter;
             this.convoNodeStore = convoNodeStore;
@@ -78,12 +78,12 @@ namespace Palavyr.Core.Services.FileAssetServices
 
     public class FileAssetDeleter : IFileAssetDeleter
     {
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly ICloudDeleter cloudDeleter;
         private readonly ILinkCreator linkCreator;
 
         public FileAssetDeleter(
-            IConfigurationEntityStore<FileAsset> fileAssetStore,
+            IEntityStore<FileAsset> fileAssetStore,
             ICloudDeleter cloudDeleter,
             ILinkCreator linkCreator
         )

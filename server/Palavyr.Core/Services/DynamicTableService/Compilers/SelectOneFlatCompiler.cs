@@ -26,16 +26,16 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         private readonly IConversationOptionSplitter splitter;
         private readonly ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater;
         private readonly IResponseRetriever responseRetriever;
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
-        private readonly IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
 
         public SelectOneFlatCompiler(
-            IGenericDynamicTableRepository<SelectOneFlat> repository,
+            IPricingStrategyEntityStore<SelectOneFlat> repository,
             IConversationOptionSplitter splitter,
             ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater,
             IResponseRetriever responseRetriever,
-            IConfigurationEntityStore<ConversationNode> convoNodeStore,
-            IConfigurationEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(repository)
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(repository)
         {
             this.splitter = splitter;
             this.selectOneFlatNodeUpdater = selectOneFlatNodeUpdater;

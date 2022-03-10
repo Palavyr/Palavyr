@@ -10,10 +10,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetAccountActiveStatusHandler : IRequestHandler<GetAccountActiveStatusRequest, GetAccountActiveStatusResponse>
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<GetAccountActiveStatusHandler> logger;
 
-        public GetAccountActiveStatusHandler(IConfigurationEntityStore<Account> accountStore, ILogger<GetAccountActiveStatusHandler> logger)
+        public GetAccountActiveStatusHandler(IEntityStore<Account> accountStore, ILogger<GetAccountActiveStatusHandler> logger)
         {
             this.accountStore = accountStore;
             this.logger = logger;

@@ -6,7 +6,7 @@ using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Repositories
 {
-    public interface IGenericDynamicTableRepository<TEntity> where TEntity : class
+    public interface IPricingStrategyEntityStore<TEntity> where TEntity : class
     {
         Task<List<TEntity>> GetAllRows(string areaIdentifier, string tableId);
         

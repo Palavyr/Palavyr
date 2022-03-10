@@ -17,9 +17,9 @@ namespace Palavyr.API.Controllers.Accounts
 
         private readonly IMediator mediator;
         private readonly IAccountIdTransport accountIdTransport;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
-        public CancelRegistrationController(IMediator mediator, IAccountIdTransport accountIdTransport, IConfigurationEntityStore<Account> accountStore)
+        public CancelRegistrationController(IMediator mediator, IAccountIdTransport accountIdTransport, IEntityStore<Account> accountStore)
         {
             this.mediator = mediator;
             this.accountIdTransport = accountIdTransport;

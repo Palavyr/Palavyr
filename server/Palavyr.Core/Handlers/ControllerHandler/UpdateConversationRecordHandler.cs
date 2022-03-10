@@ -10,13 +10,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class UpdateConversationRecordHandler : INotificationHandler<UpdateConversationRecordRequest>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
-        private readonly IConfigurationEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
         private readonly ILogger<UpdateConversationRecordHandler> logger;
 
         public UpdateConversationRecordHandler(
-            IConfigurationEntityStore<Area> intentStore,
-            IConfigurationEntityStore<ConversationRecord> convoRecordStore,
+            IEntityStore<Area> intentStore,
+            IEntityStore<ConversationRecord> convoRecordStore,
             ILogger<UpdateConversationRecordHandler> logger)
         {
             this.intentStore = intentStore;

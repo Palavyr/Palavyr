@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation.Internal;
 using Microsoft.EntityFrameworkCore;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -15,8 +16,9 @@ using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Repositories
 {
-    public class ConfigurationEntityStore<TEntity> : IConfigurationEntityStore<TEntity> where TEntity : class, IEntity, IHaveAccountId
+    public class EntityStore<TEntity> : IEntityStore<TEntity> where TEntity : class, IEntity, IHaveAccountId
     {
+        private readonly IUnitOfWorkContextProvider contextProvider;
         public readonly IAccountIdTransport AccountIdTransport;
         public readonly ICancellationTokenTransport CancellationTokenTransport;
         public readonly IQueryable<TEntity> ReadonlyQueryExecutor;
@@ -40,8 +42,9 @@ namespace Palavyr.Core.Repositories
             typeof(ConversationRecord)
         };
 
-        public ConfigurationEntityStore(IUnitOfWorkContextProvider contextProvider, IAccountIdTransport accountIdTransport, ICancellationTokenTransport cancellationTokenTransport)
+        public EntityStore(IUnitOfWorkContextProvider contextProvider, IAccountIdTransport accountIdTransport, ICancellationTokenTransport cancellationTokenTransport)
         {
+            this.contextProvider = contextProvider;
             this.AccountIdTransport = accountIdTransport;
             this.CancellationTokenTransport = cancellationTokenTransport;
             this.ReadonlyQueryExecutor = ChooseContext(contextProvider).Set<TEntity>().AsNoTracking().Where(x => x.AccountId == accountIdTransport.AccountId);
@@ -157,6 +160,16 @@ namespace Palavyr.Core.Repositories
         {
             var entities = await ReadonlyQueryExecutor.ToListAsync(CancellationToken);
             return entities.ToArray();
+        }
+
+        public async Task<TEntity[]> GetAllDeep()
+        {
+            var transientQueryable = ChooseContext(contextProvider)
+                .Set<TEntity>()
+                .AsNoTracking()
+                .Where(x => x.AccountId == AccountId)
+                .Include(ChooseContext(contextProvider).GetIncludePaths(typeof(TEntity)));
+            return await transientQueryable.ToArrayAsync(CancellationToken);
         }
 
         public async Task<TEntity> Update(TEntity entity)

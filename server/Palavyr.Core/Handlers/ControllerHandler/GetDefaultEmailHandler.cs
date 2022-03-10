@@ -13,11 +13,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetDefaultEmailHandler : IRequestHandler<GetDefaultEmailRequest, GetDefaultEmailResponse>
     {
         private readonly IEmailVerificationStatus emailVerificationStatus;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
         public GetDefaultEmailHandler(
             IEmailVerificationStatus emailVerificationStatus,
-            IConfigurationEntityStore<Account> accountStore)
+            IEntityStore<Account> accountStore)
         {
             this.emailVerificationStatus = emailVerificationStatus;
             this.accountStore = accountStore;

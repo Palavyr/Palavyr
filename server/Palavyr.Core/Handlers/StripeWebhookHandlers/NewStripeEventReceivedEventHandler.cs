@@ -8,9 +8,9 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
     public class NewStripeEventReceivedEventHandler : IRequestHandler<NewStripeEventReceivedEvent, NewStripeEventReceivedEventResponse>
     {
-        private readonly IConfigurationEntityStore<StripeWebhookRecord> stripeWebhookStore;
+        private readonly IEntityStore<StripeWebhookRecord> stripeWebhookStore;
 
-        public NewStripeEventReceivedEventHandler(IConfigurationEntityStore<StripeWebhookRecord> stripeWebhookStore)
+        public NewStripeEventReceivedEventHandler(IEntityStore<StripeWebhookRecord> stripeWebhookStore)
         {
             this.stripeWebhookStore = stripeWebhookStore;
         }

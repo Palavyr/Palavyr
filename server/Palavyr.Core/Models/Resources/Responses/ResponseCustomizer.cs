@@ -14,14 +14,14 @@ namespace Palavyr.Core.Models.Resources.Responses
 
     public class ResponseCustomizer : IResponseCustomizer
     {
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILinkCreator linkCreator;
-        private readonly IConfigurationEntityStore<Logo> logoStore;
+        private readonly IEntityStore<Logo> logoStore;
 
         public ResponseCustomizer(
-            IConfigurationEntityStore<Account> accountStore,
+            IEntityStore<Account> accountStore,
             ILinkCreator linkCreator,
-            IConfigurationEntityStore<Logo> logoStore
+            IEntityStore<Logo> logoStore
         )
         {
             this.accountStore = accountStore;

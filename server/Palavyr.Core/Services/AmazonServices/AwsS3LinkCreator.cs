@@ -21,10 +21,10 @@ namespace Palavyr.Core.Services.AmazonServices
     public class AwsS3LinkCreator : ILinkCreator
     {
         private readonly ILinkCreator linkCreator;
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
 
 
-        public AwsS3LinkCreator(ILinkCreator linkCreator, IConfigurationEntityStore<FileAsset> fileAssetStore)
+        public AwsS3LinkCreator(ILinkCreator linkCreator, IEntityStore<FileAsset> fileAssetStore)
         {
             this.linkCreator = linkCreator;
             this.fileAssetStore = fileAssetStore;

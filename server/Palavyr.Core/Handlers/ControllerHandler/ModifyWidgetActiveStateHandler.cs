@@ -9,10 +9,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyWidgetActiveStateHandler : IRequestHandler<ModifyWidgetActiveStateRequest, ModifyWidgetActiveStateResponse>
     {
-        private readonly IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore;
+        private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
         private readonly ILogger<ModifyWidgetActiveStateHandler> logger;
 
-        public ModifyWidgetActiveStateHandler(IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore, ILogger<ModifyWidgetActiveStateHandler> logger)
+        public ModifyWidgetActiveStateHandler(IEntityStore<WidgetPreference> widgetPreferenceStore, ILogger<ModifyWidgetActiveStateHandler> logger)
         {
             this.widgetPreferenceStore = widgetPreferenceStore;
             this.logger = logger;

@@ -12,12 +12,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IDangerousAccountDeleter dangerousAccountDeleter;
         private readonly ILogger<DeleteAccountHandler> logger;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
         public DeleteAccountHandler(
             IDangerousAccountDeleter dangerousAccountDeleter,
             ILogger<DeleteAccountHandler> logger,
-            IConfigurationEntityStore<Account> accountStore
+            IEntityStore<Account> accountStore
         )
         {
             this.dangerousAccountDeleter = dangerousAccountDeleter;

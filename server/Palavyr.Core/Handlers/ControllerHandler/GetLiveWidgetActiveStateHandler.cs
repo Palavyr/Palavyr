@@ -8,9 +8,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetLiveWidgetActiveStateHandler : IRequestHandler<GetLiveWidgetActiveStateRequest, GetLiveWidgetActiveStateResponse>
     {
-        private readonly IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore;
+        private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
 
-        public GetLiveWidgetActiveStateHandler(IConfigurationEntityStore<WidgetPreference> widgetPreferenceStore)
+        public GetLiveWidgetActiveStateHandler(IEntityStore<WidgetPreference> widgetPreferenceStore)
         {
             this.widgetPreferenceStore = widgetPreferenceStore;
         }

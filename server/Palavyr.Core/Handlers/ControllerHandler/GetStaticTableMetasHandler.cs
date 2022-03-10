@@ -11,10 +11,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetStaticTableMetasHandler : IRequestHandler<GetStaticTableMetasRequest, GetStaticTableMetasResponse>
     {
-        private readonly IConfigurationEntityStore<StaticTablesMeta> staticTableMetaStore;
+        private readonly IEntityStore<StaticTablesMeta> staticTableMetaStore;
         private readonly ILogger<GetStaticTableMetasHandler> logger;
 
-        public GetStaticTableMetasHandler(IConfigurationEntityStore<StaticTablesMeta> staticTableMetaStore, ILogger<GetStaticTableMetasHandler> logger)
+        public GetStaticTableMetasHandler(IEntityStore<StaticTablesMeta> staticTableMetaStore, ILogger<GetStaticTableMetasHandler> logger)
         {
             this.staticTableMetaStore = staticTableMetaStore;
             this.logger = logger;

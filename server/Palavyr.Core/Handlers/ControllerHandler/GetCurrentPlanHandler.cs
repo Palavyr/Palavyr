@@ -11,11 +11,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetCurrentPlanHandler : IRequestHandler<GetCurrentPlanRequest, GetCurrentPlanResponse>
     {
         private readonly IPlanTypeRetriever planTypeRetriever;
-        private readonly IConfigurationEntityStore<Account> accountStore;
+        private readonly IEntityStore<Account> accountStore;
 
         public GetCurrentPlanHandler(
             IPlanTypeRetriever planTypeRetriever,
-            IConfigurationEntityStore<Account> accountStore
+            IEntityStore<Account> accountStore
         )
         {
             this.planTypeRetriever = planTypeRetriever;

@@ -8,10 +8,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class SaveAsPreExistingFileHandler : INotificationHandler<SaveAsPreExistingFileRequest>
     {
-        private readonly IConfigurationEntityStore<FileAsset> fileAssetStore;
-        private readonly IConfigurationEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
 
-        public SaveAsPreExistingFileHandler(IConfigurationEntityStore<FileAsset> fileAssetStore, IConfigurationEntityStore<ConversationNode> convoNodeStore)
+        public SaveAsPreExistingFileHandler(IEntityStore<FileAsset> fileAssetStore, IEntityStore<ConversationNode> convoNodeStore)
         {
             this.fileAssetStore = fileAssetStore;
             this.convoNodeStore = convoNodeStore;

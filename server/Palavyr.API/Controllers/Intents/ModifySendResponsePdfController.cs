@@ -8,11 +8,11 @@ namespace Palavyr.API.Controllers.Intents
 {
     public class ModifySendResponsePdfController : PalavyrBaseController
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
         private const string Route = "area/send-pdf/{intentId}";
 
-        public ModifySendResponsePdfController(IConfigurationEntityStore<Area> intentStore)
+        public ModifySendResponsePdfController(IEntityStore<Area> intentStore)
         {
             this.intentStore = intentStore;
         }

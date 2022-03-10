@@ -8,9 +8,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyIntentIsCompleteHandler : IRequestHandler<ModifyIntentIsCompleteRequest, ModifyIntentIsCompleteResponse>
     {
-        private readonly IConfigurationEntityStore<Area> intentStore;
+        private readonly IEntityStore<Area> intentStore;
 
-        public ModifyIntentIsCompleteHandler(IConfigurationEntityStore<Area> intentStore)
+        public ModifyIntentIsCompleteHandler(IEntityStore<Area> intentStore)
         {
             this.intentStore = intentStore;
         }

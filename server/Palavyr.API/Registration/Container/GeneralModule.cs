@@ -66,9 +66,9 @@ namespace Palavyr.API.Registration.Container
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterGeneric(typeof(GenericDynamicTableRepository<>)).As(typeof(IGenericDynamicTableRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(PricingStrategyEntityStore<>)).As(typeof(IPricingStrategyEntityStore<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandExecutor<>)).As(typeof(IDynamicTableCommandExecutor<>)).InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(ConfigurationEntityStore<>)).As(typeof(IConfigurationEntityStore<>));
+            builder.RegisterGeneric(typeof(EntityStore<>)).As(typeof(IEntityStore<>));
 
             builder.RegisterType<MissingNodeCalculator>().As<IMissingNodeCalculator>();
             builder.RegisterType<RequiredNodeCalculator>().As<IRequiredNodeCalculator>().InstancePerLifetimeScope();
