@@ -1,7 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+using Palavyr.Core.Models.Contracts;
+
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
-    public class StripeWebhookRecord : Entity
+    public class StripeWebhookRecord : IEntity
     {
+        [Key]
+        public int? Id { get; set; }
         public string RecordId { get; set; }
         public string PayloadSignature { get; set; }
 

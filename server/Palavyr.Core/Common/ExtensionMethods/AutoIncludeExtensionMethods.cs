@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Palavyr.Core.Common.ExtensionMethods
 {
-
     public static class AutoIncludeExtensionMethods
     {
         public static IQueryable<T> Include<T>(this IQueryable<T> source, IEnumerable<string> navigationPropertyPaths)
@@ -15,7 +14,6 @@ namespace Palavyr.Core.Common.ExtensionMethods
         {
             return navigationPropertyPaths.Aggregate(source, (query, path) => query.Include(path));
         }
-        
 
         public static IEnumerable<string> GetIncludePaths(this DbContext context, Type clrEntityType, int maxDepth = int.MaxValue)
         {
@@ -34,6 +32,7 @@ namespace Palavyr.Core.Common.ExtensionMethods
                             entityNavigations.Add(navigation);
                     }
                 }
+
                 if (entityNavigations.Count == 0)
                 {
                     if (stack.Count > 0)
@@ -47,8 +46,10 @@ namespace Palavyr.Core.Common.ExtensionMethods
                         if (inverseNavigation != null)
                             includedNavigations.Add(inverseNavigation);
                     }
+
                     stack.Push(entityNavigations.GetEnumerator());
                 }
+
                 while (stack.Count > 0 && !stack.Peek().MoveNext())
                     stack.Pop();
                 if (stack.Count == 0) break;
@@ -56,7 +57,7 @@ namespace Palavyr.Core.Common.ExtensionMethods
             }
         }
 
-        
+
         public static IEnumerable<string> GetIncludePaths(this DbSet<IEntityType> context, DbContext dbcontext, Type clrEntityType, int maxDepth = int.MaxValue)
         {
             if (maxDepth < 0) throw new ArgumentOutOfRangeException(nameof(maxDepth));
@@ -74,6 +75,7 @@ namespace Palavyr.Core.Common.ExtensionMethods
                             entityNavigations.Add(navigation);
                     }
                 }
+
                 if (entityNavigations.Count == 0)
                 {
                     if (stack.Count > 0)
@@ -87,8 +89,10 @@ namespace Palavyr.Core.Common.ExtensionMethods
                         if (inverseNavigation != null)
                             includedNavigations.Add(inverseNavigation);
                     }
+
                     stack.Push(entityNavigations.GetEnumerator());
                 }
+
                 while (stack.Count > 0 && !stack.Peek().MoveNext())
                     stack.Pop();
                 if (stack.Count == 0) break;

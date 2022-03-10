@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Repositories.StoreExtensionMethods;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.AccountServices.PlanTypes
 {

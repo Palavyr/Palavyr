@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Models.Resources.Responses
 {

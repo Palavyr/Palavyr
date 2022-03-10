@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.AmazonServices
 {

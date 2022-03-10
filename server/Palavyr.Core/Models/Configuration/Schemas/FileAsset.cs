@@ -1,11 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Palavyr.Core.Models.Accounts.Schemas;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class FileAsset : Entity, IHaveAccountId
+    public class FileAsset : IEntity, IHaveAccountId
     {
+        [Key]
+        public int? Id { get; set; }
         public string AccountId { get; set; }       // the accounts Id 
         public string FileId { get; set; }          // A Guid referenced by other tables
         public string RiskyNameStem { get; set; }   // The original name (no extension) of the uploaded file

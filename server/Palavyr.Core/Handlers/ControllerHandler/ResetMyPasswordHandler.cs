@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

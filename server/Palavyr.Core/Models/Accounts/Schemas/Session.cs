@@ -1,10 +1,14 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
-    public class Session : Entity
+    public class Session : IEntity
     {
+        [Key]
+        public int? Id { get; set; }
         public string SessionId { get; set; }
         public string AccountId { get; set; }
         public string ApiKey { get; set; }

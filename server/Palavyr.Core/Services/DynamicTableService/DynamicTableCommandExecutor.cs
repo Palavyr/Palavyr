@@ -6,8 +6,8 @@ using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.DynamicTableService
 {

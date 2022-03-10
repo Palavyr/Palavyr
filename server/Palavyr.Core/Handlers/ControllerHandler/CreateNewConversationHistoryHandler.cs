@@ -8,8 +8,8 @@ using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

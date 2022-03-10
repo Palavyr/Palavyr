@@ -4,9 +4,9 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.AccountServices
 {

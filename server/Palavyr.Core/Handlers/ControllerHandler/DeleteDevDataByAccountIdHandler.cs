@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Repositories.Delete;
+using Palavyr.Core.Stores.Delete;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

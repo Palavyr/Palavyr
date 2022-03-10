@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class StaticTableRow : Entity, IStaticTableRow
+    public class StaticTableRow : IEntity, IStaticTableRow
     {
+        
+        [Key]
+        public int? Id { get; set; }
         public int RowOrder { get; set; }
         public string Description { get; set; } = null!;
         public StaticFee Fee { get; set; } = null!;

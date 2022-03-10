@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
-using Palavyr.Core.Models.Accounts.Schemas;
+using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class SelectOneFlat : Entity, IOrderedTable, IDynamicTable<SelectOneFlat>, IEntity
+    public class SelectOneFlat : IEntity, IOrderedTable, IDynamicTable<SelectOneFlat>
     {
+        [Key]
+        public int? Id { get; set; }
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }

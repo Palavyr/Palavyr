@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Models.Conversation
 {

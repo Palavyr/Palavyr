@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Data;
 
-namespace Palavyr.Core.Repositories
+namespace Palavyr.Core.Stores
 {
     public interface IUnitOfWorkContextProvider
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
 
-namespace Palavyr.Core.Repositories
+namespace Palavyr.Core.Stores
 {
 
     public interface IEntityStore<TEntity> where TEntity : class, IEntity

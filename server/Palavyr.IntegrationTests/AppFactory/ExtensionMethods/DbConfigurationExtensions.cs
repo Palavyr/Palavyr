@@ -10,10 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Repositories.Delete;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.Delete;
 
 namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Accounts.Schemas;
 
-namespace Palavyr.Core.Repositories.StoreExtensionMethods
+namespace Palavyr.Core.Stores.StoreExtensionMethods
 {
     public static class AccountStoreExtensionMethods
     {

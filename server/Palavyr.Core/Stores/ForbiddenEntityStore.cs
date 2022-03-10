@@ -8,7 +8,7 @@ using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Sessions;
 
-namespace Palavyr.Core.Repositories
+namespace Palavyr.Core.Stores
 {
     public interface IForbiddenEntityStore
     {

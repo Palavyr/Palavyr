@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.FileAssetServices
 {

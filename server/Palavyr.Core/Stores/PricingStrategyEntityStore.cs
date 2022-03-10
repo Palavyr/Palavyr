@@ -8,7 +8,7 @@ using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Sessions;
 
-namespace Palavyr.Core.Repositories
+namespace Palavyr.Core.Stores
 {
     public class PricingStrategyEntityStore<TEntity> : IPricingStrategyEntityStore<TEntity> where TEntity : class, ITable
     {

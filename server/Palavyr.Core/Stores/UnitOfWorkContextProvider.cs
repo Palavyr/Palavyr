@@ -2,7 +2,7 @@
 using Palavyr.Core.Data;
 using Palavyr.Core.Sessions;
 
-namespace Palavyr.Core.Repositories
+namespace Palavyr.Core.Stores
 {
     public class UnitOfWorkContextProvider // this must be registered as instance per lifetime scope as IUnitOfWorkContextProvider
         : IUnitOfWorkContextProvider

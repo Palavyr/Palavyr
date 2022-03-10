@@ -2,8 +2,8 @@
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.FileAssetServices
 {

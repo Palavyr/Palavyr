@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Repositories.StoreExtensionMethods;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Shouldly;
 using Test.Common.Random;

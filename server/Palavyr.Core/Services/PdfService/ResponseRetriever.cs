@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.PdfService
 {

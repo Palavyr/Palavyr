@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Models.Configuration.Schemas;
 
-namespace Palavyr.Core.Repositories.StoreExtensionMethods
+namespace Palavyr.Core.Stores.StoreExtensionMethods
 {
     public static class StaticTableStoreExtensionMethods
     {

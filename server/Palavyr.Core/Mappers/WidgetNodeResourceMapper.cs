@@ -4,7 +4,7 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Mappers
 {

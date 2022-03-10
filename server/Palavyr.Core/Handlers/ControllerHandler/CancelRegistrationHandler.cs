@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Repositories.Delete;
+using Palavyr.Core.Stores.Delete;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

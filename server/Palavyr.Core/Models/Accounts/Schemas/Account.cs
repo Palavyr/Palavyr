@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
@@ -7,8 +8,10 @@ using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
-    public class Account : Entity, IHaveAccountId
+    public class Account : IEntity, IHaveAccountId
     {
+        [Key]
+        public int? Id { get; set; }
         public string? Password { get; set; }
         public string EmailAddress { get; set; }
         public bool DefaultEmailIsVerified { get; set; }

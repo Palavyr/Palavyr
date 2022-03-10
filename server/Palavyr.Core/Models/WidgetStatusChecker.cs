@@ -7,9 +7,9 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Models
 {

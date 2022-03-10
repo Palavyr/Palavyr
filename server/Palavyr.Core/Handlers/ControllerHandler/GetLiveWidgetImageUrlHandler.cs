@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

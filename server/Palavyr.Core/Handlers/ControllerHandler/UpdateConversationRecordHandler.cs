@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

@@ -12,8 +12,6 @@ using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AttachmentServices;
@@ -21,6 +19,8 @@ using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.TemporaryPaths;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.EmailService.EmailResponse
 {

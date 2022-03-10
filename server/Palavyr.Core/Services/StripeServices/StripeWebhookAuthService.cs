@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
 using Stripe;
 
 namespace Palavyr.Core.Services.StripeServices

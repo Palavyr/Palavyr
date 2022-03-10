@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Models.Conversation.Schemas;
 
-namespace Palavyr.Core.Repositories.StoreExtensionMethods
+namespace Palavyr.Core.Stores.StoreExtensionMethods
 {
     public static class ConversationRecordStoreExtensionMethods
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.ConversationServices
 {

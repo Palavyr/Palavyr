@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Schemas;
 
-namespace Palavyr.Core.Repositories
+namespace Palavyr.Core.Stores
 {
     public interface IPricingStrategyEntityStore<TEntity> where TEntity : class
     {

@@ -10,9 +10,9 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {

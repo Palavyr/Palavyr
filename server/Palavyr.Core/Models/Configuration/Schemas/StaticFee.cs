@@ -1,12 +1,13 @@
 ﻿using System;
-using Palavyr.Core.Models.Accounts.Schemas;
+using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class StaticFee : Entity, IRecord
+    public class StaticFee : IEntity, IRecord
     {
-       
+        [Key]
+        public int? Id { get; set; }
         public double Min { get; set; }
         public double Max { get; set; }
         public string FeeId { get; set; }

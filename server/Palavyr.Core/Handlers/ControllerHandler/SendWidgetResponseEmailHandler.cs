@@ -4,8 +4,8 @@ using MediatR;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.EmailService.EmailResponse;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

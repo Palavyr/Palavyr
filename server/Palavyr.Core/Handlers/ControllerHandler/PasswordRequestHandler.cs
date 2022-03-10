@@ -4,11 +4,11 @@ using MediatR;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

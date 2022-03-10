@@ -1,11 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Amazon.S3;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Repositories.StoreExtensionMethods;
-using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.LogoServices
 {
@@ -16,39 +12,23 @@ namespace Palavyr.Core.Services.LogoServices
 
     public class LogoDeleter : ILogoDeleter
     {
-        private readonly IConfiguration configuration;
-        private readonly IEntityStore<Account> accountStore;
+        private readonly IEntityStore<Logo> logoStore;
+        private readonly IFileAssetLinker<LogoLinker> logoLinker;
 
-        private readonly IS3FileDeleter is3FileDeleter;
 
         public LogoDeleter(
-            IConfiguration configuration,
-            IEntityStore<Account> accountStore,
-            IS3FileDeleter is3FileDeleter
+            IEntityStore<Logo> logoStore,
+            IFileAssetLinker<LogoLinker> logoLinker
         )
         {
-            this.configuration = configuration;
-            this.accountStore = accountStore;
-            this.is3FileDeleter = is3FileDeleter;
+            this.logoStore = logoStore;
+            this.logoLinker = logoLinker;
         }
 
         public async Task DeleteLogo()
         {
-            var account = await accountStore.GetAccount();
-
-            var s3Key = account.AccountLogoUri;
-            if (!string.IsNullOrWhiteSpace(s3Key))
-            {
-                var userDataBucket = configuration.GetUserDataBucket();
-                var success = await is3FileDeleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
-                if (!success)
-                {
-                    throw new AmazonS3Exception("Unable to delete logo file from S3");
-                }
-            }
-            
-            account.AccountLogoUri = "";
-            
+            var logo = await logoStore.Get(logoStore.AccountId, s => s.AccountId);
+            await logoLinker.UnlinkFromAccount(logo.AccountLogoFileId);
         }
     }
 }

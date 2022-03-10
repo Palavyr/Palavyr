@@ -15,7 +15,7 @@ using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Sessions;
 
-namespace Palavyr.Core.Repositories.Delete
+namespace Palavyr.Core.Stores.Delete
 {
     public class UltraDangerousGlobalDeleter : DangerousAccountDeleter
     {

@@ -9,8 +9,6 @@ using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Repositories.Delete;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AmazonServices;
@@ -38,6 +36,8 @@ using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.TemporaryPaths;
 using Palavyr.Core.Services.Units;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.Delete;
 using Module = Autofac.Module;
 
 namespace Palavyr.API.Registration.Container

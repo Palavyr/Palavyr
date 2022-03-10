@@ -1,7 +1,12 @@
-﻿namespace Palavyr.Core.Models.Accounts.Schemas
+﻿using System.ComponentModel.DataAnnotations;
+using Palavyr.Core.Models.Contracts;
+
+namespace Palavyr.Core.Models.Accounts.Schemas
 {
-    public class EmailVerification : Entity
+    public class EmailVerification : IEntity
     {
+        [Key]
+        public int? Id { get; set; }
         public string AuthenticationToken { get; set; } = null!;
         public string EmailAddress { get; set; } = null!;
         public string AccountId { get; set; } = null!;

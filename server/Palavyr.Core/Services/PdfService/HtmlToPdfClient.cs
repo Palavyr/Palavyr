@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.PdfService.PdfServer;
 using Palavyr.Core.Services.TemporaryPaths;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.PdfService
 {

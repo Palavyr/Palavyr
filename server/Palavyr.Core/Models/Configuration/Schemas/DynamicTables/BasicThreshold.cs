@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class BasicThreshold : Entity, IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange, IOrderableThreshold
+    public class BasicThreshold : IEntity, IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange, IOrderableThreshold
     {
+        [Key]
+        public int? Id { get; set; }
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }

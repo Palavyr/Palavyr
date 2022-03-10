@@ -1,9 +1,13 @@
-﻿using Palavyr.Core.Models.Accounts.Schemas;
+﻿using System.ComponentModel.DataAnnotations;
+using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class WidgetPreference : Entity
+    public class WidgetPreference : IEntity
     {
+        [Key]
+        public int? Id { get; set; }
+
         public string Placeholder { get; set; }
 
         public string AccountId { get; set; }

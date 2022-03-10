@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Repositories.Delete;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.Delete;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

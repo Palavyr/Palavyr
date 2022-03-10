@@ -14,7 +14,7 @@ using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Sessions;
 
-namespace Palavyr.Core.Repositories
+namespace Palavyr.Core.Stores
 {
     public class EntityStore<TEntity> : IEntityStore<TEntity> where TEntity : class, IEntity, IHaveAccountId
     {
@@ -161,6 +161,20 @@ namespace Palavyr.Core.Repositories
             var entities = await ReadonlyQueryExecutor.ToListAsync(CancellationToken);
             return entities.ToArray();
         }
+
+        public async Task<TEntity> GetDeep(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
+        {
+            var fieldName = propertySelectorExpression.GetMember().Name;
+            var transientQueryable = ChooseContext(contextProvider)
+                .Set<TEntity>()
+                .AsNoTracking()
+                .Where(x => x.AccountId == AccountId)
+                .Where(x => id == (string)x.GetType().GetProperty(fieldName).GetValue(typeof(TEntity)))
+                .Include(ChooseContext(contextProvider).GetIncludePaths(typeof(TEntity)));
+
+            return await transientQueryable.SingleAsync(CancellationToken);
+        }
+
 
         public async Task<TEntity[]> GetAllDeep()
         {

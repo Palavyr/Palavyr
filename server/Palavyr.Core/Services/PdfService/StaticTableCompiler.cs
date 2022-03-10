@@ -3,10 +3,10 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.PdfService
 {

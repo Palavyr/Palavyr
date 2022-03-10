@@ -9,7 +9,7 @@ using Palavyr.API.CustomMiddleware.MiddlewareHandlers;
 using Palavyr.Core.Data;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.API.CustomMiddleware
 {

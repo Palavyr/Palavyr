@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.API.Controllers.Accounts
 {
