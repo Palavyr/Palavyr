@@ -1,18 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Repositories.Delete
 {
+    public class UltraDangerousGlobalDeleter : DangerousAccountDeleter
+    {
+        private readonly IDetermineCurrentEnvironment currentEnvironment;
+
+        public UltraDangerousGlobalDeleter(IDetermineCurrentEnvironment currentEnvironment, IFileAssetDeleter fileAssetDeleter, DashContext dashContext, ConvoContext convoContext, AccountsContext accountsContext, AccountIdTransport accountIdTransport,
+            ICancellationTokenTransport cancellationTokenTransport) : base(fileAssetDeleter, dashContext, convoContext, accountsContext, accountIdTransport, cancellationTokenTransport)
+        {
+            this.currentEnvironment = currentEnvironment;
+        }
+
+        public void Delete______EVERYTHING()
+        {
+            if (currentEnvironment.IsProduction())
+            {
+                throw new Exception("HOW DARE YOU TRY AND DELETE EVERYTHING IN PRODUCTION. DO NOT REMOVE THIS WARNING OR THERE WILL BE CONSEQUENCES.");
+            }
+
+            
+            DeleteAllThings();
+
+        }
+    }
+    
+    
     public interface IDangerousAccountDeleter
     {
         Task DeleteAllThings();
@@ -20,8 +47,9 @@ namespace Palavyr.Core.Repositories.Delete
 
     public class DangerousAccountDeleter : IDangerousAccountDeleter
     {
+        private readonly IConfigurationEntityStore<Account> accountStore;
         private readonly IFileAssetDeleter fileAssetDeleter;
-        private readonly DashContext dashContext;
+        private readonly DashContext dashContext; // Try not to call these contexts directly.
         private readonly ConvoContext convoContext;
         private readonly AccountsContext accountsContext;
         private readonly AccountIdTransport accountIdTransport;
@@ -33,6 +61,7 @@ namespace Palavyr.Core.Repositories.Delete
         private string AccountId => accountIdTransport.AccountId;
 
         public DangerousAccountDeleter(
+            IConfigurationEntityStore<Account> accountStore,
             IFileAssetDeleter fileAssetDeleter,
             DashContext dashContext,
             ConvoContext convoContext,
@@ -40,6 +69,7 @@ namespace Palavyr.Core.Repositories.Delete
             AccountIdTransport accountIdTransport,
             ICancellationTokenTransport cancellationTokenTransport)
         {
+            this.accountStore = accountStore;
             this.fileAssetDeleter = fileAssetDeleter;
             this.dashContext = dashContext;
             this.convoContext = convoContext;
@@ -54,7 +84,7 @@ namespace Palavyr.Core.Repositories.Delete
             await DeleteAccountEntities();
         }
 
-        private async Task DeleteFileAssets()
+        internal virtual async Task DeleteFileAssets()
         {
             var fileAssetIds = await dashContext.FileAssets
                 .Where(row => row.AccountId == AccountId)
@@ -74,6 +104,7 @@ namespace Palavyr.Core.Repositories.Delete
                 convoContext,
                 accountsContext
             };
+            
 
             foreach (var context in contexts)
             {
@@ -82,9 +113,25 @@ namespace Palavyr.Core.Repositories.Delete
                 {
                     var tableContext = SetContextByEntityType(entityType);
                     var entities = await tableContext.ToListAsync(CancellationToken);
+
+                    entities = FilterByCurrentAccount(entities);
+                    
                     tableContext.RemoveRange(entities);
                 }
             }
+        }
+
+        internal virtual List<IEntityType> FilterByCurrentAccount(List<IEntityType> unfiltered)
+        {
+            var filteredTypes = unfiltered
+                .Where(x => x.GetType().GetInterfaces().Contains(typeof(IHaveAccountId))).Select(x => (IHaveAccountId)x);
+
+            foreach (var filteredType in filteredTypes)
+            {
+                filteredType.includ
+            }
+            
+            
         }
 
         private DbSet<IEntityType> SetContextByEntityType(IEntityType entityType)

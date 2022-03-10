@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Handlers;
 using Palavyr.Core.Handlers.ControllerHandler;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions

@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Stripe;

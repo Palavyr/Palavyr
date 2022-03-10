@@ -1,9 +1,7 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;

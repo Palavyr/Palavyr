@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Palavyr.IntegrationTests.DataCreators;

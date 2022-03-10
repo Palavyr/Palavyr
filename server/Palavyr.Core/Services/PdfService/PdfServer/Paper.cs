@@ -1,5 +1,4 @@
 ﻿using System;
-using Palavyr.Core.Common.Environment;
 
 namespace Palavyr.Core.Services.PdfService.PdfServer
 {

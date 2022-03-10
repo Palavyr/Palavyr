@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Palavyr.Core.Common.UniqueIdentifiers;
+﻿using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Models
 {

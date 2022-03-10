@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Palavyr.IntegrationTests.AppFactory
+﻿namespace Palavyr.IntegrationTests.AppFactory
 {
     public static class IntegrationConstants
     {

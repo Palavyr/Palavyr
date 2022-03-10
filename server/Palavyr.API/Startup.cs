@@ -37,7 +37,6 @@ namespace Palavyr.API
             builder.RegisterModule(new AmazonModule(configuration));
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
-            builder.RegisterModule(new EntityStoreModule());
 
             var controllersTypesInAssembly = typeof(Startup).Assembly.GetExportedTypes()
                 .Where(type => typeof(ControllerBase).IsAssignableFrom(type)).ToArray();

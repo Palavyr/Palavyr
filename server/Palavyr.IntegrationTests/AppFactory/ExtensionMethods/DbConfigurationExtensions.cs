@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
+using Palavyr.Core.Repositories.Delete;
+using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {
@@ -71,7 +73,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             accountContext.Database.EnsureCreated();
             dashContext.Database.EnsureCreated();
             convoContext.Database.EnsureCreated();
-
+            
             ResetDbs(accountContext, dashContext, convoContext);
 
             accountContext.SaveChanges();
@@ -133,6 +135,12 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 
         public static void ResetDbs(AccountsContext accountContext, DashContext dashContext, ConvoContext convoContext)
         {
+            
+            
+            
+            
+            
+            
             accountContext.ResetAccountDb();
             accountContext.SaveChanges();
 
@@ -145,58 +153,58 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 
         public static void ResetConvoContext(this ConvoContext convoContext)
         {
-            var convos = convoContext.ConversationHistories.ToArray();
-            var completed = convoContext.ConversationRecords.ToArray();
-
-            convoContext.ConversationHistories.RemoveRange(convos);
-            convoContext.ConversationRecords.RemoveRange(completed);
-        }
-
-        public static void ResetDashDb(this DashContext dashContext)
-        {
-            var areas = dashContext.Areas.ToArray();
-            var convoNodes = dashContext.ConversationNodes.ToArray();
-            var fees = dashContext.StaticFees.ToArray();
-            var prefs = dashContext.WidgetPreferences.ToArray();
-            var dynTables = dashContext.DynamicTableMetas.ToArray();
-            var staticMetas = dashContext.StaticTablesMetas.ToArray();
-            var staticRows = dashContext.StaticTablesRows.ToArray();
-            var perc = dashContext.PercentOfThresholds.ToArray();
-            var select = dashContext.SelectOneFlats.ToArray();
-            var basic = dashContext.BasicThresholds.ToArray();
-            var categoryNested = dashContext.CategoryNestedThresholds.ToArray();
-            var twoNested = dashContext.TwoNestedCategories.ToArray();
-
-            dashContext.Areas.RemoveRange(areas);
-            dashContext.ConversationNodes.RemoveRange(convoNodes);
-            dashContext.StaticFees.RemoveRange(fees);
-            dashContext.WidgetPreferences.RemoveRange(prefs);
-            dashContext.DynamicTableMetas.RemoveRange(dynTables);
-            dashContext.StaticTablesMetas.RemoveRange(staticMetas);
-            dashContext.StaticTablesRows.RemoveRange(staticRows);
-
-            dashContext.SelectOneFlats.RemoveRange(select);
-            dashContext.PercentOfThresholds.RemoveRange(perc);
-            dashContext.BasicThresholds.RemoveRange(basic);
-            dashContext.CategoryNestedThresholds.RemoveRange(categoryNested);
-            dashContext.TwoNestedCategories.RemoveRange(twoNested);
-        }
-
-        public static void ResetAccountDb(this AccountsContext accountsContext)
-        {
-            var accounts = accountsContext.Accounts.ToArray();
-            var backups = accountsContext.Backups.ToArray();
-            var sessions = accountsContext.Sessions.ToArray();
-            var subs = accountsContext.Subscriptions.ToArray();
-            var emailVerifications = accountsContext.EmailVerifications.ToArray();
-            var stripeWebhooks = accountsContext.StripeWebHookRecords.ToArray();
-
-            accountsContext.Accounts.RemoveRange(accounts);
-            accountsContext.Backups.RemoveRange(backups);
-            accountsContext.Sessions.RemoveRange(sessions);
-            accountsContext.Subscriptions.RemoveRange(subs);
-            accountsContext.EmailVerifications.RemoveRange(emailVerifications);
-            accountsContext.StripeWebHookRecords.RemoveRange(stripeWebhooks);
+        //     var convos = convoContext.ConversationHistories.ToArray();
+        //     var completed = convoContext.ConversationRecords.ToArray();
+        //
+        //     convoContext.ConversationHistories.RemoveRange(convos);
+        //     convoContext.ConversationRecords.RemoveRange(completed);
+        // }
+        //
+        // public static void ResetDashDb(this DashContext dashContext)
+        // {
+        //     var areas = dashContext.Areas.ToArray();
+        //     var convoNodes = dashContext.ConversationNodes.ToArray();
+        //     var fees = dashContext.StaticFees.ToArray();
+        //     var prefs = dashContext.WidgetPreferences.ToArray();
+        //     var dynTables = dashContext.DynamicTableMetas.ToArray();
+        //     var staticMetas = dashContext.StaticTablesMetas.ToArray();
+        //     var staticRows = dashContext.StaticTablesRows.ToArray();
+        //     var perc = dashContext.PercentOfThresholds.ToArray();
+        //     var select = dashContext.SelectOneFlats.ToArray();
+        //     var basic = dashContext.BasicThresholds.ToArray();
+        //     var categoryNested = dashContext.CategoryNestedThresholds.ToArray();
+        //     var twoNested = dashContext.TwoNestedCategories.ToArray();
+        //
+        //     dashContext.Areas.RemoveRange(areas);
+        //     dashContext.ConversationNodes.RemoveRange(convoNodes);
+        //     dashContext.StaticFees.RemoveRange(fees);
+        //     dashContext.WidgetPreferences.RemoveRange(prefs);
+        //     dashContext.DynamicTableMetas.RemoveRange(dynTables);
+        //     dashContext.StaticTablesMetas.RemoveRange(staticMetas);
+        //     dashContext.StaticTablesRows.RemoveRange(staticRows);
+        //
+        //     dashContext.SelectOneFlats.RemoveRange(select);
+        //     dashContext.PercentOfThresholds.RemoveRange(perc);
+        //     dashContext.BasicThresholds.RemoveRange(basic);
+        //     dashContext.CategoryNestedThresholds.RemoveRange(categoryNested);
+        //     dashContext.TwoNestedCategories.RemoveRange(twoNested);
+        // }
+        //
+        // public static void ResetAccountDb(this AccountsContext accountsContext)
+        // {
+        //     var accounts = accountsContext.Accounts.ToArray();
+        //     var backups = accountsContext.Backups.ToArray();
+        //     var sessions = accountsContext.Sessions.ToArray();
+        //     var subs = accountsContext.Subscriptions.ToArray();
+        //     var emailVerifications = accountsContext.EmailVerifications.ToArray();
+        //     var stripeWebhooks = accountsContext.StripeWebHookRecords.ToArray();
+        //
+        //     accountsContext.Accounts.RemoveRange(accounts);
+        //     accountsContext.Backups.RemoveRange(backups);
+        //     accountsContext.Sessions.RemoveRange(sessions);
+        //     accountsContext.Subscriptions.RemoveRange(subs);
+        //     accountsContext.EmailVerifications.RemoveRange(emailVerifications);
+        //     accountsContext.StripeWebHookRecords.RemoveRange(stripeWebhooks);
         }
     }
 }

@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
-using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.StripeServices.Products;
 using Stripe.Checkout;

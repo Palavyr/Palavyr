@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Conversation.Schemas

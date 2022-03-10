@@ -1,5 +1,4 @@
-﻿using System;
-using Humanizer;
+﻿using Humanizer;
 
 namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated
 {

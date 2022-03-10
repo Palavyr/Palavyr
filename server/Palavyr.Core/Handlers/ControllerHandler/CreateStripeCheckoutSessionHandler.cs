@@ -8,7 +8,6 @@ using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

@@ -2,14 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Repositories.StoreExtensionMethods;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

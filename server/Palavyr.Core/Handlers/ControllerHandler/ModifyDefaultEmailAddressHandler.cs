@@ -6,7 +6,6 @@ using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;

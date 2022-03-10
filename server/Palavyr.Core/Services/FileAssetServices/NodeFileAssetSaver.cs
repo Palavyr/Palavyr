@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
 
 namespace Palavyr.Core.Services.FileAssetServices

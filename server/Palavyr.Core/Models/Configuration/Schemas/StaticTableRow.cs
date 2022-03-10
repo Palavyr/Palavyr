@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Contracts;

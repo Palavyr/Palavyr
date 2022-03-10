@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Palavyr.Core.Models.Accounts.Schemas
+﻿namespace Palavyr.Core.Models.Accounts.Schemas
 {
     public class Subscription : Entity
     {

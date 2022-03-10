@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.DataCreators;
 using Palavyr.IntegrationTests.Tests.Mocks;

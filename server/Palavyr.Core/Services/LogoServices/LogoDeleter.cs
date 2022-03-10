@@ -1,15 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Amazon.S3;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Repositories.StoreExtensionMethods;
 using Palavyr.Core.Services.AmazonServices.S3Service;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.LogoServices
 {
