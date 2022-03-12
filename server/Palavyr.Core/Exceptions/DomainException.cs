@@ -6,6 +6,7 @@ namespace Palavyr.Core.Exceptions
     public class DomainException : Exception
     {
         public string Message { get; set; } = "";
+
         public DomainException()
         {
         }

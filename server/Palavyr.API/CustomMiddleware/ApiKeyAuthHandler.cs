@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Palavyr.API.CustomMiddleware.MiddlewareHandlers;
@@ -45,7 +46,7 @@ namespace Palavyr.API.CustomMiddleware
             this.accountStore = accountStore;
             this.mediator = mediator;
         }
-        
+
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             logger.LogDebug("Calling Api Authentication handler...");
@@ -64,7 +65,7 @@ namespace Palavyr.API.CustomMiddleware
                 return await Task.FromResult(AuthenticateResult.Fail("Could not find the API Key in url."));
             }
 
-            var account = await accountStore.Get(apiKey.ToString(), s => s.ApiKey);
+            var account = await accountStore.RawReadonlyQuery().SingleOrDefaultAsync(s => s.ApiKey == apiKey.ToString(), httpContext.RequestAborted);
             if (account == null)
             {
                 return await Task.FromResult(AuthenticateResult.Fail("Api Key not attached to any accounts."));
@@ -72,17 +73,18 @@ namespace Palavyr.API.CustomMiddleware
 
             if (!account.Active)
             {
-                return await Task.FromResult(AuthenticateResult.Fail(
-                    "Account is not activated. Check your email for an activation code to use with the dashboard."));
+                return await Task.FromResult(
+                    AuthenticateResult.Fail(
+                        "Account is not activated. Check your email for an activation code to use with the dashboard."));
             }
 
             await mediator.Publish(new SetAccountEvent(account.AccountId));
 
             // account found - apikey is legit. Now make a claim ticket...
-            var claims = new[] {new Claim(ClaimTypes.SerialNumber, apiKey.ToString())};
+            var claims = new[] { new Claim(ClaimTypes.SerialNumber, apiKey.ToString()) };
             var claimsIdentity = new ClaimsIdentity(claims, nameof(ApiKeyAuthenticationHandler));
             var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), this.Scheme.Name);
-            
+
             return await Task.FromResult(AuthenticateResult.Success(ticket));
         }
     }

@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;

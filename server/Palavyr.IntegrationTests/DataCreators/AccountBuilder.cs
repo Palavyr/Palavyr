@@ -56,7 +56,7 @@ namespace Palavyr.IntegrationTests.DataCreators
 
         public DefaultAccountAndSessionBuilder WithDefaultEmailAddress()
         {
-            this.emailAddress = IntegrationConstants.EmailAddress;
+            this.emailAddress = this.test.EmailAddress;
             return this;
         }
 

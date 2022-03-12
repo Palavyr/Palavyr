@@ -115,7 +115,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<EnquiryDeleter>().As<IEnquiryDeleter>();
             builder.RegisterType<EnquiryInsightComputer>().As<IEnquiryInsightComputer>();
             builder.RegisterType<FileAssetDeleter>().As<IFileAssetDeleter>();
-
+            builder.RegisterType<CompilePdfServerRequest>().As<ICompilePdfServerRequest>();
 
             builder.RegisterType<FileAssetKeyResolver>().As<IFileAssetKeyResolver>();
             builder.RegisterType<FileAssetLinker>().As<IFileAssetLinker<FileAssetLinker>>();

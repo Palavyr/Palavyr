@@ -29,6 +29,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
         public override async Task InitializeAsync()
         {
             SetCancellationToken();
+            SetAccountIdTransport();
             await this.SetupProAccount();
             await base.InitializeAsync();
         }
@@ -38,12 +39,10 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
         {
             // arrange 
             var intentId = A.RandomId();
-            var recordBuilder = this.CreateConversationRecordBuilder();
-            var record = await recordBuilder.WithIntentId(intentId).Build();
+            var record = await this.CreateConversationRecordBuilder().WithIntentId(intentId).Build();
 
             // create intent without response PDF set
-            var intentBuilder = this.CreateIntentBuilder();
-            var intent = await intentBuilder.WithoutResponsePdf().WithIntentId(intentId).Build(); //SendPdfResponse needs to be false for this test
+            await this.CreateIntentBuilder().WithoutResponsePdf().WithIntentId(intentId).Build(); //SendPdfResponse needs to be false for this test
 
             var emailRequest = new EmailRequest
             {

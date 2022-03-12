@@ -2,7 +2,6 @@
 using Autofac;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Core.GlobalConstants;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,13 +7,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.Environment;
-using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Contracts;
+using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Sessions;
 
@@ -23,6 +26,8 @@ namespace Palavyr.Core.Stores.Delete
         private readonly IDetermineCurrentEnvironment currentEnvironment;
 
         public UltraDangerousGlobalDeleter(
+            IServiceProvider serviceProvider,
+            IUnitOfWorkContextProvider unitOfWorkContextProvider,
             IEntityStore<Account> accountStore,
             IDetermineCurrentEnvironment currentEnvironment,
             IFileAssetDeleter fileAssetDeleter,
@@ -30,7 +35,7 @@ namespace Palavyr.Core.Stores.Delete
             ConvoContext convoContext,
             AccountsContext accountsContext,
             AccountIdTransport accountIdTransport,
-            ICancellationTokenTransport cancellationTokenTransport) : base(fileAssetDeleter, dashContext, convoContext, accountsContext, accountIdTransport, cancellationTokenTransport)
+            ICancellationTokenTransport cancellationTokenTransport) : base(serviceProvider, unitOfWorkContextProvider, fileAssetDeleter, dashContext, convoContext, accountsContext, accountIdTransport, cancellationTokenTransport)
         {
             this.currentEnvironment = currentEnvironment;
         }
@@ -54,19 +59,23 @@ namespace Palavyr.Core.Stores.Delete
 
     public class DangerousAccountDeleter : IDangerousAccountDeleter
     {
+        private readonly IServiceProvider lifetimeScope;
+        private readonly IUnitOfWorkContextProvider contextProvider;
         private readonly IFileAssetDeleter fileAssetDeleter;
         private readonly DashContext dashContext; // Try not to call these contexts directly.
         private readonly ConvoContext convoContext;
         private readonly AccountsContext accountsContext;
         private readonly IAccountIdTransport accountIdTransport;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
-
+        private readonly List<IEntityType> allEntities = new List<IEntityType>();
         private bool fileAssetsDeleted = false;
 
         private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
         private string AccountId => accountIdTransport.AccountId;
 
         public DangerousAccountDeleter(
+            IServiceProvider lifetimeScope,
+            IUnitOfWorkContextProvider contextProvider,
             IFileAssetDeleter fileAssetDeleter,
             DashContext dashContext,
             ConvoContext convoContext,
@@ -74,12 +83,18 @@ namespace Palavyr.Core.Stores.Delete
             IAccountIdTransport accountIdTransport,
             ICancellationTokenTransport cancellationTokenTransport)
         {
+            this.lifetimeScope = lifetimeScope;
+            this.contextProvider = contextProvider;
             this.fileAssetDeleter = fileAssetDeleter;
             this.dashContext = dashContext;
             this.convoContext = convoContext;
             this.accountsContext = accountsContext;
             this.accountIdTransport = accountIdTransport;
             this.cancellationTokenTransport = cancellationTokenTransport;
+
+            allEntities.AddRange(dashContext.Model.GetEntityTypes().ToList());
+            allEntities.AddRange(accountsContext.Model.GetEntityTypes().ToList());
+            allEntities.AddRange(convoContext.Model.GetEntityTypes().ToList());
         }
 
         public async Task DeleteAllThings()
@@ -98,35 +113,91 @@ namespace Palavyr.Core.Stores.Delete
             fileAssetsDeleted = true;
         }
 
+        private int Counter = 0;
+
+        private async Task DeleteAccountAt<TContext, TEntity>() where TEntity : class, IEntity where TContext : DbContext
+        {
+            if (!allEntities.Select(x => x.ClrType).Contains(typeof(TEntity)))
+            {
+                return;
+            }
+
+            if (!typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
+            {
+                return;
+            }
+
+            DbContext context;
+            var name = typeof(TContext).Name;
+            switch (name)
+            {
+                case "DashContext":
+                    context = dashContext;
+                    break;
+                case "ConvoContext":
+                    context = convoContext;
+                    break;
+                case "AccountsContext":
+                    context = accountsContext;
+                    break;
+                default:
+                    throw new Exception("Context not found");
+            }
+
+            if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
+            {
+                var newContext = lifetimeScope.GetService<TContext>();
+
+                var store = newContext.Set<TEntity>();
+                var entities = await store.ToListAsync(CancellationToken);
+
+                var toDelete = FilterByCurrentAccount(entities);//.Where(x => ((IHaveAccountId)x).AccountId == AccountId);
+                store.RemoveRange(toDelete);
+                await contextProvider.DangerousCommitAllContexts();
+                Counter += 1;
+            }
+        }
+
         private async Task DeleteAccountEntities()
         {
             if (!fileAssetsDeleted) throw new DomainException("Cannot Delete Account without first deleting file assets.");
 
-            var contexts = new List<DbContext>()
-            {
-                dashContext,
-                convoContext,
-                accountsContext
-            };
+            await DeleteAccountAt<DashContext, Area>();
+            await DeleteAccountAt<DashContext, ConversationNode>();
+            await DeleteAccountAt<DashContext, StaticFee>();
+            await DeleteAccountAt<DashContext, StaticTablesMeta>();
+            await DeleteAccountAt<DashContext, StaticTableRow>();
+
+            await DeleteAccountAt<DashContext, DynamicTableMeta>();
+            await DeleteAccountAt<DashContext, FileAsset>();
+            await DeleteAccountAt<DashContext, Logo>();
+            await DeleteAccountAt<DashContext, AttachmentLinkRecord>();
+            await DeleteAccountAt<DashContext, WidgetPreference>();
+
+            await DeleteAccountAt<DashContext, SelectOneFlat>();
+            await DeleteAccountAt<DashContext, PercentOfThreshold>();
+            await DeleteAccountAt<DashContext, BasicThreshold>();
+            await DeleteAccountAt<DashContext, TwoNestedCategory>();
+            await DeleteAccountAt<DashContext, CategoryNestedThreshold>();
 
 
-            foreach (var context in contexts)
-            {
-                var entityTypes = context.Model.GetEntityTypes().ToList();
-                foreach (var entityType in entityTypes)
-                {
-                    var tableContext = SetContextByEntityType(entityType, context);
-                    var includePaths = tableContext.GetIncludePaths(context, entityType.ClrType);
-                    var content = await tableContext.Include(includePaths).ToListAsync(CancellationToken);
-                    content = FilterByCurrentAccount(content);
-                    tableContext.RemoveRange(content);
-                }
-            }
+            await DeleteAccountAt<AccountsContext, Account>();
+            await DeleteAccountAt<AccountsContext, Session>();
+            await DeleteAccountAt<AccountsContext, EmailVerification>();
+            await DeleteAccountAt<AccountsContext, Subscription>();
+            await DeleteAccountAt<AccountsContext, StripeWebhookReceivedRecord>();
+
+
+            await DeleteAccountAt<ConvoContext, ConversationHistory>();
+            await DeleteAccountAt<ConvoContext, ConversationRecord>();
+
+            if (Counter != allEntities.Count - 1) throw new DomainException($"Failed to delete all data - contact palavyr. hit {Counter} of {allEntities.Count}");
+            await contextProvider.DangerousCommitAllContexts();
         }
 
-        internal virtual List<IEntity> FilterByCurrentAccount(List<IEntity> unfiltered)
+        internal virtual List<TEntity> FilterByCurrentAccount<TEntity>(List<TEntity> unfiltered)
         {
-            var entities = new List<IEntity>();
+            var entities = new List<TEntity>();
             try
             {
                 var selected = unfiltered.Select(x => (IHaveAccountId)x);
@@ -134,7 +205,7 @@ namespace Palavyr.Core.Stores.Delete
                 {
                     if (select.AccountId == AccountId)
                     {
-                        entities.Add((IEntity)select);
+                        entities.Add((TEntity)select);
                     }
                 }
 
@@ -145,25 +216,6 @@ namespace Palavyr.Core.Stores.Delete
                 entities.Clear();
                 return entities;
             }
-        }
-
-        private DbSet<IEntity> SetContextByEntityType(IEntityType entityType, DbContext context)
-        {
-            // We need the name of generic method to call using the class reference
-            var mi = GetType().GetMethod("SetTable", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            // This creates a callable MethodInfo with our generic type
-            var miConstructed = mi?.MakeGenericMethod(entityType.ClrType);
-
-            // This calls the method with the generic type using Invoke
-            var constructed = (DbSet<IEntity>)miConstructed?.Invoke(this, new object[] { context });
-            return constructed;
-        }
-
-        private DbSet<T> SetTable<T>(DbContext context) where T : class
-        {
-            var table = context.Set<T>();
-            return table;
         }
     }
 }

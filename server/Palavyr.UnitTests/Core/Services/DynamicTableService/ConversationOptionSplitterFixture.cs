@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Exceptions;
 using Palavyr.Core.Services.DynamicTableService;
 using Shouldly;
 using Test.Common;

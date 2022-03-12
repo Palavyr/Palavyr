@@ -1,15 +1,25 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Stores;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
+    public static class BuilderStoreExtensionMethods
+    {
+        public static async Task CreateAndSave<TEntity>(this BaseIntegrationFixture test, TEntity entity) where TEntity : class, IEntity
+        {
+            var store = test.ResolveStore<TEntity>();
+            store.ResetCancellationToken(new CancellationTokenSource(test.Timeout));
+            await store.Create(entity);
+            // await test.ResolveType<IUnitOfWorkContextProvider>().DangerousCommitAllContexts();
+        }
+        
+    }
+    
     public static partial class BuilderExtensionMethods
     {
         public static ConversationRecordBuilder CreateConversationRecordBuilder(this BaseIntegrationFixture test)
@@ -17,14 +27,6 @@ namespace Palavyr.IntegrationTests.DataCreators
             return new ConversationRecordBuilder(test);
         }
 
-        public static async Task CreateAndSave<TEntity>(this BaseIntegrationFixture test, TEntity entity) where TEntity : class, IEntity
-        {
-            var store = test.ResolveStore<TEntity>();
-            store.ResetCancellationToken(new CancellationTokenSource(test.Timeout));
-
-            await store.Create(entity);
-            await test.ResolveType<IUnitOfWorkContextProvider>().DangerousCommitAllContexts();
-        }
     }
 
 
@@ -90,7 +92,6 @@ namespace Palavyr.IntegrationTests.DataCreators
             };
 
             await test.CreateAndSave(record);
-
             return record;
         }
     }

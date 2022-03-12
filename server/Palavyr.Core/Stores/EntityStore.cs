@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation.Internal;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
@@ -22,7 +23,6 @@ namespace Palavyr.Core.Stores
         public ICancellationTokenTransport CancellationTokenTransport;
         public readonly IQueryable<TEntity> ReadonlyQueryExecutor;
         public readonly DbSet<TEntity> QueryExecutor;
-
 
 
         public CancellationToken CancellationToken => CancellationTokenTransport.CancellationToken;
@@ -131,15 +131,21 @@ namespace Palavyr.Core.Stores
             return result;
         }
 
-        private async Task<TEntity> ApplyExpression(string id, IQueryable<TEntity> queryExecutor, Expression<Func<TEntity, string>> propertySelectorExpression)
+        private IQueryable<TEntity> ApplyExpression(string id, IQueryable<TEntity> queryExecutor, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            var result = await queryExecutor.WhereWorking(id, propertySelectorExpression).SingleAsync(CancellationToken);
+            var result = queryExecutor.WhereWorking(id, propertySelectorExpression);
             return result;
         }
 
         public async Task<TEntity> Get(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            return await ApplyExpression(id, ReadonlyQueryExecutor, propertySelectorExpression);
+            var entity = await ApplyExpression(id, ReadonlyQueryExecutor, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
+            if (entity is null)
+            {
+                throw new EntityNotFoundException("Entity not found");
+            }
+
+            return entity;
         }
 
         public async Task<TEntity> Get(int id, Expression<Func<TEntity, string>> propertySelectorExpression)
@@ -198,7 +204,7 @@ namespace Palavyr.Core.Stores
 
             transientQueryable
                 .WhereWorking(id, propertySelectorExpression)
-                .Include(ChooseContext(contextProvider).GetIncludePaths(typeof(TEntity)));
+                .Include(((IQueryable<object>)ChooseContext(contextProvider)).GetIncludePaths((IEntityType)typeof(TEntity)));
 
             return await transientQueryable.SingleAsync(CancellationToken);
         }
@@ -214,8 +220,7 @@ namespace Palavyr.Core.Stores
                 transientQueryable = transientQueryable.Where(x => ((IHaveAccountId)x).AccountId == AccountId);
             }
 
-            transientQueryable = transientQueryable.Include(ChooseContext(contextProvider).GetIncludePaths(typeof(TEntity)));
-
+            transientQueryable = transientQueryable.Include(((IQueryable<object>)ChooseContext(contextProvider)).GetIncludePaths((IEntityType)typeof(TEntity)));
             return await transientQueryable.ToArrayAsync(CancellationToken);
         }
 
@@ -263,7 +268,7 @@ namespace Palavyr.Core.Stores
 
             throw new DomainException("Raw Queries on entities that do not implement IHaveAccountId are not allowed");
         }
-        
+
         public IQueryable<TEntity> RawReadonlyQuery()
         {
             return QueryExecutor.AsNoTracking();

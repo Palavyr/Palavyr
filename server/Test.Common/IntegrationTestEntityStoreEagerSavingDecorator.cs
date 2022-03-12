@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
 namespace Test.Common

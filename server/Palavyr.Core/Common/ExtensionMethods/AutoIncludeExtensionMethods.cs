@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
 
 
@@ -17,10 +16,9 @@ namespace Palavyr.Core.Common.ExtensionMethods
             return navigationPropertyPaths.Aggregate(source, (query, path) => query.Include(path));
         }
 
-        public static IEnumerable<string> GetIncludePaths(this DbContext context, Type clrEntityType, int maxDepth = int.MaxValue)
+        public static IEnumerable<string> GetIncludePaths(this IQueryable<object> context, IEntityType entityType, int maxDepth = int.MaxValue)
         {
             if (maxDepth < 0) throw new ArgumentOutOfRangeException(nameof(maxDepth));
-            var entityType = context.Model.FindEntityType(clrEntityType);
             var includedNavigations = new HashSet<INavigation>();
             var stack = new Stack<IEnumerator<INavigation>>();
             while (true)

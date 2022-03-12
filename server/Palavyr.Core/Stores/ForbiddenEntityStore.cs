@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Sessions;
@@ -67,11 +66,11 @@ namespace Palavyr.Core.Stores
         {
             await Task.CompletedTask;
             var specificContext = ChooseContext();
-            var entitiesDeep = specificContext
-                .Set<TEntity>()
-                .Include(specificContext.GetIncludePaths(typeof(TEntity)));
-
-            specificContext.RemoveRange(entitiesDeep);
+            // var entitiesDeep = specificContext
+            //     .Set<TEntity>()
+            //     .Include(specificContext.GetIncludePaths(typeof(TEntity)));
+            //
+            // specificContext.RemoveRange(entitiesDeep);
         }
     }
 }

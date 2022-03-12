@@ -33,7 +33,8 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public readonly string ApiKey = Guid.NewGuid().ToString();
         public readonly string StripeCustomerId = Guid.NewGuid().ToString();
         public readonly string SessionId = Guid.NewGuid().ToString();
-
+        public readonly string EmailAddress = $"{Guid.NewGuid()}@gmail.com";
+        
         public readonly Lazy<AutofacServiceProvider> ServiceProvider;
 
 
@@ -142,6 +143,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
             await sessionStore.Delete(SessionId, s => s.SessionId);
 
             var provider = ResolveType<IUnitOfWorkContextProvider>();
+            await provider.DangerousCommitAllContexts();
             await provider.DisposeContexts();
 
             WebHostFactory.Dispose();
