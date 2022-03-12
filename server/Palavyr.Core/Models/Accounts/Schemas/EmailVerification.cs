@@ -3,7 +3,7 @@ using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
-    public class EmailVerification : Entity
+    public class EmailVerification : Entity, IHaveAccountId
     {
         [Key]
         public int? Id { get; set; }

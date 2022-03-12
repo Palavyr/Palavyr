@@ -1,0 +1,38 @@
+﻿using System.Linq;
+using Palavyr.Core.Exceptions;
+using Palavyr.Core.Models.Accounts.Schemas;
+
+namespace Palavyr.Core.Services.StripeServices.Products
+{
+    public class TestProductRegistry : IProductRegistry
+    {
+        public PlanTypeMap[] ProductList =>
+            new[]
+            {
+                new PlanTypeMap(DevProducts.FreeProduct.FreeProductId, Account.PlanTypeEnum.Free),
+                new PlanTypeMap(DevProducts.LyteProduct.LyteProductId, Account.PlanTypeEnum.Lyte),
+                new PlanTypeMap(DevProducts.PremiumProduct.PremiumProductId, Account.PlanTypeEnum.Premium),
+                new PlanTypeMap(DevProducts.ProProduct.ProProductId, Account.PlanTypeEnum.Pro)
+            };
+
+        public Account.PlanTypeEnum GetPlanTypeEnum(string productId)
+        {
+            var product = ProductList.SingleOrDefault(prod => prod.ProductId == productId);
+            if (product == null)
+            {
+                throw new ProductNotRegisteredException($"The product {productId} was not registered in ProductIds.cs");
+            }
+
+            return product.PlanType;
+        }
+
+        public ProductIds GetProductIds()
+        {
+            return new ProductIds(
+                DevProducts.FreeProduct.FreeProductId,
+                DevProducts.LyteProduct.LyteProductId,
+                DevProducts.PremiumProduct.PremiumProductId,
+                DevProducts.ProProduct.ProProductId);
+        }
+    }
+}

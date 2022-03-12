@@ -5,19 +5,6 @@ using Palavyr.Core.Models.Accounts.Schemas;
 
 namespace Palavyr.Core.Services.StripeServices.Products
 {
-    public class DevProductRegistery : IProductRegistry
-    {
-        public Account.PlanTypeEnum GetPlanTypeEnum(string productId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public ProductIds GetProductIds()
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
     public class StagingProductRegistry : IProductRegistry
     {
         public PlanTypeMap[] ProductList =>

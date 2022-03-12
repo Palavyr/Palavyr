@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -22,16 +21,19 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
     public class TwoNestedCategoryCompiler : BaseCompiler<TwoNestedCategory>, ITwoNestedCategoryCompiler
     {
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IConversationOptionSplitter splitter;
         private readonly IResponseRetriever responseRetriever;
         private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
 
         public TwoNestedCategoryCompiler(
+            IEntityStore<ConversationNode> convoNodeStore,
             IPricingStrategyEntityStore<TwoNestedCategory> repository,
             IConversationOptionSplitter splitter,
             IResponseRetriever responseRetriever,
             IEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(repository)
         {
+            this.convoNodeStore = convoNodeStore;
             this.splitter = splitter;
             this.responseRetriever = responseRetriever;
             this.dynamicTableMetaStore = dynamicTableMetaStore;
@@ -163,14 +165,16 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             };
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
         {
             var update = table.TwoNestedCategory;
 
             var (innerCategories, outerCategories) = GetInnerAndOuterCategories(update);
-            var nodes = (await context.ConversationNodes.ToListAsync())
+
+            var nodes = await convoNodeStore.Query()
                 .Where(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId)
-                .OrderBy(x => x.ResolveOrder).ToList();
+                .OrderBy(x => x.ResolveOrder).ToListAsync(convoNodeStore.CancellationToken);
+
             if (nodes.Count > 0)
             {
                 nodes.Single(x => x.ResolveOrder == 0).ValueOptions = splitter.JoinValueOptions(outerCategories);

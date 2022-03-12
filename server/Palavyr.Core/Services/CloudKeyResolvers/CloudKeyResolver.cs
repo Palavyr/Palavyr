@@ -4,18 +4,18 @@ using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.CloudKeyResolvers
 {
-    public interface ICloudKeyResolver
+    public interface ICloudCompatibleKeyResolver
     {
         string ResolveFileAssetKey(FileName fileName);
         string ResolveResponsePdfKey(FileName fileName);
         string ResolveResponsePdfPreviewKey(FileName fileName);
     }
 
-    public class CloudKeyResolver : ICloudKeyResolver
+    public class CloudCompatibleKeyResolver : ICloudCompatibleKeyResolver
     {
         private readonly IAccountIdTransport accountIdTransport;
 
-        public CloudKeyResolver(IAccountIdTransport accountIdTransport)
+        public CloudCompatibleKeyResolver(IAccountIdTransport accountIdTransport)
         {
             this.accountIdTransport = accountIdTransport;
         }

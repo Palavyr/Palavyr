@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Stores;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Test.Common.Random;
 
@@ -11,6 +15,15 @@ namespace Palavyr.IntegrationTests.DataCreators
         public static ConversationRecordBuilder CreateConversationRecordBuilder(this BaseIntegrationFixture test)
         {
             return new ConversationRecordBuilder(test);
+        }
+
+        public static async Task CreateAndSave<TEntity>(this BaseIntegrationFixture test, TEntity entity) where TEntity : class, IEntity
+        {
+            var store = test.ResolveStore<TEntity>();
+            store.ResetCancellationToken(new CancellationTokenSource(test.Timeout));
+
+            await store.Create(entity);
+            await test.ResolveType<IUnitOfWorkContextProvider>().DangerousCommitAllContexts();
         }
     }
 
@@ -58,7 +71,7 @@ namespace Palavyr.IntegrationTests.DataCreators
             this.intentId = intentId;
             return this;
         }
-        
+
         public async Task<ConversationRecord> Build()
         {
             var intentId = this.intentId ?? A.RandomId();
@@ -66,7 +79,7 @@ namespace Palavyr.IntegrationTests.DataCreators
             var timeStamp = this.timeStamp ?? DateTime.Now;
             var accountId = this.accountId ?? test.AccountId;
             var conversationId = this.conversationId ?? A.RandomId();
-            
+
             var record = new ConversationRecord()
             {
                 AreaIdentifier = intentId,
@@ -76,8 +89,7 @@ namespace Palavyr.IntegrationTests.DataCreators
                 ConversationId = conversationId
             };
 
-            test.ConvoContext.ConversationRecords.Add(record);
-            await test.ConvoContext.SaveChangesAsync();
+            await test.CreateAndSave(record);
 
             return record;
         }

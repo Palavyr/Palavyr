@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Sessions;
@@ -156,19 +155,21 @@ namespace Palavyr.IntegrationTests.DataCreators
                 IntroductionId = A.RandomId()
             };
 
-            var token = test.Container.GetService<ICancellationTokenTransport>();
-            if (token == null)
-            {
-                test.SetCancellationToken();
-            }
+            SetAccountIdTransportIfNotSet(); 
+            await test.CreateAndSave(defaultAccount);
+            await test.CreateAndSave(Session.CreateNew(test.SessionId, test.AccountId, test.ApiKey));
+            
 
-
-            var sessionStore = test.ResolveStore<Session>();
-
-            await test.AccountsContext.Accounts.AddAsync(defaultAccount);
-            var session = Session.CreateNew(IntegrationConstants.SessionId, test.AccountId, test.ApiKey);
-            await sessionStore.Create(session);
             return defaultAccount;
+        }
+
+        private void SetAccountIdTransportIfNotSet()
+        {
+            var accToken = test.ResolveType<IAccountIdTransport>();
+            if (!accToken.IsSet())
+            {
+                test.SetAccountIdTransport();
+            }
         }
     }
 }

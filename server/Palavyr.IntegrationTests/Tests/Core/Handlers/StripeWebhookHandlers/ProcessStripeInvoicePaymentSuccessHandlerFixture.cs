@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
@@ -29,7 +30,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
             var @event = new InvoicePaymentSuccessfulEvent(invoice);
             var emailer = Container.GetService<ISesEmail>();
             var logger = Container.GetService<ILogger<ProcessStripeInvoicePaymentSuccessHandler>>();
-            var handler = new ProcessStripeInvoicePaymentSuccessHandler(logger, AccountsContext, emailer);
+            var handler = new ProcessStripeInvoicePaymentSuccessHandler(ResolveStore<Account>(), logger, emailer);
 
             await handler.Handle(@event, CancellationToken);
 

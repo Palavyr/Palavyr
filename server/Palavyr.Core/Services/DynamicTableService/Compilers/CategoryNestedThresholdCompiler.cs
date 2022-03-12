@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -60,7 +59,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return categories;
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
         {
             var update = table.CategoryNestedThreshold;
             var category = GetCategories(update);
@@ -118,7 +117,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     NodeTypeCode.III,
                     resolveOrder: 1,
                     isMultiOptionEditable: false,
-                    dynamicType: widgetResponseKey // check in widget component perhaps if this is dynamic, and thresholdtype... then we can do a check against the server... bleh this is so gross. But there is no other way right now.
+                    dynamicType: widgetResponseKey // check in widget component perhaps if this is dynamic, and threshold type... then we can do a check against the server... bleh this is so gross. But there is no other way right now.
                 )
             );
         }
@@ -162,8 +161,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             var convoNodeIds = CollectNodeIds(dynamicResponseComponents);
 
-            var convoNodes = await convoNodeStore.GetMany(convoNodeIds, c => c.NodeId);
-            // var convoNodes = await repository.GetConversationNodeByIds(convoNodeIds);
+            var convoNodes = await convoNodeStore.GetMany(convoNodeIds.ToArray(), c => c.NodeId);
             var categoryNode = convoNodes.Single(x => x.ResolveOrder == 0);
 
             var categoryResponse = dynamicResponseComponents.Responses

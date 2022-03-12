@@ -5,7 +5,7 @@ using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class StaticTablesMeta : Entity, IStaticTable
+    public class StaticTablesMeta : Entity, IStaticTable, IHaveAccountId
     {
         public int TableOrder { get; set; }
         public string Description { get; set; }

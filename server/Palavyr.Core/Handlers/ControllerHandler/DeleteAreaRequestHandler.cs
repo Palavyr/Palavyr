@@ -16,6 +16,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task Handle(DeleteAreaRequest request, CancellationToken cancellationToken)
         {
+            await Task.CompletedTask;
             await areaDeleter.DeleteArea(request.IntentId, cancellationToken);
         }
     }

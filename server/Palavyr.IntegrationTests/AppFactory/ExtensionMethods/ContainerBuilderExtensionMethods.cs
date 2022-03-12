@@ -27,13 +27,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
         public static ContainerBuilder AddCancellationToken(this ContainerBuilder containerBuilder)
         {
             containerBuilder.Register(
-                c =>
-                {
-                    var ctx = new CancellationTokenSource();
-                    var holder = new CancellationTokenTransport();
-                    holder.Assign(ctx.Token);
-                    return holder;
-                }).As<ICancellationTokenTransport>().InstancePerLifetimeScope();
+                c => { return new CancellationTokenTransport(new CancellationTokenSource().Token); }).As<ICancellationTokenTransport>().InstancePerLifetimeScope();
 
             return containerBuilder;
         }

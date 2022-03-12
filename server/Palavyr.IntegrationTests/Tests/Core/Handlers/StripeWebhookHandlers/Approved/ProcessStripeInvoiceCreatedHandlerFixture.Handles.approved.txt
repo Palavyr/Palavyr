@@ -58,7 +58,7 @@
                     Amount Due: $150.00
                 </p>
                 <p>
-                    Due Date: Sunday, March 6, 2022
+                    Due Date: Wednesday, January 1, 3000
                 </p>
                 <p>
                     This invoice will be automatically billed at the end of this billing period.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -10,10 +11,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.Delete;
+using Test.Common.TestFileAssetServices;
 
 namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {
@@ -71,19 +75,19 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             using var scope = sp.CreateScope();
             var scopedServices = scope.ServiceProvider;
 
-            var accountContext = scopedServices.GetRequiredService<AccountsContext>();
-            var dashContext = scopedServices.GetRequiredService<DashContext>();
-            var convoContext = scopedServices.GetRequiredService<ConvoContext>();
+            var dashContext = scopedServices.GetService<DashContext>();
+            var accountContext = scopedServices.GetService<AccountsContext>();
+            var convoContext = scopedServices.GetService<ConvoContext>();
 
             accountContext.Database.EnsureCreated();
             dashContext.Database.EnsureCreated();
             convoContext.Database.EnsureCreated();
 
-            ResetDbs(scopedServices, accountContext, dashContext, convoContext);
+            var tempCancellationToken = new CancellationTokenTransport(new CancellationToken());
+            var contextProvider = new UnitOfWorkContextProvider(dashContext, accountContext, convoContext, tempCancellationToken);
+            ResetDbs(scopedServices, contextProvider, tempCancellationToken);
 
-            accountContext.SaveChanges();
-            dashContext.SaveChanges();
-            convoContext.SaveChanges();
+            contextProvider.DangerousCommitAllContexts();
         }
 
         private static void ConfigureInMemoryDatabases(IServiceCollection services, InMemoryDatabaseRoot dbRoot)
@@ -138,26 +142,33 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             }
         }
 
-        public static async Task ResetDbs(IServiceProvider scopedServices, AccountsContext accountContext, DashContext dashContext, ConvoContext convoContext)
+        public static async Task ResetDbs(IServiceProvider scopedServices, IUnitOfWorkContextProvider contextProvider, ICancellationTokenTransport cancellationTokenTransport)
         {
-            var accounts = await accountContext.Accounts.Select(x => x.AccountId).ToArrayAsync();
+            var context = scopedServices.GetService<AccountsContext>();
+            var accounts = context.Accounts.ToList();
 
             foreach (var account in accounts)
             {
-                var accountStore = scopedServices.GetService<EntityStore<Account>>();
-                var fileAssetDeleter = scopedServices.GetService<IFileAssetDeleter>();
-                var accountTransport = new AccountIdTransport();
-                accountTransport.Assign(account);
-                var token = new CancellationTokenTransport();
-                token.Assign(default);
+                var accountTransport = new AccountIdTransport(account.AccountId);
+                var assetStore = new EntityStore<FileAsset>(contextProvider, accountTransport, cancellationTokenTransport);
 
-                var accountDeleter = new DangerousAccountDeleter(accountStore, fileAssetDeleter, dashContext, convoContext, accountContext, accountTransport, token);
+                var deleter = new IntegrationTestFileDelete(
+                    assetStore,
+                    accountTransport,
+                    cancellationTokenTransport,
+                    new GuidUtils(),
+                    new FileAssetKeyResolver(new CloudCompatibleKeyResolver(accountTransport)),
+                    new IntegrationTestFileLinkCreator());
+
+                var accountDeleter = new DangerousAccountDeleter(
+                    deleter,
+                    contextProvider.ConfigurationContext(),
+                    contextProvider.ConvoContext(),
+                    contextProvider.AccountsContext(),
+                    accountTransport,
+                    cancellationTokenTransport);
                 await accountDeleter.DeleteAllThings();
             }
-
-            accountContext.SaveChanges();
-            dashContext.SaveChanges();
-            convoContext.SaveChanges();
         }
     }
 }

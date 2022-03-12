@@ -2,29 +2,29 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Stores;
 using Stripe;
+using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated
 {
     public class ProcessStripeInvoiceCreatedHandler : INotificationHandler<StripeInvoiceCreatedEvent>
     {
         private readonly ILogger<ProcessStripeInvoiceCreatedHandler> logger;
-        private readonly AccountsContext accountsContext;
         private readonly ISesEmail emailClient;
+        private readonly IEntityStore<Account> accountStore;
 
         public ProcessStripeInvoiceCreatedHandler(
             ILogger<ProcessStripeInvoiceCreatedHandler> logger,
-            AccountsContext accountsContext,
-            ISesEmail emailClient)
+            ISesEmail emailClient,
+            IEntityStore<Account> accountStore)
         {
             this.logger = logger;
-            this.accountsContext = accountsContext;
             this.emailClient = emailClient;
+            this.accountStore = accountStore;
         }
 
         public async Task Handle(StripeInvoiceCreatedEvent notifcation, CancellationToken cancellationToken)
@@ -32,9 +32,8 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCrea
             var invoiceCreated = notifcation.invoice;
             logger.LogDebug(invoiceCreated.Currency);
             Console.WriteLine();
-            var account = await accountsContext
-                .Accounts
-                .SingleOrDefaultAsync(row => row.StripeCustomerId == invoiceCreated.CustomerId);
+
+            var account = await accountStore.Get(invoiceCreated.CustomerId, s => s.StripeCustomerId);
 
             string dueDate;
             if (invoiceCreated.DueDate is null)

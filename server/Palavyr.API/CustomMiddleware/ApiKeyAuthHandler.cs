@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -9,8 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Palavyr.API.CustomMiddleware.MiddlewareHandlers;
-using Palavyr.Core.Data;
 using Palavyr.Core.GlobalConstants;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.API.CustomMiddleware
 {
@@ -25,24 +25,24 @@ namespace Palavyr.API.CustomMiddleware
 
     public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthSchemeOptions>
     {
-        private readonly AccountsContext accountsContext;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly ILogger<ApiKeyAuthenticationHandler> logger;
+        private readonly IEntityStore<Account> accountStore;
         private readonly IMediator mediator;
 
         public ApiKeyAuthenticationHandler(
-            AccountsContext accountsContext,
             IHttpContextAccessor contextAccessor,
             IOptionsMonitor<ApiKeyAuthSchemeOptions> options,
             ILoggerFactory loggerFactory,
             ILogger<ApiKeyAuthenticationHandler> logger,
             UrlEncoder encoder,
+            IEntityStore<Account> accountStore,
             ISystemClock clock,
             IMediator mediator) : base(options, loggerFactory, encoder, clock)
         {
-            this.accountsContext = accountsContext;
             httpContextAccessor = contextAccessor;
             this.logger = logger;
+            this.accountStore = accountStore;
             this.mediator = mediator;
         }
         
@@ -63,8 +63,8 @@ namespace Palavyr.API.CustomMiddleware
             {
                 return await Task.FromResult(AuthenticateResult.Fail("Could not find the API Key in url."));
             }
-            
-            var account = accountsContext.Accounts.SingleOrDefault(row => row.ApiKey == apiKey.ToString());
+
+            var account = await accountStore.Get(apiKey.ToString(), s => s.ApiKey);
             if (account == null)
             {
                 return await Task.FromResult(AuthenticateResult.Fail("Api Key not attached to any accounts."));

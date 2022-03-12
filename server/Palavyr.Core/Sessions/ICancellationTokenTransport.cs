@@ -6,5 +6,6 @@ namespace Palavyr.Core.Sessions
     {
         CancellationToken CancellationToken { get; set; }
         void Assign(CancellationToken cancellationToken);
+        bool IsSet();
     }
 }

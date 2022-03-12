@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Contracts;
 
 
 namespace Palavyr.Core.Common.ExtensionMethods
@@ -58,7 +60,7 @@ namespace Palavyr.Core.Common.ExtensionMethods
         }
 
 
-        public static IEnumerable<string> GetIncludePaths(this DbSet<IEntityType> context, DbContext dbcontext, Type clrEntityType, int maxDepth = int.MaxValue)
+        public static IEnumerable<string> GetIncludePaths(this DbSet<IEntity> context, DbContext dbcontext, Type clrEntityType, int maxDepth = int.MaxValue)
         {
             if (maxDepth < 0) throw new ArgumentOutOfRangeException(nameof(maxDepth));
             var entityType = dbcontext.Model.FindEntityType(clrEntityType);

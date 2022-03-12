@@ -4,7 +4,7 @@ using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class SelectOneFlat : Entity, IOrderedTable, IDynamicTable<SelectOneFlat>
+    public class SelectOneFlat : Entity, IOrderedTable, IDynamicTable<SelectOneFlat>, IHaveAccountId
     {
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }

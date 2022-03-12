@@ -11,6 +11,7 @@ using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Sessions;
@@ -29,7 +30,7 @@ namespace Palavyr.Core.Stores.Delete
             ConvoContext convoContext,
             AccountsContext accountsContext,
             AccountIdTransport accountIdTransport,
-            ICancellationTokenTransport cancellationTokenTransport) : base(accountStore, fileAssetDeleter, dashContext, convoContext, accountsContext, accountIdTransport, cancellationTokenTransport)
+            ICancellationTokenTransport cancellationTokenTransport) : base(fileAssetDeleter, dashContext, convoContext, accountsContext, accountIdTransport, cancellationTokenTransport)
         {
             this.currentEnvironment = currentEnvironment;
         }
@@ -53,12 +54,11 @@ namespace Palavyr.Core.Stores.Delete
 
     public class DangerousAccountDeleter : IDangerousAccountDeleter
     {
-        private readonly IEntityStore<Account> accountStore;
         private readonly IFileAssetDeleter fileAssetDeleter;
         private readonly DashContext dashContext; // Try not to call these contexts directly.
         private readonly ConvoContext convoContext;
         private readonly AccountsContext accountsContext;
-        private readonly AccountIdTransport accountIdTransport;
+        private readonly IAccountIdTransport accountIdTransport;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
 
         private bool fileAssetsDeleted = false;
@@ -67,15 +67,13 @@ namespace Palavyr.Core.Stores.Delete
         private string AccountId => accountIdTransport.AccountId;
 
         public DangerousAccountDeleter(
-            IEntityStore<Account> accountStore,
             IFileAssetDeleter fileAssetDeleter,
             DashContext dashContext,
             ConvoContext convoContext,
             AccountsContext accountsContext,
-            AccountIdTransport accountIdTransport,
+            IAccountIdTransport accountIdTransport,
             ICancellationTokenTransport cancellationTokenTransport)
         {
-            this.accountStore = accountStore;
             this.fileAssetDeleter = fileAssetDeleter;
             this.dashContext = dashContext;
             this.convoContext = convoContext;
@@ -117,10 +115,8 @@ namespace Palavyr.Core.Stores.Delete
                 var entityTypes = context.Model.GetEntityTypes().ToList();
                 foreach (var entityType in entityTypes)
                 {
-                    var tableContext = SetContextByEntityType(entityType);
-
-                    var altContext = SetContextByEntityTypeAlt(entityType);
-                    var includePaths = altContext.GetIncludePaths(entityType.GetType());
+                    var tableContext = SetContextByEntityType(entityType, context);
+                    var includePaths = tableContext.GetIncludePaths(context, entityType.ClrType);
                     var content = await tableContext.Include(includePaths).ToListAsync(CancellationToken);
                     content = FilterByCurrentAccount(content);
                     tableContext.RemoveRange(content);
@@ -128,17 +124,17 @@ namespace Palavyr.Core.Stores.Delete
             }
         }
 
-        internal virtual List<IEntityType> FilterByCurrentAccount(List<IEntityType> unfiltered)
+        internal virtual List<IEntity> FilterByCurrentAccount(List<IEntity> unfiltered)
         {
-            var entities = new List<IEntityType>();
+            var entities = new List<IEntity>();
             try
             {
                 var selected = unfiltered.Select(x => (IHaveAccountId)x);
                 foreach (var select in selected)
                 {
-                    if (select.AccountId == accountStore.AccountId)
+                    if (select.AccountId == AccountId)
                     {
-                        entities.Add((IEntityType)select);
+                        entities.Add((IEntity)select);
                     }
                 }
 
@@ -151,33 +147,20 @@ namespace Palavyr.Core.Stores.Delete
             }
         }
 
-        private DbSet<IEntityType> SetContextByEntityType(IEntityType entityType)
+        private DbSet<IEntity> SetContextByEntityType(IEntityType entityType, DbContext context)
         {
             // We need the name of generic method to call using the class reference
             var mi = GetType().GetMethod("SetTable", BindingFlags.Instance | BindingFlags.NonPublic);
 
             // This creates a callable MethodInfo with our generic type
-            var miConstructed = mi?.MakeGenericMethod(entityType.GetType());
+            var miConstructed = mi?.MakeGenericMethod(entityType.ClrType);
 
             // This calls the method with the generic type using Invoke
-            return (DbSet<IEntityType>)miConstructed?.Invoke(this, null);
+            var constructed = (DbSet<IEntity>)miConstructed?.Invoke(this, new object[] { context });
+            return constructed;
         }
 
-
-        private DbContext SetContextByEntityTypeAlt(IEntityType entityType)
-        {
-            // We need the name of generic method to call using the class reference
-            var mi = GetType().GetMethod("SetTable", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            // This creates a callable MethodInfo with our generic type
-            var miConstructed = mi?.MakeGenericMethod(entityType.GetType());
-
-            // This calls the method with the generic type using Invoke
-            return (DbContext)miConstructed?.Invoke(this, null);
-        }
-
-
-        public DbSet<T> SetTable<T>(DbContext context) where T : class, IEntity
+        private DbSet<T> SetTable<T>(DbContext context) where T : class
         {
             var table = context.Set<T>();
             return table;

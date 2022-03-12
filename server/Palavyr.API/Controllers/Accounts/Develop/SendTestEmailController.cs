@@ -35,7 +35,7 @@ namespace Palavyr.API.Controllers.Accounts.Develop
         {
             var identityRequest = new GetIdentityVerificationAttributesRequest()
             {
-                Identities = new List<string>() {"Paul.e.gradie@gmail.com"},
+                Identities = new List<string>() { "Paul.e.gradie@gmail.com" },
             };
             GetIdentityVerificationAttributesResponse response;
             try

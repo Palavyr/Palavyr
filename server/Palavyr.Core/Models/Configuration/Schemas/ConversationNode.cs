@@ -8,7 +8,7 @@ using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class ConversationNode : Entity, IRecord
+    public class ConversationNode : Entity, IRecord, IHaveAccountId
     {
         public string? AreaIdentifier { get; set; }
         public string? AccountId { get; set; }

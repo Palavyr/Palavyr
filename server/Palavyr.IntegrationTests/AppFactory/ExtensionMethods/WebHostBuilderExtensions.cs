@@ -3,15 +3,17 @@ using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Palavyr.API;
+using Palavyr.Core.GlobalConstants;
 
 namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {
     public static class WebHostBuilderExtensions
     {
-        public static HttpClient ConfigureInMemoryClient(this WebApplicationFactory<Startup> builder)
+        public static HttpClient ConfigureInMemoryClient(this WebApplicationFactory<Startup> builder, string sessionId)
         {
             var client = builder.CreateClient();
             client.BaseAddress = new Uri(IntegrationConstants.BaseUri);
+            client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.SessionId, sessionId);
             return client;
         }
 

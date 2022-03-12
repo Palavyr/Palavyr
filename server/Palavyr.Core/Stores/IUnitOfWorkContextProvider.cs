@@ -9,5 +9,7 @@ namespace Palavyr.Core.Stores
         ConvoContext ConvoContext();
         DashContext ConfigurationContext();
         Task CloseUnitOfWork();
+        Task DisposeContexts();
+        Task DangerousCommitAllContexts();
     }
 }

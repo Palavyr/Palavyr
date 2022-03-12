@@ -8,16 +8,16 @@ namespace Palavyr.Core.Services.CloudKeyResolvers
 
     public class FileAssetKeyResolver : IFileAssetKeyResolver
     {
-        private readonly ICloudKeyResolver cloudKeyResolver;
+        private readonly ICloudCompatibleKeyResolver cloudCompatibleKeyResolver;
 
-        public FileAssetKeyResolver(ICloudKeyResolver cloudKeyResolver)
+        public FileAssetKeyResolver(ICloudCompatibleKeyResolver cloudCompatibleKeyResolver)
         {
-            this.cloudKeyResolver = cloudKeyResolver;
+            this.cloudCompatibleKeyResolver = cloudCompatibleKeyResolver;
         }
 
         public string Resolve(FileName fileName)
         {
-            return cloudKeyResolver.ResolveFileAssetKey(fileName);
+            return cloudCompatibleKeyResolver.ResolveFileAssetKey(fileName);
         }
     }
 }

@@ -5,7 +5,7 @@ using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class TwoNestedCategory : Entity, IOrderedTable, IDynamicTable<TwoNestedCategory>, IHaveRange, IMultiItem
+    public class TwoNestedCategory : Entity, IOrderedTable, IDynamicTable<TwoNestedCategory>, IHaveRange, IMultiItem, IHaveAccountId
     {
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }

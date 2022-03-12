@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Data;
-using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Services.FileAssetServices;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.EnquiryServices
 {
@@ -16,27 +14,22 @@ namespace Palavyr.Core.Services.EnquiryServices
 
     public class EnquiryDeleter : IEnquiryDeleter
     {
-        private readonly IS3FileDeleter is3FileDeleter;
         private readonly IFileAssetDeleter fileAssetDeleter;
-        private readonly IConfiguration configuration;
-        private readonly ConvoContext convoContext;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
 
         public EnquiryDeleter(
             IFileAssetDeleter fileAssetDeleter,
-            IConfiguration configuration,
-            ConvoContext convoContext
+            IEntityStore<ConversationRecord> convoRecordStore
         )
         {
             this.fileAssetDeleter = fileAssetDeleter;
-            this.configuration = configuration;
-            this.convoContext = convoContext;
+            this.convoRecordStore = convoRecordStore;
         }
 
         public async Task DeleteEnquiry(string conversationId, CancellationToken cancellationToken)
         {
             await DeleteFromS3(conversationId);
-            TrackDeleteFromDb(conversationId);
-            await convoContext.SaveChangesAsync(cancellationToken);
+            await TrackDeleteFromDb(conversationId);
         }
 
         public async Task DeleteEnquiries(string[] fileReferences, CancellationToken cancellationToken)
@@ -45,8 +38,6 @@ namespace Palavyr.Core.Services.EnquiryServices
             {
                 await DeleteEnquiry(fileReference, cancellationToken);
             }
-
-            await convoContext.SaveChangesAsync(cancellationToken);
         }
 
         private async Task DeleteFromS3(string fileId)
@@ -54,10 +45,9 @@ namespace Palavyr.Core.Services.EnquiryServices
             await fileAssetDeleter.RemoveFile(fileId);
         }
 
-        public void TrackDeleteFromDb(string conversationId)
+        public async Task TrackDeleteFromDb(string conversationId)
         {
-            var rowsToDelete = convoContext.ConversationRecords.Where(x => x.ConversationId == conversationId);
-            convoContext.ConversationRecords.RemoveRange(rowsToDelete);
+            await convoRecordStore.Delete(conversationId, s => s.ConversationId);
         }
     }
 }

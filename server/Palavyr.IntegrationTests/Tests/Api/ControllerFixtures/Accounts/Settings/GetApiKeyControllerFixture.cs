@@ -19,7 +19,6 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
 
         public override async Task InitializeAsync()
         {
-            SetCancellationToken();
             await this.SetupProAccount();
             await base.InitializeAsync();
         }

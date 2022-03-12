@@ -1,36 +1,60 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Data.Setup.SeedData;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.AccountServices
 {
     public class AccountRegistrationMaker : IAccountRegistrationMaker
     {
+        private readonly IEntityStore<Subscription> subscriptionStore;
         private readonly ILogger<AccountRegistrationMaker> logger;
-        private readonly AccountsContext accountsContext;
-        private readonly DashContext dashContext;
         private readonly IEmailVerificationService emailVerificationService;
         private readonly IPalavyrAccessChecker accessChecker;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
+        private readonly IEntityStore<SelectOneFlat> defaultPricingStrategyStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
 
         public AccountRegistrationMaker(
+            IEntityStore<Subscription> subscriptionStore,
             ILogger<AccountRegistrationMaker> logger,
-            AccountsContext accountsContext,
-            DashContext dashContext,
             IEmailVerificationService emailVerificationService,
-            IPalavyrAccessChecker accessChecker
+            IPalavyrAccessChecker accessChecker,
+            IEntityStore<Area> intentStore,
+            IEntityStore<WidgetPreference> widgetPreferenceStore,
+            IEntityStore<SelectOneFlat> defaultPricingStrategyStore,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IEntityStore<ConversationNode> convoNodeStore
         )
         {
+            this.subscriptionStore = subscriptionStore;
             this.logger = logger;
-            this.accountsContext = accountsContext;
-            this.dashContext = dashContext;
             this.emailVerificationService = emailVerificationService;
             this.accessChecker = accessChecker;
+            this.intentStore = intentStore;
+            this.widgetPreferenceStore = widgetPreferenceStore;
+            this.defaultPricingStrategyStore = defaultPricingStrategyStore;
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.convoNodeStore = convoNodeStore;
         }
 
+        private async Task InstallSeedData(string accountId, string emailAddress, string introId)
+        {
+            logger.LogDebug("Install new account seed data.");
+            var seedData = new SeedData(accountId, emailAddress, introId);
+            await intentStore.CreateMany(seedData.Areas.ToArray());
+            await widgetPreferenceStore.Create(seedData.WidgetPreference);
+            await defaultPricingStrategyStore.CreateMany(seedData.DefaultDynamicTables.ToArray());
+            await dynamicTableMetaStore.CreateMany(seedData.DefaultDynamicTableMetas.ToArray());
+            await convoNodeStore.CreateMany(seedData.IntroductionConversationNodes.ToArray());
+        }
 
         public async Task<bool> TryRegisterAccountAndSendEmailVerificationToken(string accountId, string apiKey, string emailAddress, string introId, CancellationToken cancellationToken)
         {
@@ -50,18 +74,7 @@ namespace Palavyr.Core.Services.AccountServices
             // Add the default subscription (free with 2 areas)
             logger.LogDebug($"Add default subscription for {accountId}");
             var newSubscription = Subscription.CreateNew(accountId, apiKey, freePlanType.GetDefaultNumAreas());
-            await accountsContext.Subscriptions.AddAsync(newSubscription);
-        }
-
-        private async Task InstallSeedData(string accountId, string emailAddress, string introId)
-        {
-            logger.LogDebug("Install new account seed data.");
-            var seedData = new SeedData(accountId, emailAddress, introId);
-            await dashContext.Areas.AddRangeAsync(seedData.Areas);
-            await dashContext.WidgetPreferences.AddAsync(seedData.WidgetPreference);
-            await dashContext.SelectOneFlats.AddRangeAsync(seedData.DefaultDynamicTables);
-            await dashContext.DynamicTableMetas.AddRangeAsync(seedData.DefaultDynamicTableMetas);
-            await dashContext.ConversationNodes.AddRangeAsync(seedData.IntroductionConversationNodes);
+            await subscriptionStore.Create(newSubscription);
         }
     }
 }

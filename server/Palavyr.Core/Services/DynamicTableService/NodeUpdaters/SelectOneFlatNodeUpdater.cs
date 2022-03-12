@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
@@ -14,7 +13,6 @@ namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
     public interface ISelectOneFlatNodeUpdater
     {
         Task UpdateConversationNode(
-            DashContext context,
             List<SelectOneFlat> currentSelectOneFlatUpdate,
             DynamicTableMeta tableMeta,
             ConversationNode node,
@@ -41,7 +39,6 @@ namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
         }
 
         public async Task UpdateConversationNode(
-            DashContext context,
             List<SelectOneFlat> currentSelectOneFlatUpdate,
             DynamicTableMeta tableMeta,
             ConversationNode node,

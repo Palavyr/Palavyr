@@ -19,14 +19,13 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 
         public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
-            UseFakeStripeCustomerService(builder);
             return base.CustomizeContainer(builder);
         }
 
 
         public override Task InitializeAsync()
         {
-            SetAccountId();
+            SetAccountIdTransport();
             SetCancellationToken();
             this.SetupLyteAccount();
             return base.InitializeAsync();

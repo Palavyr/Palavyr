@@ -58,8 +58,8 @@ namespace PalavyrServer.UnitTests.Core.Services.DynamicTableService
         public void WhenAGuidIsRequested_AndNoGuidIsPresent_AnExceptionIsThrown()
         {
             var sut = "WOw-Thisisa-Crazy-Thing";
-            Action test = () => splitter.GetTableIdFromDynamicNodeType(sut);
-            test.ShouldThrow<GuidNotFoundException>(sut);
+            var result = splitter.GetTableIdFromDynamicNodeType(sut);
+            result.ShouldBeNull();
         }
 
         public Task InitializeAsync()

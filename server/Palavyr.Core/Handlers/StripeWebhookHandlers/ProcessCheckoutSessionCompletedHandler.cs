@@ -2,31 +2,27 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
-using Palavyr.Core.Services.StripeServices.Products;
-using Stripe.Checkout;
+using Palavyr.Core.Stores;
+using Session = Stripe.Checkout.Session;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
-    public class ProcessStripeCheckoutSessionCompletedHandler : INotificationHandler<CheckoutSessionCompletedEvent>
+    public class ProcessStripeCheckoutSessionCompletedHandler : INotificationHandler<CheckoutSessionCompletedNotification>
     {
-        private AccountsContext accountsContext;
-        private readonly IProductRegistry productRegistry;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger;
         private IStripeSubscriptionService stripeSubscriptionService;
 
         public ProcessStripeCheckoutSessionCompletedHandler(
-            AccountsContext accountsContext,
-            IProductRegistry productRegistry,
+            IEntityStore<Account> accountStore, 
             ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger,
             IStripeSubscriptionService stripeSubscriptionService
         )
         {
-            this.accountsContext = accountsContext;
-            this.productRegistry = productRegistry;
+            this.accountStore = accountStore;
             this.logger = logger;
             this.stripeSubscriptionService = stripeSubscriptionService;
         }
@@ -38,12 +34,10 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
         /// <param name="session"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task Handle(CheckoutSessionCompletedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(CheckoutSessionCompletedNotification notification, CancellationToken cancellationToken)
         {
             var session = notification.session;
-            var account = await accountsContext
-                .Accounts
-                .SingleOrDefaultAsync(row => row.StripeCustomerId == session.CustomerId);
+            var account = await accountStore.Get(session.CustomerId, s => s.StripeCustomerId);
             if (account == null)
             {
                 throw new Exception("ERROR TODO: EMAIL paul.e.gradie@gmail.com to manually set status");
@@ -57,15 +51,14 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
             account.PlanType = planTypeEnum;
             account.HasUpgraded = true;
             account.CurrentPeriodEnd = bufferedPeriodEnd;
-            await accountsContext.SaveChangesAsync();
         }
     }
 
-    public class CheckoutSessionCompletedEvent : INotification
+    public class CheckoutSessionCompletedNotification : INotification
     {
         public readonly Session session;
 
-        public CheckoutSessionCompletedEvent(Session session)
+        public CheckoutSessionCompletedNotification(Session session)
         {
             this.session = session;
         }

@@ -13,7 +13,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
     /// The ItemId/ItemName represents this partition key.
     /// The itemName unfortunately has to be duplicated along with the itemId.
     /// </summary>
-    public class PercentOfThreshold : Entity, IComparable<PercentOfThreshold>, IOrderedTable, IDynamicTable<PercentOfThreshold>, IOrderableThreshold, IMultiItem
+    public class PercentOfThreshold : Entity, IComparable<PercentOfThreshold>, IOrderedTable, IDynamicTable<PercentOfThreshold>, IOrderableThreshold, IMultiItem, IHaveAccountId
     {
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }

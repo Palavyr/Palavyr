@@ -105,7 +105,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
 
             await router.ProcessStripeEvent(@event, A.RandomId(), CancellationToken);
 
-            AssertEventIsRouted<CheckoutSessionCompletedEvent>();
+            AssertEventIsRouted<CheckoutSessionCompletedNotification>();
         }
 
         [Fact]

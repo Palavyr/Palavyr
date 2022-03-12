@@ -125,8 +125,7 @@ namespace Palavyr.Core.Services.DynamicTableService
                 tableId,
                 mappedTableRows,
                 dynamicTable.TableTag,
-                typeof(TEntity).Name,
-                async context => await entityCompiler.UpdateConversationNode(context, dynamicTable, tableId, areaIdentifier)
+                typeof(TEntity).Name, async () => await entityCompiler.UpdateConversationNode(dynamicTable, tableId, areaIdentifier)
             );
 
             return await pricingStrategyEntityStore.GetAllRows(areaIdentifier, tableId);

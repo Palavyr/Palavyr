@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware.MiddlewareHandlers;
 using Palavyr.Core.Data;
@@ -48,7 +52,7 @@ namespace Palavyr.API.CustomMiddleware
                 if (!string.IsNullOrEmpty(sessionId))
                 {
                     logger.LogDebug("Session Id found - performing looking in the persistence store...");
-                    var session = await sessionStore.Get(sessionId, s => s.SessionId);
+                    var session = await sessionStore.RawReadonlyQuery().SingleOrDefaultAsync(x => x.SessionId == sessionId);
                     if (session != null)
                     {
                         logger.LogDebug("Session found. Assigning account Id to the Request Header.");

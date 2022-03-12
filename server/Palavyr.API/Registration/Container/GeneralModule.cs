@@ -65,13 +65,15 @@ namespace Palavyr.API.Registration.Container
                 .AsClosedTypesOf(typeof(IMapToPreExisting<,>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(EntityStore<>)).As(typeof(IEntityStore<>))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
 
             builder.RegisterGeneric(typeof(PricingStrategyEntityStore<>)).As(typeof(IPricingStrategyEntityStore<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandExecutor<>)).As(typeof(IDynamicTableCommandExecutor<>)).InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(EntityStore<>)).As(typeof(IEntityStore<>));
 
             builder.RegisterType<MissingNodeCalculator>().As<IMissingNodeCalculator>();
-            builder.RegisterType<RequiredNodeCalculator>().As<IRequiredNodeCalculator>().InstancePerLifetimeScope();
+            builder.RegisterType<RequiredNodeCalculator>().As<IRequiredNodeCalculator>();
             builder.RegisterType<TreeRootFinder>().As<ITreeRootFinder>();
             builder.RegisterType<TreeWalker>().As<ITreeWalker>();
             builder.RegisterType<NodeCounter>().As<INodeCounter>();
@@ -85,13 +87,14 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<AuthService>().As<IAuthService>();
             builder.RegisterType<AwsCloudFileSaver>().As<ICloudFileSaver>();
             builder.RegisterType<AwsS3LinkCreator>().As<ILinkCreator>();
+            builder.RegisterType<S3PreSignedUrlCreator>().As<IS3PreSignedUrlCreator>();
             builder.RegisterType<BasicThresholdCompiler>().As<IBasicThresholdCompiler>();
             builder.RegisterType<BillingPortalSession>().As<IBillingPortalSession>();
             builder.RegisterType<BusinessRules>().As<IBusinessRules>();
             builder.RegisterType<CategoryNestedThresholdCompiler>().As<ICategoryNestedThresholdCompiler>();
             builder.RegisterType<CloudDeleter>().As<ICloudDeleter>();
             builder.RegisterType<CloudFileDownloader>().As<ICloudFileDownloader>();
-            builder.RegisterType<CloudKeyResolver>().As<ICloudKeyResolver>();
+            builder.RegisterType<CloudCompatibleKeyResolver>().As<ICloudCompatibleKeyResolver>();
             builder.RegisterType<CompileSenderDetails>().As<ICompileSenderDetails>();
             builder.RegisterType<CompletedConversationModifier>().As<ICompletedConversationModifier>();
             builder.RegisterType<ConversationNodeUpdater>().As<IConversationNodeUpdater>();

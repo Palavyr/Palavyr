@@ -16,7 +16,11 @@ namespace Palavyr.API.CustomMiddleware
 
         public async Task Handle(SetCancellationTokenRequest notification, CancellationToken cancellationToken)
         {
-            cancellationTokenTransport.Assign(notification.CancellationToken);
+            if (!cancellationTokenTransport.IsSet())
+            {
+                cancellationTokenTransport.Assign(notification.CancellationToken);
+            }
+
             await Task.CompletedTask;
         }
     }

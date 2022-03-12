@@ -2,7 +2,7 @@
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class WidgetPreference : Entity
+    public class WidgetPreference : Entity, IHaveAccountId
     {
         public string Placeholder { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class AttachmentLinkRecord : Entity
+    public class AttachmentLinkRecord : Entity, IHaveAccountId
     {
         public string AccountId { get; set; }
         public string IntentId { get; set; }

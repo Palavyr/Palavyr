@@ -8,7 +8,7 @@ using Palavyr.Core.Services.Units;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class DynamicTableMeta : Entity, ITable
+    public class DynamicTableMeta : Entity, ITable, IHaveAccountId
     {
         public string TableTag { get; set; }
         public string PrettyName { get; set; }

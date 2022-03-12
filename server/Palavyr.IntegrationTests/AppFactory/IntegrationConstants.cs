@@ -2,7 +2,6 @@
 {
     public static class IntegrationConstants
     {
-        public const string SessionId = "abc123treu";
         public const string DefaultArea = "area-234";
         public const string EmailAddress = "test.palavyr@gmail.com";
         public const string Password = "12345";

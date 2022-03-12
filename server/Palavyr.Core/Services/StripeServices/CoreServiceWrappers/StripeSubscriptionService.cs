@@ -75,37 +75,6 @@ namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
             return bufferedPeriodEnd;
         }
 
-        // public void wow()
-        // {
-        //     var subscription = await stripeSubscriptionService.GetSubscription(session);
-        //     var planTypeEnum = GetPlanTypeEnum(subscription);
-        //     // var priceDetails = stripeSubscriptionService.GetPriceDetails(subscription);
-        //     // var productId = stripeSubscriptionService.GetProductId(priceDetails);
-        //     // var planTypeEnum = productRegistry.GetPlanTypeEnum(productId);
-        //
-        //     var bufferedPeriodEnd = stripeSubscriptionServiceGetBufferedEndTime(session);
-        //     // var priceDetails = stripeSubscriptionService.GetPriceDetails(subscription);
-        //     // var paymentInterval = stripeSubscriptionService.GetPaymentInterval(priceDetails);
-        //     // var paymentIntervalEnum = paymentInterval.GetPaymentIntervalEnum();
-        //     // var bufferedPeriodEnd = paymentIntervalEnum.AddEndTimeBuffer(subscription.CurrentPeriodEnd);
-        // }
-
-        // public virtual async Task<Subscription> GetSubscription(Session session)
-        // {
-        //     Subscription subscription;
-        //     try
-        //     {
-        //         subscription = await subscriptionService.GetAsync(session.SubscriptionId);
-        //     }
-        //     catch (StripeException ex)
-        //     {
-        //         logger.LogDebug($"Could not find Stripe Subscription: {ex.Message}");
-        //         throw new DomainException($"Could not find Stripe Subscription: {ex.Message}");
-        //     }
-        //
-        //     return subscription;
-        // }
-
         public Price GetPriceDetails(Subscription subscription)
         {
             var item = subscription.Items.Data.FirstOrDefault();

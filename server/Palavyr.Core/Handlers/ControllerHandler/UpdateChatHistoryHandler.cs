@@ -3,21 +3,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class UpdateChatHistoryHandler : INotificationHandler<UpdateChatHistoryRequest>
     {
-        private readonly ConvoContext convoContext;
+        private readonly IEntityStore<ConversationHistory> convoHistoryStore;
         private readonly ILogger<UpdateChatHistoryHandler> logger;
         private readonly IAccountIdTransport accountIdTransport;
 
-        public UpdateChatHistoryHandler(ConvoContext convoContext, ILogger<UpdateChatHistoryHandler> logger, IAccountIdTransport accountIdTransport)
+        public UpdateChatHistoryHandler(IEntityStore<ConversationHistory> convoHistoryStore, ILogger<UpdateChatHistoryHandler> logger, IAccountIdTransport accountIdTransport)
         {
-            this.convoContext = convoContext;
+            this.convoHistoryStore = convoHistoryStore;
             this.logger = logger;
             this.accountIdTransport = accountIdTransport;
         }
@@ -25,8 +25,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task Handle(UpdateChatHistoryRequest request, CancellationToken cancellationToken)
         {
             var conversationUpdate = request.MapToConversationHistory(accountIdTransport.AccountId);
-            convoContext.ConversationHistories.Add(conversationUpdate);
-            await convoContext.SaveChangesAsync();
+            await convoHistoryStore.Create(conversationUpdate);
         }
     }
 

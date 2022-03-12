@@ -3,7 +3,7 @@ using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class StaticFee : Entity, IRecord
+    public class StaticFee : Entity, IRecord, IHaveAccountId
     {
         public double Min { get; set; }
         public double Max { get; set; }

@@ -1,4 +1,6 @@
-﻿using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+﻿using Palavyr.Core.Services.StripeServices.Products;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Stripe;
 using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
@@ -8,7 +10,11 @@ namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
         private readonly BaseIntegrationFixture test;
         private string subId;
         private string customerId;
-
+        private TestProductRegistry productRegistry = new TestProductRegistry();
+        private Price price;
+        private Subscription sub;
+        
+        
         public StripeCheckoutSessionBuilder(BaseIntegrationFixture test)
         {
             this.test = test;
@@ -26,15 +32,38 @@ namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
             return this;
         }
 
+        public StripeCheckoutSessionBuilder AsFreeSubscription(string custId)
+        {
+            this.customerId = custId;
+            this.sub = test.CreateStripeSubscriptionBuilder()
+                .WithPrice(test.CreateStripePriceBuilder().WithFreeProductId().Build())
+                .WithCustomerId(custId)
+                .Build();
+            return this;
+        }
+
+        public StripeCheckoutSessionBuilder AsProSubscription(string custId)
+        {
+            this.customerId = custId;
+            this.sub = test.CreateStripeSubscriptionBuilder()
+                .WithPrice(test.CreateStripePriceBuilder().WithProProductId().Build())
+                .WithCustomerId(custId)
+                .Build();
+            return this;
+        }
+  
+
         public Stripe.Checkout.Session Build()
         {
             var subscriptionId = this.subId ?? A.RandomId();
             var custId = this.customerId ?? test.StripeCustomerId;
+            var subs = this.sub ?? test.CreateStripeSubscriptionBuilder().Build();
 
             return new Stripe.Checkout.Session()
             {
                 SubscriptionId = subscriptionId,
-                CustomerId = custId
+                CustomerId = custId,
+                Subscription = subs
             };
         }
     }

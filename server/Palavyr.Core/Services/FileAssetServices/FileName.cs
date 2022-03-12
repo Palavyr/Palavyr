@@ -16,6 +16,11 @@ namespace Palavyr.Core.Services.FileAssetServices
             FileId = fileId;
         }
 
+        public override string ToString()
+        {
+            return string.Join(".", FileId, Extension);
+        }
+
         public static FileName ParseRiskyFileName(string fileName, string fileId)
         {
             var extension = ParseExtension(fileName);

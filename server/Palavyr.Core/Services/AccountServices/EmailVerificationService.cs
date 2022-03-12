@@ -1,9 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data;
 using Palavyr.Core.Data.Setup.WelcomeEmail;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.EmailService;
@@ -11,6 +9,7 @@ using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.AccountServices
 {
@@ -22,17 +21,19 @@ namespace Palavyr.Core.Services.AccountServices
 
     public class EmailVerificationService : IEmailVerificationService
     {
-        private readonly AccountsContext accountsContext;
         private readonly ILogger<EmailVerificationService> logger;
         private readonly IRequestEmailVerification requestEmailVerification;
         private readonly ISesEmail emailClient;
         private readonly IGuidUtils guidUtils;
         private readonly IEmailVerificationStatus emailVerificationStatus;
         private readonly IAccountIdTransport accountIdTransport;
+        private readonly IEntityStore<Account> accountStore;
+        private readonly IEntityStore<EmailVerification> emailVerificationsStore;
         private StripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
-            AccountsContext accountsContext,
+            IEntityStore<Account> accountStore,
+            IEntityStore<EmailVerification> emailVerificationsStore,
             ILogger<EmailVerificationService> logger,
             StripeCustomerService stripeCustomerService,
             IRequestEmailVerification requestEmailVerification,
@@ -42,8 +43,9 @@ namespace Palavyr.Core.Services.AccountServices
             IAccountIdTransport accountIdTransport
         )
         {
+            this.accountStore = accountStore;
+            this.emailVerificationsStore = emailVerificationsStore;
             this.stripeCustomerService = stripeCustomerService;
-            this.accountsContext = accountsContext;
             this.logger = logger;
             this.requestEmailVerification = requestEmailVerification;
             this.emailClient = emailClient;
@@ -55,19 +57,17 @@ namespace Palavyr.Core.Services.AccountServices
         public async Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken)
         {
             logger.LogDebug("Attempting to confirm email via auth Token.");
-            var emailVerification = await accountsContext
-                .EmailVerifications
-                .SingleOrDefaultAsync(row => row.AuthenticationToken == authToken.Trim(), cancellationToken);
+            var emailVerification = await emailVerificationsStore
+                .Get(authToken.Trim(), s => s.AuthenticationToken);
+
             if (emailVerification == null)
             {
                 return false;
             }
 
             logger.LogDebug("Email Address found.");
-            var accountId = emailVerification.AccountId;
-            var account = await accountsContext
-                .Accounts
-                .SingleOrDefaultAsync(row => row.AccountId == accountId);
+
+            var account = await accountStore.Get(emailVerification.AccountId, s => s.AccountId);
             if (account == null)
             {
                 return false;
@@ -75,7 +75,7 @@ namespace Palavyr.Core.Services.AccountServices
 
             account.Active = true;
 
-            accountsContext.EmailVerifications.Remove(emailVerification);
+            await emailVerificationsStore.Delete(emailVerification);
 
             logger.LogDebug("Verifying email address. Already verified using an authtoken, so this is okay");
 
@@ -96,7 +96,6 @@ namespace Palavyr.Core.Services.AccountServices
 
                 account.StripeCustomerId = customer.Id;
 
-                await accountsContext.SaveChangesAsync();
                 return true;
             }
 
@@ -108,8 +107,7 @@ namespace Palavyr.Core.Services.AccountServices
             // prepare the account confirmation email
             logger.LogDebug("Provide an account setup confirmation token");
             var confirmationToken = guidUtils.CreateShortenedGuid(1);
-            await accountsContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, emailAddress, accountIdTransport.AccountId));
-            await accountsContext.SaveChangesAsync(cancellationToken);
+            await emailVerificationsStore.Create(EmailVerification.CreateNew(confirmationToken, emailAddress, accountIdTransport.AccountId));
 
             logger.LogDebug($"Sending emails from {EmailConstants.PalavyrMainEmailAddress}");
             var htmlBody = EmailConfirmationHtml.GetConfirmationEmailBody(emailAddress, confirmationToken);

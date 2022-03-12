@@ -68,7 +68,7 @@ namespace Palavyr.API.Registration.Container
                         }
                         else
                         {
-                            return new DevProductRegistery();
+                            return new TestProductRegistry();
                         }
                     })
                 .InstancePerLifetimeScope();

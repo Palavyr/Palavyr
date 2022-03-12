@@ -95,8 +95,9 @@ namespace Palavyr.Core.Services.FileAssetServices
 
         public async Task<FileLink[]> RemoveFiles(string[] fileIds)
         {
-            var images = await fileAssetStore.GetMany(fileIds, asset => asset.FileId);
-            await cloudDeleter.DeleteMany(images);
+            var assets = await fileAssetStore.GetMany(fileIds, asset => asset.FileId);
+            await fileAssetStore.Delete(assets.ToArray());
+            await cloudDeleter.DeleteMany(assets);
 
             var remainingAssets = await fileAssetStore.GetAll();
             return await remainingAssets.ToFileLinks(linkCreator);
@@ -104,7 +105,10 @@ namespace Palavyr.Core.Services.FileAssetServices
 
         public async Task<FileLink[]> RemoveFile(string fileId)
         {
-            await fileAssetStore.Delete(fileId, x => x.FileId);
+            var asset = await fileAssetStore.Get(fileId, s => s.FileId);
+            await fileAssetStore.Delete(asset);
+            await cloudDeleter.Delete(asset);
+
             var remainingAssets = await fileAssetStore.GetAll();
             return await remainingAssets.ToFileLinks(linkCreator);
         }

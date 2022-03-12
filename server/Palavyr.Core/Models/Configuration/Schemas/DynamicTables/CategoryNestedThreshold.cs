@@ -5,7 +5,7 @@ using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class CategoryNestedThreshold : Entity, IOrderedTable, IDynamicTable<CategoryNestedThreshold>, IHaveRange, IMultiItem, IOrderableThreshold
+    public class CategoryNestedThreshold : Entity, IOrderedTable, IDynamicTable<CategoryNestedThreshold>, IHaveRange, IMultiItem, IOrderableThreshold, IHaveAccountId
     {
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }

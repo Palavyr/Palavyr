@@ -4,7 +4,7 @@ using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class StaticTableRow : Entity, IStaticTableRow
+    public class StaticTableRow : Entity, IStaticTableRow, IHaveAccountId
     {
         public int RowOrder { get; set; }
         public string Description { get; set; } = null!;

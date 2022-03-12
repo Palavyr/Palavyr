@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 using Stripe;
 using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
@@ -15,27 +16,29 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
     public class ProcessStripePriceUpdatedHandler : INotificationHandler<PriceUpdatedEvent>
     {
         private readonly ILogger<ProcessStripePriceUpdatedHandler> logger;
-        private readonly AccountsContext accountsContext;
+        private readonly IEntityStore<Account> accountStore;
+        private readonly ICancellationTokenTransport cancellationTokenTransport;
         private readonly ISesEmail emailClient;
-
+        private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
         public ProcessStripePriceUpdatedHandler(
             ILogger<ProcessStripePriceUpdatedHandler> logger,
-            AccountsContext accountsContext,
+            IEntityStore<Account> accountStore,
+            ICancellationTokenTransport cancellationTokenTransport,
             ISesEmail emailClient
         )
         {
             this.logger = logger;
-            this.accountsContext = accountsContext;
+            this.accountStore = accountStore;
+            this.cancellationTokenTransport = cancellationTokenTransport;
             this.emailClient = emailClient;
         }
 
         public async Task Handle(PriceUpdatedEvent notification, CancellationToken cancellationToken)
         {
             var priceUpdate = notification.price;
-            var accounts = await accountsContext
-                .Accounts
+            var accounts = await accountStore.Query()
                 .Where(row => row.PlanType == Account.PlanTypeEnum.Premium || row.PlanType == Account.PlanTypeEnum.Pro)
-                .ToListAsync();
+                .ToListAsync(CancellationToken);
             
             if (priceUpdate.Livemode)
             {

@@ -8,9 +8,9 @@ namespace Palavyr.Core.Services.CloudKeyResolvers
 
     public class ResponsePdfPreviewKeyResolver : IResponsePdfPreviewKeyResolver
     {
-        private readonly ICloudKeyResolver cloudKeyResolver;
+        private readonly ICloudCompatibleKeyResolver cloudKeyResolver;
 
-        public ResponsePdfPreviewKeyResolver(ICloudKeyResolver cloudKeyResolver)
+        public ResponsePdfPreviewKeyResolver(ICloudCompatibleKeyResolver cloudKeyResolver)
         {
             this.cloudKeyResolver = cloudKeyResolver;
         }
