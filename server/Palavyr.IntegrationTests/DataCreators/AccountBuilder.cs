@@ -3,7 +3,6 @@ using System;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Test.Common.Random;
@@ -155,21 +154,11 @@ namespace Palavyr.IntegrationTests.DataCreators
                 IntroductionId = A.RandomId()
             };
 
-            // SetAccountIdTransportIfNotSet(); 
             await test.CreateAndSave(defaultAccount);
             await test.CreateAndSave(Session.CreateNew(test.SessionId, test.AccountId, test.ApiKey));
             
 
             return defaultAccount;
-        }
-
-        private void SetAccountIdTransportIfNotSet()
-        {
-            var accToken = test.ResolveType<IAccountIdTransport>();
-            if (!accToken.IsSet())
-            {
-                test.SetAccountIdTransport();
-            }
         }
     }
 }

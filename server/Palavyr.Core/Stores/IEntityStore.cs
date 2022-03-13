@@ -15,6 +15,7 @@ namespace Palavyr.Core.Stores
         Task CreateMany(TEntity[] entities);
         Task<TEntity> Get(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<TEntity> Get(int id, Expression<Func<TEntity, string>> propertySelectorExpression);
+        Task<TEntity> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<List<TEntity>> GetMany(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<List<TEntity>> GetMany(int[] ids, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<List<TEntity>> GetMany(string id, Expression<Func<TEntity, string>> propertySelectorExpression);

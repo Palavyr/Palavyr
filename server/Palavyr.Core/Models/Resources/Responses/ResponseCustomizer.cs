@@ -50,7 +50,6 @@ namespace Palavyr.Core.Models.Resources.Responses
             return html;
         }
 
-
         private async Task<string> CustomizeCompany(string html)
         {
             var account = await accountStore.Get(accountStore.AccountId, x => x.AccountId);
@@ -61,16 +60,16 @@ namespace Palavyr.Core.Models.Resources.Responses
 
         private async Task<string> CustomizeLogo(string html)
         {
-            var logo = await logoStore.Get(accountStore.AccountId, x => x.AccountId);
-            var link = await linkCreator.CreateLink(logo.AccountLogoFileId);
+            var logo = await logoStore.GetOrNull(accountStore.AccountId, x => x.AccountId);
 
 
-            if (string.IsNullOrWhiteSpace(link))
+            if (logo is null || string.IsNullOrWhiteSpace(logo.AccountLogoFileId))
             {
                 return html.Replace(ResponseVariableDefinition.LogoUriVariablePattern, string.Empty);
             }
             else
             {
+                var link = await linkCreator.CreateLink(logo.AccountLogoFileId);
                 var imgTag = $"<img src=\"{link}\" alt=\"Logo\" />";
                 var updatedHtml = html.Replace(ResponseVariableDefinition.LogoUriVariablePattern, imgTag);
                 return updatedHtml;

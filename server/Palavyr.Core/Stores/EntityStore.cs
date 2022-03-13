@@ -125,13 +125,6 @@ namespace Palavyr.Core.Stores
                 .ToArrayAsync(CancellationToken);
         }
 
-        private async Task<List<TEntity>> ApplyExpression(string[] ids, IQueryable<TEntity> queryExecutor, Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            var result = await queryExecutor.WhereWorking(ids, propertySelectorExpression).ToListAsync(CancellationToken);
-            return result;
-        }
-        
-
         public async Task<TEntity> Get(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
             var entity = await ReadonlyQueryExecutor.WhereWorking(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
@@ -149,14 +142,19 @@ namespace Palavyr.Core.Stores
             return entity;
         }
 
+        public async Task<TEntity> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
+        {
+            return await ReadonlyQueryExecutor.WhereWorking(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
+        }
+
         public async Task<List<TEntity>> GetMany(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            return await ApplyExpression(ids, ReadonlyQueryExecutor, propertySelectorExpression);
+            return await ReadonlyQueryExecutor.WhereWorking(ids, propertySelectorExpression).ToListAsync(CancellationToken);
         }
 
         public async Task<List<TEntity>> GetMany(List<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            return await ApplyExpression(ids.ToArray(), ReadonlyQueryExecutor, propertySelectorExpression);
+            return await ReadonlyQueryExecutor.WhereWorking(ids.ToArray(), propertySelectorExpression).ToListAsync(CancellationToken);
         }
 
 

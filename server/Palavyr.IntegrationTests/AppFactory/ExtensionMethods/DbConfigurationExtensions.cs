@@ -78,6 +78,10 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             var accountContext = scopedServices.GetService<AccountsContext>();
             var convoContext = scopedServices.GetService<ConvoContext>();
 
+            // accountContext.Database.EnsureDeleted();
+            // dashContext.Database.EnsureDeleted();
+            // convoContext.Database.EnsureDeleted();
+
             accountContext.Database.EnsureCreated();
             dashContext.Database.EnsureCreated();
             convoContext.Database.EnsureCreated();
@@ -152,14 +156,15 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             {
                 var accountTransport = new AccountIdTransport(account.AccountId);
                 var assetStore = new EntityStore<FileAsset>(contextProvider, accountTransport, cancellationTokenTransport);
-
+                var decoratedStore = new IntegrationTestEntityStoreEagerSavingDecorator<FileAsset>(assetStore, contextProvider);
+                
                 var deleter = new IntegrationTestFileDelete(
-                    new IntegrationTestEntityStoreEagerSavingDecorator<FileAsset>(assetStore, contextProvider),
+                    decoratedStore,
                     accountTransport,
                     cancellationTokenTransport,
                     new GuidUtils(),
                     new FileAssetKeyResolver(new CloudCompatibleKeyResolver(accountTransport)),
-                    new IntegrationTestFileLinkCreator());
+                    new IntegrationTestFileLinkCreator(decoratedStore));
 
                 var accountDeleter = new DangerousAccountDeleter(
                     scopedServices,

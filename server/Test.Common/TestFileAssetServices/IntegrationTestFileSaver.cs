@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -117,22 +118,30 @@ namespace Test.Common.TestFileAssetServices
 
     public class IntegrationTestFileLinkCreator : ILinkCreator
     {
+        private readonly IEntityStore<FileAsset> fileAssetStore;
+
+        public IntegrationTestFileLinkCreator(
+            IEntityStore<FileAsset> fileAssetStore
+        )
+        {
+            this.fileAssetStore = fileAssetStore;
+        }
+
         public async Task<string> CreateLink(string fileAssetId)
         {
-            await Task.CompletedTask;
-            return "";
+            var asset = await fileAssetStore.Get(fileAssetId, s => s.FileId);
+            return asset.LocationKey ?? "";
         }
 
         public async Task<string[]> CreateManyLinks(string[] fileAssetIds)
         {
-            await Task.CompletedTask;
-            return new[] { "" };
+            var assets = await fileAssetStore.GetMany(fileAssetIds, s => s.FileId);
+            return assets.Select(x => x.LocationKey).ToArray();
         }
 
         public async Task<IEnumerable<string>> CreateManyLinks(IEnumerable<string> fileAssetIds)
         {
-            await Task.CompletedTask;
-            return new[] { "" };
+            return await CreateManyLinks(fileAssetIds.ToArray());
         }
     }
 }

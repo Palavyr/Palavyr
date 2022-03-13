@@ -57,15 +57,19 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<DetermineCurrentOperatingSystem>().As<IDetermineCurrentOperatingSystem>();
             builder.RegisterType<Units>().AsSelf().SingleInstance();
 
-            builder.RegisterAssemblyTypes(assemblies)
+            builder
+                .RegisterAssemblyTypes(assemblies)
                 .AsClosedTypesOf(typeof(IMapToNew<,>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(assemblies)
+            builder
+                .RegisterAssemblyTypes(assemblies)
                 .AsClosedTypesOf(typeof(IMapToPreExisting<,>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(EntityStore<>)).As(typeof(IEntityStore<>))
+            builder
+                .RegisterGeneric(typeof(EntityStore<>))
+                .As(typeof(IEntityStore<>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 

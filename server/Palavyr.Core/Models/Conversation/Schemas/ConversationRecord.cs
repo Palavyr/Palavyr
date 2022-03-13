@@ -22,7 +22,11 @@ namespace Palavyr.Core.Models.Conversation.Schemas
         public bool IsFallback { get; set; }
         public string Locale { get; set; } // TODO: Correct This
         public bool IsComplete { get; set; }
-        
+
+        public ConversationRecord()
+        {
+            
+        }
         public static ConversationRecord CreateDefault(string conversationId, string accountId, string areaName, string areaIdentifier)
         {
             return new ConversationRecord

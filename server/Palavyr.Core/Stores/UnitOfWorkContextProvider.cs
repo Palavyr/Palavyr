@@ -72,7 +72,7 @@ namespace Palavyr.Core.Stores
 
             await dashContext.SaveChangesAsync(token);
             await accountsContext.SaveChangesAsync(token);
-            await accountsContext.SaveChangesAsync(token);
+            await convoContext.SaveChangesAsync(token);
         }
     }
 }

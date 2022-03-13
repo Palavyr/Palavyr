@@ -52,6 +52,11 @@ namespace Test.Common
             return result;
         }
 
+        public async Task<TEntity> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
+        {
+            return await inner.GetOrNull(id, propertySelectorExpression);
+        }
+
         public async Task<List<TEntity>> GetMany(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
             var result = await inner.GetMany(ids, propertySelectorExpression);
@@ -125,7 +130,7 @@ namespace Test.Common
             return inner.RawReadonlyQuery();
         }
 
-        public CancellationToken CancellationToken { get; }
-        public string AccountId { get; }
+        public CancellationToken CancellationToken => inner.CancellationToken;
+        public string AccountId => inner.AccountId;
     }
 }
