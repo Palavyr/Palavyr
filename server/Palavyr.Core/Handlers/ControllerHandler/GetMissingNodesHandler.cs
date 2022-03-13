@@ -16,15 +16,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly ILogger<GetMissingNodesHandler> logger;
         private readonly IEntityStore<Area> intentStore;
-        private readonly RequiredNodeCalculator requiredNodeCalculator;
-        private readonly MissingNodeCalculator missingNodeCalculator;
+        private readonly IRequiredNodeCalculator requiredNodeCalculator;
+        private readonly IMissingNodeCalculator missingNodeCalculator;
         private readonly INodeOrderChecker nodeOrderChecker;
 
         public GetMissingNodesHandler(
             ILogger<GetMissingNodesHandler> logger,
             IEntityStore<Area> intentStore,
-            RequiredNodeCalculator requiredNodeCalculator,
-            MissingNodeCalculator missingNodeCalculator,
+            IRequiredNodeCalculator requiredNodeCalculator,
+            IMissingNodeCalculator missingNodeCalculator,
             INodeOrderChecker nodeOrderChecker
         )
         {

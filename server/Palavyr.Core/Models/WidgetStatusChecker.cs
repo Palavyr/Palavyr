@@ -26,8 +26,8 @@ namespace Palavyr.Core.Models
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IDynamicTableCompilerOrchestrator orchestrator;
-        private readonly RequiredNodeCalculator requiredNodeCalculator;
-        private readonly MissingNodeCalculator missingNodeCalculator;
+        private readonly IRequiredNodeCalculator requiredNodeCalculator;
+        private readonly IMissingNodeCalculator missingNodeCalculator;
         private readonly INodeOrderChecker nodeOrderChecker;
         private readonly IEntityStore<Account> accountStore;
 
@@ -37,8 +37,8 @@ namespace Palavyr.Core.Models
         public WidgetStatusChecker(
             IEntityStore<ConversationNode> convoNodeStore,
             IDynamicTableCompilerOrchestrator orchestrator,
-            RequiredNodeCalculator requiredNodeCalculator,
-            MissingNodeCalculator missingNodeCalculator,
+            IRequiredNodeCalculator requiredNodeCalculator,
+            IMissingNodeCalculator missingNodeCalculator,
             INodeOrderChecker nodeOrderChecker,
             IEntityStore<Account> accountStore)
         {
