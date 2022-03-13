@@ -17,9 +17,9 @@ namespace Palavyr.Core.Services.DynamicTableService
 
     public class ConversationOptionSplitter : IConversationOptionSplitter
     {
-        private readonly GuidFinder finder;
+        private readonly IGuidFinder finder;
 
-        public ConversationOptionSplitter(GuidFinder finder)
+        public ConversationOptionSplitter(IGuidFinder finder)
         {
             this.finder = finder;
         }

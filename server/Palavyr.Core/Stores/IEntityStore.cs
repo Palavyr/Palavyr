@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Stores
@@ -29,6 +30,9 @@ namespace Palavyr.Core.Stores
         Task Delete(TEntity[] entities);
 
         IQueryable<TEntity> Query();
+
+
+        DbSet<TEntity> DangerousRawQuery();
 
         /// <summary>
         /// DANGEROUS: Only use this if you need to get around accountId filtering.

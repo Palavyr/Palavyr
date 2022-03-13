@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Stores;
 
@@ -123,6 +124,11 @@ namespace Test.Common
         public IQueryable<TEntity> Query()
         {
             return inner.Query(); // users need to commit manually here;
+        }
+
+        public DbSet<TEntity> DangerousRawQuery()
+        {
+            return inner.DangerousRawQuery();
         }
 
         public IQueryable<TEntity> RawReadonlyQuery()

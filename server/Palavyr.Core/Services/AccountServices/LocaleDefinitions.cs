@@ -17,7 +17,6 @@ namespace Palavyr.Core.Services.AccountServices
         public string[] SupportedLocales { get; set; } = null!;
     }
 
-
     public interface ILocaleDefinitions
     {
         CultureInfo[] SupportedLocales { get; set; }

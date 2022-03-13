@@ -13,7 +13,6 @@ namespace Palavyr.API.Controllers.Conversation.Images
     {
         private readonly IMediator mediator;
         private readonly IFileAssetDeleter fileAssetDeleter;
-        private readonly GuidFinder guidFinder;
         private const string Route = "images";
 
         public DeleteImagesController(IMediator mediator)

@@ -1,7 +1,10 @@
 #nullable enable
 using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.GlobalConstants;
@@ -107,8 +110,10 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
 
             await removeStaleSessions.CleanSessionDb();
-            var newSession = Session.CreateNew(token, accountStore.AccountId, account.ApiKey);
-            var session = await sessionStore.Create(newSession);
+            var newSession = Session.CreateNew(token, account.AccountId, account.ApiKey);
+            var sessionEntity = await sessionStore.DangerousRawQuery().AddAsync(newSession);
+            var session = sessionEntity.Entity;
+
             logger.LogDebug("Committing the new session to the DB.");
 
             logger.LogDebug("Session saved to DB. Returning auth response.");
@@ -171,7 +176,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
         private async Task<AccountReturn> RequestAccountViaDefault(CreateLoginRequest credentialsRequest)
         {
-            var account = await accountStore.Get(credentialsRequest.EmailAddress.ToLowerInvariant(), s => s.EmailAddress);
+            var account = await accountStore.RawReadonlyQuery().Where(x => x.EmailAddress == credentialsRequest.EmailAddress.ToLowerInvariant()).SingleOrDefaultAsync(accountStore.CancellationToken);
             if (account == null)
             {
                 return AccountReturn.Return(account, CouldNotFindAccount);

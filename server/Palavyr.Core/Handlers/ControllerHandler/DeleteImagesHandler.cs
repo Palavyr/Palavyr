@@ -12,10 +12,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class DeleteImagesHandler : IRequestHandler<DeleteImagesRequest, DeleteImagesResponse>
     {
         private readonly IFileAssetDeleter fileAssetDeleter;
-        private readonly GuidFinder guidFinder;
+        private readonly IGuidFinder guidFinder;
         private readonly IHttpContextAccessor accessor;
 
-        public DeleteImagesHandler(IFileAssetDeleter fileAssetDeleter, GuidFinder guidFinder, IHttpContextAccessor accessor)
+        public DeleteImagesHandler(IFileAssetDeleter fileAssetDeleter, IGuidFinder guidFinder, IHttpContextAccessor accessor)
         {
             this.fileAssetDeleter = fileAssetDeleter;
             this.guidFinder = guidFinder;

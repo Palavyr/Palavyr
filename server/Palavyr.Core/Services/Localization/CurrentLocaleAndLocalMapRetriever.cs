@@ -17,9 +17,9 @@ namespace Palavyr.Core.Services.Localization
     {
         private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<CurrentLocaleAndLocaleMapRetriever> logger;
-        private readonly LocaleDefinitions localeDefinitions;
+        private readonly ILocaleDefinitions localeDefinitions;
 
-        public CurrentLocaleAndLocaleMapRetriever(IEntityStore<Account> accountStore, ILogger<CurrentLocaleAndLocaleMapRetriever> logger, LocaleDefinitions localeDefinitions)
+        public CurrentLocaleAndLocaleMapRetriever(IEntityStore<Account> accountStore, ILogger<CurrentLocaleAndLocaleMapRetriever> logger, ILocaleDefinitions localeDefinitions)
         {
             this.accountStore = accountStore;
             this.logger = logger;

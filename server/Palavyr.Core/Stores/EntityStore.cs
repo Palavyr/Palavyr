@@ -262,6 +262,11 @@ namespace Palavyr.Core.Stores
             throw new DomainException("Raw Queries on entities that do not implement IHaveAccountId are not allowed");
         }
 
+        public DbSet<TEntity> DangerousRawQuery()
+        {
+            return QueryExecutor;
+        }
+
         public IQueryable<TEntity> RawReadonlyQuery()
         {
             return QueryExecutor.AsNoTracking();
