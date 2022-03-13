@@ -155,7 +155,7 @@ namespace Palavyr.IntegrationTests.DataCreators
                 IntroductionId = A.RandomId()
             };
 
-            SetAccountIdTransportIfNotSet(); 
+            // SetAccountIdTransportIfNotSet(); 
             await test.CreateAndSave(defaultAccount);
             await test.CreateAndSave(Session.CreateNew(test.SessionId, test.AccountId, test.ApiKey));
             

@@ -11,9 +11,9 @@ namespace Palavyr.API.Controllers.Testing
     {
         private readonly TestDataProvider testDataProvider;
 
-        public TestController(TestDataProvider testDataProvider)
+        public TestController()
         {
-            this.testDataProvider = testDataProvider;
+            this.testDataProvider = new TestDataProvider();
         }
 
         [HttpGet("test")]

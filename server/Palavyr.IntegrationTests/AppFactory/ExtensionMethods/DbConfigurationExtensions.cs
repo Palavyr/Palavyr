@@ -15,6 +15,7 @@ using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.Delete;
+using Test.Common;
 using Test.Common.TestFileAssetServices;
 
 namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
@@ -67,7 +68,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                 });
         }
 
-        private static void CreateDatabases(this IServiceCollection services)
+        private static Task CreateDatabases(this IServiceCollection services)
         {
             var sp = ServiceCollectionContainerBuilderExtensions.BuildServiceProvider(services);
             using var scope = sp.CreateScope();
@@ -85,7 +86,9 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             var contextProvider = new UnitOfWorkContextProvider(dashContext, accountContext, convoContext, tempCancellationToken);
             ResetDbs(scopedServices, contextProvider, tempCancellationToken);
 
-            contextProvider.DangerousCommitAllContexts();
+            // contextProvider.DangerousCommitAllContexts();
+
+            return Task.CompletedTask;
         }
 
         private static void ConfigureInMemoryDatabases(IServiceCollection services, InMemoryDatabaseRoot dbRoot)
@@ -140,10 +143,10 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             }
         }
 
-        public static async Task ResetDbs(IServiceProvider scopedServices, IUnitOfWorkContextProvider contextProvider, ICancellationTokenTransport cancellationTokenTransport)
+        public static void ResetDbs(IServiceProvider scopedServices, IUnitOfWorkContextProvider contextProvider, ICancellationTokenTransport cancellationTokenTransport)
         {
             var context = scopedServices.GetService<AccountsContext>();
-            var accounts = await context.Accounts.ToListAsync();
+            var accounts = context.Accounts.ToList();
 
             foreach (var account in accounts)
             {
@@ -151,7 +154,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                 var assetStore = new EntityStore<FileAsset>(contextProvider, accountTransport, cancellationTokenTransport);
 
                 var deleter = new IntegrationTestFileDelete(
-                    assetStore,
+                    new IntegrationTestEntityStoreEagerSavingDecorator<FileAsset>(assetStore, contextProvider),
                     accountTransport,
                     cancellationTokenTransport,
                     new GuidUtils(),
@@ -167,7 +170,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                     contextProvider.AccountsContext(),
                     accountTransport,
                     cancellationTokenTransport);
-                await accountDeleter.DeleteAllThings();
+                accountDeleter.DeleteAllThings();
             }
         }
     }

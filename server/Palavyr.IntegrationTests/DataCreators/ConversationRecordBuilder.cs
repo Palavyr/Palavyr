@@ -1,25 +1,11 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
-    public static class BuilderStoreExtensionMethods
-    {
-        public static async Task CreateAndSave<TEntity>(this BaseIntegrationFixture test, TEntity entity) where TEntity : class, IEntity
-        {
-            var store = test.ResolveStore<TEntity>();
-            store.ResetCancellationToken(new CancellationTokenSource(test.Timeout));
-            await store.Create(entity);
-            // await test.ResolveType<IUnitOfWorkContextProvider>().DangerousCommitAllContexts();
-        }
-        
-    }
-    
     public static partial class BuilderExtensionMethods
     {
         public static ConversationRecordBuilder CreateConversationRecordBuilder(this BaseIntegrationFixture test)
@@ -82,7 +68,7 @@ namespace Palavyr.IntegrationTests.DataCreators
             var accountId = this.accountId ?? test.AccountId;
             var conversationId = this.conversationId ?? A.RandomId();
 
-            var record = new ConversationRecord()
+            var record = new ConversationRecord
             {
                 AreaIdentifier = intentId,
                 AreaName = intentName,

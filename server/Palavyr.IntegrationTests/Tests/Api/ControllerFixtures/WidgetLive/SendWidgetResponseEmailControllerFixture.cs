@@ -28,8 +28,6 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
 
         public override async Task InitializeAsync()
         {
-            SetCancellationToken();
-            SetAccountIdTransport();
             await this.SetupProAccount();
             await base.InitializeAsync();
         }
@@ -55,7 +53,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
 
             // act
             var response = await ClientApiKey.PostWithApiKey<SendEmailResultResponse>(Route.Replace("{intentId}", intentId), emailRequest);
-            
+
             // assert
             response.NextNodeId.ShouldBe(EndingSequenceAttacher.EmailSuccessfulNodeId);
             response.Result.ShouldBeTrue();
@@ -67,6 +65,5 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             builder.RegisterType<MockSeSEmail>().As<ISesEmail>();
             return base.CustomizeContainer(builder);
         }
-
     }
 }

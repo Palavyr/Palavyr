@@ -130,16 +130,11 @@ namespace Palavyr.Core.Stores
             var result = await queryExecutor.WhereWorking(ids, propertySelectorExpression).ToListAsync(CancellationToken);
             return result;
         }
-
-        private IQueryable<TEntity> ApplyExpression(string id, IQueryable<TEntity> queryExecutor, Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            var result = queryExecutor.WhereWorking(id, propertySelectorExpression);
-            return result;
-        }
+        
 
         public async Task<TEntity> Get(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            var entity = await ApplyExpression(id, ReadonlyQueryExecutor, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
+            var entity = await ReadonlyQueryExecutor.WhereWorking(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
             if (entity is null)
             {
                 throw new EntityNotFoundException("Entity not found");

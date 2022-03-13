@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Resources.Requests;
@@ -8,9 +7,6 @@ namespace Palavyr.Core.Models.Conversation.Schemas
 {
     public class ConversationRecord : Entity, IHaveAccountId
     {
-        [Key]
-        public int? Id { get; set; }
-
         public string ConversationId { get; set; } // This will be used when collecting enquiries. Then used to get the 
         public string ResponsePdfId { get; set; }
         public DateTime TimeStamp { get; set; }
