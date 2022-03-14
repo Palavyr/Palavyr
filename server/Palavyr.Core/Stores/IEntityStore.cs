@@ -12,22 +12,18 @@ namespace Palavyr.Core.Stores
     public interface IEntityStore<TEntity> where TEntity : class, IEntity
     {
         void ResetCancellationToken(CancellationTokenSource tokenSource);
-        Task<TEntity> Create(TEntity entity);
-        Task CreateMany(TEntity[] entities);
         Task<TEntity> Get(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
-        Task<TEntity> Get(int id, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<TEntity> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
-        Task<List<TEntity>> GetMany(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression);
-        Task<List<TEntity>> GetMany(int[] ids, Expression<Func<TEntity, string>> propertySelectorExpression);
+        Task<List<TEntity>> GetMany(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<List<TEntity>> GetMany(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
-        Task<List<TEntity>> GetMany(int id, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<TEntity[]> GetAll();
-        Task<TEntity[]> GetAllDeep();
-        Task Delete(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression);
+        Task<TEntity> Create(TEntity entity);
+        Task CreateMany(IEnumerable<TEntity> entities);
         Task<TEntity> Update(TEntity entity);
+        Task Delete(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task Delete(TEntity entity);
         Task Delete(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
-        Task Delete(TEntity[] entities);
+        Task Delete(IEnumerable<TEntity> entities);
 
         IQueryable<TEntity> Query();
 
@@ -44,5 +40,4 @@ namespace Palavyr.Core.Stores
         CancellationToken CancellationToken { get; }
         string AccountId { get; }
     }
-    
 }

@@ -82,8 +82,7 @@ namespace Palavyr.Core.Services.AccountServices
                 emailAddress,
                 PasswordHashing.CreateHashedPassword(password),
                 accountId,
-                apiKey,
-                AccountType.Default
+                apiKey
             );
             logger.LogDebug("Adding new account via DEFAULT...");
             await accountStore.Create(account);

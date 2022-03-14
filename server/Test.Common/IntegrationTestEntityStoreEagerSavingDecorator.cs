@@ -35,7 +35,7 @@ namespace Test.Common
             return result;
         }
 
-        public async Task CreateMany(TEntity[] entities)
+        public async Task CreateMany(IEnumerable<TEntity> entities)
         {
             await inner.CreateMany(entities);
             await unitOfWorkContextProvider.DangerousCommitAllContexts();
@@ -47,24 +47,12 @@ namespace Test.Common
             return result;
         }
 
-        public async Task<TEntity> Get(int id, Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            var result = await inner.Get(id, propertySelectorExpression);
-            return result;
-        }
-
         public async Task<TEntity> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
             return await inner.GetOrNull(id, propertySelectorExpression);
         }
 
-        public async Task<List<TEntity>> GetMany(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            var result = await inner.GetMany(ids, propertySelectorExpression);
-            return result;
-        }
-
-        public async Task<List<TEntity>> GetMany(int[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
+        public async Task<List<TEntity>> GetMany(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
             var result = await inner.GetMany(ids, propertySelectorExpression);
             return result;
@@ -76,23 +64,12 @@ namespace Test.Common
             return result;
         }
 
-        public async Task<List<TEntity>> GetMany(int id, Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            var result = await inner.GetMany(id, propertySelectorExpression);
-            return result;
-        }
-
         public async Task<TEntity[]> GetAll()
         {
             return await inner.GetAll();
         }
 
-        public async Task<TEntity[]> GetAllDeep()
-        {
-            return await inner.GetAllDeep();
-        }
-
-        public async Task Delete(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
+        public async Task Delete(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
             await inner.Delete(ids, propertySelectorExpression);
             await unitOfWorkContextProvider.DangerousCommitAllContexts();
@@ -116,7 +93,7 @@ namespace Test.Common
             await unitOfWorkContextProvider.DangerousCommitAllContexts();
         }
 
-        public async Task Delete(TEntity[] entities)
+        public async Task Delete(IEnumerable<TEntity> entities)
         {
             await inner.Delete(entities);
         }

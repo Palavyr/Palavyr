@@ -20,7 +20,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
         [Fact]
         public async Task GetApiKeyFails()
         {
-            Should.ThrowAsync<DomainException>(
+            await Should.ThrowAsync<DomainException>(
                 async () => { await Client.GetAsync(Route); });
         }
     }

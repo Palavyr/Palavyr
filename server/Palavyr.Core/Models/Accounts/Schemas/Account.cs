@@ -10,8 +10,6 @@ namespace Palavyr.Core.Models.Accounts.Schemas
 {
     public class Account : Entity, IHaveAccountId
     {
-        [Key]
-        public int? Id { get; set; }
         public string? Password { get; set; }
         public string EmailAddress { get; set; }
         public bool DefaultEmailIsVerified { get; set; }
@@ -80,7 +78,6 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             string? phoneNumber,
             bool active,
             string locale,
-            AccountType accountType,
             PlanTypeEnum planType,
             PaymentIntervalEnum paymentInterval,
             bool hasUpgraded
@@ -96,7 +93,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             PhoneNumber = phoneNumber;
             Active = active;
             Locale = locale;
-            AccountType = accountType;
+            AccountType = AccountType.Default;
             PlanType = planType;
             PaymentInterval = paymentInterval;
             HasUpgraded = hasUpgraded;
@@ -104,44 +101,18 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             IntroductionId = new GuidUtils().CreateNewId();
         }
 
-        public static Account CreateGoogleAccount(
-            string apikey,
-            string emailAddress,
-            string accountId)
-        {
-            var introId = new GuidUtils().CreateNewId();
-            return new Account
-            {
-                EmailAddress = emailAddress.ToLowerInvariant(),
-                Password = null,
-                AccountId = accountId,
-                ApiKey = apikey,
-                CompanyName = null,
-                PhoneNumber = null,
-                Locale = "en-AU",
-                AccountType = AccountType.Google,
-                PlanType = PlanTypeEnum.Free,
-                PaymentInterval = PaymentIntervalEnum.Null,
-                GeneralFallbackSubject = "",
-                GeneralFallbackEmailTemplate = "",
-                CreationDate = DateTime.Now,
-                IntroductionId = introId
-            };
-        }
-
         public static Account CreateAccount(
             string emailAddress,
             string password,
             string accountId,
-            string apiKey,
-            AccountType accountType)
+            string apiKey)
         {
             return CreateAccount(
                 emailAddress,
                 password,
                 accountId,
                 apiKey,
-                accountType
+                null
             );
         }
 
@@ -151,14 +122,12 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             string password,
             string accountId,
             string apiKey,
-            AccountType accountType,
             string? stripeCustomerId
         )
         {
             return new Account(
                 emailAddress.ToLowerInvariant(), password, accountId, apiKey, null, null, false,
-                "en-AU",
-                accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false)
+                "en-AU", PlanTypeEnum.Free, PaymentIntervalEnum.Null, false)
             {
                 StripeCustomerId = stripeCustomerId
             };
@@ -173,13 +142,12 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             string companyName,
             string phoneNumber,
             bool active,
-            string locale,
-            AccountType accountType
+            string locale
         )
         {
             return new Account(
                 emailAddress.ToLowerInvariant(), password, accountId, apiKey, companyName, phoneNumber,
-                active, "en-AU", accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
+                active, "en-AU", PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
     }
 }

@@ -34,6 +34,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public readonly string StripeCustomerId = Guid.NewGuid().ToString();
         public readonly string SessionId = Guid.NewGuid().ToString();
         public readonly string EmailAddress = $"{Guid.NewGuid()}@gmail.com";
+        public readonly string Password = Guid.NewGuid().ToString();
         
         public readonly Lazy<AutofacServiceProvider> ServiceProvider;
 

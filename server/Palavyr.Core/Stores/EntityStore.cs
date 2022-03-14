@@ -4,10 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation.Internal;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Contracts;
@@ -24,6 +21,7 @@ namespace Palavyr.Core.Stores
         public readonly IQueryable<TEntity> ReadonlyQueryExecutor;
         public readonly DbSet<TEntity> QueryExecutor;
 
+        public static readonly string AccountMismatchErrorString = "Account mismatch. Please report this to info.palavy@gmail.com";
 
         public CancellationToken CancellationToken => CancellationTokenTransport.CancellationToken;
         public string AccountId => AccountIdTransport.AccountId;
@@ -83,12 +81,12 @@ namespace Palavyr.Core.Stores
             {
                 if (((IHaveAccountId)entity).AccountId != AccountId)
                 {
-                    throw new DomainException("Account mismatch. Please report this to info.palavy@gmail.com");
+                    throw new AccountMisMatchException("Account mismatch. Please report this to info.palavy@gmail.com");
                 }
             }
         }
 
-        private void AssertAccountIsCorrect(TEntity[] entities)
+        private void AssertAccountIsCorrect(IEnumerable<TEntity> entities)
         {
             foreach (var entity in entities)
             {
@@ -108,7 +106,8 @@ namespace Palavyr.Core.Stores
             return entityEntry.Entity;
         }
 
-        public async Task CreateMany(TEntity[] entities)
+
+        public async Task CreateMany(IEnumerable<TEntity> entities)
         {
             foreach (var entity in entities)
             {
@@ -127,7 +126,7 @@ namespace Palavyr.Core.Stores
 
         public async Task<TEntity> Get(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            var entity = await ReadonlyQueryExecutor.WhereWorking(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
+            var entity = await ReadonlyQueryExecutor.CustomWhere(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
             if (entity is null)
             {
                 throw new EntityNotFoundException("Entity not found");
@@ -136,47 +135,28 @@ namespace Palavyr.Core.Stores
             return entity;
         }
 
-        public async Task<TEntity> Get(int id, Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            var entity = await ReadonlyQueryExecutor.WhereWorking(id.ToString(), propertySelectorExpression).SingleAsync(CancellationToken);
-            return entity;
-        }
-
         public async Task<TEntity> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            return await ReadonlyQueryExecutor.WhereWorking(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
+            return await ReadonlyQueryExecutor.CustomWhere(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
         }
 
-        public async Task<List<TEntity>> GetMany(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
+        public async Task<List<TEntity>> GetMany(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            return await ReadonlyQueryExecutor.WhereWorking(ids, propertySelectorExpression).ToListAsync(CancellationToken);
-        }
+            // A hack until I figure out how to property customize CustomWhere with multiple Ids... shouldn't be that difficult...
+            var result = new List<TEntity>();
+            foreach (var id in ids)
+            {
+                var entities = await ReadonlyQueryExecutor.CustomWhere(id, propertySelectorExpression).ToListAsync(CancellationToken);
+                result.AddRange(entities);
+            }
 
-        public async Task<List<TEntity>> GetMany(List<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            return await ReadonlyQueryExecutor.WhereWorking(ids.ToArray(), propertySelectorExpression).ToListAsync(CancellationToken);
-        }
-
-
-        public Task<List<TEntity>> GetMany(int[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            var fieldName = propertySelectorExpression.GetMember().Name;
-            return ReadonlyQueryExecutor
-                .Where(x => ids.Contains((int)x.GetType().GetProperty(fieldName).GetValue(x)))
-                .ToListAsync(CancellationToken);
+            return result;
         }
 
         public async Task<List<TEntity>> GetMany(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            var result = await ReadonlyQueryExecutor.WhereWorking(id, propertySelectorExpression).ToListAsync(CancellationToken);
+            var result = await ReadonlyQueryExecutor.CustomWhere(id, propertySelectorExpression).ToListAsync(CancellationToken);
             return result;
-        }
-
-        public async Task<List<TEntity>> GetMany(int id, Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            return await ReadonlyQueryExecutor
-                .WhereWorking(id.ToString(), propertySelectorExpression)
-                .ToListAsync(CancellationToken);
         }
 
         public async Task<TEntity[]> GetAll()
@@ -184,41 +164,13 @@ namespace Palavyr.Core.Stores
             return await ReadonlyQueryExecutor.ToArrayAsync(CancellationToken);
         }
 
-        public async Task<TEntity> GetDeep(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            var transientQueryable = ChooseContext(contextProvider)
-                .Set<TEntity>()
-                .AsNoTracking();
-
-            if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
-            {
-                transientQueryable = transientQueryable.Where(x => ((IHaveAccountId)x).AccountId == AccountId);
-            }
-
-            transientQueryable
-                .WhereWorking(id, propertySelectorExpression)
-                .Include(((IQueryable<object>)ChooseContext(contextProvider)).GetIncludePaths((IEntityType)typeof(TEntity)));
-
-            return await transientQueryable.SingleAsync(CancellationToken);
-        }
-
-
-        public async Task<TEntity[]> GetAllDeep()
-        {
-            var transientQueryable = ChooseContext(contextProvider)
-                .Set<TEntity>()
-                .AsNoTracking();
-            if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
-            {
-                transientQueryable = transientQueryable.Where(x => ((IHaveAccountId)x).AccountId == AccountId);
-            }
-
-            transientQueryable = transientQueryable.Include(((IQueryable<object>)ChooseContext(contextProvider)).GetIncludePaths((IEntityType)typeof(TEntity)));
-            return await transientQueryable.ToArrayAsync(CancellationToken);
-        }
-
         public async Task<TEntity> Update(TEntity entity)
         {
+            if (entity.Id is null)
+            {
+                throw new InvalidOperationException("Cannot update entities that are not referenced by their primary Id key");
+            }
+
             await Task.CompletedTask;
             AssertAccountIsCorrect(entity);
             var entityEntry = QueryExecutor.Update(entity);
@@ -227,30 +179,29 @@ namespace Palavyr.Core.Stores
 
         public async Task Delete(TEntity entity)
         {
-            await Task.CompletedTask;
             AssertAccountIsCorrect(entity);
-            QueryExecutor.Remove(entity);
+            await Delete(new[] { entity });
         }
 
         public async Task Delete(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            var entities = await QueryExecutor.WhereWorking(id, propertySelectorExpression).ToListAsync(CancellationToken);
-            QueryExecutor.RemoveRange(entities);
+            var entities = await QueryExecutor.CustomWhere(id, propertySelectorExpression).ToListAsync(CancellationToken);
+            await Delete(entities);
         }
 
-        public async Task Delete(TEntity[] entities)
+        public async Task Delete(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression)
+        {
+            var entities = await GetMany(ids, propertySelectorExpression);
+            await Delete(entities);
+        }
+
+        public async Task Delete(IEnumerable<TEntity> entities)
         {
             await Task.CompletedTask;
             AssertAccountIsCorrect(entities);
             QueryExecutor.RemoveRange(entities);
         }
 
-        public async Task Delete(string[] ids, Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            var entities = await GetMany(ids, propertySelectorExpression);
-            AssertAccountIsCorrect(entities.ToArray());
-            QueryExecutor.RemoveRange(entities);
-        }
 
         public IQueryable<TEntity> Query()
         {
@@ -271,70 +222,42 @@ namespace Palavyr.Core.Stores
         {
             return QueryExecutor.AsNoTracking();
         }
-    }
-
-    public static class BorrowedExtensionMethods
-    {
-        // I don't really understand this extension method. I'm not sure why this works or why it needs to be written this way.
-        // my general gist is that it is a more literal query written with SQL-like syntax via these EF Core functions
-
-        public static IQueryable<TEntity> WhereWorking<TEntity>(
-            this IQueryable<TEntity> query,
-            string id,
-            Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            if (string.IsNullOrEmpty(id) || !(propertySelectorExpression.Body is MemberExpression memberExpression))
-            {
-                return query;
-            }
-
-            // get method info for EF.Functions.Like
-            var likeMethod = typeof(DbFunctionsExtensions).GetMethod(
-                nameof(DbFunctionsExtensions.Like), new[]
-                {
-                    typeof(DbFunctions),
-                    typeof(string),
-                    typeof(string)
-                });
-            var searchValueConstant = Expression.Constant($"%{id}%");
-            var dbFunctionsConstant = Expression.Constant(EF.Functions);
-            var propertyInfo = typeof(TEntity).GetProperty(memberExpression.Member.Name);
-            var parameterExpression = Expression.Parameter(typeof(TEntity));
-            var propertyExpression = Expression.Property(parameterExpression, propertyInfo);
 
 
-            var callLikeExpression = Expression.Call(likeMethod, dbFunctionsConstant, propertyExpression, searchValueConstant);
-            var lambda = Expression.Lambda<Func<TEntity, bool>>(callLikeExpression, parameterExpression);
-            return query.Where(lambda);
-        }
+        // public async Task<TEntity> GetDeep(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
+        // {
+        //     var transientQueryable = ChooseContext(contextProvider)
+        //         .Set<TEntity>()
+        //         .AsNoTracking();
+        //
+        //     if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
+        //     {
+        //         transientQueryable = transientQueryable.Where(x => ((IHaveAccountId)x).AccountId == AccountId);
+        //     }
+        //
+        //     transientQueryable
+        //         .CustomWhere(id, propertySelectorExpression)
+        //         .Include(((IQueryable<object>)ChooseContext(contextProvider)).GetIncludePaths((IEntityType)typeof(TEntity)));
+        //
+        //     return await transientQueryable.SingleAsync(CancellationToken);
+        // }
 
-        public static IQueryable<TEntity> WhereWorking<TEntity>(
-            this IQueryable<TEntity> query,
-            string[] ids,
-            Expression<Func<TEntity, string>> propertySelectorExpression)
-        {
-            if (ids.Length == 0 || !(propertySelectorExpression.Body is MemberExpression memberExpression))
-            {
-                return query;
-            }
 
-            // get method info for EF.Functions.Like
-            var likeMethod = typeof(DbFunctionsExtensions).GetMethod(
-                nameof(DbFunctionsExtensions.Like), new[]
-                {
-                    typeof(DbFunctions),
-                    typeof(string),
-                    typeof(string)
-                });
-            var searchValueConstant = Expression.Constant($"%{string.Join(",", ids)}%");
-            var dbFunctionsConstant = Expression.Constant(EF.Functions);
-            var propertyInfo = typeof(TEntity).GetProperty(memberExpression.Member.Name);
-            var parameterExpression = Expression.Parameter(typeof(TEntity));
-            var propertyExpression = Expression.Property(parameterExpression, propertyInfo);
-
-            var callLikeExpression = Expression.Call(likeMethod, dbFunctionsConstant, propertyExpression, searchValueConstant);
-            var lambda = Expression.Lambda<Func<TEntity, bool>>(callLikeExpression, parameterExpression);
-            return query.Where(lambda);
-        }
+        // public async Task<TEntity[]> GetAllDeep()
+        // {
+        //     var transientQueryable = ChooseContext(contextProvider)
+        //         .Set<TEntity>()
+        //         .AsNoTracking();
+        //     if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
+        //     {
+        //         transientQueryable = transientQueryable.Where(x => ((IHaveAccountId)x).AccountId == AccountId);
+        //     }
+        //
+        //     var context = (IQueryable<object>)transientQueryable;
+        //
+        //     var pathTypes = (IEntityType)typeof(TEntity);
+        //     transientQueryable = transientQueryable.Include(context.GetIncludePaths(pathTypes));
+        //     return await transientQueryable.ToArrayAsync(CancellationToken);
+        // }
     }
 }
