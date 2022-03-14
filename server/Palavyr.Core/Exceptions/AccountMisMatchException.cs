@@ -4,7 +4,6 @@ namespace Palavyr.Core.Exceptions
 {
     public class AccountMisMatchException : Exception
     {
-        public string Message { get; set; } = "";
 
         public AccountMisMatchException()
         {
@@ -12,7 +11,6 @@ namespace Palavyr.Core.Exceptions
 
         public AccountMisMatchException(string? message) : base(message)
         {
-            Message = message;
         }
     }
 }

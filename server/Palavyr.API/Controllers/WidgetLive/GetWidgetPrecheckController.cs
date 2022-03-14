@@ -18,13 +18,8 @@ namespace Palavyr.API.Controllers.WidgetLive
         private readonly IMediator mediator;
         public const string Route = "widget/pre-check";
 
-        private readonly IWidgetStatusChecker widgetStatusChecker;
-        private ILogger<GetWidgetPreCheckController> logger;
-        private readonly IAccountIdTransport accountIdTransport;
 
-        public GetWidgetPreCheckController(
-            IMediator mediator
-        )
+        public GetWidgetPreCheckController(IMediator mediator)
         {
             this.mediator = mediator;
         }

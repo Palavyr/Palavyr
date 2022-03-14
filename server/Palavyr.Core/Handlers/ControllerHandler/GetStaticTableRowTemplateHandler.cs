@@ -17,6 +17,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetStaticTableRowTemplateResponse> Handle(GetStaticTableRowTemplateRequest request, CancellationToken cancellationToken)
         {
+            await Task.CompletedTask;
             return new GetStaticTableRowTemplateResponse(StaticTableRow.CreateStaticTableRowTemplate(int.Parse(request.TableId), request.IntentId, accountIdTransport.AccountId));
 
         }

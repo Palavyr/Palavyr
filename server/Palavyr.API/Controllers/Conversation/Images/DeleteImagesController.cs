@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,10 @@ using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.API.Controllers.Conversation.Images
 {
+    [Obsolete]
     public class DeleteImagesController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        private readonly IFileAssetDeleter fileAssetDeleter;
         private const string Route = "images";
 
         public DeleteImagesController(IMediator mediator)

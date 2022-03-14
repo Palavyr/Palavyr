@@ -17,6 +17,7 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 
         public async Task Handle(PlanUpdatedEvent notification, CancellationToken cancellationToken)
         {
+            await Task.CompletedTask;
             var planUpdate = notification.plan;
             logger.LogDebug("Plan Successfully Updated");
             logger.LogDebug(planUpdate.Object);

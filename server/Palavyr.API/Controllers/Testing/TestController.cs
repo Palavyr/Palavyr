@@ -21,6 +21,7 @@ namespace Palavyr.API.Controllers.Testing
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IReadOnlyCollection<string>> Test()
         {
+            await Task.CompletedTask;
             var testData = testDataProvider.ProvideData();
             return testData;
         }

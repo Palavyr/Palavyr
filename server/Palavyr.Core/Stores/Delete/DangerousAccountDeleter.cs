@@ -104,7 +104,8 @@ namespace Palavyr.Core.Stores.Delete
 
         internal virtual async Task DeleteFileAssets()
         {
-            var fileAssetIds = await dashContext.FileAssets
+            var fileAssetIds = await dashContext
+                .FileAssets
                 .Where(row => row.AccountId == AccountId)
                 .Select(asset => asset.FileId)
                 .ToArrayAsync(CancellationToken);
@@ -128,20 +129,13 @@ namespace Palavyr.Core.Stores.Delete
 
             DbContext context;
             var name = typeof(TContext).Name;
-            switch (name)
+            context = name switch
             {
-                case "DashContext":
-                    context = dashContext;
-                    break;
-                case "ConvoContext":
-                    context = convoContext;
-                    break;
-                case "AccountsContext":
-                    context = accountsContext;
-                    break;
-                default:
-                    throw new Exception("Context not found");
-            }
+                "DashContext" => dashContext,
+                "ConvoContext" => convoContext,
+                "AccountsContext" => accountsContext,
+                _ => throw new Exception("Context not found")
+            };
 
             if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
             {

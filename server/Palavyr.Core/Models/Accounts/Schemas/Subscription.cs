@@ -5,8 +5,6 @@ namespace Palavyr.Core.Models.Accounts.Schemas
 {
     public class Subscription : Entity, IHaveAccountId
     {
-        [Key]
-        public int? Id { get; set; }
         public string AccountId { get; set; }
         public string ApiKey { get; set; }
         public int NumAreas { get; set; }

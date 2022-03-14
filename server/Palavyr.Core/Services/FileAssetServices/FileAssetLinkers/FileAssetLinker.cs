@@ -42,6 +42,7 @@ namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
 
         public async Task LinkToIntent(string fileId, string intentId)
         {
+            await Task.CompletedTask;
             throw new System.NotImplementedException();
         }
 

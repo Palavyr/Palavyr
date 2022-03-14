@@ -85,6 +85,7 @@ namespace Test.Common
         public async Task Delete(TEntity entity)
         {
             await inner.Delete(entity);
+            await unitOfWorkContextProvider.DangerousCommitAllContexts();
         }
 
         public async Task Delete(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
@@ -96,6 +97,7 @@ namespace Test.Common
         public async Task Delete(IEnumerable<TEntity> entities)
         {
             await inner.Delete(entities);
+            await unitOfWorkContextProvider.DangerousCommitAllContexts();
         }
 
         public IQueryable<TEntity> Query()

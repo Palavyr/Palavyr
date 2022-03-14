@@ -78,6 +78,7 @@ namespace Palavyr.API.CustomMiddleware
 
         public async Task FormatErrors(HttpContext context, string message, int statusCode)
         {
+            await Task.CompletedTask;
             // var headers = context.Response.Headers;
             context.Response.Clear();
             context.Response.StatusCode = StatusCodes.Status400BadRequest;

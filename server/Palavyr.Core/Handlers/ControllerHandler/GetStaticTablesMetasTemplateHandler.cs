@@ -20,6 +20,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetStaticTablesMetasTemplateResponse> Handle(GetStaticTablesMetasTemplateRequest request, CancellationToken cancellationToken)
         {
+            await Task.CompletedTask;
             return new GetStaticTablesMetasTemplateResponse(StaticTablesMeta.CreateNewMetaTemplate(request.IntentId, accountIdTransport.AccountId));
         }
     }

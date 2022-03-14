@@ -1,15 +1,10 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Conversation.Schemas
 {
-    // TODO: Rename to ConversationHistory
     public class ConversationHistory : Entity, IHaveAccountId
     {
-        [Key]
-        public int? Id { get; set; }
-
         public string ConversationId { get; set; }
         public string Prompt { get; set; }
         public string UserResponse { get; set; }

@@ -35,8 +35,10 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public readonly string SessionId = Guid.NewGuid().ToString();
         public readonly string EmailAddress = $"{Guid.NewGuid()}@gmail.com";
         public readonly string Password = Guid.NewGuid().ToString();
-        
+
         public readonly Lazy<AutofacServiceProvider> ServiceProvider;
+
+        protected internal virtual bool SaveStoreActionsImmediately => true;
 
 
         public ITestOutputHelper TestOutputHelper { get; set; }
@@ -84,7 +86,11 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
             builder.RegisterType<CreateS3TempFile>().As<ICreateS3TempFile>();
             UseFakeStripeCustomerService(builder);
 
-            builder.RegisterGenericDecorator(typeof(IntegrationTestEntityStoreEagerSavingDecorator<>), typeof(IEntityStore<>));
+            if (SaveStoreActionsImmediately)
+            {
+                builder.RegisterGenericDecorator(typeof(IntegrationTestEntityStoreEagerSavingDecorator<>), typeof(IEntityStore<>));
+            }
+
             builder.RegisterGenericDecorator(typeof(IntegrationTestMediatorNotificationHandlerDecorator<>), typeof(INotificationHandler<>));
             builder.RegisterGenericDecorator(typeof(IntegrationTestMediatorRequestHandlerDecorator<,>), typeof(IRequestHandler<,>));
 

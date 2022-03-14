@@ -60,6 +60,7 @@ namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
 
         public async Task<Account.PlanTypeEnum> GetPlanTypeEnum(Subscription subscription)
         {
+            await Task.CompletedTask;
             var priceDetails = GetPriceDetails(subscription);
             var productId = GetProductId(priceDetails);
             var planTypeEnum = productRegistry.GetPlanTypeEnum(productId);
@@ -68,6 +69,7 @@ namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
 
         public async Task<DateTime> GetBufferedEndTime(Subscription subscription)
         {
+            await Task.CompletedTask;
             var priceDetails = GetPriceDetails(subscription);
             var paymentInterval = GetPaymentInterval(priceDetails);
             var paymentIntervalEnum = paymentInterval.GetPaymentIntervalEnum();

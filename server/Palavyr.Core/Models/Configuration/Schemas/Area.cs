@@ -42,10 +42,10 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 
         public static Area CreateNewArea(string areaName, string accountId, string emailAddress, bool emailIsVerified)
         {
-            var areaId = Guid.NewGuid().ToString();
+            var intentId = Guid.NewGuid().ToString();
             return new Area
             {
-                AreaIdentifier = areaId,
+                AreaIdentifier = intentId,
                 AreaName = areaName,
                 Prologue = "",
                 Epilogue = "",
@@ -53,7 +53,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 Subject = "Thank you for reaching out!",
                 FallbackEmailTemplate = "<h2>Fallback email</h2>",
                 FallbackSubject = "Fallback Subject",
-                ConversationNodes = ConversationNode.CreateDefaultRootNode(areaId, accountId),
+                ConversationNodes = ConversationNode.CreateDefaultRootNode(intentId, accountId),
                 StaticTablesMetas = new List<StaticTablesMeta>(),
                 IsEnabled = false,
                 AreaDisplayTitle = areaName,

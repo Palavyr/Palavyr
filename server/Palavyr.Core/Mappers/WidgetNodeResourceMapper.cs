@@ -23,6 +23,7 @@ namespace Palavyr.Core.Mappers
 
         public async Task<WidgetNodeResource> Map(ConversationNode @from, CancellationToken cancellationToken)
         {
+            await Task.CompletedTask;
             return new WidgetNodeResource
             {
                 AreaIdentifier = @from.AreaIdentifier,

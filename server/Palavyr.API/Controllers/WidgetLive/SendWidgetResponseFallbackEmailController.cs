@@ -14,16 +14,12 @@ namespace Palavyr.API.Controllers.WidgetLive
     public class SendWidgetResponseFallbackEmailController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        private readonly IResponseEmailSender responseEmailSender;
 
         public const string Route = "widget/area/{areaId}/email/fallback/send";
 
-        public SendWidgetResponseFallbackEmailController(
-            IMediator mediator
-        )
+        public SendWidgetResponseFallbackEmailController(IMediator mediator)
         {
             this.mediator = mediator;
-            this.responseEmailSender = responseEmailSender;
         }
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]

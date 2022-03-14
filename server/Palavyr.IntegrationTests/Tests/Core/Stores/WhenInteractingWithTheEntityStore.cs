@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -11,7 +10,6 @@ using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Stores;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
-using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
@@ -147,7 +145,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
                 var contextProvider = ResolveType<IUnitOfWorkContextProvider>();
                 await contextProvider.DangerousCommitAllContexts();
 
-                Should.Throw<EntityNotFoundException>(async () => await store.Get(AccountId, s => s.AccountId));
+                await Should.ThrowAsync<EntityNotFoundException>(async () => await store.Get(AccountId, s => s.AccountId));
             }
 
             [Fact]
@@ -159,7 +157,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
                 await store.DangerousRawQuery().AddAsync(newEntity);
                 await contextProvider.DangerousCommitAllContexts();
 
-                Should.Throw<EntityNotFoundException>(async () => await store.Get(MisMatchedAccount, s => s.AccountId));
+                await Should.ThrowAsync<EntityNotFoundException>(async () => await store.Get(MisMatchedAccount, s => s.AccountId));
             }
         }
 
@@ -315,6 +313,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
                 entity.ApiKey = "woooow";
                 entity.Id = null;
                 await Should.ThrowAsync<InvalidOperationException>(async () => await store.Update(entity));
+            }
         }
 
         public class AndDeletingEntities : RealDatabaseIntegrationFixture
@@ -326,25 +325,94 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             [Fact]
             public async Task SingleEntityIsDeleted()
             {
-                throw new NotImplementedException();
+                // arrange
+                var store = ResolveStore<Area>();
+                var entity = await store.Create(Area.CreateNewArea(A.RandomName(), AccountId, EmailAddress, true));
+
+                await store.Delete(entity);
+
+                var result = await store.GetOrNull(entity.AreaIdentifier, x => x.AreaIdentifier);
+                result.ShouldBeNull();
+            }
+
+            [Fact]
+            public async Task AMisMatchErrorIsThrown()
+            {
+                // arrange
+                var store = ResolveStore<Area>();
+                var context = ResolveType<IUnitOfWorkContextProvider>();
+
+                var accountA = A.RandomId();
+                var newA = Area.CreateNewArea(A.RandomName(), accountA, EmailAddress, true);
+                await store.DangerousRawQuery().AddAsync(newA);
+                await context.DangerousCommitAllContexts();
+
+                await Should.ThrowAsync<AccountMisMatchException>(async () => await store.Delete(newA));
             }
 
             [Fact]
             public async Task SingleEntityIsDeletedById()
             {
-                throw new NotImplementedException();
+                // arrange
+                var store = ResolveStore<Account>();
+                var newEntity = Account.CreateAccount(EmailAddress, Password, AccountId, ApiKey);
+                await store.Create(newEntity);
+
+                // act
+                await store.Delete(newEntity.AccountId, s => s.AccountId);
+
+                var result = await store.GetOrNull(AccountId, x => x.AccountId);
+                result.ShouldBeNull();
             }
 
             [Fact]
             public async Task MultipleEntitiesAreDeletedByIds()
             {
-                throw new NotImplementedException();
+                // arrange
+                var store = ResolveStore<Area>();
+                var context = ResolveType<IUnitOfWorkContextProvider>();
+
+                var accountA = A.RandomId();
+                var accountB = A.RandomId();
+                var newA = Area.CreateNewArea(A.RandomName(), accountA, EmailAddress, true);
+                var newB = Area.CreateNewArea(A.RandomName(), accountB, EmailAddress, true);
+
+                await store.DangerousRawQuery().AddAsync(newA);
+                await store.DangerousRawQuery().AddAsync(newB);
+                await context.DangerousCommitAllContexts();
+
+
+                // act
+                await store.Delete(new[] { accountA, accountB }, s => s.AccountId);
+
+                // Assert
+                var result = await store.GetOrNull(accountA, x => x.AccountId);
+                result.ShouldBeNull();
+
+                var exists = await store.GetOrNull(accountB, x => x.AccountId);
+                exists.ShouldBeNull();
             }
 
             [Fact]
             public async Task MultipleEntitiesAreDeleted()
             {
-                throw new NotImplementedException();
+                // arrange
+                var store = ResolveStore<Area>();
+
+                var newA = Area.CreateNewArea(A.RandomName(), AccountId, EmailAddress, true);
+                var newB = Area.CreateNewArea(A.RandomName(), AccountId, EmailAddress, true);
+
+                await store.CreateMany(new[] { newA, newB });
+
+                // act
+                await store.Delete(new[] { newA, newB });
+
+                // Assert
+                var result = await store.GetOrNull(newA.AreaIdentifier, x => x.AreaIdentifier);
+                result.ShouldBeNull();
+
+                var exists = await store.GetOrNull(newB.AreaIdentifier, x => x.AreaIdentifier);
+                exists.ShouldBeNull();
             }
         }
     }

@@ -5,8 +5,6 @@ namespace Palavyr.Core.Models.Accounts.Schemas
 {
     public class EmailVerification : Entity, IHaveAccountId
     {
-        [Key]
-        public int? Id { get; set; }
         public string AuthenticationToken { get; set; } = null!;
         public string EmailAddress { get; set; } = null!;
         public string AccountId { get; set; } = null!;
