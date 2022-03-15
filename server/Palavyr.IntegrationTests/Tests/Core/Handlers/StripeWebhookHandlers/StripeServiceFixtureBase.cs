@@ -17,18 +17,12 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
         public DateTime CreatedAt = DateTime.Now;
 
 
-        public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
-        {
-            return base.CustomizeContainer(builder);
-        }
-
-
-        public override Task InitializeAsync()
+        public override async Task InitializeAsync()
         {
             SetAccountIdTransport();
             SetCancellationToken();
-            this.SetupLyteAccount();
-            return base.InitializeAsync();
+            await this.SetupLyteAccount();
+            await base.InitializeAsync();
         }
     }
 }

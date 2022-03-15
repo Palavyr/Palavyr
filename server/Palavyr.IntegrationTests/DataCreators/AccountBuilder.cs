@@ -71,7 +71,7 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
-        public DefaultAccountAndSessionBuilder WithApiKey(string apiKey)
+        public DefaultAccountAndSessionBuilder WithApiKey(string? apiKey)
         {
             this.apikey = apiKey;
             return this;
@@ -135,13 +135,15 @@ namespace Palavyr.IntegrationTests.DataCreators
             var hasUpgraded = this.hasUpgrade ?? false;
             var planT = this.planType ?? Account.PlanTypeEnum.Free;
             var periodEnd = this.currentPeriodEnd ?? DateTime.UtcNow;
-
+            var apiKey = this.apikey ?? test.ApiKey;
+            
+            
             var defaultAccount = new Account
             {
                 EmailAddress = email,
                 Password = pass,
                 AccountId = id,
-                ApiKey = test.ApiKey,
+                ApiKey = apiKey,
                 AccountType = accType,
                 StripeCustomerId = custId,
                 PhoneNumber = null,

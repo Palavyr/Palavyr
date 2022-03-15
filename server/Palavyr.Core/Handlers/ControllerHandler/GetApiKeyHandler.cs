@@ -20,7 +20,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetApiKeyResponse> Handle(GetApiKeyRequest request, CancellationToken cancellationToken)
         {
             var account = await accountStore.GetAccount();
-            if (account.ApiKey == null) throw new DomainException("No Api Key Found For this account");
+            if (string.IsNullOrEmpty(account.ApiKey) || string.IsNullOrWhiteSpace(account.ApiKey)) throw new DomainException("No Api Key Found For this account");
             return new GetApiKeyResponse(account.ApiKey);
         }
     }

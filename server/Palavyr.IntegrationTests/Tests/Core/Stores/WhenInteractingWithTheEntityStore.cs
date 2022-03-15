@@ -21,7 +21,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
     {
         public static readonly string MisMatchedAccount = "Mismatched-Account-Id";
 
-        public class AndCreatingAnEntity : RealDatabaseIntegrationFixture
+        public class AndCreatingAnEntity : InMemoryIntegrationFixture
         {
             [Fact]
             public async Task Success()
@@ -53,7 +53,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             }
         }
 
-        public class AndCreatingMany : RealDatabaseIntegrationFixture
+        public class AndCreatingMany : InMemoryIntegrationFixture
         {
             [Fact]
             public async Task Success()
@@ -106,7 +106,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             }
         }
 
-        public class AndGettingASingleEntity : RealDatabaseIntegrationFixture
+        public class AndGettingASingleEntity : InMemoryIntegrationFixture
         {
             public AndGettingASingleEntity(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
             {
@@ -162,7 +162,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
         }
 
 
-        public class AndGettingManyEntities : RealDatabaseIntegrationFixture
+        public class AndGettingManyEntities : InMemoryIntegrationFixture
         {
             public AndGettingManyEntities(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
             {
@@ -250,7 +250,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             }
         }
 
-        public class AndGettingAllEntities : RealDatabaseIntegrationFixture
+        public class AndGettingAllEntities : InMemoryIntegrationFixture
         {
             public AndGettingAllEntities(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
             {
@@ -280,7 +280,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             }
         }
 
-        public class AndUpdatingAnEntity : RealDatabaseIntegrationFixture
+        public class AndUpdatingAnEntity : InMemoryIntegrationFixture
         {
             public AndUpdatingAnEntity(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
             {
@@ -307,16 +307,11 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             {
                 var newEntity = Account.CreateAccount(EmailAddress, Password, AccountId, ApiKey);
                 var store = ResolveStore<Account>();
-
-                // act
-                var entity = await store.Create(newEntity);
-                entity.ApiKey = "woooow";
-                entity.Id = null;
-                await Should.ThrowAsync<InvalidOperationException>(async () => await store.Update(entity));
+                await Should.ThrowAsync<InvalidOperationException>(async () => await store.Update(newEntity));
             }
         }
 
-        public class AndDeletingEntities : RealDatabaseIntegrationFixture
+        public class AndDeletingEntities : InMemoryIntegrationFixture
         {
             public AndDeletingEntities(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
             {

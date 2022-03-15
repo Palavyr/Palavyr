@@ -48,6 +48,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 
         private static void AddRealDatabaseContexts(IServiceCollection services)
         {
+            // services.AddSingleton<DBTracker>();
             services.AddDbContext<AccountsContext>(
                 opt =>
                 {
@@ -77,10 +78,15 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             var dashContext = scopedServices.GetService<DashContext>();
             var accountContext = scopedServices.GetService<AccountsContext>();
             var convoContext = scopedServices.GetService<ConvoContext>();
+            // var tracker = scopedServices.GetService<DBTracker>();
 
-            // accountContext.Database.EnsureDeleted();
-            // dashContext.Database.EnsureDeleted();
-            // convoContext.Database.EnsureDeleted();
+            // if (!tracker.HasBeenReCreated)
+            // {
+            //     accountContext.Database.EnsureDeleted();
+            //     dashContext.Database.EnsureDeleted();
+            //     convoContext.Database.EnsureDeleted();
+            //     tracker.HasBeenReCreated = true;
+            // }
 
             accountContext.Database.EnsureCreated();
             dashContext.Database.EnsureCreated();
@@ -100,6 +106,8 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             var accountDbName = "TestAccountDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
             var dashDbName = "TestDashDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
             var convoDbName = "TestConvoDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
+
+            // services.AddSingleton<DBTracker>();
 
             services.AddDbContext<AccountsContext>(
                 opt =>
@@ -157,7 +165,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                 var accountTransport = new AccountIdTransport(account.AccountId);
                 var assetStore = new EntityStore<FileAsset>(contextProvider, accountTransport, cancellationTokenTransport);
                 var decoratedStore = new IntegrationTestEntityStoreEagerSavingDecorator<FileAsset>(assetStore, contextProvider);
-                
+
                 var deleter = new IntegrationTestFileDelete(
                     decoratedStore,
                     accountTransport,
@@ -179,4 +187,9 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             }
         }
     }
+
+    // public sealed class DBTracker
+    // {
+    //     public bool HasBeenReCreated { get; set; }
+    // }
 }
