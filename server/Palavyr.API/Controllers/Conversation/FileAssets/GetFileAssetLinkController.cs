@@ -1,11 +1,13 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
 
-namespace Palavyr.API.Controllers.Conversation.Images
+namespace Palavyr.API.Controllers.Conversation.FileAssets
 {
+    [Obsolete]
     public class GetImageFileLinkController : PalavyrBaseController
     {
         private readonly IMediator mediator;

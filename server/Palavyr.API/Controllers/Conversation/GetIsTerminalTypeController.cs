@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Palavyr.Core.Handlers.ControllerHandler;
 
 namespace Palavyr.API.Controllers.Conversation

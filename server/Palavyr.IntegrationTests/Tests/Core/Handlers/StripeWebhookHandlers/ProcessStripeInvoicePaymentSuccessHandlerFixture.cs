@@ -7,7 +7,7 @@ using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.DataCreators;
+using Palavyr.IntegrationTests.DataCreators.StripeBuilders;
 using Palavyr.IntegrationTests.Tests.Mocks;
 using Test.Common.ApprovalTests;
 using Xunit;

@@ -13,9 +13,9 @@ namespace Palavyr.Core.Services.FileAssetServices
     public class NodeFileAssetSaver : INodeFileAssetSaver
     {
         private readonly IFileAssetSaver fileAssetSaver;
-        private readonly IFileAssetLinker<FileAssetLinker> linker;
+        private readonly IFileAssetLinker<NodeLinker> linker;
 
-        public NodeFileAssetSaver(IFileAssetSaver fileAssetSaver, IFileAssetLinker<FileAssetLinker> linker)
+        public NodeFileAssetSaver(IFileAssetSaver fileAssetSaver, IFileAssetLinker<NodeLinker> linker)
         {
             this.fileAssetSaver = fileAssetSaver;
             this.linker = linker;

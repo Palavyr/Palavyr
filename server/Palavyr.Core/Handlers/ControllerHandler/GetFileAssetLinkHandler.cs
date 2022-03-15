@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -7,12 +8,13 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class GetImageFileLinkHandler : IRequestHandler<GetImageFileLinkRequest, GetImageFileLinkResponse>
+    [Obsolete]
+    public class GetFileAssetLinkHandler : IRequestHandler<GetImageFileLinkRequest, GetImageFileLinkResponse>
     {
         private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly ILinkCreator linkCreator;
 
-        public GetImageFileLinkHandler(
+        public GetFileAssetLinkHandler(
             IEntityStore<FileAsset> fileAssetStore,
             ILinkCreator linkCreator)
         {

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -6,27 +7,27 @@ using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Resources.Responses;
 
-namespace Palavyr.API.Controllers.Conversation.Images
+namespace Palavyr.API.Controllers.Conversation.FileAssets
 {
-    public class SaveSingleImageController : PalavyrBaseController
+    public class UploadFileAssetsController : PalavyrBaseController
     {
         private readonly IMediator mediator;
+        private const string Route = "file-assets/upload";
 
-        private const string Route = "images/save-one";
-
-        public SaveSingleImageController(IMediator mediator)
+        public UploadFileAssetsController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
         [HttpPost(Route)]
         [ActionName("Decode")]
-        public async Task<FileLink[]> SaveSingle(
+        public async Task<FileLink[]> SaveMany(
+
             [FromForm(Name = "files")]
-            IFormFile imageFile,
+            List<IFormFile> imageFiles,
             CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new SaveSingleImageRequest(imageFile), cancellationToken);
+            var response = await mediator.Send(new UploadFileAssetsRequest(imageFiles), cancellationToken);
             return response.Response;
         }
     }

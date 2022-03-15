@@ -4,7 +4,7 @@ using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Stripe;
 using Test.Common.Random;
 
-namespace Palavyr.IntegrationTests.DataCreators
+namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
 {
     public class StripeInvoiceBuilder
     {

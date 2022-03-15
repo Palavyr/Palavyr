@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks;
-using Palavyr.Core.Common.ExtensionMethods;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.FileAssetServices
@@ -20,14 +18,14 @@ namespace Palavyr.Core.Services.FileAssetServices
             this.fileAssetStore = fileAssetStore;
         }
 
-        public async Task<FileLink[]> RemoveFiles(string[] fileIds)
+        public async Task<IEnumerable<FileAsset>> RemoveFiles(string[] fileIds)
         {
             var fileLinks = await inner.RemoveFiles(fileIds);
             await fileAssetStore.Delete(fileIds, x => x.FileId);
             return fileLinks;
         }
 
-        public async Task<FileLink[]> RemoveFile(string fileId)
+        public async Task<IEnumerable<FileAsset>> RemoveFile(string fileId)
         {
             await fileAssetStore.Delete(fileId, x => x.FileId);
             return await inner.RemoveFile(fileId);
@@ -48,13 +46,13 @@ namespace Palavyr.Core.Services.FileAssetServices
             this.convoNodeStore = convoNodeStore;
         }
 
-        public async Task<FileLink[]> RemoveFiles(string[] fileIds)
+        public async Task<IEnumerable<FileAsset>> RemoveFiles(string[] fileIds)
         {
             await DereferenceFileAssetsFromConvoNodes(fileIds);
             return await fileAssetDeleter.RemoveFiles(fileIds);
         }
 
-        public async Task<FileLink[]> RemoveFile(string fileId)
+        public async Task<IEnumerable<FileAsset>> RemoveFile(string fileId)
         {
             await DereferenceFileAssetsFromConvoNodes(new[] { fileId });
             return await fileAssetDeleter.RemoveFile(fileId);
@@ -72,45 +70,42 @@ namespace Palavyr.Core.Services.FileAssetServices
 
     public interface IFileAssetDeleter
     {
-        Task<FileLink[]> RemoveFiles(string[] fileIds);
-        Task<FileLink[]> RemoveFile(string fileId);
+        Task<IEnumerable<FileAsset>> RemoveFiles(string[] fileIds);
+        Task<IEnumerable<FileAsset>> RemoveFile(string fileId);
     }
 
     public class FileAssetDeleter : IFileAssetDeleter
     {
         private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly ICloudDeleter cloudDeleter;
-        private readonly ILinkCreator linkCreator;
 
         public FileAssetDeleter(
             IEntityStore<FileAsset> fileAssetStore,
-            ICloudDeleter cloudDeleter,
-            ILinkCreator linkCreator
+            ICloudDeleter cloudDeleter
         )
         {
             this.fileAssetStore = fileAssetStore;
             this.cloudDeleter = cloudDeleter;
-            this.linkCreator = linkCreator;
         }
 
-        public async Task<FileLink[]> RemoveFiles(string[] fileIds)
+        public async Task<IEnumerable<FileAsset>> RemoveFiles(string[] fileIds)
         {
             var assets = await fileAssetStore.GetMany(fileIds, asset => asset.FileId);
             await fileAssetStore.Delete(assets.ToArray());
             await cloudDeleter.DeleteMany(assets);
 
             var remainingAssets = await fileAssetStore.GetAll();
-            return await remainingAssets.ToFileLinks(linkCreator);
+            return remainingAssets;
         }
 
-        public async Task<FileLink[]> RemoveFile(string fileId)
+        public async Task<IEnumerable<FileAsset>> RemoveFile(string fileId)
         {
             var asset = await fileAssetStore.Get(fileId, s => s.FileId);
             await fileAssetStore.Delete(asset);
             await cloudDeleter.Delete(asset);
 
             var remainingAssets = await fileAssetStore.GetAll();
-            return await remainingAssets.ToFileLinks(linkCreator);
+            return remainingAssets;
         }
     }
 }

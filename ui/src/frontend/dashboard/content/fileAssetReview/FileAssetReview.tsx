@@ -1,16 +1,15 @@
-import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { CircularProgress, Grid, makeStyles, Table, TableContainer } from "@material-ui/core";
-import { FileLink } from "@Palavyr-Types";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { HeaderStrip } from "@common/components/HeaderStrip";
-import { ImageRecordTableHeader } from "./ImageRecordTableHeader";
-import { ImageRecordTableBody } from "./ImageRecordTableBody";
-import { ImageReviewUpload } from "./ImageReviewUpload";
+import { FileAssetRecordTableHeader } from "./FileAssetRecordTableHeader";
+import { FileAssetRecordTableBody } from "./FileAssetRecordTableBody";
+import { FileAssetUpload } from "./FileAssetUpload";
 import { Align } from "@common/positioning/Align";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { FileAssetResource } from "@Palavyr-Types";
 
 const useStyles = makeStyles(theme => ({
-    image: {
+    display: {
         height: "100%",
         width: "100%",
         borderRadius: "5px",
@@ -20,27 +19,27 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const ImageReview = () => {
+export const FileAssetReview = () => {
     const cls = useStyles();
 
     const { repository, setViewName } = useContext(DashboardContext);
     setViewName("Images");
 
-    const [imageRecords, setImageRecords] = useState<FileLink[] | null>(null);
+    const [fileAssetRecords, setFileAssetRecords] = useState<FileAssetResource[] | null>(null);
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
     const [currentPreview, setCurrentPreview] = useState<string>("");
 
-    const loadImageRecords = useCallback(async () => {
-        const fileLinks = await repository.Configuration.Images.getImages();
-        setImageRecords(fileLinks);
+    const loadFileAssetRecords = useCallback(async () => {
+        const fileAssets = await repository.Configuration.FileAssets.GetFileAssets();
+        setFileAssetRecords(fileAssets);
     }, []);
 
     useEffect(() => {
-        loadImageRecords();
+        loadFileAssetRecords();
     }, []);
 
-    const onImageClick = e => {
+    const onFileAssetClick = e => {
         e.preventDefault();
         window.open(currentPreview, "_blank");
     };
@@ -48,15 +47,22 @@ export const ImageReview = () => {
     return (
         <div style={{ marginBottom: "5rem" }}>
             <div>
-                <HeaderStrip title="Review the images you've uploaded" subtitle="Add or remove stored images. These are accessible within the Palavy designer." />
+                <HeaderStrip title="Review the files you've uploaded" subtitle="Add or remove stored files. These are accessible within the Palavy designer." />
             </div>
-            <ImageReviewUpload setImageRecords={setImageRecords} numImages={imageRecords === undefined || imageRecords === null ? 1 : imageRecords.length} />
+            <FileAssetUpload setFileAssets={setFileAssetRecords} numImages={fileAssetRecords === undefined || fileAssetRecords === null ? 1 : fileAssetRecords.length} />
             <Grid container style={{ width: "100%" }}>
                 <Grid item xs={6}>
                     <TableContainer style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}>
                         <Table>
-                            <ImageRecordTableHeader />
-                            {imageRecords && <ImageRecordTableBody imageRecords={imageRecords} setImageRecords={setImageRecords} setCurrentPreview={setCurrentPreview} setShowSpinner={setShowSpinner} />}
+                            <FileAssetRecordTableHeader />
+                            {fileAssetRecords && (
+                                <FileAssetRecordTableBody
+                                    fileAssetResources={fileAssetRecords}
+                                    setFileAssetResourceRecord={setFileAssetRecords}
+                                    setCurrentPreview={setCurrentPreview}
+                                    setShowSpinner={setShowSpinner}
+                                />
+                            )}
                         </Table>
                     </TableContainer>
                 </Grid>
@@ -70,8 +76,8 @@ export const ImageReview = () => {
                     <div style={{ visibility: showSpinner ? "hidden" : "visible", maxWidth: "100%", margin: "1rem", display: "flex", justifyContent: "center" }}>
                         {currentPreview && (
                             <img
-                                onClick={onImageClick}
-                                className={cls.image}
+                                onClick={onFileAssetClick}
+                                className={cls.display}
                                 key={Date.now()}
                                 src={currentPreview}
                                 onChange={() => setShowSpinner(true)}

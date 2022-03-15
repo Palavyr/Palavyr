@@ -5,7 +5,7 @@ export interface PricingCardBody {
     response: string | React.ReactNode;
     perAreaEmail: string | React.ReactNode;
     enquiriesDashboard: string | React.ReactNode;
-    imageUpload: string | React.ReactNode;
+    fileAssetUpload: string | React.ReactNode;
     emailNotifications: string | React.ReactNode;
     inlineEmailEditor: string | React.ReactNode;
     smsNotifications: string | React.ReactNode;
@@ -21,7 +21,7 @@ export const PricingCardBody = ({
     response,
     perAreaEmail,
     enquiriesDashboard,
-    imageUpload,
+    fileAssetUpload,
     emailNotifications,
     inlineEmailEditor,
     smsNotifications,
@@ -37,7 +37,8 @@ export const PricingCardBody = ({
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="PDF Response" value={response} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Per Intent Email" value={perAreaEmail} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Enquiries Dashboard" value={enquiriesDashboard} />
-            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Image Upload" value={imageUpload} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="File Upload" value={fileAssetUpload
+    } />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Email Notifications" value={emailNotifications} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Inline Email Editor" value={inlineEmailEditor} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="SMS Notifications" value={smsNotifications} />

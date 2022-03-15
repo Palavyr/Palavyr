@@ -2,50 +2,49 @@ import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
 import { Variant } from "@material-ui/core/styles/createTypography";
 import { Align } from "@common/positioning/Align";
-import { cloneDeep } from "lodash";
 import React, { memo, useEffect, useState } from "react";
 
-export interface CustomImageProps {
-    imageLink: string;
-    imageName: string;
+export interface FileAssetDisplayProps {
+    fileAssetLink: string;
+    fileAssetName: string;
     titleVariant?: Variant;
-    imageId: string;
+    fileAssetId: string;
 }
 
 const useStyles = makeStyles((theme) => ({
-    image: {
+    display: {
         height: "100%",
         width: "100%",
         borderRadius: "5px",
     },
 }));
 
-export const CustomImage = memo(({ imageId, imageName, imageLink, titleVariant = "h6" }: CustomImageProps) => {
+export const FileAssetDisplay = memo(({ fileAssetId, fileAssetName, fileAssetLink, titleVariant = "h6" }: FileAssetDisplayProps) => {
     const cls = useStyles();
     const [isLoading, setLoading] = useState<boolean>(true);
     const [bounce, setBounce] = useState<boolean>(false);
     const onImageClick = (e) => {
         e.preventDefault();
-        window.open(imageLink, "_blank");
+        window.open(fileAssetLink, "_blank");
     };
 
     useEffect(() => {
         setBounce(!bounce);
-    }, [imageId]);
+    }, [fileAssetId]);
 
     return (
         <>
             <Typography variant={titleVariant} align="center">
-                {!isLoading && isNullOrUndefinedOrWhitespace(imageLink) ? "No Image" : `${imageName}`}
+                {!isLoading && isNullOrUndefinedOrWhitespace(fileAssetLink) ? "No Image" : `${fileAssetName}`}
             </Typography>
-            {isLoading && imageLink && (
+            {isLoading && fileAssetLink && (
                 <Align>
                     <CircularProgress style={{ padding: ".5rem", margin: "1rem" }} />
                 </Align>
             )}
             <Align>
                 <div style={{ visibility: isLoading ? "hidden" : "visible", maxWidth: "100px", margin: "1rem" }}>
-                    <img onClick={onImageClick} className={cls.image} key={Date.now()} src={imageLink} onChange={() => setLoading(true)} onLoadStart={() => setLoading(true)} onLoad={() => setLoading(false)} />
+                    <img onClick={onImageClick} className={cls.display} key={Date.now()} src={fileAssetLink} onChange={() => setLoading(true)} onLoadStart={() => setLoading(true)} onLoad={() => setLoading(false)} />
                 </div>
             </Align>
         </>

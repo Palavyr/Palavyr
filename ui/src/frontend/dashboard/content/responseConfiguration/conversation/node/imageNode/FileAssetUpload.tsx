@@ -1,6 +1,6 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { Divider, Typography } from "@material-ui/core";
-import { FileLink, SetState } from "@Palavyr-Types";
+import { SetState } from "@Palavyr-Types";
 import { Upload } from "frontend/dashboard/content/responseConfiguration/uploadable/Upload";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
@@ -9,20 +9,19 @@ import { IPalavyrNode } from "@Palavyr-Types";
 import { useNodeInterfaceStyles } from "../../nodeInterfaceStyles";
 import { SelectFromExistingImages } from "./SelectFromExistingImages";
 
-interface ImageUploadProps {
+interface FileAssetUploadProps {
     currentNode: IPalavyrNode;
     nodeId: string;
     closeEditor: () => void;
-    currentImageId: string;
-    setCurrentImageId: SetState<string>;
-    setImageLink: SetState<string>;
+    currentFileAssetId: string;
+    setCurrentFileAssetId: SetState<string>;
+    setFileAssetLink: SetState<string>;
     setImageName: SetState<string>;
     initialState: boolean;
     repository: PalavyrRepository;
-    imageId?: string;
 }
 
-export const ImageUpload = ({ setCurrentImageId, currentNode, nodeId, imageId, closeEditor, currentImageId, setImageLink, setImageName, repository, initialState = false }: ImageUploadProps) => {
+export const NodeFileAssetUpload = ({ setCurrentFileAssetId, currentNode, nodeId, closeEditor, currentFileAssetId, setFileAssetLink, setImageName, repository, initialState = false }: FileAssetUploadProps) => {
     const cls = useNodeInterfaceStyles({});
     const history = useHistory();
     const [uploadModal, setUploadModal] = useState(false);
@@ -38,25 +37,16 @@ export const ImageUpload = ({ setCurrentImageId, currentNode, nodeId, imageId, c
         setUploadModal(!uploadModal);
     };
 
-    const fileSave = async (files: File[]) => {
+    const handleFileSave = async (files: File[]) => {
+        if (files.length == 0) return;
+
         const formData = new FormData();
+        files.forEach((file: File) => formData.append("files", file));
 
-        let result: FileLink[];
-        if ((files.length = 1)) {
-            formData.append("files", files[0]);
-            result = await repository.Configuration.Images.saveSingleImage(formData);
-            setSuccessText("Image Uploaded");
-        } else if (files.length > 1) {
-            files.forEach((file: File) => {
-                formData.append("files", file);
-            });
-            result = await repository.Configuration.Images.saveMultipleImages(formData);
-            setSuccessText("Images Uploaded");
-        } else {
-            return;
-        }
+        const result = await repository.Configuration.FileAssets.UploadFileAssets(formData);
+        setSuccessText("Images Uploaded");
 
-        await repository.Configuration.Images.savePreExistingImage(result[0].fileId, nodeId);
+        await repository.Configuration.FileAssets.LinkFileAssetToNode(result[0].fileId, nodeId);
         setSuccessOpen(true);
         closeEditor();
     };
@@ -68,16 +58,15 @@ export const ImageUpload = ({ setCurrentImageId, currentNode, nodeId, imageId, c
                     <div className={cls.imageBlock}>
                         <SelectFromExistingImages
                             nodeId={nodeId}
-                            imageId={imageId}
                             repository={repository}
-                            setImageId={(imageId: string) => {
+                            setFileAssetId={(imageId: string) => {
                                 currentNode.imageId = imageId;
-                                setCurrentImageId(imageId);
+                                setCurrentFileAssetId(imageId);
                                 currentNode.UpdateTree();
                             }}
-                            currentImageId={currentImageId}
-                            setImageLink={setImageLink}
-                            setImageName={setImageName}
+                            setFileAssetLink={setFileAssetLink}
+                            setFileAssetName={setImageName}
+                            currentFileAssetId={currentFileAssetId}
                         />
                     </div>
                     <Divider />
@@ -88,11 +77,19 @@ export const ImageUpload = ({ setCurrentImageId, currentNode, nodeId, imageId, c
                                 initialState={initialState}
                                 modalState={uploadModal}
                                 toggleModal={() => toggleModal()}
-                                handleFileSave={(files: File[]) => fileSave(files)}
+                                handleFileSave={handleFileSave}
                                 summary="Upload a file."
                                 buttonText="Upload"
                                 uploadDetails={<Typography>Upload an image, pdf, or other document you wish to share with your users</Typography>}
-                                acceptedFiles={["image/png", "image/jpg", "image/gif"]}
+                                acceptedFiles={[
+                                    "image/png",
+                                    "image/jpg",
+                                    "image/gif",
+                                    "image/jpeg",
+                                    "application/pdf",
+                                    "application/msword",
+                                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                ]}
                             />
                         )}
                     </div>

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Palavyr.Core.Models.Contracts;
+﻿using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {

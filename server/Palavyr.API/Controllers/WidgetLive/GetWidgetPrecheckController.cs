@@ -3,12 +3,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {

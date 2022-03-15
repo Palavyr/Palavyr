@@ -1,12 +1,7 @@
 import { makeStyles, TableCell, TableHead, TableRow, Typography } from "@material-ui/core";
 import React from "react";
 
-const useStyles = makeStyles((theme) => ({
-    cell: {
-        textAlign: "center",
-    },
-}));
-export const ImageRecordTableHeader = () => {
+export const FileAssetRecordTableHeader = () => {
     return (
         <TableHead>
             <TableRow>

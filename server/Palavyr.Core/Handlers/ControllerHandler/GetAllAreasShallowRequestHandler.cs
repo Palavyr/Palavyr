@@ -22,7 +22,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetAllAreasResponse> Handle(GetAllAreasRequest request, CancellationToken cancellationToken)
         {
             logger.LogDebug("Return all areas");
-            var intents = await intentStore.GetMany(intentStore.AccountId, s => s.AreaIdentifier);
+            var intents = await intentStore.GetMany(intentStore.AccountId, s => s.AccountId);
             return new GetAllAreasResponse(intents);
         }
     }

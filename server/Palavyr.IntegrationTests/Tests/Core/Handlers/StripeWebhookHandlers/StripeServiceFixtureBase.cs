@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Autofac;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;

@@ -29,7 +29,7 @@ export enum CacheIds {
     ShowSeenQueries = "ShowSeenQueries",
     NeedsPassword = "NeedsPassword",
     WidgetState = "WidgetState",
-    Images = "Images",
+    FileAssets = "FileAssets",
     S3Key = "S3Key",
     SupportedUnitIds = "SupportedUnitIds",
 }

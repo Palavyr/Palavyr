@@ -1,7 +1,6 @@
 ﻿using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
-using Palavyr.IntegrationTests.DataCreators.StripeBuilders;
 
-namespace Palavyr.IntegrationTests.DataCreators
+namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
 {
     public static partial class StripeBuilderExtensionMethods
     {

@@ -59,7 +59,7 @@ import { EnableAreas } from "frontend/dashboard/content/responseConfiguration/ar
 import { SetAreasHelp } from "frontend/dashboard/content/help/SetAreasHelp";
 import { DefaultEmailTemplate } from "frontend/dashboard/content/settings/account/DefaultEmailTemplate";
 import { DefaultEmailTemplateHelp } from "frontend/dashboard/content/help/DefaultEmailTemplateHelp";
-import { ImageReview } from "frontend/dashboard/content/images/ImageReview";
+import { FileAssetReview } from "@frontend/dashboard/content/fileAssetReview/FileAssetReview";
 import { ImageReviewHelp } from "frontend/dashboard/content/help/ImageReviewHelp";
 import { PleaseSubscribe } from "frontend/dashboard/content/purchse/pleaseSubscribe/PleaseSubscribe";
 import { PleaseSubscribeHelp } from "frontend/dashboard/content/help/PleaseSubscribeHelp";
@@ -144,7 +144,7 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/getWidget" component={withLayout(GetWidget, <GetWidgetHelp />)} />
                 <ProtectedRoute exact path="/dashboard/enquiries" component={withLayout(EnquiresPage, <EnquiriesHelp />)} />
                 <ProtectedRoute exact path="/dashboard/enquiries/conversation" component={withLayout(ConversationReview, <ConversationReviewHelp />)} />
-                <ProtectedRoute exact path="/dashboard/images" component={withLayout(ImageReview, <ImageReviewHelp />)} />
+                <ProtectedRoute exact path="/dashboard/images" component={withLayout(FileAssetReview, <ImageReviewHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/subscribe" component={withLayout(Subscribe, <SubscribeHelp />)} />
                 <ProtectedRoute exact path="/dashboard/subscribe/purchase" component={withLayout(Purchase, <PurchaseHelp />)} />

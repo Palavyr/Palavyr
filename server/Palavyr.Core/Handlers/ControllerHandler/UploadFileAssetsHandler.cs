@@ -10,18 +10,18 @@ using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class SaveMultipleImagesHandler : IRequestHandler<SaveMultipleImagesRequest, SaveMultipleImagesResponse>
+    public class UploadFileAssetsHandler : IRequestHandler<UploadFileAssetsRequest, UploadFileAssetsResponse>
     {
         private readonly INodeFileAssetSaver nodeFileAssetSaver;
         private readonly ILinkCreator linkCreator;
 
-        public SaveMultipleImagesHandler(INodeFileAssetSaver nodeFileAssetSaver, ILinkCreator linkCreator)
+        public UploadFileAssetsHandler(INodeFileAssetSaver nodeFileAssetSaver, ILinkCreator linkCreator)
         {
             this.nodeFileAssetSaver = nodeFileAssetSaver;
             this.linkCreator = linkCreator;
         }
 
-        public async Task<SaveMultipleImagesResponse> Handle(SaveMultipleImagesRequest request, CancellationToken cancellationToken)
+        public async Task<UploadFileAssetsResponse> Handle(UploadFileAssetsRequest request, CancellationToken cancellationToken)
         {
             var imageFileLinks = new List<FileLink>();
             foreach (var imageFile in request.ImageFiles)
@@ -30,19 +30,19 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 imageFileLinks.Add(await fileAsset.ToFileLink(linkCreator));
             }
 
-            return new SaveMultipleImagesResponse(imageFileLinks.ToArray());
+            return new UploadFileAssetsResponse(imageFileLinks.ToArray());
         }
     }
 
-    public class SaveMultipleImagesResponse
+    public class UploadFileAssetsResponse
     {
-        public SaveMultipleImagesResponse(FileLink[] response) => Response = response;
+        public UploadFileAssetsResponse(FileLink[] response) => Response = response;
         public FileLink[] Response { get; set; }
     }
 
-    public class SaveMultipleImagesRequest : IRequest<SaveMultipleImagesResponse>
+    public class UploadFileAssetsRequest : IRequest<UploadFileAssetsResponse>
     {
-        public SaveMultipleImagesRequest(List<IFormFile> imageFiles)
+        public UploadFileAssetsRequest(List<IFormFile> imageFiles)
         {
             ImageFiles = imageFiles;
         }

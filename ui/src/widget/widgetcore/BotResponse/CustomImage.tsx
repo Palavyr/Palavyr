@@ -7,7 +7,7 @@ export interface CustomImageProps {
 }
 
 const useStyles = makeStyles(theme => ({
-    image: {
+    display: {
         height: "100%",
         width: "100%",
         borderRadius: "5px",

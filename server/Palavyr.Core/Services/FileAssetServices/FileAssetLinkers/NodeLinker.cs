@@ -4,12 +4,12 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
 {
-    public class FileAssetLinker : IFileAssetLinker<FileAssetLinker>
+    public class NodeLinker : IFileAssetLinker<NodeLinker>
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IEntityStore<FileAsset> fileAssetStore;
 
-        public FileAssetLinker(
+        public NodeLinker(
             IEntityStore<ConversationNode> convoNodeStore,
             IEntityStore<FileAsset> fileAssetStore)
         {

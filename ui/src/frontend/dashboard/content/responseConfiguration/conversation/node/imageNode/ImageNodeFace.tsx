@@ -1,39 +1,37 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import React, { useCallback, useEffect, useState } from "react";
 import { PalavyrNodeBody } from "../baseNode/PalavyrNodeBody";
-import { CustomImage } from "./CustomImage";
+import { FileAssetDisplay } from "./CustomImage";
 
-export interface ImageNodeFaceProps {
+export interface FileAssetNodeProps {
     openEditor: () => void;
-    imageId?: string | null;
+    fileId?: string | null;
     repository: PalavyrRepository;
 }
 
-export const ImageNodeFace = ({ openEditor, imageId, repository }: ImageNodeFaceProps) => {
-    const [imageLink, setImageLink] = useState<string>("");
-    const [imageName, setImageName] = useState<string>("");
-    const [currentImageId, setCurrentImageId] = useState<string>("");
+export const FileAssetNodeFace = ({ openEditor, fileId, repository }: FileAssetNodeProps) => {
+    const [fileAssetLink, setFileAssetLink] = useState<string>("");
+    const [fileAssetName, setFileAssetName] = useState<string>("");
+    const [currrentFileAssetFileId, setCurrentFileId] = useState<string>("");
 
-    const loadImage = useCallback(async () => {
-        if (imageId !== null && imageId !== undefined) {
-            const fileLinks = await repository.Configuration.Images.getImages([imageId]);
-            const fileLink = fileLinks[0];
-            if (!fileLink.isUrl) {
-                const presignedUrl = await repository.Configuration.Images.getSignedUrl(fileLink.s3Key, fileLink.fileId);
-                setImageLink(presignedUrl);
-                setImageName(fileLink.fileName);
-                setCurrentImageId(fileLink.fileId);
-            }
+    const loadFileAsset = useCallback(async () => {
+        if (fileId !== null && fileId !== undefined) {
+            const fileAssets = await repository.Configuration.FileAssets.GetFileAssets([fileId]);
+            const fileAsset = fileAssets[0];
+
+            setFileAssetLink(fileAsset.link);
+            setFileAssetName(fileAsset.fileName);
+            setCurrentFileId(fileAsset.fileId);
         }
-    }, [imageId]);
+    }, [fileId]);
 
     useEffect(() => {
-        loadImage();
-    }, [imageId]);
+        loadFileAsset();
+    }, [fileId]);
 
     return (
-        <PalavyrNodeBody openEditor={openEditor} isImageNode>
-            <CustomImage imageId={currentImageId} imageName={imageName} imageLink={imageLink} titleVariant="body1" />
+        <PalavyrNodeBody openEditor={openEditor} isFileAssetNode>
+            <FileAssetDisplay fileAssetId={currrentFileAssetFileId} fileAssetName={fileAssetName} fileAssetLink={fileAssetLink} titleVariant="body1" />
         </PalavyrNodeBody>
     );
 };

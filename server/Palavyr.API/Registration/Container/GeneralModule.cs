@@ -122,7 +122,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<CompilePdfServerRequest>().As<ICompilePdfServerRequest>();
 
             builder.RegisterType<FileAssetKeyResolver>().As<IFileAssetKeyResolver>();
-            builder.RegisterType<FileAssetLinker>().As<IFileAssetLinker<FileAssetLinker>>();
+            builder.RegisterType<NodeLinker>().As<IFileAssetLinker<NodeLinker>>();
             builder.RegisterType<LogoLinker>().As<IFileAssetLinker<LogoLinker>>();
             builder.RegisterType<FileAssetSaver>().As<IFileAssetSaver>();
             builder.RegisterType<GuidFinder>().As<IGuidFinder>();
