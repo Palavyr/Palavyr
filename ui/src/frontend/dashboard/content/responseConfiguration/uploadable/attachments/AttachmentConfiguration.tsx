@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { FileLink } from "@Palavyr-Types";
 import { Upload } from "../Upload";
 import { AttachmentList } from "./AttachmentList";
 import { AttachmentPreview } from "./AttachmentPreview";
@@ -7,6 +6,8 @@ import { useParams } from "react-router-dom";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useContext } from "react";
+import { ACCEPTED_FILES } from "@constants";
+import { FileAssetResource } from "@Palavyr-Types";
 
 const summary = "Upload a new PDF attachment to send with responses.";
 const uploadDetails = <div className="alert alert-info">Use this dialog to upload attachments that will be sent standard with the response for this area.</div>;
@@ -19,8 +20,8 @@ export const AttachmentConfiguration = () => {
     const { setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
 
     const [, setLoaded] = useState<boolean>(false);
-    const [currentPreview, setCurrentPreview] = useState<FileLink | null>();
-    const [attachmentList, setAttachmentList] = useState<Array<FileLink>>([]);
+    const [currentPreview, setCurrentPreview] = useState<FileAssetResource | null>();
+    const [attachmentList, setAttachmentList] = useState<FileAssetResource[]>([]);
 
     const [modalState, setModalState] = useState(false);
     const toggleModal = () => {
@@ -28,15 +29,15 @@ export const AttachmentConfiguration = () => {
     };
 
     const removeAttachment = async (fileId: string) => {
-        const filelinks = await repository.Configuration.Attachments.removeAttachment(areaIdentifier, fileId);
-        setAttachmentList(filelinks);
+        const fileAssetResources = await repository.Configuration.Attachments.DeleteAttachment(areaIdentifier, fileId);
+        setAttachmentList(fileAssetResources);
         setSuccessText("Attachment Removed");
         setSuccessOpen(true);
     };
 
     const loadAttachments = useCallback(async () => {
-        const fileLinks = await repository.Configuration.Attachments.GetAttachmentLinks(areaIdentifier);
-        setAttachmentList(fileLinks);
+        const fileAssetResources = await repository.Configuration.Attachments.GetAttachments(areaIdentifier);
+        setAttachmentList(fileAssetResources);
         setLoaded(true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
@@ -50,22 +51,13 @@ export const AttachmentConfiguration = () => {
     }, [areaIdentifier, attachmentList.length, loadAttachments]);
 
     const handleFileSave = async (files: File[]) => {
-        var formData = new FormData();
+        if (files.length === 0) return;
 
-        if (files.length === 1) {
-            formData.append("files", files[0]);
-            const fileLinks = await repository.Configuration.Attachments.saveSingleAttachment(areaIdentifier, formData);
-            setAttachmentList(fileLinks);
-        } else if (files.length > 1) {
-            files.forEach((file: File) => {
-                formData.append("files", file);
-            });
-            const fileLinks = await repository.Configuration.Attachments.saveMultipleAttachments(areaIdentifier, formData);
-            setAttachmentList(fileLinks);
-        } else {
-            const fileLinks = [];
-            setAttachmentList(fileLinks);
-        }
+        var formData = new FormData();
+        files.forEach((file: File) => formData.append("files", file));
+
+        const fileAssetResources = await repository.Configuration.Attachments.UploadAttachments(areaIdentifier, formData);
+        setAttachmentList(fileAssetResources);
         setSuccessText("Attachment Uploaded");
         setSuccessOpen(true);
         setCurrentPreview(null);
@@ -77,16 +69,16 @@ export const AttachmentConfiguration = () => {
 
     return (
         <>
-            <HeaderStrip title="Attachments" subtitle="Upload PDF and word documents you wish to send to your potential clients." />
+            <HeaderStrip title="Attachments" subtitle="Upload files you wish to send to your potential clients." />
             <Upload
                 initialState={attachmentList.length === 0}
                 modalState={modalState}
                 toggleModal={toggleModal}
                 handleFileSave={handleFileSave}
-                buttonText="Add PDF Attachment"
+                buttonText="Add Attachment"
                 summary={summary}
                 uploadDetails={uploadDetails}
-                acceptedFiles={["application/pdf"]}
+                acceptedFiles={ACCEPTED_FILES}
                 disableButton={shouldDisableUploadButton()}
             />
             <AttachmentList fileList={attachmentList} setCurrentPreview={setCurrentPreview} removeAttachment={removeAttachment} />

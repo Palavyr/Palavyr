@@ -68,3 +68,5 @@ export const MENU_DRAWER_STATE_COOKIE_NAME = "menu-drawer-state-cookie";
 export const USE_NEW_EDITOR_COOKIE_NAME = "use-new-editor";
 
 export const ALL_COOKIE_NAMES = [WELCOME_TOUR_COOKIE_NAME, EDITOR_TOUR_COOKIE_NAME, REMEMBER_ME_EMAIL_COOKIE_NAME, REMEMBER_ME_PASSWORD_COOKIE_NAME, MENU_DRAWER_STATE_COOKIE_NAME, USE_NEW_EDITOR_COOKIE_NAME];
+
+export const ACCEPTED_FILES = ["image/png", "image/jpg", "image/gif", "image/jpeg", "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];

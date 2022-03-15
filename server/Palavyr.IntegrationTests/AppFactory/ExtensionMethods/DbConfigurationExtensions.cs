@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.Delete;
@@ -167,12 +166,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                 var decoratedStore = new IntegrationTestEntityStoreEagerSavingDecorator<FileAsset>(assetStore, contextProvider);
 
                 var deleter = new IntegrationTestFileDelete(
-                    decoratedStore,
-                    accountTransport,
-                    cancellationTokenTransport,
-                    new GuidUtils(),
-                    new FileAssetKeyResolver(new CloudCompatibleKeyResolver(accountTransport)),
-                    new IntegrationTestFileLinkCreator(decoratedStore));
+                    decoratedStore);
 
                 var accountDeleter = new DangerousAccountDeleter(
                     scopedServices,

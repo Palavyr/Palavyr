@@ -3,41 +3,41 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class UploadFileAssetsHandler : IRequestHandler<UploadFileAssetsRequest, UploadFileAssetsResponse>
+    public class UploadNodeFileAssetsHandler : IRequestHandler<UploadFileAssetsRequest, UploadFileAssetsResponse>
     {
         private readonly INodeFileAssetSaver nodeFileAssetSaver;
-        private readonly ILinkCreator linkCreator;
+        private readonly IMapToNew<FileAsset, FileAssetResource> mapper;
 
-        public UploadFileAssetsHandler(INodeFileAssetSaver nodeFileAssetSaver, ILinkCreator linkCreator)
+        public UploadNodeFileAssetsHandler(INodeFileAssetSaver nodeFileAssetSaver, IMapToNew<FileAsset, FileAssetResource> mapper)
         {
             this.nodeFileAssetSaver = nodeFileAssetSaver;
-            this.linkCreator = linkCreator;
+            this.mapper = mapper;
         }
 
         public async Task<UploadFileAssetsResponse> Handle(UploadFileAssetsRequest request, CancellationToken cancellationToken)
         {
-            var imageFileLinks = new List<FileLink>();
+            var fileAssets = new List<FileAsset>();
             foreach (var imageFile in request.ImageFiles)
             {
                 var fileAsset = await nodeFileAssetSaver.SaveFile(imageFile);
-                imageFileLinks.Add(await fileAsset.ToFileLink(linkCreator));
+                fileAssets.Add(fileAsset);
             }
 
-            return new UploadFileAssetsResponse(imageFileLinks.ToArray());
+            var resources = await mapper.MapMany(fileAssets, cancellationToken);
+            return new UploadFileAssetsResponse(resources);
         }
     }
 
     public class UploadFileAssetsResponse
     {
-        public UploadFileAssetsResponse(FileLink[] response) => Response = response;
-        public FileLink[] Response { get; set; }
+        public UploadFileAssetsResponse(IEnumerable<FileAssetResource> response) => Response = response;
+        public IEnumerable<FileAssetResource> Response { get; set; }
     }
 
     public class UploadFileAssetsRequest : IRequest<UploadFileAssetsResponse>

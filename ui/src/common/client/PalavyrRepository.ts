@@ -182,7 +182,7 @@ export class PalavyrRepository {
         },
 
         Preview: {
-            fetchPreview: async (intentId: string) => this.client.get<FileLink>(`preview/estimate/${intentId}`),
+            FetchPreview: async (intentId: string) => this.client.get<FileAssetResource>(`preview/estimate/${intentId}`),
         },
 
         Email: {
@@ -206,18 +206,10 @@ export class PalavyrRepository {
         },
 
         Attachments: {
-            GetAttachmentLinks: async (intentId: string) => this.client.get<FileLink[]>(`attachments/${intentId}`, CacheIds.Attachments),
-            removeAttachment: async (intentId: string, fileId: string) => this.client.delete<FileLink[]>(`attachments/file-link`, CacheIds.Attachments, { data: { fileId: fileId, IntentId: intentId } }),
-
-            saveSingleAttachment: async (areaIdentifier: string, formData: FormData) =>
-                this.client.post<FileLink[], {}>(`attachments/${areaIdentifier}/save-one`, formData, CacheIds.Attachments, {
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "multipart/form-data",
-                    },
-                }),
-            saveMultipleAttachments: async (intentId: string, formData: FormData) =>
-                this.client.post<FileLink[], {}>(`attachments/${intentId}/save-many`, formData, CacheIds.Attachments, {
+            GetAttachments: async (intentId: string) => this.client.get<FileAssetResource[]>(`attachments/${intentId}`, CacheIds.Attachments),
+            DeleteAttachment: async (intentId: string, fileId: string) => this.client.delete<FileAssetResource[]>(`attachments`, CacheIds.Attachments, { data: { fileId: fileId, IntentId: intentId } }),
+            UploadAttachments: async (intentId: string, formData: FormData) =>
+                this.client.post<FileAssetResource[], {}>(`attachments/${intentId}/upload`, formData, CacheIds.Attachments, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",

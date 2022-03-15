@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import { IPalavyrNode } from "@Palavyr-Types";
 import { useNodeInterfaceStyles } from "../../nodeInterfaceStyles";
 import { SelectFromExistingImages } from "./SelectFromExistingImages";
+import { ACCEPTED_FILES } from "@constants";
 
 interface FileAssetUploadProps {
     currentNode: IPalavyrNode;
@@ -81,15 +82,7 @@ export const NodeFileAssetUpload = ({ setCurrentFileAssetId, currentNode, nodeId
                                 summary="Upload a file."
                                 buttonText="Upload"
                                 uploadDetails={<Typography>Upload an image, pdf, or other document you wish to share with your users</Typography>}
-                                acceptedFiles={[
-                                    "image/png",
-                                    "image/jpg",
-                                    "image/gif",
-                                    "image/jpeg",
-                                    "application/pdf",
-                                    "application/msword",
-                                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                                ]}
+                                acceptedFiles={ACCEPTED_FILES}
                             />
                         )}
                     </div>

@@ -18,7 +18,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 {
     public interface IAttachmentRetriever
     {
-        Task<FileLink[]> GetAttachmentLinksForIntent(string intentId);
+        Task<FileAsset[]> GetAttachmentLinksForIntent(string intentId);
         Task<IHaveBeenDownloadedFromCloudToLocal[]> GatherAttachments(string intentId, List<CloudFileDownloadRequest>? additionalFiles = null);
     }
 
@@ -63,20 +63,13 @@ namespace Palavyr.Core.Services.AttachmentServices
             return attachments;
         }
 
-        public async Task<FileLink[]> GetAttachmentLinksForIntent(string areaId)
+        public async Task<FileAsset[]> GetAttachmentLinksForIntent(string intentId)
         {
             var intent = await intentStore.Query().Include(x => x.AttachmentRecords).SingleAsync(intentStore.CancellationToken);
             var attachmentFileIds = intent.AttachmentRecords.Select(x => x.FileId).ToArray();
             var fileAssets = await fileAssetStore.Query().Where(x => attachmentFileIds.Contains(x.FileId)).ToListAsync(fileAssetStore.CancellationToken);
 
-            var fileLinks = new List<FileLink>();
-            foreach (var asset in fileAssets)
-            {
-                var fileLink = FileLink.CreateUrlLink(asset.RiskyNameStem, await linkCreator.CreateLink(asset.FileId), asset.FileId);
-                fileLinks.Add(fileLink);
-            }
-
-            return fileLinks.ToArray();
+            return fileAssets.ToArray();
         }
 
         private async Task<List<CloudFileDownloadRequest>> RetrievePdfUris(string intentId)

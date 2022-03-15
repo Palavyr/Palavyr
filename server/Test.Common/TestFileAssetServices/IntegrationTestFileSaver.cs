@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Services.FileAssetServices;
@@ -64,29 +63,13 @@ namespace Test.Common.TestFileAssetServices
     public class IntegrationTestFileDelete : IFileAssetDeleter
     {
         private readonly IEntityStore<FileAsset> fileAssetStore;
-        private readonly IAccountIdTransport accountIdTransport;
-        private readonly ICancellationTokenTransport cancellationTokenTransport;
-        private readonly IGuidUtils guidUtils;
-        private readonly IFileAssetKeyResolver fileAssetKeyResolver;
-        private readonly ILinkCreator linkCreator;
 
-        public IntegrationTestFileDelete(
-            IEntityStore<FileAsset> fileAssetStore,
-            IAccountIdTransport accountIdTransport,
-            ICancellationTokenTransport cancellationTokenTransport,
-            IGuidUtils guidUtils,
-            IFileAssetKeyResolver fileAssetKeyResolver,
-            ILinkCreator linkCreator)
+        public IntegrationTestFileDelete(IEntityStore<FileAsset> fileAssetStore)
         {
             this.fileAssetStore = fileAssetStore;
-            this.accountIdTransport = accountIdTransport;
-            this.cancellationTokenTransport = cancellationTokenTransport;
-            this.guidUtils = guidUtils;
-            this.fileAssetKeyResolver = fileAssetKeyResolver;
-            this.linkCreator = linkCreator;
         }
 
-        public async Task<FileLink[]> RemoveFiles(string[] fileIds)
+        public async Task<IEnumerable<FileAsset>> RemoveFiles(string[] fileIds)
         {
             var assets = await fileAssetStore.GetMany(fileIds, asset => asset.FileId);
             await fileAssetStore.Delete(assets.ToArray());
@@ -99,10 +82,10 @@ namespace Test.Common.TestFileAssetServices
             }
 
             var remainingAssets = await fileAssetStore.GetAll();
-            return await remainingAssets.ToFileLinks(linkCreator);
+            return remainingAssets;
         }
 
-        public async Task<FileLink[]> RemoveFile(string fileId)
+        public async Task<IEnumerable<FileAsset>> RemoveFile(string fileId)
         {
             var asset = await fileAssetStore.Get(fileId, s => s.FileId);
             await fileAssetStore.Delete(asset);
@@ -112,7 +95,7 @@ namespace Test.Common.TestFileAssetServices
             }
 
             var remainingAssets = await fileAssetStore.GetAll();
-            return await remainingAssets.ToFileLinks(linkCreator);
+            return remainingAssets;
         }
     }
 

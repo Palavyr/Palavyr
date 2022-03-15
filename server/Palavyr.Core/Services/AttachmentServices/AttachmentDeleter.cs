@@ -16,19 +16,16 @@ namespace Palavyr.Core.Services.AttachmentServices
 
     public class AttachmentDeleter : IAttachmentDeleter
     {
-        private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly IEntityStore<Area> intentStore;
         private readonly IFileAssetDeleter fileAssetDeleter;
         private readonly IFileAssetLinker<AttachmentLinker> linker;
 
 
         public AttachmentDeleter(
-            IEntityStore<FileAsset> fileAssetStore,
             IEntityStore<Area> intentStore,
             IFileAssetDeleter fileAssetDeleter,
             IFileAssetLinker<AttachmentLinker> linker)
         {
-            this.fileAssetStore = fileAssetStore;
             this.intentStore = intentStore;
             this.fileAssetDeleter = fileAssetDeleter;
             this.linker = linker;
@@ -36,7 +33,6 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task DeleteAttachment(string fileId, string intentId)
         {
-            await fileAssetDeleter.RemoveFile(fileId);
             await linker.UnLinkFromIntent(fileId, intentId);
         }
 
