@@ -248,8 +248,6 @@ export class PalavyrRepository {
             LinkFileAssetToNode: async (fileId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`file-assets/link/${fileId}/node/${nodeId}`),
             LinkFileAssetToIntent: async (fileId: string, intentId: string) => this.client.post<FileAssetResource, {}>(`file-assets/link/${fileId}/intent/${intentId}`),
             DeleteFileAsset: async (fileIds: string[]) => this.client.delete<FileAssetResource[]>(`file-assets?fileIds=${fileIds.join(",")}`, CacheIds.FileAssets), // takes a querystring command delimited of fileIds
-
-            // getSignedUrl: async (s3Key: string, fileId: string) => this.client.post<string, {}>(`images/link`, { s3Key: s3Key }),
         },
     };
 

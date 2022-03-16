@@ -144,7 +144,7 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/getWidget" component={withLayout(GetWidget, <GetWidgetHelp />)} />
                 <ProtectedRoute exact path="/dashboard/enquiries" component={withLayout(EnquiresPage, <EnquiriesHelp />)} />
                 <ProtectedRoute exact path="/dashboard/enquiries/conversation" component={withLayout(ConversationReview, <ConversationReviewHelp />)} />
-                <ProtectedRoute exact path="/dashboard/images" component={withLayout(FileAssetReview, <ImageReviewHelp />)} />
+                <ProtectedRoute exact path="/dashboard/file-assets" component={withLayout(FileAssetReview, <ImageReviewHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/subscribe" component={withLayout(Subscribe, <SubscribeHelp />)} />
                 <ProtectedRoute exact path="/dashboard/subscribe/purchase" component={withLayout(Purchase, <PurchaseHelp />)} />

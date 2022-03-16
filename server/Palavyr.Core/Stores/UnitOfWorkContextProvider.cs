@@ -38,7 +38,10 @@ namespace Palavyr.Core.Stores
 
         public async Task CloseUnitOfWork()
         {
-            await DangerousCommitAllContexts();
+            var token = GetOrCreateCancellationToken();
+            await dashContext.FinalizeAsync(token);
+            await accountsContext.FinalizeAsync(token);
+            await convoContext.FinalizeAsync(token);
             await DisposeContexts();
         }
 
@@ -50,6 +53,29 @@ namespace Palavyr.Core.Stores
         }
 
         public async Task DangerousCommitAllContexts()
+        {
+            var token = GetOrCreateCancellationToken();
+            await dashContext.SaveChangesAsync(token);
+            await accountsContext.SaveChangesAsync(token);
+            await convoContext.SaveChangesAsync(token);
+        }
+
+        public async Task OpenUnitOfWorkAsync()
+        {
+            var token = GetOrCreateCancellationToken();
+            await dashContext.BeginTransactionAsync(token);
+            await accountsContext.BeginTransactionAsync(token);
+            await convoContext.BeginTransactionAsync(token);
+        }
+
+        public void OpenUnitOfWork()
+        {
+            dashContext.BeginTransaction();
+            accountsContext.BeginTransaction();
+            convoContext.BeginTransaction();
+        }
+
+        private CancellationToken GetOrCreateCancellationToken()
         {
             CancellationToken token;
             // starting to notice how this transport idea makes testing more complicated
@@ -70,9 +96,7 @@ namespace Palavyr.Core.Stores
                 token = cts.Token;
             }
 
-            await dashContext.SaveChangesAsync(token);
-            await accountsContext.SaveChangesAsync(token);
-            await convoContext.SaveChangesAsync(token);
+            return token;
         }
     }
 }

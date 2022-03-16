@@ -24,21 +24,21 @@ namespace Palavyr.Core.Services.CloudKeyResolvers
         {
             // bucket
             // accountId / file-assets / fileId.Extension
-            return Path.Combine(accountIdTransport.AccountId, "file-assets", string.Join(".", fileName.FileId, fileName.Extension));
+            return Path.Combine(accountIdTransport.AccountId, "file-assets", fileName.ToString());
         }
 
         public string ResolveResponsePdfKey(FileName fileName)
         {
             // bucket
             // accountId / response-pdfs / fileId.Extension
-            return Path.Combine(accountIdTransport.AccountId, "response-pdfs", string.Join(".", fileName.FileId, fileName.Extension));
+            return Path.Combine(accountIdTransport.AccountId, "response-pdfs", fileName.ToString());
         }
 
         public string ResolveResponsePdfPreviewKey(FileName fileName)
         {
             // bucket
             // accountId / response-preview-pdfs / fileId.Extension
-            return Path.Combine(accountIdTransport.AccountId, "response-preview-pdfs", string.Join(".", fileName.FileId, fileName.Extension));
+            return Path.Combine(accountIdTransport.AccountId, "response-preview-pdfs", fileName.ToString());
         }
     }
 }

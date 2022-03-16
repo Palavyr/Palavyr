@@ -17,12 +17,12 @@ interface FileAssetUploadProps {
     currentFileAssetId: string;
     setCurrentFileAssetId: SetState<string>;
     setFileAssetLink: SetState<string>;
-    setImageName: SetState<string>;
+    setFileAssetName: SetState<string>;
     initialState: boolean;
     repository: PalavyrRepository;
 }
 
-export const NodeFileAssetUpload = ({ setCurrentFileAssetId, currentNode, nodeId, closeEditor, currentFileAssetId, setFileAssetLink, setImageName, repository, initialState = false }: FileAssetUploadProps) => {
+export const NodeFileAssetUpload = ({ setCurrentFileAssetId, currentNode, nodeId, closeEditor, currentFileAssetId, setFileAssetLink, setFileAssetName, repository, initialState = false }: FileAssetUploadProps) => {
     const cls = useNodeInterfaceStyles({});
     const history = useHistory();
     const [uploadModal, setUploadModal] = useState(false);
@@ -66,7 +66,7 @@ export const NodeFileAssetUpload = ({ setCurrentFileAssetId, currentNode, nodeId
                                 currentNode.UpdateTree();
                             }}
                             setFileAssetLink={setFileAssetLink}
-                            setFileAssetName={setImageName}
+                            setFileAssetName={setFileAssetName}
                             currentFileAssetId={currentFileAssetId}
                         />
                     </div>

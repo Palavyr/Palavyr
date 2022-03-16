@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
@@ -42,7 +41,7 @@ namespace Palavyr.API.CustomMiddleware
 
             var action = context.Request.Headers[ApplicationConstants.MagicUrlStrings.Action].ToString();
 
-            if (action == ApplicationConstants.MagicUrlStrings.SessionAction)
+            if (action == ApplicationConstants.MagicUrlStrings.SessionAction || action == ApplicationConstants.MagicUrlStrings.LogoutAction)
             {
                 logger.LogDebug("Session action detected. Searching for the session Id...");
                 var sessionId = context.Request.Headers[ApplicationConstants.MagicUrlStrings.SessionId].ToString().Trim();
@@ -69,12 +68,9 @@ namespace Palavyr.API.CustomMiddleware
                             logger.LogDebug($"Adding Header: {key} with value: {value}");
                         }
                     }
-
-                    await unitOfWorkContextProvider.CloseUnitOfWork();
                 }, context);
 
             await next(context);
-            Console.WriteLine("On the way out!");
         }
     }
 }

@@ -91,11 +91,13 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             dashContext.Database.EnsureCreated();
             convoContext.Database.EnsureCreated();
 
+            // accountContext.BeginTransaction();
+            // dashContext.BeginTransaction();
+            // convoContext.BeginTransaction();
+
             var tempCancellationToken = new CancellationTokenTransport(new CancellationToken());
             var contextProvider = new UnitOfWorkContextProvider(dashContext, accountContext, convoContext, tempCancellationToken);
             ResetDbs(scopedServices, contextProvider, tempCancellationToken);
-
-            // contextProvider.DangerousCommitAllContexts();
 
             return Task.CompletedTask;
         }
@@ -131,6 +133,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
         private static void SuppressWarnings(this DbContextOptionsBuilder builder)
         {
             builder.ConfigureWarnings(x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+            builder.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
         }
 
         private static void ClearDescriptors(IServiceCollection services)

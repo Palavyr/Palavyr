@@ -5,6 +5,7 @@
         public class MagicUrlStrings
         {
             public const string SessionAction = "tubmcgubs";
+            public const string LogoutAction = "logout";
             public const string Action = "action";
             public const string AccountId = "accountId";
             public const string SessionId = "sessionId";

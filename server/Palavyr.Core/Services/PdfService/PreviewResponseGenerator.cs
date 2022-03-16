@@ -9,7 +9,6 @@ using Palavyr.Core.Exceptions;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Services.DynamicTableService;

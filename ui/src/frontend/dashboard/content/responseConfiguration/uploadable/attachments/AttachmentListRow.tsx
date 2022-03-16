@@ -1,10 +1,8 @@
-import { FileLink } from "@Palavyr-Types";
 import { TableRow, TableCell } from "@material-ui/core";
 import React from "react";
 import { LinkButton } from "./LinkButton";
 import AttachmentIcon from "@material-ui/icons/Attachment";
-import { useContext } from "react";
-import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { FileAssetResource } from "@Palavyr-Types";
 
 interface IAttachmentTableRow {
     fileName: string;
@@ -27,12 +25,10 @@ var tableRowStyle = {
 
 export const AttachmentListRow = ({ fileName, link, fileId, setCurrentPreview, removeAttachment }: IAttachmentTableRow) => {
     const viewButtonClickAction = (fileName: string, link: string, fileId: string) => {
-        const attachmentLink: FileLink = {
+        const attachmentLink: FileAssetResource = {
             fileName,
-            link,
             fileId,
-            isUrl: false,
-            s3Key: "",
+            link,
         };
         setCurrentPreview(attachmentLink);
     };

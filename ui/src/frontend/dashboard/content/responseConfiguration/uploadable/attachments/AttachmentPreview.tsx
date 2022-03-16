@@ -1,13 +1,9 @@
-/// Example working pdf url
-/// http://localhost:5000/user-1/abc-123/attachments/PaulGradie_medicare_exemption_base_ms015-1807en-f-Partial.pdf
-///
-
-import { FileLink } from "@Palavyr-Types";
 import React from "react";
 import { Paper, Divider, makeStyles, Theme } from "@material-ui/core";
+import { FileAssetResource } from "@Palavyr-Types";
 
 interface IAttachmentPreview {
-    preview: FileLink;
+    preview: FileAssetResource;
 }
 
 type StyleProps = {

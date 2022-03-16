@@ -18,7 +18,7 @@ namespace Palavyr.Core.Services.FileAssetServices
 
         public override string ToString()
         {
-            return string.Join(".", FileId, Extension);
+            return string.Join("", FileId, Extension);
         }
 
         public static FileName ParseRiskyFileName(string fileName, string fileId)
@@ -38,7 +38,7 @@ namespace Palavyr.Core.Services.FileAssetServices
         {
             var extension = Path.GetExtension(fileName);
             if (extension is null) throw new DomainException("File name parsing did not yield a file extension.");
-            return extension;
+            return extension.ToLowerInvariant();
         }
 
         private static string ParseStem(string fileName)

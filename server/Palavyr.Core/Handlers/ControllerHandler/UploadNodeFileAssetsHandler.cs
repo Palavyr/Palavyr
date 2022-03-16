@@ -11,12 +11,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class UploadNodeFileAssetsHandler : IRequestHandler<UploadFileAssetsRequest, UploadFileAssetsResponse>
     {
-        private readonly INodeFileAssetSaver nodeFileAssetSaver;
+        private readonly IFileAssetSaver fileAssetSaver;
         private readonly IMapToNew<FileAsset, FileAssetResource> mapper;
 
-        public UploadNodeFileAssetsHandler(INodeFileAssetSaver nodeFileAssetSaver, IMapToNew<FileAsset, FileAssetResource> mapper)
+        public UploadNodeFileAssetsHandler(INodeFileAssetSaver fileAssetSaver, IMapToNew<FileAsset, FileAssetResource> mapper)
         {
-            this.nodeFileAssetSaver = nodeFileAssetSaver;
+            this.fileAssetSaver = fileAssetSaver;
             this.mapper = mapper;
         }
 
@@ -25,7 +25,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var fileAssets = new List<FileAsset>();
             foreach (var imageFile in request.ImageFiles)
             {
-                var fileAsset = await nodeFileAssetSaver.SaveFile(imageFile);
+                var fileAsset = await fileAssetSaver.SaveFile(imageFile);
                 fileAssets.Add(fileAsset);
             }
 

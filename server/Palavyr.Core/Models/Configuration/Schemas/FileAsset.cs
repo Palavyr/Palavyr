@@ -12,6 +12,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public string LocationKey { get; set; }     // this is path to a location in the storage provide
 
         [NotMapped]
-        public string RiskyNameWithExtension => string.Join(".", RiskyNameStem, Extension);
+        public string RiskyNameWithExtension => string.Join("", RiskyNameStem, Extension);
     }
 }

@@ -10,10 +10,10 @@ export interface TextNodeFaceProps {
 export const TextNodeFace = ({ openEditor, userText }: TextNodeFaceProps) => {
     const cls = useNodeInterfaceStyles({
         nodeText: userText,
-        isImageNode: false,
+        isFileAssetNode: false,
     });
     return (
-        <PalavyrNodeBody openEditor={openEditor} textCheck={userText} isImageNode={false}>
+        <PalavyrNodeBody openEditor={openEditor} textCheck={userText} isFileAssetNode={false}>
             <div dangerouslySetInnerHTML={{ __html: userText }}></div>
         </PalavyrNodeBody>
     );

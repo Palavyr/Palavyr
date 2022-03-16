@@ -170,8 +170,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<TwoNestedCategoryCompiler>().As<ITwoNestedCategoryCompiler>();
             builder.RegisterType<UnitRetriever>().As<IUnitRetriever>();
             builder.RegisterType<WidgetStatusChecker>().As<IWidgetStatusChecker>();
-            builder.RegisterType<UnitOfWorkContextProvider>().As<IUnitOfWorkContextProvider>().InstancePerLifetimeScope();
-
+            builder.RegisterType<UnitOfWorkContextProvider>().As<IUnitOfWorkContextProvider>();
+            
             builder.RegisterDecorator<FileAssetDeleterDeleteDatabaseRecordDecorator, IFileAssetDeleter>();
             builder.RegisterDecorator<FileAssetDeleterDereferenceConvoNodesDecorator, IFileAssetDeleter>();
             builder.RegisterDecorator<FileAssetSaverDatabaseDecorator, IFileAssetSaver>();

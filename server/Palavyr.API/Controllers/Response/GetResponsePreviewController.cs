@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Response
 {

@@ -8,7 +8,7 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Mappers;
 
-namespace Palavyr.API.Controllers.Conversation.FileAssets
+namespace Palavyr.API.Controllers.FileAssets
 {
     [Obsolete]
     public class DeleteFileAssetsController : PalavyrBaseController

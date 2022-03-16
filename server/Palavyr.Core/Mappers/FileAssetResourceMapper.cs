@@ -16,9 +16,8 @@ namespace Palavyr.Core.Mappers
 
         public async Task<FileAssetResource> Map(FileAsset @from, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
-            var fileName = string.Join(".", @from.RiskyNameStem, @from.Extension);
-            var link = await linkCreator.CreateLink(@from.LocationKey);
+            var fileName = string.Join("", @from.RiskyNameStem, @from.Extension);
+            var link = await linkCreator.CreateLink(@from.FileId);
             return new FileAssetResource
             {
                 FileName = fileName,

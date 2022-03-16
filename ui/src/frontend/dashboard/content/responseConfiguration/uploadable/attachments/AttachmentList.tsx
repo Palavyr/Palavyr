@@ -1,15 +1,15 @@
-import { FileLink } from "@Palavyr-Types";
 import { Container, Paper, TableContainer, Table, TableBody, makeStyles, Typography } from "@material-ui/core";
+import { FileAssetResource, SetState } from "@Palavyr-Types";
 import React from "react";
 import { AttachmentListRow } from "./AttachmentListRow";
 
 interface AttachmentList {
-    fileList: Array<FileLink>;
-    setCurrentPreview: any; // func
-    removeAttachment: any; // func
+    fileList: FileAssetResource[];
+    setCurrentPreview: SetState<FileAssetResource | null>;
+    removeAttachment: (fileId: string) => void;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     paper: {
         paddingTop: "0.5rem",
         paddingBottom: "0.5rem",
@@ -41,7 +41,7 @@ export const AttachmentList = ({ fileList, setCurrentPreview, removeAttachment }
             <TableContainer component={Paper}>
                 <Table>
                     <TableBody className={cls.body}>
-                        {fileList.map((row: FileLink) => (
+                        {fileList.map((row: FileAssetResource) => (
                             <AttachmentListRow key={row.fileName} fileName={row.fileName} link={row.link} fileId={row.fileId} setCurrentPreview={setCurrentPreview} removeAttachment={removeAttachment} />
                         ))}
                     </TableBody>

@@ -37,3 +37,4 @@ ITable
 IDynamicTable`1
 IMapToNew`2
 IMapToPreExisting`2
+IDataContext

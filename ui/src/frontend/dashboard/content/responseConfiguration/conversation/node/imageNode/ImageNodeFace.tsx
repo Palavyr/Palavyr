@@ -1,33 +1,33 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import React, { useCallback, useEffect, useState } from "react";
 import { PalavyrNodeBody } from "../baseNode/PalavyrNodeBody";
-import { FileAssetDisplay } from "./CustomImage";
+import { FileAssetDisplay } from "./FileAssetDisplay";
 
 export interface FileAssetNodeProps {
     openEditor: () => void;
-    fileId?: string | null;
+    fileAssetId?: string | null;
     repository: PalavyrRepository;
 }
 
-export const FileAssetNodeFace = ({ openEditor, fileId, repository }: FileAssetNodeProps) => {
+export const FileAssetNodeFace = ({ openEditor, fileAssetId, repository }: FileAssetNodeProps) => {
     const [fileAssetLink, setFileAssetLink] = useState<string>("");
     const [fileAssetName, setFileAssetName] = useState<string>("");
     const [currrentFileAssetFileId, setCurrentFileId] = useState<string>("");
 
     const loadFileAsset = useCallback(async () => {
-        if (fileId !== null && fileId !== undefined) {
-            const fileAssets = await repository.Configuration.FileAssets.GetFileAssets([fileId]);
+        if (fileAssetId !== null && fileAssetId !== undefined) {
+            const fileAssets = await repository.Configuration.FileAssets.GetFileAssets([fileAssetId]);
             const fileAsset = fileAssets[0];
 
             setFileAssetLink(fileAsset.link);
             setFileAssetName(fileAsset.fileName);
             setCurrentFileId(fileAsset.fileId);
         }
-    }, [fileId]);
+    }, [fileAssetId]);
 
     useEffect(() => {
         loadFileAsset();
-    }, [fileId]);
+    }, [fileAssetId]);
 
     return (
         <PalavyrNodeBody openEditor={openEditor} isFileAssetNode>

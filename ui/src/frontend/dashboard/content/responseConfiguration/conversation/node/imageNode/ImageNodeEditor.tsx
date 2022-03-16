@@ -1,8 +1,8 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { Dialog, DialogTitle, DialogContent, Divider, Typography, responsiveFontSizes } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, Divider, Typography } from "@material-ui/core";
 import React, { useCallback, useEffect, useState } from "react";
 import { IPalavyrNode } from "@Palavyr-Types";
-import { FileAssetDisplay } from "./CustomImage";
+import { FileAssetDisplay } from "./FileAssetDisplay";
 import { NodeFileAssetUpload } from "./FileAssetUpload";
 
 export interface ImageNodeEditorProps {
@@ -47,10 +47,10 @@ export const ImageNodeEditor = ({ currentNode, nodeId, repository, editorIsOpen,
                     currentNode={currentNode}
                     nodeId={nodeId}
                     closeEditor={closeEditor}
-                    currentImageId={currentFileAssetId}
-                    setCurrentImageId={setCurrentFileAssetId}
-                    setImageLink={setFileAssetLink}
-                    setImageName={setFileAssetName}
+                    currentFileAssetId={currentFileAssetId}
+                    setCurrentFileAssetId={setCurrentFileAssetId}
+                    setFileAssetLink={setFileAssetLink}
+                    setFileAssetName={setFileAssetName}
                     repository={repository}
                     initialState={false}
                 />

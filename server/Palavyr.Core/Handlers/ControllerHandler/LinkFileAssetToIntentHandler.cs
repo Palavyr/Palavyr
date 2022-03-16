@@ -4,7 +4,7 @@ using MediatR;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
 
-namespace Palavyr.Core.Handlers
+namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class LinkFileAssetToIntentHandler : INotificationHandler<LinkFileAssetToIntentRequest>
     {

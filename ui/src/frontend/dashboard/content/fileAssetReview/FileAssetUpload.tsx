@@ -1,4 +1,5 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
+import { ACCEPTED_FILES } from "@constants";
 import { makeStyles, Typography } from "@material-ui/core";
 import { FileAssetResource, SetState } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
@@ -53,15 +54,7 @@ export const FileAssetUpload = ({ setFileAssets, numImages }: FileAssetUploadPro
                         Upload an image, pdf, or other document you wish to share with your users during their chat.
                     </Typography>
                 }
-                acceptedFiles={[
-                    "image/png",
-                    "image/jpg",
-                    "image/gif",
-                    "image/jpeg",
-                    "application/pdf",
-                    "application/msword",
-                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                }
+                acceptedFiles={ACCEPTED_FILES}
             />
         </div>
     );

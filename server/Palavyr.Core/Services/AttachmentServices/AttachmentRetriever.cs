@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
@@ -89,7 +88,7 @@ namespace Palavyr.Core.Services.AttachmentServices
                     new CloudFileDownloadRequest
                     {
                         LocationKey = asset.LocationKey,
-                        FileNameWithExtension = string.Join(".", asset.RiskyNameStem, asset.Extension)
+                        FileNameWithExtension = string.Join("", asset.RiskyNameStem, asset.Extension)
                     });
             }
 

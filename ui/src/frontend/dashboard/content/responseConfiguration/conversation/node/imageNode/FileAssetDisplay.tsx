@@ -11,7 +11,7 @@ export interface FileAssetDisplayProps {
     fileAssetId: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     display: {
         height: "100%",
         width: "100%",
@@ -23,7 +23,7 @@ export const FileAssetDisplay = memo(({ fileAssetId, fileAssetName, fileAssetLin
     const cls = useStyles();
     const [isLoading, setLoading] = useState<boolean>(true);
     const [bounce, setBounce] = useState<boolean>(false);
-    const onImageClick = (e) => {
+    const onImageClick = e => {
         e.preventDefault();
         window.open(fileAssetLink, "_blank");
     };
@@ -44,7 +44,15 @@ export const FileAssetDisplay = memo(({ fileAssetId, fileAssetName, fileAssetLin
             )}
             <Align>
                 <div style={{ visibility: isLoading ? "hidden" : "visible", maxWidth: "100px", margin: "1rem" }}>
-                    <img onClick={onImageClick} className={cls.display} key={Date.now()} src={fileAssetLink} onChange={() => setLoading(true)} onLoadStart={() => setLoading(true)} onLoad={() => setLoading(false)} />
+                    <img
+                        onClick={onImageClick}
+                        className={cls.display}
+                        key={Date.now()}
+                        src={fileAssetLink}
+                        onChange={() => setLoading(true)}
+                        onLoadStart={() => setLoading(true)}
+                        onLoad={() => setLoading(false)}
+                    />
                 </div>
             </Align>
         </>

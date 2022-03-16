@@ -11,5 +11,8 @@ namespace Palavyr.Core.Stores
         Task CloseUnitOfWork();
         Task DisposeContexts();
         Task DangerousCommitAllContexts();
+
+        Task OpenUnitOfWorkAsync();
+        void OpenUnitOfWork();
     }
 }

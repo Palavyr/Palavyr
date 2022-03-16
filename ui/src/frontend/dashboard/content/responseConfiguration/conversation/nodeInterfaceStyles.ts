@@ -7,7 +7,7 @@ type StyleProps = {
     isDecendentOfSplitMerge?: boolean;
     splitMergeRootSiblingIndex?: number;
     debugOn?: boolean;
-    isImageNode?: boolean;
+    isFileAssetNode?: boolean;
 };
 
 export const useNodeInterfaceStyles = makeStyles(theme => ({

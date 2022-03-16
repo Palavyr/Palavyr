@@ -1,10 +1,12 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Contracts;
@@ -15,10 +17,8 @@ namespace Palavyr.Core.Stores
 {
     public class EntityStore<TEntity> : IEntityStore<TEntity> where TEntity : class, IEntity
     {
-        private readonly IUnitOfWorkContextProvider contextProvider;
         public readonly IAccountIdTransport AccountIdTransport;
         public ICancellationTokenTransport CancellationTokenTransport;
-        public readonly IQueryable<TEntity> ReadonlyQueryExecutor;
         public readonly DbSet<TEntity> QueryExecutor;
 
         public static readonly string AccountMismatchErrorString = "Account mismatch. Please report this to info.palavy@gmail.com";
@@ -43,21 +43,31 @@ namespace Palavyr.Core.Stores
 
         public EntityStore(IUnitOfWorkContextProvider contextProvider, IAccountIdTransport accountIdTransport, ICancellationTokenTransport cancellationTokenTransport)
         {
-            this.contextProvider = contextProvider;
             this.AccountIdTransport = accountIdTransport;
             this.CancellationTokenTransport = cancellationTokenTransport;
-
-            if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
-            {
-                this.ReadonlyQueryExecutor = ChooseContext(contextProvider).Set<TEntity>().Where(x => ((IHaveAccountId)x).AccountId == AccountIdTransport.AccountId);
-            }
-            else
-            {
-                this.ReadonlyQueryExecutor = ChooseContext(contextProvider).Set<TEntity>();
-            }
-
             this.QueryExecutor = ChooseContext(contextProvider).Set<TEntity>();
         }
+
+        private IQueryable<TEntity> RestrictToCurrentAccount(DbSet<TEntity> queryExecutor)
+        {
+            if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
+            {
+                return queryExecutor.Where(x => ((IHaveAccountId)x).AccountId == AccountIdTransport.AccountId);
+            }
+
+            return queryExecutor;
+        }
+
+        private IEnumerable<TEntity> RestrictToCurrentAccount(LocalView<TEntity> localEntities)
+        {
+            if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
+            {
+                return localEntities.Where(x => ((IHaveAccountId)x).AccountId == AccountIdTransport.AccountId);
+            }
+
+            return localEntities;
+        }
+
 
         private DbContext ChooseContext(IUnitOfWorkContextProvider contextProvider)
         {
@@ -81,7 +91,7 @@ namespace Palavyr.Core.Stores
             {
                 if (((IHaveAccountId)entity).AccountId != AccountId)
                 {
-                    throw new AccountMisMatchException("Account mismatch. Please report this to info.palavy@gmail.com");
+                    throw new AccountMisMatchException(AccountMismatchErrorString);
                 }
             }
         }
@@ -119,17 +129,25 @@ namespace Palavyr.Core.Stores
 
         public async Task<TEntity[]> Get(Expression<Func<TEntity, bool>> whereFilterPredicate)
         {
-            return await ReadonlyQueryExecutor
+            return await RestrictToCurrentAccount(QueryExecutor)
                 .Where(whereFilterPredicate)
                 .ToArrayAsync(CancellationToken);
         }
 
         public async Task<TEntity> Get(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            var entity = await ReadonlyQueryExecutor.CustomWhere(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
+            var entity = await RestrictToCurrentAccount(QueryExecutor)
+                .CustomWhere(id, propertySelectorExpression)
+                .SingleOrDefaultAsync(CancellationToken);
             if (entity is null)
             {
-                throw new EntityNotFoundException("Entity not found");
+                entity = RestrictToCurrentAccount(QueryExecutor.Local).SingleOrDefault();
+                if (entity is null)
+                {
+                    throw new EntityNotFoundException("Entity not found");
+                }
+
+                return entity;
             }
 
             return entity;
@@ -137,7 +155,7 @@ namespace Palavyr.Core.Stores
 
         public async Task<TEntity> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            return await ReadonlyQueryExecutor.CustomWhere(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
+            return await RestrictToCurrentAccount(QueryExecutor).CustomWhere(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
         }
 
         public async Task<List<TEntity>> GetMany(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression)
@@ -146,7 +164,9 @@ namespace Palavyr.Core.Stores
             var result = new List<TEntity>();
             foreach (var id in ids)
             {
-                var entities = await ReadonlyQueryExecutor.CustomWhere(id, propertySelectorExpression).ToListAsync(CancellationToken);
+                var entities = await RestrictToCurrentAccount(QueryExecutor)
+                    .CustomWhere(id, propertySelectorExpression)
+                    .ToListAsync(CancellationToken);
                 result.AddRange(entities);
             }
 
@@ -155,13 +175,15 @@ namespace Palavyr.Core.Stores
 
         public async Task<List<TEntity>> GetMany(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
-            var result = await ReadonlyQueryExecutor.CustomWhere(id, propertySelectorExpression).ToListAsync(CancellationToken);
+            var result = await RestrictToCurrentAccount(QueryExecutor)
+                .CustomWhere(id, propertySelectorExpression)
+                .ToListAsync(CancellationToken);
             return result;
         }
 
         public async Task<TEntity[]> GetAll()
         {
-            return await ReadonlyQueryExecutor.ToArrayAsync(CancellationToken);
+            return await RestrictToCurrentAccount(QueryExecutor).ToArrayAsync(CancellationToken);
         }
 
         public async Task<TEntity> Update(TEntity entity)

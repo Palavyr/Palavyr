@@ -8,21 +8,22 @@ namespace Palavyr.Core.Services.FileAssetServices
 {
     public class FileAssetSaverDatabaseDecorator : IFileAssetSaver
     {
-        private readonly IFileAssetSaver fileAssetSaver;
+        private readonly IFileAssetSaver inner;
         private readonly IEntityStore<FileAsset> fileAssetStore;
 
         public FileAssetSaverDatabaseDecorator(
-            IFileAssetSaver fileAssetSaver,
+            IFileAssetSaver inner,
             IEntityStore<FileAsset> fileAssetStore)
         {
-            this.fileAssetSaver = fileAssetSaver;
+            this.inner = inner;
             this.fileAssetStore = fileAssetStore;
         }
 
         public async Task<FileAsset> SaveFile(IFormFile fileData)
         {
-            var fileAsset = await fileAssetSaver.SaveFile(fileData);
+            var fileAsset = await inner.SaveFile(fileData);
             await fileAssetStore.Create(fileAsset);
+            await fileAssetStore.Get(fileAsset.FileId, s => s.FileId);
             return fileAsset;
         }
     }

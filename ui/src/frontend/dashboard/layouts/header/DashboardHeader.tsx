@@ -124,7 +124,6 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
                 >
                     <MenuIcon className={"menu-collapse-tour"} />
                 </IconButton>
-                {/* <div style={{ flexGrow: 1 }} /> */}
                 <Align direction="flex-start">
                     {title && (
                         <>
