@@ -29,7 +29,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
 {
-    public class StripeWebhookRoutingServiceFixture : RealDatabaseIntegrationFixture
+    public class StripeWebhookRoutingServiceFixture : InMemoryIntegrationFixture
     {
         private IStripeEventWebhookRoutingService router = null!;
         private ILogger<IStripeSubscriptionService> logger = null!;
@@ -50,7 +50,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
             await router.ProcessStripeEvent(@event, signature, CancellationToken.None);
 
             var mediator = (IGetData)Container.GetService<IMediator>();
-            mediator.Get()[0].Name.ShouldBe(nameof(NewStripeEventReceivedEvent));
+            mediator.Get().First().Name.ShouldBe(nameof(NewStripeEventReceivedEvent));
         }
 
         [Fact]
@@ -225,7 +225,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
         private void AssertEventIsRouted<TEventHandler>()
         {
             var mediator = (IGetData)Container.GetService<IMediator>();
-            mediator.GetFiltered()[0].Name.ShouldBe(typeof(TEventHandler).Name);
+            mediator.GetFiltered().First().Name.ShouldBe(typeof(TEventHandler).Name);
         }
 
         private Event CreateAMockEvent(string eventType)

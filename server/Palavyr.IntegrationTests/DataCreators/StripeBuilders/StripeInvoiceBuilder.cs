@@ -57,7 +57,7 @@ namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
             var currency = this.curr ?? "$";
             var amtDue = this.amountDue ?? A.RandomInt(1, 10);
             var dDate = this.dueDate ?? DateTime.Now.AddDays(3);
-
+            await Task.CompletedTask;
             return new Invoice
             {
                 CustomerId = custId,

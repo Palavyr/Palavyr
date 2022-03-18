@@ -114,6 +114,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         private protected virtual async Task DeleteTestStripeCustomers()
         {
+            await Task.CompletedTask;
             // var customerService = ResolveType<IStripeCustomerService>();
             // await customerService.DeleteSingleStripeTestCustomer(StripeCustomerId);
         }

@@ -32,10 +32,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 
             var accountStore = ResolveStore<Account>();
             var handler = new ProcessStripeSubscriptionUpdatedHandler(accountStore, service, registry, Substitute.For<ILogger<ProcessStripeSubscriptionUpdatedHandler>>());
-
+            await Task.CompletedTask;
             // act
             // await handler.Handle(new SubscriptionUpdatedEvent(subscription), CancellationToken.None);
-            
+
             // assert results of this call
         }
 
