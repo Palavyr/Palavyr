@@ -1,8 +1,10 @@
 using System;
 using Autofac;
+using MediatR;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -72,7 +74,8 @@ namespace Palavyr.API.Registration.Container
                 .As(typeof(IEntityStore<>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-
+            
+            
             builder.RegisterGeneric(typeof(PricingStrategyEntityStore<>)).As(typeof(IPricingStrategyEntityStore<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandExecutor<>)).As(typeof(IDynamicTableCommandExecutor<>)).InstancePerLifetimeScope();
 
@@ -179,6 +182,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterDecorator<LogoAssetSaverDatabaseUpdaterDecorator, ILogoAssetSaver>();
             builder.RegisterDecorator<ResponseHtmlCustomizationDecorator, IResponseHtmlBuilder>();
             builder.RegisterDecorator<ResponsePdfGeneratorUpdateConversationRecordDecorator, IResponsePdfGenerator>();
+            
         }
     }
 }

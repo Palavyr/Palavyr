@@ -11,7 +11,7 @@ namespace Test.Common.Random
             return StaticGuidUtils.CreateShortenedGuid(1);
         }
 
-        public static string RandomAccount()
+        public static string RandomAccountId()
         {
             return StaticGuidUtils.CreateShortenedGuid(1);
         }
@@ -37,6 +37,11 @@ namespace Test.Common.Random
             var tempFile = Path.GetTempFileName();
             using var stream = File.OpenRead(tempFile);
             return new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
+        }
+
+        public static string RandomTestEmail()
+        {
+            return $"test-{RandomId()}@example.com".ToLowerInvariant();
         }
     }
 }

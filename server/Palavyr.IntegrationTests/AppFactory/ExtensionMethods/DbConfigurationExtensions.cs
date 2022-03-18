@@ -77,23 +77,14 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             var dashContext = scopedServices.GetService<DashContext>();
             var accountContext = scopedServices.GetService<AccountsContext>();
             var convoContext = scopedServices.GetService<ConvoContext>();
-            // var tracker = scopedServices.GetService<DBTracker>();
 
-            // if (!tracker.HasBeenReCreated)
-            // {
-            //     accountContext.Database.EnsureDeleted();
-            //     dashContext.Database.EnsureDeleted();
-            //     convoContext.Database.EnsureDeleted();
-            //     tracker.HasBeenReCreated = true;
-            // }
+            // accountContext.Database.EnsureDeleted();
+            // dashContext.Database.EnsureDeleted();
+            // convoContext.Database.EnsureDeleted();
 
             accountContext.Database.EnsureCreated();
             dashContext.Database.EnsureCreated();
             convoContext.Database.EnsureCreated();
-
-            // accountContext.BeginTransaction();
-            // dashContext.BeginTransaction();
-            // convoContext.BeginTransaction();
 
             var tempCancellationToken = new CancellationTokenTransport(new CancellationToken());
             var contextProvider = new UnitOfWorkContextProvider(dashContext, accountContext, convoContext, tempCancellationToken);
@@ -184,9 +175,4 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             }
         }
     }
-
-    // public sealed class DBTracker
-    // {
-    //     public bool HasBeenReCreated { get; set; }
-    // }
 }

@@ -29,13 +29,13 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IAccountIdTransport accountIdTransport;
         private readonly IEntityStore<Account> accountStore;
         private readonly IEntityStore<EmailVerification> emailVerificationsStore;
-        private StripeCustomerService stripeCustomerService;
+        private IStripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
             IEntityStore<Account> accountStore,
             IEntityStore<EmailVerification> emailVerificationsStore,
             ILogger<EmailVerificationService> logger,
-            StripeCustomerService stripeCustomerService,
+            IStripeCustomerService stripeCustomerService,
             IRequestEmailVerification requestEmailVerification,
             ISesEmail emailClient,
             IGuidUtils guidUtils,

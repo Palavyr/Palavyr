@@ -23,11 +23,11 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IEntityStore<ConversationNode> convoNodeStore;
 
         public AccountRegistrationMaker(
-            IEntityStore<Subscription> subscriptionStore,
             ILogger<AccountRegistrationMaker> logger,
             IEmailVerificationService emailVerificationService,
             IPalavyrAccessChecker accessChecker,
             IEntityStore<Area> intentStore,
+            IEntityStore<Subscription> subscriptionStore,
             IEntityStore<WidgetPreference> widgetPreferenceStore,
             IEntityStore<SelectOneFlat> defaultPricingStrategyStore,
             IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
@@ -49,11 +49,13 @@ namespace Palavyr.Core.Services.AccountServices
         {
             logger.LogDebug("Install new account seed data.");
             var seedData = new SeedData(accountId, emailAddress, introId);
-            await intentStore.CreateMany(seedData.Areas.ToArray());
+            await intentStore.CreateMany(seedData.Areas);
             await widgetPreferenceStore.Create(seedData.WidgetPreference);
-            await defaultPricingStrategyStore.CreateMany(seedData.DefaultDynamicTables.ToArray());
-            await dynamicTableMetaStore.CreateMany(seedData.DefaultDynamicTableMetas.ToArray());
-            await convoNodeStore.CreateMany(seedData.IntroductionConversationNodes.ToArray());
+            await defaultPricingStrategyStore.CreateMany(seedData.DefaultDynamicTables);
+            await convoNodeStore.CreateMany(seedData.IntroductionConversationNodes);
+            
+            seedData.DefaultDynamicTableMetas[0].Id = null; // no idea why I have to do this.
+            await dynamicTableMetaStore.CreateMany(seedData.DefaultDynamicTableMetas);
         }
 
         public async Task<bool> TryRegisterAccountAndSendEmailVerificationToken(string accountId, string apiKey, string emailAddress, string introId, CancellationToken cancellationToken)

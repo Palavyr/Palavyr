@@ -39,9 +39,9 @@ namespace Palavyr.Core.Stores
         public async Task CloseUnitOfWork()
         {
             var token = GetOrCreateCancellationToken();
-            await dashContext.FinalizeAsync(token);
-            await accountsContext.FinalizeAsync(token);
-            await convoContext.FinalizeAsync(token);
+            await dashContext.SaveChangesAsync(token);
+            await accountsContext.SaveChangesAsync(token);
+            await convoContext.SaveChangesAsync(token);
             await DisposeContexts();
         }
 
@@ -58,21 +58,6 @@ namespace Palavyr.Core.Stores
             await dashContext.SaveChangesAsync(token);
             await accountsContext.SaveChangesAsync(token);
             await convoContext.SaveChangesAsync(token);
-        }
-
-        public async Task OpenUnitOfWorkAsync()
-        {
-            var token = GetOrCreateCancellationToken();
-            await dashContext.BeginTransactionAsync(token);
-            await accountsContext.BeginTransactionAsync(token);
-            await convoContext.BeginTransactionAsync(token);
-        }
-
-        public void OpenUnitOfWork()
-        {
-            dashContext.BeginTransaction();
-            accountsContext.BeginTransaction();
-            convoContext.BeginTransaction();
         }
 
         private CancellationToken GetOrCreateCancellationToken()

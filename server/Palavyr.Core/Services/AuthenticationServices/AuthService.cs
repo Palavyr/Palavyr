@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Apis.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -28,7 +27,6 @@ namespace Palavyr.Core.Services.AuthenticationServices
         private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<AuthService> logger;
         private readonly IJwtAuthenticationService jwtAuthService;
-        private IConfiguration configuration;
 
         private const string CouldNotFindAccount = "Could not find Account";
         private const string PasswordsDoNotMatch = "Password does not match.";
@@ -42,8 +40,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
             IEntityStore<Session> sessionStore,
             IEntityStore<Account> accountStore,
             ILogger<AuthService> logger,
-            IJwtAuthenticationService jwtService,
-            IConfiguration configuration
+            IJwtAuthenticationService jwtService
         )
         {
             this.removeStaleSessions = removeStaleSessions;
@@ -51,7 +48,6 @@ namespace Palavyr.Core.Services.AuthenticationServices
             this.accountStore = accountStore;
             this.logger = logger;
 
-            this.configuration = configuration;
             jwtAuthService = jwtService;
         }
 
@@ -107,8 +103,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
             logger.LogDebug("Creating and adding a new session...");
 
-
-            await removeStaleSessions.CleanSessionDb();
+            await removeStaleSessions.CleanSessionDb(account.AccountId);
             var newSession = Session.CreateNew(token, account.AccountId, account.ApiKey);
             var sessionEntity = await sessionStore.DangerousRawQuery().AddAsync(newSession);
             var session = sessionEntity.Entity;
@@ -132,30 +127,6 @@ namespace Palavyr.Core.Services.AuthenticationServices
             if (account.PlanType != Account.PlanTypeEnum.Free && DateTime.Now > periodEndWithBuffer)
             {
                 account.PlanType = Account.PlanTypeEnum.Free;
-            }
-        }
-
-        public async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string? oneTimeCode)
-        {
-            try
-            {
-                logger.LogDebug("Inside the try block -- attempting to validate Google One Time Code");
-                var result =
-                    await GoogleJsonWebSignature.ValidateAsync(
-                        oneTimeCode,
-                        new GoogleJsonWebSignature.ValidationSettings());
-                if (result == null) logger.LogError("RESULT WAS NULL");
-                return result;
-            }
-            catch (InvalidJwtException)
-            {
-                logger.LogDebug("Failed to validate the Google One Time Token - Invalid JWT Token!");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                logger.LogDebug($"UNKNOWN EXCEPTION THROWN: {ex.Message}");
-                return null;
             }
         }
 

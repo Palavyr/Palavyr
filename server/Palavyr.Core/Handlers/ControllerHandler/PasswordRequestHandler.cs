@@ -52,7 +52,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var token = string.Join("-", new[] { StaticGuidUtils.CreateNewId(), StaticGuidUtils.CreateNewId(), StaticGuidUtils.CreateNewId(), StaticGuidUtils.CreateNewId() }).Replace("-", "");
             var apiKey = account.ApiKey;
 
-            await removeStaleSessions.CleanSessionDb();
+            await removeStaleSessions.CleanSessionDb(account.AccountId);
             var session = Session.CreateNew(token, accountStore.AccountId, account.ApiKey);
             await sessionStore.Create(session);
 

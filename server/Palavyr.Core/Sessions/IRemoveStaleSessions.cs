@@ -4,6 +4,6 @@ namespace Palavyr.Core.Sessions
 {
     public interface IRemoveStaleSessions
     {
-        Task CleanSessionDb();
+        Task CleanSessionDb(string accountId);
     }
 }

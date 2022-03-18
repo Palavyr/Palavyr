@@ -6,7 +6,7 @@ using Palavyr.Core.Models.Conversation.Schemas;
 
 namespace Palavyr.Core.Data
 {
-    public class ConvoContext : DbContext, IDataContext
+    public class ConvoContext : DbContext
     {
         public ConvoContext(DbContextOptions<ConvoContext> options) : base(options)
         {
@@ -14,22 +14,5 @@ namespace Palavyr.Core.Data
 
         public DbSet<ConversationHistory> ConversationHistories { get; set; }
         public DbSet<ConversationRecord> ConversationRecords { get; set; }
-
-        private IDbContextTransaction transaction;
-
-        public async Task BeginTransactionAsync(CancellationToken cancellationToken)
-        {
-            transaction = await Database.BeginTransactionAsync(cancellationToken);
-        }
-
-        public void BeginTransaction()
-        {
-            transaction = Database.BeginTransaction();
-        }
-
-        public async Task FinalizeAsync(CancellationToken cancellationToken)
-        {
-            await transaction.CommitAsync(cancellationToken);
-        }
     }
 }

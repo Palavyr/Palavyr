@@ -9,12 +9,12 @@ using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class UploadNodeFileAssetsHandler : IRequestHandler<UploadFileAssetsRequest, UploadFileAssetsResponse>
+    public class UploadFileAssetsHandler : IRequestHandler<UploadFileAssetsRequest, UploadFileAssetsResponse>
     {
         private readonly IFileAssetSaver fileAssetSaver;
         private readonly IMapToNew<FileAsset, FileAssetResource> mapper;
 
-        public UploadNodeFileAssetsHandler(INodeFileAssetSaver fileAssetSaver, IMapToNew<FileAsset, FileAssetResource> mapper)
+        public UploadFileAssetsHandler(IFileAssetSaver fileAssetSaver, IMapToNew<FileAsset, FileAssetResource> mapper)
         {
             this.fileAssetSaver = fileAssetSaver;
             this.mapper = mapper;
@@ -23,9 +23,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<UploadFileAssetsResponse> Handle(UploadFileAssetsRequest request, CancellationToken cancellationToken)
         {
             var fileAssets = new List<FileAsset>();
-            foreach (var imageFile in request.ImageFiles)
+            foreach (var fileUpload in request.ImageFiles)
             {
-                var fileAsset = await fileAssetSaver.SaveFile(imageFile);
+                var fileAsset = await fileAssetSaver.SaveFile(fileUpload);
                 fileAssets.Add(fileAsset);
             }
 

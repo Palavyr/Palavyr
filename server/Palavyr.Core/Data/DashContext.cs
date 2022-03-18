@@ -7,14 +7,12 @@ using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 
 namespace Palavyr.Core.Data
 {
-    public class DashContext : DbContext, IDataContext
+    public class DashContext : DbContext
     {
         public DashContext(DbContextOptions<DashContext> options) : base(options)
         {
         }
 
-        private IDbContextTransaction transaction;
-        
 
         public DbSet<Area> Areas { get; set; }
         public DbSet<ConversationNode> ConversationNodes { get; set; }
@@ -33,20 +31,5 @@ namespace Palavyr.Core.Data
         public DbSet<BasicThreshold> BasicThresholds { get; set; }
         public DbSet<TwoNestedCategory> TwoNestedCategories { get; set; }
         public DbSet<CategoryNestedThreshold> CategoryNestedThresholds { get; set; }
-
-        public async Task BeginTransactionAsync(CancellationToken cancellationToken)
-        {
-            transaction = await Database.BeginTransactionAsync(cancellationToken);
-        }
-
-        public void BeginTransaction()
-        {
-            transaction = Database.BeginTransaction();
-        }
-
-        public async Task FinalizeAsync(CancellationToken cancellationToken)
-        {
-            await transaction.CommitAsync(cancellationToken);
-        }
     }
 }

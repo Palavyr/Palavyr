@@ -26,12 +26,12 @@ namespace Palavyr.API.CustomMiddleware
             HttpContext context,
             IUnitOfWorkContextProvider unitOfWorkContextProvider)
         {
-            await unitOfWorkContextProvider.OpenUnitOfWorkAsync();
-
-            context.Response.OnCompleted(
-                async o => { await unitOfWorkContextProvider.CloseUnitOfWork(); }, context);
+            // context.Response.OnCompleted(
+            //     async o => { await unitOfWorkContextProvider.CloseUnitOfWork(); }, context);
 
             await next(context);
+
+            await unitOfWorkContextProvider.CloseUnitOfWork();
         }
     }
 }

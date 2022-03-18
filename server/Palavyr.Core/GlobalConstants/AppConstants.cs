@@ -12,6 +12,7 @@
             public const string ApiKeyAccess = "apiKeyAccess";
             public const string DevAccess = "secretDevAccess";
             public const string DevAccount = "dashboardDev";
+            public const string Authorization = "Authorization";
         }
 
         public class ConfigSections

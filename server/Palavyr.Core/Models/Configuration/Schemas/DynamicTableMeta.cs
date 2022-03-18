@@ -30,7 +30,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             UnitIds unitId
         )
         {
-            return new DynamicTableMeta()
+            return new DynamicTableMeta
             {
                 TableId = tableId,
                 TableType = tableType,

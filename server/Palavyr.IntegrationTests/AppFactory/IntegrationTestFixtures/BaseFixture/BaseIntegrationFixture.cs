@@ -47,8 +47,10 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public WebApplicationFactory<Startup> WebHostFactory { get; set; } = null!;
 
+        
         public HttpClient Client => WebHostFactory.ConfigureInMemoryClient(SessionId);
         public HttpClient ClientApiKey => WebHostFactory.ConfigureInMemoryApiKeyClient(ApiKey);
+        public Func<string, HttpClient> ConfigurableClient => (string sessionId) => WebHostFactory.ConfigureInMemoryClient(sessionId);
 
         public CancellationToken CancellationToken => new CancellationTokenSource(Timeout).Token;
         public TimeSpan Timeout => TimeSpan.FromMinutes(3);

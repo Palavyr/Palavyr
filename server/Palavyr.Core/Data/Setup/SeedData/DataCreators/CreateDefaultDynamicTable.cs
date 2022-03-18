@@ -26,7 +26,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
 
         public static List<DynamicTableMeta> CreateDefaultMeta(string tableTag, string accountId, string tableId, string areaIdentifier)
         {
-            var dynamicTableMetas = new List<DynamicTableMeta>()
+            var dynamicTableMetas = new List<DynamicTableMeta>
             {
                 DynamicTableMeta.CreateNew(
                     tableTag,

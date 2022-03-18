@@ -2,8 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Stores;
+using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores.Delete;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -12,22 +11,22 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IDangerousAccountDeleter dangerousAccountDeleter;
         private readonly ILogger<DeleteAccountHandler> logger;
-        private readonly IEntityStore<Account> accountStore;
+        private readonly IAccountIdTransport accountIdTransport;
 
         public DeleteAccountHandler(
             IDangerousAccountDeleter dangerousAccountDeleter,
             ILogger<DeleteAccountHandler> logger,
-            IEntityStore<Account> accountStore
+            IAccountIdTransport accountIdTransport
         )
         {
             this.dangerousAccountDeleter = dangerousAccountDeleter;
             this.logger = logger;
-            this.accountStore = accountStore;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task Handle(DeleteAccountNotification notification, CancellationToken _)
         {
-            logger.LogInformation($"Deleting details for account: {accountStore.AccountId}");
+            logger.LogInformation($"Deleting details for account: {accountIdTransport.AccountId}");
             await dangerousAccountDeleter.DeleteAllThings();
         }
     }

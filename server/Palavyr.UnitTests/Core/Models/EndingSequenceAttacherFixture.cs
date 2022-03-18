@@ -19,7 +19,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         [Fact]
         public async Task AllNodesAreCreated()
         {
-            var result = sequenceAttacher.AttachEndingSequenceToNodeList(new List<ConversationNode>() { }, A.RandomId(), A.RandomAccount());
+            var result = sequenceAttacher.AttachEndingSequenceToNodeList(new List<ConversationNode>() { }, A.RandomId(), A.RandomAccountId());
             result.Count.ShouldBe(12);
         }
 
@@ -27,7 +27,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         [Fact]
         public async Task NodesAreReturnedInTheCorrectOrder()
         {
-            var nodeList = sequenceAttacher.AttachEndingSequenceToNodeList(new List<ConversationNode>() { }, A.RandomId(), A.RandomAccount());
+            var nodeList = sequenceAttacher.AttachEndingSequenceToNodeList(new List<ConversationNode>() { }, A.RandomId(), A.RandomAccountId());
 
             var result = nodeList.Select(x => x.NodeId).ToList();
 

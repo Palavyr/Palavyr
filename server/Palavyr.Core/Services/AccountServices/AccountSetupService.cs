@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Accounts.Schemas;
@@ -16,7 +17,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IEntityStore<Account> accountStore;
 
         private readonly INewAccountUtils newAccountUtils;
-        private readonly ILogger<AuthService> logger;
+        private readonly ILogger<AccountSetupService> logger;
         private readonly IJwtAuthenticationService jwtAuthService;
         private readonly IGuidUtils guidUtils;
         private readonly IAccountRegistrationMaker accountRegistrationMaker;
@@ -31,7 +32,7 @@ namespace Palavyr.Core.Services.AccountServices
             IEntityStore<Session> sessionStore,
             IEntityStore<Account> accountStore,
             INewAccountUtils newAccountUtils,
-            ILogger<AuthService> logger,
+            ILogger<AccountSetupService> logger,
             IJwtAuthenticationService jwtService,
             IGuidUtils guidUtils,
             IAccountRegistrationMaker accountRegistrationMaker,
@@ -42,7 +43,7 @@ namespace Palavyr.Core.Services.AccountServices
             this.accountStore = accountStore;
             this.newAccountUtils = newAccountUtils;
             this.logger = logger;
-            jwtAuthService = jwtService;
+            this.jwtAuthService = jwtService;
             this.guidUtils = guidUtils;
             this.accountRegistrationMaker = accountRegistrationMaker;
             this.accountIdTransport = accountIdTransport;
@@ -102,8 +103,8 @@ namespace Palavyr.Core.Services.AccountServices
 
         private async Task<bool> AccountExists(string emailAddress)
         {
-            var account = await accountStore.Get(emailAddress, s => s.EmailAddress);
-            return account != null;
+            var account = await accountStore.RawReadonlyQuery().SingleOrDefaultAsync(s => emailAddress == s.EmailAddress);
+            return !(account is null);
         }
     }
 }

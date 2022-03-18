@@ -104,6 +104,7 @@ namespace Palavyr.Core.Stores.Delete
 
         internal virtual async Task DeleteFileAssets()
         {
+            
             var fileAssetIds = await dashContext
                 .FileAssets
                 .Where(row => row.AccountId == AccountId)
@@ -144,7 +145,7 @@ namespace Palavyr.Core.Stores.Delete
                 var store = newContext.Set<TEntity>();
                 var entities = await store.ToListAsync(CancellationToken);
 
-                var toDelete = FilterByCurrentAccount(entities);//.Where(x => ((IHaveAccountId)x).AccountId == AccountId);
+                var toDelete = FilterByCurrentAccount(entities);
                 store.RemoveRange(toDelete);
                 await contextProvider.DangerousCommitAllContexts();
                 Counter += 1;
@@ -155,24 +156,24 @@ namespace Palavyr.Core.Stores.Delete
         {
             if (!fileAssetsDeleted) throw new DomainException("Cannot Delete Account without first deleting file assets.");
 
-            await DeleteAccountAt<DashContext, Area>();
+            // ORDER MATTERS HERE SINCE WE LINK TABLES IN THE ORM AND WE DONT USE REFLECTION TO AUTO-INCLUDE ALL CHILD ENTITIES from the aggregate root
             await DeleteAccountAt<DashContext, ConversationNode>();
-            await DeleteAccountAt<DashContext, StaticFee>();
-            await DeleteAccountAt<DashContext, StaticTablesMeta>();
-            await DeleteAccountAt<DashContext, StaticTableRow>();
-
             await DeleteAccountAt<DashContext, DynamicTableMeta>();
             await DeleteAccountAt<DashContext, FileAsset>();
-            await DeleteAccountAt<DashContext, Logo>();
-            await DeleteAccountAt<DashContext, AttachmentLinkRecord>();
             await DeleteAccountAt<DashContext, WidgetPreference>();
 
+            await DeleteAccountAt<DashContext, StaticTableRow>();
+            await DeleteAccountAt<DashContext, StaticFee>();
+            
             await DeleteAccountAt<DashContext, SelectOneFlat>();
             await DeleteAccountAt<DashContext, PercentOfThreshold>();
             await DeleteAccountAt<DashContext, BasicThreshold>();
             await DeleteAccountAt<DashContext, TwoNestedCategory>();
             await DeleteAccountAt<DashContext, CategoryNestedThreshold>();
-
+            await DeleteAccountAt<DashContext, Logo>();
+            await DeleteAccountAt<DashContext, StaticTablesMeta>();
+            await DeleteAccountAt<DashContext, AttachmentLinkRecord>();
+            await DeleteAccountAt<DashContext, Area>();
 
             await DeleteAccountAt<AccountsContext, Account>();
             await DeleteAccountAt<AccountsContext, Session>();
