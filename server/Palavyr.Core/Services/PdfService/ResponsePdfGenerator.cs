@@ -25,8 +25,6 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IHtmlToPdfClient htmlToPdfClient;
         private readonly IResponseHtmlBuilder responseHtmlBuilder;
         private readonly IResponsePdfTableCompiler responsePdfTableCompiler;
-        private readonly IStaticTableCompiler staticTableCompiler;
-        private readonly IDynamicTableCompilerOrchestrator dynamicTablesCompiler;
         private readonly IConfiguration configuration;
 
         public ResponsePdfGenerator(
@@ -46,7 +44,7 @@ namespace Palavyr.Core.Services.PdfService
             this.configuration = configuration;
         }
 
-        public async Task<PdfServerResponse> GeneratePdfResponse(
+        public async Task<FileAsset> GeneratePdfResponse(
             CriticalResponses criticalResponses,
             EmailRequest emailRequest,
             CultureInfo culture,
@@ -69,8 +67,8 @@ namespace Palavyr.Core.Services.PdfService
                     FileStem = emailRequest.ConversationId
                 });
 
-            var pdfServerResponse = await htmlToPdfClient.GeneratePdfFromHtml(html, userDataBucket, s3Key, uniqueId, Paper.CreateDefault(uniqueId)); // TODO: Make this configurable via the DBs
-            return pdfServerResponse;
+            var fileAsset = await htmlToPdfClient.GeneratePdfFromHtml(html, s3Key, uniqueId, Paper.DefaultOptions(uniqueId)); // TODO: Make this configurable via the DBs
+            return fileAsset;
         }
     }
     
@@ -115,7 +113,7 @@ namespace Palavyr.Core.Services.PdfService
             this.convoRecordStore = convoRecordStore;
         }
 
-        public async Task<PdfServerResponse> GeneratePdfResponse(CriticalResponses criticalResponses, EmailRequest emailRequest, CultureInfo culture, string uniqueId, string intentId)
+        public async Task<FileAsset> GeneratePdfResponse(CriticalResponses criticalResponses, EmailRequest emailRequest, CultureInfo culture, string uniqueId, string intentId)
         {
             var response = await inner.GeneratePdfResponse(criticalResponses, emailRequest, culture, uniqueId, intentId);
 

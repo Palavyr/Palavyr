@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -21,7 +20,7 @@ namespace Palavyr.Core.Mappers
             this.guidFinder = guidFinder;
         }
 
-        public async Task<WidgetNodeResource> Map(ConversationNode @from, CancellationToken cancellationToken)
+        public async Task<WidgetNodeResource> Map(ConversationNode @from)
         {
             await Task.CompletedTask;
             return new WidgetNodeResource

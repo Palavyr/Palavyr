@@ -29,7 +29,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             await logoDeleter.DeleteLogo();
             var fileAsset = await logoAssetSaver.SaveFile(request.File);
 
-            var fileAssetResource = await mapper.Map(fileAsset, cancellationToken);
+            var fileAssetResource = await mapper.Map(fileAsset);
 
             return new CreateCompanyLogoResponse(fileAssetResource.Link);
         }

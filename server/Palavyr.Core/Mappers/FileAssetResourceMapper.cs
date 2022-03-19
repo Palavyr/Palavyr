@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AmazonServices;
 
@@ -14,9 +13,9 @@ namespace Palavyr.Core.Mappers
             this.linkCreator = linkCreator;
         }
 
-        public async Task<FileAssetResource> Map(FileAsset @from, CancellationToken cancellationToken)
+        public async Task<FileAssetResource> Map(FileAsset @from)
         {
-            var fileName = string.Join("", @from.RiskyNameStem, @from.Extension);
+            var fileName = string.Join(string.Empty, @from.RiskyNameStem, @from.Extension);
             var link = await linkCreator.CreateLink(@from.FileId);
             return new FileAssetResource
             {

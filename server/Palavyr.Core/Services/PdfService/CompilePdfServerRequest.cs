@@ -6,7 +6,7 @@ namespace Palavyr.Core.Services.PdfService
 {
     public interface ICompilePdfServerRequest
     {
-        PdfServerRequest Compile(string bucket, string key, string html, string identifier, Paper paperOptions);
+        PdfServerRequest Compile(string key, string html, string identifier, Paper paperOptions);
     }
 
     public class CompilePdfServerRequest : ICompilePdfServerRequest
@@ -18,10 +18,11 @@ namespace Palavyr.Core.Services.PdfService
             this.configuration = configuration;
         }
 
-        public PdfServerRequest Compile(string bucket, string key, string html, string identifier, Paper paperOptions)
+        public PdfServerRequest Compile(string key, string html, string identifier, Paper paperOptions)
         {
             var accessKey = configuration.GetAccessKey();
             var secretKey = configuration.GetSecretKey();
+            var bucket = configuration.GetUserDataBucket();
             var region = configuration.GetRegion();
 
             return new PdfServerRequest

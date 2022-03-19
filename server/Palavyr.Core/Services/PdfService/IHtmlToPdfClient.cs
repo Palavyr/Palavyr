@@ -1,11 +1,12 @@
 ﻿#nullable enable
 using System.Threading.Tasks;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService.PdfServer;
 
 namespace Palavyr.Core.Services.PdfService
 {
     public interface IHtmlToPdfClient
     {
-        Task<PdfServerResponse> GeneratePdfFromHtml(string htmlString, string bucket, string locationKey, string identifier, Paper paperOptions);
+        Task<FileAsset> GeneratePdfFromHtml(string htmlString, string locationKey, string identifier, Paper paperOptions);
     }
 }

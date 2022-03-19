@@ -67,7 +67,7 @@ namespace Palavyr.Core.Services.PdfService
             }
 
             var result = JsonConvert.DeserializeObject<PdfServerResponse>(await response.Content.ReadAsStringAsync());
-
+            
             var count = 0;
             var found = false;
             while (!found)
@@ -76,7 +76,7 @@ namespace Palavyr.Core.Services.PdfService
                 if (count > retryCount)
                 {
                     logger.LogDebug("PDF File not written correctly");
-                    throw new IOException($"Pdf file not written correctly to {result.FileAsset.LocationKey}");
+                    throw new IOException($"Pdf file not written correctly to {result.S3Key}");
                 }
 
                 if (!found)

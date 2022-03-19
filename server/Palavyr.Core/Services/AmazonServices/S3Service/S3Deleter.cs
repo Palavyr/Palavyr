@@ -73,9 +73,12 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
 
             try
             {
-                var response = await s3Client.DeleteObjectsAsync(deleteRequest, cancellationTokenTransport.CancellationToken);
-                logger.LogInformation($"Response: {response}");
-                logger.LogInformation($"Deleted {string.Join(", ", fileKeys.ToArray())} from {bucket}");
+                if (keys.Count > 0)
+                {
+                    var response = await s3Client.DeleteObjectsAsync(deleteRequest, cancellationTokenTransport.CancellationToken);
+                    logger.LogInformation($"Response: {response}");
+                    logger.LogInformation($"Deleted {string.Join(", ", fileKeys.ToArray())} from {bucket}");
+                }
 
                 return true;
             }

@@ -18,7 +18,6 @@
         public class ConfigSections
         {
             public const string LoggingSection = "Logging";
-            public const string PreviewSection = "Previews";
             public const string UserDataSection = "Userdata";
 
             public const string ConfigurationDbStringKey = "DashContextPostgres";

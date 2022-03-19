@@ -4,8 +4,8 @@ namespace Palavyr.Core.Services.TemporaryPaths
 {
     public static class ExtensionTypes
     {
-        public const string Pdf = "pdf";
-        public const string Png = "png";
+        public const string Pdf = ".pdf";
+        public const string Png = ".png";
     }
 
     public interface ISafeFileNameCreator

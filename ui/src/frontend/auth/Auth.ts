@@ -80,6 +80,7 @@ class Auth {
             await logoutRepository.Logout.RequestLogout(sessionId);
             SessionStorage.unsetAuthorization();
             SessionStorage.unsetEmailAddress();
+            SessionStorage.unsetOtherSessionItems();
         }
         this.authenticated = false;
         await callback();

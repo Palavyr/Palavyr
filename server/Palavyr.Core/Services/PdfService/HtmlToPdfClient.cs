@@ -1,9 +1,9 @@
 ﻿#nullable enable
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService.PdfServer;
-using Palavyr.Core.Services.TemporaryPaths;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
@@ -12,26 +12,28 @@ namespace Palavyr.Core.Services.PdfService
     public class HtmlToPdfClient : IHtmlToPdfClient
     {
         private readonly ILogger<HtmlToPdfClient> logger;
+        private readonly IMapToNew<PdfServerResponse, FileAsset> mapper;
         private readonly IPdfServerClient pdfServerClient;
         private readonly ICompilePdfServerRequest compilePdfServerRequest;
 
         public HtmlToPdfClient(
             ILogger<HtmlToPdfClient> logger,
+            IMapToNew<PdfServerResponse, FileAsset> mapper,
             IPdfServerClient pdfServerClient,
             ICompilePdfServerRequest compilePdfServerRequest)
         {
             this.logger = logger;
+            this.mapper = mapper;
             this.pdfServerClient = pdfServerClient;
             this.compilePdfServerRequest = compilePdfServerRequest;
         }
 
-        public async Task<PdfServerResponse> GeneratePdfFromHtml(string htmlString, string bucket, string locationKey, string identifier, Paper paperOptions)
+        public async Task<FileAsset> GeneratePdfFromHtml(string htmlString, string locationKey, string identifier, Paper paperOptions)
         {
-            var request = compilePdfServerRequest.Compile(bucket, locationKey, htmlString, identifier, paperOptions);
+            var request = compilePdfServerRequest.Compile(locationKey, htmlString, identifier, paperOptions);
             var pdfServerResponse = await pdfServerClient.PostToPdfServer(request);
-
-            logger.LogDebug($"Successfully wrote the pdf file to disk at {pdfServerResponse.FileAsset.LocationKey}!");
-            return pdfServerResponse;
+            var fileAsset = await mapper.Map(pdfServerResponse);
+            return fileAsset;
         }
     }
 
@@ -39,32 +41,20 @@ namespace Palavyr.Core.Services.PdfService
     {
         private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly IHtmlToPdfClient htmlToPdfClient;
-        private readonly IAccountIdTransport accountIdTransport;
 
         public HtmlToPdfClientFileAssetCreatingDecorator(
             IEntityStore<FileAsset> fileAssetStore,
-            IHtmlToPdfClient htmlToPdfClient,
-            IAccountIdTransport accountIdTransport)
+            IHtmlToPdfClient htmlToPdfClient)
         {
             this.fileAssetStore = fileAssetStore;
             this.htmlToPdfClient = htmlToPdfClient;
-            this.accountIdTransport = accountIdTransport;
         }
 
-        public async Task<PdfServerResponse> GeneratePdfFromHtml(string htmlString, string bucket, string locationKey, string identifier, Paper paperOptions)
+        public async Task<FileAsset> GeneratePdfFromHtml(string htmlString, string locationKey, string identifier, Paper paperOptions)
         {
-            var response = await htmlToPdfClient.GeneratePdfFromHtml(htmlString, bucket, locationKey, identifier, paperOptions);
-            var newFileAsset = new FileAsset
-            {
-                AccountId = accountIdTransport.AccountId,
-                FileId = identifier,
-                LocationKey = response.FileAsset.LocationKey,
-                RiskyNameStem = identifier,
-                Extension = ExtensionTypes.Pdf
-            };
-
-            await fileAssetStore.Create(newFileAsset);
-            return response;
+            var fileAsset = await htmlToPdfClient.GeneratePdfFromHtml(htmlString, locationKey, identifier, paperOptions);
+            await fileAssetStore.Create(fileAsset);
+            return fileAsset;
         }
     }
 }

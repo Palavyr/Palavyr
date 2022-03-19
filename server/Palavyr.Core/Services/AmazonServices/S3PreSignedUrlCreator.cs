@@ -30,12 +30,11 @@ namespace Palavyr.Core.Services.AmazonServices
         public string GenericCreatePreSignedUrl(string fileKey, DateTime? expiry = null)
         {
             var expiration = expiry ?? defaultExpiration;
-            var bucket = configuration.GetUserDataBucket();
             string preSignedUrl;
             try
             {
                 preSignedUrl = s3Client.GeneratePreSignedURL(
-                    bucket,
+                    configuration.GetUserDataBucket(),
                     fileKey,
                     expiration,
                     new Dictionary<string, object>());

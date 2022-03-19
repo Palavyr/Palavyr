@@ -6,10 +6,8 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.FileAssetServices;
@@ -29,7 +27,6 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IHtmlToPdfClient htmlToPdfClient;
         private readonly IResponseHtmlBuilder responseHtmlBuilder;
         private readonly IStaticTableCompiler staticTableCompiler;
-        private readonly ILinkCreator linkCreator;
         private readonly IResponsePdfPreviewKeyResolver previewKeyResolver;
         private readonly ITemporaryPath temporaryPath;
         private readonly ICriticalResponses criticalResponses;
@@ -43,7 +40,6 @@ namespace Palavyr.Core.Services.PdfService
             IHtmlToPdfClient htmlToPdfClient,
             IResponseHtmlBuilder responseHtmlBuilder,
             IStaticTableCompiler staticTableCompiler,
-            ILinkCreator linkCreator,
             IResponsePdfPreviewKeyResolver previewKeyResolver,
             ITemporaryPath temporaryPath,
             ICriticalResponses criticalResponses,
@@ -57,7 +53,6 @@ namespace Palavyr.Core.Services.PdfService
             this.htmlToPdfClient = htmlToPdfClient;
             this.responseHtmlBuilder = responseHtmlBuilder;
             this.staticTableCompiler = staticTableCompiler;
-            this.linkCreator = linkCreator;
             this.previewKeyResolver = previewKeyResolver;
             this.temporaryPath = temporaryPath;
             this.criticalResponses = criticalResponses;
@@ -65,15 +60,13 @@ namespace Palavyr.Core.Services.PdfService
             this.guidUtils = guidUtils;
         }
 
-        public async Task<FileAssetResource> CreatePdfResponsePreviewAsync(string intentId, CultureInfo culture)
+        public async Task<FileAsset> CreatePdfResponsePreviewAsync(string intentId, CultureInfo culture)
         {
             var fakeResponses = CreateFakeResponses();
 
-            logger.LogDebug("Attempting to collect table data....");
             var tables = await CreatePreviewTables(intentId, culture);
+            var uniqueId = $"Preview-{guidUtils.CreateNewId()}";
 
-            logger.LogDebug($"Generating PDF Html string to send to express server...");
-            var uniqueId = guidUtils.CreateNewId();
             var html = await responseHtmlBuilder.BuildResponseHtml(
                 intentId,
                 fakeResponses,
@@ -87,7 +80,6 @@ namespace Palavyr.Core.Services.PdfService
                 });
 
             var localTempSafeFile = temporaryPath.CreateLocalTempSafeFile(uniqueId, ExtensionTypes.Pdf);
-
             var s3Key = previewKeyResolver.Resolve(
                 new FileName
                 {
@@ -95,17 +87,9 @@ namespace Palavyr.Core.Services.PdfService
                     FileId = uniqueId,
                     FileStem = uniqueId
                 });
-            var previewBucket = configuration.GetPreviewBucket() ?? throw new DomainException("No preview bucket specified");
-            var response = await htmlToPdfClient.GeneratePdfFromHtml(html, previewBucket, s3Key, localTempSafeFile.FileStem, Paper.CreateDefault(localTempSafeFile.FileStem));
-            var link = await linkCreator.CreateLink(response.FileAsset.FileId);
 
-            var fileAssetResource = new FileAssetResource
-            {
-                Link = link,
-                FileId = uniqueId,
-                FileName = $"Preview-{uniqueId}"
-            };
-            return fileAssetResource;
+            var fileAsset = await htmlToPdfClient.GeneratePdfFromHtml(html, s3Key, localTempSafeFile.FileStem, Paper.DefaultOptions(localTempSafeFile.FileStem));
+            return fileAsset;
         }
 
         private CriticalResponses CreateFakeResponses()
@@ -138,6 +122,7 @@ namespace Palavyr.Core.Services.PdfService
             var rows = new List<TableRow>();
             foreach (var tableMeta in dynamicTableMetas)
             {
+                // TODO: These need to retrieve the INTERFACE Yo
                 var dynamicCompiler = compilerRetriever.RetrieveCompiler(tableMeta.TableType);
                 var newRows = await dynamicCompiler.CreatePreviewData(tableMeta, intent, culture);
                 rows.AddRange(newRows);

@@ -40,7 +40,7 @@ namespace Palavyr.Core.Services.TemporaryPaths
 
         public SafeFile CreateLocalTempSafeFile(string fileNameStem, string extension = ExtensionTypes.Pdf)
         {
-            if (Path.GetExtension(fileNameStem) != null)
+            if (!string.IsNullOrEmpty(Path.GetExtension(fileNameStem)))
             {
                 throw new DomainException("An extension-less file name stem must be used with CreateLocalTempSafeFile. An extension may be specified separately");
             }

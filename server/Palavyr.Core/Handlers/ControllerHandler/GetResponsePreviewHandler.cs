@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -17,26 +18,30 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<GetResponsePreviewHandler> logger;
+        private readonly IMapToNew<FileAsset, FileAssetResource> resourceMapper;
         private readonly IPreviewResponseGenerator previewPdfGenerator;
 
         public GetResponsePreviewHandler(
             IEntityStore<Account> accountStore,
             ILogger<GetResponsePreviewHandler> logger,
+            IMapToNew<FileAsset, FileAssetResource> resourceMapper,
             IPreviewResponseGenerator previewPdfGenerator)
         {
             this.accountStore = accountStore;
             this.logger = logger;
+            this.resourceMapper = resourceMapper;
             this.previewPdfGenerator = previewPdfGenerator;
         }
 
         public async Task<GetResponsePreviewResponse> Handle(GetResponsePreviewRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountStore.GetAccount();
-            var culture = new CultureInfo(account.Locale);
+            var culture = await accountStore.GetCulture();
 
             try
             {
-                var resource = await previewPdfGenerator.CreatePdfResponsePreviewAsync(request.IntentId, culture);
+                var fileAsset = await previewPdfGenerator.CreatePdfResponsePreviewAsync(request.IntentId, culture);
+                var resource = await resourceMapper.Map(fileAsset);
+
                 return new GetResponsePreviewResponse(resource);
             }
             catch (Exception e)

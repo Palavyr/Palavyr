@@ -51,7 +51,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
 
-            var widgetNodes = await mapper.MapMany(completeConversation, cancellationToken);
+            var widgetNodes = await mapper.MapMany(completeConversation);
             
             var newConvo = NewConversation.CreateNew(widgetNodes.ToList());
 

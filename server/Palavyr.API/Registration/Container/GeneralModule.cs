@@ -95,10 +95,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<AwsCloudFileSaver>().As<ICloudFileSaver>();
             builder.RegisterType<AwsS3LinkCreator>().As<ILinkCreator>();
             builder.RegisterType<S3PreSignedUrlCreator>().As<IS3PreSignedUrlCreator>();
-            builder.RegisterType<BasicThresholdCompiler>().As<IBasicThresholdCompiler>();
             builder.RegisterType<BillingPortalSession>().As<IBillingPortalSession>();
             builder.RegisterType<BusinessRules>().As<IBusinessRules>();
-            builder.RegisterType<CategoryNestedThresholdCompiler>().As<ICategoryNestedThresholdCompiler>();
             builder.RegisterType<CloudDeleter>().As<ICloudDeleter>();
             builder.RegisterType<CloudFileDownloader>().As<ICloudFileDownloader>();
             builder.RegisterType<CloudCompatibleKeyResolver>().As<ICloudCompatibleKeyResolver>();
@@ -146,7 +144,6 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PalavyrAccessChecker>().As<IPalavyrAccessChecker>();
             builder.RegisterType<PdfResponseKeyResolver>().As<IPdfResponseKeyResolver>();
             builder.RegisterType<PdfServerClient>().As<IPdfServerClient>();
-            builder.RegisterType<PercentOfThresholdCompiler>().As<IPercentOfThresholdCompiler>();
             builder.RegisterType<PlanTypeRetriever>().As<IPlanTypeRetriever>();
             builder.RegisterType<PreviewResponseGenerator>().As<IPreviewResponseGenerator>();
             builder.RegisterType<RemoveStaleSessions>().As<IRemoveStaleSessions>();
@@ -163,14 +160,19 @@ namespace Palavyr.API.Registration.Container
 
             builder.RegisterType<S3Downloader>().As<IS3Downloader>();
             builder.RegisterType<SafeFileNameCreator>().As<ISafeFileNameCreator>();
-            builder.RegisterType<SelectOneFlatCompiler>().As<ISelectOneFlatCompiler>();
             builder.RegisterType<SelectOneFlatNodeUpdater>().As<ISelectOneFlatNodeUpdater>();
             builder.RegisterType<SesEmail>().As<ISesEmail>();
 
+            builder.RegisterType<SelectOneFlatCompiler>().As<ISelectOneFlatCompiler>();
+            builder.RegisterType<TwoNestedCategoryCompiler>().As<ITwoNestedCategoryCompiler>();
+            builder.RegisterType<PercentOfThresholdCompiler>().As<IPercentOfThresholdCompiler>();
+            builder.RegisterType<BasicThresholdCompiler>().As<IBasicThresholdCompiler>();
+            builder.RegisterType<CategoryNestedThresholdCompiler>().As<ICategoryNestedThresholdCompiler>();
+
+            
             builder.RegisterType<StaticTableCompiler>().As<IStaticTableCompiler>();
             builder.RegisterType<TemporaryPath>().As<ITemporaryPath>();
             builder.RegisterType<ThresholdEvaluator>().As<IThresholdEvaluator>();
-            builder.RegisterType<TwoNestedCategoryCompiler>().As<ITwoNestedCategoryCompiler>();
             builder.RegisterType<UnitRetriever>().As<IUnitRetriever>();
             builder.RegisterType<WidgetStatusChecker>().As<IWidgetStatusChecker>();
             builder.RegisterType<UnitOfWorkContextProvider>().As<IUnitOfWorkContextProvider>();

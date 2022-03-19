@@ -31,7 +31,7 @@ export const PASSWORD_TOO_SHORT = "passwordTooShort";
 export const PRIVACY_POLICY = "privacypolicy";
 
 // PATHS
-export const DASHBOARD_HOME = "/dashboard/activity";
+export const DASHBOARD_HOME = "/dashboard/welcome";
 export const CONVERSATION_REVIEW = "/dashboard/enquiries/conversation";
 export const CONVERSATION_REVIEW_PARAMNAME = "conversationId";
 export const RESET_PASSWORD_VERIFY = `/reset-my-password`;

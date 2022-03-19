@@ -57,8 +57,7 @@ namespace Palavyr.Core.Services.AccountServices
         public async Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken)
         {
             logger.LogDebug("Attempting to confirm email via auth Token.");
-            var emailVerification = await emailVerificationsStore
-                .Get(authToken.Trim(), s => s.AuthenticationToken);
+            var emailVerification = await emailVerificationsStore.GetOrNull(authToken.Trim(), s => s.AuthenticationToken);
 
             if (emailVerification == null)
             {
@@ -67,7 +66,7 @@ namespace Palavyr.Core.Services.AccountServices
 
             logger.LogDebug("Email Address found.");
 
-            var account = await accountStore.Get(emailVerification.AccountId, s => s.AccountId);
+            var account = await accountStore.GetOrNull(emailVerification.AccountId, s => s.AccountId);
             if (account == null)
             {
                 return false;

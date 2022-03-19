@@ -133,12 +133,12 @@ namespace Palavyr.Core.Services.StripeServices
             var existing = await GetCustomerByEmailAddress(emailAddress, cancellationToken);
             if (existing.Count() != 0)
             {
-                throw new DomainException("Attempting to create a Stripe Customer using an email address that already exists in the Stripe Customer list.");
+                throw new DomainException("Attempting to create a Stripe Customer using an email address that already exists in the Stripe.");
             }
 
             var createOptions = new CustomerCreateOptions
             {
-                Description = $"Customer automatically added for {(IsTest ? "testing" : "production")}.",
+                Description = $"Customer automatically added for {(IsTest ? determineCurrentEnvironment.IsStaging() ? "testing-staging" : "testing-dev" : "production")}.",
                 Email = emailAddress
             };
             var customer = await customerSessionService.CreateAsync(createOptions);
@@ -154,7 +154,7 @@ namespace Palavyr.Core.Services.StripeServices
 
         public async Task<StripeList<Customer>> GetCustomerByEmailAddress(string emailAddress, CancellationToken cancellationToken)
         {
-            var customer = await customerSessionService.ListAsync(new CustomerListOptions() { Email = emailAddress });
+            var customer = await customerSessionService.ListAsync(new CustomerListOptions() { Email = emailAddress }, cancellationToken: cancellationToken);
             if (customer.Count() > 1)
             {
                 throw new DomainException("Multiple stripe customers with the same email address found. This is not currently allowed.");

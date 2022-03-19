@@ -47,8 +47,12 @@ namespace Palavyr.Core.Services.PdfService
             var intent = await intentStore.GetIntentOnly(intentId);
             var previewBuilder = new StringBuilder();
 
-            var logo = await logoStore.Get(accountStore.AccountId, x => x.AccountId);
-            var logoLink = await linkCreator.CreateLink(logo.AccountLogoFileId);
+            var logo = await logoStore.GetOrNull(accountStore.AccountId, x => x.AccountId);
+            string logoLink = null!;
+            if (logo != null)
+            {
+                logoLink = await linkCreator.CreateLink(logo.AccountLogoFileId);
+            }
 
             var options = new ResponseCustomizationOptions
             {

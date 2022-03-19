@@ -28,8 +28,8 @@ namespace Palavyr.Core.Services.LogoServices
 
         public async Task<string?> GetLogo()
         {
-            var logo = await logoStore.Get(logoStore.AccountId, x => x.AccountId);
-            if (string.IsNullOrEmpty(logo.AccountLogoFileId)) return null;
+            var logo = await logoStore.GetOrNull(logoStore.AccountId, x => x.AccountId);
+            if (logo is null || string.IsNullOrEmpty(logo.AccountLogoFileId)) return null;
             var logoLink = await linkCreator.CreateLink(logo.AccountLogoFileId);
             return logoLink;
         }

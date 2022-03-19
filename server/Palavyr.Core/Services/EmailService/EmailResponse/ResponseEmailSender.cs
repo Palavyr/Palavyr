@@ -94,15 +94,15 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             if (intent.SendPdfResponse)
             {
                 logger.LogDebug("Generating PDF Response from Send Email");
-                var pdfServerResponse = await responsePdfGenerator.GeneratePdfResponse(
+                var pdfFileAsset = await responsePdfGenerator.GeneratePdfResponse(
                     responses,
                     emailRequest,
                     culture,
                     emailRequest.ConversationId,
                     intentId
                 );
-                pdfLink = await linkCreator.CreateLink(pdfServerResponse.FileAsset.FileId);
-                additionalFiles.Add(pdfServerResponse.ToS3DownloadRequestMeta());
+                pdfLink = await linkCreator.CreateLink(pdfFileAsset.FileId);
+                additionalFiles.Add(pdfFileAsset.ToCloudFileDownloadRequest());
             }
 
             var senderDetails = await compileSenderDetails.Compile(intentId, emailRequest);
