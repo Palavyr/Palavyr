@@ -14,12 +14,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<ModifyLocaleHandler> logger;
-        private readonly LocaleDefinitions localeDefinitions;
+        private readonly ILocaleDefinitions localeDefinitions;
 
         public ModifyLocaleHandler(
             IEntityStore<Account> accountStore,
             ILogger<ModifyLocaleHandler> logger,
-            LocaleDefinitions localeDefinitions)
+            ILocaleDefinitions localeDefinitions)
         {
             this.accountStore = accountStore;
             this.logger = logger;

@@ -11,7 +11,6 @@ namespace PalavyrServer.UnitTests.Core.GlobalConstants
         public void ConfigSectionsAreSet()
         {
             ApplicationConstants.ConfigSections.LoggingSection.ShouldBe("Logging");
-            ApplicationConstants.ConfigSections.PreviewSection.ShouldBe("Previews");
             ApplicationConstants.ConfigSections.UserDataSection.ShouldBe("Userdata");
 
             ApplicationConstants.ConfigSections.ConfigurationDbStringKey.ShouldBe("DashContextPostgres");

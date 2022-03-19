@@ -28,10 +28,10 @@ namespace Palavyr.Core.Services.LogoServices
 
     public class LogoAssetSaverDatabaseUpdaterDecorator : ILogoAssetSaver
     {
-        private readonly IFileAssetLinker<LogoAssetSaver> linker;
+        private readonly IFileAssetLinker<LogoLinker> linker;
         private readonly ILogoAssetSaver logoAssetSaver;
 
-        public LogoAssetSaverDatabaseUpdaterDecorator(IFileAssetLinker<LogoAssetSaver> linker, ILogoAssetSaver logoAssetSaver)
+        public LogoAssetSaverDatabaseUpdaterDecorator(IFileAssetLinker<LogoLinker> linker, ILogoAssetSaver logoAssetSaver)
         {
             this.linker = linker;
             this.logoAssetSaver = logoAssetSaver;

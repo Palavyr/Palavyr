@@ -156,7 +156,7 @@ namespace Palavyr.Core.Stores
             return entity;
         }
 
-        public async Task<TEntity> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
+        public async Task<TEntity?> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
             return await RestrictToCurrentAccount(QueryExecutor).CustomWhere(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
         }

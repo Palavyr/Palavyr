@@ -1,30 +1,29 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
 {
     public class LogoLinker : IFileAssetLinker<LogoLinker>
     {
         private readonly IEntityStore<Logo> logoStore;
-        private readonly IEntityStore<FileAsset> fileAssetStore;
 
-        public LogoLinker(IEntityStore<Logo> logoStore, IEntityStore<FileAsset> fileAssetStore)
+        public LogoLinker(IEntityStore<Logo> logoStore)
         {
             this.logoStore = logoStore;
-            this.fileAssetStore = fileAssetStore;
         }
 
         public async Task LinkToAccount(string fileId)
         {
-            var logoRecord = await logoStore.Get(logoStore.AccountId, s => s.AccountId);
-            var fileAsset = await fileAssetStore.Get(fileId, s => fileId);
-            logoRecord.AccountLogoFileId = fileAsset.FileId;
+            var logoRecord = await logoStore.GetOrCreateLogoRecord();
+            logoRecord.AccountLogoFileId = fileId;
         }
 
         public async Task UnlinkFromAccount(string fileId)
         {
-            var logoRecord = await logoStore.Get(logoStore.AccountId, s => s.AccountId);
+            var logoRecord = await logoStore.GetOrNull(logoStore.AccountId, s => s.AccountId);
+            if (logoRecord is null) return;
             logoRecord.AccountLogoFileId = "";
         }
 
