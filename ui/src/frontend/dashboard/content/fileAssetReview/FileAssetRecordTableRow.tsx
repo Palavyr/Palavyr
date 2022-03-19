@@ -1,23 +1,29 @@
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
-import { makeStyles, TableRow, TableCell, Typography, Link } from "@material-ui/core";
+import { makeStyles, TableRow, TableCell, Typography } from "@material-ui/core";
 import { FileAssetResource, SetState } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useState } from "react";
 import { useContext } from "react";
+import { FileDetails } from "./FileAssetReview";
 
 export interface FileAssetRecordTableRowProps {
     fileAssetResource: FileAssetResource;
     setFileAssetResourceRecord: SetState<FileAssetResource[]>;
     index: number;
-    setCurrentPreview: SetState<string>;
+    setCurrentPreview: SetState<FileDetails>;
     setShowSpinner: SetState<boolean>;
 }
 
 const useStyles = makeStyles(theme => ({
     delete: {
-        padding: ".7rem",
-        margin: ".4rem",
+        backgroundColor: theme.palette.warning.main,
+        border: "none",
+        "&:hover": {
+            border: "none",
+            color: "white",
+            backgroundColor: theme.palette.error.main,
+        },
     },
     link: {
         "&:hover": {
@@ -48,7 +54,9 @@ export const FileAssetRecordTableRow = ({ fileAssetResource, setFileAssetResourc
     const responseLinkOnClick = async (fileAssetResource: FileAssetResource) => {
         setIsLoading(true);
         setShowSpinner(true);
-        setCurrentPreview(fileAssetResource.link);
+
+        const extension = fileAssetResource.fileName.split(".").pop() ?? "";
+        setCurrentPreview({ link: fileAssetResource.link, extension });
 
         setIsLoading(false);
         setShowSpinner(false);
@@ -60,16 +68,11 @@ export const FileAssetRecordTableRow = ({ fileAssetResource, setFileAssetResourc
                 <Typography>{index}</Typography>
             </TableCell>
             <TableCell>
-                <Typography align="center" variant="body1">
+                <ColoredButton variant="outlined" onClick={() => responseLinkOnClick(fileAssetResource)}>
                     {fileAssetResource.fileName}
-                </Typography>
+                </ColoredButton>
             </TableCell>
-            <TableCell>
-                <Link className={cls.link} onClick={() => responseLinkOnClick(fileAssetResource)}>
-                    <Typography variant="body1">File Preview</Typography>
-                </Link>
-            </TableCell>
-            <TableCell>
+            <TableCell align="right">
                 <ColoredButton classes={cls.delete} variant="outlined" color="primary" onClick={() => onDeleteTableClick(fileAssetResource)}>
                     <Typography variant="caption"> Delete</Typography>
                     {deleteIsWorking && <ButtonCircularProgress />}

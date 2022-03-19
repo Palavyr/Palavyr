@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
@@ -69,7 +70,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         }
 
         public AutofacServiceProvider Container => ServiceProvider.Value;
-        public IConfiguration Configuration => TestConfiguration.GetTestConfiguration();
+        public IConfiguration Configuration => TestConfiguration.GetTestConfiguration(Assembly.GetExecutingAssembly());
 
         protected BaseIntegrationFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory)
         {

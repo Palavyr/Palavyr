@@ -1,10 +1,12 @@
 ﻿#nullable enable
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.FileAssets
@@ -22,7 +24,7 @@ namespace Palavyr.API.Controllers.FileAssets
         }
 
         [HttpGet(Route)]
-        public async Task<FileAsset[]> Action([FromQuery] string? fileIds, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FileAssetResource>> Action([FromQuery] string? fileIds, CancellationToken cancellationToken)
         {
             var ids = fileIds?.Split(',') ?? new string[] { };
             if (fileIds != null)

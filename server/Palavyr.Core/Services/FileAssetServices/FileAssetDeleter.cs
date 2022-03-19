@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
@@ -95,7 +96,7 @@ namespace Palavyr.Core.Services.FileAssetServices
             await cloudDeleter.DeleteMany(assets);
 
             var remainingAssets = await fileAssetStore.GetAll();
-            return remainingAssets;
+            return remainingAssets.Where(x => !fileIds.Contains(x.FileId));
         }
 
         public async Task<IEnumerable<FileAsset>> RemoveFile(string fileId)

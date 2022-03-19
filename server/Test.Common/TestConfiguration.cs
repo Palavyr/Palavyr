@@ -3,11 +3,11 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.GlobalConstants;
 
-namespace Palavyr.IntegrationTests.AppFactory
+namespace Test.Common
 {
     public static class TestConfiguration
     {
-        public static IConfiguration GetTestConfiguration()
+        public static IConfiguration GetTestConfiguration(Assembly assembly)
         {
             var myConfiguration = new Dictionary<string, string>();
             myConfiguration.Add(ApplicationConstants.ConfigSections.StripeKeySection, "stripe_secret_key_placeholder");
@@ -28,7 +28,7 @@ namespace Palavyr.IntegrationTests.AppFactory
             myConfiguration.Add(ApplicationConstants.ConfigSections.PdfServerPort, "Pdf.Server.Port");
 
 
-            var assembly = Assembly.GetExecutingAssembly();
+            // var assembly = Assembly.GetExecutingAssembly();
 
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(myConfiguration)

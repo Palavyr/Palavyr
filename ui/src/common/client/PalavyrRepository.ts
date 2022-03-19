@@ -221,33 +221,33 @@ export class PalavyrRepository {
             GetFileAssets: async (fileIds: string[] = []) => {
                 if (fileIds !== undefined && fileIds.length > 0) {
                     // if specifying 1 image
-                    const currentCache = SessionStorage.getCacheValue(CacheIds.FileAssets);
-                    if (currentCache === null) {
-                        return this.client.get<FileAssetResource[]>(`file-assets`, CacheIds.FileAssets);
-                    }
-                    const availableImages = currentCache.filter((x: FileAssetResource) => fileIds.includes(x.fileId)) as FileAssetResource[];
-                    if (availableImages.length === fileIds.length) {
-                        return Promise.resolve(availableImages);
-                    } else {
-                        return await this.client.get<FileAssetResource[]>(`file-assets?fileIds=${fileIds.join(",")}`);
-                    }
+                    // const currentCache = SessionStorage.getCacheValue(CacheIds.FileAssets);
+                    // if (currentCache === null) {
+                    //     return this.client.get<FileAssetResource[]>(`file-assets`, CacheIds.FileAssets);
+                    // }
+                    // const availableImages = currentCache.filter((x: FileAssetResource) => fileIds.includes(x.fileId)) as FileAssetResource[];
+                    // if (availableImages.length === fileIds.length) {
+                    //     return Promise.resolve(availableImages);
+                    // } else {
+                    return await this.client.get<FileAssetResource[]>(`file-assets?fileIds=${fileIds.join(",")}`);
+                    // }
                 } else {
-                    return await this.client.get<FileAssetResource[]>(`file-assets`, CacheIds.FileAssets);
+                    return await this.client.get<FileAssetResource[]>(`file-assets`); //, CacheIds.FileAssets);
                 }
             }, // takes a querystring comma delimieted of fileIds
 
             // DO NOT USE WITH NODE
             UploadFileAssets: async (formData: FormData) => {
-                const result = await this.client.post<FileAssetResource[], {}>(`file-assets/upload`, formData, CacheIds.FileAssets, { headers: this.formDataHeaders });
-                const currentCache = SessionStorage.getCacheValue(CacheIds.FileAssets) as FileAssetResource[];
-                currentCache.push(...result);
-                SessionStorage.setCacheValue(CacheIds.FileAssets, currentCache);
+                const result = await this.client.post<FileAssetResource[], {}>(`file-assets/upload`, formData, undefined, { headers: this.formDataHeaders });
+                // const currentCache = SessionStorage.getCacheValue(CacheIds.FileAssets) as FileAssetResource[];
+                // currentCache.push(...result);
+                // SessionStorage.setCacheValue(CacheIds.FileAssets, currentCache);
                 return result;
             },
 
             LinkFileAssetToNode: async (fileId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`file-assets/link/${fileId}/node/${nodeId}`),
             LinkFileAssetToIntent: async (fileId: string, intentId: string) => this.client.post<FileAssetResource, {}>(`file-assets/link/${fileId}/intent/${intentId}`),
-            DeleteFileAsset: async (fileIds: string[]) => this.client.delete<FileAssetResource[]>(`file-assets?fileIds=${fileIds.join(",")}`, CacheIds.FileAssets), // takes a querystring command delimited of fileIds
+            DeleteFileAsset: async (fileIds: string[]) => this.client.delete<FileAssetResource[]>(`file-assets?fileIds=${fileIds.join(",")}`), // CacheIds.FileAssets), // takes a querystring command delimited of fileIds
         },
     };
 

@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using Autofac;
+using Palavyr.API;
+using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Test.Common.ApprovalTests;
+using TestStack.ConventionTests;
+using TestStack.ConventionTests.Autofac;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -11,12 +16,11 @@ namespace Palavyr.IntegrationTests.Tests
 {
     public class WhenAttemptingToResolveAllTypes : InMemoryIntegrationFixture
     {
+        private readonly ITestOutputHelper testOutputHelper;
+
         [Fact]
         public void AllTypesAreResolvedSuccessfully()
         {
-            var registrations = Container.LifetimeScope.ComponentRegistry.Registrations.Select(x => x.Activator.LimitType);
-            var palavyrRegos = registrations.Where(x => x.Assembly.FullName.Contains("Palavyr")).Select(x => x.Name).ToList();
-
             var allTypes = AppDomain
                 .CurrentDomain
                 .GetAssemblies()
@@ -44,9 +48,24 @@ namespace Palavyr.IntegrationTests.Tests
             this.PalavyrAssent(stringBuilder.ToString());
         }
 
+        [Fact]
+        public void AllHandlersAreResolved()
+        {
+            // var containerBuilder = new ContainerBuilder();
+            // var config = TestConfiguration.GetTestConfiguration();
+            //
+            // Startup.ContainerSetup(containerBuilder, config);
+            // var iContainer = containerBuilder.Build();
+            // var data = new AutofacRegistrations(iContainer.ComponentRegistry);
+            //
+            // Assert.Throws<ConventionFailedException>(() => Convention.Is(new CanResolveAllRegisteredServices(iContainer), data));
+        }
+
+
         public WhenAttemptingToResolveAllTypes(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory)
             : base(testOutputHelper, factory)
         {
+            this.testOutputHelper = testOutputHelper;
         }
     }
 }

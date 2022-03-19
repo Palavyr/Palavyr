@@ -1,10 +1,8 @@
 using System;
-using System.Net.Http;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.StripeServices.Products;
@@ -49,24 +47,7 @@ namespace Palavyr.API.Registration.Container
             builder.Register(
                     context =>
                     {
-                        // var determineCurrentEnvironment = new DetermineCurrentEnvironment(configuration);
-
-                        IStripeClient stripeClient;
-                        // if (!determineCurrentEnvironment.IsDevelopment())
-                        // {
-                        //     var uri = "https://localhost:12112";
-                        //     var localUri = new Uri(uri);
-                        //     var rawClient = new HttpClient();
-                        //     rawClient.BaseAddress = localUri;
-                        //     rawClient.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.Authorization, $"Bearer {StripeConfiguration.ApiKey}");
-                        //     var innerClient = new SystemNetHttpClient(rawClient);
-                        //     stripeClient = new StripeClient(StripeConfiguration.ApiKey, apiBase: localUri., httpClient: innerClient);
-                        // }
-                        // else
-                        // {
-                        // }
-                        stripeClient = new StripeClient(StripeConfiguration.ApiKey, apiBase: StripeClient.DefaultApiBase);
-
+                        var stripeClient = new StripeClient(StripeConfiguration.ApiKey, apiBase: StripeClient.DefaultApiBase);
                         return stripeClient;
                     }).As<IStripeClient>()
                 .InstancePerLifetimeScope();

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.FileAssetServices;
@@ -22,7 +24,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<DeleteImagesResponse> Handle(DeleteImagesRequest request, CancellationToken cancellationToken)
         {
             var fileAssets = await fileAssetDeleter.RemoveFiles(request.FileIds);
-            var mapped = await mapper.MapMany(fileAssets);
+            var mapped = await mapper
+                .MapMany(
+                    fileAssets
+                        .Where(x => !x.RiskyNameWithExtension.StartsWith("Preview-")));
             return new DeleteImagesResponse(mapped);
         }
     }

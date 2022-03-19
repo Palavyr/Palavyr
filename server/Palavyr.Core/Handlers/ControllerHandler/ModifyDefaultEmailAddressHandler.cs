@@ -25,10 +25,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private readonly IRequestEmailVerification requestEmailVerification;
         private readonly IEntityStore<Account> accountStore;
         private IAmazonSimpleEmailService sesClient;
-        private StripeCustomerService stripeCustomerService;
+        private IStripeCustomerService stripeCustomerService;
 
         public ModifyDefaultEmailAddressHandler(
-            StripeCustomerService stripeCustomerService,
+            IStripeCustomerService stripeCustomerService,
             ILogger<ModifyDefaultEmailAddressHandler> logger,
             IAmazonSimpleEmailService sesClient,
             IRequestEmailVerification requestEmailVerification,
