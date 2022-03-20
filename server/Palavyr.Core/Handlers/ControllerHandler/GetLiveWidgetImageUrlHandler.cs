@@ -1,39 +1,41 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetLiveWidgetImageUrlHandler : IRequestHandler<GetLiveWidgetImageUrlRequest, GetLiveWidgetImageUrlResponse>
     {
-        private readonly IConfigurationRepository repository;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly ILinkCreator linkCreator;
-        private readonly IConfiguration configuration;
 
-        public GetLiveWidgetImageUrlHandler(IConfigurationRepository repository, ILinkCreator linkCreator, IConfiguration configuration)
+        public GetLiveWidgetImageUrlHandler(
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<FileAsset> fileAssetStore,
+            ILinkCreator linkCreator)
         {
-            this.repository = repository;
+            this.convoNodeStore = convoNodeStore;
+            this.fileAssetStore = fileAssetStore;
             this.linkCreator = linkCreator;
-            this.configuration = configuration;
         }
 
         public async Task<GetLiveWidgetImageUrlResponse> Handle(GetLiveWidgetImageUrlRequest request, CancellationToken cancellationToken)
         {
-            var convoNode = await repository.GetConversationNodeById(request.NodeId);
-            var image = await repository.GetImageById(convoNode.ImageId);
-            if (image.S3Key == null)
+            var convoNode = await convoNodeStore.Get(request.NodeId, x => x.NodeId);
+            var imageFileAsset = await fileAssetStore.Get(convoNode.ImageId, x => x.FileId);
+            if (imageFileAsset.LocationKey == null)
             {
                 throw new DomainException("Failed to set the file key for this image.");
             }
 
-            var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(image.S3Key, configuration.GetUserDataBucket(), DateTime.Now.AddDays(3));
-            return new GetLiveWidgetImageUrlResponse(preSignedUrl);
+            var link = await linkCreator.CreateLink(imageFileAsset.FileId);
+
+            return new GetLiveWidgetImageUrlResponse(link);
         }
     }
 

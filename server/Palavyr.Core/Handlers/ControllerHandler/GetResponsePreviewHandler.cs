@@ -4,58 +4,58 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Exceptions;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetResponsePreviewHandler : IRequestHandler<GetResponsePreviewRequest, GetResponsePreviewResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<GetResponsePreviewHandler> logger;
+        private readonly IMapToNew<FileAsset, FileAssetResource> resourceMapper;
         private readonly IPreviewResponseGenerator previewPdfGenerator;
 
         public GetResponsePreviewHandler(
-            IAccountRepository accountRepository,
+            IEntityStore<Account> accountStore,
             ILogger<GetResponsePreviewHandler> logger,
+            IMapToNew<FileAsset, FileAssetResource> resourceMapper,
             IPreviewResponseGenerator previewPdfGenerator)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
             this.logger = logger;
+            this.resourceMapper = resourceMapper;
             this.previewPdfGenerator = previewPdfGenerator;
         }
 
         public async Task<GetResponsePreviewResponse> Handle(GetResponsePreviewRequest request, CancellationToken cancellationToken)
         {
-            logger.LogDebug("Attempting to generate a new preview");
-            var account = await accountRepository.GetAccount();
-            var locale = account.Locale;
-            var culture = new CultureInfo(locale);
+            var culture = await accountStore.GetCulture();
 
-            FileLink fileLink;
             try
             {
-                fileLink = await previewPdfGenerator.CreatePdfResponsePreviewAsync(request.IntentId, culture);
-                logger.LogDebug("Successfully created a Response preview!");
-                logger.LogDebug($"File Link: {fileLink.Link}");
-                logger.LogDebug($"File Id: {fileLink.FileId}");
-                logger.LogDebug($"File Name: {fileLink.FileName}");
+                var fileAsset = await previewPdfGenerator.CreatePdfResponsePreviewAsync(request.IntentId, culture);
+                var resource = await resourceMapper.Map(fileAsset);
+
+                return new GetResponsePreviewResponse(resource);
             }
             catch (Exception e)
             {
                 logger.LogDebug($"Failed to Create a preview! Error: {e.Message}");
-                throw new Exception(e.Message);
+                throw new DomainException(e.Message);
             }
-
-            return new GetResponsePreviewResponse(fileLink);
         }
     }
 
     public class GetResponsePreviewResponse
     {
-        public GetResponsePreviewResponse(FileLink response) => Response = response;
-        public FileLink Response { get; set; }
+        public GetResponsePreviewResponse(FileAssetResource response) => Response = response;
+        public FileAssetResource Response { get; set; }
     }
 
     public class GetResponsePreviewRequest : IRequest<GetResponsePreviewResponse>

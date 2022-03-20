@@ -20,6 +20,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
         public override async Task InitializeAsync()
         {
             SetCancellationToken();
+            SetAccountIdTransport();
             await this.SetupProAccount();
             await base.InitializeAsync();
         }
@@ -34,6 +35,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
         [Fact]
         public async Task GetApiKeySuccess()
         {
+            
             var response = await Client.GetAsync<string>(Route);
             Assert.Equal(response, ApiKey);
         }

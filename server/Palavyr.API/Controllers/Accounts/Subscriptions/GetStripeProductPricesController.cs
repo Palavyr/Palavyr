@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Handlers;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Stripe;
 

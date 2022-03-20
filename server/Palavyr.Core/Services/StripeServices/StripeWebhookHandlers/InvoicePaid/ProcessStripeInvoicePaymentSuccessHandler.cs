@@ -2,40 +2,36 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Stores;
 using Stripe;
+using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid
 {
     public class ProcessStripeInvoicePaymentSuccessHandler : INotificationHandler<InvoicePaymentSuccessfulEvent>
     {
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<ProcessStripeInvoicePaymentSuccessHandler> logger;
-        private readonly AccountsContext accountsContext;
         private readonly ISesEmail emailClient;
 
         public ProcessStripeInvoicePaymentSuccessHandler(
-            ILogger<ProcessStripeInvoicePaymentSuccessHandler> processStripeInvoicePaidHandler,
-            AccountsContext accountsContext,
+            IEntityStore<Account> accountStore,
+            ILogger<ProcessStripeInvoicePaymentSuccessHandler> logger,
             ISesEmail emailClient
         )
         {
-            this.logger = processStripeInvoicePaidHandler;
-            this.accountsContext = accountsContext;
+            this.accountStore = accountStore;
+            this.logger = logger;
             this.emailClient = emailClient;
         }
 
         public async Task Handle(InvoicePaymentSuccessfulEvent notification, CancellationToken cancellationToken)
         {
             var invoice = notification.Invoice;
-            var account = await accountsContext
-                .Accounts
-                .SingleOrDefaultAsync(row => row.StripeCustomerId == invoice.CustomerId);
-            // if (invoice.Livemode)
-            // {
+            var account = await accountStore.Get(invoice.CustomerId, s => s.StripeCustomerId);
             if (account == null)
             {
                 logger.LogDebug("Error retrieving account by customer ID");
@@ -43,7 +39,6 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid
             }
 
             account.CurrentPeriodEnd = invoice.Subscription.CurrentPeriodEnd;
-            await accountsContext.SaveChangesAsync();
 
             var htmlBody = PaymentSucceededEmail.GetPaymentSucceededEmailHtml(invoice.Subscription.CurrentPeriodEnd);
             var textBody = PaymentSucceededEmail.GetPaymentSucceededEmailText(invoice.Subscription.CurrentPeriodEnd);

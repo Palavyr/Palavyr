@@ -12,6 +12,7 @@ namespace Palavyr.IntegrationTests.DataCreators
         {
             return new ConversationRecordBuilder(test);
         }
+
     }
 
 
@@ -58,7 +59,7 @@ namespace Palavyr.IntegrationTests.DataCreators
             this.intentId = intentId;
             return this;
         }
-        
+
         public async Task<ConversationRecord> Build()
         {
             var intentId = this.intentId ?? A.RandomId();
@@ -66,8 +67,8 @@ namespace Palavyr.IntegrationTests.DataCreators
             var timeStamp = this.timeStamp ?? DateTime.Now;
             var accountId = this.accountId ?? test.AccountId;
             var conversationId = this.conversationId ?? A.RandomId();
-            
-            var record = new ConversationRecord()
+
+            var record = new ConversationRecord
             {
                 AreaIdentifier = intentId,
                 AreaName = intentName,
@@ -76,9 +77,7 @@ namespace Palavyr.IntegrationTests.DataCreators
                 ConversationId = conversationId
             };
 
-            test.ConvoContext.ConversationRecords.Add(record);
-            await test.ConvoContext.SaveChangesAsync();
-
+            await test.CreateAndSave(record);
             return record;
         }
     }

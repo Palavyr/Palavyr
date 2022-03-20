@@ -2,42 +2,38 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyStaticTablesMetaHandler : IRequestHandler<ModifyStaticTablesMetaRequest, ModifyStaticTablesMetaResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly ILogger<ModifyStaticTablesMetaHandler> logger;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<StaticTablesMeta> staticTableMetaStore;
         private readonly IAccountIdTransport accountIdTransport;
 
         public ModifyStaticTablesMetaHandler(
-            IConfigurationRepository configurationRepository,
-            ILogger<ModifyStaticTablesMetaHandler> logger,
+            IEntityStore<Area> intentStore,
+            IEntityStore<StaticTablesMeta> staticTableMetaStore,
             IAccountIdTransport accountIdTransport)
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.intentStore = intentStore;
+            this.staticTableMetaStore = staticTableMetaStore;
             this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<ModifyStaticTablesMetaResponse> Handle(ModifyStaticTablesMetaRequest request, CancellationToken cancellationToken)
         {
-            var metasToDelete = await configurationRepository.GetStaticTables(request.IntentId);
-            await configurationRepository.RemoveStaticTables(metasToDelete);
+            var intent = await intentStore.GetIntentComplete(request.IntentId);
+            var staticTableMetas = intent.StaticTablesMetas.ToArray();
+            await staticTableMetaStore.Delete(staticTableMetas);
 
             var clearedMetas = StaticTablesMeta.BindTemplateList(request.StaticTableMetaUpdate, accountIdTransport.AccountId);
-            var area = await configurationRepository.GetAreaById(request.IntentId);
-            area.StaticTablesMetas = clearedMetas;
-
-            await configurationRepository.CommitChangesAsync();
-
-            var tables = await configurationRepository.GetStaticTables(request.IntentId);
-            return new ModifyStaticTablesMetaResponse(tables);
+            intent.StaticTablesMetas = clearedMetas;
+            return new ModifyStaticTablesMetaResponse(clearedMetas);
         }
     }
 

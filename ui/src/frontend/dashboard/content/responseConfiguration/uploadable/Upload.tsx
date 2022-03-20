@@ -6,16 +6,17 @@ import { getAnchorOrigin } from "@common/components/PalavyrSnackbar";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 
 export interface IUploadAttachment {
-    initialState?: boolean;
+    initialAccordianState?: boolean;
     modalState?: boolean;
     toggleModal?(): void;
     handleFileSave(files: File[]): void;
     summary: string;
     buttonText: string;
-    uploadDetails: JSX.Element;
+    uploadDetails: string | JSX.Element;
     acceptedFiles: Array<string>;
     dropzoneType?: "dialog" | "area";
     disableButton?: boolean;
+    disable?: boolean;
 }
 
 export type FileUpload = Blob & {
@@ -23,13 +24,13 @@ export type FileUpload = Blob & {
     readonly name: string;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     snackbarProps: {
         color: theme.palette.common.black,
     },
 }));
 
-export const Upload = ({ dropzoneType = "dialog", initialState = false, modalState, toggleModal, handleFileSave, summary, buttonText, uploadDetails, acceptedFiles, disableButton }: IUploadAttachment) => {
+export const Upload = ({ dropzoneType = "dialog", initialAccordianState = false, modalState, toggleModal, handleFileSave, summary, buttonText, uploadDetails, acceptedFiles, disable }: IUploadAttachment) => {
     const onSave = (rawFiles: File[], e: any) => {
         const files = rawFiles.filter((x: File) => !isNullOrUndefinedOrWhitespace(x));
         if (files.length === 0) return;
@@ -51,50 +52,61 @@ export const Upload = ({ dropzoneType = "dialog", initialState = false, modalSta
 
     const anchorOrigin = getAnchorOrigin("br");
     return (
-        <PalavyrAccordian title={summary} initialState={initialState}>
-            <div>
-                {uploadDetails}
-                <br></br>
-                {dropzoneType === "dialog" && (
+        <>
+            <PalavyrAccordian title={summary} initialState={initialAccordianState} disable={disable}>
+                <div>
+                    {uploadDetails}
+                    <br></br>
+                    {dropzoneType === "dialog" && (
+                        <>
+                            <Button onClick={toggleModal} variant="contained" color="primary" disabled={disable}>
+                                {buttonText}
+                            </Button>
+                            {disable && (
+                                <Typography display="block">
+                                    <strong>Upgrade your subscription to enable uploads</strong>
+                                </Typography>
+                            )}
+                        </>
+                    )}
+                </div>
+                {dropzoneType === "dialog" && !disable ? (
+                    <DropzoneDialog
+                        alertSnackbarProps={{ anchorOrigin, classes: { root: cls.snackbarProps } }}
+                        open={modalState}
+                        onSave={onSave}
+                        filesLimit={1}
+                        useChipsForPreview
+                        acceptedFiles={acceptedFiles}
+                        showPreviews={true}
+                        maxFileSize={2000000}
+                        onClose={toggleModal}
+                    />
+                ) : (
                     <>
-                        <Button onClick={toggleModal} variant="contained" color="primary" disabled={disableButton}>
-                            {buttonText}
-                        </Button>
-                        {disableButton && (
-                            <Typography display="block">
-                                <strong>Upgrade your subscription to enable uploads</strong>
-                            </Typography>
+                        {!disable && (
+                            <DropzoneArea
+                                previewText=""
+                                showAlerts={false}
+                                getPreviewIcon={(_: FileObject) => <></>}
+                                showPreviewsInDropzone={false}
+                                alertSnackbarProps={{ anchorOrigin, classes: { root: cls.snackbarProps } }}
+                                clearOnUnmount
+                                filesLimit={1}
+                                onChange={onChange}
+                                acceptedFiles={acceptedFiles}
+                                showPreviews={false}
+                                maxFileSize={2000000}
+                            />
                         )}
                     </>
                 )}
-            </div>
-            {dropzoneType === "dialog" ? (
-                <DropzoneDialog
-                    alertSnackbarProps={{ anchorOrigin, classes: { root: cls.snackbarProps } }}
-                    open={modalState}
-                    onSave={onSave}
-                    filesLimit={1}
-                    useChipsForPreview
-                    acceptedFiles={acceptedFiles}
-                    showPreviews={true}
-                    maxFileSize={2000000}
-                    onClose={toggleModal}
-                />
-            ) : (
-                <DropzoneArea
-                    previewText=""
-                    showAlerts={false}
-                    getPreviewIcon={(_: FileObject) => <></>}
-                    showPreviewsInDropzone={false}
-                    alertSnackbarProps={{ anchorOrigin, classes: { root: cls.snackbarProps } }}
-                    clearOnUnmount
-                    filesLimit={1}
-                    onChange={onChange}
-                    acceptedFiles={acceptedFiles}
-                    showPreviews={false}
-                    maxFileSize={2000000}
-                />
+            </PalavyrAccordian>
+            {disable && (
+                <Typography display="block">
+                    <strong>Upgrade your subscription to enable uploads</strong>
+                </Typography>
             )}
-        </PalavyrAccordian>
+        </>
     );
 };

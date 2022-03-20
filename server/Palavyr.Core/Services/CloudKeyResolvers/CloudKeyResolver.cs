@@ -1,0 +1,44 @@
+using System.IO;
+using Palavyr.Core.Services.FileAssetServices;
+using Palavyr.Core.Sessions;
+
+namespace Palavyr.Core.Services.CloudKeyResolvers
+{
+    public interface ICloudCompatibleKeyResolver
+    {
+        string ResolveFileAssetKey(FileName fileName);
+        string ResolveResponsePdfKey(FileName fileName);
+        string ResolveResponsePdfPreviewKey(FileName fileName);
+    }
+
+    public class CloudCompatibleKeyResolver : ICloudCompatibleKeyResolver
+    {
+        private readonly IAccountIdTransport accountIdTransport;
+
+        public CloudCompatibleKeyResolver(IAccountIdTransport accountIdTransport)
+        {
+            this.accountIdTransport = accountIdTransport;
+        }
+
+        public string ResolveFileAssetKey(FileName fileName)
+        {
+            // bucket
+            // accountId / file-assets / fileId.Extension
+            return Path.Combine(accountIdTransport.AccountId, "file-assets", fileName.ToString());
+        }
+
+        public string ResolveResponsePdfKey(FileName fileName)
+        {
+            // bucket
+            // accountId / response-pdfs / fileId.Extension
+            return Path.Combine(accountIdTransport.AccountId, "response-pdfs", fileName.ToString());
+        }
+
+        public string ResolveResponsePdfPreviewKey(FileName fileName)
+        {
+            // bucket
+            // accountId / response-preview-pdfs / fileId.Extension
+            return Path.Combine(accountIdTransport.AccountId, "response-preview-pdfs", fileName.ToString());
+        }
+    }
+}

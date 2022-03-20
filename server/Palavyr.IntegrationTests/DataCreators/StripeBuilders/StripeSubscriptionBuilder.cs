@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
-using Palavyr.Core.Services.StripeServices.Products;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Stripe;
 using Test.Common.Random;
@@ -13,7 +12,6 @@ namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
         private readonly BaseIntegrationFixture test;
         private Price? price;
 
-        private StagingProductRegistry productRegistry = new StagingProductRegistry();
         private DateTime? periodEnd;
         private string customerId;
         private PriceRecurring? priceRecurring;

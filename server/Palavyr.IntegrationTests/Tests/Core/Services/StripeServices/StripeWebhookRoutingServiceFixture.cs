@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.StripeServices.Products;
@@ -16,6 +17,8 @@ using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.SubscriptionCreated;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Shouldly;
@@ -26,7 +29,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
 {
-    public class StripeWebhookRoutingServiceFixture : RealDatabaseIntegrationFixture
+    public class StripeWebhookRoutingServiceFixture : InMemoryIntegrationFixture
     {
         private IStripeEventWebhookRoutingService router = null!;
         private ILogger<IStripeSubscriptionService> logger = null!;
@@ -41,19 +44,21 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
         public async Task EventReceivedIsFired()
         {
             var signature = A.RandomId();
-            var @event = await WriteAMockEvent(A.RandomName(), signature);
+            var stripeWebhookStore = ResolveStore<StripeWebhookReceivedRecord>();
+            var @event = await WriteAMockEvent(A.RandomName(), stripeWebhookStore, signature);
 
             await router.ProcessStripeEvent(@event, signature, CancellationToken.None);
 
             var mediator = (IGetData)Container.GetService<IMediator>();
-            mediator.Get()[0].Name.ShouldBe(nameof(NewStripeEventReceivedEvent));
+            mediator.Get().First().Name.ShouldBe(nameof(NewStripeEventReceivedEvent));
         }
 
         [Fact]
         public async Task SkipsEvent()
         {
             var signature = A.RandomId();
-            var @event = await WriteAMockEvent(A.RandomName(), signature);
+            var stripeWebhookStore = ResolveStore<StripeWebhookReceivedRecord>();
+            var @event = await WriteAMockEvent(A.RandomName(), stripeWebhookStore, signature);
 
             await router.ProcessStripeEvent(@event, signature, CancellationToken.None);
 
@@ -100,7 +105,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
 
             await router.ProcessStripeEvent(@event, A.RandomId(), CancellationToken);
 
-            AssertEventIsRouted<CheckoutSessionCompletedEvent>();
+            AssertEventIsRouted<CheckoutSessionCompletedNotification>();
         }
 
         [Fact]
@@ -220,7 +225,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
         private void AssertEventIsRouted<TEventHandler>()
         {
             var mediator = (IGetData)Container.GetService<IMediator>();
-            mediator.GetFiltered()[0].Name.ShouldBe(typeof(TEventHandler).Name);
+            mediator.GetFiltered().First().Name.ShouldBe(typeof(TEventHandler).Name);
         }
 
         private Event CreateAMockEvent(string eventType)
@@ -238,10 +243,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
             return @event;
         }
 
-        private async Task<Event> WriteAMockEvent(string eventType, string? signature = null)
+        private async Task<Event> WriteAMockEvent(string eventType, IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore, string? signature = null)
         {
             var @event = CreateAMockEvent(eventType);
-            await AccountRepository.AddStripeEvent(@event.Id, signature);
+            await stripeWebhookStore.AddStripeEvent(@event.Id, signature);
             return @event;
         }
 

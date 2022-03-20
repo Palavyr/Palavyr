@@ -2,28 +2,28 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetIsMultiOptionTypeHandler : IRequestHandler<GetIsMultiOptionTypeRequest, GetIsMultiOptionTypeResponse>
     {
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly ILogger<GetIsMultiOptionTypeHandler> logger;
-        private readonly GuidFinder guidFinder;
-        private readonly DashContext dashContext;
+        private readonly IGuidFinder guidFinder;
 
         public GetIsMultiOptionTypeHandler(
             ILogger<GetIsMultiOptionTypeHandler> logger,
-            GuidFinder guidFinder,
-            DashContext dashContext)
+            IGuidFinder guidFinder,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore)
         {
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
             this.logger = logger;
             this.guidFinder = guidFinder;
-            this.dashContext = dashContext;
         }
 
         public async Task<GetIsMultiOptionTypeResponse> Handle(GetIsMultiOptionTypeRequest request, CancellationToken cancellationToken)
@@ -42,10 +42,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             {
                 if (request.NodeType.StartsWith(dynamicTableType.TableType))
                 {
-                    var tableId = guidFinder.FindFirstGuidSuffix(request.NodeType);
-                    var table = await dashContext
-                        .DynamicTableMetas
-                        .SingleOrDefaultAsync(row => row.TableId == tableId);
+                    var tableId = guidFinder.FindFirstGuidSuffixOrNull(request.NodeType);
+                    var table = await dynamicTableMetaStore.Get(tableId, s => s.TableId);
                     if (table != null)
                     {
                         var isMultiOption = table.ValuesAsPaths;

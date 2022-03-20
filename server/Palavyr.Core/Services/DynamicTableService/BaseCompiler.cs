@@ -4,16 +4,16 @@ using System.Threading.Tasks;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
 
 
 namespace Palavyr.Core.Services.DynamicTableService
 {
     public abstract class BaseCompiler<TEntity> where TEntity : class, IDynamicTable<TEntity>
     {
-        protected readonly IGenericDynamicTableRepository<TEntity> repository;
+        protected readonly IPricingStrategyEntityStore<TEntity> repository;
 
-        public BaseCompiler(IGenericDynamicTableRepository<TEntity> repository)
+        public BaseCompiler(IPricingStrategyEntityStore<TEntity> repository)
         {
             this.repository = repository;
         }

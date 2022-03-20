@@ -2,24 +2,26 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetStripeCustomerIdHandler : IRequestHandler<GetStripeCustomerIdRequest, GetStripeCustomerIdResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Account> accountStore;
 
         public GetStripeCustomerIdHandler(
             ILogger<GetStripeCustomerIdHandler> logger,
-            IAccountRepository accountRepository)
+            IEntityStore<Account> accountStore)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
 
         public async Task<GetStripeCustomerIdResponse> Handle(GetStripeCustomerIdRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             return new GetStripeCustomerIdResponse(account.StripeCustomerId);
         }
     }

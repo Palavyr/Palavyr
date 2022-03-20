@@ -2,9 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
+using Palavyr.Core.Stores;
 using Stripe;
 using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
@@ -12,15 +11,15 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
     public class ProcessStripeSubscriptionDeletedHandler : INotificationHandler<SubscriptionDeletedEvent>
     {
-        private readonly AccountsContext accountsContext;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<ProcessStripeSubscriptionDeletedHandler> logger;
 
         public ProcessStripeSubscriptionDeletedHandler(
-            AccountsContext accountsContext,
+            IEntityStore<Account> accountStore,
             ILogger<ProcessStripeSubscriptionDeletedHandler> logger
         )
         {
-            this.accountsContext = accountsContext;
+            this.accountStore = accountStore;
             this.logger = logger;
         }
 
@@ -28,9 +27,7 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
         {
             var subscription = notification.Subscription;
 
-            var account = await accountsContext
-                .Accounts
-                .SingleOrDefaultAsync(row => row.StripeCustomerId == subscription.CustomerId);
+            var account = await accountStore.Get(subscription.CustomerId, s => s.StripeCustomerId);
             if (account == null)
             {
                 logger.LogDebug("Error retrieving account by customer ID");
@@ -39,8 +36,6 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 
             account.CurrentPeriodEnd = subscription.CurrentPeriodEnd;
             account.PlanType = Account.PlanTypeEnum.Free;
-
-            await accountsContext.SaveChangesAsync();
         }
     }
 

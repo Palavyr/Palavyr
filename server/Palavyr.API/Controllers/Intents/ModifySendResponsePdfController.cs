@@ -1,30 +1,30 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.API.Controllers.Intents
 {
     public class ModifySendResponsePdfController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IEntityStore<Area> intentStore;
 
-        private const string Route = "area/send-pdf/{areaId}";
+        private const string Route = "area/send-pdf/{intentId}";
 
-        public ModifySendResponsePdfController(IConfigurationRepository configurationRepository)
+        public ModifySendResponsePdfController(IEntityStore<Area> intentStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
         }
 
         [HttpPost(Route)]
         public async Task<bool> Post(
-            [FromRoute] string areaId,
+            [FromRoute] string intentId,
             CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(areaId);
+            var area = await intentStore.Get(intentId, s => s.AreaIdentifier);
             var newState = !area.SendPdfResponse;
             area.SendPdfResponse = newState;
-            await configurationRepository.CommitChangesAsync();
             return newState;
         }
     }

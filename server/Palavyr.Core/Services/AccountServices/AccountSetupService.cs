@@ -1,23 +1,23 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.AccountServices
 {
     public class AccountSetupService : IAccountSetupService
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<Account> accountStore;
 
         private readonly INewAccountUtils newAccountUtils;
-        private readonly ILogger<AuthService> logger;
+        private readonly ILogger<AccountSetupService> logger;
         private readonly IJwtAuthenticationService jwtAuthService;
         private readonly IGuidUtils guidUtils;
         private readonly IAccountRegistrationMaker accountRegistrationMaker;
@@ -29,19 +29,21 @@ namespace Palavyr.Core.Services.AccountServices
         private const string EmailAddressNotFound = "Email Address Not Found";
 
         public AccountSetupService(
-            IAccountRepository accountRepository,
+            IEntityStore<Session> sessionStore,
+            IEntityStore<Account> accountStore,
             INewAccountUtils newAccountUtils,
-            ILogger<AuthService> logger,
+            ILogger<AccountSetupService> logger,
             IJwtAuthenticationService jwtService,
             IGuidUtils guidUtils,
             IAccountRegistrationMaker accountRegistrationMaker,
             IAccountIdTransport accountIdTransport
         )
         {
-            this.accountRepository = accountRepository;
+            this.sessionStore = sessionStore;
+            this.accountStore = accountStore;
             this.newAccountUtils = newAccountUtils;
             this.logger = logger;
-            jwtAuthService = jwtService;
+            this.jwtAuthService = jwtService;
             this.guidUtils = guidUtils;
             this.accountRegistrationMaker = accountRegistrationMaker;
             this.accountIdTransport = accountIdTransport;
@@ -81,11 +83,10 @@ namespace Palavyr.Core.Services.AccountServices
                 emailAddress,
                 PasswordHashing.CreateHashedPassword(password),
                 accountId,
-                apiKey,
-                AccountType.Default
+                apiKey
             );
             logger.LogDebug("Adding new account via DEFAULT...");
-            await accountRepository.CreateAccount(account);
+            await accountStore.Create(account);
 
             var introId = account.IntroductionId;
             var ok = await accountRegistrationMaker.TryRegisterAccountAndSendEmailVerificationToken(accountId, apiKey, emailAddress, introId, cancellationToken);
@@ -95,15 +96,15 @@ namespace Palavyr.Core.Services.AccountServices
 
             var token = CreateNewJwtToken(account);
             var session = CreateNewSession(account);
-            await accountRepository.CreateNewSession(session);
+            await sessionStore.Create(session);
 
             return Credentials.CreateAuthenticatedResponse(session.SessionId, session.ApiKey, token, account.EmailAddress);
         }
 
         private async Task<bool> AccountExists(string emailAddress)
         {
-            var account = await accountRepository.GetAccountOrNull();
-            return account != null;
+            var account = await accountStore.RawReadonlyQuery().SingleOrDefaultAsync(s => emailAddress == s.EmailAddress);
+            return !(account is null);
         }
     }
 }

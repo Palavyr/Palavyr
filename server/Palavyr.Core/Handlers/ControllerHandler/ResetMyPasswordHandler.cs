@@ -1,18 +1,20 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ResetMyPasswordHandler : IRequestHandler<ResetMyPasswordRequest, ResetMyPasswordResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Account> accountStore;
 
-        public ResetMyPasswordHandler(IAccountRepository accountRepository)
+        public ResetMyPasswordHandler(IEntityStore<Account> accountStore)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
 
         public async Task<ResetMyPasswordResponse> Handle(ResetMyPasswordRequest request, CancellationToken cancellationToken)
@@ -22,12 +24,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 return new ResetMyPasswordResponse(new ResetPasswordResponse("Email address and password must both be set.", false));
             }
 
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
 
             // TODO: Consider password validation?
             account.Password = PasswordHashing.CreateHashedPassword(request.Password);
-            await accountRepository.CommitChangesAsync();
-
+            
             return new ResetMyPasswordResponse(new ResetPasswordResponse("Successfully reset your password. Return to the homepage to login with your new password.", true));
         }
     }

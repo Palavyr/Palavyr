@@ -1,11 +1,11 @@
 ﻿using System.Globalization;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Services.PdfService
 {
     public interface IPreviewResponseGenerator
     {
-        Task<FileLink> CreatePdfResponsePreviewAsync(string areaId, CultureInfo culture);
+        Task<FileAsset> CreatePdfResponsePreviewAsync(string areaId, CultureInfo culture);
     }
 }

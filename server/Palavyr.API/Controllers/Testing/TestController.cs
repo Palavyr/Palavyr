@@ -11,9 +11,9 @@ namespace Palavyr.API.Controllers.Testing
     {
         private readonly TestDataProvider testDataProvider;
 
-        public TestController(TestDataProvider testDataProvider)
+        public TestController()
         {
-            this.testDataProvider = testDataProvider;
+            this.testDataProvider = new TestDataProvider();
         }
 
         [HttpGet("test")]
@@ -21,6 +21,7 @@ namespace Palavyr.API.Controllers.Testing
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IReadOnlyCollection<string>> Test()
         {
+            await Task.CompletedTask;
             var testData = testDataProvider.ProvideData();
             return testData;
         }

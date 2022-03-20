@@ -2,22 +2,23 @@
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyConversationNodeTextHandler : IRequestHandler<ModifyConversationNodeTextRequest, ModifyConversationNodeTextResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
 
-        public ModifyConversationNodeTextHandler(IConfigurationRepository configurationRepository)
+        public ModifyConversationNodeTextHandler(IEntityStore<ConversationNode> convoNodeStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.convoNodeStore = convoNodeStore;
         }
 
         public async Task<ModifyConversationNodeTextResponse> Handle(ModifyConversationNodeTextRequest request, CancellationToken cancellationToken)
         {
-            var updatedConversationNode = await configurationRepository.UpdateConversationNodeText(request.IntentId, request.NodeId, request.UpdatedNodeText);
+            var updatedConversationNode = await convoNodeStore.UpdateConversationNodeText(request.IntentId, request.NodeId, request.UpdatedNodeText);
             return new ModifyConversationNodeTextResponse(updatedConversationNode);
         }
     }

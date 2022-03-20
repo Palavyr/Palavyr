@@ -1,5 +1,4 @@
 ﻿using System;
-using Palavyr.Core.Common.Environment;
 
 namespace Palavyr.Core.Services.PdfService.PdfServer
 {
@@ -16,7 +15,7 @@ namespace Palavyr.Core.Services.PdfService.PdfServer
     [Serializable]
     public class Paper
     {
-        public static Paper CreateDefault(string identifier)
+        public static Paper DefaultOptions(string identifier)
         {
             return new Paper
             {

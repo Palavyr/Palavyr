@@ -1,14 +1,12 @@
 ﻿#nullable enable
+using System.Reflection;
 using Autofac;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
-using Palavyr.Core.GlobalConstants;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Test.Common;
 using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
@@ -23,7 +21,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
                     {
                         builder
                             .ConfigureAppConfiguration(
-                                (context, configBuilder) => { configBuilder.AddConfiguration(TestConfiguration.GetTestConfiguration()); })
+                                (context, configBuilder) => { configBuilder.AddConfiguration(TestConfiguration.GetTestConfiguration(Assembly.GetExecutingAssembly())); })
                             .ConfigureTestContainer<ContainerBuilder>(builder => CustomizeContainer(builder))
                             .ConfigureAndCreateRealTestDatabase()
                             .UseTestServer();

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Autofac;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -16,7 +17,7 @@ namespace Palavyr.API.CustomMiddleware
             this.logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext context, IMediator mediator)
+        public async Task InvokeAsync(HttpContext context, IMediator mediator, ILifetimeScope lifetimeScope)
         {
             await mediator.Publish(new SetCancellationTokenRequest(context.RequestAborted));
             await next(context);

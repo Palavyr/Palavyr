@@ -1,38 +1,36 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Data;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ResendConfirmationTokenHandler : IRequestHandler<ResendConfirmationTokenRequest, ResendConfirmationTokenResponse>
     {
+        private readonly IEntityStore<EmailVerification> emailVerificationStore;
         private readonly IEmailVerificationService emailVerificationService;
-        private readonly AccountsContext accountsContext;
         private readonly IAccountIdTransport accountIdTransport;
 
         public ResendConfirmationTokenHandler(
+            IEntityStore<EmailVerification> emailVerificationStore,
             IEmailVerificationService emailVerificationService,
-            AccountsContext accountsContext,
             IAccountIdTransport accountIdTransport)
         {
+            this.emailVerificationStore = emailVerificationStore;
             this.emailVerificationService = emailVerificationService;
-            this.accountsContext = accountsContext;
             this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<ResendConfirmationTokenResponse> Handle(ResendConfirmationTokenRequest request, CancellationToken cancellationToken)
         {
             // delete any old records
-            var maybeCurrentRecord = accountsContext.EmailVerifications
-                .SingleOrDefault(x => x.EmailAddress == request.EmailAddress && x.AccountId == accountIdTransport.AccountId);
+            var maybeCurrentRecord = await emailVerificationStore.Get(request.EmailAddress, s => s.EmailAddress);
             if (maybeCurrentRecord != null)
             {
-                accountsContext.EmailVerifications.Remove(maybeCurrentRecord);
-                await accountsContext.SaveChangesAsync(cancellationToken);
+                await emailVerificationStore.Delete(maybeCurrentRecord);
             }
 
             // resend

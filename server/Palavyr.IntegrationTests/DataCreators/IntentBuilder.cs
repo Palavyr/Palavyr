@@ -74,8 +74,7 @@ namespace Palavyr.IntegrationTests.DataCreators
                 Subject = subject
             };
 
-            test.DashContext.Areas.Add(intent);
-            await test.DashContext.SaveChangesAsync();
+            await test.CreateAndSave(intent);
             return intent;
         }
     }

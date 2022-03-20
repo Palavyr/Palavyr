@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
-    public class Session
+    public class Session : Entity, IHaveAccountId
     {
-        [Key]
         public string SessionId { get; set; }
         public string AccountId { get; set; }
         public string ApiKey { get; set; }
@@ -25,12 +24,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             ApiKey = apiKey;
             Expiration = DateTime.Now.Add(TimeSpan.FromHours(ExpirationPeriod));
         }
-
-        public static Session CreateNew(string accountId, string apiKey)
-        {
-            var newSessionId = Guid.NewGuid().ToString();
-            return new Session(newSessionId, accountId, apiKey);
-        }
+        
 
         public static Session CreateNew(string token, string accountId, string apiKey)
         {

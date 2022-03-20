@@ -1,49 +1,42 @@
 ﻿#nullable enable
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.LogoServices
 {
     public interface ILogoRetriever
     {
         Task<string?> GetLogo();
+        Task<string?> GetLogoThumbnail();
     }
 
     public class LogoRetriever : ILogoRetriever
     {
-        private readonly IConfiguration configuration;
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Logo> logoStore;
         private readonly ILinkCreator linkCreator;
 
         public LogoRetriever(
-            IConfiguration configuration,
-            IAccountRepository accountRepository,
+            IEntityStore<Logo> logoStore,
             ILinkCreator linkCreator
         )
         {
-            this.configuration = configuration;
-            this.accountRepository = accountRepository;
+            this.logoStore = logoStore;
             this.linkCreator = linkCreator;
         }
 
         public async Task<string?> GetLogo()
         {
-            var account = await accountRepository.GetAccount();
-            var s3Key = account.AccountLogoUri;
-            var userDataBucket = configuration.GetUserDataBucket();
+            var logo = await logoStore.GetOrNull(logoStore.AccountId, x => x.AccountId);
+            if (logo is null || string.IsNullOrEmpty(logo.AccountLogoFileId)) return null;
+            var logoLink = await linkCreator.CreateLink(logo.AccountLogoFileId);
+            return logoLink;
+        }
 
-            if (string.IsNullOrWhiteSpace(s3Key))
-            {
-                return null;
-            }
-            else
-            {
-                var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3Key, userDataBucket);
-                return preSignedUrl;
-            }
+        public Task<string?> GetLogoThumbnail()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -2,28 +2,28 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyWidgetActiveStateHandler : IRequestHandler<ModifyWidgetActiveStateRequest, ModifyWidgetActiveStateResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
         private readonly ILogger<ModifyWidgetActiveStateHandler> logger;
 
-        public ModifyWidgetActiveStateHandler(IConfigurationRepository configurationRepository, ILogger<ModifyWidgetActiveStateHandler> logger)
+        public ModifyWidgetActiveStateHandler(IEntityStore<WidgetPreference> widgetPreferenceStore, ILogger<ModifyWidgetActiveStateHandler> logger)
         {
-            this.configurationRepository = configurationRepository;
+            this.widgetPreferenceStore = widgetPreferenceStore;
             this.logger = logger;
         }
 
         public async Task<ModifyWidgetActiveStateResponse> Handle(ModifyWidgetActiveStateRequest request, CancellationToken cancellationToken)
         {
             logger.LogDebug("Modifying widget preference");
-            var widgetPrefs = await configurationRepository.GetWidgetPreferences();
-            widgetPrefs.WidgetState = request.State;
-            await configurationRepository.CommitChangesAsync();
-            return new ModifyWidgetActiveStateResponse(widgetPrefs.WidgetState);
+            var widgetPreferences = await widgetPreferenceStore.Get(widgetPreferenceStore.AccountId, s => s.AccountId);
+            widgetPreferences.WidgetState = request.State;
+            return new ModifyWidgetActiveStateResponse(widgetPreferences.WidgetState);
         }
     }
 

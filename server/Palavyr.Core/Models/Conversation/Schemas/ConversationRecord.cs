@@ -1,15 +1,12 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Conversation.Schemas
 {
-    public class ConversationRecord
+    public class ConversationRecord : Entity, IHaveAccountId
     {
-        [Key]
-        public int? Id { get; set; }
-
         public string ConversationId { get; set; } // This will be used when collecting enquiries. Then used to get the 
         public string ResponsePdfId { get; set; }
         public DateTime TimeStamp { get; set; }
@@ -25,7 +22,11 @@ namespace Palavyr.Core.Models.Conversation.Schemas
         public bool IsFallback { get; set; }
         public string Locale { get; set; } // TODO: Correct This
         public bool IsComplete { get; set; }
-        
+
+        public ConversationRecord()
+        {
+            
+        }
         public static ConversationRecord CreateDefault(string conversationId, string accountId, string areaName, string areaIdentifier)
         {
             return new ConversationRecord

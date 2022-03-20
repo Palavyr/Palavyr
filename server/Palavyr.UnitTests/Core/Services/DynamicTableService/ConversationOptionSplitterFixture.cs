@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Exceptions;
 using Palavyr.Core.Services.DynamicTableService;
 using Shouldly;
 using Test.Common;
@@ -58,8 +56,8 @@ namespace PalavyrServer.UnitTests.Core.Services.DynamicTableService
         public void WhenAGuidIsRequested_AndNoGuidIsPresent_AnExceptionIsThrown()
         {
             var sut = "WOw-Thisisa-Crazy-Thing";
-            Action test = () => splitter.GetTableIdFromDynamicNodeType(sut);
-            test.ShouldThrow<GuidNotFoundException>(sut);
+            var result = splitter.GetTableIdFromDynamicNodeType(sut);
+            result.ShouldBeNull();
         }
 
         public Task InitializeAsync()

@@ -1,68 +1,47 @@
 ﻿using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Amazon.S3;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Data;
-using Palavyr.Core.GlobalConstants;
-using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.FileAssetServices;
+using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.AttachmentServices
 {
     public interface IAttachmentDeleter
     {
-        Task DeleteAttachment(string fileId, CancellationToken cancellationToken);
-        Task DeleteAllAreaAttachments(string areaId, CancellationToken cancellationToken);
+        Task DeleteAttachment(string fileId, string intentId);
+        Task DeleteAllAreaAttachments(string areaId);
     }
 
     public class AttachmentDeleter : IAttachmentDeleter
     {
-        private readonly IConfiguration configuration;
-        private readonly DashContext dashContext;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IFileAssetDeleter fileAssetDeleter;
+        private readonly IFileAssetLinker<AttachmentLinker> linker;
 
-        private readonly IS3Deleter s3Deleter;
 
         public AttachmentDeleter(
-            IConfiguration configuration,
-            DashContext dashContext,
-            IS3Deleter s3Deleter)
+            IEntityStore<Area> intentStore,
+            IFileAssetDeleter fileAssetDeleter,
+            IFileAssetLinker<AttachmentLinker> linker)
         {
-            this.configuration = configuration;
-            this.dashContext = dashContext;
-            this.s3Deleter = s3Deleter;
+            this.intentStore = intentStore;
+            this.fileAssetDeleter = fileAssetDeleter;
+            this.linker = linker;
         }
 
-        public async Task DeleteAttachment(string fileId, CancellationToken cancellationToken)
+        public async Task DeleteAttachment(string fileId, string intentId)
         {
-            var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
-            var meta = await dashContext.FileNameMaps.SingleAsync(x => x.SafeName == fileId, cancellationToken);
-            var success = await s3Deleter.DeleteObjectFromS3Async(userDataBucket, meta.S3Key);
-            if (!success)
-            {
-                throw new AmazonS3Exception($"Could not Delete {meta.S3Key} from {userDataBucket}");
-            }
-
-            dashContext.FileNameMaps.Remove(meta);
-            await dashContext.SaveChangesAsync();
+            await linker.Unlink(fileId, intentId);
         }
 
-        public async Task DeleteAllAreaAttachments(string areaId, CancellationToken cancellationToken)
+        public async Task DeleteAllAreaAttachments(string intentId)
         {
-            var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
-            var metas = dashContext.FileNameMaps
-                .Where(x => x.AreaIdentifier == areaId);
-            var keys = await metas
-                .Select(x => x.S3Key)
-                .ToArrayAsync(cancellationToken);
-            var success = await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, keys);
-            if (!success)
-            {
-                throw new AmazonS3Exception($"Could not Delete {string.Join(", ", keys)} from {userDataBucket}");
-            }
+            var intent = await intentStore.GetIntentComplete(intentId);
+            var fileIds = intent.AttachmentRecords.Select(att => att.FileId).ToArray();
 
-            dashContext.FileNameMaps.RemoveRange(metas);
-            await dashContext.SaveChangesAsync();
+            await fileAssetDeleter.RemoveFiles(fileIds);
         }
     }
 }

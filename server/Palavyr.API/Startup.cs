@@ -1,9 +1,7 @@
 #nullable enable
-using System.Linq;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -37,12 +35,6 @@ namespace Palavyr.API
             builder.RegisterModule(new AmazonModule(configuration));
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
-            builder.RegisterModule(new RepositoriesModule());
-
-            var controllersTypesInAssembly = typeof(Startup).Assembly.GetExportedTypes()
-                .Where(type => typeof(ControllerBase).IsAssignableFrom(type)).ToArray();
-
-            builder.RegisterTypes(controllersTypesInAssembly).PropertiesAutowired();
         }
 
         public static void RegisterStores(IServiceCollection services, IConfiguration configuration)
@@ -60,6 +52,7 @@ namespace Palavyr.API
         {
             services.AddHttpContextAccessor();
             services.AddControllers().AddControllersAsServices();
+            services.AddAuthentication().AddCertificate();
             CorsConfiguration.ConfigureCorsService(services, environ);
             Configurations.ConfigureStripe(config);
             RegisterStores(services, config);
@@ -84,8 +77,10 @@ namespace Palavyr.API
 
             app.UseAuthentication();
             app.UseAuthorization();
+            
             app.UseMiddleware<SetCancellationTokenTransportMiddleware>();
-            app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
+            app.UseMiddleware<UnitOfWorkMiddleware>();
+            app.UseMiddleware<SetAccountIdContextMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
 
             app.UseEndpoints(
                 endpoints =>

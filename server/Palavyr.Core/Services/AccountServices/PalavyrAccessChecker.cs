@@ -33,7 +33,7 @@ namespace Palavyr.Core.Services.AccountServices
         {
             if (determineCurrentEnvironment.IsDevelopment())
             {
-                if (!EmailIdentityList.AllowedEmailsInDevelopment.Contains(emailAddress))
+                if (!EmailIdentityList.AllowedEmailsInDevelopment.Contains(emailAddress) && !emailAddress.StartsWith("test"))
                 {
                     ThrowException(emailAddress);
                 }

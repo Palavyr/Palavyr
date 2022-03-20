@@ -17,9 +17,9 @@ namespace Palavyr.Core.Services.DynamicTableService
 
     public class ConversationOptionSplitter : IConversationOptionSplitter
     {
-        private readonly GuidFinder finder;
+        private readonly IGuidFinder finder;
 
-        public ConversationOptionSplitter(GuidFinder finder)
+        public ConversationOptionSplitter(IGuidFinder finder)
         {
             this.finder = finder;
         }
@@ -51,7 +51,7 @@ namespace Palavyr.Core.Services.DynamicTableService
             return options.Split(Delimiters.ValueOptionDelimiter).ToList();
         }
 
-        public string GetTableIdFromDynamicNodeType(string nodeName) => finder.FindFirstGuidSuffix(nodeName);
+        public string GetTableIdFromDynamicNodeType(string nodeName) => finder.FindFirstGuidSuffixOrNull(nodeName);
 
         public string[] SplitNodeChildrenString(string nodeChildrenString)
         {

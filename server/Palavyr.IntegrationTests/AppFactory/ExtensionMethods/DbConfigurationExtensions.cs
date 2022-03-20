@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +10,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.Delete;
+using Test.Common;
+using Test.Common.TestFileAssetServices;
 
 namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {
@@ -38,6 +47,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 
         private static void AddRealDatabaseContexts(IServiceCollection services)
         {
+            // services.AddSingleton<DBTracker>();
             services.AddDbContext<AccountsContext>(
                 opt =>
                 {
@@ -58,25 +68,29 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                 });
         }
 
-        private static void CreateDatabases(this IServiceCollection services)
+        private static Task CreateDatabases(this IServiceCollection services)
         {
             var sp = ServiceCollectionContainerBuilderExtensions.BuildServiceProvider(services);
             using var scope = sp.CreateScope();
             var scopedServices = scope.ServiceProvider;
 
-            var accountContext = scopedServices.GetRequiredService<AccountsContext>();
-            var dashContext = scopedServices.GetRequiredService<DashContext>();
-            var convoContext = scopedServices.GetRequiredService<ConvoContext>();
+            var dashContext = scopedServices.GetService<DashContext>();
+            var accountContext = scopedServices.GetService<AccountsContext>();
+            var convoContext = scopedServices.GetService<ConvoContext>();
+
+            // accountContext.Database.EnsureDeleted();
+            // dashContext.Database.EnsureDeleted();
+            // convoContext.Database.EnsureDeleted();
 
             accountContext.Database.EnsureCreated();
             dashContext.Database.EnsureCreated();
             convoContext.Database.EnsureCreated();
 
-            ResetDbs(accountContext, dashContext, convoContext);
+            var tempCancellationToken = new CancellationTokenTransport(new CancellationToken());
+            var contextProvider = new UnitOfWorkContextProvider(dashContext, accountContext, convoContext, tempCancellationToken);
+            ResetDbs(scopedServices, contextProvider, tempCancellationToken);
 
-            accountContext.SaveChanges();
-            dashContext.SaveChanges();
-            convoContext.SaveChanges();
+            return Task.CompletedTask;
         }
 
         private static void ConfigureInMemoryDatabases(IServiceCollection services, InMemoryDatabaseRoot dbRoot)
@@ -84,6 +98,8 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             var accountDbName = "TestAccountDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
             var dashDbName = "TestDashDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
             var convoDbName = "TestConvoDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
+
+            // services.AddSingleton<DBTracker>();
 
             services.AddDbContext<AccountsContext>(
                 opt =>
@@ -108,6 +124,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
         private static void SuppressWarnings(this DbContextOptionsBuilder builder)
         {
             builder.ConfigureWarnings(x => { x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning); });
+            builder.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
         }
 
         private static void ClearDescriptors(IServiceCollection services)
@@ -131,74 +148,31 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             }
         }
 
-        public static void ResetDbs(AccountsContext accountContext, DashContext dashContext, ConvoContext convoContext)
+        public static void ResetDbs(IServiceProvider scopedServices, IUnitOfWorkContextProvider contextProvider, ICancellationTokenTransport cancellationTokenTransport)
         {
-            accountContext.ResetAccountDb();
-            accountContext.SaveChanges();
+            var context = scopedServices.GetService<AccountsContext>();
+            var accounts = context.Accounts.ToList();
 
-            dashContext.ResetDashDb();
-            dashContext.SaveChanges();
+            foreach (var account in accounts)
+            {
+                var accountTransport = new AccountIdTransport(account.AccountId);
+                var assetStore = new EntityStore<FileAsset>(contextProvider, accountTransport, cancellationTokenTransport);
+                var decoratedStore = new IntegrationTestEntityStoreEagerSavingDecorator<FileAsset>(assetStore, contextProvider);
 
-            convoContext.ResetConvoContext();
-            convoContext.SaveChanges();
-        }
+                var deleter = new IntegrationTestFileDelete(
+                    decoratedStore);
 
-        public static void ResetConvoContext(this ConvoContext convoContext)
-        {
-            var convos = convoContext.ConversationHistories.ToArray();
-            var completed = convoContext.ConversationRecords.ToArray();
-
-            convoContext.ConversationHistories.RemoveRange(convos);
-            convoContext.ConversationRecords.RemoveRange(completed);
-        }
-
-        public static void ResetDashDb(this DashContext dashContext)
-        {
-            var areas = dashContext.Areas.ToArray();
-            var convoNodes = dashContext.ConversationNodes.ToArray();
-            var fees = dashContext.StaticFees.ToArray();
-            var prefs = dashContext.WidgetPreferences.ToArray();
-            var dynTables = dashContext.DynamicTableMetas.ToArray();
-            var nameMaps = dashContext.FileNameMaps.ToArray();
-            var staticMetas = dashContext.StaticTablesMetas.ToArray();
-            var staticRows = dashContext.StaticTablesRows.ToArray();
-            var perc = dashContext.PercentOfThresholds.ToArray();
-            var select = dashContext.SelectOneFlats.ToArray();
-            var basic = dashContext.BasicThresholds.ToArray();
-            var categoryNested = dashContext.CategoryNestedThresholds.ToArray();
-            var twoNested = dashContext.TwoNestedCategories.ToArray();
-
-            dashContext.Areas.RemoveRange(areas);
-            dashContext.ConversationNodes.RemoveRange(convoNodes);
-            dashContext.StaticFees.RemoveRange(fees);
-            dashContext.WidgetPreferences.RemoveRange(prefs);
-            dashContext.DynamicTableMetas.RemoveRange(dynTables);
-            dashContext.FileNameMaps.RemoveRange(nameMaps);
-            dashContext.StaticTablesMetas.RemoveRange(staticMetas);
-            dashContext.StaticTablesRows.RemoveRange(staticRows);
-
-            dashContext.SelectOneFlats.RemoveRange(select);
-            dashContext.PercentOfThresholds.RemoveRange(perc);
-            dashContext.BasicThresholds.RemoveRange(basic);
-            dashContext.CategoryNestedThresholds.RemoveRange(categoryNested);
-            dashContext.TwoNestedCategories.RemoveRange(twoNested);
-        }
-
-        public static void ResetAccountDb(this AccountsContext accountsContext)
-        {
-            var accounts = accountsContext.Accounts.ToArray();
-            var backups = accountsContext.Backups.ToArray();
-            var sessions = accountsContext.Sessions.ToArray();
-            var subs = accountsContext.Subscriptions.ToArray();
-            var emailVerifications = accountsContext.EmailVerifications.ToArray();
-            var stripeWebhooks = accountsContext.StripeWebHookRecords.ToArray();
-
-            accountsContext.Accounts.RemoveRange(accounts);
-            accountsContext.Backups.RemoveRange(backups);
-            accountsContext.Sessions.RemoveRange(sessions);
-            accountsContext.Subscriptions.RemoveRange(subs);
-            accountsContext.EmailVerifications.RemoveRange(emailVerifications);
-            accountsContext.StripeWebHookRecords.RemoveRange(stripeWebhooks);
+                var accountDeleter = new DangerousAccountDeleter(
+                    scopedServices,
+                    contextProvider,
+                    deleter,
+                    contextProvider.ConfigurationContext(),
+                    contextProvider.ConvoContext(),
+                    contextProvider.AccountsContext(),
+                    accountTransport,
+                    cancellationTokenTransport);
+                accountDeleter.DeleteAllThings();
+            }
         }
     }
 }

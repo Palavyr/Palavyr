@@ -5,7 +5,7 @@ import React from "react";
 
 type StyleProps = {
     nodeText?: string;
-    isImageNode?: boolean;
+    isFileAssetNode?: boolean;
 };
 
 const useStyles = makeStyles(theme => ({
@@ -16,8 +16,8 @@ const useStyles = makeStyles(theme => ({
         border: "1px solid gray",
         padding: "10px",
         textAlign: "center",
-        color: DEFAULT_NODE_TEXT_LIST.includes(props.nodeText ?? "") && !props.isImageNode ? "black" : "black",
-        background: DEFAULT_NODE_TEXT_LIST.includes(props.nodeText ?? "") && !props.isImageNode ? theme.palette.warning.main : "white",
+        color: DEFAULT_NODE_TEXT_LIST.includes(props.nodeText ?? "") && !props.isFileAssetNode ? "black" : "black",
+        background: DEFAULT_NODE_TEXT_LIST.includes(props.nodeText ?? "") && !props.isFileAssetNode ? theme.palette.warning.main : "white",
         "&:hover": {
             background: "lightgray",
             color: "black",
@@ -34,13 +34,13 @@ const useStyles = makeStyles(theme => ({
 interface PalvyrNodeBodyProps {
     children: React.ReactNode;
     textCheck?: string;
-    isImageNode?: boolean;
+    isFileAssetNode?: boolean;
     openEditor(): void;
 }
-export const PalavyrNodeBody = ({ openEditor, children, textCheck, isImageNode }: PalvyrNodeBodyProps) => {
+export const PalavyrNodeBody = ({ openEditor, children, textCheck, isFileAssetNode }: PalvyrNodeBodyProps) => {
     const cls = useStyles({
         nodeText: textCheck,
-        isImageNode,
+        isFileAssetNode,
     });
     return (
         <Card elevation={0} className={classNames(cls.interfaceElement, cls.textCard)} onClick={openEditor}>

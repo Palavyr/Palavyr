@@ -1,27 +1,23 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.Units;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyDynamicTableMetaHandler : IRequestHandler<ModifyDynamicTableMetaRequest, ModifyDynamicTableMetaResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly DashContext dashContext;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly IUnitRetriever unitRetriever;
 
         public ModifyDynamicTableMetaHandler(
-            IConfigurationRepository configurationRepository,
-            DashContext dashContext,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
             IUnitRetriever unitRetriever)
         {
-            this.configurationRepository = configurationRepository;
-            this.dashContext = dashContext;
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
             this.unitRetriever = unitRetriever;
         }
 
@@ -32,12 +28,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 throw new DomainException("Model Id is needed at this time");
             }
 
-            var currentMeta = await configurationRepository.GetDynamicTableMetaByTableId(request.TableId);
+            var currentMeta = await dynamicTableMetaStore.Get(request.TableId, s => s.TableId);
             currentMeta.UpdateProperties(request, unitRetriever);
-            var updatedMeta = await configurationRepository.UpdateDynamicTableMeta(currentMeta);
 
-            await configurationRepository.CommitChangesAsync();
-            
+            var updatedMeta = await dynamicTableMetaStore.Update(currentMeta);
+
             return new ModifyDynamicTableMetaResponse(updatedMeta);
         }
     }

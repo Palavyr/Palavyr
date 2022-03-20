@@ -7,7 +7,12 @@ using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models.Nodes
 {
-    public class RequiredNodeCalculator
+    public interface IRequiredNodeCalculator
+    {
+        Task<IEnumerable<NodeTypeOption>> FindRequiredNodes(Area area);
+    }
+
+    public class RequiredNodeCalculator : IRequiredNodeCalculator
     {
         private readonly IDynamicTableCompilerRetriever dynamicTableCompilerRetriever;
 

@@ -2,43 +2,41 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Handlers;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.API.Controllers.Intents
 {
-
     [Authorize]
-
     public class ModifyIntentNameController : PalavyrBaseController
     {
-
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IEntityStore<Area> intentStore;
         private readonly ILogger<ModifyIntentNameController> logger;
 
         public ModifyIntentNameController(
-            IConfigurationRepository configurationRepository,
+            IEntityStore<Area> intentStore,
             ILogger<ModifyIntentNameController> logger
         )
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
             this.logger = logger;
         }
 
-        [HttpPut("areas/update/name/{areaId}")]
+        [HttpPut("areas/update/name/{intentId}")]
         public async Task<string> Modify(
-            [FromBody] UpdateAreaNameRequest areaNameText,
-            string areaId
+            [FromBody]
+            UpdateIntentNameRequest intentNameText,
+            string intentId
         )
         {
-            var area = await configurationRepository.GetAreaById(areaId);
-            if (areaNameText.AreaName != area.AreaName)
+            var intent = await intentStore.Get(intentId, s => s.AreaIdentifier);
+            if (intentNameText.AreaName != intent.AreaName)
             {
-                area.AreaName = areaNameText.AreaName;
-                await configurationRepository.CommitChangesAsync();
+                intent.AreaName = intentNameText.AreaName;
             }
-            return areaNameText.AreaName;
+
+            return intentNameText.AreaName;
         }
     }
 }

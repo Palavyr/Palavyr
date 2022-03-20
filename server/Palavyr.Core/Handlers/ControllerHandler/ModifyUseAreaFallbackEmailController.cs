@@ -1,24 +1,24 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyUseAreaFallbackEmailHandler : IRequestHandler<ModifyUseAreaFallbackEmailRequest, ModifyUseAreaFallbackEmailResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IEntityStore<Area> intentStore;
 
-        public ModifyUseAreaFallbackEmailHandler(IConfigurationRepository configurationRepository)
+        public ModifyUseAreaFallbackEmailHandler(IEntityStore<Area> intentStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
         }
 
         public async Task<ModifyUseAreaFallbackEmailResponse> Handle(ModifyUseAreaFallbackEmailRequest request, CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(request.IntentId);
+            var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
             area.UseAreaFallbackEmail = request.UseFallback;
-            await configurationRepository.CommitChangesAsync();
             return new ModifyUseAreaFallbackEmailResponse(area.UseAreaFallbackEmail);
         }
     }

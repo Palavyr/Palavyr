@@ -11,7 +11,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetTableNameMapResponse> Handle(GetTableNameMapRequest request, CancellationToken cancellationToken)
         {
             // map that provides e.g. Select One Flat: SelectOneFlat.
-
+            await Task.CompletedTask;
             var availableTables = DynamicTableTypes.GetDynamicTableTypes();
             var tableNameMap = new Dictionary<string, string>();
             foreach (var table in availableTables)

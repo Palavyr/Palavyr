@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class StaticTablesMeta : IStaticTable
+    public class StaticTablesMeta : Entity, IStaticTable, IHaveAccountId
     {
-        [Key]
-        public int? Id { get; set; }
-
         public int TableOrder { get; set; }
         public string Description { get; set; }
         public string AreaIdentifier { get; set; }

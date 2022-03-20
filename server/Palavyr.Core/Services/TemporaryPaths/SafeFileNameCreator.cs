@@ -2,16 +2,16 @@
 
 namespace Palavyr.Core.Services.TemporaryPaths
 {
-    public enum ExtensionTypes
+    public static class ExtensionTypes
     {
-        Pdf,
-        Png
+        public const string Pdf = ".pdf";
+        public const string Png = ".png";
     }
 
     public interface ISafeFileNameCreator
     {
-        SafeFileName CreateSafeFileName(ExtensionTypes extension = ExtensionTypes.Pdf);
-        SafeFileName CreateSafeFileName(string fileStem, ExtensionTypes extension = ExtensionTypes.Pdf);
+        SafeFileName CreateSafeFileName(string extension = ExtensionTypes.Pdf);
+        SafeFileName CreateSafeFileName(string fileStem, string extension = ExtensionTypes.Pdf);
     }
 
     public class SafeFileNameCreator : ISafeFileNameCreator
@@ -22,7 +22,8 @@ namespace Palavyr.Core.Services.TemporaryPaths
         {
             this.guidUtils = guidUtils;
         }
-        public SafeFileName CreateSafeFileName(ExtensionTypes extension = ExtensionTypes.Pdf)
+
+        public SafeFileName CreateSafeFileName(string extension = ExtensionTypes.Pdf)
         {
             var fileStem = guidUtils.CreateNewId();
             var fileName = string.Join(".", fileStem, extension.ToString().ToLowerInvariant());
@@ -33,7 +34,7 @@ namespace Palavyr.Core.Services.TemporaryPaths
             };
         }
 
-        public SafeFileName CreateSafeFileName(string fileStem, ExtensionTypes extension = ExtensionTypes.Pdf)
+        public SafeFileName CreateSafeFileName(string fileStem, string extension = ExtensionTypes.Pdf)
         {
             var fileName = string.Join(".", fileStem, extension.ToString().ToLowerInvariant());
             return new SafeFileName

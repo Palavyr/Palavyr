@@ -32,8 +32,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetCurrentPlanMetaResponse
     {
-        public GetCurrentPlanMetaResponse(PlanTypeMeta response) => Response = response;
-        public PlanTypeMeta Response { get; set; }
+        public GetCurrentPlanMetaResponse(PlanTypeMetaBase response) => Response = response;
+        public PlanTypeMetaBase Response { get; set; }
     }
 
     public class GetCurrentPlanMetaRequest : IRequest<GetCurrentPlanMetaResponse>

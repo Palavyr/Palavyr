@@ -1,22 +1,24 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetDefaultFallbackEmailSubjectHandler : IRequestHandler<GetDefaultFallbackEmailSubjectRequest, GetDefaultFallbackEmailSubjectResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Account> accountStore;
 
-        public GetDefaultFallbackEmailSubjectHandler(IAccountRepository accountRepository)
+        public GetDefaultFallbackEmailSubjectHandler(IEntityStore<Account> accountStore)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
 
         public async Task<GetDefaultFallbackEmailSubjectResponse> Handle(GetDefaultFallbackEmailSubjectRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             var subject = account.GeneralFallbackSubject;
             return new GetDefaultFallbackEmailSubjectResponse(subject);
         }

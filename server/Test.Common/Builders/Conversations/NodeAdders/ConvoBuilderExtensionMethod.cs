@@ -2,7 +2,6 @@
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.DynamicTableService;
-using Palavyr.Core.Services.DynamicTableService.Compilers;
 
 namespace Test.Common.Builders.Conversations.NodeAdders
 {

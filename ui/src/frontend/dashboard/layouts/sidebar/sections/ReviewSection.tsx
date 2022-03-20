@@ -37,8 +37,8 @@ export const ReviewSection = memo(({ isActive, menuOpen }: ReviewSectionProps) =
         history.push("/dashboard/demo");
     };
 
-    const imagesReviewOnClick = () => {
-        history.push("/dashboard/images");
+    const fileAssetsReviewOnClick = () => {
+        history.push("/dashboard/file-assets");
     };
 
     const dashboardOnClick = () => {
@@ -53,55 +53,22 @@ export const ReviewSection = memo(({ isActive, menuOpen }: ReviewSectionProps) =
         <List className={"review-sidebar-tour"}>
             <SidebarSectionHeader menuOpen={menuOpen} title="Review" onClick={() => setReviewOpen(!reviewOpen)} currentState={reviewOpen} />
             <Collapse in={reviewOpen} timeout="auto" unmountOnExit>
-                <SidebarLinkItem
-                    toolTipText="Chat bot activity"
-                    menuOpen={menuOpen}
-                    className="activity-sidebar-tour"
-                    text="Activity"
-                    isActive={isActive}
-                    onClick={dashboardOnClick}
-                    IconComponent={<TrendingUpIcon className={cls.icon} />}
-                />
-                <SidebarLinkItem
-                    toolTipText="Enquiries"
-                    menuOpen={menuOpen}
-                    className={"check-enquiries-sidebar-tour"}
-                    text="Enquiries"
-                    isActive={isActive}
-                    onClick={enquiriesOnClick}
-                    IconComponent={<InboxIcon className={cls.icon} />}
-                >
+                <SidebarLinkItem toolTipText="Chat bot activity" menuOpen={menuOpen} text="Activity" isActive={isActive} onClick={dashboardOnClick} IconComponent={<TrendingUpIcon className={cls.icon} />} />
+                <SidebarLinkItem toolTipText="Enquiries" menuOpen={menuOpen} text="Enquiries" isActive={isActive} onClick={enquiriesOnClick} IconComponent={<InboxIcon className={cls.icon} />}>
                     <Badge className={"check-enquiries-badge-sidebar-tour"} showZero={false} badgeContent={unseenNotifications} color="secondary">
                         <NotificationsIcon fontSize="small" />
                     </Badge>
                 </SidebarLinkItem>
 
+                <SidebarLinkItem toolTipText="Style Designer" menuOpen={menuOpen} text="Style Designer" isActive={isActive} onClick={designerOnClick} IconComponent={<BrushIcon className={cls.icon} />} />
+                <SidebarLinkItem toolTipText="Chat Bot Demo" menuOpen={menuOpen} text="Chat Bot Demo" isActive={isActive} onClick={chatDemoOnClick} IconComponent={<MotorcycleIcon className={cls.icon} />} />
                 <SidebarLinkItem
-                    toolTipText="Style Designer"
+                    toolTipText="File Uploads"
                     menuOpen={menuOpen}
-                    className={"widget-designer-tour"}
-                    text="Style Designer"
-                    isActive={isActive}
-                    onClick={designerOnClick}
-                    IconComponent={<BrushIcon className={cls.icon} />}
-                />
-                <SidebarLinkItem
-                    toolTipText="Chat Bot Demo"
-                    menuOpen={menuOpen}
-                    className={"chat-demo-link-tour"}
-                    text="Chat Bot Demo"
-                    isActive={isActive}
-                    onClick={chatDemoOnClick}
-                    IconComponent={<MotorcycleIcon className={cls.icon} />}
-                />
-                <SidebarLinkItem
-                    toolTipText="Image Uploads"
-                    menuOpen={menuOpen}
-                    className={"uploads-sidebar-tour"}
-                    disabled={planTypeMeta && !planTypeMeta.allowedImageUpload}
+                    disabled={planTypeMeta && !planTypeMeta.allowedFileUpload}
                     text="Uploads"
                     isActive={isActive}
-                    onClick={imagesReviewOnClick}
+                    onClick={fileAssetsReviewOnClick}
                     IconComponent={<PhotoLibraryIcon className={cls.icon} />}
                 />
             </Collapse>

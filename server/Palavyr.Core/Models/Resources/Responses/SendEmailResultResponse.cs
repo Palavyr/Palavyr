@@ -9,7 +9,7 @@ namespace Palavyr.Core.Models.Resources.Responses
         
         public static SendEmailResultResponse CreateSuccess(string nextNodeId, string? pdfLink)
         {
-            return new SendEmailResultResponse()
+            return new SendEmailResultResponse
             {
                 NextNodeId = nextNodeId,
                 Result = true,

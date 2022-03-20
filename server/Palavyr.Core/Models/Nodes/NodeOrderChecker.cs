@@ -14,9 +14,9 @@ namespace Palavyr.Core.Models.Nodes
     public class NodeOrderChecker : INodeOrderChecker
     {
         private readonly INodeGetter nodeGetter;
-        private readonly GuidFinder guidFinder;
+        private readonly IGuidFinder guidFinder;
 
-        public NodeOrderChecker(INodeGetter nodeGetter, GuidFinder guidFinder)
+        public NodeOrderChecker(INodeGetter nodeGetter, IGuidFinder guidFinder)
         {
             this.nodeGetter = nodeGetter;
             this.guidFinder = guidFinder;

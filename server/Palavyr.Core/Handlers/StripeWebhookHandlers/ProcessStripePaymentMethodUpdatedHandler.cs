@@ -2,34 +2,31 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Stores;
 using Stripe;
+using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
     public class ProcessStripePaymentMethodUpdatedHandler : INotificationHandler<PaymentMethodUpdatedEvent>
     {
-        private readonly AccountsContext accountsContext;
         private readonly ISesEmail emailClient;
+        private readonly IEntityStore<Account> accountStore;
 
         public ProcessStripePaymentMethodUpdatedHandler(
-            AccountsContext accountsContext,
-            ISesEmail emailClient
+            ISesEmail emailClient,
+            IEntityStore<Account> accountStore
         )
         {
-            this.accountsContext = accountsContext;
             this.emailClient = emailClient;
+            this.accountStore = accountStore;
         }
 
         public async Task Handle(PaymentMethodUpdatedEvent notification, CancellationToken cancellationToken)
         {
             var paymentMethodUpdate = notification.paymentMethod;
-            var account = await accountsContext
-                .Accounts
-                .SingleOrDefaultAsync(row => row.StripeCustomerId == paymentMethodUpdate.CustomerId);
+            var account = await accountStore.Get(paymentMethodUpdate.CustomerId, s => s.StripeCustomerId);
 
             if (paymentMethodUpdate.Livemode)
             {

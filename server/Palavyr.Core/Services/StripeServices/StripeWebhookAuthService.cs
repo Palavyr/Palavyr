@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Stores;
 using Stripe;
 
 namespace Palavyr.Core.Services.StripeServices
@@ -17,19 +18,19 @@ namespace Palavyr.Core.Services.StripeServices
 
     public class StripeWebhookAuthService : IStripeWebhookAuthService
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore;
         private ILogger<StripeWebhookAuthService> logger;
         private IConfiguration configuration;
         private const string StripeSignature = "Stripe-Signature";
         private readonly string webhookKeySection = "Stripe:WebhookKey";
 
         public StripeWebhookAuthService(
-            IAccountRepository accountRepository,
+            IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore,
             ILogger<StripeWebhookAuthService> logger,
             IConfiguration configuration
         )
         {
-            this.accountRepository = accountRepository;
+            this.stripeWebhookStore = stripeWebhookStore;
             this.logger = logger;
             this.configuration = configuration;
         }
@@ -58,7 +59,8 @@ namespace Palavyr.Core.Services.StripeServices
                     tolerance: 150
                 );
 
-                if (await accountRepository.SignedStripePayloadExists(payloadSignature))
+                var stripePayloads = await stripeWebhookStore.GetMany(payloadSignature, s => s.PayloadSignature);
+                if (stripePayloads.Count > 0)
                 {
                     throw new Exception($"Webhook already processed and recorded in the Webhook Records Table: {eventPayload.Data}");
                 }

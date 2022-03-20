@@ -1,25 +1,25 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyEpilogueConfigurationHandler : IRequestHandler<ModifyEpilogueConfigurationRequest, ModifyEpilogueConfigurationResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IEntityStore<Area> intentStore;
 
-        public ModifyEpilogueConfigurationHandler(IConfigurationRepository configurationRepository)
+        public ModifyEpilogueConfigurationHandler(IEntityStore<Area> intentStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
         }
 
         public async Task<ModifyEpilogueConfigurationResponse> Handle(ModifyEpilogueConfigurationRequest request, CancellationToken cancellationToken)
         {
             var updatedEpilogue = request.Epilogue;
-            var area = await configurationRepository.GetAreaById(request.IntentId);
+            var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
             area.Epilogue = updatedEpilogue;
-            await configurationRepository.CommitChangesAsync();
             return new ModifyEpilogueConfigurationResponse(updatedEpilogue);
         }
     }

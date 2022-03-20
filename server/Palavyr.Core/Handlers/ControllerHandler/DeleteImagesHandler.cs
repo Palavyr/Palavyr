@@ -1,61 +1,50 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.ImageServices;
+using Microsoft.EntityFrameworkCore.Internal;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class DeleteImagesHandler : IRequestHandler<DeleteImagesRequest, DeleteImagesResponse>
     {
-        private readonly IImageRemover imageRemover;
-        private readonly GuidFinder guidFinder;
-        private readonly IHttpContextAccessor accessor;
+        private readonly IMapToNew<FileAsset, FileAssetResource> mapper;
+        private readonly IFileAssetDeleter fileAssetDeleter;
 
-        public DeleteImagesHandler(IImageRemover imageRemover, GuidFinder guidFinder, IHttpContextAccessor accessor)
+        public DeleteImagesHandler(IMapToNew<FileAsset, FileAssetResource> mapper, IFileAssetDeleter fileAssetDeleter)
         {
-            this.imageRemover = imageRemover;
-            this.guidFinder = guidFinder;
-            this.accessor = accessor;
+            this.mapper = mapper;
+            this.fileAssetDeleter = fileAssetDeleter;
         }
 
         public async Task<DeleteImagesResponse> Handle(DeleteImagesRequest request, CancellationToken cancellationToken)
         {
-            // TODO: https://www.strathweb.com/2017/07/customizing-query-string-parameter-binding-in-asp-net-core-mvc/
-            if (!accessor.HttpContext.Request.QueryString.HasValue)
-            {
-                throw new DomainException("Image deletion failed. No image id was provided.");
-            }
-
-
-            // ids should be guids
-            foreach (var id in request.ImageIds)
-            {
-                // This throws if a GUID is not found.
-                guidFinder.FindFirstGuidSuffix(id);
-            }
-
-            var fileLinks = await imageRemover.RemoveImages(request.ImageIds, cancellationToken);
-            return new DeleteImagesResponse(fileLinks);
+            var fileAssets = await fileAssetDeleter.RemoveFiles(request.FileIds);
+            var mapped = await mapper
+                .MapMany(
+                    fileAssets
+                        .Where(x => !x.RiskyNameWithExtension.StartsWith("Preview-")));
+            return new DeleteImagesResponse(mapped);
         }
     }
 
     public class DeleteImagesResponse
     {
-        public DeleteImagesResponse(FileLink[] response) => Response = response;
-        public FileLink[] Response { get; set; }
+        public DeleteImagesResponse(IEnumerable<FileAssetResource> response) => Response = response;
+        public IEnumerable<FileAssetResource> Response { get; set; }
     }
 
     public class DeleteImagesRequest : IRequest<DeleteImagesResponse>
     {
-        public DeleteImagesRequest(string[] imageIds)
+        public DeleteImagesRequest(string[] fileIds)
         {
-            ImageIds = imageIds;
+            FileIds = fileIds;
         }
 
-        public string[] ImageIds { get; set; }
+        public string[] FileIds { get; set; }
     }
 }

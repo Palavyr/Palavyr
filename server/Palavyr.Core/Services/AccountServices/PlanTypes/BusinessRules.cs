@@ -7,7 +7,7 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
 {
     public interface IBusinessRules
     {
-        Task<PlanTypeMeta> GetPlanTypeMeta();
+        Task<PlanTypeMetaBase> GetPlanTypeMeta();
         Task<int> GetAllowedAttachments();
         Task<int> GetAllowedStaticTables();
         Task<int> GetAllowedDynamicTables();
@@ -29,24 +29,24 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
             this.accountIdTransport = accountIdTransport;
         }
 
-        public async Task<PlanTypeMeta> GetPlanTypeMeta()
+        public async Task<PlanTypeMetaBase> GetPlanTypeMeta()
         {
             var planType = await planTypeRetriever.GetCurrentPlanType();
             if (planType == Account.PlanTypeEnum.Free.ToString())
             {
-                return new FreePlanTypeMeta();
+                return new FreePlanTypeMetaBase();
             }
             else if (planType == Account.PlanTypeEnum.Lyte.ToString())
             {
-                return new LytePlanTypeMeta();
+                return new LytePlanTypeMetaBase();
             }
             else if (planType == Account.PlanTypeEnum.Premium.ToString())
             {
-                return new PremiumPlanTypeMeta();
+                return new PremiumPlanTypeMetaBase();
             }
             else if (planType == Account.PlanTypeEnum.Pro.ToString())
             {
-                return new ProPlanTypeMeta();
+                return new ProPlanTypeMetaBase();
             }
             else
             {
@@ -82,7 +82,7 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         public async Task<bool> GetAllowedImageUpload()
         {
             var currentPlan = await GetPlanTypeMeta();
-            return currentPlan.AllowedImageUpload;
+            return currentPlan.AllowedFileUpload;
         }
 
         public async Task<bool> GetAllowedEmailNotifications()

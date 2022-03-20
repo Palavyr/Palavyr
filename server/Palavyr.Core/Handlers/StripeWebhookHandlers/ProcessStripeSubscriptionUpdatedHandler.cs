@@ -2,30 +2,30 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.StripeServices.Products;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers;
+using Palavyr.Core.Stores;
 using Stripe;
+using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
     public class ProcessStripeSubscriptionUpdatedHandler : INotificationHandler<SubscriptionUpdatedEvent>
     {
-        private readonly AccountsContext accountsContext;
+        private readonly IEntityStore<Account> accountStore;
         private readonly IStripeSubscriptionService stripeSubscriptionService;
         private readonly IProductRegistry productRegistry;
         private readonly ILogger<ProcessStripeSubscriptionUpdatedHandler> logger;
 
         public ProcessStripeSubscriptionUpdatedHandler(
-            AccountsContext accountsContext,
+            IEntityStore<Account> accountStore,
             IStripeSubscriptionService stripeSubscriptionService,
             IProductRegistry productRegistry,
             ILogger<ProcessStripeSubscriptionUpdatedHandler> logger
         )
         {
-            this.accountsContext = accountsContext;
+            this.accountStore = accountStore;
             this.stripeSubscriptionService = stripeSubscriptionService;
             this.productRegistry = productRegistry;
             this.logger = logger;
@@ -35,7 +35,7 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
         {
             var subscription = @event.Subscription;
 
-            var account = await subscription.GetAccount(accountsContext, logger);
+            var account = await subscription.GetAccount(accountStore, logger);
             if (subscription.CancelAtPeriodEnd)
             {
                 account.CurrentPeriodEnd = subscription.CurrentPeriodEnd;
@@ -52,8 +52,6 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
                 
                 account.PlanType = planTypeEnum;
             }
-
-            await accountsContext.SaveChangesAsync();
         }
     }
 

@@ -16,11 +16,11 @@
         public string TempFilePath { get; set; }
     }
 
-    public interface IHaveBeenDownloadedFromS3 : IHaveTemporaryPath, IHaveLocalFileName, IHaveTempDirectory
+    public interface IHaveBeenDownloadedFromCloudToLocal : IHaveTemporaryPath, IHaveLocalFileName, IHaveTempDirectory
     {
     }
     
-    public class S3DownloadFile : IHaveBeenDownloadedFromS3
+    public class S3DownloadFile : IHaveBeenDownloadedFromCloudToLocal
     {
         public string TempFilePath { get; set; }
         public string FileNameWithExtension { get; set; }

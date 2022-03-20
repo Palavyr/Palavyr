@@ -218,13 +218,19 @@ export type StaticTableValidationResult = {
 
 type HTML = string;
 
-export type FileLink = {
-    fileId: string;
-    fileName: string;
-    link: string;
-    isUrl: boolean;
-    s3Key: string;
-};
+export type FileAssetResource = {
+    fileName: string, // the risky Name with extension
+    fileId: string, // the file id
+    link: string, // a link to the file (local or cloud)
+}
+
+// export type FileLink = {
+//     fileId: string;
+//     fileName: string;
+//     link: string;
+//     isUrl: boolean;
+//     s3Key: string;
+// };
 
 export type FileLinkReference = {
     fileReference: string;
@@ -499,7 +505,7 @@ export type PlanTypeMeta = {
     allowedDynamicTables: number;
     allowedAreas: number;
 
-    allowedImageUpload: boolean;
+    allowedFileUpload: boolean;
     allowedEmailNotifications: boolean;
     allowedInlineEmailEditor: boolean;
     allowedSmsNotifications: boolean;

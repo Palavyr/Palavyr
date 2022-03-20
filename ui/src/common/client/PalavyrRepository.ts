@@ -8,7 +8,6 @@ import {
     Prices,
     EmailVerificationResponse,
     AreaTable,
-    FileLink,
     ConvoNode,
     ResponseConfigurationType,
     AccountEmailSettingsResponse,
@@ -29,6 +28,7 @@ import {
     EnquiryActivtyResource,
     LocaleResponse,
     QuantUnitDefinition,
+    FileAssetResource,
 } from "@Palavyr-Types";
 import { ApiErrors } from "frontend/dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "frontend/dashboard/subscriptionFilters/filterConvoNodeTypes";
@@ -182,7 +182,7 @@ export class PalavyrRepository {
         },
 
         Preview: {
-            fetchPreview: async (intentId: string) => this.client.get<FileLink>(`preview/estimate/${intentId}`),
+            FetchPreview: async (intentId: string) => this.client.get<FileAssetResource>(`preview/estimate/${intentId}`),
         },
 
         Email: {
@@ -206,18 +206,10 @@ export class PalavyrRepository {
         },
 
         Attachments: {
-            GetAttachmentLinks: async (intentId: string) => this.client.get<FileLink[]>(`attachments/${intentId}`, CacheIds.Attachments),
-            removeAttachment: async (intentId: string, fileId: string) => this.client.delete<FileLink[]>(`attachments/file-link`, CacheIds.Attachments, { data: { fileId: fileId, IntentId: intentId } }),
-
-            saveSingleAttachment: async (areaIdentifier: string, formData: FormData) =>
-                this.client.post<FileLink[], {}>(`attachments/${areaIdentifier}/save-one`, formData, CacheIds.Attachments, {
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "multipart/form-data",
-                    },
-                }),
-            saveMultipleAttachments: async (intentId: string, formData: FormData) =>
-                this.client.post<FileLink[], {}>(`attachments/${intentId}/save-many`, formData, CacheIds.Attachments, {
+            GetAttachments: async (intentId: string) => this.client.get<FileAssetResource[]>(`attachments/${intentId}`, undefined),
+            DeleteAttachment: async (intentId: string, fileId: string) => this.client.delete<FileAssetResource[]>(`attachments`, undefined, { data: { fileId: fileId, IntentId: intentId } }),
+            UploadAttachments: async (intentId: string, formData: FormData) =>
+                this.client.post<FileAssetResource[], {}>(`attachments/${intentId}/upload`, formData, undefined, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",
@@ -225,45 +217,37 @@ export class PalavyrRepository {
                 }),
         },
 
-        Images: {
-            // Node Editor Flow
-            saveSingleImage: async (formData: FormData) => {
-                const result = await this.client.post<FileLink[], {}>(`images/save-one`, formData, undefined, { headers: this.formDataHeaders });
-                const currentCache = SessionStorage.getCacheValue(CacheIds.Images) as FileLink[];
-                currentCache.push(...result);
-                SessionStorage.setCacheValue(CacheIds.Images, currentCache);
-                return result;
-            },
-            // saveImageUrl: async (url: string, nodeId: string) => this.client.post<FileLink[], {}>(`images/use-link/`, { Url: url, NodeId: nodeId }),
-            getImages: async (imageIds?: string[]) => {
-                if (imageIds !== undefined && imageIds.length > 0) {
+        FileAssets: {
+            GetFileAssets: async (fileIds: string[] = []) => {
+                if (fileIds !== undefined && fileIds.length > 0) {
                     // if specifying 1 image
-                    const currentCache = SessionStorage.getCacheValue(CacheIds.Images);
-                    if (currentCache === null) {
-                        return this.client.get<FileLink[]>(`images`, CacheIds.Images);
-                    }
-                    const availableImages = currentCache.filter((x: FileLink) => imageIds.includes(x.fileId)) as FileLink[];
-                    if (availableImages.length === imageIds.length) {
-                        return Promise.resolve(availableImages);
-                    } else {
-                        return this.client.get<FileLink[]>(`images?imageIds=${imageIds.join(",")}`);
-                    }
+                    // const currentCache = SessionStorage.getCacheValue(CacheIds.FileAssets);
+                    // if (currentCache === null) {
+                    //     return this.client.get<FileAssetResource[]>(`file-assets`, CacheIds.FileAssets);
+                    // }
+                    // const availableImages = currentCache.filter((x: FileAssetResource) => fileIds.includes(x.fileId)) as FileAssetResource[];
+                    // if (availableImages.length === fileIds.length) {
+                    //     return Promise.resolve(availableImages);
+                    // } else {
+                    return await this.client.get<FileAssetResource[]>(`file-assets?fileIds=${fileIds.join(",")}`);
+                    // }
                 } else {
-                    return this.client.get<FileLink[]>(`images`, CacheIds.Images);
+                    return await this.client.get<FileAssetResource[]>(`file-assets`); //, CacheIds.FileAssets);
                 }
-            }, // takes a querystring comma delimieted of imageIds
-            savePreExistingImage: async (imageId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`images/pre-existing/${imageId}/${nodeId}`),
+            }, // takes a querystring comma delimieted of fileIds
 
             // DO NOT USE WITH NODE
-            saveMultipleImages: async (formData: FormData) => {
-                const result = await this.client.post<FileLink[], {}>(`images/save-many`, formData, CacheIds.Images, { headers: this.formDataHeaders });
-                const currentCache = SessionStorage.getCacheValue(CacheIds.Images) as FileLink[];
-                currentCache.push(...result);
-                SessionStorage.setCacheValue(CacheIds.Images, currentCache);
+            UploadFileAssets: async (formData: FormData) => {
+                const result = await this.client.post<FileAssetResource[], {}>(`file-assets/upload`, formData, undefined, { headers: this.formDataHeaders });
+                // const currentCache = SessionStorage.getCacheValue(CacheIds.FileAssets) as FileAssetResource[];
+                // currentCache.push(...result);
+                // SessionStorage.setCacheValue(CacheIds.FileAssets, currentCache);
                 return result;
             },
-            deleteImage: async (imageIds: string[]) => this.client.delete<FileLink[]>(`images?imageIds=${imageIds.join(",")}`, CacheIds.Images), // takes a querystring command delimited of imageIds
-            getSignedUrl: async (s3Key: string, fileId: string) => this.client.post<string, {}>(`images/link`, { s3Key: s3Key }),
+
+            LinkFileAssetToNode: async (fileId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`file-assets/link/${fileId}/node/${nodeId}`),
+            LinkFileAssetToIntent: async (fileId: string, intentId: string) => this.client.post<FileAssetResource, {}>(`file-assets/link/${fileId}/intent/${intentId}`),
+            DeleteFileAsset: async (fileIds: string[]) => this.client.delete<FileAssetResource[]>(`file-assets?fileIds=${fileIds.join(",")}`), // CacheIds.FileAssets), // takes a querystring command delimited of fileIds
         },
     };
 

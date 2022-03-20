@@ -16,11 +16,12 @@ namespace Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory
             builder.UseServiceProviderFactory(new CustomServiceProviderFactory());
             return base.CreateHost(builder);
         }
+        
+
 
         protected override void ConfigureClient(HttpClient client)
         {
             client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.Action, ApplicationConstants.MagicUrlStrings.SessionAction);
-            client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.SessionId, IntegrationConstants.SessionId);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
 
             client.BaseAddress = new Uri(IntegrationConstants.BaseUri);

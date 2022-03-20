@@ -8,8 +8,12 @@
         public string Message { get; set; }
         public string JwtToken { get; set; }
         public string EmailAddress { get; set; }
-        
-        Credentials(string sessionId, string apiKey, string jwtToken, string emailAddress, bool authenticated, string message)
+
+        public Credentials()
+        {
+        }
+
+        private Credentials(string sessionId, string apiKey, string jwtToken, string emailAddress, bool authenticated, string message)
         {
             ApiKey = apiKey;
             SessionId = sessionId;

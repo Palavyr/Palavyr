@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Palavyr.Core.Common.UniqueIdentifiers;
+﻿using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Models
 {
@@ -26,12 +24,10 @@ namespace Palavyr.Core.Models
 
     public class EndingSequenceNodes : IEndingSequenceNodes
     {
-        private readonly IConfigurationRepository configurationRepository;
         private readonly IGuidUtils guidUtils;
 
-        public EndingSequenceNodes(IConfigurationRepository configurationRepository, IGuidUtils guidUtils)
+        public EndingSequenceNodes(IGuidUtils guidUtils)
         {
-            this.configurationRepository = configurationRepository;
             this.guidUtils = guidUtils;
         }
 

@@ -2,56 +2,58 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.DynamicTableService.NodeUpdaters;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
-    public class SelectOneFlatCompiler : BaseCompiler<SelectOneFlat>, IDynamicTablesCompiler
+    public interface ISelectOneFlatCompiler : IDynamicTablesCompiler
     {
-        private readonly IConfigurationRepository configurationRepository;
+    }
+
+    public class SelectOneFlatCompiler : BaseCompiler<SelectOneFlat>, ISelectOneFlatCompiler
+    {
         private readonly IConversationOptionSplitter splitter;
         private readonly ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater;
         private readonly IResponseRetriever responseRetriever;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
 
         public SelectOneFlatCompiler(
-            IGenericDynamicTableRepository<SelectOneFlat> repository,
-            IConfigurationRepository configurationRepository,
+            IPricingStrategyEntityStore<SelectOneFlat> repository,
             IConversationOptionSplitter splitter,
             ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater,
-            IResponseRetriever responseRetriever
-            
-
-        ) : base(repository)
+            IResponseRetriever responseRetriever,
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(repository)
         {
-            this.configurationRepository = configurationRepository;
             this.splitter = splitter;
             this.selectOneFlatNodeUpdater = selectOneFlatNodeUpdater;
             this.responseRetriever = responseRetriever;
+            this.convoNodeStore = convoNodeStore;
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
         {
             var currentSelectOneFlatUpdate = table.SelectOneFlat;
 
-            var tableMeta = await context.DynamicTableMetas.SingleOrDefaultAsync(x => x.TableId == tableId);
+            var tableMeta = await dynamicTableMetaStore.Get(tableId, s => s.TableId);
 
-            var conversationNodes = await configurationRepository.GetAreaConversationNodes(areaIdentifier);
+            var conversationNodes = await convoNodeStore.GetMany(areaIdentifier, s => s.AreaIdentifier);
             var node = conversationNodes.SingleOrDefault(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId);
 
             if (node != null && currentSelectOneFlatUpdate != null)
             {
-                await selectOneFlatNodeUpdater.UpdateConversationNode(context, currentSelectOneFlatUpdate, tableMeta, node, conversationNodes, areaIdentifier);
+                await selectOneFlatNodeUpdater.UpdateConversationNode(currentSelectOneFlatUpdate, tableMeta, node, conversationNodes, areaIdentifier);
             }
 
             // do not save the context changes here. Following the unit of work pattern,we collect all changes, validate, and then save/commit..
@@ -67,7 +69,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var nodeTypeOption = NodeTypeOption.Create(
                 dynamicTableMeta.MakeUniqueIdentifier(),
                 dynamicTableMeta.ConvertToPrettyName(),
-                dynamicTableMeta.ValuesAsPaths ? valueOptions : new List<string>() {"Continue"},
+                dynamicTableMeta.ValuesAsPaths ? valueOptions : new List<string>() { "Continue" },
                 valueOptions,
                 true,
                 dynamicTableMeta.ValuesAsPaths,
@@ -89,7 +91,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var record = await RetrieveAllAvailableResponses(dynamicResponseId);
 
             var option = record.Single(tableRow => tableRow.Option == responseValue);
-            var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(option.TableId);
+            var dynamicMeta = await dynamicTableMetaStore.Get(option.TableId, s => s.TableId);
 
             var row = new TableRow(
                 dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : option.Option,
@@ -98,7 +100,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 false,
                 culture,
                 option.Range);
-            return new List<TableRow>() {row};
+            return new List<TableRow>() { row };
         }
 
         public Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
@@ -149,7 +151,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         {
             var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses<SelectOneFlat>(tableMeta.TableId);
             var responseParts = DynamicTableTypes.CreateSelectOneFlat().CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Option);
-            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() {tableMeta.TableId}, culture);
+            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;
         }
 

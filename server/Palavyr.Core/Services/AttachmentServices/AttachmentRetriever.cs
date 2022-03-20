@@ -1,95 +1,105 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.TemporaryPaths;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.AttachmentServices
 {
     public interface IAttachmentRetriever
     {
-        Task<FileLink[]> RetrieveAttachmentLinks(string areaId, CancellationToken cancellationToken);
-        Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string areaId, List<S3SDownloadRequestMeta> s3DownloadRequestMetas, CancellationToken cancellationToken);
-        Task<List<S3SDownloadRequestMeta>> RetrievePdfUris(string areaId, CancellationToken cancellationToken);
-
+        Task<FileAsset[]> GetAttachmentLinksForIntent(string intentId);
+        Task<IHaveBeenDownloadedFromCloudToLocal[]> GatherAttachments(string intentId, List<CloudFileDownloadRequest>? additionalFiles = null);
     }
 
     public class AttachmentRetriever : IAttachmentRetriever
     {
-        private readonly DashContext dashContext;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
+        private readonly ICloudFileDownloader cloudFileDownloader;
+
+
         private readonly IConfiguration configuration;
         private readonly ILinkCreator linkCreator;
-        private readonly IS3Retriever s3Retriever;
         private readonly IBusinessRules businessRules;
 
         public AttachmentRetriever(
-            DashContext dashContext,
+            IEntityStore<Area> intentStore,
+            IEntityStore<FileAsset> fileAssetStore,
+            ICloudFileDownloader cloudFileDownloader,
             IConfiguration configuration,
             ILinkCreator linkCreator,
-            IS3Retriever s3Retriever,
             IBusinessRules businessRules
         )
         {
-            this.dashContext = dashContext;
+            this.intentStore = intentStore;
+            this.fileAssetStore = fileAssetStore;
+            this.cloudFileDownloader = cloudFileDownloader;
             this.configuration = configuration;
             this.linkCreator = linkCreator;
-            this.s3Retriever = s3Retriever;
             this.businessRules = businessRules;
         }
 
-        public async Task<FileLink[]> RetrieveAttachmentLinks(string areaId, CancellationToken cancellationToken)
+        public async Task<IHaveBeenDownloadedFromCloudToLocal[]> GatherAttachments(string intentId, List<CloudFileDownloadRequest>? additionalFiles = null)
         {
-            var userDataBucket = configuration.GetUserDataBucket();
-            var metas = await dashContext.FileNameMaps
-                .Where(x => x.AreaIdentifier == areaId)
-                .Select(
-                    x => new AttachmentMeta
-                    {
-                        SafeFileId = x.SafeName,
-                        S3Key = x.S3Key,
-                        RiskyName = x.RiskyName
-                    }).ToListAsync(cancellationToken);
+            var s3DownloadRequestMetas = await RetrievePdfUris(intentId);
 
-            var fileLinks = new List<FileLink>();
-            foreach (var meta in metas)
+            if (additionalFiles != null)
             {
-                var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(meta.S3Key, userDataBucket);
-                fileLinks.Add(FileLink.CreateUrlLink(meta.RiskyName, preSignedUrl, meta.SafeFileId));
+                s3DownloadRequestMetas.AddRange(additionalFiles);
             }
 
-            return fileLinks.ToArray();
+            var attachments = await DownloadForAttachmentToEmail(s3DownloadRequestMetas);
+            return attachments;
         }
-        
 
-        public async Task<List<S3SDownloadRequestMeta>> RetrievePdfUris(string areaId, CancellationToken cancellationToken)
+        public async Task<FileAsset[]> GetAttachmentLinksForIntent(string intentId)
         {
-            var metas = await dashContext.FileNameMaps
-                .Where(x => x.AreaIdentifier == areaId)
-                .Select(
-                    x => new S3SDownloadRequestMeta()
+            var intent = await intentStore.Query().Include(x => x.AttachmentRecords).SingleAsync(x => x.AreaIdentifier == intentId, intentStore.CancellationToken);
+            var attachmentFileIds = intent.AttachmentRecords.Select(x => x.FileId).ToArray();
+            var fileAssets = await fileAssetStore.Query().Where(x => attachmentFileIds.Contains(x.FileId)).ToListAsync(fileAssetStore.CancellationToken);
+
+            return fileAssets.ToArray();
+        }
+
+        private async Task<List<CloudFileDownloadRequest>> RetrievePdfUris(string intentId)
+        {
+            var intent = await intentStore.Query()
+                .Where(x => x.AreaIdentifier == intentId)
+                .Include(x => x.AttachmentRecords)
+                .SingleAsync(intentStore.CancellationToken);
+            var attachmentFileIds = intent.AttachmentRecords.Select(x => x.FileId).ToArray();
+            var fileAssets = await fileAssetStore.Query().Where(x => attachmentFileIds.Contains(x.FileId)).ToListAsync(fileAssetStore.CancellationToken);
+
+            var metas = new List<CloudFileDownloadRequest>();
+
+            foreach (var asset in fileAssets)
+            {
+                metas.Add(
+                    new CloudFileDownloadRequest
                     {
-                        S3Key = x.S3Key,
-                        FileNameWithExtension = x.RiskyName
-                    }).ToListAsync(cancellationToken);
+                        LocationKey = asset.LocationKey,
+                        FileNameWithExtension = string.Join("", asset.RiskyNameStem, asset.Extension)
+                    });
+            }
+
             return metas;
         }
 
-        
-        
-        public async Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string areaId, List<S3SDownloadRequestMeta> s3DownloadRequestMetas,  CancellationToken cancellationToken)
+
+        private async Task<IHaveBeenDownloadedFromCloudToLocal[]> DownloadForAttachmentToEmail(List<CloudFileDownloadRequest> cloudFileDownloadRequests)
         {
             var userDataBucket = configuration.GetUserDataBucket();
-            var localFilePaths = await s3Retriever.DownloadObjectsFromS3(userDataBucket, s3DownloadRequestMetas, cancellationToken);
+            var localFilePaths = await cloudFileDownloader.DownloadObjectsFromS3(userDataBucket, cloudFileDownloadRequests);
             if (localFilePaths == null)
             {
                 throw new AmazonS3Exception("Unable to download to server!");

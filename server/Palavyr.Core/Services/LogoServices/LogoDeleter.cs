@@ -1,13 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Amazon.S3;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Services.AmazonServices.S3Service;
-using Palavyr.Core.Sessions;
+﻿using System.Threading.Tasks;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.LogoServices
 {
@@ -18,39 +12,23 @@ namespace Palavyr.Core.Services.LogoServices
 
     public class LogoDeleter : ILogoDeleter
     {
-        private readonly IConfiguration configuration;
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Logo> logoStore;
+        private readonly IFileAssetLinker<LogoLinker> logoLinker;
 
-        private readonly IS3Deleter s3Deleter;
 
         public LogoDeleter(
-            IConfiguration configuration,
-            IAccountRepository accountRepository,
-            IS3Deleter s3Deleter
+            IEntityStore<Logo> logoStore,
+            IFileAssetLinker<LogoLinker> logoLinker
         )
         {
-            this.configuration = configuration;
-            this.accountRepository = accountRepository;
-            this.s3Deleter = s3Deleter;
+            this.logoStore = logoStore;
+            this.logoLinker = logoLinker;
         }
 
         public async Task DeleteLogo()
         {
-            var account = await accountRepository.GetAccount();
-
-            var s3Key = account.AccountLogoUri;
-            if (!string.IsNullOrWhiteSpace(s3Key))
-            {
-                var userDataBucket = configuration.GetUserDataBucket();
-                var success = await s3Deleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
-                if (!success)
-                {
-                    throw new AmazonS3Exception("Unable to delete logo file from S3");
-                }
-            }
-            
-            account.AccountLogoUri = "";
-            await accountRepository.CommitChangesAsync();
+            var accountId = logoStore.AccountId;
+            await logoLinker.Unlink(null , accountId);
         }
     }
 }

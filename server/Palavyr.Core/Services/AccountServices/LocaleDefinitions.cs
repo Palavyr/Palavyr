@@ -1,5 +1,4 @@
 #nullable enable
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -17,7 +16,6 @@ namespace Palavyr.Core.Services.AccountServices
         public string PhoneFormat { get; set; } = null!;
         public string[] SupportedLocales { get; set; } = null!;
     }
-
 
     public interface ILocaleDefinitions
     {

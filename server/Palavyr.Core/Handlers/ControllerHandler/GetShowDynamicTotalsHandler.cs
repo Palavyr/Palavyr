@@ -1,23 +1,24 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetShowDynamicTotalsHandlerHandler : IRequestHandler<GetShowDynamicTotalsHandlerRequest, GetShowDynamicTotalsHandlerResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IEntityStore<Area> intentStore;
 
-        public GetShowDynamicTotalsHandlerHandler(IConfigurationRepository configurationRepository)
+        public GetShowDynamicTotalsHandlerHandler(IEntityStore<Area> intentStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.intentStore = intentStore;
         }
 
         public async Task<GetShowDynamicTotalsHandlerResponse> Handle(GetShowDynamicTotalsHandlerRequest request, CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(request.IntentId);
-            return new GetShowDynamicTotalsHandlerResponse(area.IncludeDynamicTableTotals);
+            var intent = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
+            return new GetShowDynamicTotalsHandlerResponse(intent.IncludeDynamicTableTotals);
         }
     }
 

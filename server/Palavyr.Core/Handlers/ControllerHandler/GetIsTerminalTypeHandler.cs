@@ -3,19 +3,20 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetIsTerminalTypeHandler : IRequestHandler<GetIsTerminalTypeRequest, GetIsTerminalTypeResponse>
     {
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";
-        private DashContext dashContext;
 
-        public GetIsTerminalTypeHandler(DashContext dashContext)
+        public GetIsTerminalTypeHandler(IEntityStore<DynamicTableMeta> dynamicTableMetaStore)
         {
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
         }
 
         public async Task<GetIsTerminalTypeResponse> Handle(GetIsTerminalTypeRequest request, CancellationToken cancellationToken)
@@ -35,9 +36,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 if (request.NodeType.StartsWith(dynamicTableType.TableType))
                 {
                     var tableId = Regex.Match(request.NodeType, GUIDPattern, RegexOptions.IgnoreCase).Value;
-                    var table = await dashContext
-                        .DynamicTableMetas
-                        .SingleOrDefaultAsync(row => row.TableId == tableId);
+                    var table = await dynamicTableMetaStore.Get(tableId, s => s.TableId);
                     if (table != null)
                     {
                         return new GetIsTerminalTypeResponse(false);

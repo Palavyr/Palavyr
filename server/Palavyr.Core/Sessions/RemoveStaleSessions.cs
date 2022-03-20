@@ -1,27 +1,37 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Palavyr.Core.Data;
+using Microsoft.EntityFrameworkCore;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Models.Accounts.Schemas;
+
 
 namespace Palavyr.Core.Sessions
 {
     public class RemoveStaleSessions : IRemoveStaleSessions
     {
-        private readonly AccountsContext context;
-        
-        public RemoveStaleSessions(AccountsContext context)
+        private readonly IEntityStore<Session> sessionStore;
+
+        public RemoveStaleSessions(IEntityStore<Session> sessionStore)
         {
-            this.context = context;
+            this.sessionStore = sessionStore;
         }
 
-        public async Task CleanSessionDb()
+        public async Task CleanSessionDb(string accountId)
         {
             var now = DateTime.Now;
 
-            var expiredSessions = context.Sessions.Where(sess => now >= sess.Expiration);
-            context.Sessions.RemoveRange(expiredSessions);
-            await context.SaveChangesAsync();
-        }
+            var expiredSessions = await sessionStore.RawReadonlyQuery()
+                .Where(sess => now >= sess.Expiration)
+                .ToListAsync(sessionStore.CancellationToken);
 
+            sessionStore.DangerousRawQuery().RemoveRange(expiredSessions);
+
+            var previousSessions = await sessionStore.RawReadonlyQuery()
+                .Where(sess => sess.AccountId == accountId)
+                .ToListAsync(sessionStore.CancellationToken);
+
+            sessionStore.DangerousRawQuery().RemoveRange(previousSessions);
+        }
     }
 }

@@ -7,7 +7,7 @@ export interface CustomImageProps {
 }
 
 const useStyles = makeStyles(theme => ({
-    image: {
+    display: {
         height: "100%",
         width: "100%",
         borderRadius: "5px",
@@ -39,7 +39,7 @@ export const CustomImage = ({ imageLink }: CustomImageProps) => {
                 <div style={{ visibility: isLoading ? "hidden" : "visible", maxWidth: "100px", margin: "0.3rem" }}>
                     <img
                         onClick={onImageClick}
-                        className={cls.image}
+                        className={cls.display}
                         key={Date.now()}
                         src={imageLink}
                         onChange={() => setLoading(true)}

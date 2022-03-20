@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Handlers;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 
@@ -21,7 +20,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet(Route)]
-        public async Task<PlanTypeMeta> GetCurrentPlan(
+        public async Task<PlanTypeMetaBase> GetCurrentPlan(
             CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetCurrentPlanMetaRequest(), cancellationToken);

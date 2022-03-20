@@ -99,21 +99,6 @@ namespace Palavyr.Core.Data.Migrations.AccountsMigrations
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("Palavyr.Core.Models.Accounts.Schemas.Backup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("LatestFullDbBackup")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Backups");
-                });
-
             modelBuilder.Entity("Palavyr.Core.Models.Accounts.Schemas.EmailVerification", b =>
                 {
                     b.Property<int?>("Id")
@@ -137,8 +122,10 @@ namespace Palavyr.Core.Data.Migrations.AccountsMigrations
 
             modelBuilder.Entity("Palavyr.Core.Models.Accounts.Schemas.Session", b =>
                 {
-                    b.Property<string>("SessionId")
-                        .HasColumnType("text");
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("AccountId")
                         .HasColumnType("text");
@@ -149,27 +136,35 @@ namespace Palavyr.Core.Data.Migrations.AccountsMigrations
                     b.Property<DateTime>("Expiration")
                         .HasColumnType("timestamp without time zone");
 
-                    b.HasKey("SessionId");
-
-                    b.ToTable("Sessions");
-                });
-
-            modelBuilder.Entity("Palavyr.Core.Models.Accounts.Schemas.StripeWebhookRecord", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PayloadSignature")
+                    b.Property<string>("SessionId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("StripeWebHookRecords");
+                    b.ToTable("Sessions");
+                });
+
+            modelBuilder.Entity("Palavyr.Core.Models.Accounts.Schemas.StripeWebhookReceivedRecord", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("PayloadSignature")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RecordId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StripeWebhookReceivedRecords");
                 });
 
             modelBuilder.Entity("Palavyr.Core.Models.Accounts.Schemas.Subscription", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);

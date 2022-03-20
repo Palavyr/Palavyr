@@ -54,7 +54,7 @@ namespace Palavyr.Core.Services.StripeServices
                     break;
 
                 case Events.CheckoutSessionCompleted:
-                    await mediator.Publish(new CheckoutSessionCompletedEvent(stripeEvent.To<Session>()), cancellationToken);
+                    await mediator.Publish(new CheckoutSessionCompletedNotification(stripeEvent.To<Session>()), cancellationToken);
                     break;
 
                 case Events.InvoicePaid:

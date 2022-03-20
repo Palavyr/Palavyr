@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AmazonServices;
@@ -10,70 +10,47 @@ namespace Palavyr.Core.Common.ExtensionMethods
 {
     public static class TypeConversionExtensionMethods
     {
-        public static S3SDownloadRequestMeta ToS3DownloadRequestMeta(this PdfServerResponse pdfServerResponse)
+        public static CloudFileDownloadRequest ToCloudFileDownloadRequest(this FileAsset fileAsset)
         {
-            return new S3SDownloadRequestMeta
+            return new CloudFileDownloadRequest
             {
-                FileNameWithExtension = pdfServerResponse.FileNameWithExtension,
-                S3Key = pdfServerResponse.S3Key
+                FileNameWithExtension = fileAsset.RiskyNameWithExtension,
+                LocationKey = fileAsset.LocationKey
             };
         }
-
-        public static FileLink[] ToFileLinks(this Image[] images)
-        {
-            var fileLinks = new List<FileLink>();
-            foreach (var image in images)
-            {
-                var link = image.IsUrl ? FileLink.CreateUrlLink(image.RiskyName, image.Url, image.ImageId) : FileLink.CreateS3Link(image.RiskyName,image.ImageId, image.S3Key);
-                fileLinks.Add(link);
-            }
-
-            return fileLinks.ToArray();
-        }
-
-        public static FileLink[] ToFileLinks(this List<Image> images)
-        {
-            return ToFileLinks(images.ToArray());
-        }
-
-        // public static FileLink[] ToFileLinks(this List<Image> images, ILinkCreator linkCreator, string bucket)
+        
+        
+        // public static CloudFileDownloadRequest ToS3DownloadRequestMeta(this PdfServerResponse pdfServerResponse)
         // {
-        //     return ToFileLinks(images.ToArray(), linkCreator, bucket);
+        //     return new CloudFileDownloadRequest
+        //     {
+        //         FileNameWithExtension = pdfServerResponse.FileNameWithExtension,
+        //         LocationKey = pdfServerResponse.FileAsset.LocationKey
+        //     };
         // }
 
-        // public static FileLink[] ToFileLinks(this Image[] images, ILinkCreator linkCreator, string bucket)
+        // public static async Task<FileLink[]> ToFileLinks(this FileAsset[] fileAssets, ILinkCreator linkCreator)
         // {
-        //     var fileLinks = new List<FileLink>();
-        //     foreach (var image in images)
-        //     {
-        //         var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(image.S3Key, bucket, DateTime.Now.AddDays(6.5));
-        //         var link = FileLink.CreateLink(image.RiskyName, preSignedUrl, image.ImageId);
-        //         fileLinks.Add(link);
-        //     }
-        //
+        //     var fileLinks = await Task.WhenAll(
+        //         fileAssets
+        //             .Select(
+        //                 async asset => new FileLink
+        //                 {
+        //                     Link = await linkCreator.CreateLink(asset.FileId),
+        //                     FileId = asset.FileId,
+        //                     FileName = asset.RiskyNameWithExtension
+        //                 }));
         //     return fileLinks.ToArray();
         // }
 
-        // public static FileLink[] ToFileLinks(this Image image, ILinkCreator linkCreator, string bucket)
+        // public static async Task<FileLink> ToFileLink(this FileAsset fileAsset, ILinkCreator linkCreator)
         // {
-        //     return new[] {image}.ToFileLinks(linkCreator, image.ImageId);
+        //     return new FileLink
+        //     {
+        //         Link = await linkCreator.CreateLink(fileAsset.FileId),
+        //         FileId = fileAsset.FileId,
+        //         FileName = fileAsset.RiskyNameWithExtension
+        //     };
         // }
-
-        public static FileLink[] ImageUrlToFileLinks(this Image image)
-        {
-            return new[] {image}.ImageUrlToFileLinks();
-        }
-
-        public static FileLink[] ImageUrlToFileLinks(this Image[] images)
-        {
-            var fileLinks = new List<FileLink>();
-            foreach (var image in images)
-            {
-                var link = FileLink.CreateUrlLink(image.RiskyName, image.Url, image.ImageId);
-                fileLinks.Add(link);
-            }
-
-            return fileLinks.ToArray();
-        }
     }
 }

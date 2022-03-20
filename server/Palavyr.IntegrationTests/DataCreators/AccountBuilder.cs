@@ -1,10 +1,8 @@
 ﻿#nullable enable
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Test.Common.Random;
@@ -36,7 +34,7 @@ namespace Palavyr.IntegrationTests.DataCreators
 
         private readonly DateTime futureDate = DateTime.Parse("01/01/2200");
         private readonly DateTime pastDate = DateTime.Parse("01/01/2200");
-        
+
         public DefaultAccountAndSessionBuilder(BaseIntegrationFixture test)
         {
             this.test = test;
@@ -54,11 +52,10 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
-        
-        
+
         public DefaultAccountAndSessionBuilder WithDefaultEmailAddress()
         {
-            this.emailAddress = IntegrationConstants.EmailAddress;
+            this.emailAddress = this.test.EmailAddress;
             return this;
         }
 
@@ -74,7 +71,7 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
-        public DefaultAccountAndSessionBuilder WithApiKey(string apiKey)
+        public DefaultAccountAndSessionBuilder WithApiKey(string? apiKey)
         {
             this.apikey = apiKey;
             return this;
@@ -138,13 +135,15 @@ namespace Palavyr.IntegrationTests.DataCreators
             var hasUpgraded = this.hasUpgrade ?? false;
             var planT = this.planType ?? Account.PlanTypeEnum.Free;
             var periodEnd = this.currentPeriodEnd ?? DateTime.UtcNow;
-
+            var apiKey = this.apikey ?? test.ApiKey;
+            
+            
             var defaultAccount = new Account
             {
                 EmailAddress = email,
                 Password = pass,
                 AccountId = id,
-                ApiKey = test.ApiKey,
+                ApiKey = apiKey,
                 AccountType = accType,
                 StripeCustomerId = custId,
                 PhoneNumber = null,
@@ -157,16 +156,10 @@ namespace Palavyr.IntegrationTests.DataCreators
                 IntroductionId = A.RandomId()
             };
 
-            var token = test.Container.GetService<ICancellationTokenTransport>();
-            if (token == null)
-            {
-                test.SetCancellationToken();
-            }
+            await test.CreateAndSave(defaultAccount);
+            await test.CreateAndSave(Session.CreateNew(test.SessionId, test.AccountId, test.ApiKey));
             
 
-            await test.AccountsContext.Accounts.AddAsync(defaultAccount);
-            var session = Session.CreateNew(IntegrationConstants.SessionId, test.AccountId, test.ApiKey);
-            await test.AccountRepository.CreateNewSession(session);
             return defaultAccount;
         }
     }

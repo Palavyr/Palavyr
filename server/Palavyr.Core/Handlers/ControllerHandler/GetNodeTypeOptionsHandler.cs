@@ -4,30 +4,31 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetNodeTypeOptionsHandler : IRequestHandler<GetNodeTypeOptionsRequest, GetNodeTypeOptionsResponse>
     {
         private readonly ILogger<GetNodeTypeOptionsHandler> logger;
-        private readonly IConfigurationRepository configurationRepository;
         private readonly IDynamicTableCompilerOrchestrator dynamicTableCompilerOrchestrator;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
 
         public GetNodeTypeOptionsHandler(
             ILogger<GetNodeTypeOptionsHandler> logger,
-            IConfigurationRepository configurationRepository,
-            IDynamicTableCompilerOrchestrator dynamicTableCompilerOrchestrator)
+            IDynamicTableCompilerOrchestrator dynamicTableCompilerOrchestrator,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore)
         {
             this.logger = logger;
-            this.configurationRepository = configurationRepository;
             this.dynamicTableCompilerOrchestrator = dynamicTableCompilerOrchestrator;
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
         }
 
         public async Task<GetNodeTypeOptionsResponse> Handle(GetNodeTypeOptionsRequest request, CancellationToken cancellationToken)
         {
-            var dynamicTableMetas = await configurationRepository.GetDynamicTableMetas(request.IntentId);
+            var dynamicTableMetas = await dynamicTableMetaStore.GetMany(request.IntentId, s => s.AreaIdentifier);
             var dynamicTableData = await dynamicTableCompilerOrchestrator.CompileTablesToConfigurationNodes(dynamicTableMetas, request.IntentId);
             var defaultNodeTypeOptions = DefaultNodeTypeOptions.DefaultNodeTypeOptionsList;
 

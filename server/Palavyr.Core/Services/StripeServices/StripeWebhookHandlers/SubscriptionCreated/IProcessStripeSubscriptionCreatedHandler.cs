@@ -3,26 +3,26 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Stores;
 using Stripe;
-
+using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.SubscriptionCreated
 {
     public class ProcessStripeSubscriptionCreatedHandler : INotificationHandler<SubscriptionCreatedEvent>
     {
-        private readonly AccountsContext accountsContext;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<ProcessStripeSubscriptionCreatedHandler> logger;
         private readonly ISesEmail client;
 
         public ProcessStripeSubscriptionCreatedHandler(
-            AccountsContext accountsContext,
+            IEntityStore<Account> accountStore,
             ILogger<ProcessStripeSubscriptionCreatedHandler> logger,
             ISesEmail client
         )
         {
-            this.accountsContext = accountsContext;
+            this.accountStore = accountStore;
             this.logger = logger;
             this.client = client;
         }
@@ -31,7 +31,7 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.Subscriptio
         {
             var subscription = @event.subscription;
 
-            var account = await subscription.GetAccount(accountsContext, logger);
+            var account = await subscription.GetAccount(accountStore, logger);
             var customerEmail = account.EmailAddress;
             var htmlBody = SubscriptionCreated.GetSubscriptionCreatedHtml();
             var textBody = SubscriptionCreated.GetSubscriptionCreatedText();

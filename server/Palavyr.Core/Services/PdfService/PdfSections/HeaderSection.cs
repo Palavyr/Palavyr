@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.Core.Services.PdfService.PdfSections
@@ -40,8 +39,8 @@ namespace Palavyr.Core.Services.PdfService.PdfSections
         {
             var builder = new StringBuilder();
 
-            var firstTable = companyTable.Select(el => new Dictionary<string, string>() {["th"] = el}).ToList();
-            firstTable.Add(new Dictionary<string, string>() {["th"] = DateTime.Now.ToString()});
+            var firstTable = companyTable.Select(el => new Dictionary<string, string>() { ["th"] = el }).ToList();
+            firstTable.Add(new Dictionary<string, string>() { ["th"] = DateTime.Now.ToString() });
 
             builder.Append(@"<section id='HEADER' style='display: flex; flex-direction: row; padding-top: .5in; padding-left: .5in; padding-right: .5in;'>");
             if (!string.IsNullOrWhiteSpace(imageUri) && !string.IsNullOrEmpty(imageUri))
@@ -60,22 +59,15 @@ namespace Palavyr.Core.Services.PdfService.PdfSections
             return builder.ToString();
         }
 
-        public static string GetHeader(Account account, ILinkCreator linkCreator, string userDataBucket, string emailAddress)
+        public static string GetHeader(ResponseCustomizationOptions options, ILinkCreator linkCreator, string userDataBucket)
         {
-            var imageLocation = account.AccountLogoUri ?? "";
-            var logoUri = "";
-            if (!string.IsNullOrWhiteSpace(imageLocation))
-            {
-                logoUri = linkCreator.GenericCreatePreSignedUrl(imageLocation, userDataBucket);
-            }
-
             var companyDetails = new List<string>()
             {
-                $"<h2 style='padding-bottom: -20px;'>{account.CompanyName}</h2><h4 style='margin-top: -4rem;' >{account.PhoneNumber}</h4>", " ", emailAddress
+                $"<h2 style='padding-bottom: -20px;'>{options.CompanyName}</h2><h4 style='margin-top: -4rem;' >{options.PhoneNumber}</h4>", " ", options.EmailAddress
             };
 
             var header = CreateHeaderSection(
-                logoUri,
+                options.LogoLink ?? "",
                 companyDetails
             );
             return header;

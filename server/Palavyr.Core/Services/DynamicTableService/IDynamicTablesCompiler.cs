@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -12,7 +11,7 @@ namespace Palavyr.Core.Services.DynamicTableService
 {
     public interface IDynamicTablesCompiler
     {
-        Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier);
+        Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier);
 
         Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes);
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FileLink } from "@Palavyr-Types";
+import { FileAssetResource } from "@Palavyr-Types";
 import { CircularProgress, makeStyles, Paper } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { HeaderStrip } from "@common/components/HeaderStrip";
@@ -29,12 +29,12 @@ export const ConfigurationPreview = () => {
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [localLoading, setLocalLoading] = useState<boolean>(true);
 
-    const [preview, setPreview] = useState<FileLink>();
+    const [preview, setPreview] = useState<FileAssetResource>();
     const cls = useStyles({ preview: preview ? true : false });
 
     const loadPreview = React.useCallback(async () => {
-        const fileLink = await repository.Configuration.Preview.fetchPreview(areaIdentifier);
-        setPreview(fileLink);
+        const fileAssetResource = await repository.Configuration.Preview.FetchPreview(areaIdentifier);
+        setPreview(fileAssetResource);
         setIsLoading(true);
     }, [areaIdentifier]);
 

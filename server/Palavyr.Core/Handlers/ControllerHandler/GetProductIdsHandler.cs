@@ -16,6 +16,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetProductIdsResponse> Handle(GetProductIdsRequest request, CancellationToken cancellationToken)
         {
+            await Task.CompletedTask;
             var productsIds = productRegistry.GetProductIds();
             return new GetProductIdsResponse(productsIds);
         }

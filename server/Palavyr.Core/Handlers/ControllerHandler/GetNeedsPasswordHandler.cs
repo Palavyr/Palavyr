@@ -2,23 +2,25 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetNeedsPasswordHandler : IRequestHandler<GetNeedsPasswordRequest, GetNeedsPasswordResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Account> accountStore;
         private static readonly int[] NeedsPassword = new[] { 0 };
 
-        public GetNeedsPasswordHandler(IAccountRepository accountRepository)
+        public GetNeedsPasswordHandler(IEntityStore<Account> accountStore)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
 
         public async Task<GetNeedsPasswordResponse> Handle(GetNeedsPasswordRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             return new GetNeedsPasswordResponse(NeedsPassword.Contains((int)(account.AccountType)));
         }
     }

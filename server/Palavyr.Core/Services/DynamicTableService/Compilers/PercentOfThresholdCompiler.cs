@@ -3,38 +3,41 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
-    public class PercentOfThresholdCompiler : BaseCompiler<PercentOfThreshold>, IDynamicTablesCompiler
+    public interface IPercentOfThresholdCompiler : IDynamicTablesCompiler
     {
-        private readonly IConfigurationRepository configurationRepository;
+    }
+
+    public class PercentOfThresholdCompiler : BaseCompiler<PercentOfThreshold>, IPercentOfThresholdCompiler
+    {
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly IThresholdEvaluator thresholdEvaluator;
         private readonly IResponseRetriever responseRetriever;
 
         public PercentOfThresholdCompiler(
-            IGenericDynamicTableRepository<PercentOfThreshold> repository,
-            IConfigurationRepository configurationRepository,
+            IPricingStrategyEntityStore<PercentOfThreshold> repository,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
             IThresholdEvaluator thresholdEvaluator,
             IResponseRetriever responseRetriever
         ) : base(repository)
         {
-            this.configurationRepository = configurationRepository;
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
             this.thresholdEvaluator = thresholdEvaluator;
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
         {
             await Task.CompletedTask;
         }
@@ -45,8 +48,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier(),
                     dynamicTableMeta.ConvertToPrettyName(),
-                    new List<string>() {"Continue"},
-                    new List<string>() {"Continue"},
+                    new List<string>() { "Continue" },
+                    new List<string>() { "Continue" },
                     true,
                     false,
                     false,
@@ -66,7 +69,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             var responseValueAsDouble = double.Parse(responseValue);
             var allRows = await RetrieveAllAvailableResponses(dynamicResponseId);
-            var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(allRows[0].TableId);
+            var dynamicMeta = await dynamicTableMetaStore.Get(allRows[0].TableId, s => s.TableId);
 
             var itemIds = allRows.Select(item => item.ItemId).Distinct().ToArray();
 
@@ -75,7 +78,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             foreach (var itemId in itemIds)
             {
                 var itemThresholds = allRows.Where(item => item.ItemId == itemId);
-                var thresholdResult = (PercentOfThreshold) thresholdEvaluator.Evaluate(responseValueAsDouble, itemThresholds);
+                var thresholdResult = (PercentOfThreshold)thresholdEvaluator.Evaluate(responseValueAsDouble, itemThresholds);
 
                 var minBaseAmount = thresholdResult.ValueMin;
                 var maxBaseAmount = thresholdResult.ValueMax;
@@ -104,7 +107,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             return tableRows;
         }
-        
+
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents _)
         {
             var currentResponseAsDouble = double.Parse(response);
@@ -177,7 +180,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         {
             var availablePercentOfThreshold = await responseRetriever.RetrieveAllAvailableResponses<PercentOfThreshold>(tableMeta.TableId);
             var responseParts = DynamicTableTypes.CreatePercentOfThreshold().CreateDynamicResponseParts(availablePercentOfThreshold.First().TableId, availablePercentOfThreshold.First().Threshold.ToString());
-            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() {tableMeta.TableId}, culture);
+            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;
         }
 

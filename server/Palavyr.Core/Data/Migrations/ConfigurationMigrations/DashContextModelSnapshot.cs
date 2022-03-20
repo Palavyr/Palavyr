@@ -82,6 +82,32 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.ToTable("Areas");
                 });
 
+            modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.AttachmentLinkRecord", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("AreaId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FileId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("IntentId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.ToTable("AttachmentRecords");
+                });
+
             modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.ConversationNode", b =>
                 {
                     b.Property<int?>("Id")
@@ -458,7 +484,7 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.ToTable("TwoNestedCategories");
                 });
 
-            modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.FileNameMap", b =>
+            modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.FileAsset", b =>
                 {
                     b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
@@ -468,24 +494,24 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("AccountId")
                         .HasColumnType("text");
 
-                    b.Property<string>("AreaIdentifier")
+                    b.Property<string>("Extension")
                         .HasColumnType("text");
 
-                    b.Property<string>("RiskyName")
+                    b.Property<string>("FileId")
                         .HasColumnType("text");
 
-                    b.Property<string>("S3Key")
+                    b.Property<string>("LocationKey")
                         .HasColumnType("text");
 
-                    b.Property<string>("SafeName")
+                    b.Property<string>("RiskyNameStem")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("FileNameMaps");
+                    b.ToTable("FileAssets");
                 });
 
-            modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.Image", b =>
+            modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.Logo", b =>
                 {
                     b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
@@ -493,31 +519,14 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("AccountId")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ImageId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsUrl")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("RiskyName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("S3Key")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SafeName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Url")
+                    b.Property<string>("AccountLogoFileId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Images");
+                    b.ToTable("Logos");
                 });
 
             modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.StaticFee", b =>
@@ -683,6 +692,13 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.HasKey("Id");
 
                     b.ToTable("WidgetPreferences");
+                });
+
+            modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.AttachmentLinkRecord", b =>
+                {
+                    b.HasOne("Palavyr.Core.Models.Configuration.Schemas.Area", null)
+                        .WithMany("AttachmentRecords")
+                        .HasForeignKey("AreaId");
                 });
 
             modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.ConversationNode", b =>

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.AspNetCore.Diagnostics;
@@ -81,6 +78,7 @@ namespace Palavyr.API.CustomMiddleware
 
         public async Task FormatErrors(HttpContext context, string message, int statusCode)
         {
+            await Task.CompletedTask;
             // var headers = context.Response.Headers;
             context.Response.Clear();
             context.Response.StatusCode = StatusCodes.Status400BadRequest;

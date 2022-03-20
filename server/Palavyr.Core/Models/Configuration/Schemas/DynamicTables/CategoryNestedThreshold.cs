@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class CategoryNestedThreshold : IOrderedTable, IDynamicTable<CategoryNestedThreshold>, IHaveRange, IMultiItem, IOrderableThreshold
+    public class CategoryNestedThreshold : Entity, IOrderedTable, IDynamicTable<CategoryNestedThreshold>, IHaveRange, IMultiItem, IOrderableThreshold, IHaveAccountId
     {
-        [Key] public int? Id { get; set; }
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }

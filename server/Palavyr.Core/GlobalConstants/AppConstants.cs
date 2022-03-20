@@ -5,18 +5,19 @@
         public class MagicUrlStrings
         {
             public const string SessionAction = "tubmcgubs";
+            public const string LogoutAction = "logout";
             public const string Action = "action";
             public const string AccountId = "accountId";
             public const string SessionId = "sessionId";
             public const string ApiKeyAccess = "apiKeyAccess";
             public const string DevAccess = "secretDevAccess";
             public const string DevAccount = "dashboardDev";
+            public const string Authorization = "Authorization";
         }
 
         public class ConfigSections
         {
             public const string LoggingSection = "Logging";
-            public const string PreviewSection = "Previews";
             public const string UserDataSection = "Userdata";
 
             public const string ConfigurationDbStringKey = "DashContextPostgres";

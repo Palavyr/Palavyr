@@ -12,7 +12,6 @@ namespace PalavyrServer.UnitTests.Core.Services.AuthenticationServices
         public void AccountEnumIsOrderedCorrectly()
         {
             ((int)AccountType.Default).ShouldBe(0);
-            ((int)AccountType.Google).ShouldBe(1);
         }
     }
 }

@@ -2,34 +2,36 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.EmailService.Verification;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetDefaultEmailHandler : IRequestHandler<GetDefaultEmailRequest, GetDefaultEmailResponse>
     {
         private readonly IEmailVerificationStatus emailVerificationStatus;
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Account> accountStore;
 
         public GetDefaultEmailHandler(
             IEmailVerificationStatus emailVerificationStatus,
-            IAccountRepository accountRepository)
+            IEntityStore<Account> accountStore)
         {
             this.emailVerificationStatus = emailVerificationStatus;
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
 
         public async Task<GetDefaultEmailResponse> Handle(GetDefaultEmailRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             if (string.IsNullOrWhiteSpace(account.EmailAddress)) throw new Exception($"Default email for account id {account.AccountId} not found. Account corruption.");
 
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(account.EmailAddress);
 
             account.DefaultEmailIsVerified = verificationResponse.IsVerified();
-            await accountRepository.CommitChangesAsync();
+            
 
             var response = AccountEmailSettingsResponse.CreateNew(
                 account.EmailAddress,

@@ -6,38 +6,50 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
-    public class CategoryNestedThresholdCompiler : BaseCompiler<CategoryNestedThreshold>, IDynamicTablesCompiler
+    public interface ICategoryNestedThresholdCompiler : IDynamicTablesCompiler
     {
-        private readonly IConfigurationRepository configurationRepository;
+    }
+
+    public class CategoryNestedThresholdCompiler : BaseCompiler<CategoryNestedThreshold>, ICategoryNestedThresholdCompiler
+    {
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly IConversationOptionSplitter splitter;
         private readonly IThresholdEvaluator thresholdEvaluator;
         private readonly IResponseRetriever responseRetriever;
+        private readonly ICancellationTokenTransport cancellationTokenTransport;
+
+        private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
 
         public CategoryNestedThresholdCompiler(
-            IGenericDynamicTableRepository<CategoryNestedThreshold> repository,
-            IConfigurationRepository configurationRepository,
+            IEntityStore<ConversationNode> convoNodeStore,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IPricingStrategyEntityStore<CategoryNestedThreshold> repository,
             IConversationOptionSplitter splitter,
             IThresholdEvaluator thresholdEvaluator,
-            IResponseRetriever responseRetriever
+            IResponseRetriever responseRetriever,
+            ICancellationTokenTransport cancellationTokenTransport
         ) : base(repository)
         {
-            this.configurationRepository = configurationRepository;
+            this.convoNodeStore = convoNodeStore;
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
             this.splitter = splitter;
             this.thresholdEvaluator = thresholdEvaluator;
             this.responseRetriever = responseRetriever;
+            this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
         public List<string> GetCategories(List<CategoryNestedThreshold> rawRows)
@@ -47,14 +59,17 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return categories;
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
         {
             var update = table.CategoryNestedThreshold;
             var category = GetCategories(update);
 
-            var nodes = (await configurationRepository.GetAllConversationNodes())
-                .Where(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId)
-                .OrderBy(x => x.ResolveOrder).ToList();
+            var nodes = await convoNodeStore
+                .Query()
+                .Where(n => n.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(n.NodeType) == tableId)
+                .OrderBy(x => x.ResolveOrder)
+                .ToListAsync(CancellationToken);
+
             if (nodes.Count > 0)
             {
                 nodes.Single(x => x.ResolveOrder == 0).ValueOptions = splitter.JoinValueOptions(category);
@@ -72,7 +87,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Category"),
                     dynamicTableMeta.ConvertToPrettyName("Category (1)"),
-                    new List<string>() {"Continue"},
+                    new List<string>() { "Continue" },
                     categories,
                     true,
                     true,
@@ -92,8 +107,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Threshold"),
                     dynamicTableMeta.ConvertToPrettyName("Threshold (2)"),
-                    new List<string>() {"Continue"},
-                    new List<string>() {"Continue"},
+                    new List<string>() { "Continue" },
+                    new List<string>() { "Continue" },
                     true,
                     false,
                     false,
@@ -102,7 +117,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     NodeTypeCode.III,
                     resolveOrder: 1,
                     isMultiOptionEditable: false,
-                    dynamicType: widgetResponseKey // check in widget component perhaps if this is dynamic, and thresholdtype... then we can do a check against the server... bleh this is so gross. But there is no other way right now.
+                    dynamicType: widgetResponseKey // check in widget component perhaps if this is dynamic, and threshold type... then we can do a check against the server... bleh this is so gross. But there is no other way right now.
                 )
             );
         }
@@ -122,12 +137,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var responseAmountAsDouble = double.Parse(amount);
             if (responseAmountAsDouble < 0) throw new Exception("Negative values are not allowed");
 
-            var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(records.First().TableId);
+            var dynamicMeta = await dynamicTableMetaStore.Get(records.First().TableId, s => s.TableId);
             var thresholdResult = thresholdEvaluator.Evaluate(responseAmountAsDouble, itemRows);
             return new List<TableRow>()
             {
                 new TableRow(
-                    dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : string.Join(" @ ", new[] {category, responseAmountAsDouble.ToString("C", culture)}),
+                    dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : string.Join(" @ ", new[] { category, responseAmountAsDouble.ToString("C", culture) }),
                     thresholdResult.ValueMin,
                     thresholdResult.ValueMax,
                     false,
@@ -146,7 +161,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             var convoNodeIds = CollectNodeIds(dynamicResponseComponents);
 
-            var convoNodes = await repository.GetConversationNodeByIds(convoNodeIds);
+            var convoNodes = await convoNodeStore.GetMany(convoNodeIds.ToArray(), c => c.NodeId);
             var categoryNode = convoNodes.Single(x => x.ResolveOrder == 0);
 
             var categoryResponse = dynamicResponseComponents.Responses
@@ -240,7 +255,6 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             };
 
             return currentRows;
-
         }
 
         public async Task<List<CategoryNestedThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId, CancellationToken cancellationToken)

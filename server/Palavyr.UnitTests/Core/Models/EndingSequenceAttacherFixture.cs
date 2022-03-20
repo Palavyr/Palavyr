@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NSubstitute;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 using Shouldly;
 using Test.Common;
 using Test.Common.Random;
@@ -21,7 +19,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         [Fact]
         public async Task AllNodesAreCreated()
         {
-            var result = sequenceAttacher.AttachEndingSequenceToNodeList(new List<ConversationNode>() { }, A.RandomId(), A.RandomAccount());
+            var result = sequenceAttacher.AttachEndingSequenceToNodeList(new List<ConversationNode>() { }, A.RandomId(), A.RandomAccountId());
             result.Count.ShouldBe(12);
         }
 
@@ -29,7 +27,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         [Fact]
         public async Task NodesAreReturnedInTheCorrectOrder()
         {
-            var nodeList = sequenceAttacher.AttachEndingSequenceToNodeList(new List<ConversationNode>() { }, A.RandomId(), A.RandomAccount());
+            var nodeList = sequenceAttacher.AttachEndingSequenceToNodeList(new List<ConversationNode>() { }, A.RandomId(), A.RandomAccountId());
 
             var result = nodeList.Select(x => x.NodeId).ToList();
 
@@ -40,16 +38,15 @@ namespace PalavyrServer.UnitTests.Core.Models
 
             result.ShouldBeEquivalentTo(expected);
         }
-        
+
         public async Task InitializeAsync()
         {
             await Task.CompletedTask;
-            var configurationRepository = Substitute.For<IConfigurationRepository>();
             var guidSub = Substitute.For<IGuidUtils>();
             var range = Enumerable.Range(0, 20).Select(x => x.ToString()).ToArray();
             guidSub.CreateNewId().Returns("A", range);
 
-            var endingSequenceNodes = new EndingSequenceNodes(configurationRepository, guidSub);
+            var endingSequenceNodes = new EndingSequenceNodes(guidSub);
             sequenceAttacher = new EndingSequenceAttacher(endingSequenceNodes);
         }
 

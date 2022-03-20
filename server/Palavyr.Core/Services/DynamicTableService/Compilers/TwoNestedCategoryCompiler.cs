@@ -4,34 +4,39 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
-    public class TwoNestedCategoryCompiler : BaseCompiler<TwoNestedCategory>, IDynamicTablesCompiler
+    public interface ITwoNestedCategoryCompiler : IDynamicTablesCompiler
     {
-        private readonly IConfigurationRepository configurationRepository;
+    }
+
+    public class TwoNestedCategoryCompiler : BaseCompiler<TwoNestedCategory>, ITwoNestedCategoryCompiler
+    {
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IConversationOptionSplitter splitter;
         private readonly IResponseRetriever responseRetriever;
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
 
         public TwoNestedCategoryCompiler(
-            IGenericDynamicTableRepository<TwoNestedCategory> repository,
-            IConfigurationRepository configurationRepository,
+            IEntityStore<ConversationNode> convoNodeStore,
+            IPricingStrategyEntityStore<TwoNestedCategory> repository,
             IConversationOptionSplitter splitter,
-            IResponseRetriever responseRetriever
-        ) : base(repository)
+            IResponseRetriever responseRetriever,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(repository)
         {
-            this.configurationRepository = configurationRepository;
+            this.convoNodeStore = convoNodeStore;
             this.splitter = splitter;
             this.responseRetriever = responseRetriever;
+            this.dynamicTableMetaStore = dynamicTableMetaStore;
         }
 
         public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
@@ -45,12 +50,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var innerCategory = GetResponseByResponseId(orderedResponseIds[1], dynamicResponseParts);
 
             var result = records.Single(rec => rec.ItemName == outerCategory && rec.InnerItemName == innerCategory);
-            var dynamicTableMeta = await configurationRepository.GetDynamicTableMetaByTableId(result.TableId);
+            var dynamicTableMeta = await dynamicTableMetaStore.Get(result.TableId, s => s.TableId);
 
             return new List<TableRow>()
             {
                 new TableRow(
-                    dynamicTableMeta.UseTableTagAsResponseDescription ? dynamicTableMeta.TableTag : string.Join(" & ", new[] {result.ItemName, result.InnerItemName}),
+                    dynamicTableMeta.UseTableTagAsResponseDescription ? dynamicTableMeta.TableTag : string.Join(" & ", new[] { result.ItemName, result.InnerItemName }),
                     result.ValueMin,
                     result.ValueMax,
                     false,
@@ -126,7 +131,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var currentRows = new List<TableRow>()
             {
                 new TableRow(
-                    tableMeta.UseTableTagAsResponseDescription ? tableMeta.TableTag : string.Join(" & ", new[] {availableTwoNested.First().ItemName, availableTwoNested.First().InnerItemName}),
+                    tableMeta.UseTableTagAsResponseDescription ? tableMeta.TableTag : string.Join(" & ", new[] { availableTwoNested.First().ItemName, availableTwoNested.First().InnerItemName }),
                     availableTwoNested.First().ValueMin,
                     availableTwoNested.First().ValueMax,
                     false,
@@ -160,14 +165,16 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             };
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
         {
             var update = table.TwoNestedCategory;
 
             var (innerCategories, outerCategories) = GetInnerAndOuterCategories(update);
-            var nodes = (await context.ConversationNodes.ToListAsync())
+
+            var nodes = await convoNodeStore.Query()
                 .Where(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId)
-                .OrderBy(x => x.ResolveOrder).ToList();
+                .OrderBy(x => x.ResolveOrder).ToListAsync(convoNodeStore.CancellationToken);
+
             if (nodes.Count > 0)
             {
                 nodes.Single(x => x.ResolveOrder == 0).ValueOptions = splitter.JoinValueOptions(outerCategories);
@@ -186,7 +193,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Outer-Categories"),
                     dynamicTableMeta.ConvertToPrettyName("Outer"),
-                    new List<string>() {"Continue"},
+                    new List<string>() { "Continue" },
                     outerCategories,
                     true,
                     true,
@@ -205,7 +212,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Inner-Categories"),
                     dynamicTableMeta.ConvertToPrettyName("Inner"),
-                    new List<string>() {"Continue"},
+                    new List<string>() { "Continue" },
                     innerCategories,
                     true,
                     true,

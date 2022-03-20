@@ -2,29 +2,36 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.LogoServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class CreateCompanyLogoHandler : IRequestHandler<CreateCompanyLogoRequest, CreateCompanyLogoResponse>
     {
-        private readonly ILogoSaver logoSaver;
+        private readonly ILogoAssetSaver logoAssetSaver;
         private readonly ILogoDeleter logoDeleter;
+        private readonly IMapToNew<FileAsset, FileAssetResource> mapper;
 
         public CreateCompanyLogoHandler(
-            ILogoSaver logoSaver,
-            ILogoDeleter logoDeleter
-        )
+            ILogoAssetSaver logoAssetSaver,
+            ILogoDeleter logoDeleter,
+            IMapToNew<FileAsset, FileAssetResource> mapper)
         {
-            this.logoSaver = logoSaver;
+            this.logoAssetSaver = logoAssetSaver;
             this.logoDeleter = logoDeleter;
+            this.mapper = mapper;
         }
 
         public async Task<CreateCompanyLogoResponse> Handle(CreateCompanyLogoRequest request, CancellationToken cancellationToken)
         {
             await logoDeleter.DeleteLogo();
-            var preSignedUrl = await logoSaver.SaveLogo(request.File);
-            return new CreateCompanyLogoResponse(preSignedUrl);
+            var fileAsset = await logoAssetSaver.SaveFile(request.File);
+
+            var fileAssetResource = await mapper.Map(fileAsset);
+
+            return new CreateCompanyLogoResponse(fileAssetResource.Link);
         }
     }
 

@@ -4,24 +4,25 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetStaticTableMetasHandler : IRequestHandler<GetStaticTableMetasRequest, GetStaticTableMetasResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IEntityStore<StaticTablesMeta> staticTableMetaStore;
         private readonly ILogger<GetStaticTableMetasHandler> logger;
 
-        public GetStaticTableMetasHandler(IConfigurationRepository configurationRepository, ILogger<GetStaticTableMetasHandler> logger)
+        public GetStaticTableMetasHandler(IEntityStore<StaticTablesMeta> staticTableMetaStore, ILogger<GetStaticTableMetasHandler> logger)
         {
-            this.configurationRepository = configurationRepository;
+            this.staticTableMetaStore = staticTableMetaStore;
             this.logger = logger;
         }
 
         public async Task<GetStaticTableMetasResponse> Handle(GetStaticTableMetasRequest request, CancellationToken cancellationToken)
         {
-            var staticTables = await configurationRepository.GetStaticTables(request.IntentId);
+            var staticTables = await staticTableMetaStore.GetStaticTablesComplete(request.IntentId);
             return new GetStaticTableMetasResponse(staticTables);
         }
     }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Resources.Requests;
@@ -14,9 +13,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
     /// The ItemId/ItemName represents this partition key.
     /// The itemName unfortunately has to be duplicated along with the itemId.
     /// </summary>
-    public class PercentOfThreshold : IComparable<PercentOfThreshold>, IOrderedTable, IDynamicTable<PercentOfThreshold>, IOrderableThreshold, IMultiItem
+    public class PercentOfThreshold : Entity, IComparable<PercentOfThreshold>, IOrderedTable, IDynamicTable<PercentOfThreshold>, IOrderableThreshold, IMultiItem, IHaveAccountId
     {
-        [Key] public int? Id { get; set; }
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }

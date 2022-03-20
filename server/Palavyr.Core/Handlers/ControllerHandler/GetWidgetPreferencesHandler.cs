@@ -2,23 +2,23 @@
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetWidgetPreferencesHandler : IRequestHandler<GetWidgetPreferencesRequest, GetWidgetPreferencesResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
 
-        public GetWidgetPreferencesHandler(IConfigurationRepository configurationRepository)
+        public GetWidgetPreferencesHandler(IEntityStore<WidgetPreference> widgetPreferenceStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.widgetPreferenceStore = widgetPreferenceStore;
         }
 
         public async Task<GetWidgetPreferencesResponse> Handle(GetWidgetPreferencesRequest request, CancellationToken cancellationToken)
         {
-            var prefs = await configurationRepository.GetWidgetPreferences();
-            return new GetWidgetPreferencesResponse(prefs);
+            var widgetPreferences = await widgetPreferenceStore.Get(widgetPreferenceStore.AccountId, s => s.AccountId);
+            return new GetWidgetPreferencesResponse(widgetPreferences);
         }
     }
 

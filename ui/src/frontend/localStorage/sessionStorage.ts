@@ -1,3 +1,4 @@
+import { CacheIds } from "@api-client/FrontendAxiosClient";
 import { Font } from "@common/fonts/fontManager/types";
 import { DeSerializedImageMeta, RememberMe } from "@Palavyr-Types";
 
@@ -113,6 +114,11 @@ class SessionStorageAccess {
         this._setItem(this.JwtTokenString, "");
         this._setItem(this.loginType, "");
         this._setItem(this.active, false);
+    }
+
+    unsetOtherSessionItems(){
+        this._setItem(CacheIds.Areas, "");
+        this._setItem(CacheIds.CurrentPlanMeta, "")
     }
 
     getLoginType() {

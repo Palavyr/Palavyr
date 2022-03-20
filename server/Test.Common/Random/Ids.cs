@@ -1,4 +1,6 @@
-﻿using Palavyr.Core.Common.UniqueIdentifiers;
+﻿using System.IO;
+using Microsoft.AspNetCore.Http;
+using Palavyr.Core.Common.UniqueIdentifiers;
 
 namespace Test.Common.Random
 {
@@ -9,7 +11,7 @@ namespace Test.Common.Random
             return StaticGuidUtils.CreateShortenedGuid(1);
         }
 
-        public static string RandomAccount()
+        public static string RandomAccountId()
         {
             return StaticGuidUtils.CreateShortenedGuid(1);
         }
@@ -28,6 +30,18 @@ namespace Test.Common.Random
         {
             var rand = new System.Random(42);
             return rand.Next(min, max);
+        }
+
+        public static IFormFile RandomFormFile()
+        {
+            var tempFile = Path.GetTempFileName();
+            using var stream = File.OpenRead(tempFile);
+            return new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
+        }
+
+        public static string RandomTestEmail()
+        {
+            return $"test-{RandomId()}@example.com".ToLowerInvariant();
         }
     }
 }

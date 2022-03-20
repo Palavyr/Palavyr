@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
-using Microsoft.Extensions.DependencyInjection;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.StripeServices.Products;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.DataCreators;
+using Palavyr.IntegrationTests.DataCreators.StripeBuilders;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
@@ -20,7 +20,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
     {
         private IStripeSubscriptionService service = null!;
         private ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger = null!;
-        private StagingProductRegistry registry = null!;
+        private TestProductRegistry registry = null!;
 
         [Fact]
         public async Task TheProcessCheckoutSessionCompletedUpdatesTheAccount()
@@ -28,26 +28,25 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
             var subscriptionId = A.RandomId();
             var session = this.CreateStripeCheckoutSessionBuilder()
                 .WithSubscriptionId(subscriptionId)
-                .WithCustomerId(StripeCustomerId)
                 .Build();
 
-            var checkoutEvent = new CheckoutSessionCompletedEvent(session);
-            var handler = new ProcessStripeCheckoutSessionCompletedHandler(AccountsContext, registry, logger, service);
+            var handler = ResolveType<INotificationHandler<CheckoutSessionCompletedNotification>>();
 
-            await handler.Handle(checkoutEvent, CancellationToken);
-
-            var account = await AccountRepository.GetAccount();
-
-            account.PlanType.ShouldBe(Account.PlanTypeEnum.Free);
+            await handler.Handle(new CheckoutSessionCompletedNotification(session), CancellationToken);
+            
+            var accountStore = ResolveStore<Account>();
+            var account = await accountStore.Get(accountStore.AccountId, s => s.AccountId);
+            
+            account.PlanType.ShouldBe(Account.PlanTypeEnum.Pro);
             account.HasUpgraded.ShouldBeTrue();
             account.CurrentPeriodEnd.ShouldBeEquivalentTo(CreatedAt.AddMonths(1));
         }
 
         public override Task InitializeAsync()
         {
-            logger = Container.GetService<ILogger<ProcessStripeCheckoutSessionCompletedHandler>>();
-            service = Container.GetService<IStripeSubscriptionService>();
-            registry = new StagingProductRegistry();
+            logger = ResolveType<ILogger<ProcessStripeCheckoutSessionCompletedHandler>>();
+            service = ResolveType<IStripeSubscriptionService>();
+            registry = new TestProductRegistry();
             return base.InitializeAsync();
         }
 
@@ -55,12 +54,11 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
         {
             var priceRecurring = this.CreateStripeRecurringBuilder().WithMonthInterval().Build();
             var price = this.CreateStripePriceBuilder()
-                .WithFreeProductId()
+                .WithProProductId()
                 .WithAmount(0)
                 .WithPriceRecurring(priceRecurring)
                 .Build();
-
-
+            
             var subscription = this
                 .CreateStripeSubscriptionBuilder()
                 .WithPrice(price)

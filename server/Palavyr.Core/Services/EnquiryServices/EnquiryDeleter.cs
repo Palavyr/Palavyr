@@ -1,45 +1,35 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
-using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Services.FileAssetServices;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.EnquiryServices
 {
     public interface IEnquiryDeleter
     {
         Task DeleteEnquiry(string fileId, CancellationToken cancellationToken);
-        Task DeleteEnquiries(string[] fileReferences, CancellationToken cancellationToken);   
+        Task DeleteEnquiries(string[] fileReferences, CancellationToken cancellationToken);
     }
 
     public class EnquiryDeleter : IEnquiryDeleter
     {
-        private readonly IS3Deleter s3Deleter;
-        private readonly IS3KeyResolver s3KeyResolver;
-        private readonly IConfiguration configuration;
-        private readonly ConvoContext convoContext;
+        private readonly IFileAssetDeleter fileAssetDeleter;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
 
         public EnquiryDeleter(
-            IS3Deleter s3Deleter,
-            IS3KeyResolver s3KeyResolver,
-            IConfiguration configuration,
-            ConvoContext convoContext
+            IFileAssetDeleter fileAssetDeleter,
+            IEntityStore<ConversationRecord> convoRecordStore
         )
         {
-            this.s3Deleter = s3Deleter;
-            this.s3KeyResolver = s3KeyResolver;
-            this.configuration = configuration;
-            this.convoContext = convoContext;
+            this.fileAssetDeleter = fileAssetDeleter;
+            this.convoRecordStore = convoRecordStore;
         }
 
         public async Task DeleteEnquiry(string conversationId, CancellationToken cancellationToken)
         {
             await DeleteFromS3(conversationId);
-            TrackDeleteFromDb(conversationId);
-            await convoContext.SaveChangesAsync(cancellationToken);
+            await TrackDeleteFromDb(conversationId);
         }
 
         public async Task DeleteEnquiries(string[] fileReferences, CancellationToken cancellationToken)
@@ -48,26 +38,16 @@ namespace Palavyr.Core.Services.EnquiryServices
             {
                 await DeleteEnquiry(fileReference, cancellationToken);
             }
-
-            await convoContext.SaveChangesAsync(cancellationToken);
         }
 
-        private async Task DeleteFromS3(string fileReference)
+        private async Task DeleteFromS3(string fileId)
         {
-            // Delete from S3
-            var s3Key = s3KeyResolver.ResolveResponsePdfKey(fileReference);
-            var userDataBucket = configuration.GetUserDataBucket();
-            var success = await s3Deleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
-            if (!success)
-            {
-                throw new Exception("Failed to delete s3 file.");
-            }
+            await fileAssetDeleter.RemoveFile(fileId);
         }
 
-        public void TrackDeleteFromDb(string conversationId)
+        public async Task TrackDeleteFromDb(string conversationId)
         {
-            var rowsToDelete = convoContext.ConversationRecords.Where(x => x.ConversationId == conversationId);
-            convoContext.ConversationRecords.RemoveRange(rowsToDelete);
+            await convoRecordStore.Delete(conversationId, s => s.ConversationId);
         }
     }
 }

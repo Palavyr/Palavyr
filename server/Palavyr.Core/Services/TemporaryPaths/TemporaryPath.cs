@@ -2,13 +2,14 @@
 using System.IO.IsolatedStorage;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Exceptions;
 
 namespace Palavyr.Core.Services.TemporaryPaths
 {
     public interface ITemporaryPath
     {
-        SafeFile CreateLocalTempSafeFile(ExtensionTypes extension = ExtensionTypes.Pdf);
-        SafeFile CreateLocalTempSafeFile(string fileStem, ExtensionTypes extension = ExtensionTypes.Pdf);
+        SafeFile CreateLocalTempSafeFile(string extension = ExtensionTypes.Pdf);
+        SafeFile CreateLocalTempSafeFile(string fileStem, string extension = ExtensionTypes.Pdf);
         S3DownloadFile CreateLocalS3SavePath(string fileName);
         void DeleteLocalTempFile(string fileName);
     }
@@ -24,7 +25,7 @@ namespace Palavyr.Core.Services.TemporaryPaths
             this.safeFileNameCreator = safeFileNameCreator;
         }
 
-        public SafeFile CreateLocalTempSafeFile(ExtensionTypes extension = ExtensionTypes.Pdf)
+        public SafeFile CreateLocalTempSafeFile(string extension = ExtensionTypes.Pdf)
         {
             var safeFileName = safeFileNameCreator.CreateSafeFileName(extension);
             var isolatedStorageDirectory = IsolatedStorageFile.GetMachineStoreForApplication().GetStorageDirectory();
@@ -37,10 +38,16 @@ namespace Palavyr.Core.Services.TemporaryPaths
             };
         }
 
-        public SafeFile CreateLocalTempSafeFile(string fileStem, ExtensionTypes extension = ExtensionTypes.Pdf)
+        public SafeFile CreateLocalTempSafeFile(string fileNameStem, string extension = ExtensionTypes.Pdf)
         {
+            if (!string.IsNullOrEmpty(Path.GetExtension(fileNameStem)))
+            {
+                throw new DomainException("An extension-less file name stem must be used with CreateLocalTempSafeFile. An extension may be specified separately");
+            }
+
+            
             var isolatedStorageDirectory = IsolatedStorageFile.GetMachineStoreForApplication().GetStorageDirectory();
-            var safeFileName = safeFileNameCreator.CreateSafeFileName(fileStem, extension);
+            var safeFileName = safeFileNameCreator.CreateSafeFileName(fileNameStem, extension);
             return new SafeFile
             {
                 FileStem = safeFileName.Stem,

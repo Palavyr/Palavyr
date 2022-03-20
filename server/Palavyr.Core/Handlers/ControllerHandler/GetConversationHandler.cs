@@ -3,22 +3,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetConversationHandler : IRequestHandler<GetConversationRequest, GetConversationResponse>
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
 
-        public GetConversationHandler(IConfigurationRepository configurationRepository)
+        public GetConversationHandler(IEntityStore<ConversationNode> convoNodeStore)
         {
-            this.configurationRepository = configurationRepository;
+            this.convoNodeStore = convoNodeStore;
         }
 
         public async Task<GetConversationResponse> Handle(GetConversationRequest request, CancellationToken cancellationToken)
         {
-            var conversation = await configurationRepository.GetAreaConversationNodes(request.IntentId);
+            var conversation = await convoNodeStore.GetMany(request.IntentId, s => s.AreaIdentifier);
             return new GetConversationResponse(conversation);
         }
     }

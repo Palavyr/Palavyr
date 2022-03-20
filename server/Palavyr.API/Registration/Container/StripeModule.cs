@@ -42,31 +42,34 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<CustomerSessionService>().As<ICustomerSessionService>().InstancePerLifetimeScope();
             builder.RegisterType<StripeProductService>().As<IStripeProductService>().InstancePerDependency();
             builder.RegisterType<StripeCustomerManagementPortalService>().As<IStripeCustomerManagementPortalService>();
+            builder.RegisterType<StripeSubscriptionRetriever>().As<IStripeSubscriptionRetriever>();
 
             builder.Register(
                     context =>
                     {
-                        var determineCurrentEnvironment = new DetermineCurrentEnvironment(configuration);
-                        var baseUri = determineCurrentEnvironment.IsDevelopment() ? "https://localhost:12111" : StripeClient.DefaultApiBase;
-                        var stripeClient = new StripeClient(StripeConfiguration.ApiKey, apiBase: baseUri);
+                        var stripeClient = new StripeClient(StripeConfiguration.ApiKey, apiBase: StripeClient.DefaultApiBase);
                         return stripeClient;
                     }).As<IStripeClient>()
                 .InstancePerLifetimeScope();
+            builder.RegisterDecorator<StripeClientDecorator, IStripeClient>();
 
             builder.Register<IProductRegistry>(
-                    context =>
+                    ctx =>
                     {
-                        var determineCurrentEnvironment = new DetermineCurrentEnvironment(configuration);
-                        if (determineCurrentEnvironment.IsProduction())
+                        var envChecker = ctx.Resolve<IDetermineCurrentEnvironment>();
+                        if (envChecker.IsProduction())
                         {
                             return new ProductionProductRegistry();
                         }
-                        else
+                        else if (envChecker.IsStaging())
                         {
                             return new StagingProductRegistry();
                         }
+                        else
+                        {
+                            return new TestProductRegistry();
+                        }
                     })
-                .As<IProductRegistry>()
                 .InstancePerLifetimeScope();
         }
     }

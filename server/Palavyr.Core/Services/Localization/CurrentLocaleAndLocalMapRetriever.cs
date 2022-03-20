@@ -1,32 +1,34 @@
 ﻿using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.Localization
 {
-    public interface ICurrentLocaleAndLocalMapRetriever
+    public interface ICurrentLocaleAndLocaleMapRetriever
     {
-        Task<CurrentLocaleAndLocalMapRetriever.LocaleResponse> GetLocaleDetails(bool read);
+        Task<CurrentLocaleAndLocaleMapRetriever.LocaleResponse> GetLocaleDetails(bool read);
     }
 
-    public class CurrentLocaleAndLocalMapRetriever : ICurrentLocaleAndLocalMapRetriever
+    public class CurrentLocaleAndLocaleMapRetriever : ICurrentLocaleAndLocaleMapRetriever
     {
-        private readonly IAccountRepository accountRepository;
-        private readonly ILogger<CurrentLocaleAndLocalMapRetriever> logger;
-        private readonly LocaleDefinitions localeDefinitions;
+        private readonly IEntityStore<Account> accountStore;
+        private readonly ILogger<CurrentLocaleAndLocaleMapRetriever> logger;
+        private readonly ILocaleDefinitions localeDefinitions;
 
-        public CurrentLocaleAndLocalMapRetriever(IAccountRepository accountRepository, ILogger<CurrentLocaleAndLocalMapRetriever> logger, LocaleDefinitions localeDefinitions)
+        public CurrentLocaleAndLocaleMapRetriever(IEntityStore<Account> accountStore, ILogger<CurrentLocaleAndLocaleMapRetriever> logger, ILocaleDefinitions localeDefinitions)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
             this.logger = logger;
             this.localeDefinitions = localeDefinitions;
         }
 
         public async Task<LocaleResponse> GetLocaleDetails(bool read)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             var localeMeta = localeDefinitions.Parse(account.Locale);
 
             var localeResponse = new LocaleResponse

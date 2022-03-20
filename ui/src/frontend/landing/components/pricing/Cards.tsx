@@ -80,7 +80,7 @@ export const Free = () => {
             response={checkIcon()}
             perAreaEmail={checkIcon()}
             enquiriesDashboard={checkIcon()}
-            imageUpload={crossIcon()}
+            fileAssetUpload={crossIcon()}
             emailNotifications={crossIcon()}
             inlineEmailEditor={crossIcon()}
             smsNotifications={crossIcon()}
@@ -110,7 +110,7 @@ export const Lyte = ({ priceInfo, showYearly }: PriceInfoProps) => {
             response={checkIcon()}
             perAreaEmail={checkIcon()}
             enquiriesDashboard={checkIcon()}
-            imageUpload={crossIcon()}
+            fileAssetUpload={crossIcon()}
             emailNotifications={crossIcon()}
             inlineEmailEditor={crossIcon()}
             smsNotifications={crossIcon()}
@@ -136,7 +136,7 @@ export const Premium = ({ priceInfo, showYearly }: PriceInfoProps) => {
             response={checkIcon()}
             perAreaEmail={checkIcon()}
             enquiriesDashboard={checkIcon()}
-            imageUpload={checkIcon()}
+            fileAssetUpload={checkIcon()}
             emailNotifications={checkIcon()}
             inlineEmailEditor={checkIcon()}
             smsNotifications={crossIcon()}
@@ -165,7 +165,7 @@ export const Pro = ({ priceInfo, showYearly }: PriceInfoProps) => {
             response={checkIcon()}
             perAreaEmail={checkIcon()}
             enquiriesDashboard={checkIcon()}
-            imageUpload={checkIcon()}
+            fileAssetUpload={checkIcon()}
             emailNotifications={checkIcon()}
             inlineEmailEditor={checkIcon()}
             smsNotifications={checkIcon()}

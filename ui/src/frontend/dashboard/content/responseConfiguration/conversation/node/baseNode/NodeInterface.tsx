@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { IPalavyrNode } from "@Palavyr-Types";
 import { useNodeInterfaceStyles } from "../../nodeInterfaceStyles";
 import { ImageNodeEditor } from "../imageNode/ImageNodeEditor";
-import { ImageNodeFace } from "../imageNode/ImageNodeFace";
+import { FileAssetNodeFace } from "../imageNode/ImageNodeFace";
 import { DataLogging } from "../nodeInterface/nodeDebug/DataLogging";
 import { TextNodeEditor } from "../textNode/TextNodeEditor";
 import { TextNodeFace } from "../textNode/TextNodeFace";
@@ -75,10 +75,10 @@ export const NodeInterface = ({
             <CardContent className={classNames(cls.card, nodeId)}>
                 {showDebugData && <DataLogging debugData={compileDebug(currentNode)} nodeChildren={joinedChildReferenceString} nodeId={nodeId} />}
                 <NodeHeader isRoot={isRoot} optionPath={optionPath} nodeId={currentNode.nodeId} />
-                {currentNode.isImageNode ? <ImageNodeFace imageId={imageId} repository={repository} openEditor={openEditor} /> : <TextNodeFace openEditor={openEditor} userText={userText} />}
+                {currentNode.isImageNode ? <FileAssetNodeFace fileAssetId={imageId} repository={repository} openEditor={openEditor} /> : <TextNodeFace openEditor={openEditor} userText={userText} />}
                 <NodeTypeSelector currentNode={currentNode} shouldDisableNodeTypeSelector={shouldDisableNodeTypeSelector} />
                 {currentNode.isImageNode ? (
-                    <ImageNodeEditor currentNode={currentNode} nodeId={nodeId} repository={repository} editorIsOpen={editorIsOpen} closeEditor={closeEditor} imageId={imageId} />
+                    <ImageNodeEditor currentNode={currentNode} nodeId={nodeId} repository={repository} editorIsOpen={editorIsOpen} closeEditor={closeEditor} fileAssetId={imageId} />
                 ) : (
                     <TextNodeEditor
                         isMultiOptionType={currentNode.isMultiOptionType}

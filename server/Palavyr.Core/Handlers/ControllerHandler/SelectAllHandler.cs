@@ -1,28 +1,27 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class SelectAllHandler : INotificationHandler<SelectAllRequest>
     {
-        private readonly IConvoHistoryRepository convoHistoryRepository;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
 
-        public SelectAllHandler(IConvoHistoryRepository convoHistoryRepository)
+        public SelectAllHandler(IEntityStore<ConversationRecord> convoRecordStore)
         {
-            this.convoHistoryRepository = convoHistoryRepository;
+            this.convoRecordStore = convoRecordStore;
         }
 
         public async Task Handle(SelectAllRequest request, CancellationToken cancellationToken)
         {
-            var allRecords = await convoHistoryRepository.GetAllConversationRecords();
+            var allRecords = await convoRecordStore.GetAll();
             foreach (var conversationRecord in allRecords)
             {
                 conversationRecord.Seen = true;
             }
-
-            await convoHistoryRepository.CommitChangesAsync();
         }
     }
 

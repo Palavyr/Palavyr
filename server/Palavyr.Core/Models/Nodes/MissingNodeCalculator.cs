@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -6,7 +5,24 @@ using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models.Nodes
 {
-    public class MissingNodeCalculator
+    public interface IMissingNodeCalculator
+    {
+        string[] CalculateMissingNodes(
+            NodeTypeOption[] requiredDynamicNodeTypes,
+            List<ConversationNode> conversationNodes,
+            List<DynamicTableMeta> dynamicTableMetas,
+            List<StaticTablesMeta> staticTablesMetas);
+
+        NodeTypeOption[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes);
+
+        NodeTypeOption[] SearchTerminalResponseBranchesForMissingRequiredNodes(
+            ConversationNode node,
+            ConversationNode[] nodeList,
+            NodeTypeOption[] requiredNodes // array of node type names
+        );
+    }
+
+    public class MissingNodeCalculator : IMissingNodeCalculator
     {
         private readonly INodeGetter nodeGetter;
 

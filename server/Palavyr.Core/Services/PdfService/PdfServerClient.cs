@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -24,14 +22,14 @@ namespace Palavyr.Core.Services.PdfService
     {
         private readonly HttpClient httpClient = new HttpClient(new HttpClientHandler());
         private readonly ILogger<PdfServerClient> logger;
-        private readonly IS3Retriever s3Retriever;
+        private readonly IS3Downloader is3Downloader;
         private readonly IConfiguration configuration;
         private readonly int retryCount = 60; // number of half seconds
 
-        public PdfServerClient(ILogger<PdfServerClient> logger, IS3Retriever s3Retriever, IConfiguration configuration)
+        public PdfServerClient(ILogger<PdfServerClient> logger, IS3Downloader is3Downloader, IConfiguration configuration)
         {
             this.logger = logger;
-            this.s3Retriever = s3Retriever;
+            this.is3Downloader = is3Downloader;
             this.configuration = configuration;
         }
 
@@ -69,12 +67,12 @@ namespace Palavyr.Core.Services.PdfService
             }
 
             var result = JsonConvert.DeserializeObject<PdfServerResponse>(await response.Content.ReadAsStringAsync());
-
+            
             var count = 0;
             var found = false;
             while (!found)
             {
-                found = await s3Retriever.CheckIfFileExists(requestObject.Bucket, requestObject.Key);
+                found = await is3Downloader.CheckIfFileExists(requestObject.Bucket, requestObject.Key);
                 if (count > retryCount)
                 {
                     logger.LogDebug("PDF File not written correctly");

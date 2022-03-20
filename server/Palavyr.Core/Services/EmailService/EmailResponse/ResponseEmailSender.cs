@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AttachmentServices;
@@ -18,67 +19,64 @@ using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.TemporaryPaths;
-using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
     public interface IResponseEmailSender
     {
-        Task<SendEmailResultResponse> SendEmail(string areaId, EmailRequest emailRequest, CancellationToken cancellationToken);
-        Task<SendEmailResultResponse> SendFallbackEmail(string areaId, EmailRequest emailRequest, CancellationToken cancellationToken);
+        Task<SendEmailResultResponse> SendEmail(string intentId, EmailRequest emailRequest);
+        Task<SendEmailResultResponse> SendFallbackEmail(string intentId, EmailRequest emailRequest);
     }
 
     public class ResponseEmailSender : IResponseEmailSender
     {
+        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<ConversationRecord> convoRecordStore;
         private readonly ILogger<ResponseEmailSender> logger;
         private readonly ICriticalResponses criticalResponses;
         private readonly IAttachmentRetriever attachmentRetriever;
-        private readonly IAccountRepository accountRepository;
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ITemporaryPath temporaryPath;
-        private readonly IPdfResponseGenerator pdfResponseGenerator;
+        private readonly IResponsePdfGenerator responsePdfGenerator;
         private readonly ICompileSenderDetails compileSenderDetails;
         private readonly ISesEmail client;
         private readonly IConfiguration configuration;
         private readonly ILocaleDefinitions localeDefinitions;
         private readonly ILinkCreator linkCreator;
-        private readonly IConvoHistoryRepository convoHistoryRepository;
-        private readonly IAccountIdTransport accountIdTransport;
 
         public ResponseEmailSender(
+            IEntityStore<Area> intentStore,
+            IEntityStore<ConversationRecord> convoRecordStore,
             ILogger<ResponseEmailSender> logger,
             ICriticalResponses criticalResponses,
             IAttachmentRetriever attachmentRetriever,
-            IAccountRepository accountRepository,
-            IConfigurationRepository configurationRepository,
+            IEntityStore<Account> accountStore,
             ITemporaryPath temporaryPath,
-            IPdfResponseGenerator pdfResponseGenerator,
+            IResponsePdfGenerator responsePdfGenerator,
             ICompileSenderDetails compileSenderDetails,
             ISesEmail client,
             IConfiguration configuration,
             ILocaleDefinitions localeDefinitions,
-            ILinkCreator linkCreator,
-            IConvoHistoryRepository convoHistoryRepository,
-            IAccountIdTransport accountIdTransport
-        )
+            ILinkCreator linkCreator)
         {
+            this.intentStore = intentStore;
+            this.convoRecordStore = convoRecordStore;
             this.logger = logger;
             this.criticalResponses = criticalResponses;
             this.attachmentRetriever = attachmentRetriever;
-            this.accountRepository = accountRepository;
-            this.configurationRepository = configurationRepository;
+            this.accountStore = accountStore;
             this.temporaryPath = temporaryPath;
-            this.pdfResponseGenerator = pdfResponseGenerator;
+            this.responsePdfGenerator = responsePdfGenerator;
             this.compileSenderDetails = compileSenderDetails;
             this.client = client;
             this.configuration = configuration;
             this.localeDefinitions = localeDefinitions;
             this.linkCreator = linkCreator;
-            this.convoHistoryRepository = convoHistoryRepository;
-            this.accountIdTransport = accountIdTransport;
         }
 
-        public async Task<SendEmailResultResponse> SendEmail(string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)
+        public async Task<SendEmailResultResponse> SendEmail(string intentId, EmailRequest emailRequest)
         {
             var responses = criticalResponses.Compile(emailRequest.KeyValues);
             logger.LogDebug("Compiled successfully");
@@ -87,72 +85,59 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             var localTempPath = temporaryPath.CreateLocalTempSafeFile(emailRequest.ConversationId);
             logger.LogDebug("culture and local temp path gotten");
 
-            var area = await configurationRepository.GetAreaById(areaId);
-            logger.LogDebug($"{area.AreaIdentifier} found");
+            var intent = await intentStore.GetIntentOnly(intentId);
+            logger.LogDebug($"{intent.AreaIdentifier} found");
 
-            var additionalFiles = new List<S3SDownloadRequestMeta>();
+            var additionalFiles = new List<CloudFileDownloadRequest>();
+            string? pdfLink = null; // used to provide direct link in the chat
 
-            string? pdfLink = null;
-            if (area.SendPdfResponse)
+            if (intent.SendPdfResponse)
             {
                 logger.LogDebug("Generating PDF Response from Send Email");
-                var pdfServerResponse = await pdfResponseGenerator.GeneratePdfResponseAsync(
+                var pdfFileAsset = await responsePdfGenerator.GeneratePdfResponse(
                     responses,
                     emailRequest,
                     culture,
-                    localTempPath.FileStem,
-                    areaId
+                    emailRequest.ConversationId,
+                    intentId
                 );
-                pdfLink = linkCreator.GenericCreatePreSignedUrl(pdfServerResponse.S3Key, configuration.GetUserDataBucket());
-                additionalFiles.Add(pdfServerResponse.ToS3DownloadRequestMeta());
-
-                var currentConvoRecord = await convoHistoryRepository.GetConversationRecordById(emailRequest.ConversationId);
-                currentConvoRecord.ResponsePdfId = emailRequest.ConversationId;
-                await convoHistoryRepository.UpdateConversationRecord(currentConvoRecord);
-
+                pdfLink = await linkCreator.CreateLink(pdfFileAsset.FileId);
+                additionalFiles.Add(pdfFileAsset.ToCloudFileDownloadRequest());
             }
 
-            var senderDetails = await compileSenderDetails.Compile(areaId, emailRequest);
+            var senderDetails = await compileSenderDetails.Compile(intentId, emailRequest);
 
-            var s3DownloadRequestMetas = await attachmentRetriever.RetrievePdfUris(areaId, cancellationToken);
-            
-            if (additionalFiles != null)
-            {
-                s3DownloadRequestMetas.AddRange(additionalFiles);
-            }
-            
-            var attachments = await attachmentRetriever.RetrieveAttachmentFiles(areaId, s3DownloadRequestMetas, cancellationToken);
-            
-            
+            var attachments = await attachmentRetriever.GatherAttachments(intentId, additionalFiles);
+
             logger.LogDebug("Sending Email...");
             var responseResult = await Send(senderDetails, attachments.Select(x => x.TempFilePath).ToArray(), pdfLink);
-            
+
             foreach (var attachment in attachments)
             {
                 logger.LogDebug($"Deleting locale temp file: {attachment.FileNameWithExtension}");
                 temporaryPath.DeleteLocalTempFile(attachment.FileNameWithExtension);
             }
 
-            await convoHistoryRepository.CommitChangesAsync(cancellationToken);
             return responseResult;
         }
 
-        public async Task<SendEmailResultResponse> SendFallbackEmail(string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)
+        public async Task<SendEmailResultResponse> SendFallbackEmail(string intentId, EmailRequest emailRequest)
         {
-            var sendAttachmentsOnFallback = await SendAttachmentsWhenFallback(areaId);
+            var sendAttachmentsOnFallback = await SendAttachmentsWhenFallback(intentId);
 
-            IHaveBeenDownloadedFromS3[] attachments;
+            IHaveBeenDownloadedFromCloudToLocal[] attachments;
             if (sendAttachmentsOnFallback)
             {
-                var metas = await attachmentRetriever.RetrievePdfUris(areaId, cancellationToken);
-                attachments = await attachmentRetriever.RetrieveAttachmentFiles(areaId,  metas, cancellationToken);
+                attachments = await attachmentRetriever.GatherAttachments(intentId);
+                // var metas = await attachmentRetriever.RetrievePdfUris(areaId, cancellationToken);
+                // attachments = await attachmentRetriever.DownloadForAttachmentToEmail(areaId,  metas, cancellationToken);
             }
             else
             {
-                attachments = new IHaveBeenDownloadedFromS3[] { };
+                attachments = new IHaveBeenDownloadedFromCloudToLocal[] { };
             }
 
-            var senderDetails = await compileSenderDetails.Compile(areaId, emailRequest);
+            var senderDetails = await compileSenderDetails.Compile(intentId, emailRequest);
             var responseResult = await Send(senderDetails, attachments.Select(x => x.TempFilePath).ToArray());
             foreach (var attachment in attachments)
             {
@@ -162,7 +147,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             return responseResult;
         }
 
-        private async Task<SendEmailResultResponse> Send(CompileSenderDetails.CompiledSenderDetails details, string[] attachments, string? pdfUri = null, CancellationToken cancellationToken = default)
+        private async Task<SendEmailResultResponse> Send(CompileSenderDetails.CompiledSenderDetails details, string[] attachments, string? pdfUri = null)
         {
             bool ok;
             if (attachments.Length == 0)
@@ -180,7 +165,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                     details.BodyAsHtml,
                     details.BodyAsText,
                     attachments.ToList()); // Attachments here should be local file paths that are temporary
-            
+
             return ok
                 ? SendEmailResultResponse.CreateSuccess(EndingSequenceAttacher.EmailSuccessfulNodeId, pdfUri)
                 : SendEmailResultResponse.CreateFailure(EndingSequenceAttacher.EmailFailedNodeId);
@@ -188,15 +173,15 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
         private async Task<CultureInfo> GetCulture()
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             var locale = account.Locale ?? localeDefinitions.DefaultLocale.Name;
             return new CultureInfo(locale);
         }
 
-        private async Task<bool> SendAttachmentsWhenFallback(string areaId)
+        private async Task<bool> SendAttachmentsWhenFallback(string intentId)
         {
-            var account = await configurationRepository.GetAreaById(areaId);
-            return account.SendAttachmentsOnFallback;
+            var intent = await intentStore.GetIntentOnly(intentId);
+            return intent.SendAttachmentsOnFallback;
         }
     }
 }

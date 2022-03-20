@@ -32,9 +32,6 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMe
         {
             var json = JsonConvert.SerializeObject(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            // var buffer = System.Text.Encoding.UTF8.GetBytes(json);
-            // var content = new ByteArrayContent(buffer);
-
             var message = await client.PostAsync(requestUri, content, cancellationToken);
             return await message.ReadResponse<TResponse>();
         }

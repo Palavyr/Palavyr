@@ -1,26 +1,28 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ToggleShowSeenEnquiriesHandler : IRequestHandler<ToggleShowSeenEnquiriesRequest, ToggleShowSeenEnquiriesResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Account> accountStore;
 
-        public ToggleShowSeenEnquiriesHandler(IAccountRepository accountRepository)
+        public ToggleShowSeenEnquiriesHandler(IEntityStore<Account> accountStore)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
 
         public async Task<ToggleShowSeenEnquiriesResponse> Handle(ToggleShowSeenEnquiriesRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
 
             var newValue = !account.ShowSeenEnquiries;
             account.ShowSeenEnquiries = newValue;
-            await accountRepository.CommitChangesAsync();
+            
             return new ToggleShowSeenEnquiriesResponse(newValue);
         }
     }

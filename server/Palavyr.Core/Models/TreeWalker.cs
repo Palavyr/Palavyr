@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models
 {
-    public class TreeWalker
+    public interface ITreeWalker
+    {
+        int CountAllTerminalNodes(ConversationNode[] nodeList, ConversationNode node, int count);
+    }
+
+    public class TreeWalker : ITreeWalker
     {
         private readonly IConversationOptionSplitter splitter;
 

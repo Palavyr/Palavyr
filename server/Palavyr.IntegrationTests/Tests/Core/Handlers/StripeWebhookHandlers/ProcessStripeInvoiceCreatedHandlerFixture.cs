@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Autofac;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.DataCreators;
+using Palavyr.IntegrationTests.DataCreators.StripeBuilders;
 using Palavyr.IntegrationTests.Tests.Mocks;
 using Test.Common.ApprovalTests;
 using Xunit;
@@ -25,14 +26,14 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
             var invoice = await this.CreateStripeInvoiceBuilder()
                 .WithCurrency("$")
                 .WithAmountDue(150)
-                .WithDueDate(DateTime.Now.AddDays(7))
+                .WithDueDate(DateTime.Parse("01/01/3000"))
                 .WithSubscription(subscription)
                 .Build();
 
             var @event = new StripeInvoiceCreatedEvent(invoice);
             var emailer = Container.GetService<ISesEmail>();
             var logger = Container.GetService<ILogger<ProcessStripeInvoiceCreatedHandler>>();
-            var handler = new ProcessStripeInvoiceCreatedHandler(logger, AccountsContext, emailer);
+            var handler = ResolveType<INotificationHandler<StripeInvoiceCreatedEvent>>();
 
             await handler.Handle(@event, CancellationToken);
 

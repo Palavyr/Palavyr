@@ -4,42 +4,45 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class CreateStripeCheckoutSessionHandler : IRequestHandler<CreateStripeCheckoutSessionRequest, CreateStripeCheckoutSessionResponse>
     {
         private readonly ILogger<CreateStripeCheckoutSessionHandler> logger;
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Account> accountStore;
 
         private readonly IStripeCheckoutServiceSession stripeCheckoutServiceSession;
 
         public CreateStripeCheckoutSessionHandler(
             ILogger<CreateStripeCheckoutSessionHandler> logger,
-            IAccountRepository accountRepository,
+            IEntityStore<Account> accountStore,
             IStripeCheckoutServiceSession stripeCheckoutServiceSession
         )
         {
             this.logger = logger;
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
             this.stripeCheckoutServiceSession = stripeCheckoutServiceSession;
         }
 
         public async Task<CreateStripeCheckoutSessionResponse> Handle(CreateStripeCheckoutSessionRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             if (account.StripeCustomerId == null)
             {
                 throw new DomainException("Account and Stripe customer Id must be set");
             }
 
-            var sessionId = await stripeCheckoutServiceSession.CreateCheckoutSessionId(account.StripeCustomerId, request.SuccessUrl, request.CancelUrl, request.PriceId);
-            await accountRepository.CreateAndAddNewSession(sessionId, account.ApiKey);
-            await accountRepository.CommitChangesAsync();
-            return new CreateStripeCheckoutSessionResponse(sessionId);
+            var sessionToken = await stripeCheckoutServiceSession.CreateCheckoutSessionId(account.StripeCustomerId, request.SuccessUrl, request.CancelUrl, request.PriceId);
+            // await removeStaleSessions.CleanSessionDb();
+            // var session = Session.CreateNew(sessionToken, accountStore.AccountId, account.ApiKey);
+            // await sessionStore.Create(session);
+
+            return new CreateStripeCheckoutSessionResponse(sessionToken);
         }
     }
 
@@ -58,4 +61,3 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public string CancelUrl { get; set; }
     }
 }
-

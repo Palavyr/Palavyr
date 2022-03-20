@@ -1,23 +1,24 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
     public class NewStripeEventReceivedEventHandler : IRequestHandler<NewStripeEventReceivedEvent, NewStripeEventReceivedEventResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore;
 
-        public NewStripeEventReceivedEventHandler(IAccountRepository accountRepository)
+        public NewStripeEventReceivedEventHandler(IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore)
         {
-            this.accountRepository = accountRepository;
+            this.stripeWebhookStore = stripeWebhookStore;
         }
 
         public async Task<NewStripeEventReceivedEventResponse> Handle(NewStripeEventReceivedEvent notification, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
-            var exists = await accountRepository.SignedStripePayloadExists(notification.Signature);
+            var records = await stripeWebhookStore.GetMany(notification.Signature, s => s.PayloadSignature);
+            var exists = records.Count > 0;
             return new NewStripeEventReceivedEventResponse(shouldCancelProcessing: exists);
         }
     }

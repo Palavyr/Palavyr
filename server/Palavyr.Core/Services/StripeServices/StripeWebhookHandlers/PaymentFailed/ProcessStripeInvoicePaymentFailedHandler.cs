@@ -1,15 +1,13 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Exceptions;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
+using Palavyr.Core.Stores;
 using Stripe;
+using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
+
 
 namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed
 {
@@ -21,40 +19,31 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFail
     public class ProcessStripeInvoicePaymentFailedHandler : INotificationHandler<InvoicePaymentFailedEvent>
     {
         private readonly ILogger<ProcessStripeInvoicePaymentFailedHandler> logger;
-        private readonly AccountsContext accountsContext;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ISesEmail emailClient;
 
         public ProcessStripeInvoicePaymentFailedHandler(
             ILogger<ProcessStripeInvoicePaymentFailedHandler> logger,
-            AccountsContext accountsContext,
+            IEntityStore<Account> accountStore,
             ISesEmail emailClient
         )
         {
             this.logger = logger;
-            this.accountsContext = accountsContext;
+            this.accountStore = accountStore;
             this.emailClient = emailClient;
         }
 
         public async Task Handle(InvoicePaymentFailedEvent notification, CancellationToken cancellationToken)
         {
             var invoice = notification.invoice;
-            var account = await accountsContext
-                .Accounts
-                .SingleOrDefaultAsync(row => row.StripeCustomerId == invoice.CustomerId);
-
-            // if (invoice.Livemode)
-            // {
-            //     if (account == null)
-            //     {
-            //         throw new Exception("ERROR TODO: EMAIL paul.e.gradie@gmail.com to manually set status");
-            //     }
+            var account = await accountStore.Get(invoice.CustomerId, s => s.StripeCustomerId);
 
             // if we don't get payment, we don't update the currentPeriodEnd. We check this at the beginning of each login, so
             // if we don't update, then time moves forward, and eventually the login will set IsActive to false. If isActive is false,
             // then we freeze their account because they owe us money. From there, they can pay their bill, and then cancel if they prefer
             // to not use the service.
             var endDate = account.CurrentPeriodEnd;
-   
+
 
             var htmlBody = EmailPaymentFailed.GetPaymentFailedEmailHtml(endDate);
             var textBody = EmailPaymentFailed.GetPaymentFailedEmailText(endDate);

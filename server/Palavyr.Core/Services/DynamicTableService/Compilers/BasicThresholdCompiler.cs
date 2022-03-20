@@ -3,38 +3,41 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
-    public class BasicThresholdCompiler : BaseCompiler<BasicThreshold>, IDynamicTablesCompiler
+    public interface IBasicThresholdCompiler : IDynamicTablesCompiler
     {
-        private readonly IConfigurationRepository configurationRepository;
+    }
+
+    public class BasicThresholdCompiler : BaseCompiler<BasicThreshold>, IBasicThresholdCompiler
+    {
+        private readonly IEntityStore<DynamicTableMeta> dynamicTableStore;
         private readonly IThresholdEvaluator thresholdEvaluator;
         private readonly IResponseRetriever responseRetriever;
 
         public BasicThresholdCompiler(
-            IGenericDynamicTableRepository<BasicThreshold> repository,
-            IConfigurationRepository configurationRepository,
+            IEntityStore<DynamicTableMeta> dynamicTableStore,
+            IPricingStrategyEntityStore<BasicThreshold> repository,
             IThresholdEvaluator thresholdEvaluator,
             IResponseRetriever responseRetriever
         ) : base(repository)
         {
-            this.configurationRepository = configurationRepository;
+            this.dynamicTableStore = dynamicTableStore;
             this.thresholdEvaluator = thresholdEvaluator;
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task UpdateConversationNode(DashContext dashContext, DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
         {
             await Task.CompletedTask;
         }
@@ -44,8 +47,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var nodeTypeOption = NodeTypeOption.Create(
                 dynamicTableMeta.MakeUniqueIdentifier(),
                 dynamicTableMeta.ConvertToPrettyName(),
-                new List<string>() {"Continue"},
-                new List<string>() {"Continue"},
+                new List<string>() { "Continue" },
+                new List<string>() { "Continue" },
                 true,
                 false,
                 false,
@@ -67,7 +70,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var responseValueAsDouble = double.Parse(responseValue);
             var allRows = await RetrieveAllAvailableResponses(dynamicResponseId);
 
-            var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(allRows.First().TableId);
+            var dynamicMeta = await dynamicTableStore.Get(allRows.First().TableId, s => s.TableId);
 
             var itemsToCreateRowsFor = allRows.Where(x => !string.IsNullOrWhiteSpace(x.ItemName)).Select(row => row.ItemName).Distinct();
 
@@ -145,7 +148,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         {
             var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses<BasicThreshold>(tableMeta.TableId);
             var responseParts = DynamicTableTypes.CreateBasicThreshold().CreateDynamicResponseParts(availableBasicThreshold.First().TableId, availableBasicThreshold.First().Threshold.ToString());
-            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() {tableMeta.TableId}, culture);
+            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;
         }
 

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
 using Stripe;
@@ -28,7 +29,7 @@ namespace Palavyr.API.CustomMiddleware
             this.logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext)
+        public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext, IDetermineCurrentEnvironment environment)
         {
             try
             {
@@ -97,7 +98,16 @@ namespace Palavyr.API.CustomMiddleware
                         statusCode = StatusCodes.Status500InternalServerError;
                         message = "Sorry! We made a mistake internally! Please reach out and let us know!";
                         break;
-                        
+                    
+                    case AccountMisMatchException accountMisMatchException:
+                        logger.LogCritical("An attempt was made to access data across accounts. This is not allowed.");
+                        logger.LogCritical(accountMisMatchException.Message);
+                        statusCode = StatusCodes.Status500InternalServerError;
+                        message = "Sorry! We made a mistake internally! Please reach out and let us know!";
+                        if (environment.IsDevelopment())
+                            message = message + $" {accountMisMatchException.Message}";
+                        break;
+
                     default:
                         logger.LogError("Unknown Exception");
                         logger.LogError($"{ex.Source}");

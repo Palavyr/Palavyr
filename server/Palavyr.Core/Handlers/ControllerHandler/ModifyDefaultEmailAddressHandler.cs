@@ -6,11 +6,12 @@ using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
@@ -21,32 +22,29 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private const string Failed = "Failed";
 
         private ILogger<ModifyDefaultEmailAddressHandler> logger;
-        private AccountsContext accountsContext;
         private readonly IRequestEmailVerification requestEmailVerification;
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Account> accountStore;
         private IAmazonSimpleEmailService sesClient;
-        private StripeCustomerService stripeCustomerService;
+        private IStripeCustomerService stripeCustomerService;
 
         public ModifyDefaultEmailAddressHandler(
-            AccountsContext accountsContext,
-            StripeCustomerService stripeCustomerService,
+            IStripeCustomerService stripeCustomerService,
             ILogger<ModifyDefaultEmailAddressHandler> logger,
             IAmazonSimpleEmailService sesClient,
             IRequestEmailVerification requestEmailVerification,
-            IAccountRepository accountRepository
+            IEntityStore<Account> accountStore
         )
         {
-            this.accountsContext = accountsContext;
             this.stripeCustomerService = stripeCustomerService;
             this.logger = logger;
             this.sesClient = sesClient;
             this.requestEmailVerification = requestEmailVerification;
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
         }
 
         public async Task<ModifyDefaultEmailAddressResponse> Handle(ModifyDefaultEmailAddressRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
 
             // First check if email is already verified or has attempted to be verified
             var identityRequest = new GetIdentityVerificationAttributesRequest()
@@ -87,7 +85,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                     case (Pending):
                         account.EmailAddress = request.EmailAddress;
                         account.DefaultEmailIsVerified = false;
-                        await accountsContext.SaveChangesAsync();
                         verificationResponse = EmailVerificationResponse.CreateNew(
                             Pending,
                             "This email is currently pending verification. Please check your inbox (don't forget to check spam!) for an email from AWS with the subject line 'Amazon Web Services – Email Address Verification Request'.",
@@ -99,7 +96,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                         result = await requestEmailVerification.VerifyEmailAddressAsync(request.EmailAddress);
                         account.EmailAddress = request.EmailAddress;
                         account.DefaultEmailIsVerified = false;
-                        await accountsContext.SaveChangesAsync();
                         verificationResponse = EmailVerificationResponse.CreateNew(
                             Pending,
                             $"You have previously submitted this email for verification, however the attempt failed. We've resent the verification email to {request.EmailAddress}. Please check your inbox (don't forget to check spam!) for an email from AWS with the subject line 'Amazon Web Services – Email Address Verification Request'. The link will expire in 24 hours.",
@@ -110,7 +106,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                     case (Success):
                         account.EmailAddress = request.EmailAddress;
                         account.DefaultEmailIsVerified = true;
-                        await accountsContext.SaveChangesAsync();
                         verificationResponse = EmailVerificationResponse.CreateNew(
                             Success,
                             "This email has already been verified.",
@@ -138,7 +133,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             account.EmailAddress = request.EmailAddress;
             account.DefaultEmailIsVerified = false;
 
-            await accountsContext.SaveChangesAsync();
             verificationResponse = EmailVerificationResponse.CreateNew(
                 Pending,
                 "To complete email verification, go to your inbox and look for an email with the subject line 'Amazon Web Services – Email Address Verification Request' and click the verification link. This link will expire in 24 hours.",

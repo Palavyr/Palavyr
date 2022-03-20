@@ -1,72 +1,47 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.FileSystemTools;
-using Palavyr.Core.GlobalConstants;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Services.AmazonServices;
-using Palavyr.Core.Services.AmazonServices.S3Service;
-using Palavyr.Core.Services.TemporaryPaths;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.FileAssetServices;
+using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
 
 namespace Palavyr.Core.Services.LogoServices
 {
-    public interface ILogoSaver
+    public interface ILogoAssetSaver : IFileAssetSaver
     {
-        Task<string> SaveLogo(IFormFile logoFile);
     }
 
-    public class LogoSaver : ILogoSaver
+    public class LogoAssetSaver : ILogoAssetSaver
     {
-        private readonly IS3Saver s3Saver;
-        private readonly IConfiguration configuration;
-        private readonly IS3KeyResolver s3KeyResolver;
-        private readonly ITemporaryPath temporaryPath;
-        private readonly ILinkCreator linkCreator;
-        private readonly IAccountRepository accountRepository;
-        private readonly ILocalIo localIo;
+        private readonly IFileAssetSaver fileAssetSaver;
 
-        public LogoSaver(
-            IS3Saver s3Saver,
-            IConfiguration configuration,
-            IS3KeyResolver s3KeyResolver,
-            ITemporaryPath temporaryPath,
-            ILinkCreator linkCreator,
-            IAccountRepository accountRepository,
-            ILocalIo localIo
-        )
+        public LogoAssetSaver(IFileAssetSaver fileAssetSaver)
         {
-            this.s3Saver = s3Saver;
-            this.configuration = configuration;
-            this.s3KeyResolver = s3KeyResolver;
-            this.temporaryPath = temporaryPath;
-            this.linkCreator = linkCreator;
-            this.accountRepository = accountRepository;
-            this.localIo = localIo;
+            this.fileAssetSaver = fileAssetSaver;
         }
 
-        public async Task<string> SaveLogo(IFormFile logoFile)
+        public async Task<FileAsset> SaveFile(IFormFile fileData)
         {
-            var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
-            var localSafePath = temporaryPath.CreateLocalTempSafeFile();
+            var fileAsset = await fileAssetSaver.SaveFile(fileData);
+            return fileAsset;
+        }
+    }
 
-            var pathExtension = Path.GetExtension(logoFile.FileName);
-            if (pathExtension == null) throw new Exception("File type could not be identified");
+    public class LogoAssetSaverDatabaseUpdaterDecorator : ILogoAssetSaver
+    {
+        private readonly IFileAssetLinker<LogoLinker> linker;
+        private readonly ILogoAssetSaver logoAssetSaver;
 
-            var logoKey = s3KeyResolver.ResolveLogoKey(localSafePath.FileStem, pathExtension);
+        public LogoAssetSaverDatabaseUpdaterDecorator(IFileAssetLinker<LogoLinker> linker, ILogoAssetSaver logoAssetSaver)
+        {
+            this.linker = linker;
+            this.logoAssetSaver = logoAssetSaver;
+        }
 
-            var account = await accountRepository.GetAccount();
-            account.AccountLogoUri = logoKey;
-            await accountRepository.CommitChangesAsync();
-
-            await localIo.SaveFile(localSafePath.S3Key, logoFile);
-
-            await s3Saver.StreamObjectToS3(userDataBucket, logoFile, logoKey);
-            temporaryPath.DeleteLocalTempFile(localSafePath.FileNameWithExtension);
-
-            var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(logoKey, userDataBucket);
-            return preSignedUrl;
+        public async Task<FileAsset> SaveFile(IFormFile fileData)
+        {
+            var fileAsset = await logoAssetSaver.SaveFile(fileData);
+            await linker.Link(fileAsset.FileId, default);
+            return fileAsset;
         }
     }
 }

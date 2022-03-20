@@ -3,34 +3,36 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyLocaleHandler : IRequestHandler<ModifyLocaleRequest, ModifyLocaleResponse>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<ModifyLocaleHandler> logger;
-        private readonly LocaleDefinitions localeDefinitions;
+        private readonly ILocaleDefinitions localeDefinitions;
 
         public ModifyLocaleHandler(
-            IAccountRepository accountRepository,
+            IEntityStore<Account> accountStore,
             ILogger<ModifyLocaleHandler> logger,
-            LocaleDefinitions localeDefinitions)
+            ILocaleDefinitions localeDefinitions)
         {
-            this.accountRepository = accountRepository;
+            this.accountStore = accountStore;
             this.logger = logger;
             this.localeDefinitions = localeDefinitions;
         }
 
         public async Task<ModifyLocaleResponse> Handle(ModifyLocaleRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
+            var account = await accountStore.GetAccount();
             var newLocale = localeDefinitions.Parse(request.LocaleId);
 
             account.Locale = newLocale.Name;
-            await accountRepository.CommitChangesAsync();
+            
             var culture = new CultureInfo(newLocale.Name);
 
             var localeMeta = new LocaleDetails

@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Palavyr.API.Controllers.Accounts.Settings;
-using Palavyr.Core.Exceptions;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -20,8 +21,14 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
         [Fact]
         public async Task GetApiKeyFails()
         {
-            Should.ThrowAsync<DomainException>(
-                async () => { await Client.GetAsync(Route); });
+            var result = await Client.GetAsync(Route);
+            result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        }
+
+        public override async Task InitializeAsync()
+        {
+            await this.CreateDefaultAccountAndSessionBuilder().WithApiKey(" ").Build();
+            await base.InitializeAsync();
         }
     }
 }

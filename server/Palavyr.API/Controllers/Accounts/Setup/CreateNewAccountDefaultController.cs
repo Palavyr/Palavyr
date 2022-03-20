@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Handlers;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Resources.Responses;
 
@@ -14,9 +13,7 @@ namespace Palavyr.API.Controllers.Accounts.Setup
         private readonly IMediator mediator;
         public const string Route = "account/create/default";
 
-        public CreateNewAccountDefaultController(
-            IMediator mediator
-        )
+        public CreateNewAccountDefaultController(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -25,9 +22,10 @@ namespace Palavyr.API.Controllers.Accounts.Setup
         [HttpPost(Route)]
         public async Task<Credentials> Create(
             [FromBody]
-            CreateNewAccountDefaultRequest request,
+            CreateNewAccountRequest request,
             CancellationToken cancellationToken)
         {
+            
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;
         }

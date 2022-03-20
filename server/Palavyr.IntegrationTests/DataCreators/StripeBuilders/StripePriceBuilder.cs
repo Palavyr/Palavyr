@@ -1,4 +1,5 @@
-﻿using Palavyr.Core.Services.StripeServices.Products;
+﻿#nullable enable
+using Palavyr.Core.Services.StripeServices.Products;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Stripe;
 using Test.Common.Random;
@@ -13,7 +14,7 @@ namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
         private string? prodId;
         private int? amount;
 
-        private StagingProductRegistry productRegistry = new StagingProductRegistry();
+        private TestProductRegistry productRegistry = new TestProductRegistry();
         private PriceRecurring? priceRecurring;
 
         public StripePriceBuilder(BaseIntegrationFixture test)
@@ -33,10 +34,9 @@ namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
             return this;
         }
 
-        public StripePriceBuilder WithPriceRecurring(PriceRecurring priceRecurring)
+        public StripePriceBuilder WithPriceRecurring(PriceRecurring recurring)
         {
-            // priceDetails.Recurring.Interval;
-            this.priceRecurring = priceRecurring;
+            this.priceRecurring = recurring;
             return this;
         }
 

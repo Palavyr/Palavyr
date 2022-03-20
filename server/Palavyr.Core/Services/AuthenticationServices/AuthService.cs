@@ -1,15 +1,16 @@
 #nullable enable
 using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Google.Apis.Auth;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.GlobalConstants;
-using Palavyr.Core.Handlers;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores;
 
 
 namespace Palavyr.Core.Services.AuthenticationServices
@@ -21,10 +22,11 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
     public class AuthService : IAuthService
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IRemoveStaleSessions removeStaleSessions;
+        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<AuthService> logger;
         private readonly IJwtAuthenticationService jwtAuthService;
-        private IConfiguration configuration;
 
         private const string CouldNotFindAccount = "Could not find Account";
         private const string PasswordsDoNotMatch = "Password does not match.";
@@ -34,16 +36,18 @@ namespace Palavyr.Core.Services.AuthenticationServices
         private const int GracePeriod = 5;
 
         public AuthService(
-            IAccountRepository accountRepository,
+            IRemoveStaleSessions removeStaleSessions,
+            IEntityStore<Session> sessionStore,
+            IEntityStore<Account> accountStore,
             ILogger<AuthService> logger,
-            IJwtAuthenticationService jwtService,
-            IConfiguration configuration
+            IJwtAuthenticationService jwtService
         )
         {
-            this.accountRepository = accountRepository;
+            this.removeStaleSessions = removeStaleSessions;
+            this.sessionStore = sessionStore;
+            this.accountStore = accountStore;
             this.logger = logger;
 
-            this.configuration = configuration;
             jwtAuthService = jwtService;
         }
 
@@ -98,10 +102,13 @@ namespace Palavyr.Core.Services.AuthenticationServices
             UpdateCurrentAccountState(account);
 
             logger.LogDebug("Creating and adding a new session...");
-            var session = await accountRepository.CreateAndAddNewSession(account);
+
+            await removeStaleSessions.CleanSessionDb(account.AccountId);
+            var newSession = Session.CreateNew(token, account.AccountId, account.ApiKey);
+            var sessionEntity = await sessionStore.DangerousRawQuery().AddAsync(newSession);
+            var session = sessionEntity.Entity;
 
             logger.LogDebug("Committing the new session to the DB.");
-            await accountRepository.CommitChangesAsync();
 
             logger.LogDebug("Session saved to DB. Returning auth response.");
             return Credentials.CreateAuthenticatedResponse(
@@ -123,30 +130,6 @@ namespace Palavyr.Core.Services.AuthenticationServices
             }
         }
 
-        public async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string? oneTimeCode)
-        {
-            try
-            {
-                logger.LogDebug("Inside the try block -- attempting to validate Google One Time Code");
-                var result =
-                    await GoogleJsonWebSignature.ValidateAsync(
-                        oneTimeCode,
-                        new GoogleJsonWebSignature.ValidationSettings());
-                if (result == null) logger.LogError("RESULT WAS NULL");
-                return result;
-            }
-            catch (InvalidJwtException)
-            {
-                logger.LogDebug("Failed to validate the Google One Time Token - Invalid JWT Token!");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                logger.LogDebug($"UNKNOWN EXCEPTION THROWN: {ex.Message}");
-                return null;
-            }
-        }
-
         private async Task<AccountReturn> RequestAccount(CreateLoginRequest loginCredentialsRequest)
         {
             logger.LogDebug("Determining login type...");
@@ -163,7 +146,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
         private async Task<AccountReturn> RequestAccountViaDefault(CreateLoginRequest credentialsRequest)
         {
-            var account = await accountRepository.GetAccountByEmailOrNull(credentialsRequest.EmailAddress.ToLowerInvariant());
+            var account = await accountStore.RawReadonlyQuery().Where(x => x.EmailAddress == credentialsRequest.EmailAddress.ToLowerInvariant()).SingleOrDefaultAsync(accountStore.CancellationToken);
             if (account == null)
             {
                 return AccountReturn.Return(account, CouldNotFindAccount);
@@ -193,9 +176,6 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
         private LoginType DetermineLoginType(CreateLoginRequest loginCredentialsRequest)
         {
-            // if (!string.IsNullOrWhiteSpace(loginCredentialsRequest.OneTimeCode) &&
-            //     !string.IsNullOrWhiteSpace(loginCredentialsRequest.TokenId))
-            //     return LoginType.Google;
             if (!string.IsNullOrWhiteSpace(loginCredentialsRequest.EmailAddress) &&
                 !string.IsNullOrWhiteSpace(loginCredentialsRequest.Password))
                 return LoginType.Default;
