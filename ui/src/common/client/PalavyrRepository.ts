@@ -206,10 +206,10 @@ export class PalavyrRepository {
         },
 
         Attachments: {
-            GetAttachments: async (intentId: string) => this.client.get<FileAssetResource[]>(`attachments/${intentId}`, CacheIds.Attachments),
-            DeleteAttachment: async (intentId: string, fileId: string) => this.client.delete<FileAssetResource[]>(`attachments`, CacheIds.Attachments, { data: { fileId: fileId, IntentId: intentId } }),
+            GetAttachments: async (intentId: string) => this.client.get<FileAssetResource[]>(`attachments/${intentId}`, undefined),
+            DeleteAttachment: async (intentId: string, fileId: string) => this.client.delete<FileAssetResource[]>(`attachments`, undefined, { data: { fileId: fileId, IntentId: intentId } }),
             UploadAttachments: async (intentId: string, formData: FormData) =>
-                this.client.post<FileAssetResource[], {}>(`attachments/${intentId}/upload`, formData, CacheIds.Attachments, {
+                this.client.post<FileAssetResource[], {}>(`attachments/${intentId}/upload`, formData, undefined, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",

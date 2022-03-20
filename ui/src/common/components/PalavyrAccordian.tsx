@@ -34,9 +34,10 @@ export interface PalavyrAccordianProps {
     initialState?: boolean;
     titleVariant?: Variant;
     actions?: React.ReactNode;
+    disable?: boolean;
 }
 
-export const PalavyrAccordian = ({ title, initialState = false, titleVariant = "h5", actions, children }: PalavyrAccordianProps) => {
+export const PalavyrAccordian = ({ title, initialState = false, titleVariant = "h5", actions, disable, children }: PalavyrAccordianProps) => {
     const [accordState, setAccordState] = useState<boolean>(false);
     const toggleAccord = () => setAccordState(!accordState);
 
@@ -47,7 +48,7 @@ export const PalavyrAccordian = ({ title, initialState = false, titleVariant = "
     }, [initialState]);
 
     return (
-        <Accordion className={cls.accordian} expanded={accordState}>
+        <Accordion className={cls.accordian} expanded={accordState} disabled={disable}>
             <AccordionSummary className={cls.accordianHead} onClick={toggleAccord} expandIcon={<ExpandMoreIcon style={{ color: "white" }} />}>
                 <Typography variant={titleVariant}>{title}</Typography>
             </AccordionSummary>

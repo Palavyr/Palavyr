@@ -71,7 +71,7 @@ namespace Palavyr.Core.Services.AccountServices
 
         private async Task CreateNewSubscription(string accountId, string apiKey)
         {
-            var freePlanType = new LytePlanTypeMeta();
+            var freePlanType = new LytePlanTypeMetaBase();
 
             // Add the default subscription (free with 2 areas)
             logger.LogDebug($"Add default subscription for {accountId}");

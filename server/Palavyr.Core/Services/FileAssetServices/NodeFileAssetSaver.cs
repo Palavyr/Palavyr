@@ -30,7 +30,7 @@ namespace Palavyr.Core.Services.FileAssetServices
         public async Task<FileAsset> SaveFile(string nodeId, IFormFile fileData)
         {
             var fileAsset = await fileAssetSaver.SaveFile(fileData);
-            await linker.LinkToNode(fileAsset.FileId, nodeId);
+            await linker.Link(fileAsset.FileId, nodeId);
 
             return fileAsset;
         }

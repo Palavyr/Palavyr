@@ -25,7 +25,7 @@ namespace Palavyr.Core.Services.AttachmentServices
         public async Task<FileAsset> SaveFile(string intentId, IFormFile attachmentFile)
         {
             var fileAsset = await fileAssetSaver.SaveFile(attachmentFile);
-            await linker.LinkToIntent(fileAsset.FileId, intentId);
+            await linker.Link(fileAsset.FileId, intentId);
 
             return fileAsset;
         }

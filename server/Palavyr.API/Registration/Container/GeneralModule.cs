@@ -74,8 +74,8 @@ namespace Palavyr.API.Registration.Container
                 .As(typeof(IEntityStore<>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-            
-            
+
+
             builder.RegisterGeneric(typeof(PricingStrategyEntityStore<>)).As(typeof(IPricingStrategyEntityStore<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandExecutor<>)).As(typeof(IDynamicTableCommandExecutor<>)).InstancePerLifetimeScope();
 
@@ -86,7 +86,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<NodeCounter>().As<INodeCounter>();
             builder.RegisterType<AccountRegistrationMaker>().As<IAccountRegistrationMaker>();
             builder.RegisterType<AccountSetupService>().As<IAccountSetupService>();
-            builder.RegisterType<AreaDeleter>().As<IAreaDeleter>();
+            builder.RegisterType<IntentDeleter>().As<IIntentDeleter>();
             builder.RegisterType<AttachmentAssetSaver>().As<IAttachmentAssetSaver>();
             builder.RegisterType<AttachmentDeleter>().As<IAttachmentDeleter>();
             builder.RegisterType<AttachmentLinker>().As<IFileAssetLinker<AttachmentLinker>>();
@@ -121,6 +121,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<EnquiryInsightComputer>().As<IEnquiryInsightComputer>();
             builder.RegisterType<FileAssetDeleter>().As<IFileAssetDeleter>();
             builder.RegisterType<CompilePdfServerRequest>().As<ICompilePdfServerRequest>();
+            builder.RegisterType<IntentDeleter>().As<IIntentDeleter>();
+
 
             builder.RegisterType<FileAssetKeyResolver>().As<IFileAssetKeyResolver>();
             builder.RegisterType<NodeLinker>().As<IFileAssetLinker<NodeLinker>>();
@@ -169,22 +171,21 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<BasicThresholdCompiler>().As<IBasicThresholdCompiler>();
             builder.RegisterType<CategoryNestedThresholdCompiler>().As<ICategoryNestedThresholdCompiler>();
 
-            
+
             builder.RegisterType<StaticTableCompiler>().As<IStaticTableCompiler>();
             builder.RegisterType<TemporaryPath>().As<ITemporaryPath>();
             builder.RegisterType<ThresholdEvaluator>().As<IThresholdEvaluator>();
             builder.RegisterType<UnitRetriever>().As<IUnitRetriever>();
             builder.RegisterType<WidgetStatusChecker>().As<IWidgetStatusChecker>();
             builder.RegisterType<UnitOfWorkContextProvider>().As<IUnitOfWorkContextProvider>();
-            
+
             builder.RegisterDecorator<FileAssetDeleterDeleteDatabaseRecordDecorator, IFileAssetDeleter>();
-            builder.RegisterDecorator<FileAssetDeleterDereferenceConvoNodesDecorator, IFileAssetDeleter>();
+            builder.RegisterDecorator<FileAssetDeleterDereferenceDecorator, IFileAssetDeleter>();
             builder.RegisterDecorator<FileAssetSaverDatabaseDecorator, IFileAssetSaver>();
             builder.RegisterDecorator<HtmlToPdfClientFileAssetCreatingDecorator, IHtmlToPdfClient>();
             builder.RegisterDecorator<LogoAssetSaverDatabaseUpdaterDecorator, ILogoAssetSaver>();
             builder.RegisterDecorator<ResponseHtmlCustomizationDecorator, IResponseHtmlBuilder>();
             builder.RegisterDecorator<ResponsePdfGeneratorUpdateConversationRecordDecorator, IResponsePdfGenerator>();
-            
         }
     }
 }

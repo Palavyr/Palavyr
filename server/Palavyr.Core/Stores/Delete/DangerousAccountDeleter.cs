@@ -16,7 +16,9 @@ using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Services.FileAssetServices;
+using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Stores.Delete
 {
@@ -104,7 +106,6 @@ namespace Palavyr.Core.Stores.Delete
 
         internal virtual async Task DeleteFileAssets()
         {
-            
             var fileAssetIds = await dashContext
                 .FileAssets
                 .Where(row => row.AccountId == AccountId)
@@ -128,16 +129,6 @@ namespace Palavyr.Core.Stores.Delete
                 return;
             }
 
-            DbContext context;
-            var name = typeof(TContext).Name;
-            context = name switch
-            {
-                "DashContext" => dashContext,
-                "ConvoContext" => convoContext,
-                "AccountsContext" => accountsContext,
-                _ => throw new Exception("Context not found")
-            };
-
             if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
             {
                 var newContext = lifetimeScope.GetService<TContext>();
@@ -156,6 +147,10 @@ namespace Palavyr.Core.Stores.Delete
         {
             if (!fileAssetsDeleted) throw new DomainException("Cannot Delete Account without first deleting file assets.");
 
+            var accountStore = lifetimeScope.GetService<IEntityStore<Account>>();
+            var account = await accountStore.GetAccount();
+            var stripeCustomerId = account.StripeCustomerId;
+
             // ORDER MATTERS HERE SINCE WE LINK TABLES IN THE ORM AND WE DONT USE REFLECTION TO AUTO-INCLUDE ALL CHILD ENTITIES from the aggregate root
             await DeleteAccountAt<DashContext, ConversationNode>();
             await DeleteAccountAt<DashContext, DynamicTableMeta>();
@@ -164,7 +159,7 @@ namespace Palavyr.Core.Stores.Delete
 
             await DeleteAccountAt<DashContext, StaticTableRow>();
             await DeleteAccountAt<DashContext, StaticFee>();
-            
+
             await DeleteAccountAt<DashContext, SelectOneFlat>();
             await DeleteAccountAt<DashContext, PercentOfThreshold>();
             await DeleteAccountAt<DashContext, BasicThreshold>();
@@ -172,8 +167,8 @@ namespace Palavyr.Core.Stores.Delete
             await DeleteAccountAt<DashContext, CategoryNestedThreshold>();
             await DeleteAccountAt<DashContext, Logo>();
             await DeleteAccountAt<DashContext, StaticTablesMeta>();
-            await DeleteAccountAt<DashContext, AttachmentLinkRecord>();
             await DeleteAccountAt<DashContext, Area>();
+            await DeleteAccountAt<DashContext, AttachmentLinkRecord>();
 
             await DeleteAccountAt<AccountsContext, Account>();
             await DeleteAccountAt<AccountsContext, Session>();
@@ -187,6 +182,14 @@ namespace Palavyr.Core.Stores.Delete
 
             if (Counter != allEntities.Count - 1) throw new DomainException($"Failed to delete all data - contact palavyr. hit {Counter} of {allEntities.Count}");
             await contextProvider.DangerousCommitAllContexts();
+
+            await DeleteStripeCustomer(stripeCustomerId);
+        }
+
+        public async Task DeleteStripeCustomer(string stripeCustomerId)
+        {
+            var customerService = lifetimeScope.GetService<IStripeCustomerService>();
+            await customerService.DeleteSingleStripeTestCustomer(stripeCustomerId);
         }
 
         internal virtual List<TEntity> FilterByCurrentAccount<TEntity>(List<TEntity> unfiltered)

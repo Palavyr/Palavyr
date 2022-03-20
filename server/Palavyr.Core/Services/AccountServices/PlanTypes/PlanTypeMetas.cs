@@ -2,16 +2,16 @@
 
 namespace Palavyr.Core.Services.AccountServices.PlanTypes
 {
-    public class FreePlanTypeMeta : PlanTypeMeta
+    public class FreePlanTypeMetaBase : PlanTypeMetaBase
     {
-        public FreePlanTypeMeta()
+        public FreePlanTypeMetaBase()
         {
             AllowedAttachments = 0;
             AllowedStaticTables = 1;
             AllowedDynamicTables = 1;
             AllowedAreas = 2;
 
-            AllowedImageUpload = false;
+            AllowedFileUpload = false;
             AllowedEmailNotifications = false;
             AllowedInlineEmailEditor = false;
             AllowedSmsNotifications = false;
@@ -21,16 +21,16 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class LytePlanTypeMeta : PlanTypeMeta
+    public class LytePlanTypeMetaBase : PlanTypeMetaBase
     {
-        public LytePlanTypeMeta()
+        public LytePlanTypeMetaBase()
         {
             AllowedAttachments = 0;
             AllowedStaticTables = 2;
             AllowedDynamicTables = 2;
             AllowedAreas = 6;
 
-            AllowedImageUpload = false;
+            AllowedFileUpload = false;
             AllowedEmailNotifications = false;
             AllowedInlineEmailEditor = false;
             AllowedSmsNotifications = false;
@@ -40,16 +40,16 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class PremiumPlanTypeMeta : PlanTypeMeta
+    public class PremiumPlanTypeMetaBase : PlanTypeMetaBase
     {
-        public PremiumPlanTypeMeta()
+        public PremiumPlanTypeMetaBase()
         {
             AllowedAttachments = 2;
             AllowedStaticTables = 2;
             AllowedDynamicTables = 2;
             AllowedAreas = 10;
 
-            AllowedImageUpload = true;
+            AllowedFileUpload = true;
             AllowedEmailNotifications = true;
             AllowedInlineEmailEditor = true;
             AllowedSmsNotifications = false;
@@ -59,16 +59,16 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class ProPlanTypeMeta : PlanTypeMeta
+    public class ProPlanTypeMetaBase : PlanTypeMetaBase
     {
-        public ProPlanTypeMeta()
+        public ProPlanTypeMetaBase()
         {
             AllowedAttachments = 999999;
             AllowedStaticTables = 999999;
             AllowedDynamicTables = 999999;
             AllowedAreas = 999999;
 
-            AllowedImageUpload = true;
+            AllowedFileUpload = true;
             AllowedEmailNotifications = true;
             AllowedInlineEmailEditor = true;
             AllowedSmsNotifications = true;

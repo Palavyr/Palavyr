@@ -7,19 +7,19 @@ using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.Deletion
 {
-    public interface IAreaDeleter
+    public interface IIntentDeleter
     {
         Task DeleteArea(string areaId, CancellationToken cancellationToken);
     }
 
-    public class AreaDeleter : IAreaDeleter
+    public class IntentDeleter : IIntentDeleter
     {
-        private readonly EntityStore<Area> intentStore;
-        private readonly ILogger<IAreaDeleter> logger;
+        private readonly IEntityStore<Area> intentStore;
+        private readonly ILogger<IIntentDeleter> logger;
 
-        public AreaDeleter(
-            EntityStore<Area> intentStore,
-            ILogger<IAreaDeleter> logger
+        public IntentDeleter(
+            IEntityStore<Area> intentStore,
+            ILogger<IIntentDeleter> logger
         )
         {
             this.intentStore = intentStore;

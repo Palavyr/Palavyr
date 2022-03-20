@@ -2,6 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.AttachmentServices;
+using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
+using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.FileAssetServices
@@ -34,37 +37,78 @@ namespace Palavyr.Core.Services.FileAssetServices
     }
 
 
-    public class FileAssetDeleterDereferenceConvoNodesDecorator : IFileAssetDeleter
+    public class FileAssetDeleterDereferenceDecorator : IFileAssetDeleter
     {
         private readonly IFileAssetDeleter fileAssetDeleter;
-        private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<AttachmentLinkRecord> attachmentLinkRecordStore;
+        private readonly IFileAssetLinker<LogoLinker> logoLinker;
+        private readonly IFileAssetLinker<AttachmentLinker> attachmentLinker;
+        private readonly IFileAssetLinker<NodeLinker> nodeLinker;
+        private readonly IAccountIdTransport accountIdTransport;
+        private string AccountId => accountIdTransport.AccountId;
 
-        public FileAssetDeleterDereferenceConvoNodesDecorator(
+        public FileAssetDeleterDereferenceDecorator(
             IFileAssetDeleter fileAssetDeleter,
-            IEntityStore<ConversationNode> convoNodeStore)
+            IEntityStore<AttachmentLinkRecord> attachmentLinkRecordStore,
+            IFileAssetLinker<LogoLinker> logoLinker,
+            IFileAssetLinker<AttachmentLinker> attachmentLinker,
+            IFileAssetLinker<NodeLinker> nodeLinker,
+            IAccountIdTransport accountIdTransport)
         {
             this.fileAssetDeleter = fileAssetDeleter;
-            this.convoNodeStore = convoNodeStore;
+            this.attachmentLinkRecordStore = attachmentLinkRecordStore;
+            this.logoLinker = logoLinker;
+            this.attachmentLinker = attachmentLinker;
+            this.nodeLinker = nodeLinker;
+            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<IEnumerable<FileAsset>> RemoveFiles(string[] fileIds)
         {
-            await DereferenceFileAssetsFromConvoNodes(fileIds);
+            await DereferenceAllLocations(fileIds);
             return await fileAssetDeleter.RemoveFiles(fileIds);
         }
 
         public async Task<IEnumerable<FileAsset>> RemoveFile(string fileId)
         {
-            await DereferenceFileAssetsFromConvoNodes(new[] { fileId });
+            await DereferenceAllLocations(new[] { fileId });
             return await fileAssetDeleter.RemoveFile(fileId);
         }
 
-        private async Task DereferenceFileAssetsFromConvoNodes(string[] ids)
+        private async Task DereferenceAllLocations(string[] fileIds)
         {
-            var referencingNodes = await convoNodeStore.GetMany(ids, node => node.NodeId);
-            foreach (var node in referencingNodes)
+            await DereferenceFileAssetsFromConvoNodes(fileIds);
+            await DereferenceIntents(fileIds);
+            await DereferenceLogo(fileIds);
+        }
+
+        private async Task DereferenceLogo(string[] fileIds)
+        {
+            foreach (var fileId in fileIds)
             {
-                node.ImageId = null;
+                // try to unlink if its used in the logo. It may not be.
+                await logoLinker.Unlink(fileId, AccountId);
+            }
+        }
+
+        private async Task DereferenceFileAssetsFromConvoNodes(string[] fileIds)
+        {
+            foreach (var fileId in fileIds)
+            {
+                await nodeLinker.Unlink(fileId, default);
+            }
+        }
+
+        private async Task DereferenceIntents(string[] fileIds)
+        {
+            foreach (var fileId in fileIds)
+            {
+                var attachmentRecords = await attachmentLinkRecordStore.GetMany(fileId, s => s.FileId);
+                var intentIds = attachmentRecords.Select(x => x.IntentId);
+                foreach (var intentId in intentIds)
+                {
+                    await attachmentLinker.Unlink(fileId, intentId);
+                }
             }
         }
     }

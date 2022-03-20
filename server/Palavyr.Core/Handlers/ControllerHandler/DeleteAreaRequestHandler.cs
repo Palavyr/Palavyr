@@ -5,23 +5,22 @@ using Palavyr.Core.Services.Deletion;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class DeleteAreaRequestHandler : INotificationHandler<DeleteAreaRequest>
+    public class DeleteAreaRequestHandler : INotificationHandler<DeleteIntentRequest>
     {
-        private readonly IAreaDeleter areaDeleter;
+        private readonly IIntentDeleter intentDeleter;
 
-        public DeleteAreaRequestHandler(IAreaDeleter areaDeleter)
+        public DeleteAreaRequestHandler(IIntentDeleter intentDeleter)
         {
-            this.areaDeleter = areaDeleter;
+            this.intentDeleter = intentDeleter;
         }
 
-        public async Task Handle(DeleteAreaRequest request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteIntentRequest request, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
-            await areaDeleter.DeleteArea(request.IntentId, cancellationToken);
+            await intentDeleter.DeleteArea(request.IntentId, cancellationToken);
         }
     }
 
-    public class DeleteAreaRequest : INotification
+    public class DeleteIntentRequest : INotification
     {
         public string IntentId { get; set; }
     }

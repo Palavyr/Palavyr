@@ -40,7 +40,7 @@ namespace Palavyr.Core.Services.LogoServices
         public async Task<FileAsset> SaveFile(IFormFile fileData)
         {
             var fileAsset = await logoAssetSaver.SaveFile(fileData);
-            await linker.LinkToAccount(fileAsset.FileId);
+            await linker.Link(fileAsset.FileId, default);
             return fileAsset;
         }
     }

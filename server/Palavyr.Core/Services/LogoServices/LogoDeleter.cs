@@ -27,7 +27,8 @@ namespace Palavyr.Core.Services.LogoServices
 
         public async Task DeleteLogo()
         {
-            await logoLinker.UnlinkFromAccount(default);
+            var accountId = logoStore.AccountId;
+            await logoLinker.Unlink(null , accountId);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿#nullable enable
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
 
@@ -17,39 +18,20 @@ namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
             this.fileAssetStore = fileAssetStore;
         }
 
-        public async Task LinkToNode(string fileId, string nodeId)
+        public async Task Link(string fileId, string nodeId)
         {
             var node = await convoNodeStore.Get(nodeId, s => s.NodeId);
             var fileAsset = await fileAssetStore.Get(fileId, s => s.FileId);
             node.ImageId = fileAsset.FileId;
         }
 
-        public async Task UnLinkFromNode(string fileId, string nodeId)
+        public async Task Unlink(string fileId, string _)
         {
-            var node = await convoNodeStore.Get(nodeId, s => s.NodeId);
-            node.ImageId = null;
+            var nodes = await convoNodeStore.GetMany(fileId, s => s.ImageId);
+            foreach (var node in nodes)
+            {
+                node.ImageId = "";
+            }
         }
-
-        public Task LinkToAccount(string fileId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task UnlinkFromAccount(string fileId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task LinkToIntent(string fileId, string intentId)
-        {
-            await Task.CompletedTask;
-            throw new System.NotImplementedException();
-        }
-
-        public Task UnLinkFromIntent(string fileId, string intentId)
-        {
-            throw new System.NotImplementedException();
-        }
-
     }
 }

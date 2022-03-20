@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿#nullable enable
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -14,37 +15,31 @@ namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
             this.logoStore = logoStore;
         }
 
-        public async Task LinkToAccount(string fileId)
+        public async Task Link(string fileId, string _)
         {
             var logoRecord = await logoStore.GetOrCreateLogoRecord();
             logoRecord.AccountLogoFileId = fileId;
         }
 
-        public async Task UnlinkFromAccount(string fileId)
+        public async Task Unlink(string? fileId, string targetId)
         {
             var logoRecord = await logoStore.GetOrNull(logoStore.AccountId, s => s.AccountId);
             if (logoRecord is null) return;
-            logoRecord.AccountLogoFileId = "";
-        }
-
-        public Task LinkToIntent(string fileId, string intentId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task LinkToNode(string fileId, string nodeId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task UnLinkFromIntent(string fileId, string intentId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task UnLinkFromNode(string fileId, string nodeId)
-        {
-            throw new System.NotImplementedException();
+            
+            // if a fileId is supplied, assume we are looking for a specific use of this file Id with the logo record.
+            // .e.g. when deleting the file asset
+            if (!string.IsNullOrEmpty(fileId))
+            {
+                if (logoRecord.AccountLogoFileId == fileId)
+                {
+                    logoRecord.AccountLogoFileId = "";
+                }
+            }
+            // Else, we are requesting a generic dereference of the account logo id (we delete the logo, but not the fileAsset itself)
+            else
+            {
+                logoRecord.AccountLogoFileId = "";
+            }
         }
     }
 }

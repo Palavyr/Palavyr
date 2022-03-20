@@ -33,7 +33,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task DeleteAttachment(string fileId, string intentId)
         {
-            await linker.UnLinkFromIntent(fileId, intentId);
+            await linker.Unlink(fileId, intentId);
         }
 
         public async Task DeleteAllAreaAttachments(string intentId)

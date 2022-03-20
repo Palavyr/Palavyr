@@ -48,25 +48,23 @@ export const FileAssetReview = () => {
         window.open(currentPreview.link, "_blank");
     };
 
-    const renderSwitch = (currentpreview: FileDetails) => {
-        const { extension, link } = currentpreview;
+    const renderSwitch = (current: FileDetails) => {
+        const { extension, link } = current;
 
         switch (extension) {
             case "pdf":
                 return (
-                    <>
-                        <Typography>LETS GO</Typography>
-                        <div style={{ width: "100%", height: "100%" }}>{link && <object data={link} id="upload-preview" type="application/pdf" width="100%" height="100%" aria-label="preview"></object>}</div>
-                    </>
+                    <div style={{ width: "100%", height: "100vh" }}>
+                        <object data={link} id="upload-preview" type="application/pdf" width="100%" height="100%" aria-label="preview"></object>;
+                    </div>
                 );
-
             default:
                 return (
                     <img
                         onClick={onFileAssetClick}
                         className={cls.display}
                         key={Date.now()}
-                        src={currentPreview.link}
+                        src={current.link}
                         onChange={() => setShowSpinner(true)}
                         onLoadStart={() => setShowSpinner(true)}
                         onLoad={() => setShowSpinner(false)}
@@ -92,8 +90,8 @@ export const FileAssetReview = () => {
                             <CircularProgress style={{ padding: ".5rem", margin: "1rem" }} />
                         </Align>
                     )}
-                    <div style={{ visibility: showSpinner ? "hidden" : "visible", maxWidth: "100%", margin: "1rem", display: "flex", justifyContent: "center" }}>
-                        {currentPreview && (currentPreview.extension.endsWith("png") || currentPreview.extension.endsWith("jpg")) && renderSwitch(currentPreview)}
+                    <div style={{ visibility: showSpinner ? "hidden" : "visible", maxWidth: "100%", minHeight: "100%", margin: "1rem", display: "flex", justifyContent: "center" }}>
+                        {currentPreview && renderSwitch(currentPreview)}
                     </div>
                 </Grid>
             </Grid>

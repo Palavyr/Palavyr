@@ -65,7 +65,7 @@ export const ReviewSection = memo(({ isActive, menuOpen }: ReviewSectionProps) =
                 <SidebarLinkItem
                     toolTipText="File Uploads"
                     menuOpen={menuOpen}
-                    disabled={planTypeMeta && !planTypeMeta.allowedImageUpload}
+                    disabled={planTypeMeta && !planTypeMeta.allowedFileUpload}
                     text="Uploads"
                     isActive={isActive}
                     onClick={fileAssetsReviewOnClick}

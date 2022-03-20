@@ -505,7 +505,7 @@ export type PlanTypeMeta = {
     allowedDynamicTables: number;
     allowedAreas: number;
 
-    allowedImageUpload: boolean;
+    allowedFileUpload: boolean;
     allowedEmailNotifications: boolean;
     allowedInlineEmailEditor: boolean;
     allowedSmsNotifications: boolean;

@@ -16,10 +16,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task Handle(LinkFileAttachmentToNodeRequest request, CancellationToken cancellationToken)
         {
-            await linker.LinkToNode(request.FileId, request.NodeId);
+            await linker.Link(request.FileId, request.NodeId);
         }
     }
-
 
     public class LinkFileAttachmentToNodeRequest : INotification
     {

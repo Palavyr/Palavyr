@@ -32,6 +32,31 @@ export const FileAssetDisplay = memo(({ fileAssetId, fileAssetName, fileAssetLin
         setBounce(!bounce);
     }, [fileAssetId]);
 
+    const renderSwitch = () => {
+        const extension = fileAssetName.split(".")[0];
+
+        switch (extension) {
+            case "pdf":
+                return (
+                    <div style={{ width: "100%", height: "100vh" }}>
+                        <object data={fileAssetLink} id="upload-preview" type="application/pdf" width="100%" height="100%" aria-label="preview"></object>
+                    </div>
+                );
+            default:
+                return (
+                    <img
+                        onClick={onImageClick}
+                        className={cls.display}
+                        key={Date.now()}
+                        src={fileAssetLink}
+                        onChange={() => setLoading(true)}
+                        onLoadStart={() => setLoading(true)}
+                        onLoad={() => setLoading(false)}
+                    />
+                );
+        }
+    };
+
     return (
         <>
             <Typography variant={titleVariant} align="center">
@@ -43,17 +68,7 @@ export const FileAssetDisplay = memo(({ fileAssetId, fileAssetName, fileAssetLin
                 </Align>
             )}
             <Align>
-                <div style={{ visibility: isLoading ? "hidden" : "visible", maxWidth: "100px", margin: "1rem" }}>
-                    <img
-                        onClick={onImageClick}
-                        className={cls.display}
-                        key={Date.now()}
-                        src={fileAssetLink}
-                        onChange={() => setLoading(true)}
-                        onLoadStart={() => setLoading(true)}
-                        onLoad={() => setLoading(false)}
-                    />
-                </div>
+                <div style={{ visibility: isLoading ? "hidden" : "visible", maxWidth: "100px", margin: "1rem" }}>{renderSwitch()}</div>
             </Align>
         </>
     );

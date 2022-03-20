@@ -133,7 +133,7 @@ namespace Palavyr.Core.Services.StripeServices
             var existing = await GetCustomerByEmailAddress(emailAddress, cancellationToken);
             if (existing.Count() != 0)
             {
-                throw new DomainException("Attempting to create a Stripe Customer using an email address that already exists in the Stripe.");
+                throw new DomainException("Attempting to create a Stripe Customer using an email address that already exists in Stripe.");
             }
 
             var createOptions = new CustomerCreateOptions

@@ -1,16 +1,16 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Upload } from "../Upload";
 import { AttachmentList } from "./AttachmentList";
 import { AttachmentPreview } from "./AttachmentPreview";
 import { useParams } from "react-router-dom";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useContext } from "react";
-import { ACCEPTED_FILES } from "@constants";
 import { FileAssetResource } from "@Palavyr-Types";
+import { UploadOrChooseFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
+import { cloneDeep } from "lodash";
 
-const summary = "Upload a new PDF attachment to send with responses.";
-const uploadDetails = <div className="alert alert-info">Use this dialog to upload attachments that will be sent standard with the response for this area.</div>;
+const summary = "Upload a new attachment to send with responses.";
+const uploadDetails = <div className="alert alert-info">Use this dialog to upload attachments that will be sent standard with the response for this intent.</div>;
 
 export const AttachmentConfiguration = () => {
     const { repository } = useContext(DashboardContext);
@@ -22,11 +22,7 @@ export const AttachmentConfiguration = () => {
     const [, setLoaded] = useState<boolean>(false);
     const [currentPreview, setCurrentPreview] = useState<FileAssetResource | null>();
     const [attachmentList, setAttachmentList] = useState<FileAssetResource[]>([]);
-
-    const [modalState, setModalState] = useState(false);
-    const toggleModal = () => {
-        setModalState(!modalState);
-    };
+    const [currentFileAssetId, setCurrentFileAssetId] = useState<string>("");
 
     const removeAttachment = async (fileId: string) => {
         const fileAssetResources = await repository.Configuration.Attachments.DeleteAttachment(areaIdentifier, fileId);
@@ -64,22 +60,30 @@ export const AttachmentConfiguration = () => {
     };
 
     const shouldDisableUploadButton = () => {
-        return planTypeMeta && attachmentList.length >= planTypeMeta.allowedAttachments;
+        const shouldDisable = planTypeMeta && attachmentList.length >= planTypeMeta.allowedAttachments;
+        return shouldDisable;
+    };
+
+    const onSelectChange = async (_: any, option: FileAssetResource) => {
+        setCurrentFileAssetId(option.fileId);
+        await repository.Configuration.FileAssets.LinkFileAssetToIntent(option.fileId, areaIdentifier);
+        setAttachmentList(cloneDeep([...attachmentList.filter(x => x.fileId != option.fileId), option]));
+        setSuccessText("Attachment Added");
+        setSuccessOpen(true);
+        setCurrentPreview(null);
     };
 
     return (
         <>
             <HeaderStrip title="Attachments" subtitle="Upload files you wish to send to your potential clients." />
-            <Upload
-                initialState={attachmentList.length === 0}
-                modalState={modalState}
-                toggleModal={toggleModal}
+            <UploadOrChooseFromExisting
+                excludableFileAssets={attachmentList}
+                currentFileAssetId={currentFileAssetId}
+                disable={shouldDisableUploadButton()}
                 handleFileSave={handleFileSave}
-                buttonText="Add Attachment"
+                onSelectChange={onSelectChange}
                 summary={summary}
                 uploadDetails={uploadDetails}
-                acceptedFiles={ACCEPTED_FILES}
-                disableButton={shouldDisableUploadButton()}
             />
             <AttachmentList fileList={attachmentList} setCurrentPreview={setCurrentPreview} removeAttachment={removeAttachment} />
             {currentPreview ? <AttachmentPreview preview={currentPreview} /> : null}

@@ -45,14 +45,12 @@ export const ImageNodeEditor = ({ currentNode, nodeId, repository, editorIsOpen,
                 </Typography>
                 <NodeFileAssetUpload
                     currentNode={currentNode}
-                    nodeId={nodeId}
                     closeEditor={closeEditor}
                     currentFileAssetId={currentFileAssetId}
-                    setCurrentFileAssetId={setCurrentFileAssetId}
+                    setFileAssetId={setCurrentFileAssetId}
                     setFileAssetLink={setFileAssetLink}
                     setFileAssetName={setFileAssetName}
                     repository={repository}
-                    initialState={false}
                 />
                 <Divider />
             </DialogContent>

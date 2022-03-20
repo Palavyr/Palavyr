@@ -146,7 +146,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public virtual async Task DisposeAsync()
         {
-            // await DeleteTestStripeCustomers();
+            await DeleteTestStripeCustomers();
             SetCancellationToken();
             var deleter = ResolveType<IDangerousAccountDeleter>();
             await deleter.DeleteAllThings();

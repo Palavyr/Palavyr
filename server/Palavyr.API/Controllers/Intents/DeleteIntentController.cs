@@ -6,12 +6,12 @@ using Palavyr.Core.Handlers.ControllerHandler;
 
 namespace Palavyr.API.Controllers.Intents
 {
-    public class DeleteAreaController : PalavyrBaseController
+    public class DeleteIntentController : PalavyrBaseController
     {
         private readonly IMediator mediator;
         public const string Route = "intents/delete/{intentId}";
 
-        public DeleteAreaController(IMediator mediator)
+        public DeleteIntentController(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.Intents
         [HttpDelete(Route)]
         public async Task Delete(
             [FromRoute]
-            DeleteAreaRequest request,
+            DeleteIntentRequest request,
             CancellationToken cancellationToken
         )
         {

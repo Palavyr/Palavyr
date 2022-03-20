@@ -18,7 +18,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task Handle(LinkFileAssetToIntentRequest request, CancellationToken cancellationToken)
         {
             // asserts this image exists
-            await linker.LinkToIntent(request.FileId, request.IntentId);
+            await linker.Link(request.FileId, request.IntentId);
         }
     }
 
