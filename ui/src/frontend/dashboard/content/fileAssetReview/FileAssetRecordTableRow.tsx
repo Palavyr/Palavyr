@@ -64,10 +64,10 @@ export const FileAssetRecordTableRow = ({ fileAssetResource, setFileAssetResourc
 
     return (
         <TableRow>
-            <TableCell>
+            <TableCell width={50}>
                 <Typography>{index}</Typography>
             </TableCell>
-            <TableCell>
+            <TableCell align="left">
                 <ColoredButton variant="outlined" onClick={() => responseLinkOnClick(fileAssetResource)}>
                     {fileAssetResource.fileName}
                 </ColoredButton>

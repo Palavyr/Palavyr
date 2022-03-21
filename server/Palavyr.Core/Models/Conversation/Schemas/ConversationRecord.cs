@@ -25,8 +25,8 @@ namespace Palavyr.Core.Models.Conversation.Schemas
 
         public ConversationRecord()
         {
-            
         }
+
         public static ConversationRecord CreateDefault(string conversationId, string accountId, string areaName, string areaIdentifier)
         {
             return new ConversationRecord
@@ -37,14 +37,6 @@ namespace Palavyr.Core.Models.Conversation.Schemas
                 AreaIdentifier = areaIdentifier,
                 TimeStamp = TimeUtils.CreateNewTimeStamp()
             };
-        }
-
-        public ConversationRecord ApplyEmailRequest(EmailRequest request)
-        {
-            Name = request.Name;
-            Email = request.EmailAddress;
-            PhoneNumber = request.Phone;
-            return this;
         }
 
         public static ConversationRecord CreateNew(
