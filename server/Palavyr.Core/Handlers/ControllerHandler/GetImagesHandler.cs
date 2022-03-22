@@ -3,8 +3,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.FileAssetServices;
+using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -32,9 +35,34 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 fileAssets = await fileAssetStore.GetMany(request.FileIds, x => x.FileId);
             }
 
-            fileAssets = fileAssets.Where(x => !x.RiskyNameStem.StartsWith("Preview-"));
-            var resources = await mapper.MapMany(fileAssets);
+            var filteredAssets = FilterResponsesOut(fileAssets);
+            var resources = await mapper.MapMany(filteredAssets);
             return new GetFileAssetsResponse(resources);
+        }
+
+        private IEnumerable<FileAsset> FilterResponsesOut(IEnumerable<FileAsset> fileAssets)
+        {
+            var barred = new[] { ResponsePrefix.Palavyr, ResponsePrefix.Preview };
+
+            var filtered = new List<FileAsset>();
+            foreach (var fileAsset in fileAssets)
+            {
+                var isBarred = false;
+                foreach (var bar in barred)
+                {
+                    if (fileAsset.RiskyNameStem.StartsWith(bar))
+                    {
+                        isBarred = true;
+                    }
+                }
+
+                if (!isBarred)
+                {
+                    filtered.Add(fileAsset);
+                }
+            }
+
+            return filtered;
         }
     }
 

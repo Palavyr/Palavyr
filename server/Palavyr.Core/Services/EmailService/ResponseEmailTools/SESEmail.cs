@@ -8,20 +8,14 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
     public partial class SesEmail : ISesEmail
     {
         private readonly ILogger<SesEmail> logger;
-        private readonly IDetermineCurrentOperatingSystem determineCurrentOperatingSystem;
-        private readonly ICancellationTokenTransport cancellationTokenTransport;
-        private IAmazonSimpleEmailService EmailClient { get;}
-        
+        private IAmazonSimpleEmailService EmailClient { get; }
+
         public SesEmail(
             ILogger<SesEmail> logger,
-            IAmazonSimpleEmailService client,
-            IDetermineCurrentOperatingSystem determineCurrentOperatingSystem,
-            ICancellationTokenTransport cancellationTokenTransport
+            IAmazonSimpleEmailService client
         )
         {
             this.logger = logger;
-            this.determineCurrentOperatingSystem = determineCurrentOperatingSystem;
-            this.cancellationTokenTransport = cancellationTokenTransport;
             EmailClient = client;
         }
     }

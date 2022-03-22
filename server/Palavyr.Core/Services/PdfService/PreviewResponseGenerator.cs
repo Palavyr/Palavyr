@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.CloudKeyResolvers;
@@ -65,7 +66,7 @@ namespace Palavyr.Core.Services.PdfService
             var fakeResponses = CreateFakeResponses();
 
             var tables = await CreatePreviewTables(intentId, culture);
-            var uniqueId = $"Preview-{guidUtils.CreateNewId()}";
+            var uniqueId = $"{ResponsePrefix.Preview}{guidUtils.CreateNewId()}";
 
             var html = await responseHtmlBuilder.BuildResponseHtml(
                 intentId,

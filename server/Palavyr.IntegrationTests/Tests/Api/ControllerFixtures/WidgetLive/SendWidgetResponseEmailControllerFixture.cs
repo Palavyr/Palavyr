@@ -59,7 +59,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             // assert
             response.NextNodeId.ShouldBe(EndingSequenceAttacher.EmailSuccessfulNodeId);
             response.Result.ShouldBeTrue();
-            response.PdfLink.ShouldBeNull();
+            response.FileAsset.ShouldBeNull();
         }
 
         public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)

@@ -44,17 +44,22 @@ export interface IZoomImage {
     alt: string;
     imgSrc: string;
     className?: string;
+    onLoad?: () => void;
+    onLoadStart?: () => void;
+    onClick?: (e: any) => void;
 }
 
-export const ZoomImage = ({ alt, imgSrc, className = "" }: IZoomImage) => {
+export const ZoomImage = ({ alt, imgSrc, className = "", onClick = undefined, onLoad = undefined, onLoadStart = undefined }: IZoomImage) => {
     const cls = useStyles();
 
     const [zoomedIn, setZoomedIn] = useState(false);
     const [scrollbarSize, setScrollbarSize] = useState(null);
 
-    const zoomIn = useCallback(() => {
-        setZoomedIn(true);
-    }, [setZoomedIn]);
+    const zoomIn =
+        onClick ??
+        useCallback(() => {
+            setZoomedIn(true);
+        }, [setZoomedIn]);
 
     const zoomOut = useCallback(() => {
         setZoomedIn(false);
@@ -88,7 +93,7 @@ export const ZoomImage = ({ alt, imgSrc, className = "" }: IZoomImage) => {
                     </div>
                 </Portal>
             )}
-            <img alt={alt} src={imgSrc} onClick={zoomIn} className={classNames(className, cls.zoomedOutImage)}></img>
+            <img alt={alt} src={imgSrc} onClick={zoomIn} className={classNames(className, cls.zoomedOutImage)} onLoad={onLoad} onLoadStart={onLoadStart}></img>
         </Fragment>
     );
 };

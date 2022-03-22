@@ -1,4 +1,4 @@
-import { SetState, WidgetPreferences } from "@Palavyr-Types";
+import { FileAssetResource, SetState, WidgetPreferences } from "@Palavyr-Types";
 import React from "react";
 import { IAppContext } from "widget/hook";
 

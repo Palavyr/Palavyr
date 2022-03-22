@@ -66,8 +66,6 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             string fromAddressLabel = "",
             string toAddressLabel = "")
         {
-
-            logger.LogDebug("Emailing from windows -- using raw ses");
             var message = GetMessage(
                 fromAddressLabel,
                 fromAddress,
@@ -83,23 +81,20 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
                 RawMessage = new RawMessage(GetMessageStream(message)),
             };
 
-            LoggerExtensions.LogDebug(logger, "Trying to send email...");
+            logger.LogDebug("Trying to send email...");
 
             try
             {
                 var response = await EmailClient.SendRawEmailAsync(rawSendRequest);
-                LoggerExtensions.LogDebug(logger, "Email Sent Successfully");
+                logger.LogDebug("Email Sent Successfully");
                 return true;
             }
             catch (Exception ex)
             {
-                LoggerExtensions.LogDebug(logger, "Email (with attachments) was not sent. ");
-                LoggerExtensions.LogDebug(logger, "Error: " + ex.Message);
+                logger.LogDebug("Email (with attachments) was not sent. ");
+                logger.LogDebug("Error: " + ex.Message);
                 return false;
             }
-
-
-            throw new Exception("OS not supported for attachment emails. Sorry");
         }
     }
 }

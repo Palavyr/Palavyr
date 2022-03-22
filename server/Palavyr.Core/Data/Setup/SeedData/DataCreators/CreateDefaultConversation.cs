@@ -25,9 +25,9 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
             {
                 DefaultNodeTypeOptions.CreateYesNo().MapNodeTypeOptionToConversationNode(
                     node1Id,
-                    "Do you love dogs?",
+                    "Do you love animals?",
                     true,
-                    TreeUtils.CreateNodeChildrenString(node2Id, node3Id),
+                    TreeUtils.CreateNodeChildrenString(node3Id, node2Id),
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId,
                     areaIdentifier,
@@ -49,7 +49,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     node3Id,
                     "Do you love dogs?",
                     false,
-                    TreeUtils.CreateNodeChildrenString(node4Id, node5Id),
+                    TreeUtils.CreateNodeChildrenString(node5Id, node4Id),
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId,
                     areaIdentifier,

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
@@ -45,9 +46,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             var (intentId, name, email) = recordUpdate;
 
-            logger.LogDebug("Fetching nodes...");
-            var standardNodes = await convoNodeStore.GetMany(intentId, s => s.AreaIdentifier);
-            var completeConversation = endingSequenceAttacher.AttachEndingSequenceToNodeList(standardNodes, intentId, accountIdTransport.AccountId);
+            // Need to use a no tracking query executor here so that we don't save changes to the nodeChildren string when we wire up the standard nodes to the ending sequence.
+            var standardNodesNoTracking = await convoNodeStore
+                .RawReadonlyQuery()
+                .Where(x => x.AccountId == convoNodeStore.AccountId)
+                .Where(x => x.AreaIdentifier == intentId)
+                .ToListAsync(convoNodeStore.CancellationToken);
+            var completeConversation = endingSequenceAttacher.AttachEndingSequenceToNodeList(standardNodesNoTracking, intentId, accountIdTransport.AccountId);
 
             logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
 

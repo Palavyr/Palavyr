@@ -3,27 +3,28 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Mappers;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
-    public class GetLiveWidgetImageUrlController : PalavyrBaseController
+    public class GetLiveWidgetFileAssetController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        private const string Route = "widget/node-image/{nodeId}";
+        private const string Route = "widget/node-file-asset/{nodeId}";
 
-        public GetLiveWidgetImageUrlController(IMediator mediator)
+        public GetLiveWidgetFileAssetController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
         [HttpGet(Route)]
-        public async Task<string> GetImageUrl(
+        public async Task<FileAssetResource> GetFileAsset(
             [FromRoute]
             string nodeId,
             CancellationToken cancellationToken
         )
         {
-            var response = await mediator.Send(new GetLiveWidgetImageUrlRequest(), cancellationToken);
+            var response = await mediator.Send(new GetLiveWidgetFileAssetRequest(), cancellationToken);
             return response.Response;
         }
     }

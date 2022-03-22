@@ -45,7 +45,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             }
 
             var widgetPrefs = await widgetStore.Get(widgetStore.AccountId, s => s.AccountId);
-            var areas = await intentStore.GetActiveAreasWithConvoAndDynamicAndStaticTables();
+            var areas = await intentStore.GetActiveIntentsWithConvoAndDynamicAndStaticTables();
 
             var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(areas, widgetPrefs, request.Demo, logger);
             logger.LogDebug($"Pre-check run successful.");

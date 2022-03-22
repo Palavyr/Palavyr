@@ -8,21 +8,21 @@ using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Conversation
 {
-    public class GetConversationByAreaIdController : PalavyrBaseController
+    public class GetConversationByIntentIdController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "configure-conversations/{areaId}";
+        public const string Route = "configure-conversations/{intentId}";
 
-        public GetConversationByAreaIdController(
+        public GetConversationByIntentIdController(
             IMediator mediator)
         {
             this.mediator = mediator;
         }
 
         [HttpGet(Route)]
-        public async Task<List<ConversationNode>> Get([FromRoute] string areaId, CancellationToken cancellationToken)
+        public async Task<List<ConversationNode>> Get([FromRoute] string intentId, CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetConversationRequest(areaId), cancellationToken);
+            var response = await mediator.Send(new GetConversationRequest(intentId), cancellationToken);
             return response.Response;
         }
     }

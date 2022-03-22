@@ -1,20 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Mappers
 {
-    public class EmailRequestMapper : IMapToNew<EmailRequest, ConversationRecord>
+    public class EmailRequestMapper : IMapToPreExisting<EmailRequest, ConversationRecord>
     {
-        public async Task<ConversationRecord> Map(EmailRequest @from)
+        public async Task Map(EmailRequest @from, ConversationRecord to, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
-            return new ConversationRecord
-            {
-                Name = @from.Name,
-                Email = @from.EmailAddress,
-                PhoneNumber = @from.Phone
-            };
+            to.Name = @from.Name;
+            to.Email = @from.EmailAddress;
+            to.PhoneNumber = @from.Phone;
         }
     }
 }

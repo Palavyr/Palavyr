@@ -219,10 +219,10 @@ export type StaticTableValidationResult = {
 type HTML = string;
 
 export type FileAssetResource = {
-    fileName: string, // the risky Name with extension
-    fileId: string, // the file id
-    link: string, // a link to the file (local or cloud)
-}
+    fileName: string; // the risky Name with extension
+    fileId: string; // the file id
+    link: string; // a link to the file (local or cloud)
+};
 
 // export type FileLink = {
 //     fileId: string;
@@ -1084,7 +1084,7 @@ export type WidgetPreCheckResult = {
 export type SendEmailResultResponse = {
     nextNodeId: string;
     result: boolean;
-    pdfLink?: string;
+    fileAsset?: FileAssetResource;
 };
 
 export interface IProgressTheChat {
@@ -1139,7 +1139,7 @@ export type ContextProperties = {
     dynamicResponses: DynamicResponses;
     numIndividuals: number | null;
     widgetPreferences: WidgetPreferences | null;
-    pdfLink: string | null;
+    responseFileAsset: FileAssetResource;
 };
 
 export interface ImageState {

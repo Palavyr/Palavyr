@@ -30,7 +30,7 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
             return intentComplete;
         }
 
-        public static async Task<List<Area>> GetActiveAreasWithConvoAndDynamicAndStaticTables(this IEntityStore<Area> intentStore)
+        public static async Task<List<Area>> GetActiveIntentsWithConvoAndDynamicAndStaticTables(this IEntityStore<Area> intentStore)
         {
             return await intentStore
                 .Query()

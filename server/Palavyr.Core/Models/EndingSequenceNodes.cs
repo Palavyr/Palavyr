@@ -19,6 +19,8 @@ namespace Palavyr.Core.Models
         ConversationNode CreateMayWeSendAnInformationalEmailForTooComplicated(string areaId, string accountId, params string[] nodeChildrenIds);
         ConversationNode CreateSendFallbackEmail(string areaId, string accountId, params string[] nodeChildrenIds);
         ConversationNode CreateGenericTooComplicated(string areaId, string accountId, params string[] nodeChildrenIds);
+
+        ConversationNode CreateShowResponseFileAsset(string intentId, string accountId, params string[] nodeChildrenIds);
     }
 
 
@@ -117,7 +119,7 @@ namespace Palavyr.Core.Models
                 "",
                 "",
                 accountId,
-                DefaultNodeTypeOptions.ProvideInfoWithPdfLink.StringName,
+                DefaultNodeTypeOptions.ProvideInfo.StringName,
                 NodeTypeCode.II,
                 false,
                 false,
@@ -307,7 +309,31 @@ namespace Palavyr.Core.Models
                 false,
                 true
             );
+        }
 
+        public ConversationNode CreateShowResponseFileAsset(string intentId, string accountId, params string[] nodeChildrenIds)
+        {
+            var nodeId = guidUtils.CreateNewId();
+            var text = "You can view your pdf here.";
+
+            return ConversationNode.CreateNew(
+                nodeId,
+                InternalNodeTypeOptions.ShowResponseFileAsset.StringName,
+                text,
+                intentId,
+                nodeChildrenString: TreeUtils.CreateNodeChildrenString(nodeChildrenIds),
+                "",
+                "",
+                accountId,
+                InternalNodeTypeOptions.ShowResponseFileAsset.StringName,
+                NodeTypeCode.IV,
+                false,
+                false,
+                false,
+                false,
+                isImageNode: true,
+                imageId: ""
+            );
         }
     }
 }
