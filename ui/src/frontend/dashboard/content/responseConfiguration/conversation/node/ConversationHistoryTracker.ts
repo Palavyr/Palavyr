@@ -32,7 +32,7 @@ export class ConversationHistoryTracker implements IConversationHistoryTracker {
 
     public addConversationHistoryToQueue(dirtyConversationRecord: IPalavyrLinkedList) {
         this.currentPosition += 1;
-        console.log(this.conversationHistory.length);
+        // console.log(this.conversationHistory.length);
 
         const newConversationRecord = dirtyConversationRecord;
 
@@ -63,7 +63,7 @@ export class ConversationHistoryTracker implements IConversationHistoryTracker {
             return;
         }
         this.currentPosition -= 1;
-        console.log(`Back Current Position: ${this.currentPosition}`);
+        // console.log(`Back Current Position: ${this.currentPosition}`);
         this.refreshConversation();
     }
 
@@ -74,12 +74,12 @@ export class ConversationHistoryTracker implements IConversationHistoryTracker {
         }
 
         this.currentPosition += 1;
-        console.log(`Forward Current Position: ${this.currentPosition}`);
+        // console.log(`Forward Current Position: ${this.currentPosition}`);
         this.refreshConversation();
     }
 
     public refreshConversation() {
-        console.log("Refreshing Conversation");
+        // console.log("Refreshing Conversation");
         const linkedNodeList = this.conversationHistory[this.currentPosition];
         this.resetLinkedNodes(linkedNodeList);
     }

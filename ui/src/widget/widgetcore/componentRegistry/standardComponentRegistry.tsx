@@ -383,7 +383,17 @@ export class StandardComponents {
 
         return () => {
             const { context } = useContext(WidgetContext);
-            const fileAsset = context.AppContext.responseFileAsset;
+
+            let fileAsset: FileAssetResource | null;
+            if (designer) {
+                fileAsset = {
+                    fileName: "test.png",
+                    link: "https://i.chzbgr.com/full/9591491840/h124EF692/cat-oizzyandthef",
+                    fileId: "1234",
+                };
+            } else {
+                fileAsset = context.AppContext.responseFileAsset;
+            }
 
             useEffect(() => {
                 if (designer) return;
@@ -407,8 +417,11 @@ export class StandardComponents {
 
             useEffect(() => {
                 (async () => {
-                    if (designer) return;
-
+                    if (designer) {
+                        setFileAsset({ fileId: "", fileName: "example.pdf", link: node.optionPath! });
+                        setLoaded(false);
+                        return;
+                    }
                     const fileAsset = await client.Widget.Get.FileAsset(node.nodeId);
 
                     if (fileAsset.fileId !== undefined && fileAsset.fileId !== null) {

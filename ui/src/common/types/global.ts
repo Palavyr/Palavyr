@@ -4,6 +4,7 @@ import { PalavyrLinkedList } from "frontend/dashboard/content/responseConfigurat
 import React, { Dispatch, ElementType, SetStateAction } from "react";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { DynamicTableTypes } from "@frontend/dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableRegistry";
+import { IAppContext } from "widget/hook";
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />

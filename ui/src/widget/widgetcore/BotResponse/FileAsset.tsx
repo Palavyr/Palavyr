@@ -66,7 +66,7 @@ export const FileAsset = ({ fileAsset }: FileAssetProps) => {
             default:
                 return (
                     <div onClick={onClick} style={{ visibility: isLoading ? "hidden" : "visible", margin: "0.3rem" }}>
-                        <ZoomImage onClick={onClick} imgSrc={fileAsset.link} alt="preview" />
+                        <ZoomImage imgSrc={link} onLoad={() => setLoading(false)} alt="preview" />
                     </div>
                 );
         }
