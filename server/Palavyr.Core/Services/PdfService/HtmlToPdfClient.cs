@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService.PdfServer;
-using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.PdfService

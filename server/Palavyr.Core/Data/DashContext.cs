@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 

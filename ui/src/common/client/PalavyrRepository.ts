@@ -334,6 +334,7 @@ export class PalavyrRepository {
 
     public Enquiries = {
         getEnquiries: async () => this.client.get<Enquiries>(`enquiries`),
+        getEnquiryCount: async () => this.client.get<number>(`enquiries/count`),
         getShowSeenEnquiries: async () => this.client.get<boolean>(`enquiries/show`),
         toggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(`enquiries/toggle-show`),
 

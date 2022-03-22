@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +12,7 @@ namespace Palavyr.Core.Services.ConversationServices
     public interface IConversationRecordRetriever
     {
         Task<IEnumerable<Enquiry>> RetrieveConversationRecords();
+        Task<int> GetActiveEnquiryCount();
     }
 
     public class ConversationRecordRetriever : IConversationRecordRetriever
@@ -41,6 +41,13 @@ namespace Palavyr.Core.Services.ConversationServices
 
             var enquiries = await mapper.MapMany(conversationRecords);
             return enquiries;
+        }
+
+        public async Task<int> GetActiveEnquiryCount()
+        {
+            var conversationRecords = await convoRecordStore.GetAll();
+            var unseen = conversationRecords.Where(x => !x.Seen).ToArray();
+            return unseen.Length;
         }
     }
 }

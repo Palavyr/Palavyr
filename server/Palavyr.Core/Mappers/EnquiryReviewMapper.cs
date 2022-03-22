@@ -38,7 +38,7 @@ namespace Palavyr.Core.Mappers
                 Name = @from.Name,
                 Email = @from.Email,
                 PhoneNumber = @from.PhoneNumber,
-                HasResponse = !string.IsNullOrEmpty(fileId)
+                HasResponse = !string.IsNullOrEmpty(fileAssetResource.Link)
             };
         }
     }

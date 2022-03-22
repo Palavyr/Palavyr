@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Handlers.ControllerHandler;

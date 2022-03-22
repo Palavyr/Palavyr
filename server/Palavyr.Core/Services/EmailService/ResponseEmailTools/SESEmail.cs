@@ -1,7 +1,5 @@
 using Amazon.SimpleEmail;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.Environment;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
 {

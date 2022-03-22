@@ -1,7 +1,6 @@
 ﻿using System;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Conversation.Schemas
 {

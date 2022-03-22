@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using Autofac;
-using Palavyr.API;
-using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Test.Common.ApprovalTests;
-using TestStack.ConventionTests;
-using TestStack.ConventionTests.Autofac;
 using Xunit;
 using Xunit.Abstractions;
 

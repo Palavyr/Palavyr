@@ -1,10 +1,5 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AmazonServices;
+﻿using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AttachmentServices;
-using Palavyr.Core.Services.PdfService;
 
 namespace Palavyr.Core.Common.ExtensionMethods
 {

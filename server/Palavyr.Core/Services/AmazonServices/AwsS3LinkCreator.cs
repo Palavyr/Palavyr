@@ -12,8 +12,7 @@ namespace Palavyr.Core.Services.AmazonServices
         Task<string[]> CreateManyLinks(string[] fileAssetIds);
         Task<IEnumerable<string>> CreateManyLinks(IEnumerable<string> fileAssetIds);
     }
-    
-    
+
 
     public class AwsS3LinkCreator : ILinkCreator
     {
@@ -27,9 +26,10 @@ namespace Palavyr.Core.Services.AmazonServices
             this.fileAssetStore = fileAssetStore;
         }
 
-        public async Task<string> CreateLink(string fileAssetId)
+        public async Task<string?> CreateLink(string fileAssetId)
         {
-            var fileAsset = await fileAssetStore.Get(fileAssetId, s => s.FileId);
+            var fileAsset = await fileAssetStore.GetOrNull(fileAssetId, s => s.FileId);
+            if (fileAsset is null) return null;
             var link = linkCreator.GenericCreatePreSignedUrl(fileAsset.LocationKey);
             return link;
         }
