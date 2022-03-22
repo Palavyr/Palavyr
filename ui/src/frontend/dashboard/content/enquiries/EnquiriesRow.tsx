@@ -61,8 +61,7 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
 
     const responseLinkOnClick = async (enquiry: EnquiryRow) => {
         markAsSeen(enquiry.conversationId);
-        const signedUrl = await repository.Enquiries.getSignedUrl(enquiry.linkReference.fileReference);
-        window.open(signedUrl, "_blank");
+        window.open(enquiry.fileAssetResource.link, "_blank");
     };
 
     const convoDetailsOnClick = async (enquiry: EnquiryRow) => {

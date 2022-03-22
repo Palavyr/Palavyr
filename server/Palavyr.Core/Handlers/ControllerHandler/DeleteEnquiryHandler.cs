@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Resources.Responses;
@@ -30,8 +31,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class DeleteEnquiryResponse
     {
-        public DeleteEnquiryResponse(Enquiry[] response) => Response = response;
-        public Enquiry[] Response { get; set; }
+        public DeleteEnquiryResponse(IEnumerable<Enquiry> response) => Response = response;
+        public IEnumerable<Enquiry> Response { get; set; }
     }
 
     public class DeleteEnquiryRequest : IRequest<DeleteEnquiryResponse>

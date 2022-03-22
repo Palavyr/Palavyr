@@ -242,7 +242,7 @@ export type FileLinkReference = {
 export type EnquiryRow = {
     id: number;
     conversationId: string;
-    linkReference: FileLinkReference;
+    fileAssetResource: FileAssetResource;
     timeStamp: string;
     accountId: string;
     areaName: string;

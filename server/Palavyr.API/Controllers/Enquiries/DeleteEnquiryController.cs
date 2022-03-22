@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +14,13 @@ namespace Palavyr.API.Controllers.Enquiries
 
         public const string Route = "enquiries/selected";
 
-        public DeleteEnquiryController(
-            IMediator mediator
-        )
+        public DeleteEnquiryController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
         [HttpPut(Route)]
-        public async Task<Enquiry[]> DeleteSelected(
+        public async Task<IEnumerable<Enquiry>> DeleteSelected(
             DeleteEnquiryRequest request,
             CancellationToken cancellationToken)
         {
