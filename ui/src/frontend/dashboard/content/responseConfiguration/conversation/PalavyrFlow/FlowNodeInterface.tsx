@@ -16,7 +16,6 @@ export const NodeFlowInterface = ({ data }: NodeFlowInterfaceProps) => {
                 userText={currentNode.userText}
                 shouldPresentResponse={currentNode.shouldPresentResponse}
                 isMemberOfLeftmostBranch={currentNode.isMemberOfLeftmostBranch}
-                imageId={currentNode.imageId}
                 nodeId={currentNode.nodeId}
                 joinedChildReferenceString={currentNode.childNodeReferences.joinedReferenceString}
                 shouldDisableNodeTypeSelector={currentNode.shouldDisableNodeTypeSelector}

@@ -102,7 +102,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<CloudCompatibleKeyResolver>().As<ICloudCompatibleKeyResolver>();
             builder.RegisterType<CompileSenderDetails>().As<ICompileSenderDetails>();
             builder.RegisterType<CompletedConversationModifier>().As<ICompletedConversationModifier>();
-            builder.RegisterType<ConversationNodeUpdater>().As<IConversationNodeUpdater>();
+            builder.RegisterType<ConversationUpdater>().As<IConversationNodeUpdater>();
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>();
             builder.RegisterType<ConversationRecordRetriever>().As<IConversationRecordRetriever>();
             builder.RegisterType<CriticalResponses>().As<ICriticalResponses>();

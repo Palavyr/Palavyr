@@ -3,12 +3,13 @@ import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
 import { Variant } from "@material-ui/core/styles/createTypography";
 import { Align } from "@common/positioning/Align";
 import React, { memo, useEffect, useState } from "react";
+import { FileAssetResource } from "@Palavyr-Types";
+import { ColoredButton } from "@common/components/borrowed/ColoredButton";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 export interface FileAssetDisplayProps {
-    fileAssetLink: string;
-    fileAssetName: string;
+    fileAsset: FileAssetResource;
     titleVariant?: Variant;
-    fileAssetId: string;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -17,38 +18,43 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         borderRadius: "5px",
     },
+    width: {
+        width: "100%",
+    },
 }));
 
-export const FileAssetDisplay = memo(({ fileAssetId, fileAssetName, fileAssetLink, titleVariant = "h6" }: FileAssetDisplayProps) => {
+export const FileAssetDisplay = memo(({ fileAsset, titleVariant = "h6" }: FileAssetDisplayProps) => {
     const cls = useStyles();
-    const [isLoading, setLoading] = useState<boolean>(true);
+    const [isLoading, setLoading] = useState<boolean>(false);
     const [bounce, setBounce] = useState<boolean>(false);
-    const onImageClick = e => {
+
+    const onClick = e => {
         e.preventDefault();
-        window.open(fileAssetLink, "_blank");
+        window.open(fileAsset.link, "_blank");
     };
 
     useEffect(() => {
         setBounce(!bounce);
-    }, [fileAssetId]);
+    }, [fileAsset]);
 
     const renderSwitch = () => {
-        const extension = fileAssetName.split(".")[0];
-
+        const extension = fileAsset.fileName.split(".").pop() ?? "";
         switch (extension) {
             case "pdf":
                 return (
-                    <div style={{ width: "100%", height: "100vh" }}>
-                        <object data={fileAssetLink} id="upload-preview" type="application/pdf" width="100%" height="100%" aria-label="preview"></object>
-                    </div>
+                    <Align extraClassNames={cls.width}>
+                        <ColoredButton styles={{ marginBottom: "0.3rem", width: "100%" }} variant="outlined" color="primary" onClick={onClick}>
+                            PDF
+                        </ColoredButton>
+                    </Align>
                 );
             default:
                 return (
                     <img
-                        onClick={onImageClick}
+                        onClick={onClick}
                         className={cls.display}
                         key={Date.now()}
-                        src={fileAssetLink}
+                        src={fileAsset.link}
                         onChange={() => setLoading(true)}
                         onLoadStart={() => setLoading(true)}
                         onLoad={() => setLoading(false)}
@@ -60,9 +66,9 @@ export const FileAssetDisplay = memo(({ fileAssetId, fileAssetName, fileAssetLin
     return (
         <>
             <Typography variant={titleVariant} align="center">
-                {!isLoading && isNullOrUndefinedOrWhitespace(fileAssetLink) ? "No Image" : `${fileAssetName}`}
+                {!isLoading && isNullOrUndefinedOrWhitespace(fileAsset.link) ? "No Image" : `${fileAsset.fileName}`}
             </Typography>
-            {isLoading && fileAssetLink && (
+            {isLoading && fileAsset.link && (
                 <Align>
                     <CircularProgress style={{ padding: ".5rem", margin: "1rem" }} />
                 </Align>

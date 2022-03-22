@@ -1,8 +1,8 @@
 import { NodeTypeOptions, PlanTypeMeta, PurchaseTypes, NodeOption } from "@Palavyr-Types";
 
 export const filterNodeTypeOptionsOnSubscription = (nodeTypeOptions: NodeTypeOptions, planTypeMeta: PlanTypeMeta) => {
-    const excludeFromFree: string[] = ["ShowImage"];
-    const excludeFromLyte: string[] = ["ShowImage"];
+    const excludeFromFree: string[] = ["ShowImage", "ShowFileAsset"];
+    const excludeFromLyte: string[] = ["ShowImage", "ShowFileAsset"];
     const excludeFromPremium: string[] = [];
 
     let filteredNodes = [...nodeTypeOptions];

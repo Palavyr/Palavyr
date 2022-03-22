@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useState } from "react";
 export interface SelectFromExistingImagesProps {
     repository: PalavyrRepository;
     onSelectChange: (_: any, option: FileAssetResource) => void;
-    currentFileAssetId: string;
+    currentFileAssetId?: string | null;
     excludableFileAssets?: FileAssetResource[];
     disable?: boolean;
 }
@@ -30,15 +30,19 @@ export const SelectFromExistingFileAssets = ({ repository, disable, onSelectChan
                     return true;
                 }
             }
-            return asset.fileId !== currentFileAssetId;
+            if (currentFileAssetId) {
+                return asset.fileId !== currentFileAssetId;
+            }
+            return true;
         });
 
-        setOptions(filteredOptions);
+        return filteredOptions;
     };
 
     const loadOptions = useCallback(async () => {
         const fileAssets = await repository.Configuration.FileAssets.GetFileAssets();
-        setfilteredFileAssetOptions(fileAssets);
+        const filteredOptions = setfilteredFileAssetOptions(fileAssets);
+        setOptions(filteredOptions);
     }, [currentFileAssetId]);
 
     useEffect(() => {

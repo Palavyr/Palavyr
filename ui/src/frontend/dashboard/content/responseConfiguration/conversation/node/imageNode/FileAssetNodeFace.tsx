@@ -1,4 +1,5 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
+import { FileAssetResource } from "@Palavyr-Types";
 import React, { useCallback, useEffect, useState } from "react";
 import { PalavyrNodeBody } from "../baseNode/PalavyrNodeBody";
 import { FileAssetDisplay } from "./FileAssetDisplay";
@@ -10,18 +11,13 @@ export interface FileAssetNodeProps {
 }
 
 export const FileAssetNodeFace = ({ openEditor, fileAssetId, repository }: FileAssetNodeProps) => {
-    const [fileAssetLink, setFileAssetLink] = useState<string>("");
-    const [fileAssetName, setFileAssetName] = useState<string>("");
-    const [currrentFileAssetFileId, setCurrentFileId] = useState<string>("");
+    const [fileAsset, setFileAsset] = useState<FileAssetResource | null>(null);
 
     const loadFileAsset = useCallback(async () => {
         if (fileAssetId !== null && fileAssetId !== undefined) {
             const fileAssets = await repository.Configuration.FileAssets.GetFileAssets([fileAssetId]);
             const fileAsset = fileAssets[0];
-
-            setFileAssetLink(fileAsset.link);
-            setFileAssetName(fileAsset.fileName);
-            setCurrentFileId(fileAsset.fileId);
+            setFileAsset(fileAsset);
         }
     }, [fileAssetId]);
 
@@ -31,7 +27,7 @@ export const FileAssetNodeFace = ({ openEditor, fileAssetId, repository }: FileA
 
     return (
         <PalavyrNodeBody openEditor={openEditor} isFileAssetNode>
-            <FileAssetDisplay fileAssetId={currrentFileAssetFileId} fileAssetName={fileAssetName} fileAssetLink={fileAssetLink} titleVariant="body1" />
+            {fileAsset && <FileAssetDisplay fileAsset={fileAsset} titleVariant="body1" />}
         </PalavyrNodeBody>
     );
 };

@@ -85,7 +85,6 @@ export class ConversationHistoryTracker implements IConversationHistoryTracker {
     }
 
     private resetLinkedNodes(linkedNodeList: IPalavyrLinkedList) {
-        console.log("Resetting Linked Nodes");
         this.linkedNodeList = linkedNodeList;
         this.setLinkedNodes(cloneDeep(linkedNodeList));
     }

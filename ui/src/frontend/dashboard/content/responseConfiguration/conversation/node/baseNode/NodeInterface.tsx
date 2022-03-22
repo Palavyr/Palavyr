@@ -7,8 +7,8 @@ import React, { useState } from "react";
 import { useContext } from "react";
 import { IPalavyrNode } from "@Palavyr-Types";
 import { useNodeInterfaceStyles } from "../../nodeInterfaceStyles";
-import { ImageNodeEditor } from "../imageNode/ImageNodeEditor";
-import { FileAssetNodeFace } from "../imageNode/ImageNodeFace";
+import { FileAssetNodeEditor } from "../imageNode/FileAssetNodeEditor";
+import { FileAssetNodeFace } from "../imageNode/FileAssetNodeFace";
 import { DataLogging } from "../nodeInterface/nodeDebug/DataLogging";
 import { TextNodeEditor } from "../textNode/TextNodeEditor";
 import { TextNodeFace } from "../textNode/TextNodeFace";
@@ -24,7 +24,6 @@ export interface NodeInterfaceProps {
     userText: string;
     shouldPresentResponse: boolean;
     isMemberOfLeftmostBranch: boolean;
-    imageId?: string | null;
     nodeId: string;
     joinedChildReferenceString: string;
     shouldDisableNodeTypeSelector: boolean;
@@ -49,7 +48,6 @@ export const NodeInterface = ({
     userText,
     shouldPresentResponse,
     isMemberOfLeftmostBranch,
-    imageId,
     nodeId,
     joinedChildReferenceString,
     shouldDisableNodeTypeSelector,
@@ -75,10 +73,10 @@ export const NodeInterface = ({
             <CardContent className={classNames(cls.card, nodeId)}>
                 {showDebugData && <DataLogging debugData={compileDebug(currentNode)} nodeChildren={joinedChildReferenceString} nodeId={nodeId} />}
                 <NodeHeader isRoot={isRoot} optionPath={optionPath} nodeId={currentNode.nodeId} />
-                {currentNode.isImageNode ? <FileAssetNodeFace fileAssetId={imageId} repository={repository} openEditor={openEditor} /> : <TextNodeFace openEditor={openEditor} userText={userText} />}
+                {currentNode.isImageNode ? <FileAssetNodeFace fileAssetId={currentNode.imageId} repository={repository} openEditor={openEditor} /> : <TextNodeFace openEditor={openEditor} userText={userText} />}
                 <NodeTypeSelector currentNode={currentNode} shouldDisableNodeTypeSelector={shouldDisableNodeTypeSelector} />
                 {currentNode.isImageNode ? (
-                    <ImageNodeEditor currentNode={currentNode} nodeId={nodeId} repository={repository} editorIsOpen={editorIsOpen} closeEditor={closeEditor} fileAssetId={imageId} />
+                    <FileAssetNodeEditor currentNode={currentNode} repository={repository} editorIsOpen={editorIsOpen} closeEditor={closeEditor} />
                 ) : (
                     <TextNodeEditor
                         isMultiOptionType={currentNode.isMultiOptionType}

@@ -28,7 +28,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string Selection => DefaultNodeTypeOptions.Selection.StringName;
             public static string CollectDetails => DefaultNodeTypeOptions.CollectDetails.StringName;
 
-            public static string ProvideInfoWithPdfLink => DefaultNodeTypeOptions.ProvideInfoWithPdfLink.StringName;
         }
 
         public static List<NodeTypeOption> IntroNodeOptionList =>
@@ -56,7 +55,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new SendResponse(),
                 new TooComplicated(),
                 new Anabranch(),
-                new ShowImage(),
+                // new ShowImage(),
                 new ShowFileAsset(),
                 new EndWithoutEmail(),
                 new LoopbackAnchor(),
@@ -190,7 +189,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponentType = NodeComponentTypes.ShowImage;
+                NodeComponentType = NodeComponentTypes.ShowFileAsset;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 IsImageNode = true;
