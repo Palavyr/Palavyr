@@ -32,7 +32,6 @@ export class ConversationHistoryTracker implements IConversationHistoryTracker {
 
     public addConversationHistoryToQueue(dirtyConversationRecord: IPalavyrLinkedList) {
         this.currentPosition += 1;
-        // console.log(this.conversationHistory.length);
 
         const newConversationRecord = dirtyConversationRecord;
 
