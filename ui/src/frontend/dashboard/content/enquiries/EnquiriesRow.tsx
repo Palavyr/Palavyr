@@ -72,11 +72,9 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
 
     const deleteEnquiryOnClick = async (enquiry: EnquiryRow) => {
         setDeleteIsWorking(true);
-        setTimeout(async () => {
-            const enquiries = await repository.Enquiries.deleteSelectedEnquiries([enquiry.conversationId]);
-            setEnquiries(enquiries);
-            setDeleteIsWorking(false);
-        }, 1500);
+        const enquiries = await repository.Enquiries.deleteSelectedEnquiries([enquiry.conversationId]);
+        setEnquiries(enquiries);
+        setDeleteIsWorking(false);
     };
 
     const { formattedDate, formattedTime } = formatLegitTimeStamp(enquiry.timeStamp);

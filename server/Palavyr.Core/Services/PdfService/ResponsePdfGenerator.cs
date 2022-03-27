@@ -93,16 +93,16 @@ namespace Palavyr.Core.Services.PdfService
 
         public async Task<FileAsset> GeneratePdfResponse(CriticalResponses criticalResponses, EmailRequest emailRequest, CultureInfo culture, string intentId)
         {
-            var response = await inner.GeneratePdfResponse(criticalResponses, emailRequest, culture, intentId);
+            var fileAsset = await inner.GeneratePdfResponse(criticalResponses, emailRequest, culture, intentId);
 
-            await fileAssetStore.Create(response);
+            await fileAssetStore.Create(fileAsset);
             await contextProvider.ConfigurationContext().SaveChangesAsync(CancellationToken);
 
             var record = await convoRecordStore.GetSingleRecord(emailRequest.ConversationId);
-            record.ResponsePdfId = emailRequest.ConversationId;
+            record.ResponsePdfId = fileAsset.FileId;
             await convoRecordStore.Update(record);
 
-            return response;
+            return fileAsset;
         }
     }
 }

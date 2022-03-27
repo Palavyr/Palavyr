@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: prefs.chatBubbleColor,
         overflowY: "hidden",
         marginTop: ".6rem",
-        marginBottom: ".6rem"
+        marginBottom: ".6rem",
     }),
     messageTubeContainer: (prefs: WidgetPreferences) => ({
         paddingTop: "2rem",
@@ -71,6 +71,8 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
     const messageRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
+        console.log(messageRef)
+        console.log(messageRef.current)
         scrollToBottom(messageRef.current);
     }, [context.messages, context.loading]);
 
@@ -82,7 +84,7 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
 
     return (
         <div id="messages" className={classNames(wcls.pwrow, wcls.pcontent, cls.messageTubeContainer)} ref={messageRef}>
-            {context.messages.length > 0 && context.messages.map((message, index) => <MessageSlice message={message} showTimeStamp={showTimeStamp} key={`${index}-${format(message.timestamp, "hh:mm")}`} />)}
+            {context.messages.length > 0 && context.messages.map((message, index) => <MessageSlice message={message} showTimeStamp={showTimeStamp} key={`${index}-${message.timestamp}`} />)}
             {context.loading && <Loader />}
             <div style={{ height: "6rem" }} />
         </div>

@@ -412,31 +412,16 @@ export class StandardComponents {
 
         return () => {
             const [loaded, setLoaded] = useState<boolean>(false);
-            const [fileAsset, setFileAsset] = useState<FileAssetResource | null>(null);
             const { context } = useContext(WidgetContext);
 
             useEffect(() => {
-                (async () => {
-                    if (designer) {
-                        setFileAsset({ fileId: "", fileName: "example.pdf", link: node.optionPath! });
-                        setLoaded(false);
-                        return;
-                    }
-                    const fileAsset = await client.Widget.Get.FileAsset(node.nodeId);
-
-                    if (fileAsset.fileId !== undefined && fileAsset.fileId !== null) {
-                        setFileAsset(fileAsset);
-                    }
-                    setLoaded(false);
-                })();
-
                 setTimeout(() => {
                     if (designer) return;
                     responseAction(context, node, child, nodeList, client, convoId, null);
                 }, 2500);
             }, []);
 
-            return fileAsset ? <FileAsset fileAsset={fileAsset} /> : <PalavyrText>Loading...</PalavyrText>;
+            return <FileAsset fileAsset={node.fileAssetResource!} />;
         };
     }
 

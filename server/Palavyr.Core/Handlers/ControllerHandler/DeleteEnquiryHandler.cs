@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -23,9 +24,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<DeleteEnquiryResponse> Handle(DeleteEnquiryRequest request, CancellationToken cancellationToken)
         {
-            await enquiryDeleter.DeleteEnquiries(request.FileReferences, cancellationToken);
+            await enquiryDeleter.DeleteEnquiries(request.ConversationIds);
             var result = await conversationRecordRetriever.RetrieveConversationRecords();
-            return new DeleteEnquiryResponse(result);
+
+            bool FilterRecentlyDeleted(Enquiry e)
+            {
+                return !request.ConversationIds.Contains(e.ConversationId);
+            }
+
+            var filtered = result.Where(FilterRecentlyDeleted);
+            return new DeleteEnquiryResponse(filtered);
         }
     }
 
@@ -37,6 +45,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class DeleteEnquiryRequest : IRequest<DeleteEnquiryResponse>
     {
-        public string[] FileReferences { get; set; }
+        public string[] ConversationIds { get; set; }
     }
 }

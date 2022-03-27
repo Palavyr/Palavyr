@@ -225,14 +225,6 @@ export type FileAssetResource = {
     link: string; // a link to the file (local or cloud)
 };
 
-// export type FileLink = {
-//     fileId: string;
-//     fileName: string;
-//     link: string;
-//     isUrl: boolean;
-//     s3Key: string;
-// };
-
 export type FileLinkReference = {
     fileReference: string;
     fileId: string;
@@ -1017,6 +1009,7 @@ export type WidgetNodeResource = {
     isDynamicTableNode: boolean;
     dynamicType: string | null;
     resolveOrder: number | null;
+    fileAssetResource: FileAssetResource | null;
     // unitGroup: UnitGroups | null;
     // unitPrettyName: UnitPrettyNames | null;
     // currencySymbol: string | null;

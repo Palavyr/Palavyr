@@ -3,6 +3,7 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Mappers
@@ -10,19 +11,35 @@ namespace Palavyr.Core.Mappers
     public class WidgetNodeResourceMapper : IMapToNew<ConversationNode, WidgetNodeResource>
     {
         private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly ILinkCreator linkCreator;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
+        private readonly IMapToNew<FileAsset, FileAssetResource> fileAssetMapper;
         private readonly IGuidFinder guidFinder;
 
         public WidgetNodeResourceMapper(
             IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            ILinkCreator linkCreator,
+            IEntityStore<FileAsset> fileAssetStore,
+            IMapToNew<FileAsset, FileAssetResource> fileAssetMapper,
             IGuidFinder guidFinder)
         {
             this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.linkCreator = linkCreator;
+            this.fileAssetStore = fileAssetStore;
+            this.fileAssetMapper = fileAssetMapper;
             this.guidFinder = guidFinder;
         }
 
         public async Task<WidgetNodeResource> Map(ConversationNode @from)
         {
-            await Task.CompletedTask;
+            FileAssetResource? fileAssetResource = null;
+            if (!string.IsNullOrEmpty(@from.ImageId))
+            {
+                var fileAsset = await fileAssetStore.GetOrNull(@from.ImageId, s => s.FileId);
+                if (fileAsset is null) throw new DomainException("The file Id attached to the convo node wasn't found.");
+                fileAssetResource = await fileAssetMapper.Map(fileAsset);
+            }
+            
             return new WidgetNodeResource
             {
                 AreaIdentifier = @from.AreaIdentifier,
@@ -38,6 +55,7 @@ namespace Palavyr.Core.Mappers
                 IsDynamicTableNode = @from.IsDynamicTableNode,
                 DynamicType = @from.DynamicType,
                 ResolveOrder = @from.ResolveOrder,
+                FileAssetResource= fileAssetResource
                 // UnitId = await AttachUnitIdOrNull(@from)
             };
         }

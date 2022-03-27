@@ -38,7 +38,7 @@ export class PalavyrWidgetRepository {
         confirmationEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/send?key=${secretKey}`,
         fallbackEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/fallback/send?key=${secretKey}`,
         internalCheck: (secretKey: SecretKey) => `widget/internal-check?key=${secretKey}`,
-        fileAsset: (secretKey: SecretKey, nodeId: string) => `widget/node-file-asset/${nodeId}?key=${secretKey}`,
+        // fileAsset: (secretKey: SecretKey, nodeId: string) => `widget/node-file-asset/${nodeId}?key=${secretKey}`,
         getIntroSequence: (secretKey: SecretKey) => `account/settings/intro-sequence?key=${secretKey}`,
     };
 
@@ -50,7 +50,7 @@ export class PalavyrWidgetRepository {
             Areas: async () => this.client.get<Array<AreaTable>>(this.Routes.intents(this.secretKey)),
             NewConversationHistory: async (recordUpdateDto: Partial<ConversationRecordUpdate>) =>
                 this.client.post<NewConversation, {}>(this.Routes.newConversationHistory(this.secretKey), recordUpdateDto),
-            FileAsset: async (nodeId: string) => this.client.get<FileAssetResource>(this.Routes.fileAsset(this.secretKey, nodeId)),
+            // FileAsset: async (nodeId: string) => this.client.get<FileAssetResource>(this.Routes.fileAsset(this.secretKey, nodeId)),
             IntroSequence: async () => this.client.get<WidgetNodes>(this.Routes.getIntroSequence(this.secretKey)),
         },
 

@@ -1,17 +1,12 @@
 import React, { useContext } from "react";
 import cn from "classnames";
 
-// import "./styles.scss";
 import { makeStyles } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 import clss from "./Loader.module.scss";
-
-type Props = {
-    typing?: boolean;
-};
 
 const useStyles = makeStyles(theme => ({
     loaderContainer: (props: WidgetPreferences) => ({
@@ -38,13 +33,13 @@ const useStyles = makeStyles(theme => ({
     }),
 }));
 
-export const Loader = ({ typing }: Props) => {
+export const Loader = () => {
     const { preferences } = useContext(WidgetContext);
     const cls = useStyles(preferences);
 
     return (
         <div className={cls.loaderContainer}>
-            <PalavyrText display="inline-block" className={cls.text}>
+            <PalavyrText display="inline" className={cls.text}>
                 <i>
                     Typing
                     {"   "}

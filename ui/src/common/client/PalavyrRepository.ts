@@ -342,12 +342,8 @@ export class PalavyrRepository {
             const result = this.client.put<Enquiries, {}>(`enquiries/update/${conversationId}`);
             return result;
         },
-        deleteSelectedEnquiries: async (fileReferences: string[]) => {
-            const result = this.client.put<Enquiries, {}>(`enquiries/selected`, { FileReferences: fileReferences });
-            return result;
-        },
+        deleteSelectedEnquiries: async (conversationIds: string[]) => this.client.put<Enquiries, {}>(`enquiries/selected`, { ConversationIds: conversationIds }),
 
-        getSignedUrl: async (fileId: string) => this.client.get<string>(`enquiries/link/${fileId}`),
         getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`, [CacheIds.Conversation, conversationId].join("-") as CacheIds),
 
         getEnquiryInsights: async () => this.client.get<EnquiryActivtyResource[]>("enquiry-insights"),

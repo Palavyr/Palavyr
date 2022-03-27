@@ -14,4 +14,5 @@ export const ConvoNode: WidgetNodeResource = {
     nodeComponentType: "YesNo",
     dynamicType: "",
     resolveOrder: 0,
+    fileAssetResource: null,
 };

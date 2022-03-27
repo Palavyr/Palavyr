@@ -1,4 +1,7 @@
-﻿namespace Palavyr.Core.Models.Configuration.Constant
+﻿using Palavyr.Core.Mappers;
+using Palavyr.Core.Models.Configuration.Schemas;
+
+namespace Palavyr.Core.Models.Configuration.Constant
 {
     public class WidgetNodeResource
     {
@@ -16,6 +19,8 @@
         public string DynamicType { get; set; }
         public int? ResolveOrder { get; set; }
         public int? UnitId { get; set; }
+
+        public FileAssetResource? FileAssetResource { get; set; }
         // public string? UnitGroup { get; set; }
         // public string? UnitPrettyName { get; set; }
         // public string? CurrencySymbol { get; set; }

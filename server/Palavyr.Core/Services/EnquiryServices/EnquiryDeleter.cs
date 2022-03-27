@@ -1,4 +1,4 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Services.FileAssetServices;
@@ -8,8 +8,7 @@ namespace Palavyr.Core.Services.EnquiryServices
 {
     public interface IEnquiryDeleter
     {
-        Task DeleteEnquiry(string fileId, CancellationToken cancellationToken);
-        Task DeleteEnquiries(string[] fileReferences, CancellationToken cancellationToken);
+        Task DeleteEnquiries(string[] fileReferences);
     }
 
     public class EnquiryDeleter : IEnquiryDeleter
@@ -26,28 +25,18 @@ namespace Palavyr.Core.Services.EnquiryServices
             this.convoRecordStore = convoRecordStore;
         }
 
-        public async Task DeleteEnquiry(string conversationId, CancellationToken cancellationToken)
+        public async Task DeleteEnquiries(string[] conversationIds)
         {
-            await DeleteFromS3(conversationId);
-            await TrackDeleteFromDb(conversationId);
-        }
-
-        public async Task DeleteEnquiries(string[] fileReferences, CancellationToken cancellationToken)
-        {
-            foreach (var fileReference in fileReferences)
+            var fileIds = new List<string>();
+            foreach (var conversationId in conversationIds)
             {
-                await DeleteEnquiry(fileReference, cancellationToken);
+                var record = await convoRecordStore.Get(conversationId, s => s.ConversationId);
+
+                fileIds.Add(record.ResponsePdfId);
+                await convoRecordStore.Delete(conversationId, s => s.ConversationId);
             }
-        }
 
-        private async Task DeleteFromS3(string fileId)
-        {
-            await fileAssetDeleter.RemoveFile(fileId);
-        }
-
-        public async Task TrackDeleteFromDb(string conversationId)
-        {
-            await convoRecordStore.Delete(conversationId, s => s.ConversationId);
+            await fileAssetDeleter.RemoveFiles(fileIds.ToArray());
         }
     }
 }
