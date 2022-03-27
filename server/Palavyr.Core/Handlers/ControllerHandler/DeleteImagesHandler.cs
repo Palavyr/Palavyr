@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -23,27 +22,51 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<DeleteImagesResponse> Handle(DeleteImagesRequest request, CancellationToken cancellationToken)
         {
             var fileAssets = await fileAssetDeleter.RemoveFiles(request.FileIds);
-            var mapped = await mapper
-                .MapMany(
-                    fileAssets
-                        .Where(x => !x.RiskyNameWithExtension.StartsWith("Preview-")));
+            var mapped = await mapper.MapMany(FilterResponsesOut(fileAssets));
             return new DeleteImagesResponse(mapped);
         }
-    }
 
-    public class DeleteImagesResponse
-    {
-        public DeleteImagesResponse(IEnumerable<FileAssetResource> response) => Response = response;
-        public IEnumerable<FileAssetResource> Response { get; set; }
-    }
 
-    public class DeleteImagesRequest : IRequest<DeleteImagesResponse>
-    {
-        public DeleteImagesRequest(string[] fileIds)
+        private IEnumerable<FileAsset> FilterResponsesOut(IEnumerable<FileAsset> fileAssets)
         {
-            FileIds = fileIds;
-        }
+            var barred = new[] { ResponsePrefix.Palavyr, ResponsePrefix.Preview };
 
-        public string[] FileIds { get; set; }
+            var filtered = new List<FileAsset>();
+            foreach (var fileAsset in fileAssets)
+            {
+                var isBarred = false;
+                foreach (var bar in barred)
+                {
+                    if (fileAsset.RiskyNameStem.StartsWith(bar))
+                    {
+                        isBarred = true;
+                    }
+                }
+
+                if (!isBarred)
+                {
+                    filtered.Add(fileAsset);
+                }
+            }
+
+            return filtered;
+        }
     }
 }
+
+public class DeleteImagesResponse
+{
+    public DeleteImagesResponse(IEnumerable<FileAssetResource> response) => Response = response;
+    public IEnumerable<FileAssetResource> Response { get; set; }
+}
+
+public class DeleteImagesRequest : IRequest<DeleteImagesResponse>
+{
+    public DeleteImagesRequest(string[] fileIds)
+    {
+        FileIds = fileIds;
+    }
+
+    public string[] FileIds { get; set; }
+}
+

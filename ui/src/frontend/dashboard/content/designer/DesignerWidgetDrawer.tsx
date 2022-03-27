@@ -81,6 +81,8 @@ const initializer = async (context: IAppContext, repository: PalavyrRepository) 
     SnowflakeRenderFileAsset(client, context);
     render("ProvideInfo", "Thanks so much for using Palavyr!", "8", "9", context, client);
     render("TakeNumber", "Give us a number.", "9", "10", context, client);
+
+    scrollToTop();
 };
 
 const SnowflakeRenderFileAsset = (client: PalavyrWidgetRepository, context: IAppContext) => {

@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import { CircularProgress, Grid, makeStyles } from "@material-ui/core";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { FileAssetUpload } from "./FileAssetUpload";

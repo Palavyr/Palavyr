@@ -116,7 +116,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             var listFontColor = "#100F0F";
             var selectListColor = "##F5F1F1";
             var headerColor = "#DBE3E3";
-            var fontFamily = "Architects Daughter";
+            var fontFamily = "Gowun Dodum";
             var landingHeader = "<h2>Welcome!</h2>";
             var chatHeader = "<h2>Dogs Galore</h2><h4>We're the Dog Experts!</h4>";
             var placeholder = "Write here...";

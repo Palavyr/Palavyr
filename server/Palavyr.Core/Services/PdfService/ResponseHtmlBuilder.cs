@@ -51,12 +51,15 @@ namespace Palavyr.Core.Services.PdfService
             string logoLink = null!;
             if (logo != null)
             {
-                logoLink = await linkCreator.CreateLink(logo.AccountLogoFileId);
+                if (!string.IsNullOrEmpty(logo.AccountLogoFileId))
+                {
+                    logoLink = await linkCreator.CreateLink(logo.AccountLogoFileId);
+                }
             }
 
             var options = new ResponseCustomizationOptions
             {
-                LogoLink = logoLink,
+                LogoLink = logoLink ?? "",
                 CompanyName = account.CompanyName,
                 PhoneNumber = account.PhoneNumber,
                 EmailAddress = string.IsNullOrEmpty(intent.AreaSpecificEmail) ? account.EmailAddress : intent.AreaSpecificEmail
