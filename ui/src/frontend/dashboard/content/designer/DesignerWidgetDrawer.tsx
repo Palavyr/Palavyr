@@ -74,6 +74,35 @@ const initializer = async (context: IAppContext, repository: PalavyrRepository) 
     render("ProvideInfo", "You can use this display to customize your widget.", "1", "2", context, client);
 
     // Special Snowflake button code
+    SnowflakeRenderButtons(client, context);
+    render("Selection", "Here is your intent selector.", "5", "6", context, client);
+    render("CollectDetails", "Here is your details collector.", "6", "7", context, client);
+
+    SnowflakeRenderFileAsset(client, context);
+    render("ProvideInfo", "Thanks so much for using Palavyr!", "8", "9", context, client);
+    render("TakeNumber", "Give us a number.", "9", "10", context, client);
+};
+
+const SnowflakeRenderFileAsset = (client: PalavyrWidgetRepository, context: IAppContext) => {
+    const node = { text: "View your image", nodeId: "7", nodeChildrenString: "8" } as Partial<WidgetNodeResource>;
+
+    const component = ComponentRegistry["ShowResponseFileAsset"]({ node, nodeList: [], client, convoId: "test-123", designer: true });
+    const m = {
+        type: MessageTypes.BOT,
+        component,
+        props: {},
+        sender: CSS_LINKER_and_NODE_TYPE.BOT,
+        timestamp: new Date(),
+        showAvatar: true,
+        customId: "",
+        unread: true,
+        nodeType: "",
+        specialId: "",
+    };
+    context.addNewBotMessage(m);
+};
+
+const SnowflakeRenderButtons = (client: PalavyrWidgetRepository, context: IAppContext) => {
     const node = { text: "Here are some example buttons", nodeId: "2", nodeChildrenString: "3,4" } as WidgetNodeResource;
     const nodeList = [
         { nodeId: "3", optionPath: "Yes" },
@@ -93,12 +122,6 @@ const initializer = async (context: IAppContext, repository: PalavyrRepository) 
         specialId: "",
     };
     context.addNewBotMessage(m);
-
-    render("Selection", "Here is your intent selector.", "5", "6", context, client);
-    render("CollectDetails", "Here is your details collector.", "6", "7", context, client);
-    render("ProvideInfoWithPdfLink", "Here is your pdf link.", "7", "8", context, client);
-    render("ProvideInfo", "Thanks so much for using Palavyr!", "8", "9", context, client);
-    render("TakeNumber", "Give us a number.", "9", "10", context, client);
 };
 
 export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawerProps) => {
@@ -106,11 +129,25 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
     const wcls = useWidgetStyles();
     const theme = useTheme();
     const context = useAppContext();
+    context.AppContext.responseFileAsset = {
+        fileName: "test.png",
+        link: "https://i.chzbgr.com/full/9591491840/h124EF692/cat-oizzyandthef",
+        fileId: "1234",
+    };
 
     const DrawerWidget = (
         <div className={classNames(cls.widget, wcls.pwbox)}>
             {widgetPreferences && (
-                <WidgetContext.Provider value={{ preferences: widgetPreferences, chatStarted: true, setChatStarted: () => null, setConvoId: () => null, convoId: "demo", context }}>
+                <WidgetContext.Provider
+                    value={{
+                        preferences: widgetPreferences,
+                        chatStarted: true,
+                        setChatStarted: () => null,
+                        setConvoId: () => null,
+                        convoId: "demo",
+                        context,
+                    }}
+                >
                     <WidgetLayout initializer={initializer} />
                 </WidgetContext.Provider>
             )}

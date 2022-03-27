@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.S3;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
-using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.TemporaryPaths;
 using Palavyr.Core.Stores;
@@ -26,26 +23,18 @@ namespace Palavyr.Core.Services.AttachmentServices
         private readonly IEntityStore<Area> intentStore;
         private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly ICloudFileDownloader cloudFileDownloader;
-
-
-        private readonly IConfiguration configuration;
-        private readonly ILinkCreator linkCreator;
         private readonly IBusinessRules businessRules;
 
         public AttachmentRetriever(
             IEntityStore<Area> intentStore,
             IEntityStore<FileAsset> fileAssetStore,
             ICloudFileDownloader cloudFileDownloader,
-            IConfiguration configuration,
-            ILinkCreator linkCreator,
             IBusinessRules businessRules
         )
         {
             this.intentStore = intentStore;
             this.fileAssetStore = fileAssetStore;
             this.cloudFileDownloader = cloudFileDownloader;
-            this.configuration = configuration;
-            this.linkCreator = linkCreator;
             this.businessRules = businessRules;
         }
 
@@ -98,11 +87,10 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         private async Task<IHaveBeenDownloadedFromCloudToLocal[]> DownloadForAttachmentToEmail(List<CloudFileDownloadRequest> cloudFileDownloadRequests)
         {
-            var userDataBucket = configuration.GetUserDataBucket();
-            var localFilePaths = await cloudFileDownloader.DownloadObjectsFromS3(userDataBucket, cloudFileDownloadRequests);
+            var localFilePaths = await cloudFileDownloader.DownloadObjectsFromS3(cloudFileDownloadRequests);
             if (localFilePaths == null)
             {
-                throw new AmazonS3Exception("Unable to download to server!");
+                throw new DomainException("Unable to download attachmentFiles");
             }
 
             var totalAttachmentsAllowed = await businessRules.GetAllowedAttachments();

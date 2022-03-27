@@ -8,20 +8,23 @@ using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Models.Conversation
 {
-    public class ConversationNodeUpdater : IConversationNodeUpdater
+    public class ConversationUpdater : IConversationNodeUpdater
     {
         private readonly IAccountIdTransport accountIdTransport;
         private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IOrphanRemover orphanRemover;
 
-        public ConversationNodeUpdater(
+        public ConversationUpdater(
             IAccountIdTransport accountIdTransport,
             IEntityStore<Area> intentStore,
+            IEntityStore<ConversationNode> convoNodeStore,
             IOrphanRemover orphanRemover
         )
         {
             this.accountIdTransport = accountIdTransport;
             this.intentStore = intentStore;
+            this.convoNodeStore = convoNodeStore;
             this.orphanRemover = orphanRemover;
         }
 
@@ -31,7 +34,9 @@ namespace Palavyr.Core.Models.Conversation
             var deOrphanedAreaConvo = orphanRemover.RemoveOrphanedNodes(mappedUpdates);
 
             var intent = await intentStore.GetIntentComplete(intentId);
-            intent.ConversationNodes.Clear();
+            var currentNodes = intent.ConversationNodes;
+            await convoNodeStore.Delete(currentNodes);
+            
             intent.ConversationNodes.AddRange(deOrphanedAreaConvo);
 
             return deOrphanedAreaConvo;

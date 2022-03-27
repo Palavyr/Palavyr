@@ -1,9 +1,7 @@
 ﻿using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
-using Newtonsoft.Json;
 using Palavyr.API.Controllers.Accounts;
 using Palavyr.API.Controllers.Accounts.Setup;
 using Palavyr.Core.GlobalConstants;

@@ -51,11 +51,6 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             };
 
             logger.LogDebug("Trying to send email...");
-
-            // if (determineCurrentOperatingSystem.IsWindows())
-            // {
-            logger.LogDebug("Emailing from windows -- using raw ses");
-
             try
             {
                 await EmailClient.SendEmailAsync(sendRequest);
@@ -69,35 +64,6 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
                 //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
                 return false;
             }
-            // }
-
-            // if (determineCurrentOperatingSystem.IsLinux()) // Is Lambda
-            // {
-            //     logger.LogDebug("Emailing from linux -- using smtp");
-            //
-            //     try
-            //     {
-            //         logger.LogDebug("TRYING");
-            //
-            //         await smtpEmailClient.SendSmtpEmail(
-            //             fromAddress,
-            //             toAddress,
-            //             subject,
-            //             htmlBody
-            //         );
-            //         logger.LogDebug("SMTP Email send was successful!");
-            //         return true;
-            //     }
-            //     catch (Exception ex)
-            //     {
-            //         logger.LogDebug("SMTP Email was not sent. ");
-            //         logger.LogDebug($"Error: {ex.Message}");
-            //         //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
-            //         return false;
-            //     }
-            // }
-
-            throw new Exception("OS Not supported for sending emails");
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetDemoWidgetPreCheckResponse> Handle(GetDemoWidgetPreCheckRequest request, CancellationToken cancellationToken)
         {
             var widgetPrefs = await widgetPreferenceStore.Get(widgetPreferenceStore.AccountId, s => s.AccountId);
-            var intent = await intentStore.GetActiveAreasWithConvoAndDynamicAndStaticTables();
+            var intent = await intentStore.GetActiveIntentsWithConvoAndDynamicAndStaticTables();
 
             var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(intent, widgetPrefs, true, logger);
             logger.LogDebug($"Pre-check run successful.");

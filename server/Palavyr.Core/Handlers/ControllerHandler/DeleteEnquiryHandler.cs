@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Resources.Responses;
@@ -22,20 +24,27 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<DeleteEnquiryResponse> Handle(DeleteEnquiryRequest request, CancellationToken cancellationToken)
         {
-            await enquiryDeleter.DeleteEnquiries(request.FileReferences, cancellationToken);
+            await enquiryDeleter.DeleteEnquiries(request.ConversationIds);
             var result = await conversationRecordRetriever.RetrieveConversationRecords();
-            return new DeleteEnquiryResponse(result);
+
+            bool FilterRecentlyDeleted(Enquiry e)
+            {
+                return !request.ConversationIds.Contains(e.ConversationId);
+            }
+
+            var filtered = result.Where(FilterRecentlyDeleted);
+            return new DeleteEnquiryResponse(filtered);
         }
     }
 
     public class DeleteEnquiryResponse
     {
-        public DeleteEnquiryResponse(Enquiry[] response) => Response = response;
-        public Enquiry[] Response { get; set; }
+        public DeleteEnquiryResponse(IEnumerable<Enquiry> response) => Response = response;
+        public IEnumerable<Enquiry> Response { get; set; }
     }
 
     public class DeleteEnquiryRequest : IRequest<DeleteEnquiryResponse>
     {
-        public string[] FileReferences { get; set; }
+        public string[] ConversationIds { get; set; }
     }
 }

@@ -8,7 +8,7 @@ import { SelectFromExistingFileAssets } from "./SelectFromExistingFileAssets";
 
 export interface UploadOrChooseFromExistingProps {
     handleFileSave: (files: File[]) => void;
-    currentFileAssetId: string;
+    currentFileAssetId?: string | null;
     onSelectChange: (_: any, option: FileAssetResource) => void;
     initialAccordianState?: boolean;
     summary?: string;

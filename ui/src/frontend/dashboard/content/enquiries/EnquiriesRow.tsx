@@ -61,8 +61,7 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
 
     const responseLinkOnClick = async (enquiry: EnquiryRow) => {
         markAsSeen(enquiry.conversationId);
-        const signedUrl = await repository.Enquiries.getSignedUrl(enquiry.linkReference.fileReference);
-        window.open(signedUrl, "_blank");
+        window.open(enquiry.fileAssetResource.link, "_blank");
     };
 
     const convoDetailsOnClick = async (enquiry: EnquiryRow) => {
@@ -73,11 +72,9 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
 
     const deleteEnquiryOnClick = async (enquiry: EnquiryRow) => {
         setDeleteIsWorking(true);
-        setTimeout(async () => {
-            const enquiries = await repository.Enquiries.deleteSelectedEnquiries([enquiry.conversationId]);
-            setEnquiries(enquiries);
-            setDeleteIsWorking(false);
-        }, 1500);
+        const enquiries = await repository.Enquiries.deleteSelectedEnquiries([enquiry.conversationId]);
+        setEnquiries(enquiries);
+        setDeleteIsWorking(false);
     };
 
     const { formattedDate, formattedTime } = formatLegitTimeStamp(enquiry.timeStamp);

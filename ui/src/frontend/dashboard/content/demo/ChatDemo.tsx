@@ -34,7 +34,6 @@ export const ChatDemoPage = () => {
     const [preCheckErrors, setPreCheckErrors] = useState<PreCheckError[]>([]);
     const [apiKey, setApiKey] = useState<string>("");
     const [iframeRefreshed, reloadIframe] = useState<boolean>(false);
-    const [widgetPreferences, setWidgetPreferences] = useState<WidgetPreferences>();
 
     const cls = useStyles(preCheckErrors.length > 0);
 
@@ -52,25 +51,17 @@ export const ChatDemoPage = () => {
     const loadDemoWidget = useCallback(async () => {
         const key = await repository.Settings.Account.getApiKey();
         setApiKey(key);
-
-        const currentWidgetPreferences = await repository.WidgetDemo.GetWidetPreferences();
-        setWidgetPreferences(currentWidgetPreferences);
     }, []);
 
     useEffect(() => {
         loadDemoWidget();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <Paper className={cls.paper}>
             <AreasInNeedOfAttention preCheckErrors={preCheckErrors} />
             <ChatDemoHeader />
-            <Grid container alignItems="center" justify="center">
-                <Grid item xs={4}>
-                    {apiKey && <PalavyrDemoWidget preCheckErrors={preCheckErrors} apiKey={apiKey} iframeRefreshed={iframeRefreshed} />}
-                </Grid>
-            </Grid>
+            <Align>{apiKey && <PalavyrDemoWidget preCheckErrors={preCheckErrors} apiKey={apiKey} iframeRefreshed={iframeRefreshed} />}</Align>
             <div className={cls.reloadButton}>
                 <SinglePurposeButton classes={cls.button} variant="outlined" color="primary" buttonText="Reload" onClick={() => reloadIframe(!iframeRefreshed)} />
             </div>

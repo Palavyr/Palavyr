@@ -6,7 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.TemporaryPaths;
 
@@ -14,7 +16,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
 {
     public interface IS3Downloader
     {
-        Task<IHaveBeenDownloadedFromCloudToLocal[]?> DownloadObjectsFromS3(string? bucket, List<CloudFileDownloadRequest> metas, CancellationToken cancellationToken);
+        Task<IHaveBeenDownloadedFromCloudToLocal[]?> DownloadObjectsFromS3(List<CloudFileDownloadRequest> metas, CancellationToken cancellationToken);
         Task<bool> CheckIfFileExists(string bucket, string key);
     }
 
@@ -22,27 +24,32 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
     {
         private readonly ITemporaryPath temporaryPath;
         private readonly IAmazonS3 s3Client;
+        private readonly IConfiguration configuration;
         private readonly ILogger<IS3Downloader> logger;
+
+        private string UserDataBucket => configuration.GetUserDataBucket();
 
         public S3Downloader(
             ITemporaryPath temporaryPath,
             IAmazonS3 s3Client,
+            IConfiguration configuration,
             ILogger<IS3Downloader> logger
         )
         {
             this.temporaryPath = temporaryPath;
             this.s3Client = s3Client;
+            this.configuration = configuration;
             this.logger = logger;
         }
 
-        public async Task<IHaveBeenDownloadedFromCloudToLocal[]?> DownloadObjectsFromS3(string? bucket, List<CloudFileDownloadRequest> metas, CancellationToken cancellationToken)
+        public async Task<IHaveBeenDownloadedFromCloudToLocal[]?> DownloadObjectsFromS3(List<CloudFileDownloadRequest> metas, CancellationToken cancellationToken)
         {
             var areComplete = new List<Task<GetObjectResponse>>();
             foreach (var meta in metas)
             {
                 var objectRequest = new GetObjectRequest()
                 {
-                    BucketName = bucket,
+                    BucketName = UserDataBucket,
                     Key = meta.LocationKey
                 };
                 areComplete.Add(s3Client.GetObjectAsync(objectRequest));

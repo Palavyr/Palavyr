@@ -62,10 +62,8 @@ export const EnquiresPage = () => {
         setDeleteIsLoading(true);
         const seenEnquiries = enquiries.filter((x: EnquiryRow) => x.seen);
         const enqs = await repository.Enquiries.deleteSelectedEnquiries(seenEnquiries.map((x: EnquiryRow) => x.conversationId));
-        setTimeout(() => {
-            setEnquiries(enqs);
-            setDeleteIsLoading(false);
-        }, 1000);
+        setEnquiries(enqs);
+        setDeleteIsLoading(false);
     };
 
     const loadEnquiries = useCallback(async () => {

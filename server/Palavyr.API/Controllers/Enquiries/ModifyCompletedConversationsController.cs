@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -18,7 +19,7 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
         [HttpPut(Route)]
-        public async Task<Enquiry[]> UpdateCompletedConversation(string conversationId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Enquiry>> UpdateCompletedConversation(string conversationId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new ModifyCompletedConversationsRequest(conversationId), cancellationToken);
             return response.Response;

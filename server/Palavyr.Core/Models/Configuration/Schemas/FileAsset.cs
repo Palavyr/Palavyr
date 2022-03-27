@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.IO;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Services.PdfService;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {

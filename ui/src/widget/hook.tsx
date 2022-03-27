@@ -1,5 +1,5 @@
-import { ContextProperties, DynamicResponses, KeyValues, UserMessageData, BotMessageData, WidgetPreferences } from "@Palavyr-Types";
-import { useEffect, useState } from "react";
+import { ContextProperties, DynamicResponses, KeyValues, UserMessageData, BotMessageData, WidgetPreferences, FileAssetResource } from "@Palavyr-Types";
+import { useState } from "react";
 
 export interface BehaviorState {
     disabledInput: boolean;
@@ -17,7 +17,7 @@ export interface ContextState {
     dynamicResponses: DynamicResponses;
     numIndividuals: number | null;
     widgetPreferences: WidgetPreferences | null;
-    pdfLink: string | null;
+    responseFileAsset: FileAssetResource | null;
 }
 export interface MessagesState {
     messages: (UserMessageData | BotMessageData)[];
@@ -35,7 +35,7 @@ const defaultContextProperties: ContextProperties = {
     region: "",
     numIndividuals: null,
     widgetPreferences: null,
-    pdfLink: null,
+    responseFileAsset: { fileId: "", fileName: "", link: "" },
 };
 
 const defaultMessages: MessagesState = {
@@ -58,10 +58,6 @@ const defaultAppContext: AppContext = {
 
 export const useAppContext = (): IAppContext => {
     const [AppContext, setAppContext] = useState<AppContext>(defaultAppContext);
-
-    // useEffect(() => {
-    //     setAppContext(defaultAppContext);
-    // }, []);
 
     const addNewUserMessage = (message: UserMessageData) => {
         AppContext.messages.push(message);
@@ -147,7 +143,7 @@ export const useAppContext = (): IAppContext => {
     const disableMessageLoader = () => {
         setAppContext({
             ...AppContext,
-            loading: false
+            loading: false,
         });
     };
 
@@ -221,8 +217,12 @@ export const useAppContext = (): IAppContext => {
         });
     };
 
-    const setPdfLink = (pdfLink: string) => {
-        setAppContext({ ...AppContext, pdfLink });
+    const setResponseFileAsset = (responseFileAsset: FileAssetResource) => {
+        AppContext.responseFileAsset = responseFileAsset;
+        setAppContext({
+            ...AppContext,
+            responseFileAsset: AppContext.responseFileAsset,
+        });
     };
 
     const setDynamicResponses = (dynamicResponses: DynamicResponses) => {
@@ -250,7 +250,7 @@ export const useAppContext = (): IAppContext => {
         setEmailAddress,
         setRegion,
         setWidgetPreferences,
-        setPdfLink,
+        setResponseFileAsset,
         setDynamicResponses,
         setKeyValues,
 
@@ -270,7 +270,7 @@ export const useAppContext = (): IAppContext => {
         region: AppContext.region,
         numIndividuals: AppContext.numIndividuals,
         widgetPreferences: AppContext.widgetPreferences,
-        pdfLink: AppContext.pdfLink,
+        responseFileAsset: AppContext.responseFileAsset,
         dynamicResponses: AppContext.dynamicResponses,
         keyValues: AppContext.keyValues,
         disabledInput: AppContext.disabledInput,
@@ -288,8 +288,6 @@ export interface IAppContext {
     enableMessageLoader: () => void;
     disableMessageLoader: () => void;
 
-
-
     toggleUserDetails: () => void;
     openUserDetails: () => void;
     closeUserDetails: () => void;
@@ -301,7 +299,7 @@ export interface IAppContext {
     setEmailAddress: (emailAddress: string) => void;
     setRegion: (region: string) => void;
     setWidgetPreferences: (widgetPreferences: any) => void;
-    setPdfLink: (pdfLink: string) => void;
+    setResponseFileAsset: (responseFileAssetResource: FileAssetResource) => void;
     setDynamicResponses: (dynamicResponses: DynamicResponses) => void;
     setKeyValues: (keyValues: KeyValues) => void;
 
@@ -321,7 +319,7 @@ export interface IAppContext {
     region: string;
     numIndividuals: number | null;
     widgetPreferences: WidgetPreferences | null;
-    pdfLink: string | null;
+    responseFileAsset: FileAssetResource | null;
     dynamicResponses: DynamicResponses;
     keyValues: KeyValues;
     disabledInput: boolean;

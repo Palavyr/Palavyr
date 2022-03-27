@@ -24,7 +24,7 @@ export const renderNextBotMessage = (context: IAppContext, node: WidgetNodeResou
     }
 
     const makeNextComponent = ComponentRegistry[node.nodeComponentType];
-    const component = makeNextComponent({ node, nodeList, client, convoId });
+    const component = makeNextComponent({context, node, nodeList, client, convoId });
 
     const botMessage = {
         type: MessageTypes.BOT,

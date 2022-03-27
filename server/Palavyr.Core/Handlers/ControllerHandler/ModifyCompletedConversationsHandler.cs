@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -29,8 +30,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyCompletedConversationsResponse
     {
-        public ModifyCompletedConversationsResponse(Enquiry[] response) => Response = response;
-        public Enquiry[] Response { get; set; }
+        public ModifyCompletedConversationsResponse(IEnumerable<Enquiry> response) => Response = response;
+        public IEnumerable<Enquiry> Response { get; set; }
     }
 
     public class ModifyCompletedConversationsRequest : IRequest<ModifyCompletedConversationsResponse>

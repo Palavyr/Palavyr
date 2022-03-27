@@ -124,7 +124,7 @@ namespace Test.Common.TestFileAssetServices
 
         public async Task<IEnumerable<string>> CreateManyLinks(IEnumerable<string> fileAssetIds)
         {
-            return await CreateManyLinks(fileAssetIds.ToArray());
+            return await CreateManyLinks(fileAssetIds);
         }
     }
 }

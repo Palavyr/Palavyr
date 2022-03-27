@@ -18,6 +18,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string MultipleChoiceAsPath => DefaultNodeTypeOptions.MultipleChoiceAsPath.StringName;
             public static string MultipleChoiceContinue => DefaultNodeTypeOptions.MultipleChoiceContinue.StringName;
 
+            public static string ShowFileAsset => DefaultNodeTypeOptions.ShowFileAsset.StringName;
             public static string ShowImage => DefaultNodeTypeOptions.ShowImage.StringName;
             public static string TooComplicated => DefaultNodeTypeOptions.TooComplicated.StringName;
             public static string SendResponse => DefaultNodeTypeOptions.SendResponse.StringName;
@@ -27,7 +28,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string Selection => DefaultNodeTypeOptions.Selection.StringName;
             public static string CollectDetails => DefaultNodeTypeOptions.CollectDetails.StringName;
 
-            public static string ProvideInfoWithPdfLink => DefaultNodeTypeOptions.ProvideInfoWithPdfLink.StringName;
         }
 
         public static List<NodeTypeOption> IntroNodeOptionList =>
@@ -55,7 +55,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new SendResponse(),
                 new TooComplicated(),
                 new Anabranch(),
-                new ShowImage(),
+                // new ShowImage(),
+                new ShowFileAsset(),
                 new EndWithoutEmail(),
                 new LoopbackAnchor(),
                 new Loopback()
@@ -73,6 +74,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         public static Anabranch CreateAnabranch() => new Anabranch();
         public static ShowImage CreateShowImage() => new ShowImage();
+        public static ShowFileAsset CreateShowFileAsset() => new ShowFileAsset();
 
         public static TakeCurrency CreateTakeCurrency() => new TakeCurrency();
         public static TakeNumber CreateTakeNumber() => new TakeNumber();
@@ -165,6 +167,33 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.I;
+            }
+        }
+
+        public class ShowFileAsset : NodeTypeOption
+
+        {
+            public new static string StringName => nameof(ShowFileAsset);
+
+            public ShowFileAsset()
+            {
+                Text = "Show File";
+                Value = StringName;
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() {"Continue"};
+                IsMultiOptionType = false;
+                IsTerminalType = false;
+                GroupName = InfoProvide;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsDynamicType = false;
+                NodeComponentType = NodeComponentTypes.ShowFileAsset;
+                IsCurrency = false;
+                IsMultiOptionEditable = false;
+                IsImageNode = true;
+                NodeTypeCode = NodeTypeCode.IX;
             }
         }
 

@@ -8,7 +8,7 @@ namespace Palavyr.Core.Models
 {
     public interface IEndingSequenceAttacher
     {
-        List<ConversationNode> AttachEndingSequenceToNodeList(List<ConversationNode> nodeList, string areaId, string accountId);
+        List<ConversationNode> AttachEndingSequenceToNodeList(List<ConversationNode> nodeList, string intentId, string accountId);
     }
 
     public class EndingSequenceAttacher : IEndingSequenceAttacher
@@ -32,25 +32,25 @@ namespace Palavyr.Core.Models
 
             return introSequence;
         }
-        
-        
-        public List<ConversationNode> AttachEndingSequenceToNodeList(List<ConversationNode> nodeList, string areaId, string accountId)
+
+        public List<ConversationNode> AttachEndingSequenceToNodeList(List<ConversationNode> nodeList, string intentId, string accountId)
         {
-            var sendEmail = endingSequenceNodes.CreateSendEmail(areaId, accountId, "Placeholder");
-            var restartAfterDontSendEmail = endingSequenceNodes.CreateDontSendEmailRestart(areaId, accountId, "Placeholder");
-            var mayWeSendAnEmail = endingSequenceNodes.CreateMayWeSendAnEmail(areaId, accountId, sendEmail.NodeId, restartAfterDontSendEmail.NodeId);
-            var emailSendWasSuccessful = endingSequenceNodes.CreateEmailSendWasSuccessful(areaId, accountId, InternalNodeTypeOptions.Restart.StringName);
-            var restart = endingSequenceNodes.CreateRestart(areaId, accountId, "Terminate");
+            var sendEmail = endingSequenceNodes.CreateSendEmail(intentId, accountId, "Placeholder");
+            var restartAfterDontSendEmail = endingSequenceNodes.CreateDontSendEmailRestart(intentId, accountId, "Placeholder");
+            var mayWeSendAnEmail = endingSequenceNodes.CreateMayWeSendAnEmail(intentId, accountId, sendEmail.NodeId, restartAfterDontSendEmail.NodeId);
+            var restart = endingSequenceNodes.CreateRestart(intentId, accountId, "Terminate");
+            var showYourFileAttachmentIfOneExists = endingSequenceNodes.CreateShowResponseFileAsset(intentId, accountId, restart.NodeId);
+            var emailSendWasSuccessful = endingSequenceNodes.CreateEmailSendWasSuccessful(intentId, accountId, showYourFileAttachmentIfOneExists.NodeId);
 
-            var retrySendEmailSecondAttempt = endingSequenceNodes.CreateRetrySendEmailSecondAttempt(areaId, accountId, "Placeholder");
-            var emailSendFailedFirstAttempt = endingSequenceNodes.CreateEmailSendFailedFirstAttempt(areaId, accountId, retrySendEmailSecondAttempt.NodeId);
-            var fallbackRetrySendEmailSecondAttempt = endingSequenceNodes.CreateFallbackRetrySendEmailSecondAttempt(areaId, accountId, "Placeholder");
-            var fallbackEmailSendFailedFirstAttempt = endingSequenceNodes.CreateFallbackEmailSendFailedFirstAttempt(areaId, accountId, fallbackRetrySendEmailSecondAttempt.NodeId);
+            var retrySendEmailSecondAttempt = endingSequenceNodes.CreateRetrySendEmailSecondAttempt(intentId, accountId, "Placeholder");
+            var emailSendFailedFirstAttempt = endingSequenceNodes.CreateEmailSendFailedFirstAttempt(intentId, accountId, retrySendEmailSecondAttempt.NodeId);
+            var fallbackRetrySendEmailSecondAttempt = endingSequenceNodes.CreateFallbackRetrySendEmailSecondAttempt(intentId, accountId, "Placeholder");
+            var fallbackEmailSendFailedFirstAttempt = endingSequenceNodes.CreateFallbackEmailSendFailedFirstAttempt(intentId, accountId, fallbackRetrySendEmailSecondAttempt.NodeId);
 
-            var sendFallbackEmail = endingSequenceNodes.CreateSendFallbackEmail(areaId, accountId, "Placeholder");
-            var mayWeSendAnInformationalEmailForTooComplicated = endingSequenceNodes.CreateMayWeSendAnInformationalEmailForTooComplicated(areaId, accountId, sendFallbackEmail.NodeId, restartAfterDontSendEmail.NodeId);
+            var sendFallbackEmail = endingSequenceNodes.CreateSendFallbackEmail(intentId, accountId, "Placeholder");
+            var mayWeSendAnInformationalEmailForTooComplicated = endingSequenceNodes.CreateMayWeSendAnInformationalEmailForTooComplicated(intentId, accountId, sendFallbackEmail.NodeId, restartAfterDontSendEmail.NodeId);
 
-            var genericTooComplicated = endingSequenceNodes.CreateGenericTooComplicated(areaId, accountId);
+            var genericTooComplicated = endingSequenceNodes.CreateGenericTooComplicated(intentId, accountId);
 
 
             nodeList.Add(genericTooComplicated);
@@ -63,19 +63,19 @@ namespace Palavyr.Core.Models
                         node.NodeChildrenString = mayWeSendAnInformationalEmailForTooComplicated.NodeId;
                         continue;
                     }
-            
+
                     if (node.NodeType == DefaultNodeTypeOptions.SendResponse.StringName)
                     {
                         node.NodeChildrenString = mayWeSendAnEmail.NodeId; // we're deciding that the thanksId node will be the entry point in to the response ending sequence
                         continue;
                     }
-            
+
                     if (node.NodeType == DefaultNodeTypeOptions.EndWithoutEmail.StringName)
                     {
                         node.NodeChildrenString = restartAfterDontSendEmail.NodeId;
                         continue;
                     }
-            
+
                     throw new Exception($"Our bad - Node type: {node.NodeType} is not handled (EndingSequence.cs)");
                 }
             }
@@ -88,6 +88,7 @@ namespace Palavyr.Core.Models
                     restartAfterDontSendEmail,
                     emailSendWasSuccessful,
                     restart,
+                    showYourFileAttachmentIfOneExists,
                     emailSendFailedFirstAttempt,
                     retrySendEmailSecondAttempt,
                     fallbackEmailSendFailedFirstAttempt,

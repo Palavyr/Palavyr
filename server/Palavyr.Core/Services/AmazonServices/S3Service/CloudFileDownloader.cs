@@ -10,7 +10,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
 {
     public interface ICloudFileDownloader
     {
-        Task<IHaveBeenDownloadedFromCloudToLocal[]?> DownloadObjectsFromS3(string? bucket, List<CloudFileDownloadRequest> metas);
+        Task<IHaveBeenDownloadedFromCloudToLocal[]?> DownloadObjectsFromS3(List<CloudFileDownloadRequest> metas);
     }
 
     public class CloudFileDownloader : ICloudFileDownloader
@@ -26,9 +26,9 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
             this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
-        public async Task<IHaveBeenDownloadedFromCloudToLocal[]?> DownloadObjectsFromS3(string? bucket, List<CloudFileDownloadRequest> metas)
+        public async Task<IHaveBeenDownloadedFromCloudToLocal[]?> DownloadObjectsFromS3(List<CloudFileDownloadRequest> metas)
         {
-            return await s3Downloader.DownloadObjectsFromS3(bucket, metas, CancellationToken);
+            return await s3Downloader.DownloadObjectsFromS3(metas, CancellationToken);
         }
     }
 }

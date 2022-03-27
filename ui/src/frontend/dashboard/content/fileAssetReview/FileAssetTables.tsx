@@ -23,7 +23,7 @@ export const FileAssetTables = ({ fileAssetResources, setFileAssetResourceRecord
             {groupKeys.map(key => {
                 const groupResources = groupedFiles[key];
                 return (
-                    <Table>
+                    <Table style={{ marginBottom: "0.5rem" }}>
                         <FileAssetRecordTableHeader extension={key} />
                         <FileAssetRecordTableBody
                             fileAssetResources={groupResources}

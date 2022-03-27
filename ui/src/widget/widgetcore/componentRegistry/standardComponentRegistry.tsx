@@ -3,11 +3,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import { responseAction } from "@widgetcore/BotResponse/utils/responseAction";
 import { ConvoContextProperties } from "./registry";
-import { AreaTable, IProgressTheChat, SelectedOption, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
+import { AreaTable, FileAssetResource, IProgressTheChat, SelectedOption, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
 import { ResponseButton } from "@widgetcore/BotResponse/ResponseButton";
 import { splitValueOptionsByDelimiter } from "@widgetcore/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "@widgetcore/UserDetailsDialog/ChatLoadingSpinner";
-import { CustomImage } from "@widgetcore/BotResponse/CustomImage";
+import { FileAsset } from "@widgetcore/BotResponse/FileAsset";
 import { NumberFormatValues } from "react-number-format";
 import { TextInput } from "@widgetcore/BotResponse/number/TextInput";
 import { BotResponse } from "../BotResponse/BotResponse";
@@ -18,6 +18,7 @@ import { ChoiceList } from "@widgetcore/BotResponse/optionFormats/ChoiceList";
 import { MiniContactForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { CurrencyTextField } from "@widgetcore/BotResponse/numbers/CurrencyTextField";
 import { widgetSelection } from "@common/Analytics/gtag";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -206,21 +207,6 @@ export class StandardComponents {
         };
     }
 
-    public makeProvideInfoWithPdfLink({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
-        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
-
-        return () => {
-            const { context } = useContext(WidgetContext);
-
-            useEffect(() => {
-                if (designer) return;
-                responseAction(context, node, child, nodeList, client, convoId, null);
-            }, []);
-
-            return <BotResponse message={node.text} pdfLink={designer ? " " : context.pdfLink} />;
-        };
-    }
-
     public makeMultipleChoiceContinueButtons({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
         const valueOptions = splitValueOptionsByDelimiter(node.valueOptions);
@@ -284,12 +270,11 @@ export class StandardComponents {
         let child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const { context } = useContext(WidgetContext);
+            const { context, preferences } = useContext(WidgetContext);
             const [response, setResponse] = useState<string>("");
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
-            const { preferences } = useContext(WidgetContext);
             const cls = useStyles(preferences);
 
             const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -393,29 +378,50 @@ export class StandardComponents {
         };
     }
 
-    makeShowImage({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
+    makeShowResponseFileAsset({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const [loaded, setLoaded] = useState<boolean>(false);
-            const [link, setLink] = useState<string>("");
             const { context } = useContext(WidgetContext);
 
-            useEffect(() => {
-                (async () => {
-                    if (designer) return;
-                    const presignedUrl = await client.Widget.Get.NodeImage(node.nodeId);
-                    setLink(presignedUrl);
-                    setLoaded(false);
-                })();
+            let fileAsset: FileAssetResource | null;
+            if (designer) {
+                fileAsset = {
+                    fileName: "test.png",
+                    link: "https://i.chzbgr.com/full/9591491840/h124EF692/cat-oizzyandthef",
+                    fileId: "1234",
+                };
+            } else {
+                fileAsset = context.AppContext.responseFileAsset;
+            }
 
+            useEffect(() => {
+                if (designer) return;
                 setTimeout(() => {
                     if (designer) return;
                     responseAction(context, node, child, nodeList, client, convoId, null);
                 }, 2500);
             }, []);
 
-            return <CustomImage imageLink={link} />;
+            return fileAsset ? <FileAsset fileAsset={fileAsset} /> : <></>;
+        };
+    }
+
+    makeShowFileAsset({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
+
+        return () => {
+            const [loaded, setLoaded] = useState<boolean>(false);
+            const { context } = useContext(WidgetContext);
+
+            useEffect(() => {
+                setTimeout(() => {
+                    if (designer) return;
+                    responseAction(context, node, child, nodeList, client, convoId, null);
+                }, 2500);
+            }, []);
+
+            return <FileAsset fileAsset={node.fileAssetResource!} />;
         };
     }
 
@@ -542,8 +548,8 @@ export class StandardComponents {
                 if (response.result) {
                     const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale);
                     await client.Widget.Post.UpdateConvoRecord(completeConvo);
-                    if (response.pdfLink !== null && response.pdfLink !== "" && response.pdfLink !== undefined) {
-                        context.setPdfLink(response.pdfLink);
+                    if (response.fileAsset?.link !== null && response.fileAsset?.link !== "" && response.fileAsset?.link !== undefined) {
+                        context.setResponseFileAsset(response.fileAsset);
                     }
                 }
                 return response;

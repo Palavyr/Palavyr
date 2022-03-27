@@ -1,12 +1,13 @@
 import React, { useContext } from "react";
 import format from "date-fns/format";
-import { Link, makeStyles, Table, Typography } from "@material-ui/core";
+import { makeStyles, Table, TableBody, TableRow } from "@material-ui/core";
 import classNames from "classnames";
 import { HtmlTextMessage } from "@widgetcore/BotResponse/HtmlTextMessage";
 import { SingleRowSingleCell } from "@widgetcore/BotResponse/TableCell";
 import Fade from "react-reveal/Fade";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { WidgetPreferences } from "@Palavyr-Types";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 const useStyles = makeStyles(theme => ({
     textField: {},
@@ -82,44 +83,46 @@ export const BotResponse = ({ message, input, button, buttons, pdfLink = null }:
         <div className={cls.container}>
             <div className={cls.marker} />
             <Table className={cls.table} classes={{ root: cls.table }}>
-                <>
-                    {message && (
+                <TableBody>
+                    <>
+                        {message && (
+                            <SingleRowSingleCell>
+                                <Fade left>
+                                    <HtmlTextMessage message={message} className={cls.textField} />
+                                </Fade>
+                            </SingleRowSingleCell>
+                        )}
+                        {pdfLink && (
+                            <div className={cls.pdfLinkContainer}>
+                                <PalavyrText style={{ textDecoration: "none" }} align="center">
+                                    <a href={pdfLink} target="_blank" className={cls.link}>
+                                        Click to view your estimate now
+                                    </a>
+                                </PalavyrText>
+                            </div>
+                        )}
+                        <Fade right>
+                            <TableRow className={classNames("rcw-timestamp", cls.timeStamp)}>{format(new Date(), "hh:mm")}</TableRow>
+                        </Fade>
+                    </>
+                    {input && (
                         <SingleRowSingleCell>
-                            <Fade left>
-                                <HtmlTextMessage message={message} className={cls.textField} />
-                            </Fade>
+                            <Fade bottom>{input}</Fade>
                         </SingleRowSingleCell>
                     )}
-                    {pdfLink && (
-                        <div className={cls.pdfLinkContainer}>
-                            <Typography style={{ textDecoration: "none" }} align="center">
-                                <a href={pdfLink} target="_blank" className={cls.link}>
-                                    Click to view your estimate now
-                                </a>
-                            </Typography>
-                        </div>
+                    {button && (
+                        <SingleRowSingleCell align="right">
+                            <div className={cls.marginTop}>{button}</div>
+                        </SingleRowSingleCell>
                     )}
-                    <Fade right>
-                        <span className={classNames("rcw-timestamp", cls.timeStamp)}>{format(new Date(), "hh:mm")}</span>
-                    </Fade>
-                </>
-                {input && (
-                    <SingleRowSingleCell>
-                        <Fade bottom>{input}</Fade>
-                    </SingleRowSingleCell>
-                )}
-                {button && (
-                    <SingleRowSingleCell align="right">
-                        <div className={cls.marginTop}>{button}</div>
-                    </SingleRowSingleCell>
-                )}
-                {buttons && (
-                    <Fade bottom>
-                        <div className={classNames(cls.marginTop)} style={{ marginRight: "0.3rem", width: "100%" }}>
-                            <div style={{ flexWrap: "wrap", display: "flex", flexDirection: "row", width: "100%", justifyContent: "evenly" }}>{buttons}</div>
-                        </div>
-                    </Fade>
-                )}
+                    {buttons && (
+                        <Fade bottom>
+                            <div className={classNames(cls.marginTop)} style={{ marginRight: "0.3rem", width: "100%" }}>
+                                <div style={{ flexWrap: "wrap", display: "flex", flexDirection: "row", width: "100%", justifyContent: "evenly" }}>{buttons}</div>
+                            </div>
+                        </Fade>
+                    )}
+                </TableBody>
             </Table>
         </div>
     );

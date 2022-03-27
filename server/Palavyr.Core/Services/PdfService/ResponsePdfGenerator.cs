@@ -1,23 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.CloudKeyResolvers;
-using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.PdfService.PdfServer;
 using Palavyr.Core.Services.TemporaryPaths;
+using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.PdfService
 {
+
     public class ResponsePdfGenerator : IResponsePdfGenerator
     {
         private readonly IEntityStore<Area> intentStore;
@@ -25,15 +25,13 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IHtmlToPdfClient htmlToPdfClient;
         private readonly IResponseHtmlBuilder responseHtmlBuilder;
         private readonly IResponsePdfTableCompiler responsePdfTableCompiler;
-        private readonly IConfiguration configuration;
 
         public ResponsePdfGenerator(
             IEntityStore<Area> intentStore,
             IPdfResponseKeyResolver pdfResponseKeyResolver,
             IHtmlToPdfClient htmlToPdfClient,
             IResponseHtmlBuilder responseHtmlBuilder,
-            IResponsePdfTableCompiler responsePdfTableCompiler,
-            IConfiguration configuration
+            IResponsePdfTableCompiler responsePdfTableCompiler
         )
         {
             this.intentStore = intentStore;
@@ -41,14 +39,12 @@ namespace Palavyr.Core.Services.PdfService
             this.htmlToPdfClient = htmlToPdfClient;
             this.responseHtmlBuilder = responseHtmlBuilder;
             this.responsePdfTableCompiler = responsePdfTableCompiler;
-            this.configuration = configuration;
         }
 
         public async Task<FileAsset> GeneratePdfResponse(
             CriticalResponses criticalResponses,
             EmailRequest emailRequest,
             CultureInfo culture,
-            string uniqueId,
             string intentId)
         {
             if (emailRequest.NumIndividuals <= 0) throw new Exception("Num individuals must be 1 or more.");
@@ -58,70 +54,55 @@ namespace Palavyr.Core.Services.PdfService
             var responseTables = await responsePdfTableCompiler.CompileResponseTables(intentId, emailRequest, culture, intent.IncludeDynamicTableTotals);
             var html = await responseHtmlBuilder.BuildResponseHtml(intentId, criticalResponses, responseTables, emailRequest);
 
-            var userDataBucket = configuration.GetUserDataBucket();
-            var s3Key = pdfResponseKeyResolver.Resolve(
+            var fileStem = $"{ResponsePrefix.Palavyr}{emailRequest.ConversationId}";
+            var locationKey = pdfResponseKeyResolver.Resolve(
                 new FileName
                 {
                     Extension = ExtensionTypes.Pdf,
                     FileId = emailRequest.ConversationId,
-                    FileStem = emailRequest.ConversationId
+                    FileStem = fileStem
                 });
 
-            var fileAsset = await htmlToPdfClient.GeneratePdfFromHtml(html, s3Key, uniqueId, Paper.DefaultOptions(uniqueId)); // TODO: Make this configurable via the DBs
+            var fileAsset = await htmlToPdfClient.GeneratePdfFromHtml(html, locationKey, fileStem, Paper.DefaultOptions(fileStem)); // TODO: Make this configurable via the DBs
             return fileAsset;
         }
     }
-    
-    public interface IResponsePdfTableCompiler
-    {
-        Task<List<Table>> CompileResponseTables(string intentId, EmailRequest emailRequest, CultureInfo culture, bool includeDynamicTableTotals);
-    }
-
-    public class ResponsePdfTableCompiler : IResponsePdfTableCompiler
-    {
-        private readonly IStaticTableCompiler staticTableCompiler;
-        private readonly IDynamicTableCompilerOrchestrator dynamicTablesCompiler;
-
-        public ResponsePdfTableCompiler(IStaticTableCompiler staticTableCompiler, IDynamicTableCompilerOrchestrator dynamicTablesCompiler)
-        {
-            this.staticTableCompiler = staticTableCompiler;
-            this.dynamicTablesCompiler = dynamicTablesCompiler;
-        }
-
-        public async Task<List<Table>> CompileResponseTables(string intentId, EmailRequest emailRequest, CultureInfo culture, bool includeDynamicTableTotals)
-        {
-            var tables = new List<Table>();
-            var staticTables = await staticTableCompiler.CollectStaticTables(intentId, culture, emailRequest.NumIndividuals); // ui always sends a number - 1 or greater.
-            var dynamicTables = await dynamicTablesCompiler.CompileTablesToPdfRows(emailRequest.DynamicResponses, culture, includeDynamicTableTotals);
-
-            tables.AddRange(dynamicTables);
-            tables.AddRange(staticTables);
-            return tables;
-        }
-    }
-
-
 
     public class ResponsePdfGeneratorUpdateConversationRecordDecorator : IResponsePdfGenerator
     {
         private readonly IResponsePdfGenerator inner;
+        private readonly ICancellationTokenTransport cancellationTokenTransport;
+        private readonly IUnitOfWorkContextProvider contextProvider;
         private readonly IEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
+        private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
 
-        public ResponsePdfGeneratorUpdateConversationRecordDecorator(IResponsePdfGenerator inner, IEntityStore<ConversationRecord> convoRecordStore)
+        public ResponsePdfGeneratorUpdateConversationRecordDecorator(
+            IResponsePdfGenerator inner,
+            ICancellationTokenTransport cancellationTokenTransport,
+            IUnitOfWorkContextProvider contextProvider,
+            IEntityStore<ConversationRecord> convoRecordStore,
+            IEntityStore<FileAsset> fileAssetStore)
         {
             this.inner = inner;
+            this.cancellationTokenTransport = cancellationTokenTransport;
+            this.contextProvider = contextProvider;
             this.convoRecordStore = convoRecordStore;
+            this.fileAssetStore = fileAssetStore;
         }
 
-        public async Task<FileAsset> GeneratePdfResponse(CriticalResponses criticalResponses, EmailRequest emailRequest, CultureInfo culture, string uniqueId, string intentId)
+        public async Task<FileAsset> GeneratePdfResponse(CriticalResponses criticalResponses, EmailRequest emailRequest, CultureInfo culture, string intentId)
         {
-            var response = await inner.GeneratePdfResponse(criticalResponses, emailRequest, culture, uniqueId, intentId);
+            var fileAsset = await inner.GeneratePdfResponse(criticalResponses, emailRequest, culture, intentId);
+
+            await fileAssetStore.Create(fileAsset);
+            await contextProvider.ConfigurationContext().SaveChangesAsync(CancellationToken);
 
             var record = await convoRecordStore.GetSingleRecord(emailRequest.ConversationId);
-            record.ResponsePdfId = emailRequest.ConversationId;
+            record.ResponsePdfId = fileAsset.FileId;
             await convoRecordStore.Update(record);
 
-            return response;
+            return fileAsset;
         }
     }
 }

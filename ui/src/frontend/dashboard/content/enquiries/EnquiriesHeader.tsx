@@ -47,7 +47,7 @@ export const EnquiriesHeader = ({ checked, onChange, disabled }: EnquiresHeaderP
             </TableCell>
             <TableCell>
                 <Typography align="center" variant="h5">
-                    Area
+                    Intent
                 </Typography>
             </TableCell>
             <TableCell>

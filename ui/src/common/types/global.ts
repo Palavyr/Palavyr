@@ -4,6 +4,7 @@ import { PalavyrLinkedList } from "frontend/dashboard/content/responseConfigurat
 import React, { Dispatch, ElementType, SetStateAction } from "react";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { DynamicTableTypes } from "@frontend/dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableRegistry";
+import { IAppContext } from "widget/hook";
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />
@@ -219,18 +220,10 @@ export type StaticTableValidationResult = {
 type HTML = string;
 
 export type FileAssetResource = {
-    fileName: string, // the risky Name with extension
-    fileId: string, // the file id
-    link: string, // a link to the file (local or cloud)
-}
-
-// export type FileLink = {
-//     fileId: string;
-//     fileName: string;
-//     link: string;
-//     isUrl: boolean;
-//     s3Key: string;
-// };
+    fileName: string; // the risky Name with extension
+    fileId: string; // the file id
+    link: string; // a link to the file (local or cloud)
+};
 
 export type FileLinkReference = {
     fileReference: string;
@@ -241,7 +234,7 @@ export type FileLinkReference = {
 export type EnquiryRow = {
     id: number;
     conversationId: string;
-    linkReference: FileLinkReference;
+    fileAssetResource: FileAssetResource;
     timeStamp: string;
     accountId: string;
     areaName: string;
@@ -1016,6 +1009,7 @@ export type WidgetNodeResource = {
     isDynamicTableNode: boolean;
     dynamicType: string | null;
     resolveOrder: number | null;
+    fileAssetResource: FileAssetResource | null;
     // unitGroup: UnitGroups | null;
     // unitPrettyName: UnitPrettyNames | null;
     // currencySymbol: string | null;
@@ -1084,7 +1078,7 @@ export type WidgetPreCheckResult = {
 export type SendEmailResultResponse = {
     nextNodeId: string;
     result: boolean;
-    pdfLink?: string;
+    fileAsset?: FileAssetResource;
 };
 
 export interface IProgressTheChat {
@@ -1139,7 +1133,7 @@ export type ContextProperties = {
     dynamicResponses: DynamicResponses;
     numIndividuals: number | null;
     widgetPreferences: WidgetPreferences | null;
-    pdfLink: string | null;
+    responseFileAsset: FileAssetResource;
 };
 
 export interface ImageState {

@@ -206,8 +206,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         const needsPassword = await repository.Settings.Account.CheckNeedsPassword();
         setAccountTypeNeedsPassword(needsPassword);
 
-        const enqs = await repository.Enquiries.getEnquiries();
-        const numUnseen = enqs.filter((x: EnquiryRow) => !x.seen).length;
+        const numUnseen = await repository.Enquiries.getEnquiryCount();
         setUnseenNotifications(numUnseen);
 
         if (areaIdentifier) {

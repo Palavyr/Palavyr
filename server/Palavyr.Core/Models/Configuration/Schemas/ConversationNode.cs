@@ -30,7 +30,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool IsMultiOptionEditable { get; set; }
         public bool IsImageNode { get; set; }
         public string? ImageId { get; set; } // no extension on this (don't add .png)
-
+        // public string? FileId { get; set; } // TODO: Migration to add this and move away from imageId
         public string? OptionPath { get; set; }
         public string? ValueOptions { get; set; }
         public string? NodeType { get; set; }

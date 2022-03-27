@@ -1,10 +1,8 @@
 using System;
 using Autofac;
-using MediatR;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -102,7 +100,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<CloudCompatibleKeyResolver>().As<ICloudCompatibleKeyResolver>();
             builder.RegisterType<CompileSenderDetails>().As<ICompileSenderDetails>();
             builder.RegisterType<CompletedConversationModifier>().As<ICompletedConversationModifier>();
-            builder.RegisterType<ConversationNodeUpdater>().As<IConversationNodeUpdater>();
+            builder.RegisterType<ConversationUpdater>().As<IConversationNodeUpdater>();
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>();
             builder.RegisterType<ConversationRecordRetriever>().As<IConversationRecordRetriever>();
             builder.RegisterType<CriticalResponses>().As<ICriticalResponses>();

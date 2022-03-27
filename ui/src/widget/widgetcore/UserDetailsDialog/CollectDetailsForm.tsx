@@ -119,11 +119,6 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
 
     return (
         <>
-            {/* <video>
-                <source src="./public/background-gif.mp4" type="video/mp4" />
-            </video> */}
-
-            {/* <img src="./background-gif.mp4" alt="background" height={"100%"} width={"100%"} style={{ height: "100vh", width: "100%" }} /> */}
             <Dialog
                 open={context.userDetailsVisible && chatStarted}
                 className={cls.baseDialogCollectionForm}
@@ -134,7 +129,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
                     scrollPaper: cls.dialogPaperScrollPaperCollectionForm,
                 }}
                 BackdropProps={{ className: cls.backgropPropsClassName }}
-                disableBackdropClick
+                onClose={_ => null}
                 hideBackdrop={false}
                 disableEscapeKeyDown
             >

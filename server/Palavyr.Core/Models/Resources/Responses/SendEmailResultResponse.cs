@@ -1,3 +1,5 @@
+using Palavyr.Core.Mappers;
+
 #nullable enable
 namespace Palavyr.Core.Models.Resources.Responses
 {
@@ -5,15 +7,15 @@ namespace Palavyr.Core.Models.Resources.Responses
     {
         public string NextNodeId { get; set; }
         public bool Result { get; set; }
-        public string? PdfLink { get; set; }
+        public FileAssetResource? FileAsset { get; set; }
         
-        public static SendEmailResultResponse CreateSuccess(string nextNodeId, string? pdfLink)
+        public static SendEmailResultResponse CreateSuccess(string nextNodeId, FileAssetResource? fileAsset)
         {
             return new SendEmailResultResponse
             {
                 NextNodeId = nextNodeId,
                 Result = true,
-                PdfLink = pdfLink
+                FileAsset = fileAsset
             };
         }
 

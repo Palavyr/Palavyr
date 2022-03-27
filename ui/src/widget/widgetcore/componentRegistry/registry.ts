@@ -16,7 +16,8 @@ export const ComponentRegistry: Registry = {
     ProvideInfo: components.makeProvideInfo,
     TakeNumber: components.makeTakeNumber,
     TakeNumberIndividuals: components.makeTakeNumberIndividuals,
-    ShowImage: components.makeShowImage,
+    ShowImage: components.makeShowFileAsset, // deprecated
+    ShowFileAsset: components.makeShowFileAsset,
 
     TooComplicated: components.makeProvideInfo,
     SendResponse: components.makeProvideInfo,
@@ -25,10 +26,11 @@ export const ComponentRegistry: Registry = {
     SendTooComplicatedEmail: components.makeSendFallbackEmail,
     Restart: components.makeRestart,
     EndWithoutEmail: components.makeEndWithoutEmail,
+    ShowResponseFileAsset: components.makeShowResponseFileAsset,
 
     Selection: components.makeSelectOptions,
     CollectDetails: components.makeCollectDetails,
-    ProvideInfoWithPdfLink: components.makeProvideInfoWithPdfLink,
+    // ProvideInfoWithPdfLink: components.makeProvideInfoWithPdfLink,
 };
 
 export const ConvoContextProperties = {

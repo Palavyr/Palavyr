@@ -9,14 +9,11 @@ import { UploadOrChooseFromExisting } from "@common/uploads/UploadOrChooseFromEx
 interface FileAssetUploadProps {
     currentNode: IPalavyrNode;
     closeEditor: () => void;
-    currentFileAssetId: string;
-    setFileAssetId: SetState<string>;
-    setFileAssetLink: SetState<string>;
-    setFileAssetName: SetState<string>;
+    setFileAsset: SetState<FileAssetResource>;
     repository: PalavyrRepository;
 }
 
-export const NodeFileAssetUpload = ({ setFileAssetId, currentNode, closeEditor, currentFileAssetId, setFileAssetLink, setFileAssetName, repository }: FileAssetUploadProps) => {
+export const NodeFileAssetUpload = ({ setFileAsset, currentNode, closeEditor, repository }: FileAssetUploadProps) => {
     const history = useHistory();
 
     const { setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
@@ -36,32 +33,20 @@ export const NodeFileAssetUpload = ({ setFileAssetId, currentNode, closeEditor, 
         setSuccessText("File Uploaded");
 
         currentNode.imageId = result[0].fileId;
+        currentNode.UpdateTree();
         setSuccessOpen(true);
         closeEditor();
     };
 
     const onSelectChange = async (_: any, option: FileAssetResource) => {
-        if (setFileAssetLink) {
-            setFileAssetLink(option.link);
+        if (setFileAsset) {
+            setFileAsset(option);
+            currentNode.imageId = option.fileId;
+            currentNode.UpdateTree();
+            setSuccessOpen(true);
+            closeEditor();
         }
-
-        if (setFileAssetName) {
-            setFileAssetName(option.fileName);
-        }
-
-        if (setFileAssetId) {
-            setFileAssetId(option.fileId);
-        }
-        // setLabel(option.fileName);
     };
 
-    return (
-        <>
-            {currentNode && (
-                <>
-                    <UploadOrChooseFromExisting handleFileSave={handleFileSave} onSelectChange={onSelectChange} currentFileAssetId={currentFileAssetId} />
-                </>
-            )}
-        </>
-    );
+    return <>{currentNode && <UploadOrChooseFromExisting handleFileSave={handleFileSave} onSelectChange={onSelectChange} currentFileAssetId={currentNode.imageId} />}</>;
 };

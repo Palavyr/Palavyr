@@ -1,10 +1,12 @@
-﻿namespace Palavyr.Core.Models.Resources.Responses
+﻿using Palavyr.Core.Mappers;
+
+namespace Palavyr.Core.Models.Resources.Responses
 {
     public class Enquiry
     {
         public int? Id { get; set; }
         public string ConversationId { get; set; }
-        public FileLinkReference LinkReference { get; set; }
+        public FileAssetResource FileAssetResource { get; set; }
         public string TimeStamp { get; set; }
         public string AccountId { get; set; }
         public string AreaName { get; set; }

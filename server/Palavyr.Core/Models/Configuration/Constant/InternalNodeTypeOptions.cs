@@ -6,7 +6,29 @@ namespace Palavyr.Core.Models.Configuration.Constant
     {
         // these are only exposed internal to the API - used in the ending sequence to some extent. These are not availalable right now in the ui until we have very 
         // thorough validation logic when saving trees. Right now we do not.
+        public class ShowResponseFileAsset : NodeTypeOption
+        {
+            public new static string StringName => nameof(ShowResponseFileAsset);
 
+            public ShowResponseFileAsset()
+            {
+                Text = "Show File Asset";
+                Value = StringName;
+                PathOptions = new List<string>() { };
+                ValueOptions = new List<string>() { };
+                IsMultiOptionType = false;
+                GroupName = InfoProvide;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsDynamicType = false;
+                IsMultiOptionEditable = false;
+                IsCurrency = false;
+            }
+            
+        }
         public class Restart : NodeTypeOption
         {
             public new static string StringName => nameof(Restart);
