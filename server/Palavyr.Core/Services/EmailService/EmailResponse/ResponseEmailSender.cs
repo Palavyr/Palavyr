@@ -71,23 +71,23 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
             var additionalFiles = new List<CloudFileDownloadRequest>();
 
-            FileAsset fileAsset = null; // used to provide direct link in the chat
+            FileAssetResource fileAssetResource = null; // used to provide direct link in the chat
             if (intent.SendPdfResponse)
             {
                 logger.LogDebug("Generating PDF Response from Send Email");
-                fileAsset = await responsePdfGenerator.GeneratePdfResponse(
+                var fileAsset = await responsePdfGenerator.GeneratePdfResponse(
                     responses,
                     emailRequest,
                     culture,
                     intentId
                 );
                 additionalFiles.Add(fileAsset.ToCloudFileDownloadRequest());
+                fileAssetResource = await mapper.Map(fileAsset);
             }
 
             var senderDetails = await compileSenderDetails.Compile(intentId, emailRequest);
             var attachments = await attachmentRetriever.GatherAttachments(intentId, additionalFiles);
 
-            var fileAssetResource = await mapper.Map(fileAsset);
             var responseResult = await Send(senderDetails, attachments.Select(x => x.TempFilePath).ToArray(), fileAssetResource);
 
             CleanUpLocalFiles(attachments);

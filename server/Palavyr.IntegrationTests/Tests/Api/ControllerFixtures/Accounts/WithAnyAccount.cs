@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Palavyr.API.Controllers.Accounts;
@@ -61,24 +60,10 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
         private async Task Delete(Credentials credentials)
         {
             var tempClient = ConfigurableClient(credentials.SessionId);
-            // var tempClient = CreateTempClient(Client, credentials.JwtToken, credentials.SessionId);
             var result = await tempClient.PostAsync(DeleteAccountController.Route, null);
             result.EnsureSuccessStatusCode();
         }
 
-        private HttpClient CreateTempClient(HttpClient baseClient, string jwt, string sessionId)
-        {
-            var client = new HttpClient();
-            client.BaseAddress = baseClient.BaseAddress;
-
-            client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.Action, ApplicationConstants.MagicUrlStrings.SessionAction);
-            client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.Authorization, jwt);
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.SessionId, sessionId);
-            return client;
-
-
-        }
 
         public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
@@ -86,11 +71,11 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
             return base.CustomizeContainer(builder);
         }
 
-        public override Task DisposeAsync()
+        public override async Task DisposeAsync()
         {
+            await Task.CompletedTask;
             Client.DefaultRequestHeaders.Remove("Authorization");
             Client.DefaultRequestHeaders.Remove(ApplicationConstants.MagicUrlStrings.SessionId);
-            return base.DisposeAsync();
         }
     }
 

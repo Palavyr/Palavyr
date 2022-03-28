@@ -53,7 +53,7 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             logger.LogDebug("Trying to send email...");
             try
             {
-                await EmailClient.SendEmailAsync(sendRequest);
+                var response = await EmailClient.SendEmailAsync(sendRequest);
                 logger.LogDebug("SES Email send was successful!");
                 return true;
             }

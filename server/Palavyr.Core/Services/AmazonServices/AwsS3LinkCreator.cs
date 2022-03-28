@@ -9,6 +9,7 @@ namespace Palavyr.Core.Services.AmazonServices
     public interface ILinkCreator
     {
         Task<string> CreateLink(string fileAssetId);
+        string CreateLink(FileAsset fileAsset);
         Task<IEnumerable<string>> CreateManyLinks(IEnumerable<string> fileAssetIds);
     }
 
@@ -29,6 +30,12 @@ namespace Palavyr.Core.Services.AmazonServices
         {
             var fileAsset = await fileAssetStore.GetOrNull(fileAssetId, s => s.FileId);
             if (fileAsset is null) return null;
+            var link = linkCreator.GenericCreatePreSignedUrl(fileAsset.LocationKey);
+            return link;
+        }
+
+        public string CreateLink(FileAsset fileAsset)
+        {
             var link = linkCreator.GenericCreatePreSignedUrl(fileAsset.LocationKey);
             return link;
         }

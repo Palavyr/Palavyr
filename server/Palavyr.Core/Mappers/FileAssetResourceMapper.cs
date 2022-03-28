@@ -16,7 +16,12 @@ namespace Palavyr.Core.Mappers
         public async Task<FileAssetResource> Map(FileAsset @from)
         {
             var fileName = string.Join(string.Empty, @from.RiskyNameStem, @from.Extension);
-            var link = await linkCreator.CreateLink(@from.FileId);
+            var link = await linkCreator.CreateLink(@from.FileId); // can probably just use the overload instead
+            if (link is null)
+            {
+                link = linkCreator.CreateLink(@from);
+            }
+
             return new FileAssetResource
             {
                 FileName = fileName,

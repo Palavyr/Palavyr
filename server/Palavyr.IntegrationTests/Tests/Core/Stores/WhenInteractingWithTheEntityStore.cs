@@ -17,11 +17,24 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Stores
 {
+    public class StoreBaseFixture : InMemoryIntegrationFixture
+    {
+        public StoreBaseFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        {
+        }
+
+        public override async Task DisposeAsync()
+        {
+            await Task.CompletedTask;
+            // return base.DisposeAsync();
+        }
+    }
+    
     public static class WhenInteractingWithTheEntityStore
     {
         public static readonly string MisMatchedAccount = "Mismatched-Account-Id";
 
-        public class AndCreatingAnEntity : InMemoryIntegrationFixture
+        public class AndCreatingAnEntity : StoreBaseFixture
         {
             [Fact]
             public async Task Success()
@@ -53,7 +66,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             }
         }
 
-        public class AndCreatingMany : InMemoryIntegrationFixture
+        public class AndCreatingMany : StoreBaseFixture
         {
             [Fact]
             public async Task Success()
@@ -106,7 +119,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             }
         }
 
-        public class AndGettingASingleEntity : InMemoryIntegrationFixture
+        public class AndGettingASingleEntity : StoreBaseFixture
         {
             public AndGettingASingleEntity(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
             {
@@ -162,7 +175,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
         }
 
 
-        public class AndGettingManyEntities : InMemoryIntegrationFixture
+        public class AndGettingManyEntities : StoreBaseFixture
         {
             public AndGettingManyEntities(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
             {
@@ -250,7 +263,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             }
         }
 
-        public class AndGettingAllEntities : InMemoryIntegrationFixture
+        public class AndGettingAllEntities : StoreBaseFixture
         {
             public AndGettingAllEntities(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
             {
@@ -280,7 +293,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             }
         }
 
-        public class AndUpdatingAnEntity : InMemoryIntegrationFixture
+        public class AndUpdatingAnEntity : StoreBaseFixture
         {
             public AndUpdatingAnEntity(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
             {
@@ -311,7 +324,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             }
         }
 
-        public class AndDeletingEntities : InMemoryIntegrationFixture
+        public class AndDeletingEntities : StoreBaseFixture
         {
             public AndDeletingEntities(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
             {

@@ -10,7 +10,6 @@ using Palavyr.Core.Mappers;
 
 namespace Palavyr.API.Controllers.FileAssets
 {
-    [Obsolete]
     public class DeleteFileAssetsController : PalavyrBaseController
     {
         private readonly IMediator mediator;

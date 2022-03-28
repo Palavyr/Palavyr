@@ -9,8 +9,6 @@ import { DesignerWidgetDrawer } from "./DesignerWidgetDrawer";
 import { FontSelector } from "./fonts/FontSelector";
 import { DesignChatHeader } from "./headers/ChatHeader";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
-import { FontManager, OPTIONS_DEFAULTS } from "@common/fonts/fontManager";
-import { googleFontApikey } from "@api-client/clientUtils";
 import { InitializeFonts } from "./fonts/Initializer";
 
 const drawerWidth = 440;

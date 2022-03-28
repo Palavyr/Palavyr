@@ -35,3 +35,9 @@ export function scrollToBottom(messagesDiv: HTMLDivElement | null) {
     const scrollOffset = messagesDiv.scrollHeight - (scrollTop + screenHeight);
     if (scrollOffset) scrollWithSlowMotion(messagesDiv, scrollTop, scrollOffset);
 }
+
+export function scrollToTop(messagesDiv: HTMLDivElement | null) {
+    if (!messagesDiv) return;
+    const scrollTop = messagesDiv.scrollTop;
+    if (scrollTop) scrollWithSlowMotion(messagesDiv, scrollTop, -scrollTop);
+}

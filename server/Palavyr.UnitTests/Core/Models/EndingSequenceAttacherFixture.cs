@@ -20,7 +20,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         public async Task AllNodesAreCreated()
         {
             var result = sequenceAttacher.AttachEndingSequenceToNodeList(new List<ConversationNode>() { }, A.RandomId(), A.RandomAccountId());
-            result.Count.ShouldBe(12);
+            result.Count.ShouldBe(13);
         }
 
 
@@ -33,7 +33,7 @@ namespace PalavyrServer.UnitTests.Core.Models
 
             var expected = new List<string>()
             {
-                "6", "1", "A", "0", "EmailSuccessfulNodeId", "Restart", "EmailFailedNodeId", "2", "FallbackEmailFailedNodeId", "3", "5", "4"
+                "7", "1", "A", "0", "EmailSuccessfulNodeId", "Restart", "2", "EmailFailedNodeId", "3", "FallbackEmailFailedNodeId", "4", "6", "5"
             };
 
             result.ShouldBeEquivalentTo(expected);

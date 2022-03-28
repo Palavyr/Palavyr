@@ -38,9 +38,8 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             // arrange 
             var intentId = A.RandomId();
 
-
             var record = await this.CreateConversationRecordBuilder().WithIntentId(intentId).Build();
-            
+
             // create intent without response PDF set
             await this.CreateIntentBuilder().WithoutResponsePdf().WithIntentId(intentId).Build(); //SendPdfResponse needs to be false for this test
 
@@ -55,7 +54,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
 
             // act
             var response = await ClientApiKey.PostWithApiKey<SendEmailResultResponse>(Route.Replace("{intentId}", intentId), emailRequest);
-            
+
             // assert
             response.NextNodeId.ShouldBe(EndingSequenceAttacher.EmailSuccessfulNodeId);
             response.Result.ShouldBeTrue();

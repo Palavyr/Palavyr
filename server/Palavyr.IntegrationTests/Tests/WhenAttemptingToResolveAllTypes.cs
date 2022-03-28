@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Test.Common.ApprovalTests;
@@ -61,6 +62,12 @@ namespace Palavyr.IntegrationTests.Tests
             : base(testOutputHelper, factory)
         {
             this.testOutputHelper = testOutputHelper;
+        }
+
+        public override async Task DisposeAsync()
+        {
+            await Task.CompletedTask;
+            WebHostFactory.Dispose();
         }
     }
 }

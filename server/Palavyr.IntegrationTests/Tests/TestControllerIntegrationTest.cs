@@ -85,5 +85,11 @@ namespace Palavyr.IntegrationTests.Tests
             Assert.Equal(TimeSpan.FromMinutes(5), headers.MaxAge);
             Assert.True(headers.Public);
         }
+
+        public override async Task DisposeAsync()
+        {
+            await Task.CompletedTask;
+             WebHostFactory.Dispose();
+        }
     }
 }

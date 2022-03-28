@@ -35,6 +35,10 @@ namespace Palavyr.Core.Models
 
         public List<ConversationNode> AttachEndingSequenceToNodeList(List<ConversationNode> nodeList, string intentId, string accountId)
         {
+            // Ensure we don't save any changes to the convo nodes. These are potentially tracked entities
+            var convoNodeList = new List<ConversationNode>();
+            convoNodeList.AddRange(nodeList);
+
             var sendEmail = endingSequenceNodes.CreateSendEmail(intentId, accountId, "Placeholder");
             var restartAfterDontSendEmail = endingSequenceNodes.CreateDontSendEmailRestart(intentId, accountId, "Placeholder");
             var mayWeSendAnEmail = endingSequenceNodes.CreateMayWeSendAnEmail(intentId, accountId, sendEmail.NodeId, restartAfterDontSendEmail.NodeId);
@@ -52,9 +56,8 @@ namespace Palavyr.Core.Models
 
             var genericTooComplicated = endingSequenceNodes.CreateGenericTooComplicated(intentId, accountId);
 
-
-            nodeList.Add(genericTooComplicated);
-            foreach (var node in nodeList)
+            convoNodeList.Add(genericTooComplicated);
+            foreach (var node in convoNodeList)
             {
                 if (node.IsTerminalType)
                 {
@@ -80,7 +83,7 @@ namespace Palavyr.Core.Models
                 }
             }
 
-            nodeList.AddRange(
+            convoNodeList.AddRange(
                 new List<ConversationNode>
                 {
                     mayWeSendAnEmail,
@@ -96,7 +99,7 @@ namespace Palavyr.Core.Models
                     mayWeSendAnInformationalEmailForTooComplicated,
                     sendFallbackEmail
                 });
-            return nodeList;
+            return convoNodeList;
         }
     }
 }
