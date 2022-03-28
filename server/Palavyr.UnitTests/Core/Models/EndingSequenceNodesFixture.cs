@@ -69,7 +69,7 @@ namespace PalavyrServer.UnitTests.Core.Models
             node.NodeType.ShouldBe(DefaultNodeTypeOptions.ProvideInfo.StringName);
             node.OptionPath.ShouldBeEmpty();
             node.ValueOptions.ShouldBeEmpty();
-            node.NodeComponentType.ShouldBe(DefaultNodeTypeOptions.ProvideInfoWithPdfLink.StringName);
+            node.NodeComponentType.ShouldBe(DefaultNodeTypeOptions.ProvideInfo.StringName);
             node.IsRoot.ShouldBeFalse();
             node.IsCritical.ShouldBeFalse();
             node.IsMultiOptionType.ShouldBeFalse();

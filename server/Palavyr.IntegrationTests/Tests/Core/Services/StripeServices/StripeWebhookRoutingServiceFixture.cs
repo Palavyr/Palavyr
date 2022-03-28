@@ -208,6 +208,11 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
             return base.InitializeAsync();
         }
 
+        public override async Task DisposeAsync()
+        {
+            await Task.CompletedTask;
+        }
+
         public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
             builder.Register(

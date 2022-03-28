@@ -18,5 +18,10 @@ namespace Palavyr.IntegrationTests.Tests
             var response = await Client.GetAsync("/healthcheck");
             response.EnsureSuccessStatusCode();
         }
+
+        public override async Task DisposeAsync()
+        {
+            await Task.CompletedTask;
+            WebHostFactory.Dispose();        }
     }
 }

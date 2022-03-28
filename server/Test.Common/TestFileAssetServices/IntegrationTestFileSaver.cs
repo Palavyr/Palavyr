@@ -116,6 +116,11 @@ namespace Test.Common.TestFileAssetServices
             return asset.LocationKey ?? "";
         }
 
+        public string CreateLink(FileAsset fileAsset)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public async Task<string[]> CreateManyLinks(string[] fileAssetIds)
         {
             var assets = await fileAssetStore.GetMany(fileAssetIds, s => s.FileId);

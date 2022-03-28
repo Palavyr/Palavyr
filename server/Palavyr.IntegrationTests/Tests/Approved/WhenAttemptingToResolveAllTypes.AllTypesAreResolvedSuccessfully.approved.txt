@@ -9,11 +9,9 @@ IHaveLocalFileName
 IHaveTemporaryPath
 IHaveBeenDownloadedFromCloudToLocal
 IProcessStripeInvoicePaymentFailedHandler
-ILogoAssetSaver
 IFileAssetLinker`1
 IDynamicTableCommandExecutor`1
 IDynamicTablesCompiler
-IAreaDeleter
 IResolveCloudKeys
 IAccount
 IArea
