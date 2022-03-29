@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Checkbox, FormControlLabel, makeStyles, TableCell, TableRow, Typography } from "@material-ui/core";
+import { Button, Checkbox, FormControlLabel, makeStyles, TableCell, TableRow } from "@material-ui/core";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { TableData, BasicThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
@@ -7,6 +7,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { UnitInput } from "../../components/UnitInput";
+import { TableButton } from "../SelectOneFlat/TableButton";
 
 type StyleProps = {
     isTrue: boolean;
@@ -136,16 +137,12 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
                     </TableCell>
                     <TableCell align={cellAlignment}>
                         {!row.triggerFallback && (
-                            <Button
-                                variant="contained"
-                                style={{ width: "18ch" }}
-                                color={row.range ? "primary" : "secondary"}
+                            <TableButton
+                                state={row.range}
                                 onClick={() => {
                                     modifier.setRangeOrValue(tableData, row.rowId);
                                 }}
-                            >
-                                {row.range ? "Range" : "Single Value"}
-                            </Button>
+                            />
                         )}
                     </TableCell>
                 </>

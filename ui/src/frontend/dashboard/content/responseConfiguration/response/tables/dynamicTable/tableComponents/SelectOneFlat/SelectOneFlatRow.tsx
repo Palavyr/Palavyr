@@ -9,6 +9,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import RemoveIcon from "@material-ui/icons/Remove";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
+import { TableButton } from "./TableButton";
 
 export interface ISelectOneFlatRow {
     dataIndex: number;
@@ -106,28 +107,14 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                 />
             </TableCell>
             <TableCell align={cellAlignment}>
-                <Button
-                    startIcon={
-                        row.range ? (
-                            <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
-                                <ChevronLeftIcon />
-                                {/* <RemoveIcon />  */}
-                                <ChevronRightIcon />
-                            </div>
-                        ) : (
-                            <RemoveIcon />
-                        )
-                    }
-                    // endIcon={row.range ? <ChevronRightIcon /> : null}
-                    variant="contained"
-                    style={{ width: "18ch" }}
-                    color={row.range ? "primary" : "secondary"}
+                <TableButton
+                    state={row.range}
+                    onMessage="Range"
+                    offMessage="Value"
                     onClick={() => {
                         modifier.setRangeOrValue(tableData, dataIndex);
                     }}
-                >
-                    {row.range ? "Range" : "Single Value"}
-                </Button>
+                />
             </TableCell>
         </TableRow>
     );

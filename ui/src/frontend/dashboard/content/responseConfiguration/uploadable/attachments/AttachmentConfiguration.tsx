@@ -9,7 +9,7 @@ import { FileAssetResource } from "@Palavyr-Types";
 import { UploadOrChooseFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
 import { cloneDeep } from "lodash";
 
-const summary = "Upload a new attachment to send with responses.";
+const summary = "Upload";
 const uploadDetails = <div className="alert alert-info">Use this dialog to upload attachments that will be sent standard with the response for this intent.</div>;
 
 export const AttachmentConfiguration = () => {

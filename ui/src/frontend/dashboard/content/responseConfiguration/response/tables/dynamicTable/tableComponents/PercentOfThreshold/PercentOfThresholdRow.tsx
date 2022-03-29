@@ -1,6 +1,5 @@
 import React from "react";
-import { TableRow, Button, makeStyles, FormControlLabel, Checkbox, Typography } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+import { TableRow, makeStyles, FormControlLabel, Checkbox, Typography } from "@material-ui/core";
 import { PercentOfThresholdData, TableData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
@@ -8,6 +7,8 @@ import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField"
 import { NumberFormatValues } from "react-number-format";
 import { UnitInput } from "../../components/UnitInput";
 import { Cell } from "../../components/Cell";
+import { TableButton } from "../SelectOneFlat/TableButton";
+import { TableDeleteButton } from "./TableDeleteButton";
 
 export interface IPercentOfThresholdRow {
     tableData: TableData;
@@ -23,7 +24,7 @@ export interface IPercentOfThresholdRow {
 type StyleProps = {
     isTrue: boolean;
 };
-const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles(theme => ({
     number: {
         border: "1px solid lightgray",
         padding: "1.2rem",
@@ -66,9 +67,7 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
     return (
         <TableRow className={cls.tableRow}>
             <Cell>
-                <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeRow(tableData, row.rowId)}>
-                    Delete
-                </Button>
+                <TableDeleteButton onClick={() => modifier.removeRow(tableData, row.rowId)} />
             </Cell>
             <Cell>
                 <UnitInput
@@ -103,16 +102,14 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                 <>
                     <Cell>
                         {!row.triggerFallback && (
-                            <Button
-                                variant="contained"
-                                style={{ width: "18ch" }}
-                                color={row.posNeg ? "primary" : "secondary"}
+                            <TableButton
                                 onClick={() => {
                                     modifier.setAddOrSubtract(tableData, row.rowId);
                                 }}
-                            >
-                                {row.posNeg === true ? "Add" : "Subtract"}
-                            </Button>
+                                onMessage="Add"
+                                offMessage="Subtract"
+                                state={row.posNeg}
+                            />
                         )}
                     </Cell>
                     <Cell>
@@ -167,16 +164,14 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                     </Cell>
                     <Cell>
                         {!row.triggerFallback && (
-                            <Button
-                                variant="contained"
-                                style={{ width: "18ch" }}
-                                color={row.range ? "primary" : "secondary"}
+                            <TableButton
                                 onClick={() => {
                                     modifier.setRangeOrValue(tableData, row.rowId);
                                 }}
-                            >
-                                {row.range ? "Range" : "Single Value"}
-                            </Button>
+                                onMessage="Range"
+                                offMessage="Value"
+                                state={row.range}
+                            />
                         )}
                     </Cell>
                 </>

@@ -1,11 +1,11 @@
-import { PalavyrText } from "@common/components/typography/PalavyrTypography";
-import { TableHead, TableRow, TableCell, makeStyles } from "@material-ui/core";
+import { TableHead, TableRow, TableCell as TC, makeStyles, TableCellProps } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
 
 const useStyles = makeStyles(theme => ({
     cell: {
-        borderRight: `1px solid ${theme.palette.grey[300]}`,
+        height: "10px",
+        // borderRight: `1px solid ${theme.palette.grey[300]}`,
     },
     noRight: {
         borderRight: "0px solid white",
@@ -13,12 +13,24 @@ const useStyles = makeStyles(theme => ({
     head: {
         border: "none",
         boxShadow: "none",
+        height: "10px",
     },
     row: {
         border: "none",
         boxShadow: "none",
+        height: "10px",
+    },
+    cellInner: {
+        height: "10px",
+        lineHeight: "0px",
+        padding: "5px",
     },
 }));
+
+const TableCell = (props: TableCellProps) => {
+    const cls = useStyles();
+    return <TC classes={{ root: cls.cellInner }} className={cls.cellInner} {...props} />;
+};
 
 export const SelectOneFlatHeader = () => {
     const cls = useStyles();

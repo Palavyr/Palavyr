@@ -13,6 +13,7 @@ import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
+import { TableDeleteButton } from "../dynamicTable/tableComponents/PercentOfThreshold/TableDeleteButton";
 
 type styleProp = {
     index: number;
@@ -67,9 +68,7 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
     return (
         <TableRow className={cls.row}>
             <TableCell align={cellAlignment}>
-                <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.delRow(staticTableMetas, tableOrder, rowOrder)}>
-                    Delete
-                </Button>
+                <TableDeleteButton onClick={() => modifier.delRow(staticTableMetas, tableOrder, rowOrder)} />
             </TableCell>
             <TableCell align={cellAlignment}>
                 <TextField

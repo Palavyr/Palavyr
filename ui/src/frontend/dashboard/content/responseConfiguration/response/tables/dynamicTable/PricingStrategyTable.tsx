@@ -1,7 +1,6 @@
 import React from "react";
 import { DynamicTable, DynamicTableProps, QuantUnitDefinition, TableNameMap } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
-import { cloneDeep } from "lodash";
 import { dynamicTableComponentMap } from "./DynamicTableRegistry";
 
 export const useStyles = makeStyles(theme => ({

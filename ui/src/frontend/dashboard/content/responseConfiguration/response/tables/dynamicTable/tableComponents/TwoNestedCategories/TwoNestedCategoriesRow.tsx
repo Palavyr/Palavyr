@@ -8,6 +8,7 @@ import { SetState } from "@Palavyr-Types";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { Cell } from "../../components/Cell";
+import { TableButton } from "../SelectOneFlat/TableButton";
 
 export interface TwoNestedCategoriesRowProps {
     index: number;
@@ -60,6 +61,15 @@ export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, oute
 
     return (
         <TableRow>
+            <Cell>
+                {shouldDisableInnerCategory ? (
+                    <div style={{ width: "22ch" }}></div>
+                ) : (
+                    <Button style={{ width: "22ch" }} size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeInnerCategory(tableData, row.rowOrder)}>
+                        Delete {row.innerItemName}
+                    </Button>
+                )}
+            </Cell>
             <Cell>
                 {index === 0 && (
                     <TextField
@@ -123,30 +133,18 @@ export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, oute
             </Cell>
             <Cell>
                 {!shouldDisableInnerCategory ? (
-                    <Button
+                    <TableButton
+                        state={row.range}
                         disabled={shouldDisableInnerCategory}
-                        variant="contained"
-                        style={{ width: "18ch" }}
-                        color={row.range ? "primary" : "secondary"}
                         onClick={() => {
                             modifier.setRangeOrValue(tableData, row.rowOrder);
                         }}
-                    >
-                        {row.range ? "Range" : "Single Value"}
-                    </Button>
+                    />
                 ) : (
                     <div style={{ width: "18ch" }}></div>
                 )}
             </Cell>
-            <Cell>
-                {shouldDisableInnerCategory ? (
-                    <div style={{ width: "22ch" }}></div>
-                ) : (
-                    <Button style={{ width: "22ch" }} size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeInnerCategory(tableData, row.rowOrder)}>
-                        Delete {row.innerItemName}
-                    </Button>
-                )}
-            </Cell>
+
             <Cell></Cell>
         </TableRow>
     );

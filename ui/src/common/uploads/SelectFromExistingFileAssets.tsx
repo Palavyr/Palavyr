@@ -58,7 +58,7 @@ export const SelectFromExistingFileAssets = ({ repository, disable, onSelectChan
 
     return (
         <>
-            <PalavyrAccordian title="Select a file you've already uploaded" disable={disable} initialState={false}>
+            <PalavyrAccordian title="Select from your files" disable={disable} initialState={false}>
                 {options && (
                     <PalavyrAutoComplete
                         groupby={groupby}

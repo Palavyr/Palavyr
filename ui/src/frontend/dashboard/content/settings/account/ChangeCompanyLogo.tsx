@@ -12,6 +12,7 @@ import { DropzoneArea } from "material-ui-dropzone";
 import * as React from "react";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { SettingsWrapper } from "../SettingsWrapper";
+import { SelectFromExistingFileAssets } from "@common/uploads/SelectFromExistingFileAssets";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -177,6 +178,14 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
                     </div>
                 </Align>
                 <Divider />
+
+                <SelectFromExistingFileAssets
+                    onSelectChange={handleFileChange}
+                    repository={repository}
+                    currentFileAssetId={companyLogo}
+                />
+
+
                 <div className={cls.dropzone}>
                     <DropzoneArea
                         showAlerts={true}

@@ -9,6 +9,8 @@ import { NumberFormatValues } from "react-number-format";
 import { UnitInput } from "../../components/UnitInput";
 import { Cell } from "../../components/Cell";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
+import { TableButton } from "../SelectOneFlat/TableButton";
+import { TableDeleteButton } from "../PercentOfThreshold/TableDeleteButton";
 
 export interface CategoryNestedThresholdProps {
     rowIndex: number;
@@ -70,6 +72,9 @@ export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName,
 
     return (
         <TableRow>
+            <Cell>
+                <TableDeleteButton onClick={() => modifier.removeThreshold(tableData, row.rowId)} />
+            </Cell>
             <Cell>
                 {rowIndex === 0 && (
                     <TextField
@@ -153,22 +158,13 @@ export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName,
                     </Cell>
                     <Cell>
                         {!row.triggerFallback && (
-                            <Button
-                                variant="contained"
-                                style={{ width: "18ch" }}
-                                color={row.range ? "primary" : "secondary"}
+                            <TableButton
+                                state={row.range}
                                 onClick={() => {
                                     modifier.setRangeOrValue(tableData, row.rowId);
                                 }}
-                            >
-                                {row.range ? "Range" : "Single Value"}
-                            </Button>
+                            />
                         )}
-                    </Cell>
-                    <Cell>
-                        <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeThreshold(tableData, row.rowId)}>
-                            Delete Threshold
-                        </Button>
                     </Cell>
                 </>
             ) : (

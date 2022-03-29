@@ -56,6 +56,7 @@ export const EnableAreaRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) =
                 <Typography variant="h6">{areasEnabled.areaName}</Typography>
             </TableCell>
             <TableCell className={classNames(cls.cell, cls.wide)}>
+
                 <OsTypeToggle controlledState={isEnabled === true} onChange={onToggleChange} enabledLabel="Enabled" disabledLabel="Disabled" />
             </TableCell>
         </TableRow>

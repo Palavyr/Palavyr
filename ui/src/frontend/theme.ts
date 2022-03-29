@@ -35,65 +35,68 @@ export const red = "#8F4807";
 // #29648A
 
 const typography = {
-    fontFamily: ["'Poppins'", "'Rubik'", "'Kanit'"].join(","),
+    fontFamily: ["'Gowun Dodum', 'Poppins'", "'Rubik'", "'Kanit'"].join(","),
     h1: {
-        fontFamily: "Kanit",
+        fontFamily: "Gowun Dodum",
         fontWeight: 400,
         fontSize: "3.052rem",
     },
     h2: {
-        fontFamily: "Kanit",
+        fontFamily: "Gowun Dodum",
         fontSize: "2.441rem",
         fontWeight: 400,
     },
     h3: {
-        fontFamily: "Kanit",
+        fontFamily: "Gowun Dodum",
         fontSize: "1.953rem",
         fontWeight: 400,
     },
     h4: {
-        fontFamily: "Kanit",
+        fontFamily: "Gowun Dodum",
         fontSize: "1.563rem",
         fontWeight: 400,
     },
     h5: {
-        fontFamily: "Kanit",
+        fontFamily: "Gowun Dodum",
         fontSize: "1.25rem",
         fontWeight: 400,
     },
     h6: {
-        fontFamily: "Kanit",
+        fontFamily: "Gowun Dodum",
         fontSize: "1rem",
         fontWeight: 400,
     },
     subtitle1: {
-        fontFamily: "Poppins",
-        fontSize: "0.8",
+        fontFamily: "Gowun Dodum",
+        fontSize: "1rem",
         fontWeight: 400,
     },
     subtitle2: {
-        fontFamily: "Poppins",
-        fontSize: "0.64rem",
+        fontFamily: "Gowun Dodum",
+        fontSize: "0.8rem",
         fontWeight: 400,
     },
     body1: {
-        fontFamily: "Poppins",
-        fontSize: ".8rem",
+        fontFamily: "Gowun Dodum",
+        fontSize: ".92rem",
         fontWeight: 400,
     },
     body2: {
-        fontFamily: "Poppins",
-        fontSize: "0.7rem",
+        fontFamily: "Gowun Dodum",
+        fontSize: "0.8rem",
     },
     button: {
-        fontFamily: "Poppins",
+        fontFamily: "Gowun Dodum",
+        fontSize: "0.8rem",
+
     },
     caption: {
-        fontFamily: "Poppins",
-        fontSize: "0.6rem",
+        fontFamily: "Gowun Dodum",
+        fontSize: "0.8rem",
     },
     overline: {
-        fontFamily: "Poppins",
+        fontFamily: "Gowun Dodum",
+        fontSize: "0.8rem",
     },
 };
 

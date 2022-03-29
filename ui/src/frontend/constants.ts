@@ -41,7 +41,7 @@ export const RESET_PASSWORD_SUCCESS = "/reset-success";
 export const PURCHASE_ROUTE = "/dashboard/subscribe/purchase";
 
 // Dashboard style
-export const DRAWER_WIDTH: number = 240;
+export const DRAWER_WIDTH: number = 220;
 export const HELP_DRAWER_WIDTH: number = 300;
 
 // Palavyr Configuration Node

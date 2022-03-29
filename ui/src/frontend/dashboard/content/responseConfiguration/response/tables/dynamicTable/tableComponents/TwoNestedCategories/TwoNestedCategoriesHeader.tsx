@@ -20,6 +20,7 @@ export const TwoNestedCategoriesHeader = ({ show }: { show: boolean }) => {
     return show ? (
         <TableHead>
             <TableRow>
+                <TableCell align="center">{show && <h5>Delete</h5>}</TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
                     {show && <h5> Outer Category</h5>}
                 </TableCell>
@@ -33,7 +34,6 @@ export const TwoNestedCategoriesHeader = ({ show }: { show: boolean }) => {
                     {show && <h5>Max Amount</h5>}
                 </TableCell>
                 <TableCell align="center"></TableCell>
-                <TableCell align="center">{show && <h5>Delete</h5>}</TableCell>
                 <TableCell align="center"></TableCell>
             </TableRow>
         </TableHead>

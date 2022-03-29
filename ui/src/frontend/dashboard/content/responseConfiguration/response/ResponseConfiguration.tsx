@@ -38,7 +38,6 @@ const getStaticTableValidationResult = (staticTables: StaticTableMetas): StaticT
 };
 
 export const ResponseConfiguration = () => {
-
     const [, setLoaded] = useState(false);
     const [prologue, setPrologue] = useState<string>("");
     const [staticTables, setStaticTables] = useState<StaticTableMetas>([]);
@@ -122,9 +121,9 @@ export const ResponseConfiguration = () => {
 
     return (
         <>
-            <HeaderStrip title="Your Response PDF" subtitle="Use this editor to configure the fee tables, as well as associated information, that will be sent in the response PDF for this intent." />
+            <HeaderStrip title="Chat Response PDF" subtitle="Below are the four sections of your response PDF, which you can customize to your liking" />
             {sendPdfWithResponse !== null && (
-                <OsTypeToggle controlledState={sendPdfWithResponse} onChange={onToggleSendPdfWithResponse} enabledLabel="Send response Pdf with email" disabledLabel="Do not send response Pdf with email" />
+                <OsTypeToggle controlledState={sendPdfWithResponse} onChange={onToggleSendPdfWithResponse} enabledLabel="Send response PDF with email" disabledLabel="Do not send PDF with email" />
             )}
 
             <ExpandableTextBox title="Introductory statement" updatableValue={prologue} onChange={updatePrologue} onSave={savePrologue}>
@@ -140,8 +139,8 @@ export const ResponseConfiguration = () => {
                 <HeaderStrip
                     divider
                     light
-                    title="Configure a dynamic pricing strategy"
-                    subtitle="When you configure a pricing strategy, it creates a corresponding palavyr node that must be included in the chat conversation. When a client provides the corresponding information, its used to determine a fee estimate. Some strategies produce nodes that depend on prior nodes, so these must be placed in the Palavyr in logical order."
+                    title="Configure a pricing strategy"
+                    subtitle="Pricing strategies are fee tables that require input from the customer to determine the fee. By selecting one, you are telling Palavyr.com that you will be including a node in the conversation that will ask the customer for their input."
                 />
             </DynamicTableConfiguration>
 

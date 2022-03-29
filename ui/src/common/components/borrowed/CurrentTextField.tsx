@@ -5,7 +5,8 @@ import CurrencyFormat, { NumberFormatProps, NumberFormatValues } from "react-num
 
 const useStyles = makeStyles(theme => ({
     styles: {
-        // padding: "40px",
+        marginTop: "15px",
+        width: "12ch"
     },
 }));
 export interface CurrencyTextFieldProps extends NumberFormatProps {

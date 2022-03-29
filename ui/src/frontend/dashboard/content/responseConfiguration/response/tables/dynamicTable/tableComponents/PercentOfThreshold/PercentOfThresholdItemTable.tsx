@@ -26,7 +26,7 @@ interface IPercentOfThreshold {
 const useStyles = makeStyles(theme => ({
     input: {
         margin: "0.6rem",
-        width: "50ch",
+        width: "30ch",
         paddingLeft: "0.4rem",
     },
     inputPropsCls: {
@@ -74,7 +74,7 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                 />
             </Align>
             <Table>
-                <PercentOfThresholdHeader tableData={tableData} modifier={modifier} />
+                <PercentOfThresholdHeader  />
                 <TableBody className={cls.tableStyles}>
                     {sortByPropertyNumeric(getter, itemData).map((row: PercentOfThresholdData, index: number) => {
                         row.rowOrder = index;

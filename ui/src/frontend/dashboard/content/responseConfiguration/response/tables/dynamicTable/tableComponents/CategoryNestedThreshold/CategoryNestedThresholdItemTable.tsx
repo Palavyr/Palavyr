@@ -56,7 +56,6 @@ export const CategoryNestedThresholdItemTable = ({
     unitPrettyName,
     unitGroup,
 }: CategoryNestedThresholdItemTableProps) => {
-
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
 

@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         backgroundColor: "transparent",
         border: "none",
-        borderTop: `4px solid ${theme.palette.primary.main}`,
         borderBottom: `4px solid ${theme.palette.primary.main}`,
         boxShadow: "none",
     },

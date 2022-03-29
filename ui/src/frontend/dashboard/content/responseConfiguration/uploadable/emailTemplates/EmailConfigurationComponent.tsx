@@ -93,7 +93,7 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
 
     return (
         <>
-            <EmailSubject subject={areaSubjectState} accordianTitle="Update the subject line for this email" onChange={onAreaSubjectChange}>
+            <EmailSubject subject={areaSubjectState} accordianTitle="Email Subject Line" onChange={onAreaSubjectChange}>
                 <div className={cls.saveOrCancel}>
                     <SaveOrCancel onSave={onSaveAreaSubject} onCancel={loadAreaSubject} />
                 </div>
@@ -103,13 +103,13 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
                 toggleModal={toggleModal}
                 handleFileSave={handleFileSave}
                 buttonText="Add Email Template"
-                summary="Upload a new Email Response"
+                summary="Upload"
                 uploadDetails={<EditorDetails key={"Upload"} variableDetails={variableDetails} />}
                 acceptedFiles={["text/html", "text/plain"]}
             />
             {planTypeMeta && planTypeMeta.allowedInlineEmailEditor ? (
                 <EmailEditor
-                    accordianTitle="Use an editor to craft your response email"
+                    accordianTitle="Edit in the Browser"
                     uploadDetails={<EditorDetails key={"Editor"} variableDetails={variableDetails} />}
                     setEmailTemplate={setEmailTemplate}
                     emailTemplate={emailTemplate}
