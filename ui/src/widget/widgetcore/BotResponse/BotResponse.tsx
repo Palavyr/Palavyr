@@ -10,7 +10,9 @@ import { WidgetPreferences } from "@Palavyr-Types";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 const useStyles = makeStyles(theme => ({
-    textField: {},
+    textField: (props: WidgetPreferences) => ({
+        color: props.chatFontColor,
+    }),
     timeStamp: (props: WidgetPreferences) => ({
         fontSize: "9px",
         marginTop: "0.6rem",
