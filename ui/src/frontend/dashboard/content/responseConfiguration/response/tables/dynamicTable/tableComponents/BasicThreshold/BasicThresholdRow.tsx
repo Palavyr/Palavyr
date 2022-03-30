@@ -8,6 +8,7 @@ import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField"
 import { NumberFormatValues } from "react-number-format";
 import { UnitInput } from "../../components/UnitInput";
 import { TableButton } from "../SelectOneFlat/TableButton";
+import { TextInput } from "@common/components/TextField/TextInput";
 
 type StyleProps = {
     isTrue: boolean;
@@ -26,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     },
     input: {
         margin: "0.6rem",
-        width: "55ch",
+        width: "30ch",
     },
     maxValInput: (props: StyleProps) => {
         if (props.isTrue === true) {
@@ -36,6 +37,9 @@ const useStyles = makeStyles(theme => ({
         } else {
             return {};
         }
+    },
+    inputPropsCls: {
+        paddingLeft: "0.4rem",
     },
 }));
 
@@ -62,11 +66,27 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
 
     return (
         <TableRow key={key}>
-            <TableCell align={cellAlignment}>
-                {rowIndex > 0 && (
+            <TableCell width="25" align={cellAlignment}>
+                {rowIndex > 0 ? (
                     <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeRow(tableData, row.rowId)}>
                         Delete
                     </Button>
+                ) : (
+                    // <Align direction="flex-start">
+                    <TextInput
+                        className={cls.input}
+                        variant="standard"
+                        label="Name to use in PDF fee table"
+                        type="text"
+                        value={tableData[0].name}
+                        InputLabelProps={{ className: cls.inputPropsCls }}
+                        color="primary"
+                        onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
+                            event.preventDefault();
+                            modifier.setItemName(tableData, event.target.value);
+                        }}
+                    />
+                    // </Align>
                 )}
             </TableCell>
             <TableCell align={cellAlignment}>
@@ -116,7 +136,7 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
                             />
                         )}
                     </TableCell>
-                    <TableCell align={cellAlignment}>
+                    <TableCell width="200px" align={cellAlignment}>
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 className={cls.maxValInput}

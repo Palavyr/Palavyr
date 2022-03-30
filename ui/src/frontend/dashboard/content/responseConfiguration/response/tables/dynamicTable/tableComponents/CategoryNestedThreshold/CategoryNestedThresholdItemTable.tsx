@@ -63,7 +63,7 @@ export const CategoryNestedThresholdItemTable = ({
     return (
         <>
             <Table className={cls.tableStyles}>
-                {categoryIndex === 0 && <CategoryNestedThresholdHeader tableData={tableData} modifier={modifier} />}
+                {categoryIndex === 0 && <CategoryNestedThresholdHeader />}
                 <TableBody className={cls.body}>
                     {sortByPropertyNumeric(getter, categoryData).map((row: CategoryNestedThresholdData, rowIndex: number) => {
                         row.rowOrder = rowIndex;

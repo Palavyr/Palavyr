@@ -36,8 +36,8 @@ const useStyles = makeStyles(theme => ({
         paddingRight: "0.6rem",
     },
     headerText: {
-        fontSize: "16pt",
-        fontWight: "bold",
+        fontSize: theme.typography.body1.fontSize,
+        fontWeight: theme.typography.fontWeightBold,
     },
 }));
 
@@ -91,12 +91,8 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                             <TableCell align={cellAlignment} className={cls.headerText}>
                                 Max Amount (if range)
                             </TableCell>
-                            <TableCell align={cellAlignment} className={cls.headerText}>
-                                Range
-                            </TableCell>
-                            <TableCell align={cellAlignment} className={cls.headerText}>
-                                Per Individual
-                            </TableCell>
+                            <TableCell align={cellAlignment} className={cls.headerText}></TableCell>
+                            <TableCell align={cellAlignment} className={cls.headerText}></TableCell>
                             <TableCell align={cellAlignment} className={cls.headerText}></TableCell>
                         </TableRow>
                     </TableHead>

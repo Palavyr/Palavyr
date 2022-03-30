@@ -4,8 +4,8 @@ import React from "react";
 
 const useStyles = makeStyles(theme => ({
     cell: {
-        height: "10px",
-        // borderRight: `1px solid ${theme.palette.grey[300]}`,
+        fontSize: theme.typography.body1.fontSize,
+        fontWeight: theme.typography.fontWeightBold,
     },
     noRight: {
         borderRight: "0px solid white",
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     cellInner: {
         height: "10px",
         lineHeight: "0px",
-        padding: "5px",
+        padding: "15px",
     },
 }));
 
@@ -34,20 +34,19 @@ const TableCell = (props: TableCellProps) => {
 
 export const SelectOneFlatHeader = () => {
     const cls = useStyles();
-    const variantHeader = "h4";
 
     return (
         <TableHead className={cls.head}>
             <TableRow className={cls.row}>
                 <TableCell align="center"></TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <h4>Option Name</h4>
+                    Option Name
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <h4>Amount</h4>
+                    Amount
                 </TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.noRight)}>
-                    <h4>Max Amount</h4>
+                <TableCell align="center" className={classNames(cls.cell)}>
+                    Max Amount
                 </TableCell>
                 <TableCell align="center"></TableCell>
             </TableRow>

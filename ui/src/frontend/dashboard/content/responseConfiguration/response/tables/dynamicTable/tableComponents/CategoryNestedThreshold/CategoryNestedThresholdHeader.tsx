@@ -1,50 +1,38 @@
-import { PalavyrText } from "@common/components/typography/PalavyrTypography";
-import { TableHead, TableRow, TableCell, makeStyles, Button } from "@material-ui/core";
-import { CategoryNestedThresholdData } from "@Palavyr-Types";
+import { TableHead, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
-import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 
 const useStyles = makeStyles(theme => ({
     cell: {
         fontSize: theme.typography.body1.fontSize,
         fontWeight: theme.typography.fontWeightBold,
     },
-    text: {
-        // fontSize: "16pt",
-    },
-    noRight: {
-        borderRight: `0px solid ${theme.palette.common.white}`,
-    },
+    text: {},
+    noRight: {},
 }));
 
-export interface ICategoryNestedThresholdHeader {
-    tableData: CategoryNestedThresholdData[];
-    modifier: CategoryNestedThresholdModifier;
-}
+export interface ICategoryNestedThresholdHeader {}
 
-export const CategoryNestedThresholdHeader = ({ tableData, modifier }: ICategoryNestedThresholdHeader) => {
+export const CategoryNestedThresholdHeader = ({}: ICategoryNestedThresholdHeader) => {
     const cls = useStyles();
 
     return (
         <TableHead>
             <TableRow>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText> Category</PalavyrText>
+                    Category
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText> Threshold</PalavyrText>
+                    Threshold
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText> Amount</PalavyrText>
+                    Amount
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell, cls.noRight)}>
-                    <PalavyrText> Max Amount</PalavyrText>
+                    Max Amount
                 </TableCell>
                 <TableCell align="center"></TableCell>
-                <TableCell align="center">
-                    <PalavyrText>Delete</PalavyrText>
-                </TableCell>
+                <TableCell align="center"></TableCell>
                 <TableCell align="center"></TableCell>
             </TableRow>
         </TableHead>

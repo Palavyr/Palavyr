@@ -9,7 +9,6 @@ import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     container: {
-        borderTop: `4px solid ${theme.palette.primary.main}`,
         borderBottom: `4px solid ${theme.palette.primary.main}`,
     },
 }));

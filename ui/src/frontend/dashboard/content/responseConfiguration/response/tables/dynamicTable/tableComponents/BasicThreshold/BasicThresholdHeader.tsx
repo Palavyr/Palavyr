@@ -1,51 +1,36 @@
 import React from "react";
-import { TableHead, TableRow, TableCell, makeStyles, Button } from "@material-ui/core";
+import { TableHead, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
-import { TableData } from "@Palavyr-Types";
-import { BasicThresholdModifier } from "./BasicThresholdModifier";
-import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 const useStyles = makeStyles(theme => ({
     cell: {
         fontSize: theme.typography.body1.fontSize,
         fontWeight: theme.typography.fontWeightBold,
     },
-    text: {
-        // fontSize: theme.typography.body1.fontSize,
-        // fontWeight: "bold"
-    },
-    row: {
-        // borderBottom: "3px solid black"
-    },
-    noRight: {
-        // borderRight: `0px solid ${theme.palette.common.white}`,
-    },
+    text: {},
+    row: {},
+    noRight: {},
 }));
 
-export interface IBasicThresholdHeader {
-    tableData: TableData;
-    modifier: BasicThresholdModifier;
-}
+export interface IBasicThresholdHeader {}
 
-export const BasicThresholdHeader = ({ tableData, modifier }: IBasicThresholdHeader) => {
+export const BasicThresholdHeader = ({}: IBasicThresholdHeader) => {
     const cls = useStyles();
     return (
         <TableHead>
             <TableRow className={cls.row}>
                 <TableCell align="center"></TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText>Threshold</PalavyrText>
+                    Threshold
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText>Amount</PalavyrText>
+                    Amount
                 </TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.noRight)}>
-                    <PalavyrText> Max Amount</PalavyrText>
+                <TableCell align="center" width="11ch" className={classNames(cls.cell)}>
+                    Max Amount
                 </TableCell>
-                <TableCell align="center">
-                    <PalavyrText align="center" className={classNames(cls.cell)}>
-                        Range or Value
-                    </PalavyrText>
+                <TableCell align="center" className={classNames(cls.cell)}>
+                    Range or Value
                 </TableCell>
                 <TableCell align="center"></TableCell>
             </TableRow>

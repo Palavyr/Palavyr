@@ -4,14 +4,11 @@ import React from "react";
 
 const useStyles = makeStyles(theme => ({
     cell: {
-        borderRight: `1px solid ${theme.palette.common.white}`,
+        fontSize: theme.typography.body1.fontSize,
+        fontWeight: theme.typography.fontWeightBold,
     },
-    text: {
-        fontSize: "16pt",
-    },
-    noRight: {
-        borderRight: "0px solid white",
-    },
+    text: {},
+    noRight: {},
 }));
 
 export const TwoNestedCategoriesHeader = ({ show }: { show: boolean }) => {
@@ -20,18 +17,18 @@ export const TwoNestedCategoriesHeader = ({ show }: { show: boolean }) => {
     return show ? (
         <TableHead>
             <TableRow>
-                <TableCell align="center">{show && <h5>Delete</h5>}</TableCell>
+                <TableCell align="center"></TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    {show && <h5> Outer Category</h5>}
+                    {show && "Outer Category"}
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    {show && <h5>Inner Category</h5>}
+                    {show && "Inner Category"}
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    {show && <h5>Amount</h5>}
+                    {show && "Amount"}
                 </TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.noRight)}>
-                    {show && <h5>Max Amount</h5>}
+                <TableCell align="center" className={classNames(cls.cell)}>
+                    {show && "Max Amount"}
                 </TableCell>
                 <TableCell align="center"></TableCell>
                 <TableCell align="center"></TableCell>

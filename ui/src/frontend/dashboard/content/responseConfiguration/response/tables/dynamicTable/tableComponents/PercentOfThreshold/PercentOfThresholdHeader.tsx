@@ -1,4 +1,3 @@
-import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { makeStyles, TableCell, TableHead, TableRow } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
@@ -20,26 +19,22 @@ export const PercentOfThresholdHeader = () => {
     return (
         <TableHead>
             <TableRow className={cls.row}>
-                <TableCell style={{width: "0px"}} classes={{ body: cls.button }}></TableCell>
+                <TableCell style={{ width: "0px" }} classes={{ body: cls.button }}></TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText>If exceeds</PalavyrText>
+                    If exceeds
+                </TableCell>
+                <TableCell align="center" className={classNames(cls.cell)}></TableCell>
+                <TableCell align="center" className={classNames(cls.cell)}>
+                    % of
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText> </PalavyrText>
+                    Amount
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText>% of</PalavyrText>
+                    Max Amount
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText>Amount</PalavyrText>
-                </TableCell>
-                <TableCell align="center" className={classNames(cls.cell)}>
-                    <PalavyrText>Max Amount</PalavyrText>
-                </TableCell>
-                <TableCell align="center">
-                    <PalavyrText align="center" className={classNames(cls.cell)}>
-                        Range or Value
-                    </PalavyrText>
+                    Range or Value
                 </TableCell>
                 <TableCell></TableCell>
             </TableRow>

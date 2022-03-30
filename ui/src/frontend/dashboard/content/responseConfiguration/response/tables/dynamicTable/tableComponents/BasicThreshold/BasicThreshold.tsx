@@ -43,18 +43,14 @@ const useStyles = makeStyles(theme => ({
         paddingLeft: "0.4rem",
     },
     container: {
-        borderTop: `4px solid ${theme.palette.primary.main}`,
         borderBottom: `4px solid ${theme.palette.primary.main}`,
-    },
-    inputPropsCls: {
-        paddingLeft: "0.4rem",
     },
 }));
 
 export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, deleteAction, tables, tableIndex, availableDynamicTableOptions, tableNameMap, unitTypes, inUse, table }: DynamicTableProps) => {
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
-    const [name, setItemName] = useState<string>("");
+    // const [name, setItemName] = useState<string>("");
     const [localTable, setLocalTable] = useState<DynamicTable>();
     const isMounted = useIsMounted();
 
@@ -116,6 +112,14 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, 
         return false;
     };
 
+    const onItemNameChange = (event: { preventDefault: () => void; target: { value: string } }) => {
+        event.preventDefault();
+        if (localTable) {
+            modifier.setItemName(localTable.tableRows, event.target.value);
+            // setItemName(event.target.value);
+        }
+    };
+
     return localTable ? (
         <>
             <DynamicTableHeader
@@ -128,24 +132,8 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, 
                 inUse={inUse}
             />
             <div className={cls.container}>
-                <Align direction="flex-start">
-                    <TextInput
-                        className={cls.input}
-                        variant="standard"
-                        label="Name to use in PDF fee table"
-                        type="text"
-                        value={name}
-                        InputLabelProps={{ className: cls.inputPropsCls }}
-                        color="primary"
-                        onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
-                            event.preventDefault();
-                            modifier.setItemName(localTable.tableRows, event.target.value);
-                            setItemName(event.target.value);
-                        }}
-                    />
-                </Align>
                 <Table>
-                    <BasicThresholdHeader tableData={localTable.tableRows} modifier={modifier} />
+                    <BasicThresholdHeader />
                     <BasicThresholdBody tableData={localTable.tableRows} modifier={modifier} unitPrettyName={localTable.tableMeta.unitPrettyName} unitGroup={localTable.tableMeta.unitGroup} />
                 </Table>
             </div>

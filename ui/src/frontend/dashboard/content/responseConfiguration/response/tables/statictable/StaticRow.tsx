@@ -14,6 +14,7 @@ import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { TableDeleteButton } from "../dynamicTable/tableComponents/PercentOfThreshold/TableDeleteButton";
+import { TableButton } from "../dynamicTable/tableComponents/SelectOneFlat/TableButton";
 
 type styleProp = {
     index: number;
@@ -113,29 +114,22 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                 />
             </TableCell>
             <TableCell align={cellAlignment}>
-                <Button
-                    startIcon={rangeState ? <ChevronLeftIcon /> : <RemoveIcon />}
-                    endIcon={rangeState ? <ChevronRightIcon /> : null}
-                    variant="contained"
-                    color={rangeState ? "primary" : "secondary"}
+                <TableButton
+                    state={rangeState}
                     onClick={() => {
                         modifier.changeRange(staticTableMetas, tableOrder, rowOrder);
                     }}
-                >
-                    {rangeState ? "Range" : "Single"}
-                </Button>
+                />
             </TableCell>
             <TableCell align={cellAlignment}>
-                <Button
-                    startIcon={perState ? <GroupAddIcon /> : <PeopleAltIcon />}
-                    variant="contained"
-                    color={perState ? "primary" : "secondary"}
+                <TableButton
+                    offMessage="Single Value"
+                    onMessage="Per Person"
                     onClick={() => {
                         modifier.changePer(staticTableMetas, tableOrder, rowOrder);
                     }}
-                >
-                    {perState ? "Per Individual" : "Static Fee"}
-                </Button>
+                    state={perState}
+                />
             </TableCell>
             <TableCell align={cellAlignment}>
                 {!modifier.isRowFirstPosition(rowOrder) && <ArrowDropUpIcon className={cls.largeicon} onClick={() => modifier.shiftRowUp(staticTableMetas, tableOrder, rowOrder)} />}
