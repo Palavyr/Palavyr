@@ -11,6 +11,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { UploadOrChooseFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
+import { ZoomImage } from "@common/components/borrowed/ZoomImage";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -73,7 +74,7 @@ export const ChangeLogoImage = () => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
-    const [companyLogo, setcompanyLogo] = useState<FileAssetResource | null>(null);
+    const [companyLogo, setcompanyLogo] = useState<FileAssetResource>({ fileId: "", fileName: "", link: "" });
 
     const loadCompanyLogo = useCallback(async () => {
         const logoFileAssetResource = await repository.Settings.Account.getCompanyLogo();
@@ -96,24 +97,24 @@ export const ChangeLogoImage = () => {
 
     const handleDeleteLogo = async () => {
         await repository.Settings.Account.deleteCompanyLogo();
-        setcompanyLogo(null);
+        setcompanyLogo({ fileId: "", fileName: "", link: "" });
     };
 
     useEffect(() => {
         loadCompanyLogo();
         return () => {
-            setcompanyLogo(null);
+            setcompanyLogo({ fileId: "", fileName: "", link: "" });
         };
     }, []);
 
     return (
         <SettingsWrapper>
-            <HeaderStrip title="Select your company logo" subtitle="Update your company logo. This is used in the response email and pdf sent to customers." />
+            <HeaderStrip title="Select your Logo" subtitle="Update a logo that will be used in the response email and pdf sent to customers." />
             <Paper className={cls.paper}>
-                <Alert style={{ marginBottom: "1.4rem" }} severity={companyLogo?.fileId === null ? "error" : "success"}>
+                <Alert style={{ marginBottom: "1.4rem" }} severity={!companyLogo?.fileId ? "error" : "success"}>
                     <AlertTitle>
                         <PalavyrText align="left" variant="h5">
-                            {companyLogo?.fileId === null ? "Provide your company logo" : "Logo uploaded"}
+                            {!companyLogo?.fileId ? "Provide your company logo" : "Logo uploaded"}
                         </PalavyrText>
                     </AlertTitle>
                     <PalavyrText align="left" variant="body1" display="block">
@@ -123,18 +124,18 @@ export const ChangeLogoImage = () => {
                         For the best results, use a square 250px by 250px png or svg image.
                     </PalavyrText>
                 </Alert>
-                {companyLogo?.fileId !== null && (
+                {companyLogo?.fileId && (
                     <PalavyrText display="block" align="center" variant="h5" gutterBottom>
                         Your Current Logo
                     </PalavyrText>
                 )}
                 <Align>
                     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "1.4rem" }}>
-                        {companyLogo?.fileId === null ? (
+                        {!companyLogo?.fileId ? (
                             "Upload a company logo"
                         ) : (
                             <Paper className={cls.logoPreview} classes={{ root: cls.paperRoot }}>
-                                <img className={cls.img} src={companyLogo?.link} />
+                                <ZoomImage alt="logo" imgSrc={companyLogo?.link} className={cls.img} />
                             </Paper>
                         )}
                     </div>
@@ -143,7 +144,7 @@ export const ChangeLogoImage = () => {
                 <UploadOrChooseFromExisting currentFileAssetId={companyLogo?.fileId} handleFileSave={handleFileSave} onSelectChange={handleFileChange} summary={"Upload"} uploadDetails={""} />
 
                 <SpaceEvenly>
-                    <SinglePurposeButton disabled={companyLogo?.fileId === null} variant="contained" color="secondary" buttonText="Remove current logo" onClick={handleDeleteLogo} />
+                    <SinglePurposeButton disabled={!companyLogo?.fileId} variant="contained" color="secondary" buttonText="Remove current logo" onClick={handleDeleteLogo} />
                 </SpaceEvenly>
             </Paper>
         </SettingsWrapper>
