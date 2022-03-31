@@ -9,7 +9,7 @@ export const convertTodos = (todos: Todos) => {
     return {
         name: isNotNullOrUndefinedOrWhitespace(todos.name),
         emailAddress: todos.emailAddress,
-        logoUri: isNotNullOrUndefinedOrWhitespace(todos.logoUri),
+        logoUri: isNotNullOrUndefinedOrWhitespace(todos.logoUri.link),
         isVerified: todos.isVerified,
         awaitingVerification: todos.awaitingVerification,
         phoneNumber: isNotNullOrUndefinedOrWhitespace(todos.phoneNumber),

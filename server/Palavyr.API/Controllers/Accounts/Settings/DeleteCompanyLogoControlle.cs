@@ -9,7 +9,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
     public class DeleteCompanyLogoController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "account/settings/logo";
+        public const string Route = "file-assets/unlink/logo";
 
         public DeleteCompanyLogoController(IMediator mediator)
         {

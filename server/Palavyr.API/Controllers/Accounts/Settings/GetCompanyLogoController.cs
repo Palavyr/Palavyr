@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Mappers;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -18,7 +19,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet(Route)]
-        public async Task<string?> Get(
+        public async Task<FileAssetResource?> Get(
             CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetCompanyLogoRequest(), cancellationToken);

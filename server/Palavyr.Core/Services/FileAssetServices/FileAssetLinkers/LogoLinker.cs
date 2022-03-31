@@ -15,13 +15,13 @@ namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
             this.logoStore = logoStore;
         }
 
-        public async Task Link(string fileId, string _)
+        public async Task Link(string fileId, string _ = null)
         {
             var logoRecord = await logoStore.GetOrCreateLogoRecord();
             logoRecord.AccountLogoFileId = fileId;
         }
 
-        public async Task Unlink(string? fileId, string targetId)
+        public async Task Unlink(string? fileId, string _ = null)
         {
             var logoRecord = await logoStore.GetOrNull(logoStore.AccountId, s => s.AccountId);
             if (logoRecord is null) return;

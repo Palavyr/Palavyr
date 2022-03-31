@@ -634,7 +634,7 @@ export type ProductIds = {
 export type Todos = {
     name: string;
     emailAddress: string;
-    logoUri: string;
+    logoUri: FileAssetResource;
     isVerified: boolean;
     awaitingVerification: boolean;
     phoneNumber: string;

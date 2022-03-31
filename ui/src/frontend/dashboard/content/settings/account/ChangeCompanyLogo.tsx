@@ -4,7 +4,7 @@ import { getAnchorOrigin } from "@common/components/PalavyrSnackbar";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Divider, makeStyles, Paper, Typography } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { SetState } from "@Palavyr-Types";
+import { FileAssetResource, SetState } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { Align } from "@common/positioning/Align";
 import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
@@ -13,13 +13,14 @@ import * as React from "react";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { SelectFromExistingFileAssets } from "@common/uploads/SelectFromExistingFileAssets";
+import { UploadOrChooseFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
 
 const useStyles = makeStyles(theme => ({
     paper: {
         backgroundColor: "rgb(0, 0, 0 ,0)", //theme.palette.secondary.light,
         border: "0px",
         boxShadow: "none",
-         padding: "2rem",
+        padding: "2rem",
         margin: "1rem",
         width: "100%",
         display: "inline-block",
@@ -72,86 +73,50 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const ChangeLogoImage = () => {
-    const [fileUpload, setFileUpload] = useState<File[]>([]);
-    return <ChangeLogoImageInner fileUpload={fileUpload} setFileUpload={setFileUpload} />;
-};
-
-interface ChangeLogoImageInner {
-    fileUpload: File[];
-    setFileUpload: SetState<File[]>;
-}
-const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInner) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
-    const [alertState, setAlertState] = useState<boolean>(false);
-    const [companyLogo, setcompanyLogo] = useState<string>("");
-
-    const alertMessage = {
-        title: "Logo updated.",
-        message: "",
-    };
+    const [companyLogo, setcompanyLogo] = useState<FileAssetResource | null>(null);
 
     const loadCompanyLogo = useCallback(async () => {
-        const logoUri = await repository.Settings.Account.getCompanyLogo();
-        setcompanyLogo(logoUri);
+        const logoFileAssetResource = await repository.Settings.Account.getCompanyLogo();
+        setcompanyLogo(logoFileAssetResource);
     }, []);
 
-    const handleFileChange = (files: File[]) => {
-        setFileUpload(files);
+    const handleFileChange = async (_: any, fileAssetResource: FileAssetResource) => {
+        await repository.Configuration.FileAssets.LinkFileAssetToLogo(fileAssetResource.fileId);
+        setcompanyLogo(fileAssetResource);
     };
 
-    const handleFileDelete = (file: File) => {
-        setFileUpload([file]);
-    };
+    const handleFileSave = async (files: File[]) => {
+        const formData = new FormData();
+        formData.append("files", files[0]);
 
-    const handleFileSave = async () => {
-        if (fileUpload !== null) {
-            const formData = new FormData();
-            formData.append("files", fileUpload[0]);
-            const dataUrl = await repository.Settings.Account.updateCompanyLogo(formData);
-            setcompanyLogo(dataUrl);
-        }
-        setFileUpload([]); // shouldn't this clear the chip
-    };
-
-    const getDropRejectMessage = (rejectedFile: File, acceptedFiles: string[], maxFileSize: number) => {
-        let message = `File ${rejectedFile.name} was rejected. `;
-        if (!acceptedFiles.includes(rejectedFile.type)) {
-            message += "File type not supported. ";
-        }
-        const maxFileSizeInGb = maxFileSize / 1000000 + " MB";
-        if (rejectedFile.size > maxFileSize) {
-            message += "File is too big. Size limit is " + maxFileSizeInGb;
-        }
-
-        return message;
+        const fileAssetResources = await repository.Configuration.FileAssets.UploadFileAssets(formData);
+        const fileAssetResource = await repository.Configuration.FileAssets.LinkFileAssetToLogo(fileAssetResources[0].fileId);
+        setcompanyLogo(fileAssetResource);
     };
 
     const handleDeleteLogo = async () => {
         await repository.Settings.Account.deleteCompanyLogo();
-        setcompanyLogo("");
+        setcompanyLogo(null);
     };
 
     useEffect(() => {
         loadCompanyLogo();
         return () => {
-            setFileUpload([]);
+            setcompanyLogo(null);
         };
     }, []);
 
-    const previewProps = { classes: { root: cls.previewChip, deleteIcon: cls.deleteIcon, label: cls.label } };
-
-    const anchorOrigin = getAnchorOrigin("br");
-
     return (
         <SettingsWrapper>
-            <HeaderStrip title="Change your company logo" subtitle="Update your company logo. This is used in the response email and pdf sent to customers." />
+            <HeaderStrip title="Select your company logo" subtitle="Update your company logo. This is used in the response email and pdf sent to customers." />
             <Paper className={cls.paper}>
-                <Alert style={{ marginBottom: "1.4rem" }} severity={companyLogo === "" ? "error" : "success"}>
+                <Alert style={{ marginBottom: "1.4rem" }} severity={companyLogo === null ? "error" : "success"}>
                     <AlertTitle>
                         <Typography align="left" variant="h5">
-                            {companyLogo === "" ? "Upload your company logo" : "Logo uploaded"}
+                            {companyLogo === null ? "Provide your company logo" : "Logo uploaded"}
                         </Typography>
                     </AlertTitle>
                     <Typography align="left" variant="body1" display="block">
@@ -161,54 +126,27 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
                         For the best results, use a square 250px by 250px png or svg image.
                     </Typography>
                 </Alert>
-                {companyLogo !== "" && (
+                {companyLogo !== null && (
                     <Typography display="block" align="center" variant="h5" gutterBottom>
                         Your Current Logo
                     </Typography>
                 )}
                 <Align>
                     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "1.4rem" }}>
-                        {companyLogo === "" ? (
+                        {companyLogo === null ? (
                             "Upload a company logo"
                         ) : (
                             <Paper className={cls.logoPreview} classes={{ root: cls.paperRoot }}>
-                                <img className={cls.img} src={companyLogo} />
+                                <img className={cls.img} src={companyLogo.link} />
                             </Paper>
                         )}
                     </div>
                 </Align>
                 <Divider />
+                <UploadOrChooseFromExisting currentFileAssetId={companyLogo?.fileId} handleFileSave={handleFileSave} onSelectChange={handleFileChange} summary={"Upload"} uploadDetails={""} />
 
-                <SelectFromExistingFileAssets
-                    onSelectChange={handleFileChange}
-                    repository={repository}
-                    currentFileAssetId={companyLogo}
-                />
-
-
-                <div className={cls.dropzone}>
-                    <DropzoneArea
-                        showAlerts={true}
-                        onChange={handleFileChange}
-                        onDelete={handleFileDelete}
-                        dropzoneText="Drag and drop a new image logo here or click"
-                        useChipsForPreview
-                        showPreviewsInDropzone={false}
-                        previewChipProps={previewProps}
-                        acceptedFiles={["image/png", "image/svg"]}
-                        showPreviews={fileUpload.length > 0}
-                        maxFileSize={500000}
-                        previewGridProps={{ item: { alignContent: "flex-start" }, container: { spacing: 2, direction: "row" } }}
-                        filesLimit={1}
-                        previewText="Selected Files"
-                        alertSnackbarProps={{ anchorOrigin, classes: { root: cls.snackbarProps } }}
-                        getDropRejectMessage={getDropRejectMessage}
-                    />
-                    <PalavyrAlert alertState={alertState} setAlertState={setAlertState} useAlert alertMessage={alertMessage} />
-                </div>
                 <SpaceEvenly>
-                    <SinglePurposeButton disabled={fileUpload.length === 0} variant="contained" color="primary" buttonText="Upload and Save" onClick={handleFileSave} />
-                    <SinglePurposeButton disabled={companyLogo === ""} variant="contained" color="secondary" buttonText="Delete current logo" onClick={handleDeleteLogo} />
+                    <SinglePurposeButton disabled={companyLogo === null} variant="contained" color="secondary" buttonText="Remove current logo" onClick={handleDeleteLogo} />
                 </SpaceEvenly>
             </Paper>
         </SettingsWrapper>

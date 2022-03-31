@@ -1,6 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.LogoServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -8,25 +10,29 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetCompanyLogoHandler : IRequestHandler<GetCompanyLogoRequest, GetCompanyLogoResponse>
     {
         private readonly ILogoRetriever logoRetriever;
+        private readonly IMapToNew<FileAsset, FileAssetResource> mapper;
 
         public GetCompanyLogoHandler(
-            ILogoRetriever logoRetriever
-        )
+            ILogoRetriever logoRetriever,
+            IMapToNew<FileAsset, FileAssetResource> mapper)
         {
             this.logoRetriever = logoRetriever;
+            this.mapper = mapper;
         }
 
         public async Task<GetCompanyLogoResponse> Handle(GetCompanyLogoRequest request, CancellationToken cancellationToken)
         {
-            var preSignedUrl = await logoRetriever.GetLogo();
-            return new GetCompanyLogoResponse(preSignedUrl);
+            var logoFileAsset = await logoRetriever.GetLogo();
+            var fileAssetResource = await mapper.Map(logoFileAsset);
+            
+            return new GetCompanyLogoResponse(fileAssetResource);
         }
     }
 
     public class GetCompanyLogoResponse
     {
-        public GetCompanyLogoResponse(string response) => Response = response;
-        public string Response { get; set; }
+        public GetCompanyLogoResponse(FileAssetResource response) => Response = response;
+        public FileAssetResource Response { get; set; }
     }
 
     public class GetCompanyLogoRequest : IRequest<GetCompanyLogoResponse>

@@ -1,57 +1,39 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
 using Palavyr.Core.Services.LogoServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class CreateCompanyLogoHandler : IRequestHandler<CreateCompanyLogoRequest, CreateCompanyLogoResponse>
+    public class CreateCompanyLogoHandler : INotificationHandler<LinkFileAssetToLogoRequest>
     {
         private readonly ILogoAssetSaver logoAssetSaver;
-        private readonly ILogoDeleter logoDeleter;
-        private readonly IMapToNew<FileAsset, FileAssetResource> mapper;
+        private readonly IFileAssetLinker<LogoLinker> linker;
 
         public CreateCompanyLogoHandler(
-            ILogoAssetSaver logoAssetSaver,
-            ILogoDeleter logoDeleter,
-            IMapToNew<FileAsset, FileAssetResource> mapper)
+            IFileAssetLinker<LogoLinker> linker)
         {
-            this.logoAssetSaver = logoAssetSaver;
-            this.logoDeleter = logoDeleter;
-            this.mapper = mapper;
+            this.linker = linker;
         }
 
-        public async Task<CreateCompanyLogoResponse> Handle(CreateCompanyLogoRequest request, CancellationToken cancellationToken)
+        public async Task Handle(LinkFileAssetToLogoRequest request, CancellationToken cancellationToken)
         {
-            await logoDeleter.DeleteLogo();
-            var fileAsset = await logoAssetSaver.SaveFile(request.File);
-
-            var fileAssetResource = await mapper.Map(fileAsset);
-
-            return new CreateCompanyLogoResponse(fileAssetResource.Link);
+            await linker.Link(request.FileId);
         }
     }
 
-    public class CreateCompanyLogoResponse
+    public class LinkFileAssetToLogoRequest : INotification
     {
-        public string Response { get; set; }
-        public CreateCompanyLogoResponse(string response) => Response = response;
-    }
-
-    public class CreateCompanyLogoRequest : IRequest<CreateCompanyLogoResponse>
-    {
-        public CreateCompanyLogoRequest()
+        public LinkFileAssetToLogoRequest()
         {
         }
 
-        public CreateCompanyLogoRequest(IFormFile file)
+        public LinkFileAssetToLogoRequest(string fileId)
         {
-            File = file;
+            FileId = fileId;
         }
 
-        public IFormFile File { get; set; }
+        public string FileId { get; set; }
     }
 }

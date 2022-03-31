@@ -1,6 +1,6 @@
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { makeStyles, Typography } from "@material-ui/core";
-import { VariableDetail, PurchaseTypes } from "@Palavyr-Types";
+import { VariableDetail } from "@Palavyr-Types";
 import { EmailSubject } from "frontend/dashboard/content/settings/subject/EmailSubject";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
@@ -98,6 +98,7 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
                     <SaveOrCancel onSave={onSaveAreaSubject} onCancel={loadAreaSubject} />
                 </div>
             </EmailSubject>
+            <hr/>
             <Upload
                 modalState={modalState}
                 toggleModal={toggleModal}

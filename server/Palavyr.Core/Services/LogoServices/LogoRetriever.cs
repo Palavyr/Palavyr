@@ -8,33 +8,32 @@ namespace Palavyr.Core.Services.LogoServices
 {
     public interface ILogoRetriever
     {
-        Task<string?> GetLogo();
-        Task<string?> GetLogoThumbnail();
+        Task<FileAsset?> GetLogo();
+        Task<FileAsset?> GetLogoThumbnail();
     }
 
     public class LogoRetriever : ILogoRetriever
     {
         private readonly IEntityStore<Logo> logoStore;
-        private readonly ILinkCreator linkCreator;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
 
         public LogoRetriever(
             IEntityStore<Logo> logoStore,
-            ILinkCreator linkCreator
-        )
+            IEntityStore<FileAsset> fileAssetStore )
         {
             this.logoStore = logoStore;
-            this.linkCreator = linkCreator;
+            this.fileAssetStore = fileAssetStore;
         }
 
-        public async Task<string?> GetLogo()
+        public async Task<FileAsset?> GetLogo()
         {
             var logo = await logoStore.GetOrNull(logoStore.AccountId, x => x.AccountId);
             if (logo is null || string.IsNullOrEmpty(logo.AccountLogoFileId)) return null;
-            var logoLink = await linkCreator.CreateLink(logo.AccountLogoFileId);
-            return logoLink;
+            var fileAsset = await fileAssetStore.Get(logo.AccountLogoFileId, s => s.FileId);
+            return fileAsset;
         }
 
-        public Task<string?> GetLogoThumbnail()
+        public Task<FileAsset?> GetLogoThumbnail()
         {
             throw new System.NotImplementedException();
         }

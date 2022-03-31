@@ -247,6 +247,7 @@ export class PalavyrRepository {
 
             LinkFileAssetToNode: async (fileId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`file-assets/link/${fileId}/node/${nodeId}`),
             LinkFileAssetToIntent: async (fileId: string, intentId: string) => this.client.post<FileAssetResource, {}>(`file-assets/link/${fileId}/intent/${intentId}`),
+            LinkFileAssetToLogo: async (fileId: string) => this.client.post<FileAssetResource, {}>(`file-assets/link/${fileId}/logo`),
             DeleteFileAsset: async (fileIds: string[]) => this.client.delete<FileAssetResource[]>(`file-assets?fileIds=${fileIds.join(",")}`), // CacheIds.FileAssets), // takes a querystring command delimited of fileIds
         },
     };
@@ -300,7 +301,7 @@ export class PalavyrRepository {
             updatePhoneNumber: async (newPhoneNumber: string) => this.client.put<string, {}>(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }),
             updateLocale: async (newLocaleId: string) => this.client.put<LocaleResponse, {}>(`account/settings/locale`, { LocaleId: newLocaleId }),
             updateCompanyLogo: async (formData: FormData) =>
-                this.client.put<string, {}>(`account/settings/logo`, formData, undefined, {
+                this.client.put<FileAssetResource, {}>(`account/settings/logo`, formData, undefined, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",
@@ -312,13 +313,13 @@ export class PalavyrRepository {
             getPhoneNumber: async () => this.client.get<PhoneSettingsResponse>(`account/settings/phone-number`),
 
             GetLocale: async (readonly: boolean = false) => this.client.get<LocaleResponse>(`account/settings/locale?read=${readonly}`),
-            getCompanyLogo: async () => this.client.get<string>(`account/settings/logo`),
+            getCompanyLogo: async () => this.client.get<FileAssetResource>(`account/settings/logo`),
 
             getIntroductionId: async () => this.client.get<string>(`account/settings/intro-id`),
             updateIntroduction: async (introId: string, update: ConvoNode[]) =>
                 this.client.post<ConvoNode[], {}>(`account/settings/intro-id`, { Transactions: update }, [CacheIds.PalavyrConfiguration, introId].join("-") as CacheIds),
 
-            deleteCompanyLogo: async () => this.client.delete(`account/settings/logo`),
+            deleteCompanyLogo: async () => this.client.delete(`file-assets/unlink/logo`),
             DeleteAccount: async () => {
                 const result = this.client.post(`account/delete-account`);
                 SessionStorage.ClearAllCacheValues();
