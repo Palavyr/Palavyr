@@ -1,4 +1,4 @@
-import { ErrorResponse, SetState } from "@Palavyr-Types";
+import { ErrorResponse } from "@Palavyr-Types";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { ApiErrors } from "frontend/dashboard/layouts/Errors/ApiErrors";
 import { SessionStorage } from "@localStorage/sessionStorage";
@@ -29,7 +29,7 @@ export enum CacheIds {
     ShowSeenQueries = "ShowSeenQueries",
     NeedsPassword = "NeedsPassword",
     WidgetState = "WidgetState",
-    // FileAssets = "FileAssets",
+    // FileAssets = "FileAssets", temporarily turned off
     S3Key = "S3Key",
     SupportedUnitIds = "SupportedUnitIds",
 }

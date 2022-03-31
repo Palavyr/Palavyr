@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Exceptions;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
 
@@ -23,7 +26,6 @@ namespace Palavyr.Core.Services.FileAssetServices
         {
             var fileAsset = await inner.SaveFile(fileData);
             await fileAssetStore.Create(fileAsset);
-            await fileAssetStore.Get(fileAsset.FileId, s => s.FileId);
             return fileAsset;
         }
     }
@@ -38,18 +40,33 @@ namespace Palavyr.Core.Services.FileAssetServices
     {
         private readonly ICloudFileSaver cloudFileSaver;
         private readonly IGuidUtils guidUtils;
+        private readonly IEntityStore<FileAsset> fileAssetStore;
 
-        public FileAssetSaver(ICloudFileSaver cloudFileSaver, IGuidUtils guidUtils)
+        public FileAssetSaver(ICloudFileSaver cloudFileSaver, IGuidUtils guidUtils, IEntityStore<FileAsset> fileAssetStore)
         {
             this.cloudFileSaver = cloudFileSaver;
             this.guidUtils = guidUtils;
+            this.fileAssetStore = fileAssetStore;
         }
 
         public async Task<FileAsset> SaveFile(IFormFile fileData)
         {
-            var fileName = FileName.ParseRiskyFileName(fileData.FileName, guidUtils.CreateNewId());
+            var fileName = await GenerateFileName(fileData.FileName);
             var fileAsset = await cloudFileSaver.SaveFile(fileName, fileData);
             return fileAsset;
+        }
+
+        private async Task<FileName> GenerateFileName(string providedFilename)
+        {
+            var fileName = FileName.ParseRiskyFileName(providedFilename, guidUtils.CreateNewId());
+            var currentFiles = await fileAssetStore.GetAll();
+            var currentFileNames = currentFiles.Select(x => x.RiskyNameWithExtension.ToLowerInvariant()).ToArray();
+            if (currentFileNames.Contains(providedFilename.ToLowerInvariant()))
+            {
+                throw new DomainException("That file already exists!");
+            }
+
+            return fileName;
         }
     }
 }
