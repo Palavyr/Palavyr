@@ -1,19 +1,16 @@
 import { HeaderStrip } from "@common/components/HeaderStrip";
-import { PalavyrAlert } from "@common/components/PalavyrAlert";
-import { getAnchorOrigin } from "@common/components/PalavyrSnackbar";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { Divider, makeStyles, Paper, Typography } from "@material-ui/core";
+import { Divider, makeStyles, Paper } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { FileAssetResource, SetState } from "@Palavyr-Types";
+import { FileAssetResource } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { Align } from "@common/positioning/Align";
 import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
-import { DropzoneArea } from "material-ui-dropzone";
 import * as React from "react";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { SettingsWrapper } from "../SettingsWrapper";
-import { SelectFromExistingFileAssets } from "@common/uploads/SelectFromExistingFileAssets";
 import { UploadOrChooseFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -113,31 +110,31 @@ export const ChangeLogoImage = () => {
         <SettingsWrapper>
             <HeaderStrip title="Select your company logo" subtitle="Update your company logo. This is used in the response email and pdf sent to customers." />
             <Paper className={cls.paper}>
-                <Alert style={{ marginBottom: "1.4rem" }} severity={companyLogo === null ? "error" : "success"}>
+                <Alert style={{ marginBottom: "1.4rem" }} severity={companyLogo?.fileId === null ? "error" : "success"}>
                     <AlertTitle>
-                        <Typography align="left" variant="h5">
-                            {companyLogo === null ? "Provide your company logo" : "Logo uploaded"}
-                        </Typography>
+                        <PalavyrText align="left" variant="h5">
+                            {companyLogo?.fileId === null ? "Provide your company logo" : "Logo uploaded"}
+                        </PalavyrText>
                     </AlertTitle>
-                    <Typography align="left" variant="body1" display="block">
+                    <PalavyrText align="left" variant="body1" display="block">
                         Your company logo is placed into the top left area of each response PDF.
-                    </Typography>
-                    <Typography align="left" variant="body1" display="block">
+                    </PalavyrText>
+                    <PalavyrText align="left" variant="body1" display="block">
                         For the best results, use a square 250px by 250px png or svg image.
-                    </Typography>
+                    </PalavyrText>
                 </Alert>
-                {companyLogo !== null && (
-                    <Typography display="block" align="center" variant="h5" gutterBottom>
+                {companyLogo?.fileId !== null && (
+                    <PalavyrText display="block" align="center" variant="h5" gutterBottom>
                         Your Current Logo
-                    </Typography>
+                    </PalavyrText>
                 )}
                 <Align>
                     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "1.4rem" }}>
-                        {companyLogo === null ? (
+                        {companyLogo?.fileId === null ? (
                             "Upload a company logo"
                         ) : (
                             <Paper className={cls.logoPreview} classes={{ root: cls.paperRoot }}>
-                                <img className={cls.img} src={companyLogo.link} />
+                                <img className={cls.img} src={companyLogo?.link} />
                             </Paper>
                         )}
                     </div>
@@ -146,7 +143,7 @@ export const ChangeLogoImage = () => {
                 <UploadOrChooseFromExisting currentFileAssetId={companyLogo?.fileId} handleFileSave={handleFileSave} onSelectChange={handleFileChange} summary={"Upload"} uploadDetails={""} />
 
                 <SpaceEvenly>
-                    <SinglePurposeButton disabled={companyLogo === null} variant="contained" color="secondary" buttonText="Remove current logo" onClick={handleDeleteLogo} />
+                    <SinglePurposeButton disabled={companyLogo?.fileId === null} variant="contained" color="secondary" buttonText="Remove current logo" onClick={handleDeleteLogo} />
                 </SpaceEvenly>
             </Paper>
         </SettingsWrapper>

@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet(Route)]
-        public async Task<FileAssetResource?> Get(
+        public async Task<FileAssetResource> Get(
             CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetCompanyLogoRequest(), cancellationToken);

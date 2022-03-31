@@ -23,8 +23,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetCompanyLogoResponse> Handle(GetCompanyLogoRequest request, CancellationToken cancellationToken)
         {
             var logoFileAsset = await logoRetriever.GetLogo();
+            if (logoFileAsset is null) return new GetCompanyLogoResponse(new FileAssetResource());
+
             var fileAssetResource = await mapper.Map(logoFileAsset);
-            
+
             return new GetCompanyLogoResponse(fileAssetResource);
         }
     }
