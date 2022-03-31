@@ -7,14 +7,14 @@ using Palavyr.Core.Services.LogoServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    public class LinkFileAssetToLogo : PalavyrBaseController
+    public class LinkFileAssetToLogoController : PalavyrBaseController
     {
         private readonly IMediator mediator;
         public const string Route = "file-assets/link/{fileId}/logo";
 
         private readonly ILogoAssetSaver logoAssetSaver;
 
-        public LinkFileAssetToLogo(IMediator mediator)
+        public LinkFileAssetToLogoController(IMediator mediator)
         {
             this.mediator = mediator;
         }
