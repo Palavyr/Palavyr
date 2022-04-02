@@ -6,16 +6,26 @@ import { Align } from "@common/positioning/Align";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { FileAssetResource } from "@Palavyr-Types";
 import { FileAssetTables } from "./FileAssetTables";
+import { ZoomImage } from "@common/components/borrowed/ZoomImage";
+
+type StyleProps = { showSpinner: boolean };
 
 const useStyles = makeStyles(theme => ({
     display: {
-        height: "100%",
-        width: "100%",
+        display: "flex",
+        justifyContent: "center",
         borderRadius: "5px",
         "&:hover": {
             cursor: "pointer",
         },
     },
+    image: (props: StyleProps) => ({
+        textAlign: "center",
+        visibility: props.showSpinner ? "hidden" : "visible",
+        margin: "1rem",
+        display: "flex",
+        justifyContent: "center",
+    }),
 }));
 
 export type FileDetails = {
@@ -24,14 +34,13 @@ export type FileDetails = {
 };
 
 export const FileAssetReview = () => {
-    const cls = useStyles();
-
     const { repository, setViewName } = useContext(DashboardContext);
     setViewName("Uploads");
 
     const [fileAssetResources, setFileAssetRecords] = useState<FileAssetResource[] | null>(null);
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
+    const cls = useStyles({ showSpinner });
     const [currentPreview, setCurrentPreview] = useState<FileDetails>(null!);
 
     const loadFileAssetRecords = useCallback(async () => {
@@ -43,28 +52,23 @@ export const FileAssetReview = () => {
         loadFileAssetRecords();
     }, [loadFileAssetRecords]);
 
-    const onFileAssetClick = e => {
-        e.preventDefault();
-        window.open(currentPreview.link, "_blank");
-    };
-
     const renderSwitch = (current: FileDetails) => {
         const { extension, link } = current;
 
         switch (extension) {
             case "pdf":
                 return (
-                    <div style={{ width: "100%", height: "100vh" }}>
+                    <div style={{ width: "100%", height: "76vh" }}>
                         <object data={link} id="upload-preview" type="application/pdf" width="100%" height="100%" aria-label="preview"></object>;
                     </div>
                 );
             default:
                 return (
-                    <img
-                        onClick={onFileAssetClick}
+                    <ZoomImage
+                        alt="Image"
                         className={cls.display}
                         key={Date.now()}
-                        src={current.link}
+                        imgSrc={current.link}
                         onChange={() => setShowSpinner(true)}
                         onLoadStart={() => setShowSpinner(true)}
                         onLoad={() => setShowSpinner(false)}
@@ -90,9 +94,7 @@ export const FileAssetReview = () => {
                             <CircularProgress style={{ padding: ".5rem", margin: "1rem" }} />
                         </Align>
                     )}
-                    <div style={{ visibility: showSpinner ? "hidden" : "visible", maxWidth: "100%", minHeight: "100%", margin: "1rem", display: "flex", justifyContent: "center" }}>
-                        {currentPreview && renderSwitch(currentPreview)}
-                    </div>
+                    <div className={cls.image}>{currentPreview && renderSwitch(currentPreview)}</div>
                 </Grid>
             </Grid>
         </div>

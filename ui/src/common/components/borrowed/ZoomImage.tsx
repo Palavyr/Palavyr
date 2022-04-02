@@ -40,16 +40,17 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export interface IZoomImage {
+export interface ZoomImageProps {
     alt: string;
     imgSrc: string;
     className?: string;
     onLoad?: () => void;
     onLoadStart?: () => void;
     onClick?: (e: any) => void;
+    onChange?: (e: any) => void;
 }
 
-export const ZoomImage = ({ alt, imgSrc, className = "", onClick = undefined, onLoad = undefined, onLoadStart = undefined }: IZoomImage) => {
+export const ZoomImage = ({ alt, imgSrc, className = "", onClick = undefined, onLoad = undefined, onLoadStart = undefined, onChange = undefined }: ZoomImageProps) => {
     const cls = useStyles();
 
     const [zoomedIn, setZoomedIn] = useState(false);

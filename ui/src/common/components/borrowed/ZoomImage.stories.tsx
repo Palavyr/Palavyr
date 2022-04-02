@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
-import { ZoomImage, IZoomImage } from './ZoomImage';
+import { ZoomImage, ZoomImageProps } from './ZoomImage';
 
 
 export default {
@@ -9,7 +9,7 @@ export default {
 } as Meta;
 
 
-const Template = (args: IZoomImage) => <div style={{height: "30%", width: "30%"}}><ZoomImage {...args} /></div>;
+const Template = (args: ZoomImageProps) => <div style={{height: "30%", width: "30%"}}><ZoomImage {...args} /></div>;
 
 export const Primary = Template.bind({});
 Primary.args = {
