@@ -16,13 +16,13 @@ export const ChangePhoneNumber = () => {
     const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
-    const [, setLoaded] = useState<boolean>(false);
-    const [phoneNumber, setPhoneNumber] = useState<string>("");
+    const [loaded, setLoaded] = useState<boolean>(false);
+    const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
     const [locale, setLocale] = useState<string>("");
 
     const loadPhoneNumber = useCallback(async () => {
         const { phoneNumber, locale } = await repository.Settings.Account.getPhoneNumber();
-        setPhoneNumber(phoneNumber);
+        setPhoneNumber(phoneNumber ?? "");
         setLocale(locale);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -51,11 +51,12 @@ export const ChangePhoneNumber = () => {
             <Divider />
             <SettingsGridRowText
                 fullWidth
+                loading={phoneNumber === null}
                 inputType="phone"
                 placeholder="New Phone Number"
                 onClick={handlePhoneNumberChange}
                 clearVal={true}
-                currentValue={phoneNumber}
+                currentValue={phoneNumber ?? ""}
                 successText="Successfully updated Phone Number"
                 alertNode={
                     <Alert severity={phoneNumber ? "success" : "error"}>

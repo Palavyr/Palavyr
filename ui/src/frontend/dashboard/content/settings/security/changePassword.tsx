@@ -28,16 +28,27 @@ const useStyles = makeStyles((theme: Theme) =>
             boxShadow: "none",
             padding: "2rem",
             margin: "2rem",
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
         },
         rowStyle: {
             padding: "1rem",
             margin: "1rem",
+            maxWidth: "50ch",
+            display: "flex",
+            justifyContent: "center",
         },
         titleText: {
             fontWeight: "bold",
         },
         input: {
             width: "100%",
+        },
+        block: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
         },
     })
 );
@@ -75,8 +86,8 @@ export const ChangePassword = () => {
                         <li>1 uppercase letter</li>
                     </ul>
                 </Alert>
-                <Grid container spacing={3}>
-                    <Grid className={cls.rowStyle} item xs={12}>
+                <Grid classes={{ root: cls.root }} alignContent="center" container spacing={3}>
+                    <Grid alignContent="center" className={cls.rowStyle} item xs={12}>
                         <FormControl fullWidth className={classNames(cls.margin)}>
                             <InputLabel htmlFor="standard-adornment-password-old">Old Password</InputLabel>
                             <Input

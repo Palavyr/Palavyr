@@ -2,8 +2,8 @@ import { Divider, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 
 interface HeaderStripProps {
-    title: string;
-    subtitle?: string;
+    title: string | React.ReactNode;
+    subtitle?: string | React.ReactNode;
     divider?: boolean;
     light?: boolean;
     gutterBottom?: boolean;

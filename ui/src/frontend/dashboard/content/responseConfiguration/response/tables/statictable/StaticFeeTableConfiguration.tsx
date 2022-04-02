@@ -22,6 +22,7 @@ interface IFeeConfiguration {
     tableCanceler(): Promise<any>;
     areaIdentifier: string;
     children: React.ReactNode;
+    initialState?: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -42,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tableCanceler, modifier, areaIdentifier, children }: IFeeConfiguration) => {
+export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tableCanceler, modifier, areaIdentifier, children, initialState }: IFeeConfiguration) => {
     const { repository, planTypeMeta } = useContext(DashboardContext);
     const cls = useStyles();
 
@@ -90,7 +91,7 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
         );
 
     return (
-        <PalavyrAccordian title={title} initialState={true} actions={actions}>
+        <PalavyrAccordian title={title} initialState={initialState ?? false} actions={actions}>
             <>
                 {children}
                 {staticTables.length === 0 && (

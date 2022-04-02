@@ -12,6 +12,7 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import Cookies from "js-cookie";
 import { ALL_COOKIE_NAMES } from "@constants";
 import ErrorIcon from "@material-ui/icons/Error";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 const useStyles = makeStyles(theme => ({
     titleText: {
@@ -49,7 +50,17 @@ export const DeleteAccount = () => {
 
     return (
         <SettingsWrapper>
-            <HeaderStrip title="Delete your account" subtitle="Caution - account deletion is permanent." />
+            <HeaderStrip
+                title="Delete your account"
+                subtitle={
+                    <PalavyrText>
+                        Caution - Account Deletion is{" "}
+                        <i>
+                            <b>permanent</b>
+                        </i>
+                    </PalavyrText>
+                }
+            />
             <Divider />
             <SettingsGridRowText
                 onClick={async () => await Promise.resolve(setDialogOpen(true))}

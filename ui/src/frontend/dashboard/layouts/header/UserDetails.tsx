@@ -13,6 +13,8 @@ import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import FreeBreakfastIcon from "@material-ui/icons/FreeBreakfast";
 import CardMembershipIcon from "@material-ui/icons/CardMembership";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
+import { webUrl } from "@common/client/clientUtils";
+
 const DETAILS_MAX_HEIGHT = TOPBAR_MAX_HEIGHT - 10;
 
 const useStyles = makeStyles(theme => ({
@@ -52,7 +54,7 @@ export const UserDetailsMenu = React.memo(() => {
     const email = SessionStorage.getEmailAddress();
     const [loading, setLoading] = useState<boolean>(true);
 
-    const { planTypeMeta, setViewName } = React.useContext(DashboardContext);
+    const { planTypeMeta, setViewName, repository } = React.useContext(DashboardContext);
 
     const userOnClick = () => {
         setViewName("General Settings");
@@ -73,6 +75,13 @@ export const UserDetailsMenu = React.memo(() => {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const createCustomerPortalSession = async () => {
+        const returnUrl = `${webUrl}/dashboard`;
+        const customerId = await repository.Purchase.Customer.GetCustomerId();
+        const portalUrl = await repository.Purchase.Customer.GetCustomerPortal(customerId, returnUrl);
+        window.open(portalUrl, "_blank");
     };
 
     const getPlanTypeIcon = () => {
@@ -101,7 +110,7 @@ export const UserDetailsMenu = React.memo(() => {
                 </IconButton>
             </Tooltip>
             <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={userOnClick}>
                     <ListItemIcon>
                         <PalavyrText>whoami</PalavyrText>
                     </ListItemIcon>
@@ -111,7 +120,7 @@ export const UserDetailsMenu = React.memo(() => {
                         </span>
                     </ListItem>
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={createCustomerPortalSession}>
                     <ListItemIcon>{getPlanTypeIcon()}</ListItemIcon>
                     <ListItem>{planTypeMeta && <PalavyrText>Subscription: {planTypeMeta.planType}</PalavyrText>}</ListItem>
                 </MenuItem>

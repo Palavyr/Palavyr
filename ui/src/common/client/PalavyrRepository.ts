@@ -325,7 +325,6 @@ export class PalavyrRepository {
                 SessionStorage.ClearAllCacheValues();
                 return result;
             },
-            CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`),
         },
         EmailVerification: {
             RequestEmailVerification: async (emailAddress: string, intentId: string) => this.client.post<EmailVerificationResponse, {}>(`verification/email`, { EmailAddress: emailAddress, IntentId: intentId }),

@@ -87,8 +87,8 @@ const baseRoutesToExclude = [
     "/dashboard/subscribe/purchase",
     "/dashboard/confirm",
     "/dashboard/getwidget",
-    "/dashboard/images",
     "/dashboard/activity",
+    "/dashboard/file-assets",
 ];
 
 export const routesToExclude = baseRoutesToExclude.concat(baseRoutesToExclude.map(x => x + "/"));
@@ -149,5 +149,3 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
         </AppBar>
     );
 };
-
-

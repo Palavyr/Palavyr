@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Paper, Grid, TextField, makeStyles, Typography } from "@material-ui/core";
+import { Paper, Grid, TextField, makeStyles, Typography, CircularProgress } from "@material-ui/core";
 import { useState } from "react";
 import { SinglePurposeButton } from "./SinglePurposeButton";
 import NumberFormat from "react-number-format";
@@ -19,6 +19,7 @@ export interface ISettingsGridRow {
     locale?: string;
     successText?: string;
     classNames?: string;
+    loading?: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -29,13 +30,14 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         backgroundColor: "rgb(0, 0, 0 ,0)", //theme.palette.secondary.light,
-        border :"0px",
+        border: "0px",
         boxShadow: "none",
-        // backgroundColor: theme.palette.primary.light,
-        // color: theme.palette.common.white,
         padding: "2rem",
         margin: "1rem",
         width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
     },
     phone: {
         padding: ".5rem",
@@ -48,6 +50,7 @@ const useStyles = makeStyles(theme => ({
 export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
     successText,
     locale,
+    loading,
     fullWidth,
     inputType,
     alertNode,
@@ -56,7 +59,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
     currentValue,
     clearVal = false,
     buttonText = "Update",
-    classNames = ''
+    classNames = "",
 }: ISettingsGridRow) => {
     const [inputVal, setInputVal] = useState<string>();
     const [inputValStatus, setInputValStatus] = useState<string | null>(null);
@@ -69,7 +72,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
     return (
         <>
             <Paper className={cn(cls.paper, classNames)}>
-                {alertNode}
+                <div style={{ display: "flex", justifyContent: "center", margin: "1rem" }}>{loading ? <CircularProgress /> : alertNode}</div>
                 <Grid className={cls.row} container>
                     {placeholder && (
                         <Grid item xs={12}>
@@ -128,8 +131,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
                         </>
                     )}
                 </Grid>
-                {/* <Divider /> */}
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <div style={{ display: "flex", justifyContent: "center" }}>
                     <SinglePurposeButton
                         variant="outlined"
                         color="primary"

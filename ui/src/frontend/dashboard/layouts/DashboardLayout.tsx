@@ -9,7 +9,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { DashboardHeader } from "./header/DashboardHeader";
 
 import { SideBarMenu } from "./sidebar/SideBarMenu";
-import { useParams, useHistory, useLocation } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewIntentModal } from "./sidebar/AddNewIntentModal";
 import { cloneDeep } from "lodash";
@@ -82,7 +82,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         },
     },
     toolbar: () => {
-        // console.log(theme.mixins.toolbar)
         return {
             display: "flex",
             alignItems: "center",
@@ -126,6 +125,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     drawerFiller: {
         backgroundColor: theme.palette.primary.main,
         flexGrow: 1,
+    },
+    iconButton: {
+    borderRadius: "5px",
+        width: "10ch",
+        "&:hover": {
+            backgroundColor: theme.palette.grey[200],
+        },
     },
 }));
 
@@ -171,7 +177,6 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const [errorText, setErrorText] = useState<string>("Error");
 
     const [snackPosition, setSnackPosition] = useState<SnackbarPositions>("br");
-    const [accountTypeNeedsPassword, setAccountTypeNeedsPassword] = useState<boolean>(false);
 
     const [unseenNotifications, setUnseenNotifications] = useState<number>(0);
 
@@ -202,9 +207,6 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
 
         const locale = await repository.Settings.Account.GetLocale(true); // readonly == true
         setCurrencySymbol(locale.currentLocale.currencySymbol);
-
-        const needsPassword = await repository.Settings.Account.CheckNeedsPassword();
-        setAccountTypeNeedsPassword(needsPassword);
 
         const numUnseen = await repository.Enquiries.getEnquiryCount();
         setUnseenNotifications(numUnseen);
@@ -309,7 +311,6 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                     value={{
                         areaIdentifier,
                         reRenderDashboard,
-                        accountTypeNeedsPassword,
                         successOpen,
                         setSuccessOpen,
                         successText,
@@ -387,7 +388,9 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                                 paper: cls.helpDrawerPaper,
                             }}
                         >
-                            <IconButton  onClick={handleHelpDrawerClose}>{theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon />}</IconButton>
+                            <IconButton className={cls.iconButton} onClick={handleHelpDrawerClose}>
+                                {theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                            </IconButton>
                             <Divider />
                             {helpComponent}
                         </Drawer>

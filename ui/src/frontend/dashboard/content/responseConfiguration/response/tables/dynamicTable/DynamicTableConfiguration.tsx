@@ -15,9 +15,10 @@ export interface IDynamicTable {
     title: string;
     areaIdentifier: string;
     children: React.ReactNode;
+    initialState?: boolean;
 }
 
-export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: IDynamicTable) => {
+export const DynamicTableConfiguration = ({ title, areaIdentifier, children, initialState }: IDynamicTable) => {
     const { repository, planTypeMeta, setSuccessOpen } = useContext(DashboardContext);
 
     const [showDebug, setShowDebug] = useState<boolean>(false);
@@ -123,7 +124,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
     );
 
     return (
-        <PalavyrAccordian title={title} initialState={true} actions={actions}>
+        <PalavyrAccordian title={title} initialState={initialState ?? false} actions={actions}>
             {children}
             {isDevelopmentStage() && (
                 <OsTypeToggle

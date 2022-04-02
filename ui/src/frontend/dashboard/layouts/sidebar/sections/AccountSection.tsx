@@ -35,9 +35,7 @@ export const AccountSection = ({ isActive, menuOpen }: AccountSectionProps) => {
     const createCustomerPortalSession = async () => {
         const returnUrl = `${webUrl}/dashboard`;
         const customerId = await repository.Purchase.Customer.GetCustomerId();
-        console.log(customerId);
         const portalUrl = await repository.Purchase.Customer.GetCustomerPortal(customerId, returnUrl);
-        console.log(portalUrl);
         window.open(portalUrl, "_blank");
     };
 
@@ -59,26 +57,26 @@ export const AccountSection = ({ isActive, menuOpen }: AccountSectionProps) => {
                     onClick={generalSettingsOnClick}
                     IconComponent={<SettingsIcon className={cls.icon} />}
                 />
-                {planTypeMeta && planTypeMeta.isFreePlan && (
-                    <SidebarLinkItem
-                        toolTipText="Purchase A Subscription"
-                        menuOpen={menuOpen}
-                        text="Subscribe"
-                        isActive={isActive}
-                        onClick={subscribeOnClick}
-                        IconComponent={<SubscriptionsIcon className={cls.icon} />}
-                    />
-                )}
-                {planTypeMeta && !planTypeMeta.isFreePlan && (
-                    <SidebarLinkItem
-                        toolTipText="Manage Your Subscription"
-                        menuOpen={menuOpen}
-                        text="Subscription"
-                        isActive={isActive || !planTypeMeta.isFreePlan}
-                        onClick={createCustomerPortalSession}
-                        IconComponent={<PaymentIcon className={cls.icon} />}
-                    />
-                )}
+                {planTypeMeta &&
+                    (planTypeMeta.isFreePlan ? (
+                        <SidebarLinkItem
+                            toolTipText="Purchase A Subscription"
+                            menuOpen={menuOpen}
+                            text="Subscribe"
+                            isActive={isActive}
+                            onClick={subscribeOnClick}
+                            IconComponent={<SubscriptionsIcon className={cls.icon} />}
+                        />
+                    ) : (
+                        <SidebarLinkItem
+                            toolTipText="Manage Your Subscription"
+                            menuOpen={menuOpen}
+                            text="Subscription"
+                            isActive={isActive || !planTypeMeta.isFreePlan}
+                            onClick={createCustomerPortalSession}
+                            IconComponent={<PaymentIcon className={cls.icon} />}
+                        />
+                    ))}
             </Collapse>
         </List>
     );

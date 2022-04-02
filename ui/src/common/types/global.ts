@@ -392,8 +392,8 @@ export enum GeneralSettingsLoc {
     companyLogo,
     locale,
     default_email_template,
-    deleteaccount,
     password,
+    deleteaccount,
 }
 
 export type Action = {
@@ -867,7 +867,6 @@ export type AnabranchContext = {
 
 export interface IDashboardContext {
     areaIdentifier: string;
-    accountTypeNeedsPassword: boolean;
     checkAreaCount(): void;
     areaName: string;
     setViewName: SetState<string>;

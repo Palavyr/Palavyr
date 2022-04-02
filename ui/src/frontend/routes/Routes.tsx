@@ -46,7 +46,7 @@ import { ChangeLocaleHelp } from "frontend/dashboard/content/help/ChangeLocaleHe
 import { ChangePasswordHelp } from "frontend/dashboard/content/help/ChangePasswordHelp";
 import { ChangePhoneNumberHelp } from "frontend/dashboard/content/help/ChangePhoneNumberHelp";
 import { ChangeImageLogoHelp } from "frontend/dashboard/content/help/ChangeImageLogoHelp";
-import { SettingsContent } from "frontend/dashboard/content/settings/SettingsContent";
+import { GeneralSettingsTabs } from "@frontend/dashboard/content/settings/GeneralSettingsTabs";
 import { DeleteAccount } from "frontend/dashboard/content/settings/account/DeleteAccount";
 import { DeleteAccountHelp } from "frontend/dashboard/content/help/DeleteAccountHelp";
 import { ConversationReview } from "frontend/dashboard/content/enquiries/ConversationReview";
@@ -89,15 +89,15 @@ const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Elem
     return ComponentWithHelp;
 };
 
-const withAreaTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => {
+const withIntentSettingsTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => {
     const location = useLocation();
     AppPageView(location.pathname);
     return <IntentContent>{ContentComponent}</IntentContent>;
 };
-const withSettingsTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => {
+const withGeneralSettingsTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => {
     const location = useLocation();
     AppPageView(location.pathname);
-    return <SettingsContent>{ContentComponent}</SettingsContent>;
+    return <GeneralSettingsTabs>{ContentComponent}</GeneralSettingsTabs>;
 };
 
 export const Routes = () => {
@@ -117,26 +117,26 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/tour" component={withLayout(ToursPage, <ToursPageHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/activity" component={withLayout(ActivityDashboardPage, <ActivityDashboardHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/pricing/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(withAreaTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<EmailConfiguration />), <EmailHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/pricing/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withAreaTabs(<ConversationConfigurationPage />), <ConversationHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<ConversationConfigurationPage />), <ConversationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/conversation/intro/:areaIdentifier" component={withLayout(IntroConversationConfigurationPage, <ConversationHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withAreaTabs(<IntentSettings />), <IntentSettingsHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/pricingpreview/:areaIdentifier" component={withLayout(withAreaTabs(<ConfigurationPreview />), <PreviewHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<IntentSettings />), <IntentSettingsHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/pricingpreview/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<ConfigurationPreview />), <PreviewHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/set-areas" component={withLayout(EnableAreas, <SetAreasHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/settings/password" component={withLayout(withSettingsTabs(<ChangePassword />), <ChangePasswordHelp />)} />
-                <ProtectedRoute exact path="/dashboard/settings/email" component={withLayout(withSettingsTabs(<ChangeEmail />), <ChangeDefaultEmailHelp />)} />
-                <ProtectedRoute exact path="/dashboard/settings/companyName" component={withLayout(withSettingsTabs(<ChangeCompanyName />), <ChangeCompanyNameHelp />)} />
-                <ProtectedRoute exact path="/dashboard/settings/phoneNumber" component={withLayout(withSettingsTabs(<ChangePhoneNumber />), <ChangePhoneNumberHelp />)} />
-                <ProtectedRoute exact path="/dashboard/settings/companyLogo" component={withLayout(withSettingsTabs(<ChangeLogoImage />), <ChangeImageLogoHelp />)} />
-                <ProtectedRoute exact path="/dashboard/settings/locale" component={withLayout(withSettingsTabs(<ChangeLocale />), <ChangeLocaleHelp />)} />
-                <ProtectedRoute exact path="/dashboard/settings/default_email_template" component={withLayout(withSettingsTabs(<DefaultEmailTemplate />), <DefaultEmailTemplateHelp />)} />
-                <ProtectedRoute exact path="/dashboard/settings/deleteaccount" component={withLayout(withSettingsTabs(<DeleteAccount />), <DeleteAccountHelp />)} />
+                <ProtectedRoute exact path="/dashboard/settings/password" component={withLayout(withGeneralSettingsTabs(<ChangePassword />), <ChangePasswordHelp />)} />
+                <ProtectedRoute exact path="/dashboard/settings/email" component={withLayout(withGeneralSettingsTabs(<ChangeEmail />), <ChangeDefaultEmailHelp />)} />
+                <ProtectedRoute exact path="/dashboard/settings/companyName" component={withLayout(withGeneralSettingsTabs(<ChangeCompanyName />), <ChangeCompanyNameHelp />)} />
+                <ProtectedRoute exact path="/dashboard/settings/phoneNumber" component={withLayout(withGeneralSettingsTabs(<ChangePhoneNumber />), <ChangePhoneNumberHelp />)} />
+                <ProtectedRoute exact path="/dashboard/settings/companyLogo" component={withLayout(withGeneralSettingsTabs(<ChangeLogoImage />), <ChangeImageLogoHelp />)} />
+                <ProtectedRoute exact path="/dashboard/settings/locale" component={withLayout(withGeneralSettingsTabs(<ChangeLocale />), <ChangeLocaleHelp />)} />
+                <ProtectedRoute exact path="/dashboard/settings/default_email_template" component={withLayout(withGeneralSettingsTabs(<DefaultEmailTemplate />), <DefaultEmailTemplateHelp />)} />
+                <ProtectedRoute exact path="/dashboard/settings/deleteaccount" component={withLayout(withGeneralSettingsTabs(<DeleteAccount />), <DeleteAccountHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/demo" component={withLayout(ChatDemoPage, <ChatDemoHelp />)} />
                 <ProtectedRoute exact path="/dashboard/designer" component={withLayout(WidgetDesignerPage, <ChatDemoHelp />)} />

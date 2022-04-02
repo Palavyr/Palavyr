@@ -17,7 +17,7 @@ export const ChangeCompanyName = () => {
     const classes = useStyles();
 
     const [, setLoaded] = useState<boolean>(false);
-    const [companyName, setCompanyName] = useState<string>("");
+    const [companyName, setCompanyName] = useState<string | null>(null);
 
     const [] = useState<boolean>(false);
 
@@ -47,10 +47,11 @@ export const ChangeCompanyName = () => {
             <Divider />
             <SettingsGridRowText
                 fullWidth
+                loading={companyName === null}
                 placeholder="New Company Name"
                 onClick={handleCompanyNameChange}
                 clearVal={true}
-                currentValue={companyName}
+                currentValue={companyName ?? ""}
                 alertNode={
                     <Alert severity={companyName === "" ? "error" : "success"}>
                         <AlertTitle className={classes.titleText}>{companyName === "" ? "Please set your company name." : "Company / Business name."}</AlertTitle>

@@ -12,8 +12,8 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(theme => ({
     alert: {
-        borderTop: `2px solid ${theme.palette.common.black}`,
-        borderBottom: `2px solid ${theme.palette.common.black}`,
+        // borderTop: `2px solid ${theme.palette.common.black}`,
+        // borderBottom: `2px solid ${theme.palette.common.black}`,
         "& .MuiGrid-grid-xs-3": {
             padding: "0px",
         },
@@ -228,7 +228,10 @@ export const IntentSettings = () => {
                                 <AlertTitle>
                                     <Typography variant="h5">Permanently DELETE</Typography>
                                 </AlertTitle>
-                                CAREFUL! Use this option to delete this area (and all associated data) forever.
+                                <b>Caution!</b> Deletion of intents is{" "}
+                                <i>
+                                    <b>permanent</b>
+                                </i>
                             </Alert>
                         }
                         onClick={async () => await Promise.resolve(setDialogOpen(true))}

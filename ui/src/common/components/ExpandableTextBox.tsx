@@ -9,19 +9,20 @@ export interface IExpandableTextBox {
     updatableValue: string;
     onChange(e: ChangeEvent<HTMLInputElement>): void;
     onSave(): Promise<boolean>;
+    initialState?: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     textField: {
         padding: "1rem",
         border: "none",
     },
 }));
 
-export const ExpandableTextBox = ({ updatableValue, title, onChange, onSave, children }: IExpandableTextBox) => {
+export const ExpandableTextBox = ({ updatableValue, title, onChange, onSave, children, initialState }: IExpandableTextBox) => {
     const cls = useStyles();
     return (
-        <PalavyrAccordian title={title} initialState={true} actions={<SaveOrCancel onSave={onSave} />}>
+        <PalavyrAccordian title={title} initialState={initialState ?? false} actions={<SaveOrCancel onSave={onSave} />}>
             {children}
             <div className={cls.textField}>
                 <TextField fullWidth multiline placeholder="Place text here" rows={3} value={updatableValue} onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e)}></TextField>

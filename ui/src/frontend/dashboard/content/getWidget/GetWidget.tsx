@@ -1,13 +1,13 @@
 import React, { useEffect, useCallback, useState, useContext } from "react";
-import { Typography, Card, makeStyles, Divider, Box, Tab, Tabs } from "@material-ui/core";
-import { serverUrl, widgetUrl } from "@common/client/clientUtils";
+import { Typography, makeStyles, Box, Tab, Tabs } from "@material-ui/core";
+import { widgetUrl } from "@common/client/clientUtils";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { ZoomImage } from "@common/components/borrowed/ZoomImage";
 import Styles from "./minimalStyles.png";
-import Precheck from "./precheck.png";
-import { LineSpacer } from "@common/components/typography/LineSpacer";
+import SiteBuilders from "./siteBuilders.png";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
+import { Align } from "@common/positioning/Align";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -37,14 +37,14 @@ function a11yProps(index: number) {
 }
 
 const useStyles = makeStyles(theme => ({
-    outerCard: {
-        margin: "4rem",
+    outerdiv: {
         padding: "3rem",
         textAlign: "center",
     },
     img: {
         height: "300px",
         borderRadius: "15px",
+        marginTop: "3rem",
     },
 }));
 
@@ -75,17 +75,18 @@ export const GetWidget = () => {
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
                         <Tab label="HTML" {...a11yProps(0)} />
-                        <Tab label="Pre-Check" {...a11yProps(1)} />
-                        <Tab label="Wix" {...a11yProps(2)} />
+                        <Tab label="React" {...a11yProps(1)} />
+                        <Tab label="Point and Click Site Builders" {...a11yProps(2)} />
+                        {/* <Tab label="Pre-Check" {...a11yProps(3)} /> */}
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
-                    <Card className={cls.outerCard}>
+                    <div className={cls.outerdiv}>
                         <Typography gutterBottom variant="h5">
-                            Add the configured widget to your website
+                            Add the widget to HTML
                         </Typography>
                         <Typography gutterBottom paragraph>
-                            To add the widget to your website, simply paste the following code into your website's html and apply custom styling:
+                            To add the widget to your website's HTML, simply paste the following code into your website's html and apply custom styling:
                         </Typography>
                         {apikey !== "" && (
                             <Typography style={{ cursor: "pointer" }} onClick={() => window.open(`${widgetUrl}/widget?key=${apikey}`, "_blank")} component="pre" paragraph>
@@ -96,39 +97,53 @@ export const GetWidget = () => {
                         )}
                         <Typography gutterBottom>Minimal Style Recommendation</Typography>
                         <ZoomImage alt="min styles" imgSrc={Styles} className={cls.img} />
-                    </Card>
+                    </div>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
-                        <Card className={cls.outerCard}>
+                    <div className={cls.outerdiv}>
+                        <Align verticalCenter direction="center" orientation="column">
                             <Typography gutterBottom variant="h5">
-                                Check if your widget is enabled before loading (This feature is currently disabled during Alpha testing )
+                                Use the all new React Chat Widget
                             </Typography>
-                            <Typography paragraph>
-                                <p>
-                                    You may wish to perform a precheck on your widget before you attempt to load it in your website. Doing so will help guard against accidental loading of your widget when it is
-                                    in an incomplete state.
-                                </p>
-                                <p>To do this, send a request to the following url:</p>
-                                <strong>
-                                    {serverUrl}/api/widget/widget-precheck?key={apikey}
-                                </strong>
-                            </Typography>
-                            <Typography>
-                                This request must be made with the following custom header:
-                                <p>
-                                    <pre>action=widgetAccess</pre>
-                                </p>
-                            </Typography>
-                            <Divider />
-                            <LineSpacer numLines={2} />
-                            <ZoomImage alt="precheck" imgSrc={Precheck} className={cls.img} />
-                        </Card>
+                            <PalavyrText gutterBottom>
+                                Examples for how to place your widget using React can be found on{" "}
+                                <a target="_blank" href="https://www.npmjs.com/package/palavyr-chat-widget">
+                                    NPM
+                                </a>{" "}
+                                and the open source{" "}
+                                <a target="_blank" href="https://github.com/Palavyr/palavyr-chat-widget">
+                                    Palavyr Chat Widget
+                                </a>{" "}
+                                project.
+                            </PalavyrText>
+                            <PalavyrText>
+                                For a working demo of the widget, visit the{" "}
+                                <a target="_blank" href="https://palavyr.github.io/palavyr-chat-widget/">
+                                    Demo Webpage
+                                </a>
+                                .
+                            </PalavyrText>
+                        </Align>
                     </div>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                    TODO
-                    {/* <FontSelector widgetPreferences={widgetPreferences} setWidgetPreferences={setWidgetPreferences} /> */}
+                    <div className={cls.outerdiv}>
+                        <Align verticalCenter direction="center" orientation="column">
+                            <Typography gutterBottom variant="h5" style={{}}>
+                                Embed the widget in your point-and-click site builder website
+                            </Typography>
+                            <PalavyrText gutterBottom style={{ maxWidth: "75%", marginBottom: "1rem" }}>
+                                Point and click site builders are websites that allow you to create a websites quickly directly through your web browsers. These are websites such as sitebuilder.com, wix.com,
+                                godaddy.com, etc.
+                            </PalavyrText>
+                            <PalavyrText>To embed a widget in your website, you can provide your widget's url to your site builder's tool for embedding iframes or links. For example:</PalavyrText>
+
+                            <div className={cls.img}>
+                                <Typography gutterBottom>Click to zoom</Typography>
+                                <ZoomImage alt="Site Builders" imgSrc={SiteBuilders} />
+                            </div>
+                        </Align>
+                    </div>
                 </TabPanel>
             </Box>
         </>

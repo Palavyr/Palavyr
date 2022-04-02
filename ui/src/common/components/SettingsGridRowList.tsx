@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Paper, Grid, makeStyles, FormControl, InputLabel, Typography, Divider, Select } from "@material-ui/core";
+import { Paper, Grid, makeStyles, FormControl, InputLabel, Typography, Divider, Select, CircularProgress } from "@material-ui/core";
 import { useState } from "react";
 import { PalavyrSnackbar } from "./PalavyrSnackbar";
 
@@ -11,16 +11,19 @@ export interface ISettingsGridRow {
     useModal?: boolean;
     modalMessage: string;
     onChange(event: any): void;
+    loading?: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     row: {
         padding: "1rem",
         margin: "1rem",
+        display: "flex",
+        justifyContent: "center",
     },
     paper: {
         backgroundColor: "rgb(0, 0, 0 ,0)",
-        border :"0px",
+        border: "0px",
         boxShadow: "none",
 
         padding: "2rem",
@@ -30,29 +33,30 @@ const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
         width: "50%",
+        alignSelf: "center",
     },
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
 }));
 
-export const SettingsGridRowList: React.FC<ISettingsGridRow> = ({ onChange, modalMessage, useModal, alertNode, currentValue, menuName, menu }: ISettingsGridRow) => {
-    const classes = useStyles();
+export const SettingsGridRowList: React.FC<ISettingsGridRow> = ({ onChange, modalMessage, useModal, alertNode, currentValue, menuName, menu, loading }: ISettingsGridRow) => {
+    const cls = useStyles();
     const [alertState, setAlertState] = useState<boolean>(false);
 
     return (
         <>
-            <Paper className={classes.paper}>
-                {alertNode}
-                <Grid className={classes.row} container>
-                    <FormControl className={classes.formControl}>
+            <Paper className={cls.paper}>
+                <div style={{ display: "flex", justifyContent: "center", margin: "1rem" }}>{loading ? <CircularProgress /> : alertNode}</div>
+                <Grid alignContent="center" className={cls.row} container>
+                    <FormControl className={cls.formControl}>
                         <InputLabel id="select-list-label">{menuName}</InputLabel>
                         <Select
                             fullWidth
                             labelId="select-list-locale"
                             id="select-text-locale"
                             value={currentValue}
-                            onChange={(event) => {
+                            onChange={event => {
                                 onChange(event);
                                 setAlertState(true);
                             }}
@@ -61,8 +65,7 @@ export const SettingsGridRowList: React.FC<ISettingsGridRow> = ({ onChange, moda
                         </Select>
                     </FormControl>
                 </Grid>
-                {/* <Divider /> */}
-                <Grid className={classes.row}>
+                <Grid className={cls.row}>
                     {currentValue && (
                         <>
                             <Typography display="inline" style={{ paddingTop: "1rem" }} variant="body1">

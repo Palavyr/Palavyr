@@ -68,6 +68,7 @@ export const ChangeLocale = () => {
                     <HeaderStrip title="Change your locale" subtitle="The locale affects the currency symbol used." />
                     <Divider />
                     <SettingsGridRowList
+                        loading={localeName === undefined}
                         onChange={handleLocaleChange}
                         currentValue={localeName + " - " + currencySymbol}
                         menuName="Select your locale"

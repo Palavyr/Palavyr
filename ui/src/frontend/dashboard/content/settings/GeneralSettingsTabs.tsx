@@ -15,13 +15,12 @@ import { useHistory } from "react-router-dom";
 import { GeneralSettingsLoc } from "@Palavyr-Types";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
 import SubjectIcon from "@material-ui/icons/Subject";
-import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 type StyleProps = {
     accountTypeNeedsPassword: boolean;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
     },
@@ -38,34 +37,33 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.primary.dark,
     },
 
-    passicon: (props: StyleProps) => ({
-        color: props.accountTypeNeedsPassword ? "navy" : theme.palette.secondary.light,
-        cursor: props.accountTypeNeedsPassword ? "pointer" : "default",
-    }),
-    passtabtext: (props: StyleProps) => ({
-        color: props.accountTypeNeedsPassword ? "navy" : theme.palette.secondary.light,
-        cursor: props.accountTypeNeedsPassword ? "pointer" : "default",
-    }),
+    passicon: {
+        color: "navy",
+        cursor: "pointer",
+    },
+    passtabtext: {
+        color: "navy",
+        cursor: "pointer",
+    },
 }));
 
-interface ISettingsContent {
+interface GeneralSettingsContentProps {
     children: JSX.Element[] | JSX.Element;
 }
 
-interface ISettingsContentInner extends ISettingsContent {
+interface GeneralSettingsContentInner extends GeneralSettingsContentProps {
     setLoaded(val: boolean): void;
 }
 
-export const SettingsContent = ({ children }: ISettingsContent) => {
+export const GeneralSettingsTabs = ({ children }: GeneralSettingsContentProps) => {
     const [, setLoaded] = useState<boolean>(false);
-    return <SettingsContentInner setLoaded={setLoaded} children={children} />;
+    return <GeneralSettingsTabsInner setLoaded={setLoaded} children={children} />;
 };
 
-const SettingsContentInner = ({ setLoaded, children }: ISettingsContentInner) => {
+const GeneralSettingsTabsInner = ({ setLoaded, children }: GeneralSettingsContentInner) => {
     const history = useHistory();
 
-    const { accountTypeNeedsPassword } = React.useContext(DashboardContext);
-    const cls = useStyles({ accountTypeNeedsPassword });
+    const cls = useStyles();
     const searchParams = new URLSearchParams(location.search);
     const rawTab = searchParams.get("tab");
     const tab = rawTab ? (parseInt(rawTab) as PanelRange) : 0;
@@ -91,8 +89,8 @@ const SettingsContentInner = ({ setLoaded, children }: ISettingsContentInner) =>
                     <Tab onClick={() => sendTo(GeneralSettingsLoc.companyLogo)} className={cls.tabtext} icon={<BrandingWatermarkIcon className={cls.icon} />} label="Company Logo" {...intentTabProps(3)} />
                     <Tab onClick={() => sendTo(GeneralSettingsLoc.locale)} className={cls.tabtext} icon={<PublicIcon className={cls.icon} />} label="Locale" {...intentTabProps(4)} />
                     <Tab onClick={() => sendTo(GeneralSettingsLoc.default_email_template)} className={cls.tabtext} icon={<SubjectIcon className={cls.icon} />} label="Fallback Email" {...intentTabProps(5)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.deleteaccount)} className={cls.tabtext} icon={<DeleteSweepIcon className={cls.icon} />} label="Delete" {...intentTabProps(6)} />
-                    {accountTypeNeedsPassword && <Tab onClick={() => sendTo(GeneralSettingsLoc.password)} className={cls.passtabtext} icon={<LockOpenIcon className={cls.passicon} />} label="Password" {...intentTabProps(7)} />}
+                    {<Tab onClick={() => sendTo(GeneralSettingsLoc.password)} className={cls.passtabtext} icon={<LockOpenIcon className={cls.passicon} />} label="Password" {...intentTabProps(6)} />}
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.deleteaccount)} className={cls.tabtext} icon={<DeleteSweepIcon className={cls.icon} />} label="Delete" {...intentTabProps(7)} />
                 </Tabs>
             </AppBar>
             <Align>{children}</Align>

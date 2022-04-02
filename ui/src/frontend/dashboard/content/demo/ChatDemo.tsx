@@ -1,7 +1,7 @@
-import { PreCheckError, WidgetPreferences } from "@Palavyr-Types";
+import { PreCheckError } from "@Palavyr-Types";
 import React, { useState, useCallback, useEffect } from "react";
-import { Grid, Paper, makeStyles } from "@material-ui/core";
-import { AreasInNeedOfAttention } from "./AreasInNeedOfAttention";
+import { Paper, makeStyles } from "@material-ui/core";
+import { IntentsInNeedOfAttention } from "./AreasInNeedOfAttention";
 import { ChatDemoHeader } from "./ChatDemoHeader";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { PalavyrDemoWidget } from "./DemoWidget";
@@ -59,7 +59,7 @@ export const ChatDemoPage = () => {
 
     return (
         <Paper className={cls.paper}>
-            <AreasInNeedOfAttention preCheckErrors={preCheckErrors} />
+            <IntentsInNeedOfAttention preCheckErrors={preCheckErrors} />
             <ChatDemoHeader />
             <Align>{apiKey && <PalavyrDemoWidget preCheckErrors={preCheckErrors} apiKey={apiKey} iframeRefreshed={iframeRefreshed} />}</Align>
             <div className={cls.reloadButton}>

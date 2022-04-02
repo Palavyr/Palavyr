@@ -1,19 +1,15 @@
 import React, { useState } from "react";
 import { Fade, Grid, makeStyles, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@material-ui/core";
 import { PreCheckError } from "@Palavyr-Types";
-import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import { useEffect } from "react";
 
 const useStyles = makeStyles(theme => ({
     uppercell: {
         paddingTop: "1rem",
         paddingBottom: "2rem",
-        // borderTop: "4px solid black",
-        // borderBottom: "4px solid black",
         backgroundColor: theme.palette.warning.light,
         marginBottom: "3rem",
         boxShadow: theme.shadows[2],
-        // borderRadius: "15px"
     },
 
     table: {
@@ -28,11 +24,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-interface AreasInNeedOfAttentionProps {
+interface IntentsInNeedOfAttentionProps {
     preCheckErrors: PreCheckError[];
 }
 
-export const AreasInNeedOfAttention = ({ preCheckErrors }: AreasInNeedOfAttentionProps) => {
+export const IntentsInNeedOfAttention = ({ preCheckErrors }: IntentsInNeedOfAttentionProps) => {
     const cls = useStyles();
     const [isVisible, setIsVisible] = useState(true);
     const [hidden, setHidden] = useState(false);
@@ -47,25 +43,6 @@ export const AreasInNeedOfAttention = ({ preCheckErrors }: AreasInNeedOfAttentio
     }, []);
     return (
         <>
-            {/* {preCheckErrors.length === 0 && !hidden && (
-                <Fade in={isVisible} exit={!isVisible} style={{ textAlign: "center", display: "flex", justifyContent: "center" }}>
-                    <Grid
-                        className={cls.sucessUpperCell}
-                        style={{ display: "flex", justifyContent: "center", justifyItems: "center", width: "30%", paddingLeft: "2rem", paddingRight: "2rem", paddingTop: "1rem", paddingBottom: "1rem" }}
-                    >
-                        <>
-                            <div style={{ marginRight: "1.3rem" }}>
-                                <Typography align="center" variant="h4">
-                                    Ready
-                                </Typography>
-                            </div>
-                            <div style={{ top: "30px" }}>
-                                <DoneOutlineIcon style={{ margin: "0px", padding: "0px", top: "4px", position: "relative" }} />
-                            </div>
-                        </>
-                    </Grid>
-                </Fade>
-            )} */}
             {preCheckErrors.length > 0 && (
                 <Fade in>
                     <Grid className={cls.uppercell}>
