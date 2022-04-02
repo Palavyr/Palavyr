@@ -11,7 +11,7 @@ import { DashboardHeader } from "./header/DashboardHeader";
 import { SideBarMenu } from "./sidebar/SideBarMenu";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
-import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
+import { AddNewIntentModal } from "./sidebar/AddNewIntentModal";
 import { cloneDeep } from "lodash";
 import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
@@ -342,7 +342,6 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                     }}
                 >
                     <div className={cls.root}>
-                        <CssBaseline />
                         <DashboardHeader
                             open={menuOpen}
                             unseenNotifications={unseenNotifications}
@@ -388,11 +387,11 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                                 paper: cls.helpDrawerPaper,
                             }}
                         >
-                            <IconButton onClick={handleHelpDrawerClose}>{theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon />}</IconButton>
+                            <IconButton  onClick={handleHelpDrawerClose}>{theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon />}</IconButton>
                             <Divider />
                             {helpComponent}
                         </Drawer>
-                        {planTypeMeta && (areaNameDetails.length < planTypeMeta.allowedAreas ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
+                        {planTypeMeta && (areaNameDetails.length < planTypeMeta.allowedAreas ? <AddNewIntentModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
                         <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
                         {successOpen && <PalavyrSnackbar position={snackPosition} successText={successText} successOpen={successOpen} setSuccessOpen={setSuccessOpen} />}
                         {warningOpen && <PalavyrSnackbar position={snackPosition} warningText={warningText} warningOpen={warningOpen} setWarningOpen={setWarningOpen} />}

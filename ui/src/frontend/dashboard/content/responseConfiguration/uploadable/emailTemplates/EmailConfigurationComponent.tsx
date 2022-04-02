@@ -1,4 +1,5 @@
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
+import { UploadOrSelectFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
 import { makeStyles, Typography } from "@material-ui/core";
 import { VariableDetail } from "@Palavyr-Types";
 import { EmailSubject } from "frontend/dashboard/content/settings/subject/EmailSubject";
@@ -98,14 +99,14 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
                     <SaveOrCancel onSave={onSaveAreaSubject} onCancel={loadAreaSubject} />
                 </div>
             </EmailSubject>
-            <hr/>
+            <hr />
             <Upload
                 modalState={modalState}
                 toggleModal={toggleModal}
                 handleFileSave={handleFileSave}
                 buttonText="Add Email Template"
                 summary="Upload"
-                uploadDetails={<EditorDetails key={"Upload"} variableDetails={variableDetails} />}
+                uploadDetails={<EditorDetails key="Upload" variableDetails={variableDetails} />}
                 acceptedFiles={["text/html", "text/plain"]}
             />
             {planTypeMeta && planTypeMeta.allowedInlineEmailEditor ? (

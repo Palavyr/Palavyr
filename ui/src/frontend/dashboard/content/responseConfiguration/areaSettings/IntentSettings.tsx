@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const AreaSettings = () => {
+export const IntentSettings = () => {
     const { repository } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
@@ -84,7 +84,7 @@ export const AreaSettings = () => {
         };
     }, []);
 
-    const handleAreaNameChange = async (newAreaName: string) => {
+    const handleIntentNameChange = async (newAreaName: string) => {
         if (newAreaName === settings.areaName) return;
         const updatedAreaName = await repository.Area.updateAreaName(areaIdentifier, newAreaName);
         const updatedSettings = { ...settings, areaName: updatedAreaName };
@@ -92,7 +92,7 @@ export const AreaSettings = () => {
         window.location.reload(); // reloads the sidebar...
     };
 
-    const handleAreaDisplayTitleChange = async (newAreaDisplayTitle: any) => {
+    const handleIntentDisplayTitleChange = async (newAreaDisplayTitle: any) => {
         if (newAreaDisplayTitle === settings.areaTitle) return;
         const updatedDisplayTitle = await repository.Area.updateDisplayTitle(areaIdentifier, newAreaDisplayTitle);
         window.location.reload();
@@ -100,7 +100,7 @@ export const AreaSettings = () => {
         setSettings(updatedSettings);
     };
 
-    const handleAreaDelete = async () => {
+    const handleIntentDelete = async () => {
         await repository.Area.deleteArea(areaIdentifier);
         history.push("/dashboard");
         window.location.reload();
@@ -131,7 +131,7 @@ export const AreaSettings = () => {
         return severityLevel;
     };
 
-    const onAreaEnabledToggleChange = async () => {
+    const onIntentEnabledToggleChange = async () => {
         const updatedisEnabled = await repository.Area.UpdateIsEnabled(!isEnabledState, areaIdentifier);
         setIsEnabledState(updatedisEnabled);
     };
@@ -143,8 +143,8 @@ export const AreaSettings = () => {
     // I'll refactor this later. . .
     return loaded ? (
         <>
-            <HeaderStrip title="Area Settings" subtitle={`Modify settings that are specific to this area (${settings.areaName}).`} />
-            {isEnabledState !== null && <OsTypeToggle controlledState={isEnabledState} onChange={onAreaEnabledToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />}
+            <HeaderStrip title="Intent Settings" subtitle={`Modify settings that are specific to this intent (${settings.areaName}).`} />
+            {isEnabledState !== null && <OsTypeToggle controlledState={isEnabledState} onChange={onIntentEnabledToggleChange} enabledLabel="Intent Enabled" disabledLabel="Intent Disabled" />}
 
             <Grid container spacing={3} justify="center">
                 <SettingsBanner title="Widget Settings" subtitle="These options affect the appearance and behavior of the widget." />
@@ -162,7 +162,7 @@ export const AreaSettings = () => {
                         }
                         placeholder="New Area Name (Widget)"
                         currentValue={settings.areaTitle}
-                        onClick={handleAreaDisplayTitleChange}
+                        onClick={handleIntentDisplayTitleChange}
                         clearVal={false}
                     />
                 </Grid>
@@ -209,7 +209,7 @@ export const AreaSettings = () => {
                         }
                         placeholder="New Area Name (Dashboard)"
                         currentValue={settings.areaName}
-                        onClick={handleAreaNameChange}
+                        onClick={handleIntentNameChange}
                         clearVal={false}
                     />
                 </Grid>
@@ -240,7 +240,7 @@ export const AreaSettings = () => {
             {alertState && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
             <Dialog PaperProps={{ style: { margin: "2rem", padding: "2rem" } }} style={{ margin: "2rem", padding: "2rem" }} open={dialogOpen} onClose={() => setDialogOpen(false)}>
                 <Typography variant="h4">Are you sure you want to delete this intent??</Typography>
-                <Button className={cls.buttonHover} onClick={handleAreaDelete}>
+                <Button className={cls.buttonHover} onClick={handleIntentDelete}>
                     PERMANENTLY DELETE
                 </Button>
             </Dialog>

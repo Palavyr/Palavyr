@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { useCallback } from "react";
-import { EnableAreaRow } from "./EnableAreaRow";
+import { EnableAreaRow } from "./EnableIntentRow";
 
 const useStyles = makeStyles(theme => ({
     paper: {

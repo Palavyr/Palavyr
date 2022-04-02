@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { useHistory } from "react-router-dom";
 import { Divider, makeStyles } from "@material-ui/core";
-import { AuthContext, DashboardContext } from "../DashboardContext";
+import { AuthContext } from "../DashboardContext";
 import { IntentsSection } from "./sections/IntentsSection";
 import { ReviewSection } from "./sections/ReviewSection";
 import { AccountSection } from "./sections/AccountSection";

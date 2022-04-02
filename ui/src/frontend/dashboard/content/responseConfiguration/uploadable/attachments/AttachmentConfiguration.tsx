@@ -6,7 +6,7 @@ import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useContext } from "react";
 import { FileAssetResource } from "@Palavyr-Types";
-import { UploadOrChooseFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
+import { UploadOrSelectFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
 import { cloneDeep } from "lodash";
 
 const summary = "Upload";
@@ -76,7 +76,7 @@ export const AttachmentConfiguration = () => {
     return (
         <>
             <HeaderStrip title="Attachments" subtitle="Upload files you wish to send to your potential clients." />
-            <UploadOrChooseFromExisting
+            <UploadOrSelectFromExisting
                 excludableFileAssets={attachmentList}
                 currentFileAssetId={currentFileAssetId}
                 disable={shouldDisableUploadButton()}

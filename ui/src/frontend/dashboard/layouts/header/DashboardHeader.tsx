@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { AppBar, Toolbar, IconButton, Typography, makeStyles, Badge, Tooltip, LinearProgress } from "@material-ui/core";
+import { AppBar, Toolbar, IconButton, Typography, makeStyles, LinearProgress } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import classNames from "classnames";
 import { Align } from "../../../../common/positioning/Align";
 import { useHistory, useLocation } from "react-router-dom";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import InfoIcon from "@material-ui/icons/Info";
 import { SpaceEvenly } from "../../../../common/positioning/SpaceEvenly";
 import { ErrorPanel } from "../Errors/ErrorPanel";
 import { DASHBOARD_HEADER_TOPBAR_zINDEX, DRAWER_WIDTH } from "@constants";
 import { yellow } from "@material-ui/core/colors";
-import { UserDetails } from "./UserDetails";
+import { UserDetailsMenu } from "./UserDetails";
+import { NotificationBadges } from "./NotificationBadges";
+import { InfoIconButton } from "./InfoIconButton";
 
 interface DashboardHeaderProps {
     open: boolean;
@@ -91,14 +91,12 @@ const baseRoutesToExclude = [
     "/dashboard/activity",
 ];
 
-const routesToExclude = baseRoutesToExclude.concat(baseRoutesToExclude.map(x => x + "/"));
+export const routesToExclude = baseRoutesToExclude.concat(baseRoutesToExclude.map(x => x + "/"));
 
 export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifications, open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
     const cls = useStyles();
     const [sized, setSized] = useState<boolean>(false);
     const handle = () => setSized(!sized);
-    const location = useLocation();
-    const history = useHistory();
 
     useEffect(() => {
         window.addEventListener("resize", handle);
@@ -136,29 +134,13 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
                 <div style={{ flexGrow: 1 }} />
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <Align float="right" verticalCenter extraClassNames={cls.barItem}>
-                        {!routesToExclude.includes(location.pathname) ? (
-                            <Tooltip title="Help about this page">
-                                <IconButton color="inherit" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.icon, helpOpen && cls.hide)}>
-                                    <InfoIcon />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <div></div>
-                        )}
+                        <NotificationBadges unseenNotifications={unseenNotifications} />
                     </Align>
                     <Align float="right" verticalCenter extraClassNames={cls.barItem}>
-                        <Tooltip title="Unseen enquiries">
-                            <span className={classNames(cls.icon, "check-enquiries-badge-sidebar-tour")}>
-                                <IconButton disabled={unseenNotifications === 0} onClick={() => history.push("/dashboard/enquiries")} className={cls.icon} edge="start" color="inherit">
-                                    <Badge showZero={false} badgeContent={unseenNotifications} color="secondary">
-                                        <NotificationsIcon />
-                                    </Badge>
-                                </IconButton>
-                            </span>
-                        </Tooltip>
+                        <UserDetailsMenu />
                     </Align>
                     <Align float="right" verticalCenter extraClassNames={cls.barItem}>
-                        <UserDetails />
+                        <InfoIconButton handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} />
                     </Align>
                 </div>
             </Toolbar>
@@ -167,3 +149,5 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
         </AppBar>
     );
 };
+
+

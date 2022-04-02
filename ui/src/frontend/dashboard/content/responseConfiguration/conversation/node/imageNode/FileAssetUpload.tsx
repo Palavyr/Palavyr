@@ -4,7 +4,7 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { IPalavyrNode } from "@Palavyr-Types";
-import { UploadOrChooseFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
+import { UploadOrSelectFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
 
 interface FileAssetUploadProps {
     currentNode: IPalavyrNode;
@@ -48,5 +48,5 @@ export const NodeFileAssetUpload = ({ setFileAsset, currentNode, closeEditor, re
         }
     };
 
-    return <>{currentNode && <UploadOrChooseFromExisting handleFileSave={handleFileSave} onSelectChange={onSelectChange} currentFileAssetId={currentNode.imageId} />}</>;
+    return <>{currentNode && <UploadOrSelectFromExisting handleFileSave={handleFileSave} onSelectChange={onSelectChange} currentFileAssetId={currentNode.imageId} />}</>;
 };

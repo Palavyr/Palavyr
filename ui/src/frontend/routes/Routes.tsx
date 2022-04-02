@@ -31,7 +31,7 @@ import Auth from "frontend/auth/Auth";
 import { EmailConfiguration } from "frontend/dashboard/content/responseConfiguration/uploadable/emailTemplates/EmailConfiguration";
 import { ResponseConfiguration } from "frontend/dashboard/content/responseConfiguration/response/ResponseConfiguration";
 import { AttachmentConfiguration } from "frontend/dashboard/content/responseConfiguration/uploadable/attachments/AttachmentConfiguration";
-import { AreaSettings } from "frontend/dashboard/content/responseConfiguration/areaSettings/AreaSettings";
+import { IntentSettings } from "@frontend/dashboard/content/responseConfiguration/areaSettings/IntentSettings";
 import { ConfigurationPreview } from "frontend/dashboard/content/responseConfiguration/previews/ConfigurationPreview";
 import { IntentContent } from "@frontend/dashboard/content/responseConfiguration/IntentContent";
 import { ChangeCompanyName } from "frontend/dashboard/content/settings/account/ChangeCompanyName";
@@ -55,7 +55,7 @@ import { ConfirmYourResetLink } from "@landing/components/passwordReset/ConfirmY
 import { RESET_PASSWORD_FORM, RESET_PASSWORD_VERIFY, RESET_PASSWORD_SUCCESS } from "@constants";
 import { RenderPasswordDialog } from "@landing/components/passwordReset/SubmitNewPassword";
 import { RenderResetSuccess } from "@landing/components/passwordReset/PasswordResetSuccess";
-import { EnableAreas } from "frontend/dashboard/content/responseConfiguration/areaSettings/enableAreas/EnableAreas";
+import { EnableAreas } from "@frontend/dashboard/content/responseConfiguration/areaSettings/enableAreas/EnableIntents";
 import { SetAreasHelp } from "frontend/dashboard/content/help/SetAreasHelp";
 import { DefaultEmailTemplate } from "frontend/dashboard/content/settings/account/DefaultEmailTemplate";
 import { DefaultEmailTemplateHelp } from "frontend/dashboard/content/help/DefaultEmailTemplateHelp";
@@ -124,7 +124,7 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withAreaTabs(<ConversationConfigurationPage />), <ConversationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/conversation/intro/:areaIdentifier" component={withLayout(IntroConversationConfigurationPage, <ConversationHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withAreaTabs(<AreaSettings />), <IntentSettingsHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withAreaTabs(<IntentSettings />), <IntentSettingsHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/pricingpreview/:areaIdentifier" component={withLayout(withAreaTabs(<ConfigurationPreview />), <PreviewHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/set-areas" component={withLayout(EnableAreas, <SetAreasHelp />)} />

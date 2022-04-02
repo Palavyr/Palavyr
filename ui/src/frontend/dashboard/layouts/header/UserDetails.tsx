@@ -1,15 +1,18 @@
 import * as React from "react";
-import { CircularProgress, makeStyles, Tooltip, Typography } from "@material-ui/core";
+import { Button, IconButton, ListItem, ListItemIcon, makeStyles, Menu, MenuItem, Tooltip } from "@material-ui/core";
 import { SessionStorage } from "@localStorage/sessionStorage";
 import { DashboardContext } from "../DashboardContext";
 import Fade from "@material-ui/core/Fade";
-import { GeneralSettingsLoc } from "@Palavyr-Types";
+import { GeneralSettingsLoc, PurchaseTypes } from "@Palavyr-Types";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import classNames from "classnames";
-import { Align } from "../../../../common/positioning/Align";
 import { TOPBAR_MAX_HEIGHT } from "@constants";
-
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import FreeBreakfastIcon from "@material-ui/icons/FreeBreakfast";
+import CardMembershipIcon from "@material-ui/icons/CardMembership";
+import WhatshotIcon from "@material-ui/icons/Whatshot";
 const DETAILS_MAX_HEIGHT = TOPBAR_MAX_HEIGHT - 10;
 
 const useStyles = makeStyles(theme => ({
@@ -29,22 +32,20 @@ const useStyles = makeStyles(theme => ({
         maxWidgth: "none",
         zIndex: 9999,
     },
-    itemAlign: {
-        display: "inline-block",
-        verticalAlign: "middle",
-    },
-    text: {
-        marginLeft: "0.5rem",
-        marginRight: "1rem",
-        color: theme.palette.common.black,
-    },
     default: {
         padding: "0.5rem",
         display: "flex",
     },
+    icon: {
+        "&:hover": {
+            backgroundColor: theme.palette.primary.light,
+        },
+        fontSize: "22pt",
+        color: theme.palette.info.light,
+    },
 }));
 
-export const UserDetails = React.memo(() => {
+export const UserDetailsMenu = React.memo(() => {
     const cls = useStyles();
     const history = useHistory();
 
@@ -52,22 +53,6 @@ export const UserDetails = React.memo(() => {
     const [loading, setLoading] = useState<boolean>(true);
 
     const { planTypeMeta, setViewName } = React.useContext(DashboardContext);
-
-    let details: JSX.Element;
-    if (email) {
-        details = (
-            <Align verticalCenter>
-                <span className={cls.default}>
-                    <Typography className={cls.text} noWrap={true}>
-                        {email}
-                    </Typography>
-                    {planTypeMeta && <Typography className={classNames(cls.text, cls.itemAlign)}>Subscription: {planTypeMeta.planType}</Typography>}
-                </span>
-            </Align>
-        );
-    } else {
-        details = <Typography>Please Log In</Typography>;
-    }
 
     const userOnClick = () => {
         setViewName("General Settings");
@@ -80,11 +65,57 @@ export const UserDetails = React.memo(() => {
         }, 1200);
     }, []);
 
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const getPlanTypeIcon = () => {
+        if (planTypeMeta) {
+            switch (planTypeMeta.planType) {
+                case PurchaseTypes.Free:
+                    return <FreeBreakfastIcon className={cls.icon} />;
+                case PurchaseTypes.Lyte:
+                    return <CardMembershipIcon className={cls.icon} />;
+                case PurchaseTypes.Premium:
+                    return <WhatshotIcon className={cls.icon} />;
+                case PurchaseTypes.Pro:
+                    return <AccountBalanceIcon className={cls.icon} />;
+                default:
+                    return <></>;
+            }
+        }
+        return;
+    };
+
     return (
-        <Tooltip TransitionComponent={Fade} title={<Typography>{email}</Typography>} placement="right" classes={{ tooltip: cls.toolTipInternal }} interactive>
-            <div onClick={userOnClick} className={cls.logwrapper}>
-                {loading ? <CircularProgress style={{ padding: "0.5rem" }} /> : details}
-            </div>
-        </Tooltip>
+        <>
+            <Tooltip TransitionComponent={Fade} title={<PalavyrText>User Details</PalavyrText>} placement="bottom" classes={{ tooltip: cls.toolTipInternal }} interactive>
+                <IconButton className={cls.icon} aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                    <AccountBoxIcon />
+                </IconButton>
+            </Tooltip>
+            <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+                <MenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                        <PalavyrText>whoami</PalavyrText>
+                    </ListItemIcon>
+                    <ListItem>
+                        <span className={cls.default}>
+                            <PalavyrText noWrap={true}>{email}</PalavyrText>
+                        </span>
+                    </ListItem>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                    <ListItemIcon>{getPlanTypeIcon()}</ListItemIcon>
+                    <ListItem>{planTypeMeta && <PalavyrText>Subscription: {planTypeMeta.planType}</PalavyrText>}</ListItem>
+                </MenuItem>
+            </Menu>
+        </>
     );
 });

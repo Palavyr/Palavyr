@@ -9,7 +9,7 @@ import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
 import * as React from "react";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { SettingsWrapper } from "../SettingsWrapper";
-import { UploadOrChooseFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
+import { UploadOrSelectFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { ZoomImage } from "@common/components/borrowed/ZoomImage";
 
@@ -141,7 +141,7 @@ export const ChangeLogoImage = () => {
                     </div>
                 </Align>
                 <Divider />
-                <UploadOrChooseFromExisting currentFileAssetId={companyLogo?.fileId} handleFileSave={handleFileSave} onSelectChange={handleFileChange} summary={"Upload"} uploadDetails={""} />
+                <UploadOrSelectFromExisting currentFileAssetId={companyLogo?.fileId} handleFileSave={handleFileSave} onSelectChange={handleFileChange} summary={"Upload"} uploadDetails={""} />
 
                 <SpaceEvenly>
                     <SinglePurposeButton disabled={!companyLogo?.fileId} variant="contained" color="secondary" buttonText="Remove current logo" onClick={handleDeleteLogo} />

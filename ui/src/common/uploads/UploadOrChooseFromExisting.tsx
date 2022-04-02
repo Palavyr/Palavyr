@@ -6,7 +6,7 @@ import React, { useContext, useState } from "react";
 import { ACCEPTED_FILES } from "@constants";
 import { SelectFromExistingFileAssets } from "./SelectFromExistingFileAssets";
 
-export interface UploadOrChooseFromExistingProps {
+export interface UploadOrSelectFromExistingProps {
     handleFileSave: (files: File[]) => void;
     currentFileAssetId?: string | null;
     onSelectChange: (_: any, option: FileAssetResource) => void;
@@ -15,9 +15,10 @@ export interface UploadOrChooseFromExistingProps {
     uploadDetails?: string | JSX.Element;
     disable?: boolean;
     excludableFileAssets?: FileAssetResource[];
+    acceptedFiles?: string[];
 }
 
-export const UploadOrChooseFromExisting = ({
+export const UploadOrSelectFromExisting = ({
     currentFileAssetId,
     handleFileSave,
     onSelectChange,
@@ -26,7 +27,8 @@ export const UploadOrChooseFromExisting = ({
     summary,
     uploadDetails,
     disable,
-}: UploadOrChooseFromExistingProps) => {
+    acceptedFiles = ACCEPTED_FILES,
+}: UploadOrSelectFromExistingProps) => {
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
     const [uploadModal, setUploadModal] = useState(false);
@@ -51,7 +53,7 @@ export const UploadOrChooseFromExisting = ({
                     summary={summary ?? "Upload a file."}
                     buttonText={"Upload"}
                     uploadDetails={uploadDetails ?? <Typography>Upload an image, pdf, or other document you wish to share with your users</Typography>}
-                    acceptedFiles={ACCEPTED_FILES}
+                    acceptedFiles={acceptedFiles}
                     disable={disable}
                 />
             </div>

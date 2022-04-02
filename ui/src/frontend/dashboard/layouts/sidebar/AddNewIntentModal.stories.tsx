@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
-import { AddNewAreaModal, IAddNewAreaModal } from './AddNewAreaModal';
+import { AddNewIntentModal, AddNewIntentModalProps } from './AddNewIntentModal';
 
 
 export default {
     title: "Dashboard/AreaContent/AddNewAreaModal",
-    component: AddNewAreaModal
+    component: AddNewIntentModal
 } as Meta;
 
-const Template = (args: IAddNewAreaModal) => <AddNewAreaModal {...args} />;
+const Template = (args: AddNewIntentModalProps) => <AddNewIntentModal {...args} />;
 
 // TODO: Mock api call to get data
 export const Primary = Template.bind({});

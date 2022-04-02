@@ -30,13 +30,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export interface IAddNewAreaModal {
+export interface AddNewIntentModalProps {
     open: boolean;
     handleClose(): void;
     setNewArea(newAreaObject: AreaTable): void;
 }
 
-export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaModal) => {
+export const AddNewIntentModal = ({ open, handleClose, setNewArea }: AddNewIntentModalProps) => {
     const [areaName, setAreaName] = useState<string>("");
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
@@ -59,9 +59,9 @@ export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaMo
 
     return (
         <Dialog BackdropProps={{ className: cls.backdrop }} fullWidth classes={{ root: cls.dialog }} open={open} onClose={handleClose}>
-            <DialogTitle>Add a new Area</DialogTitle>
+            <DialogTitle>Add a new intent</DialogTitle>
             <DialogContent>
-                <TextField className={cls.text} autoFocus margin="dense" value={areaName} onChange={textFieldOnChange} id="name" label="New Area Name" type="text" fullWidth />
+                <TextField className={cls.text} autoFocus margin="dense" value={areaName} onChange={textFieldOnChange} id="name" label="New Intent Name" type="text" fullWidth />
             </DialogContent>
             <DialogActions>
                 <AddOrCancel disabled={buttonDisabled} onAdd={onAdd} onCancel={handleClose} addText="Add" cancelText="Cancel" />
