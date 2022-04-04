@@ -1,4 +1,5 @@
 using System.IO;
+using Palavyr.Core.Common.ExtensionMethods.PathExtensions;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Sessions;
 
@@ -24,21 +25,26 @@ namespace Palavyr.Core.Services.CloudKeyResolvers
         {
             // bucket
             // accountId / file-assets / fileId.Extension
-            return Path.Combine(accountIdTransport.AccountId, "file-assets", fileName.ToString());
+            return UnixCombine(accountIdTransport.AccountId, "file-assets", fileName.ToString());
         }
 
         public string ResolveResponsePdfKey(FileName fileName)
         {
             // bucket
             // accountId / response-pdfs / fileId.Extension
-            return Path.Combine(accountIdTransport.AccountId, "response-pdfs", fileName.ToString());
+            return UnixCombine(accountIdTransport.AccountId, "response-pdfs", fileName.ToString());
         }
 
         public string ResolveResponsePdfPreviewKey(FileName fileName)
         {
             // bucket
             // accountId / response-preview-pdfs / fileId.Extension
-            return Path.Combine(accountIdTransport.AccountId, "response-preview-pdfs", fileName.ToString());
+            return UnixCombine(accountIdTransport.AccountId, "response-preview-pdfs", fileName.ToString());
+        }
+
+        public static string UnixCombine(params string[] args)
+        {
+            return Path.Combine(args).ConvertToUnix();
         }
     }
 }
