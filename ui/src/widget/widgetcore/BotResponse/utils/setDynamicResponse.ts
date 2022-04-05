@@ -2,8 +2,7 @@ import { DynamicResponses } from "@Palavyr-Types";
 import { cloneDeep, findIndex } from "lodash";
 
 
-export const setDynamicResponse = (currentDyanmicResponse: DynamicResponses, dynamicType: string, nodeId: string, response: string) => {
-    let dynamicResponseContext = cloneDeep(currentDyanmicResponse);
+export const setDynamicResponse = (dynamicResponseContext: DynamicResponses, dynamicType: string, nodeId: string, response: string) => {
 
     const currentResponseTypeIndex = findIndex(dynamicResponseContext, (resp: Object) => {
         return Object.keys(resp).includes(dynamicType);

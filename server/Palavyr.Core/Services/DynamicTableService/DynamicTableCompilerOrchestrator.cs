@@ -5,7 +5,6 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.DynamicTableService
 {
@@ -13,17 +12,14 @@ namespace Palavyr.Core.Services.DynamicTableService
     {
         private readonly IDynamicResponseComponentExtractor dynamicResponseComponentExtractor;
         private readonly IDynamicTableCompilerRetriever dynamicTableCompilerRetriever;
-        private readonly IAccountIdTransport accountIdTransport;
 
         public DynamicTableCompilerOrchestrator(
             IDynamicResponseComponentExtractor dynamicResponseComponentExtractor,
-            IDynamicTableCompilerRetriever dynamicTableCompilerRetriever,
-            IAccountIdTransport accountIdTransport
+            IDynamicTableCompilerRetriever dynamicTableCompilerRetriever
         )
         {
             this.dynamicResponseComponentExtractor = dynamicResponseComponentExtractor;
             this.dynamicTableCompilerRetriever = dynamicTableCompilerRetriever;
-            this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)

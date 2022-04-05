@@ -6,12 +6,10 @@ import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { BasicThresholdHeader } from "./BasicThresholdHeader";
 import { BasicThresholdBody } from "./BasicThresholdBody";
 import { useState } from "react";
-import { Button, makeStyles, Table, TableContainer, AccordionActions } from "@material-ui/core";
+import { Button, makeStyles, Table, AccordionActions } from "@material-ui/core";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { TextInput } from "@common/components/TextField/TextInput";
-import { Align } from "@common/positioning/Align";
 import { DynamicTableHeader } from "../../DynamicTableHeader";
 import { cloneDeep } from "lodash";
 import { useIsMounted } from "@common/hooks/useIsMounted";
@@ -50,7 +48,6 @@ const useStyles = makeStyles(theme => ({
 export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, deleteAction, tables, tableIndex, availableDynamicTableOptions, tableNameMap, unitTypes, inUse, table }: DynamicTableProps) => {
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
-    // const [name, setItemName] = useState<string>("");
     const [localTable, setLocalTable] = useState<DynamicTable>();
     const isMounted = useIsMounted();
 
@@ -116,7 +113,6 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, 
         event.preventDefault();
         if (localTable) {
             modifier.setItemName(localTable.tableRows, event.target.value);
-            // setItemName(event.target.value);
         }
     };
 

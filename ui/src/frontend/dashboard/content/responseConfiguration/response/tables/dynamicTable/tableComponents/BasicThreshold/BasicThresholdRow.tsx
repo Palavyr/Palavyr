@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button, Checkbox, FormControlLabel, makeStyles, TableCell, TableRow } from "@material-ui/core";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { TableData, BasicThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
@@ -56,7 +56,6 @@ const cellAlignment = "center";
 
 export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGroup, unitPrettyName }: IBasicThresholdRow) => {
     const cls = useStyles({ isTrue: !row.range });
-
     const onTriggerFallbackChange = event => {
         modifier.checkTriggerFallbackChange(tableData, row, event.target.checked);
     };
@@ -78,7 +77,7 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
                         variant="standard"
                         label="Name to use in PDF fee table"
                         type="text"
-                        value={tableData[0].name}
+                        value={tableData[0].itemName}
                         InputLabelProps={{ className: cls.inputPropsCls }}
                         color="primary"
                         onChange={(event: { preventDefault: () => void; target: { value: string } }) => {

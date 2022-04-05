@@ -226,7 +226,8 @@ export const useAppContext = (): IAppContext => {
     };
 
     const setDynamicResponses = (dynamicResponses: DynamicResponses) => {
-        setAppContext({ ...AppContext, dynamicResponses });
+        const update = [...AppContext.dynamicResponses, ...dynamicResponses]
+        setAppContext({ ...AppContext, dynamicResponses: update });
     };
 
     const setKeyValues = (keyValues: KeyValues) => {
@@ -251,7 +252,7 @@ export const useAppContext = (): IAppContext => {
         setRegion,
         setWidgetPreferences,
         setResponseFileAsset,
-        setDynamicResponses,
+        addDynamicResponse: setDynamicResponses,
         setKeyValues,
 
         addNewUserMessage,
@@ -300,7 +301,7 @@ export interface IAppContext {
     setRegion: (region: string) => void;
     setWidgetPreferences: (widgetPreferences: any) => void;
     setResponseFileAsset: (responseFileAssetResource: FileAssetResource) => void;
-    setDynamicResponses: (dynamicResponses: DynamicResponses) => void;
+    addDynamicResponse: (dynamicResponses: DynamicResponses) => void;
     setKeyValues: (keyValues: KeyValues) => void;
 
     addNewUserMessage: (message: UserMessageData) => void;

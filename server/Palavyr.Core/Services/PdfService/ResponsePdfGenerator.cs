@@ -17,7 +17,6 @@ using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.PdfService
 {
-
     public class ResponsePdfGenerator : IResponsePdfGenerator
     {
         private readonly IEntityStore<Area> intentStore;

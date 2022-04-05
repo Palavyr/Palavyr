@@ -55,6 +55,9 @@ export const responseAction = async (
 
         if (node.isDynamicTableNode && node.dynamicType) {
             const updatedDynamicResponses = setDynamicResponse(context.dynamicResponses, node.dynamicType, node.nodeId, response.toString());
+
+            context.addDynamicResponse(updatedDynamicResponses);
+
             const currentDynamicResponseState = updatedDynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
 
             const tooComplicated = await client.Widget.Post.InternalCheck(node, response, currentDynamicResponseState);
