@@ -28,6 +28,11 @@ namespace Test.Common
             inner.ResetCancellationToken(tokenSource);
         }
 
+        public async Task<TEntity[]> GetPaginated(int skip, int take)
+        {
+            return await inner.GetPaginated(skip, take);
+        }
+
         public async Task<TEntity> Create(TEntity entity)
         {
             var result = await inner.Create(entity);

@@ -1,6 +1,6 @@
 import React from "react";
 import { TableRow, makeStyles, FormControlLabel, Checkbox, Typography } from "@material-ui/core";
-import { PercentOfThresholdData, TableData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
+import { PercentOfThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
@@ -11,7 +11,7 @@ import { TableButton } from "../SelectOneFlat/TableButton";
 import { TableDeleteButton } from "./TableDeleteButton";
 
 export interface IPercentOfThresholdRow {
-    tableData: TableData;
+    tableData: PercentOfThresholdData[];
     itemData: PercentOfThresholdData[];
     itemLength: number;
     row: PercentOfThresholdData;

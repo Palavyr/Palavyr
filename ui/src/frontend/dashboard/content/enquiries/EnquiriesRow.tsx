@@ -1,20 +1,18 @@
-import React, { useContext } from "react";
+import React from "react";
 import { CONVERSATION_REVIEW, CONVERSATION_REVIEW_PARAMNAME } from "@constants";
 import { Checkbox, Link, makeStyles, TableRow, Typography } from "@material-ui/core";
-import { Enquiries, EnquiryRow, SetState } from "@Palavyr-Types";
+import { EnquiryRow } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useHistory } from "react-router-dom";
-import { ColoredButton } from "@common/components/borrowed/ColoredButton";
-import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
-import { useState } from "react";
 import { EnquiryTableRowCell } from "./EnquiriesTableRowCell";
 import { formatLegitTimeStamp } from "./enquiriesUtils";
 import { EnquiryTimeStamp } from "./EnquiryTimeStamp";
 
 export interface EnquiriesTableRowProps {
     enquiry: EnquiryRow;
-    setEnquiries: SetState<Enquiries>;
-    index: number;
+    toggleSelected: (conversationId: string) => void;
+    markAsSeen: (conversationId: string) => Promise<void>;
+    selected: boolean;
 }
 
 const formConversationReviewPath = (conversationId: string) => {
@@ -38,43 +36,26 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTableRowProps) => {
+export const EnquiriesTableRow = ({ enquiry, toggleSelected, markAsSeen, selected }: EnquiriesTableRowProps) => {
     const cls = useStyles();
-    const { repository } = useContext(DashboardContext);
     const history = useHistory();
 
-    const [deleteIsWorking, setDeleteIsWorking] = useState<boolean>(false);
+    const { setUnseenNotifications, unseenNotifications } = React.useContext(DashboardContext);
 
-    const { setUnseenNotifications } = React.useContext(DashboardContext);
-
-    const markAsSeen = async (conversationId: string) => {
-        const enquiries = await repository.Enquiries.updateEnquiry(conversationId);
-        setEnquiries(enquiries);
+    const update = async () => {
+        await markAsSeen(enquiry.conversationId);
+        setUnseenNotifications(unseenNotifications - 1);
     };
 
-    const toggleSeenValue = async (conversationId: string) => {
-        const enqs = await repository.Enquiries.updateEnquiry(conversationId);
-        const numUnseen = enqs.filter((x: EnquiryRow) => !x.seen).length;
-        setUnseenNotifications(numUnseen);
-        setEnquiries(enqs);
-    };
-
-    const responseLinkOnClick = async (enquiry: EnquiryRow) => {
-        markAsSeen(enquiry.conversationId);
+    const responseLinkOnClick = async () => {
+        await update();
         window.open(enquiry.fileAssetResource.link, "_blank");
     };
 
-    const convoDetailsOnClick = async (enquiry: EnquiryRow) => {
+    const convoDetailsOnClick = async () => {
+        await update();
         const url = formConversationReviewPath(enquiry.conversationId);
-        markAsSeen(enquiry.conversationId);
         history.push(url);
-    };
-
-    const deleteEnquiryOnClick = async (enquiry: EnquiryRow) => {
-        setDeleteIsWorking(true);
-        const enquiries = await repository.Enquiries.deleteSelectedEnquiries([enquiry.conversationId]);
-        setEnquiries(enquiries);
-        setDeleteIsWorking(false);
     };
 
     const { formattedDate, formattedTime } = formatLegitTimeStamp(enquiry.timeStamp);
@@ -82,7 +63,12 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
     return (
         <TableRow style={{ backgroundColor: enquiry.seen ? "white" : "lightgray", fontWeight: enquiry.seen ? "normal" : "bold" }} key={enquiry.conversationId}>
             <EnquiryTableRowCell>
-                <Typography>{index + 1}</Typography>
+                <Checkbox
+                    checked={selected}
+                    onClick={() => {
+                        toggleSelected(enquiry.conversationId);
+                    }}
+                />
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
                 <Typography>{enquiry.name}</Typography>
@@ -94,13 +80,13 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
                 <Typography>{enquiry.phoneNumber}</Typography>
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
-                <Link className={cls.link} onClick={() => convoDetailsOnClick(enquiry)}>
+                <Link className={cls.link} onClick={async () => await convoDetailsOnClick()}>
                     <Typography>History</Typography>
                 </Link>
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
                 {enquiry.hasResponse ? (
-                    <Link className={cls.link} onClick={() => responseLinkOnClick(enquiry)}>
+                    <Link className={cls.link} onClick={async () => await responseLinkOnClick()}>
                         <Typography>PDF</Typography>
                     </Link>
                 ) : (
@@ -114,18 +100,7 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
                 <EnquiryTimeStamp formattedDate={formattedDate} formattedTime={formattedTime} />
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
-                <Checkbox
-                    checked={enquiry.seen}
-                    onClick={() => {
-                        toggleSeenValue(enquiry.conversationId);
-                    }}
-                />
-            </EnquiryTableRowCell>
-            <EnquiryTableRowCell>
-                <ColoredButton classes={cls.delete} variant="outlined" color="primary" onClick={() => deleteEnquiryOnClick(enquiry)}>
-                    <Typography> Delete</Typography>
-                    {deleteIsWorking && <ButtonCircularProgress />}
-                </ColoredButton>
+                <></>
             </EnquiryTableRowCell>
         </TableRow>
     );

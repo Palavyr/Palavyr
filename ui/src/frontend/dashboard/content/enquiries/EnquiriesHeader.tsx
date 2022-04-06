@@ -1,20 +1,15 @@
-import { PalavyrCheckbox } from "@common/components/PalavyrCheckBox";
 import { makeStyles, TableRow, TableCell, Typography } from "@material-ui/core";
 import React from "react";
 
 const useStyles = makeStyles(theme => ({
     headerRow: {
-        borderBottom: "3px solid black",
+        borderBottom: `2px solid ${theme.palette.common.black}`,
     },
 }));
 
-export interface EnquiresHeaderProps {
-    checked: boolean;
-    onChange(): void;
-    disabled: boolean;
-}
+export interface EnquiresHeaderProps {}
 
-export const EnquiriesHeader = ({ checked, onChange, disabled }: EnquiresHeaderProps) => {
+export const EnquiriesHeader = ({}: EnquiresHeaderProps) => {
     const cls = useStyles();
 
     return (
@@ -55,14 +50,7 @@ export const EnquiriesHeader = ({ checked, onChange, disabled }: EnquiresHeaderP
                     Time
                 </Typography>
             </TableCell>
-            <TableCell>
-                <Typography align="center" variant="h5">
-                    Seen
-                </Typography>
-            </TableCell>
-            <TableCell>
-                <PalavyrCheckbox label="Select All" checked={checked} onChange={onChange} disabled={disabled} />
-            </TableCell>
+            <TableCell></TableCell>
         </TableRow>
     );
 };

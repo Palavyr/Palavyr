@@ -32,7 +32,7 @@ namespace Palavyr.Core.Services.DynamicTableService
             DynamicResponses dynamicResponses,
             CultureInfo culture,
             bool includeTotals
-        )
+        ) 
         {
             var tableRows = new List<TableRow>();
             foreach (var dynamicResponse in dynamicResponses)

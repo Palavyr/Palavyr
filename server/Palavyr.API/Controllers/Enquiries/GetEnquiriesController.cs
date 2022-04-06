@@ -21,10 +21,16 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
         [HttpGet(Route)]
-        public async Task<IEnumerable<Enquiry>> Get(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Enquiry>> Get([FromQuery] GetEnquiriesRequest request, CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetEnquiriesRequest(), cancellationToken);
+            var response = await mediator.Send(request, cancellationToken);
             return response.Response;
         }
+    }
+
+    public class SkipTake
+    {
+        public int Skip { get; set; }
+        public int Take { get; set; }
     }
 }

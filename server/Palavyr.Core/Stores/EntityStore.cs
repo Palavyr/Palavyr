@@ -112,6 +112,12 @@ namespace Palavyr.Core.Stores
             this.CancellationTokenTransport = new CancellationTokenTransport(tokenSource.Token);
         }
 
+        public async Task<TEntity[]> GetPaginated(int skip, int take)
+        {
+            var page = await QueryExecutor.Skip(skip).Take(take).ToArrayAsync(CancellationToken);
+            return page;
+        }
+
         public async Task<TEntity> Create(TEntity entity)
         {
             AssertAccountIsCorrect(entity);

@@ -8,13 +8,13 @@ using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
-    public class DeleteEnquiryController : PalavyrBaseController
+    public class DeleteEnquiriesController : PalavyrBaseController
     {
         private readonly IMediator mediator;
 
-        public const string Route = "enquiries/selected";
+        public const string Route = "enquiries/delete";
 
-        public DeleteEnquiryController(IMediator mediator)
+        public DeleteEnquiriesController(IMediator mediator)
         {
             this.mediator = mediator;
         }

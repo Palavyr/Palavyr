@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button, Checkbox, FormControlLabel, makeStyles, TableCell, TableRow } from "@material-ui/core";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { TableData, BasicThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
+import { BasicThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 
 interface IBasicThresholdRow {
     rowIndex: number;
-    tableData: TableData;
+    tableData: BasicThresholdData[];
     row: BasicThresholdData;
     modifier: BasicThresholdModifier;
     unitGroup: UnitGroups;
@@ -71,7 +71,6 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
                         Delete
                     </Button>
                 ) : (
-                    // <Align direction="flex-start">
                     <TextInput
                         className={cls.input}
                         variant="standard"
@@ -85,7 +84,6 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
                             modifier.setItemName(tableData, event.target.value);
                         }}
                     />
-                    // </Align>
                 )}
             </TableCell>
             <TableCell align={cellAlignment}>

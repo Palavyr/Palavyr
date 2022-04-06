@@ -1,14 +1,12 @@
 import React from "react";
-import { TableRow, Button, makeStyles, TextField, FormControlLabel, Checkbox } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { CategoryNestedThresholdData, TableData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
+import { TableRow, makeStyles, TextField, FormControlLabel, Checkbox } from "@material-ui/core";
+import { CategoryNestedThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { UnitInput } from "../../components/UnitInput";
 import { Cell } from "../../components/Cell";
-import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { TableButton } from "../SelectOneFlat/TableButton";
 import { TableDeleteButton } from "../PercentOfThreshold/TableDeleteButton";
 
@@ -17,7 +15,7 @@ export interface CategoryNestedThresholdProps {
     categoryId: string;
     categoryName: string;
     categorySize: number;
-    tableData: TableData;
+    tableData: CategoryNestedThresholdData[];
     row: CategoryNestedThresholdData;
     modifier: CategoryNestedThresholdModifier;
     unitGroup: UnitGroups;

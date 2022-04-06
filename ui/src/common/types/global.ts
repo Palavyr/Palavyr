@@ -247,6 +247,15 @@ export type EnquiryRow = {
     areaIdentifier: string;
 };
 
+export type SelectionMap = {
+    [conversationId: string]: boolean;
+}
+
+export type MarkAsSeenUpdate = {
+    ConversationId: string;
+    Seen: boolean;
+};
+
 export type Enquiries = EnquiryRow[];
 
 export type EnquiryActivtyResource = {

@@ -1,19 +1,16 @@
-import React, { memo } from "react";
+import React from "react";
 import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
 import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { SelectOneFlatData, TableData } from "@Palavyr-Types";
+import { SelectOneFlatData } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import RemoveIcon from "@material-ui/icons/Remove";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { TableButton } from "./TableButton";
 
 export interface ISelectOneFlatRow {
     dataIndex: number;
-    tableData: TableData;
+    tableData: SelectOneFlatData[];
     row: SelectOneFlatData;
     modifier: SelectOneFlatModifier;
 }

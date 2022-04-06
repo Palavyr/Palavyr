@@ -29,6 +29,7 @@ import {
     LocaleResponse,
     QuantUnitDefinition,
     FileAssetResource,
+    MarkAsSeenUpdate,
 } from "@Palavyr-Types";
 import { ApiErrors } from "frontend/dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "frontend/dashboard/subscriptionFilters/filterConvoNodeTypes";
@@ -338,11 +339,8 @@ export class PalavyrRepository {
         getShowSeenEnquiries: async () => this.client.get<boolean>(`enquiries/show`),
         toggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(`enquiries/toggle-show`),
 
-        updateEnquiry: async (conversationId: string) => {
-            const result = this.client.put<Enquiries, {}>(`enquiries/update/${conversationId}`);
-            return result;
-        },
-        deleteSelectedEnquiries: async (conversationIds: string[]) => this.client.put<Enquiries, {}>(`enquiries/selected`, { ConversationIds: conversationIds }),
+        UpdateSeen: async (updates: MarkAsSeenUpdate[]) => this.client.put<{}, {}>(`enquiries/seen`, { Updates: updates }),
+        DeleteSelected: async (conversationIds: string[]) => this.client.put<Enquiries, {}>(`enquiries/delete`, { ConversationIds: conversationIds }),
 
         getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`, [CacheIds.Conversation, conversationId].join("-") as CacheIds),
 

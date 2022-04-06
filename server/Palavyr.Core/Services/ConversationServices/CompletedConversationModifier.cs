@@ -1,37 +1,39 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Palavyr.Core.Data;
-using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Sessions;
+using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.ConversationServices
 {
     public interface ICompletedConversationModifier
     {
-        Task<IEnumerable<Enquiry>> ModifyCompletedConversation(string conversationId);
+        Task MarkAsSeen(List<MarkAsSeenUpdate> updates);
     }
 
     public class CompletedConversationModifier : ICompletedConversationModifier
     {
-        private readonly ConvoContext convoContext;
-        private readonly IConversationRecordRetriever conversationRecordRetriever;
-        private readonly IAccountIdTransport accountIdTransport;
+        private readonly IEntityStore<ConversationRecord> recordStore;
 
-        public CompletedConversationModifier(ConvoContext convoContext, IConversationRecordRetriever conversationRecordRetriever, IAccountIdTransport accountIdTransport )
+        public CompletedConversationModifier(IEntityStore<ConversationRecord> recordStore, IConversationRecordRetriever conversationRecordRetriever)
         {
-            this.convoContext = convoContext;
-            this.conversationRecordRetriever = conversationRecordRetriever;
-            this.accountIdTransport = accountIdTransport;
+            this.recordStore = recordStore;
         }
 
-        public async Task<IEnumerable<Enquiry>> ModifyCompletedConversation(string conversationId)
+        public async Task MarkAsSeen(List<MarkAsSeenUpdate> updates)
         {
-            var convo = await convoContext.ConversationRecords.SingleOrDefaultAsync(row => row.AccountId == accountIdTransport.AccountId && row.ConversationId == conversationId);
-            convo.Seen = !convo.Seen;
-            await convoContext.SaveChangesAsync();
+            var ids = updates.Select(x => x.ConversationId).ToList();
+            var records = await recordStore.GetMany(ids, s => s.ConversationId);
 
-            return await conversationRecordRetriever.RetrieveConversationRecords();
+            foreach (var update in updates)
+            {
+                var record = records.SingleOrDefault(x => x.ConversationId == update.ConversationId);
+                if (!(record is null))
+                {
+                    record.Seen = update.Seen;
+                }
+            }
         }
     }
 }

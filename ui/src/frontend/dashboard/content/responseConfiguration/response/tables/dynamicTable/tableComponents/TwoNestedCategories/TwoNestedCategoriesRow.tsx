@@ -1,10 +1,9 @@
 import React from "react";
-import { TableRow, TableCell, Button, makeStyles, TextField } from "@material-ui/core";
+import { TableRow, Button, makeStyles, TextField } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { TableData, TwoNestedCategoryData } from "@Palavyr-Types";
+import { TwoNestedCategoryData } from "@Palavyr-Types";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { SetState } from "@Palavyr-Types";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { Cell } from "../../components/Cell";
@@ -15,8 +14,7 @@ export interface TwoNestedCategoriesRowProps {
     shouldDisableInnerCategory: boolean;
     outerCategoryId: string;
     outerCategoryName: string;
-    // setOuterCategoryName: SetState<string>;
-    tableData: TableData;
+    tableData: TwoNestedCategoryData[];
     row: TwoNestedCategoryData;
     modifier: TwoNestedCategoriesModifier;
 }
@@ -26,7 +24,6 @@ type StyleProps = {
 };
 const useStyles = makeStyles(theme => ({
     number: {
-        // border: "1px solid lightgray",
         padding: "1.2rem",
         fontSize: `${theme.typography.fontSize}`,
         font: `${theme.typography.fontFamily}`,
