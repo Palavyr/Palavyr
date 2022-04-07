@@ -72,7 +72,7 @@ export class PalavyrWidgetRepository {
                 dynamicResponses: Array<{ [key: string]: string }>,
                 keyValues: KeyValues,
                 convoId: string,
-                isDemo: boolean;
+                isDemo: boolean
             ) =>
                 this.client.post<SendEmailResultResponse, {}>(this.Routes.confirmationEmail(this.secretKey, intentId, isDemo), {
                     ConversationId: convoId,
