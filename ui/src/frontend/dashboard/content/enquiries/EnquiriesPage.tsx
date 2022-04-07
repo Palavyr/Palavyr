@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
-import { Enquiries, EnquiryRow, SelectionMap } from "@Palavyr-Types";
+import { Enquiries, EnquiryRow, SelectionMap, SetState } from "@Palavyr-Types";
 import { TableContainer, Paper, TableHead, TableBody, Table, makeStyles, CircularProgress } from "@material-ui/core";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
@@ -42,8 +42,24 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const paginateEnquiries = (enq: Enquiries, currentPage: number, pageSize: number) => {
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    return enq.slice(start, end);
+};
+
+const updateTotalPages = (setTotalPages: SetState<number>, fullEnquiryList: Enquiries, pageSize: number, showSeen: boolean) => {
+    let totalPages = 0;
+    if (showSeen) {
+        totalPages = Math.ceil(fullEnquiryList.length / pageSize);
+    } else {
+        totalPages = Math.ceil(fullEnquiryList.filter(e => !e.seen).length / pageSize);
+    }
+    setTotalPages(totalPages);
+};
+
 export const EnquiresPage = () => {
-    const { repository, setViewName } = useContext(DashboardContext);
+    const { repository, setViewName, setUnseenNotifications, unseenNotifications } = useContext(DashboardContext);
     setViewName("Enquiries");
     const cls = useStyles();
 
@@ -51,19 +67,15 @@ export const EnquiresPage = () => {
     const [currentPageList, setCurrentPageList] = useState<Enquiries>([]);
     const [selectionMap, setSelectionMap] = useState<SelectionMap>({});
 
-    const [currentPage, setCurrentPage] = useState<number>(0);
-    const [pageSize, setPageSize] = useState<number>(5);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(6);
     const [totalPages, setTotalPages] = useState<number>(0);
 
     const [loading, setLoading] = useState<boolean>(true);
     const [showSeen, setShowSeen] = useState<boolean | null>(null);
     const [allSelected, setAllSelected] = useState<boolean>(false);
 
-    const paginateEnquiries = (enq: Enquiries) => {
-        const start = currentPage * pageSize;
-        const end = start + pageSize;
-        return enq.slice(start, end);
-    };
+    const filterEnqsByShowSeen = (enqs: Enquiries, s: boolean) => (s ? enqs : enqs.filter(e => !e.seen));
 
     const loadEnquiries = useCallback(async () => {
         const show = await repository.Enquiries.getShowSeenEnquiries();
@@ -78,42 +90,35 @@ export const EnquiresPage = () => {
         });
         setSelectionMap(map);
 
-        const current = paginateEnquiries(enqs);
+        const availableEnqs = filterEnqsByShowSeen(enqs, show);
+        const current = paginateEnquiries(availableEnqs, currentPage, pageSize);
         setCurrentPageList(current);
 
         setLoading(false);
     }, []);
 
-    const updateTotalPages = () => {
-        let totalPages = 0;
-        if (showSeen) {
-            totalPages = Math.ceil(fullEnquiryList.length / pageSize);
-        } else {
-            totalPages = Math.ceil(fullEnquiryList.filter(e => !e.seen).length / pageSize);
-        }
-        setTotalPages(totalPages);
-    };
+    useEffect(() => {
+        loadEnquiries();
+    }, [loadEnquiries]);
 
     useEffect(() => {
-        updateTotalPages();
+        if (showSeen !== null) {
+            const availableEnqs = filterEnqsByShowSeen(fullEnquiryList, showSeen);
+            updateTotalPages(setTotalPages, availableEnqs, pageSize, showSeen);
+        }
     }, [showSeen, fullEnquiryList, pageSize]);
 
-    const handlePageChange = (event: any, page: number) => {
-        setCurrentPage(page);
-    };
-
     useEffect(() => {
-        const current = paginateEnquiries(fullEnquiryList);
-        setCurrentPageList(current);
-    }, []);
+        if (showSeen !== null) {
+            const currentitems = filterEnqsByShowSeen(fullEnquiryList, showSeen);
+            const current = paginateEnquiries(currentitems, currentPage, pageSize);
+            setCurrentPageList(current);
+        }
+    }, [currentPage, pageSize, fullEnquiryList, showSeen]);
 
     const numberPropertyGetter = (enquiry: EnquiryRow) => {
         return enquiry.id;
     };
-
-    useEffect(() => {
-        loadEnquiries();
-    }, [loadEnquiries]);
 
     const toggleShowSeen = async () => {
         const result = await repository.Enquiries.toggleShowSeenEnquiries();
@@ -162,8 +167,12 @@ export const EnquiresPage = () => {
 
     const deleteSelected = async () => {
         const idsToDelete = Object.keys(selectionMap).filter(x => selectionMap[x]);
-        const updatedEnquiries = fullEnquiryList.filter(x => !idsToDelete.includes(x.conversationId));
 
+        const updatedEnquiries = fullEnquiryList.filter(x => !idsToDelete.includes(x.conversationId));
+        Object.keys(selectionMap).forEach(x => {
+            delete selectionMap[x];
+        });
+        setUnseenNotifications(unseenNotifications - idsToDelete.length);
         await repository.Enquiries.DeleteSelected(idsToDelete);
         setSelectionMap(cloneDeep(selectionMap));
         setFullEnquiryList(cloneDeep(updatedEnquiries));
@@ -174,7 +183,7 @@ export const EnquiresPage = () => {
             <HeaderStrip title="Enquiries" subtitle="Review your recent enquiries. Use the 'History' link to view the conversation. Use the 'PDF' link to view the response PDF that was sent." />
             {showSeen !== null && <OsTypeToggle controlledState={showSeen} onChange={toggleShowSeen} enabledLabel="Show Seen Enquiries" disabledLabel="Hide Seen Enquiries" />}
             <div className={cls.ctl}>
-                <Pagination count={totalPages} onChange={handlePageChange} variant="outlined" shape="rounded" />
+                <Pagination count={totalPages} onChange={(_: any, page: number) => setCurrentPage(page)} variant="outlined" shape="rounded" />
                 <EnquiryBehaviorButtons toggleSelectAll={toggleSelectAll} markAsSeen={markAsSeen} markAsUnseen={markAsUnSeen} deleteSelected={deleteSelected} />
             </div>
             <TableContainer component={Paper}>
