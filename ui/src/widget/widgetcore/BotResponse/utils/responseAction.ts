@@ -44,6 +44,7 @@ export const responseAction = async (
     nodeList: WidgetNodes,
     client: PalavyrWidgetRepository,
     convoId: string,
+    isDemo: boolean,
     response: string | null = null,
     callback: (() => void) | null = null
 ) => {
@@ -80,16 +81,18 @@ export const responseAction = async (
 
     if (callback) callback();
 
-    if (convoId !== null) {
-        const updatePayload: WidgetConversationUpdate = {
-            ConversationId: convoId,
-            Prompt: stripHtml(node.text),
-            UserResponse: response,
-            NodeId: node.nodeId,
-            NodeCritical: node.isCritical,
-            NodeType: node.nodeType,
-        };
-        await client.Widget.Post.UpdateConvoHistory(updatePayload); // no need to await for this
+    if (!isDemo) {
+        if (convoId !== null) {
+            const updatePayload: WidgetConversationUpdate = {
+                ConversationId: convoId,
+                Prompt: stripHtml(node.text),
+                UserResponse: response,
+                NodeId: node.nodeId,
+                NodeCritical: node.isCritical,
+                NodeType: node.nodeType,
+            };
+            await client.Widget.Post.UpdateConvoHistory(updatePayload); // no need to await for this
+        }
     }
 
     setTimeout(() => {

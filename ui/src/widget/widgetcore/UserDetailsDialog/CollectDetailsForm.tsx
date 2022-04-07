@@ -82,7 +82,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     const [phonePattern, setphonePattern] = useState<string>("");
     const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
-    const { chatStarted, setChatStarted, convoId, context, preferences } = useContext(WidgetContext);
+    const { chatStarted, setChatStarted, convoId, context, preferences, isDemo } = useContext(WidgetContext);
 
     useEffect(() => {
         (async () => {
@@ -96,7 +96,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     const cls = useStyles(preferences);
     const [status, setStatus] = useState<string | null>(null);
 
-    const onChange = (event: any, newOption: LocaleResource) => {
+    const onChange = (_: any, newOption: LocaleResource) => {
         setphonePattern(newOption.phoneFormat);
         context.setRegion(newOption.name);
     };
@@ -106,7 +106,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
         setKickoff(true);
         setChatStarted(true);
 
-        if (convoId) {
+        if (convoId && !isDemo) {
             await client.Widget.Post.UpdateConvoRecord({ Name: context.name, Email: context.emailAddress, PhoneNumber: context.phoneNumber, Locale: context.region, ConversationId: convoId });
         }
         context.closeUserDetails();

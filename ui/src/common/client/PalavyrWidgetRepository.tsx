@@ -13,7 +13,6 @@ import {
     WidgetNodeResource,
     WidgetNodes,
     WidgetPreferences,
-    FileAssetResource,
 } from "@Palavyr-Types";
 import { AxiosClient } from "./WidgetAxiosClient";
 
@@ -32,13 +31,12 @@ export class PalavyrWidgetRepository {
         widgetPreferences: (secretKey: SecretKey) => `widget/preferences?key=${secretKey}`,
         locale: (secretKey: SecretKey) => `account/settings/locale/widget?key=${secretKey}`,
         intents: (secretKey: SecretKey) => `widget/intents?key=${secretKey}`,
-        newConversationHistory: (secretKey: SecretKey) => `widget/create?key=${secretKey}`,
+        newConversationHistory: (secretKey: SecretKey, isDemo: boolean) => `widget/create?key=${secretKey}&demo=${isDemo}`,
         updateConvoHistory: (secretKey: SecretKey) => `widget/conversation?key=${secretKey}`,
         updateConvoRecord: (secretKey: SecretKey) => `widget/record?key=${secretKey}`,
         confirmationEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/send?key=${secretKey}`,
         fallbackEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/fallback/send?key=${secretKey}`,
         internalCheck: (secretKey: SecretKey) => `widget/internal-check?key=${secretKey}`,
-        // fileAsset: (secretKey: SecretKey, nodeId: string) => `widget/node-file-asset/${nodeId}?key=${secretKey}`,
         getIntroSequence: (secretKey: SecretKey) => `account/settings/intro-sequence?key=${secretKey}`,
     };
 
@@ -48,9 +46,8 @@ export class PalavyrWidgetRepository {
             WidgetPreferences: async () => this.client.get<WidgetPreferences>(this.Routes.widgetPreferences(this.secretKey)),
             Locale: async () => this.client.get<LocaleResponse>(this.Routes.locale(this.secretKey)),
             Areas: async () => this.client.get<Array<AreaTable>>(this.Routes.intents(this.secretKey)),
-            NewConversationHistory: async (recordUpdateDto: Partial<ConversationRecordUpdate>) =>
-                this.client.post<NewConversation, {}>(this.Routes.newConversationHistory(this.secretKey), recordUpdateDto),
-            // FileAsset: async (nodeId: string) => this.client.get<FileAssetResource>(this.Routes.fileAsset(this.secretKey, nodeId)),
+            NewConversationHistory: async (recordUpdateDto: Partial<ConversationRecordUpdate>, isDemo: boolean) =>
+                this.client.post<NewConversation, {}>(this.Routes.newConversationHistory(this.secretKey, isDemo), recordUpdateDto),
             IntroSequence: async () => this.client.get<WidgetNodes>(this.Routes.getIntroSequence(this.secretKey)),
         },
 

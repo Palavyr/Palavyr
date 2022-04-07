@@ -20,13 +20,13 @@ export const WidgetApp = () => {
 
     const context = useAppContext();
 
-    const Client = new PalavyrWidgetRepository(secretKey);
+    const client = new PalavyrWidgetRepository(secretKey);
 
     const runAppPrecheck = useCallback(async () => {
-        const preCheckResult = await Client.Widget.Get.PreCheck(isDemo === "true" ? true : false);
+        const preCheckResult = await client.Widget.Get.PreCheck(isDemo === "true" ? true : false);
 
         if (preCheckResult.isReady) {
-            const prefs = await Client.Widget.Get.WidgetPreferences();
+            const prefs = await client.Widget.Get.WidgetPreferences();
             setWidgetPrefs(prefs);
         }
         setTimeout(() => {
@@ -37,10 +37,10 @@ export const WidgetApp = () => {
 
     useEffect(() => {
         (async () => {
-            const preCheckResult = await Client.Widget.Get.PreCheck(isDemo === "true" ? true : false);
+            const preCheckResult = await client.Widget.Get.PreCheck(isDemo === "true" ? true : false);
 
             if (preCheckResult.isReady) {
-                const prefs = await Client.Widget.Get.WidgetPreferences();
+                const prefs = await client.Widget.Get.WidgetPreferences();
                 setIsReady(preCheckResult.isReady);
 
                 InitializeFonts(prefs);
@@ -51,8 +51,8 @@ export const WidgetApp = () => {
 
     return (
         <div style={{ height: "100%", width: "100%" }}>
-            {preferences && (
-                <WidgetContext.Provider value={{ context, preferences, chatStarted, setChatStarted, setConvoId, convoId }}>
+            {preferences && isDemo && (
+                <WidgetContext.Provider value={{ isDemo: isDemo === "true", context, preferences, chatStarted, setChatStarted, setConvoId, convoId }}>
                     {isReady ? (
                         <>
                             <AreYouSureYouWantToGoBack />

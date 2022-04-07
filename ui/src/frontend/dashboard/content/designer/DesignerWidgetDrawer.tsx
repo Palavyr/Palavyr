@@ -142,6 +142,7 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
             {widgetPreferences && (
                 <WidgetContext.Provider
                     value={{
+                        isDemo: true,
                         preferences: widgetPreferences,
                         chatStarted: true,
                         setChatStarted: () => null,

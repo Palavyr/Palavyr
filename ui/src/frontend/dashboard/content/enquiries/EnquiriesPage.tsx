@@ -166,14 +166,15 @@ export const EnquiresPage = () => {
     };
 
     const deleteSelected = async () => {
-        const idsToDelete = Object.keys(selectionMap).filter(x => selectionMap[x]);
-
-        const updatedEnquiries = fullEnquiryList.filter(x => !idsToDelete.includes(x.conversationId));
-        Object.keys(selectionMap).forEach(x => {
+        const idsToDelete = Object.keys(selectionMap).filter(x => selectionMap[x]); // selected ids
+        idsToDelete.forEach(x => {
             delete selectionMap[x];
         });
+
         setUnseenNotifications(unseenNotifications - idsToDelete.length);
         await repository.Enquiries.DeleteSelected(idsToDelete);
+
+        const updatedEnquiries = fullEnquiryList.filter(x => !idsToDelete.includes(x.conversationId)); //
         setSelectionMap(cloneDeep(selectionMap));
         setFullEnquiryList(cloneDeep(updatedEnquiries));
     };
