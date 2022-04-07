@@ -24,6 +24,8 @@ namespace Palavyr.API.Controllers.WidgetLive
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
         [HttpPost(Route)]
         public async Task<SendEmailResultResponse> SendEmail(
+            [FromQuery]
+            bool demo,
             [FromRoute]
             string areaId,
             [FromBody]
@@ -31,7 +33,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             CancellationToken cancellationToken
         )
         {
-            var response = await mediator.Send(new SendWidgetResponseFallbackEmailRequest(emailRequest, areaId), cancellationToken);
+            var response = await mediator.Send(new SendWidgetResponseFallbackEmailRequest(emailRequest, areaId, demo), cancellationToken);
             return response.Response;
         }
     }

@@ -13,7 +13,8 @@ namespace Palavyr.Core.Services.PdfService
             CriticalResponses criticalResponses,
             EmailRequest emailRequest,
             CultureInfo culture,
-            string intentId
+            string intentId,
+            bool isDemo
         );
     }
     

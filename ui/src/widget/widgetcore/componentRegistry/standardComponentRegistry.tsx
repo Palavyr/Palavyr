@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
         },
     },
     inputLabel: (props: WidgetPreferences) => ({
-        borderBottom: "1px solid " + props.chatFontColor,
+        // borderBottom: "1px solid " + props.chatFontColor,
         fontFamily: props.fontFamily,
         color: props.chatFontColor,
         "& .MuiFormLabel-root": {
@@ -270,7 +270,7 @@ export class StandardComponents {
         return () => {
             const { context, preferences, isDemo } = useContext(WidgetContext);
             const [response, setResponse] = useState<string>("");
-            const [disabled, setDisabled] = useState<boolean>(true);
+            const [disabled, setDisabled] = useState<boolean>(false);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
             const cls = useStyles(preferences);
@@ -316,7 +316,16 @@ export class StandardComponents {
                         //     }}
                         // />
                         // }
-                        <TextInput className={cls.inputLabel} value={response} label="" type="number" inputPropsClassName={cls.textField} inputLabelPropsClassName={cls.textLabel} onChange={onChange} />
+                        <TextInput
+                            disabled={inputDisabled}
+                            className={cls.inputLabel}
+                            value={response}
+                            label=""
+                            type="number"
+                            inputPropsClassName={cls.textField}
+                            inputLabelPropsClassName={cls.textLabel}
+                            onChange={onChange}
+                        />
                     }
                     button={<ResponseButton disabled={disabled} onClick={onClick} />}
                 />
@@ -542,7 +551,7 @@ export class StandardComponents {
                     numIndividuals = 1;
                 }
 
-                const response = await client.Widget.Send.ConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId);
+                const response = await client.Widget.Send.ConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId, isDemo);
                 if (response.result) {
                     const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale);
                     if (!isDemo) {
@@ -633,7 +642,7 @@ export class StandardComponents {
                 const phone = context.AppContext[ConvoContextProperties.phoneNumber];
                 const locale = context.AppContext[ConvoContextProperties.region];
 
-                const response = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId);
+                const response = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId, isDemo);
                 if (response.result) {
                     if (!isDemo) {
                         const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale, true);

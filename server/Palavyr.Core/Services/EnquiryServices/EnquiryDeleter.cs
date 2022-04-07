@@ -32,7 +32,11 @@ namespace Palavyr.Core.Services.EnquiryServices
             {
                 var record = await convoRecordStore.Get(conversationId, s => s.ConversationId);
 
-                fileIds.Add(record.ResponsePdfId);
+                if (record.ResponsePdfId != null)
+                {
+                    fileIds.Add(record.ResponsePdfId);
+                }
+
                 await convoRecordStore.Delete(conversationId, s => s.ConversationId);
             }
 

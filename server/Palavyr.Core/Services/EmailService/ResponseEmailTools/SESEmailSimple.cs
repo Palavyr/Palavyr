@@ -34,8 +34,21 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
         /// <param name="htmlBody"></param>
         /// <param name="textBody"></param>
         /// <returns>bool - success is true, fail is false</returns>
-        public async Task<bool> SendEmail(string fromAddress, string toAddress, string subject, string htmlBody, string textBody)
+        public async Task<bool> SendEmail(
+            string fromAddress,
+            string toAddress,
+            string subject,
+            string htmlBody,
+            string textBody,
+            bool notifyIntentOwner = false)
         {
+            var toAddy = new List<string>() { toAddress };
+            if (notifyIntentOwner)
+            {
+                toAddy.Add(fromAddress);
+            }
+
+
             var sendRequest = new SendEmailRequest()
             {
                 Source = fromAddress,

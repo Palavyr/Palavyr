@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -44,7 +45,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<CreateNewConversationHistoryResponse> Handle(CreateNewConversationHistoryRequest recordUpdate, CancellationToken cancellationToken)
         {
-            var (intentId, name, email) = recordUpdate;
+            var intentId = recordUpdate.IntentId;
 
             // Need to use a no tracking query executor here so that we don't save changes to the nodeChildren string when we wire up the standard nodes to the ending sequence.
             var standardNodesNoTracking = await convoNodeStore
@@ -53,11 +54,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 .Where(x => x.AreaIdentifier == intentId)
                 .ToListAsync(convoNodeStore.CancellationToken);
             var completeConversation = endingSequenceAttacher.AttachEndingSequenceToNodeList(standardNodesNoTracking, intentId, accountIdTransport.AccountId);
-
-            logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
-
             var widgetNodes = await mapper.MapMany(completeConversation);
-            
+
             var newConvo = NewConversation.CreateNew(widgetNodes.ToList());
 
             var intent = await intentStore.Get(intentId, s => s.AreaIdentifier);
@@ -73,7 +71,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 newConversationRecord.Name = recordUpdate.Name;
             }
 
-            await convoRecordStore.Create(newConversationRecord);
+            if (!recordUpdate.IsDemo)
+            {
+                await convoRecordStore.Create(newConversationRecord);
+            }
 
             return new CreateNewConversationHistoryResponse(newConvo);
         }
@@ -90,6 +91,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public string IntentId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public bool IsDemo { get; set; }
 
         public void Deconstruct(out string intentId, out string name, out string email)
         {

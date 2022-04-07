@@ -34,7 +34,8 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             string subject,
             string htmlBody,
             string textBody,
-            List<string> filePaths)
+            List<string> filePaths,
+            bool notifyIntentOwner = false)
         {
             var from = new MailboxAddress(fromAddressLabel ?? "", fromAddress); // TODO support Labels
             var to = new MailboxAddress(toAddressLabel ?? "", toAddress);
@@ -43,6 +44,11 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             var message = new MimeMessage();
             message.From.Add(from);
             message.To.Add(to);
+
+            if (notifyIntentOwner)
+            {
+                message.To.Add(new MailboxAddress(fromAddressLabel ?? "", fromAddress));
+            }
             message.Subject = subject;
             message.Body = body;
 
@@ -64,7 +70,8 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             string textBody,
             List<string> filePaths,
             string fromAddressLabel = "",
-            string toAddressLabel = "")
+            string toAddressLabel = "",
+            bool notifyIntentOwner = true)
         {
             var message = GetMessage(
                 fromAddressLabel,
@@ -74,7 +81,8 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
                 subject,
                 htmlBody,
                 textBody,
-                filePaths);
+                filePaths,
+                notifyIntentOwner);
 
             var rawSendRequest = new SendRawEmailRequest()
             {

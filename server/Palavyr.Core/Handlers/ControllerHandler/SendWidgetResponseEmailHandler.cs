@@ -28,11 +28,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<SendWidgetResponseEmailResponse> Handle(SendWidgetResponseEmailRequest request, CancellationToken cancellationToken)
         {
-            var convoRecord = await convoRecordStore.Get(request.EmailRequest.ConversationId, s => s.ConversationId);
-            await mapper.Map(request.EmailRequest, convoRecord, cancellationToken);
-            await convoRecordStore.Update(convoRecord);
+            if (!request.IsDemo)
+            {
+                var convoRecord = await convoRecordStore.Get(request.EmailRequest.ConversationId, s => s.ConversationId);
+                await mapper.Map(request.EmailRequest, convoRecord, cancellationToken);
+                await convoRecordStore.Update(convoRecord);
+            }
 
-            var resultResponse = await responseEmailSender.SendWidgetResponse(request.IntentId, request.EmailRequest);
+            var resultResponse = await responseEmailSender.SendWidgetResponse(request.IntentId, request.EmailRequest, request.IsDemo);
             return new SendWidgetResponseEmailResponse(resultResponse);
         }
     }
@@ -45,13 +48,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class SendWidgetResponseEmailRequest : IRequest<SendWidgetResponseEmailResponse>
     {
-        public SendWidgetResponseEmailRequest(EmailRequest emailRequest, string intentId)
+        public SendWidgetResponseEmailRequest(EmailRequest emailRequest, string intentId, bool isDemo)
         {
             EmailRequest = emailRequest;
             IntentId = intentId;
+            IsDemo = isDemo;
         }
+        
 
         public EmailRequest EmailRequest { get; set; }
         public string IntentId { get; set; }
+        public bool IsDemo { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -36,9 +35,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var intent = await intentStore.GetActiveIntentsWithConvoAndDynamicAndStaticTables();
 
             var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(intent, widgetPrefs, true, logger);
-            logger.LogDebug($"Pre-check run successful.");
-            logger.LogDebug($"Ready result:{result.IsReady}");
-            logger.LogDebug($"Incomplete areas: {result.PreCheckErrors.Select(x => x.AreaName).ToList()}");
             return new GetDemoWidgetPreCheckResponse(result);
         }
     }

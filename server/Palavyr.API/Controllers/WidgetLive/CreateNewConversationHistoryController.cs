@@ -22,11 +22,14 @@ namespace Palavyr.API.Controllers.WidgetLive
 
         [HttpPost(Route)]
         public async Task<NewConversation> Create(
+            [FromQuery]
+            bool demo,
             [FromBody]
             CreateNewConversationHistoryRequest request,
             CancellationToken cancellationToken
         )
         {
+            request.IsDemo = demo;
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;
         }

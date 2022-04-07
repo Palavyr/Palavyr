@@ -22,8 +22,8 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
     public interface IResponseEmailSender
     {
-        Task<SendEmailResultResponse> SendWidgetResponse(string intentId, EmailRequest emailRequest);
-        Task<SendEmailResultResponse> SendFallbackResponse(string intentId, EmailRequest emailRequest);
+        Task<SendEmailResultResponse> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isdemo);
+        Task<SendEmailResultResponse> SendFallbackResponse(string intentId, EmailRequest emailRequest, bool isDemo);
     }
 
     public class ResponseEmailSender : IResponseEmailSender
@@ -63,7 +63,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             this.client = client;
         }
 
-        public async Task<SendEmailResultResponse> SendWidgetResponse(string intentId, EmailRequest emailRequest)
+        public async Task<SendEmailResultResponse> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isDemo)
         {
             var responses = criticalResponses.Compile(emailRequest.KeyValues);
             var culture = await accountStore.GetCulture();
@@ -79,7 +79,8 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                     responses,
                     emailRequest,
                     culture,
-                    intentId
+                    intentId,
+                    isDemo
                 );
                 additionalFiles.Add(fileAsset.ToCloudFileDownloadRequest());
                 fileAssetResource = await mapper.Map(fileAsset);
@@ -88,14 +89,14 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             var senderDetails = await compileSenderDetails.Compile(intentId, emailRequest);
             var attachments = await attachmentRetriever.GatherAttachments(intentId, additionalFiles);
 
-            var responseResult = await Send(senderDetails, attachments.Select(x => x.TempFilePath).ToArray(), fileAssetResource);
+            var responseResult = await Send(senderDetails, attachments.Select(x => x.TempFilePath).ToArray(), fileAssetResource); // file asset goes to widget for show
 
             CleanUpLocalFiles(attachments);
 
             return responseResult;
         }
 
-        public async Task<SendEmailResultResponse> SendFallbackResponse(string intentId, EmailRequest emailRequest)
+        public async Task<SendEmailResultResponse> SendFallbackResponse(string intentId, EmailRequest emailRequest, bool isDemo)
         {
             var sendAttachmentsOnFallback = await SendAttachmentsWhenFallback(intentId);
 
@@ -134,7 +135,8 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                     details.ToAddress,
                     details.Subject,
                     details.BodyAsHtml,
-                    details.BodyAsText);
+                    details.BodyAsText,
+                    notifyIntentOwner: true);
             else
                 ok = await client.SendEmailWithAttachments(
                     details.FromAddress,
@@ -142,7 +144,8 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                     details.Subject,
                     details.BodyAsHtml,
                     details.BodyAsText,
-                    attachments.ToList()); // Attachments here should be local file paths that are temporary
+                    attachments.ToList(),
+                    notifyIntentOwner: true); // Attachments here should be local file paths that are temporary
 
             return ok
                 ? SendEmailResultResponse.CreateSuccess(EndingSequenceAttacher.EmailSuccessfulNodeId, fileAssetResource)

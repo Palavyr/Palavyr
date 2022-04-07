@@ -18,7 +18,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<SendWidgetResponseFallbackEmailResponse> Handle(SendWidgetResponseFallbackEmailRequest request, CancellationToken cancellationToken)
         {
-            var fallbackResultResponse = await responseEmailSender.SendFallbackResponse(request.IntentId, request.EmailRequest);
+            var fallbackResultResponse = await responseEmailSender.SendFallbackResponse(request.IntentId, request.EmailRequest, request.IsDemo);
             return new SendWidgetResponseFallbackEmailResponse(fallbackResultResponse);
         }
     }
@@ -31,13 +31,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class SendWidgetResponseFallbackEmailRequest : IRequest<SendWidgetResponseFallbackEmailResponse>
     {
-        public SendWidgetResponseFallbackEmailRequest(EmailRequest emailRequest, string intentId)
+        public SendWidgetResponseFallbackEmailRequest(EmailRequest emailRequest, string intentId, bool isDemo)
         {
             EmailRequest = emailRequest;
             IntentId = intentId;
+            IsDemo = isDemo;
         }
 
         public EmailRequest EmailRequest { get; set; }
         public string IntentId { get; set; }
+        public bool IsDemo { get; set; }
     }
 }

@@ -34,8 +34,8 @@ export class PalavyrWidgetRepository {
         newConversationHistory: (secretKey: SecretKey, isDemo: boolean) => `widget/create?key=${secretKey}&demo=${isDemo}`,
         updateConvoHistory: (secretKey: SecretKey) => `widget/conversation?key=${secretKey}`,
         updateConvoRecord: (secretKey: SecretKey) => `widget/record?key=${secretKey}`,
-        confirmationEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/send?key=${secretKey}`,
-        fallbackEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/fallback/send?key=${secretKey}`,
+        confirmationEmail: (secretKey: SecretKey, intentId: string, isDemo: boolean) => `widget/area/${intentId}/email/send?key=${secretKey}&demo=${isDemo}`,
+        fallbackEmail: (secretKey: SecretKey, intentId: string, isDemo: boolean) => `widget/area/${intentId}/email/fallback/send?key=${secretKey}&demo=${isDemo}`,
         internalCheck: (secretKey: SecretKey) => `widget/internal-check?key=${secretKey}`,
         getIntroSequence: (secretKey: SecretKey) => `account/settings/intro-sequence?key=${secretKey}`,
     };
@@ -71,9 +71,10 @@ export class PalavyrWidgetRepository {
                 numIndividuals: number,
                 dynamicResponses: Array<{ [key: string]: string }>,
                 keyValues: KeyValues,
-                convoId: string
+                convoId: string,
+                isDemo: boolean;
             ) =>
-                this.client.post<SendEmailResultResponse, {}>(this.Routes.confirmationEmail(this.secretKey, intentId), {
+                this.client.post<SendEmailResultResponse, {}>(this.Routes.confirmationEmail(this.secretKey, intentId, isDemo), {
                     ConversationId: convoId,
                     EmailAddress: emailAddress,
                     DynamicResponses: dynamicResponses,
@@ -82,8 +83,8 @@ export class PalavyrWidgetRepository {
                     Phone: phone,
                     NumIndividuals: numIndividuals,
                 }),
-            FallbackEmail: async (areaIdentifier: string, emailAddress: string, name: string, phone: string, convoId: string) =>
-                this.client.post<SendEmailResultResponse, {}>(this.Routes.fallbackEmail(this.secretKey, areaIdentifier), {
+            FallbackEmail: async (intentId: string, emailAddress: string, name: string, phone: string, convoId: string, isDemo: boolean) =>
+                this.client.post<SendEmailResultResponse, {}>(this.Routes.fallbackEmail(this.secretKey, intentId, isDemo), {
                     ConversationId: convoId,
                     EmailAddress: emailAddress,
                     Name: name,

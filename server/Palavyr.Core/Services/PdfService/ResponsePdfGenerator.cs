@@ -44,7 +44,8 @@ namespace Palavyr.Core.Services.PdfService
             CriticalResponses criticalResponses,
             EmailRequest emailRequest,
             CultureInfo culture,
-            string intentId)
+            string intentId,
+            bool isDemo)
         {
             if (emailRequest.NumIndividuals <= 0) throw new Exception("Num individuals must be 1 or more.");
 
@@ -90,16 +91,19 @@ namespace Palavyr.Core.Services.PdfService
             this.fileAssetStore = fileAssetStore;
         }
 
-        public async Task<FileAsset> GeneratePdfResponse(CriticalResponses criticalResponses, EmailRequest emailRequest, CultureInfo culture, string intentId)
+        public async Task<FileAsset> GeneratePdfResponse(CriticalResponses criticalResponses, EmailRequest emailRequest, CultureInfo culture, string intentId, bool isDemo)
         {
-            var fileAsset = await inner.GeneratePdfResponse(criticalResponses, emailRequest, culture, intentId);
+            var fileAsset = await inner.GeneratePdfResponse(criticalResponses, emailRequest, culture, intentId, isDemo);
 
             await fileAssetStore.Create(fileAsset);
             await contextProvider.ConfigurationContext().SaveChangesAsync(CancellationToken);
 
-            var record = await convoRecordStore.GetSingleRecord(emailRequest.ConversationId);
-            record.ResponsePdfId = fileAsset.FileId;
-            await convoRecordStore.Update(record);
+            if (!isDemo)
+            {
+                var record = await convoRecordStore.GetSingleRecord(emailRequest.ConversationId);
+                record.ResponsePdfId = fileAsset.FileId;
+                await convoRecordStore.Update(record);
+            }
 
             return fileAsset;
         }

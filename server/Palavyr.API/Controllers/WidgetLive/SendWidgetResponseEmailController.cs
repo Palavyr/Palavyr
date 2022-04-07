@@ -25,12 +25,13 @@ namespace Palavyr.API.Controllers.WidgetLive
         public async Task<SendEmailResultResponse> SendEmail(
             [FromRoute]
             string intentId,
+            [FromQuery] bool demo,
             [FromBody]
             EmailRequest emailRequest,
             CancellationToken cancellationToken
         )
         {
-            var response = await mediator.Send(new SendWidgetResponseEmailRequest(emailRequest, intentId), cancellationToken);
+            var response = await mediator.Send(new SendWidgetResponseEmailRequest(emailRequest, intentId, demo), cancellationToken);
             return response.Response;
         }
     }
