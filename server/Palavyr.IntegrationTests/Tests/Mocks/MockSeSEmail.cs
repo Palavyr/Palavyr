@@ -25,7 +25,13 @@ namespace Palavyr.IntegrationTests.Tests.Mocks
             return SentHtml;
         }
 
-        public async Task<bool> SendEmail(string fromAddress, string toAddress, string subject, string htmlBody, string textBody)
+        public async Task<bool> SendEmail(
+            string fromAddress,
+            string toAddress,
+            string subject,
+            string htmlBody,
+            string textBody,
+            bool notifyIntentOwner = false)
         {
             await Task.CompletedTask;
             SentText = textBody;
@@ -41,7 +47,8 @@ namespace Palavyr.IntegrationTests.Tests.Mocks
             string textBody,
             List<string> filePaths,
             string fromAddressLabel = "",
-            string toAddressLabel = "")
+            string toAddressLabel = "",
+            bool notifyIntentOwner = false)
         {
             await Task.CompletedTask;
             SentText = textBody;
