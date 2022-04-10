@@ -22,7 +22,7 @@ export const extractContent = (inputTextWithHtml: string, space: boolean = true)
     return [span.textContent || span.innerText].toString().replace(/ +/g, " ");
 };
 
-export const computeReadingTime = (node: WidgetNodeResource): number => {
+export const computeReadingTime = (node: WidgetNodeResource, readingTime: number): number => {
     const typicalReadingSpeed = (node: WidgetNodeResource) => floor((extractContent(node.text).length / WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN) * 1000, 0);
     const timeout = min([MIN_SPEED_MILLISECONDS, max([MAX_SPEED_MILLISECONDS, typicalReadingSpeed(node)])]);
     return timeout as number;
@@ -48,6 +48,8 @@ export const responseAction = async (
     response: string | null = null,
     callback: (() => void) | null = null
 ) => {
+    // LOCK THE RESET BUTTON on activation of this block
+    context.disableReset();
     if (response) {
         if (node.isCritical) {
             const keyValue = { [node.text]: response.toString() } as KeyValue;
@@ -57,7 +59,7 @@ export const responseAction = async (
         if (node.isDynamicTableNode && node.dynamicType) {
             const updatedDynamicResponses = setDynamicResponse(context.dynamicResponses, node.dynamicType, node.nodeId, response.toString());
 
-            context.addDynamicResponse(updatedDynamicResponses);
+            context.setDynamicResponses(updatedDynamicResponses);
 
             const currentDynamicResponseState = updatedDynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
 
@@ -74,10 +76,11 @@ export const responseAction = async (
             userText = response;
         }
         const userResponse = createUserResponseComponent(userText, convoId);
+
         context.addNewUserMessage(userResponse);
     }
 
-    const timeout = computeReadingTime(child);
+    const timeout = computeReadingTime(child, context.readingSpeed);
 
     if (callback) callback();
 
@@ -91,15 +94,23 @@ export const responseAction = async (
                 NodeCritical: node.isCritical,
                 NodeType: node.nodeType,
             };
+
             await client.Widget.Post.UpdateConvoHistory(updatePayload); // no need to await for this
         }
     }
 
     setTimeout(() => {
         context.enableMessageLoader();
+        // TODO need to check if reset is requested
+
         setTimeout(() => {
+            // todo; need to check if rest is requested -- everywhere...
+
             renderNextBotMessage(context, child, nodeList, client, convoId);
             context.disableMessageLoader();
+            if (context.chatStarted) {
+                context.enableReset();
+            }
         }, timeout);
     }, 2000);
 };

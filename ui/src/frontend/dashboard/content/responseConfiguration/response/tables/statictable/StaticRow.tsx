@@ -1,16 +1,10 @@
 import React from "react";
-import { makeStyles, TextField, Button, TableRow, TableCell } from "@material-ui/core";
+import { makeStyles, TextField, TableRow, TableCell } from "@material-ui/core";
 import { StaticTableMetas } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
-import DeleteIcon from "@material-ui/icons/Delete";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import RemoveIcon from "@material-ui/icons/Remove";
-import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { TableDeleteButton } from "../dynamicTable/tableComponents/PercentOfThreshold/TableDeleteButton";

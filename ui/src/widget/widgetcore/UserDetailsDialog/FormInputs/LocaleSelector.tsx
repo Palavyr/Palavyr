@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     root: (props: WidgetPreferences) => ({
         marginTop: "2.2rem",
         background: "none",
-        borderBottom: "1px solid " + props.chatFontColor,
+        // borderBottom: "1px solid " + props.chatFontColor,
     }),
     paper: {
         backgroundColor: theme.palette.common.white,

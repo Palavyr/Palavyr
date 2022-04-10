@@ -82,7 +82,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     const [phonePattern, setphonePattern] = useState<string>("");
     const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
-    const { chatStarted, setChatStarted, convoId, context, preferences, isDemo } = useContext(WidgetContext);
+    const { convoId, context, preferences, isDemo } = useContext(WidgetContext);
 
     useEffect(() => {
         (async () => {
@@ -104,7 +104,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     const onFormSubmit = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
         setKickoff(true);
-        setChatStarted(true);
+        context.setChatStarted();
 
         if (convoId && !isDemo) {
             await client.Widget.Post.UpdateConvoRecord({ Name: context.name, Email: context.emailAddress, PhoneNumber: context.phoneNumber, Locale: context.region, ConversationId: convoId });
@@ -120,7 +120,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     return (
         <>
             <Dialog
-                open={context.userDetailsVisible && chatStarted}
+                open={context.userDetailsVisible && context.detailsIconEnabled}
                 className={cls.baseDialogCollectionForm}
                 classes={{
                     root: cls.dialogBackgroundCollectionForm,
@@ -151,7 +151,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
                                 endIcon={detailsSet && <CheckCircleOutlineIcon />}
                                 type="submit"
                             >
-                                <Typography variant="h5">{chatStarted ? "Continue" : "Begin"}</Typography>
+                                <Typography variant="h5">{context.detailsIconEnabled ? "Continue" : "Begin"}</Typography>
                             </Button>
                         }
                     />
@@ -188,15 +188,14 @@ export const ContactForm = ({ disabled, onFormSubmit, submitButton, localeOption
 export interface MiniContactFormProps {
     onFormSubmit(e: { preventDefault: () => void }): void;
     formProps: any;
-    setDetailsSet: SetState<boolean>;
     submitButton: React.ReactNode;
     disabled: boolean;
 }
-export const MiniContactForm = ({ disabled, onFormSubmit, setDetailsSet, submitButton, formProps }: MiniContactFormProps) => {
+export const MiniContactForm = ({ disabled, onFormSubmit, submitButton, formProps }: MiniContactFormProps) => {
     return (
         <form onSubmit={onFormSubmit}>
             <NameForm {...formProps} disabled={disabled} />
-            <EmailForm {...formProps} setDetailsSet={setDetailsSet} disabled={disabled} />
+            <EmailForm {...formProps} disabled={disabled} />
             <div style={{ display: "flex", justifyContent: "right" }}>{submitButton}</div>
         </form>
     );

@@ -1130,7 +1130,7 @@ export type KeyValue = {
     [key: string]: string; // MUST BE STRING for server
 };
 
-export type KeyValues = Array<KeyValue>;
+export type KeyValues = KeyValue[];
 
 export type ContextProperties = {
     name: string;

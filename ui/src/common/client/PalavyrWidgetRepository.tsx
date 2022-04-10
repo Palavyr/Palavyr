@@ -45,7 +45,7 @@ export class PalavyrWidgetRepository {
             PreCheck: async (isDemo: boolean) => this.client.get<PreCheckResult>(this.Routes.precheck(this.secretKey, isDemo)),
             WidgetPreferences: async () => this.client.get<WidgetPreferences>(this.Routes.widgetPreferences(this.secretKey)),
             Locale: async () => this.client.get<LocaleResponse>(this.Routes.locale(this.secretKey)),
-            Areas: async () => this.client.get<Array<AreaTable>>(this.Routes.intents(this.secretKey)),
+            Intents: async () => this.client.get<Array<AreaTable>>(this.Routes.intents(this.secretKey)),
             NewConversationHistory: async (recordUpdateDto: Partial<ConversationRecordUpdate>, isDemo: boolean) =>
                 this.client.post<NewConversation, {}>(this.Routes.newConversationHistory(this.secretKey, isDemo), recordUpdateDto),
             IntroSequence: async () => this.client.get<WidgetNodes>(this.Routes.getIntroSequence(this.secretKey)),

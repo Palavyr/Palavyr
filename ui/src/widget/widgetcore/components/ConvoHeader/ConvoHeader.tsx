@@ -6,6 +6,7 @@ import { WidgetContext } from "../../context/WidgetContext";
 import classNames from "classnames";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import "@widgetcore/widget/widget.module.scss";
+import { OsTypeToggle } from "@frontend/dashboard/content/responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 
 export interface ConvoHeaderProps {
     titleAvatar?: string;
@@ -65,10 +66,10 @@ const useStyles = makeStyles(theme => ({
 export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
     const [tipOpen, setTipOpen] = useState<boolean>(false);
     const ref = useRef<HTMLDivElement>(null);
-    const { preferences, chatStarted, context} = useContext(WidgetContext);
+    const { preferences, context } = useContext(WidgetContext);
 
     useEffect(() => {
-        if (chatStarted) {
+        if (context.detailsIconEnabled) {
             setTipOpen(true);
             setTimeout(() => {
                 setTipOpen(false);
@@ -89,19 +90,20 @@ export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
                 ref.current.removeEventListener("mouseout", () => setTipOpen(false));
             }
         };
-    }, [chatStarted]);
+    }, [context.detailsIconEnabled]);
 
     const cls = useStyles(preferences);
     const wcls = useWidgetStyles();
-
-
+    console.log("ICON: " + context.detailsIconEnabled);
     return (
         <div className={classNames(wcls.pwrow, wcls.pheader, cls.header)}>
-            {chatStarted && (
+            {context.detailsIconEnabled && (
                 <Fade in>
-                    <Tooltip open={tipOpen} title="Update your contact details" placement="left">
-                        <FaceIcon ref={ref as any} className={cls.settingsIcon} onClick={context.openUserDetails} />
-                    </Tooltip>
+                    <>
+                        <Tooltip open={tipOpen} title="Update your contact details" placement="left">
+                            <FaceIcon ref={ref as any} className={cls.settingsIcon} onClick={context.openUserDetails} />
+                        </Tooltip>
+                    </>
                 </Fade>
             )}
             {titleAvatar && <img src={titleAvatar} className="pcw-avatar" alt="profile" />}
