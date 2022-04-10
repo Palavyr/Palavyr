@@ -7,7 +7,7 @@ import { setDynamicResponse } from "./setDynamicResponse";
 import { IAppContext } from "widget/hook";
 import { UserMessage } from "@widgetcore/components/Messages/components/Message/Message";
 
-const WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN = 22;
+const WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN = 11;
 const MIN_SPEED_MILLISECONDS = 18000;
 const MAX_SPEED_MILLISECONDS = 2000;
 export const extractContent = (inputTextWithHtml: string, space: boolean = true) => {
@@ -23,7 +23,9 @@ export const extractContent = (inputTextWithHtml: string, space: boolean = true)
 };
 
 export const computeReadingTime = (node: WidgetNodeResource, readingTime: number): number => {
-    const typicalReadingSpeed = (node: WidgetNodeResource) => floor((extractContent(node.text).length / WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN) * 1000, 0);
+    const ajustedReadTime = WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN * readingTime;
+
+    const typicalReadingSpeed = (node: WidgetNodeResource) => floor((extractContent(node.text).length / ajustedReadTime) * 1000, 0);
     const timeout = min([MIN_SPEED_MILLISECONDS, max([MAX_SPEED_MILLISECONDS, typicalReadingSpeed(node)])]);
     return timeout as number;
 };

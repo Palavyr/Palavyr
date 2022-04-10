@@ -54,7 +54,7 @@ const defaultBehavior: BehaviorState = {
     resetEnabled: false,
     detailsIconEnabled: false,
     resetRequested: false,
-    readingSpeed: 1,
+    readingSpeed: 2,
     chatStarted: false,
 };
 
@@ -270,6 +270,10 @@ export const useAppContext = (): IAppContext => {
         setAppContext((appContext: AppContext) => ({ ...appContext, resetRequested: true }));
     };
 
+    const setReadingSpeed = (speed: number) => {
+        setAppContext((appContext: AppContext) => ({ ...appContext, readingSpeed: speed }));
+    };
+
     return {
         toggleInputDisable,
         toggleMessageLoader,
@@ -302,6 +306,7 @@ export const useAppContext = (): IAppContext => {
         setChatStarted,
         requestReset,
         enableDetailsIcon,
+        setReadingSpeed,
 
         messages: AppContext.messages,
         loading: AppContext.loading,
@@ -359,6 +364,9 @@ export interface IAppContext {
     disableReset(): void;
     setChatStarted(): void;
     enableDetailsIcon(): void;
+
+    setReadingSpeed(speed: number): void;
+
     messages: (UserMessageData | BotMessageData)[];
     loading: boolean;
     phoneNumber: string;

@@ -1,17 +1,17 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 import ReplayIcon from "@material-ui/icons/Replay";
-import "@widgetcore/widget/widget.module.scss";
 import classNames from "classnames";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import { IAppContext } from "widget/hook";
-import { TextSpeedToggle } from "./TextSpeedToggle";
 import { getSelectorNode } from "@widgetcore/BotResponse/utils/utils";
 import { useLocation } from "react-router-dom";
 import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
 import { renderNextBotMessage } from "@widgetcore/BotResponse/utils/renderBotMessage";
 import { Tooltip } from "@material-ui/core";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
+import { TextSpeedSwitch } from "./TextSpeedSwitch";
+import "@widgetcore/widget/widget.module.scss";
 
 type StyleProps = {
     resetEnabled: boolean;
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     leadingText: {},
     wrapper: {
         fontFamily: theme.typography.fontFamily,
-        justifyItems: "center",
+        justifyItems: "c enter",
         paddingLeft: "1rem",
     },
     brand: {
@@ -31,7 +31,6 @@ const useStyles = makeStyles(theme => ({
     },
     replayIcon: {
         fontSize: "1rem",
-        // paddingRight: "1rem",
         "&:hover": {
             cursor: "pointer",
         },
@@ -40,7 +39,6 @@ const useStyles = makeStyles(theme => ({
     iconRoot: {
         marginRight: ".3rem",
         marginLeft: ".3rem",
-        // textAlign: "right",
     },
     visible: (props: StyleProps) => ({
         visibility: props.resetEnabled ? "visible" : "hidden",
@@ -51,7 +49,7 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
-        backgroundColor: theme.palette.primary.main, // "#264B94",
+        backgroundColor: "#264B94",
         color: "white",
     },
 }));
@@ -97,7 +95,17 @@ export const BrandingStrip = ({ context }: { context: IAppContext }) => {
                         <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={resetOnClick} />
                     </Tooltip>
                 )}
-                {/* <TextSpeedToggle disabled={false} name="Active" style={{ zIndex: 10000 }} /> */}
+                <Tooltip key="speed-check" title="Chat Speed">
+                    <TextSpeedSwitch
+                        onChange={(_: any, checked: boolean) => {
+                            if (checked) {
+                                context.setReadingSpeed(30);
+                            } else {
+                                context.setReadingSpeed(1);
+                            }
+                        }}
+                    />
+                </Tooltip>
             </div>
         </div>
     );
