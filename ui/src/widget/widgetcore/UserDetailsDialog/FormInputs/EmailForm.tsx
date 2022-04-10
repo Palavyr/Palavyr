@@ -1,14 +1,11 @@
 import { makeStyles, TextField } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
-import React, { Dispatch, SetStateAction, useContext } from "react";
+import React, { useContext } from "react";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserEmail, checkUserName, INVALID_EMAIL, INVALID_PHONE } from "../UserDetailsCheck";
 
-export interface EmailFormProps extends BaseFormProps {
-    setDetailsSet: Dispatch<SetStateAction<boolean>>;
-    disabled: boolean;
-}
+export interface EmailFormProps extends BaseFormProps {}
 
 const useStyles = makeStyles(theme => ({
     helperTextRoot: (props: WidgetPreferences) => ({
@@ -82,7 +79,7 @@ const useStyles = makeStyles(theme => ({
     }),
 }));
 
-export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailFormProps) => {
+export const EmailForm = ({ status, setStatus }: EmailFormProps) => {
     const {
         preferences,
         context: { name, emailAddress, setEmailAddress, setPhoneNumber },
@@ -123,9 +120,6 @@ export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailF
             label="Email Address"
             autoComplete="off"
             type="email"
-            onBlur={() => {
-                setDetailsSet(checkUserDetailsAreSet());
-            }}
             onChange={e => {
                 setEmailAddress(e.target.value);
                 if (status === INVALID_EMAIL) {

@@ -1,16 +1,27 @@
-import { makeStyles, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import React from "react";
 import ReplayIcon from "@material-ui/icons/Replay";
-import "@widgetcore/widget/widget.module.scss";
 import classNames from "classnames";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import { IAppContext } from "widget/hook";
+import { getSelectorNode } from "@widgetcore/BotResponse/utils/utils";
+import { useLocation } from "react-router-dom";
+import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { renderNextBotMessage } from "@widgetcore/BotResponse/utils/renderBotMessage";
+import { Tooltip } from "@material-ui/core";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
+import { TextSpeedSwitch } from "./TextSpeedSwitch";
+import "@widgetcore/widget/widget.module.scss";
+
+type StyleProps = {
+    resetEnabled: boolean;
+};
 
 const useStyles = makeStyles(theme => ({
     leadingText: {},
     wrapper: {
-        fontFamily: "Poppins",
-        justifyItems: "center",
+        fontFamily: theme.typography.fontFamily,
+        justifyItems: "c enter",
         paddingLeft: "1rem",
     },
     brand: {
@@ -18,43 +29,83 @@ const useStyles = makeStyles(theme => ({
             cursor: "pointer",
         },
     },
-    spacer: {
-        minHeight: "30px",
-
-        width: "100%",
-        backgroundColor: "#264B94",
-        color: "white",
-        zIndex: 1000,
-    },
     replayIcon: {
-        color: theme.palette.common.white,
         fontSize: "1rem",
-        paddingRight: "1rem",
         "&:hover": {
             cursor: "pointer",
         },
+        color: theme.palette.common.white,
     },
     iconRoot: {
+        marginRight: ".3rem",
+        marginLeft: ".3rem",
+    },
+    visible: (props: StyleProps) => ({
+        visibility: props.resetEnabled ? "visible" : "hidden",
+    }),
+
+    container: {
+        minHeight: "30px",
         width: "100%",
-        textAlign: "right",
+        display: "flex",
+        justifyContent: "space-between",
+        backgroundColor: "#264B94",
+        color: "white",
     },
 }));
 export const BrandingStrip = ({ context }: { context: IAppContext }) => {
-    const cls = useStyles();
+    const cls = useStyles({ resetEnabled: context.resetEnabled });
     const wcls = useWidgetStyles();
+    // we don't need to enable this. We just allow users to click the restart button and if they do, then we treat
+    // the convo as if someone just left.
+    // When they hit it, we DO NOT reset set the user info form details (name, email, locale, phone), but we do
+    // 1. load the selector
+    // 2. clear all other context (responses, keyvalues, etc)
+
+    const location = useLocation();
+    let secretKey = new URLSearchParams(location.search).get("key");
+    if (!secretKey) {
+        secretKey = "123";
+    }
+    const client = new PalavyrWidgetRepository(secretKey);
+
+    const resetOnClick = async () => {
+        if (context.resetEnabled) {
+            context.resetToSelector();
+            const intro = await client.Widget.Get.IntroSequence();
+            const selectorNode = getSelectorNode(intro);
+            renderNextBotMessage(context, selectorNode, intro, client, null);
+        }
+    };
+
     return (
-        <div className={classNames(wcls.pwrow, wcls.pfooter, cls.spacer)}>
+        <div className={classNames(wcls.pwrow, wcls.pfooter, cls.container)}>
             <div style={{ alignItems: "center", display: "flex" }}>
-                <Typography className={cls.wrapper} variant="caption">
+                <PalavyrText className={cls.wrapper} variant="caption">
                     Powered by{" "}
                     <strong className={cls.brand} onClick={() => window.open("https://www.palavyr.com")}>
                         Palavyr
                     </strong>
-                </Typography>
+                </PalavyrText>
             </div>
-            <div style={{ paddingLeft: "3rem", height: "100%", alignItems: "center", display: "flex" }}>
-                {context.resetEnabled && <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={context.resetToSelector} />}
-                {!context.resetEnabled && <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={() => window.location.reload()} />}
+            <div style={{ display: "flex", flexGrow: 1 }} />
+            <div style={{ alignItems: "center", display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
+                {context.resetEnabled && (
+                    <Tooltip key="replay" title="Restart">
+                        <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={resetOnClick} />
+                    </Tooltip>
+                )}
+                <Tooltip key="speed-check" title="Chat Speed">
+                    <TextSpeedSwitch
+                        onChange={(_: any, checked: boolean) => {
+                            if (checked) {
+                                context.setReadingSpeed(30);
+                            } else {
+                                context.setReadingSpeed(1);
+                            }
+                        }}
+                    />
+                </Tooltip>
             </div>
         </div>
     );

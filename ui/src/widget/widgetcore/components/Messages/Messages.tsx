@@ -1,5 +1,4 @@
 import React, { memo, useContext, useEffect, useMemo, useRef } from "react";
-import format from "date-fns/format";
 import { Loader } from "./components/Loader/Loader";
 import { BotMessageData, UserMessageData, WidgetPreferences } from "@Palavyr-Types";
 import { scrollToBottom } from "@widgetcore/utils/messages";
@@ -71,8 +70,8 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
     const messageRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        console.log(messageRef)
-        console.log(messageRef.current)
+        // console.log(messageRef)
+        // console.log(messageRef.current)
         scrollToBottom(messageRef.current);
     }, [context.messages, context.loading]);
 

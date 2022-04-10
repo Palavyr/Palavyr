@@ -11,7 +11,6 @@ import { Dialog } from "@material-ui/core";
 import { InitializeFonts } from "@frontend/dashboard/content/designer/fonts/Initializer";
 
 export const WidgetApp = () => {
-    const [chatStarted, setChatStarted] = useState<boolean>(false);
     const [convoId, setConvoId] = useState<string | null>(null);
     const [isReady, setIsReady] = useState<boolean | null>(null);
     const [preferences, setWidgetPrefs] = useState<WidgetPreferences>();
@@ -52,7 +51,7 @@ export const WidgetApp = () => {
     return (
         <div style={{ height: "100%", width: "100%" }}>
             {preferences && isDemo && (
-                <WidgetContext.Provider value={{ isDemo: isDemo === "true", context, preferences, chatStarted, setChatStarted, setConvoId, convoId }}>
+                <WidgetContext.Provider value={{ isDemo: isDemo === "true", context, preferences, setConvoId, convoId }}>
                     {isReady ? (
                         <>
                             <AreYouSureYouWantToGoBack />

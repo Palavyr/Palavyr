@@ -87,9 +87,9 @@ export class StandardComponents {
             const cls = useStyles(preferences);
 
             const loadAreas = useCallback(async () => {
-                var areas = await client.Widget.Get.Areas();
-                var options = areas.map((area: AreaTable) => {
-                    return { areaDisplay: area.areaDisplayTitle, areaId: area.areaIdentifier };
+                var intents = await client.Widget.Get.Intents();
+                var options = intents.map((intent: AreaTable) => {
+                    return { areaDisplay: intent.areaDisplayTitle, areaId: intent.areaIdentifier };
                 });
 
                 setOptions(options);
@@ -100,7 +100,6 @@ export class StandardComponents {
                     setOpen(true);
                 }
                 loadAreas();
-                context.enableReset();
             }, [loadAreas]);
 
             const onChange = async (_: any, newOption: SelectedOption) => {
@@ -122,6 +121,8 @@ export class StandardComponents {
                 let secretKey = new URLSearchParams(location.search).get("key") as string;
                 widgetSelection(secretKey, newOption.areaDisplay, newOption.areaId);
                 renderNextBotMessage(context, rootNode, nodes, client, convoId);
+                context.enableReset();
+                context.setChatStarted();
             };
 
             // const renderThatDoesntCheckOUtResponse = (node, messageResponse, nodeList, client, convoId) => {
@@ -152,19 +153,18 @@ export class StandardComponents {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const { setChatStarted, setConvoId, context, isDemo } = useContext(WidgetContext);
+            const { setConvoId, context, isDemo } = useContext(WidgetContext);
 
             const [disabled, setDisabled] = useState<boolean>(false);
 
             const [status, setStatus] = useState<string | null>(null);
-            const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
             const onFormSubmit = (e: { preventDefault: () => void }) => {
                 if (designer) return;
                 e.preventDefault();
                 setDisabled(true);
-                setChatStarted(true);
                 setConvoId(convoId);
+                context.enableDetailsIcon();
                 responseAction(context, node, child, nodeList, client, convoId, isDemo);
             };
 
@@ -181,7 +181,6 @@ export class StandardComponents {
                         <MiniContactForm
                             disabled={disabled}
                             onFormSubmit={onFormSubmit}
-                            setDetailsSet={setDetailsSet}
                             formProps={{ status, setStatus }}
                             submitButton={<ResponseButton disabled={disabled} onSubmit={onFormSubmit} type="submit" />}
                         />

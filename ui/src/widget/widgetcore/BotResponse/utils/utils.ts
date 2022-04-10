@@ -7,6 +7,11 @@ export const getRootNode = (nodeList: WidgetNodes): WidgetNodeResource => {
     return node;
 };
 
+export const getSelectorNode = (nodeList: WidgetNodes): WidgetNodeResource => {
+    const node = nodeList.filter(x => x.nodeComponentType === "Selection")[0];
+    return node;
+};
+
 export const getOrderedChildNodes = (childrenIDs: string, nodeList: WidgetNodes) => {
     const ids = childrenIDs.split(",");
     const children: WidgetNodes = [];

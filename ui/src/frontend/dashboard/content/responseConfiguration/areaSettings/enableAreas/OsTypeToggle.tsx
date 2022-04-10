@@ -9,14 +9,15 @@ interface ToggleProps {
     enabledLabel: string;
     disabledLabel: string;
     disabled?: boolean;
+    style?: React.CSSProperties;
 }
 
-export const OsTypeToggle = ({ controlledState, onChange, enabledLabel, disabledLabel, disabled }: ToggleProps) => {
+export const OsTypeToggle = ({ controlledState, onChange, enabledLabel, disabledLabel, disabled, style }: ToggleProps) => {
     return (
         <Align>
             <FormControlLabel
                 disabled={disabled}
-                control={<IOSSwitch disabled={controlledState === null} checked={controlledState === true} onChange={onChange} name="Active" />}
+                control={<IOSSwitch disabled={controlledState === null} checked={controlledState === true} onChange={onChange} name="Active" style={style} />}
                 style={{ color: "black", fontWeight: "bolder", paddingBottom: "0.8rem" }}
                 label={controlledState === null ? "loading..." : controlledState === true ? enabledLabel : disabledLabel}
             />

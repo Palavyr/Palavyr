@@ -137,6 +137,10 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
         fileId: "1234",
     };
 
+    useEffect(() => {
+        context.enableDetailsIcon();
+    }, []);
+
     const DrawerWidget = (
         <div className={classNames(cls.widget, wcls.pwbox)}>
             {widgetPreferences && (
@@ -144,8 +148,6 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
                     value={{
                         isDemo: true,
                         preferences: widgetPreferences,
-                        chatStarted: true,
-                        setChatStarted: () => null,
                         setConvoId: () => null,
                         convoId: "demo",
                         context,

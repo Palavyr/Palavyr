@@ -6,6 +6,10 @@ export interface BehaviorState {
     loading: boolean;
     userDetailsVisible: boolean;
     resetEnabled: boolean;
+    detailsIconEnabled: boolean;
+    resetRequested: boolean;
+    readingSpeed: number;
+    chatStarted: boolean;
 }
 
 export interface ContextState {
@@ -48,6 +52,10 @@ const defaultBehavior: BehaviorState = {
     loading: false,
     userDetailsVisible: false,
     resetEnabled: false,
+    detailsIconEnabled: false,
+    resetRequested: false,
+    readingSpeed: 2,
+    chatStarted: false,
 };
 
 const defaultAppContext: AppContext = {
@@ -60,178 +68,210 @@ export const useAppContext = (): IAppContext => {
     const [AppContext, setAppContext] = useState<AppContext>(defaultAppContext);
 
     const addNewUserMessage = (message: UserMessageData) => {
-        AppContext.messages.push(message);
-        setAppContext({
-            ...AppContext,
-            messages: [...AppContext.messages],
-        });
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
+            messages: [...appContext.messages, message],
+        }));
     };
 
     const addNewBotMessage = (message: BotMessageData) => {
         // MAKE SURE TO ATTACH SELECTION CUSTOM ID WHEN HITTING THE SELECTION COMPONENT SO WE CAN TRUNCATE BY IT
-        AppContext.messages.push(message);
-        setAppContext({
-            ...AppContext,
-            messages: [...AppContext.messages],
-            badgeCount: AppContext.badgeCount + 1,
+        setAppContext((appContext: AppContext) => {
+            return {
+                ...appContext,
+                messages: [...appContext.messages, message],
+                badgeCount: appContext.badgeCount + 1,
+            };
         });
+    };
+
+    const setChatStarted = () => {
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
+            chatStarted: true,
+        }));
     };
 
     const enableReset = () => {
-        console.log("enableReset");
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             resetEnabled: true,
-        });
+        }));
+    };
+
+    const disableReset = () => {
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
+            resetEnabled: false,
+        }));
     };
 
     const resetToSelector = () => {
-        const messages = AppContext.messages;
-        const indexOfSelector = messages.findIndex(m => m.nodeType === "Selection");
-        const truncated = messages.slice(0, indexOfSelector + 1);
-
-        setAppContext({
-            ...AppContext,
-            messages: truncated,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
+            messages: [],
+            loading: false,
+            keyValues: [],
+            dynamicResponses: [],
+            numIndividuals: null,
+            responseFileAsset: { fileId: "", fileName: "", link: "" },
             badgeCount: 0,
-        });
+            chatStarted: false,
+        }));
     };
 
     const dropMessages = () => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             messages: [],
-            badgeCount: 0,
-        });
+        }));
     };
 
     const setBadgeCount = (badgeCount: number) => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             badgeCount,
-        });
+        }));
     };
 
     const markAllAsRead = () => {
-        setAppContext({
-            ...AppContext,
-            messages: AppContext.messages.map(m => ({ ...m, read: true })),
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
+            messages: appContext.messages.map(m => ({ ...m, read: true })),
             badgeCount: 0,
-        });
+        }));
     };
 
     const toggleInputDisable = () => {
-        setAppContext({
-            ...AppContext,
-            disabledInput: !AppContext.disabledInput,
-        });
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
+            disabledInput: !appContext.disabledInput,
+        }));
     };
 
     const toggleMessageLoader = () => {
-        setAppContext({
-            ...AppContext,
-            loading: !AppContext.loading,
-        });
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
+            loading: !appContext.loading,
+        }));
     };
     const enableMessageLoader = () => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             loading: true,
-        });
+        }));
     };
 
     const disableMessageLoader = () => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             loading: false,
-        });
+        }));
     };
 
     const toggleUserDetails = () => {
-        setAppContext({
-            ...AppContext,
-            userDetailsVisible: !AppContext.userDetailsVisible,
-        });
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
+            userDetailsVisible: !appContext.userDetailsVisible,
+        }));
+    };
+
+    const enableDetailsIcon = () => {
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
+            detailsIconEnabled: true,
+        }));
     };
 
     const openUserDetails = () => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             userDetailsVisible: true,
-        });
+        }));
     };
 
     const closeUserDetails = () => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             userDetailsVisible: false,
-        });
+        }));
     };
 
     const setContextProperties = (properties: ContextProperties) => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             ...properties,
-        });
+        }));
     };
 
     const setNumIndividuals = (numIndividuals: number) => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             numIndividuals,
-        });
+        }));
     };
 
     const setName = (name: string) => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             name,
-        });
+        }));
     };
 
     const setPhoneNumber = (phoneNumber: string) => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             phoneNumber,
-        });
+        }));
     };
 
     const setEmailAddress = (emailAddress: string) => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             emailAddress,
-        });
+        }));
     };
 
     const setRegion = (region: string) => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             region,
-        });
+        }));
     };
 
     const setWidgetPreferences = (widgetPreferences: WidgetPreferences) => {
-        setAppContext({
-            ...AppContext,
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
             widgetPreferences,
-        });
+        }));
     };
 
     const setResponseFileAsset = (responseFileAsset: FileAssetResource) => {
-        AppContext.responseFileAsset = responseFileAsset;
-        setAppContext({
-            ...AppContext,
-            responseFileAsset: AppContext.responseFileAsset,
-        });
+        setAppContext((appContext: AppContext) => ({
+            ...appContext,
+            responseFileAsset: responseFileAsset,
+        }));
     };
 
     const setDynamicResponses = (dynamicResponses: DynamicResponses) => {
-        const update = [...AppContext.dynamicResponses, ...dynamicResponses]
-        setAppContext({ ...AppContext, dynamicResponses: update });
+        setAppContext((appContext: AppContext) => {
+            return {
+                ...appContext,
+                dynamicResponses: [...appContext.dynamicResponses, ...dynamicResponses],
+            };
+        });
     };
 
     const setKeyValues = (keyValues: KeyValues) => {
-        setAppContext({ ...AppContext, keyValues });
+        setAppContext((appContext: AppContext) => ({ ...appContext, keyValues }));
+    };
+
+    const requestReset = () => {
+        setAppContext((appContext: AppContext) => ({ ...appContext, resetRequested: true }));
+    };
+
+    const setReadingSpeed = (speed: number) => {
+        setAppContext((appContext: AppContext) => ({ ...appContext, readingSpeed: speed }));
     };
 
     return {
@@ -252,7 +292,7 @@ export const useAppContext = (): IAppContext => {
         setRegion,
         setWidgetPreferences,
         setResponseFileAsset,
-        addDynamicResponse: setDynamicResponses,
+        setDynamicResponses,
         setKeyValues,
 
         addNewUserMessage,
@@ -262,6 +302,11 @@ export const useAppContext = (): IAppContext => {
         setBadgeCount,
         markAllAsRead,
         enableReset,
+        disableReset,
+        setChatStarted,
+        requestReset,
+        enableDetailsIcon,
+        setReadingSpeed,
 
         messages: AppContext.messages,
         loading: AppContext.loading,
@@ -278,6 +323,10 @@ export const useAppContext = (): IAppContext => {
         userDetailsVisible: AppContext.userDetailsVisible,
         badgeCount: AppContext.badgeCount,
         resetEnabled: AppContext.resetEnabled,
+        detailsIconEnabled: AppContext.detailsIconEnabled,
+        resetRequested: AppContext.resetRequested,
+        readingSpeed: AppContext.readingSpeed,
+        chatStarted: AppContext.chatStarted,
         AppContext,
     };
 };
@@ -301,16 +350,22 @@ export interface IAppContext {
     setRegion: (region: string) => void;
     setWidgetPreferences: (widgetPreferences: any) => void;
     setResponseFileAsset: (responseFileAssetResource: FileAssetResource) => void;
-    addDynamicResponse: (dynamicResponses: DynamicResponses) => void;
+    setDynamicResponses: (dynamicResponses: DynamicResponses) => void;
     setKeyValues: (keyValues: KeyValues) => void;
 
     addNewUserMessage: (message: UserMessageData) => void;
     addNewBotMessage: (message: BotMessageData) => void;
     resetToSelector: () => void;
+    requestReset: () => void;
     dropMessages: () => void;
     setBadgeCount: (badgeCount: number) => void;
     markAllAsRead: () => void;
     enableReset(): void;
+    disableReset(): void;
+    setChatStarted(): void;
+    enableDetailsIcon(): void;
+
+    setReadingSpeed(speed: number): void;
 
     messages: (UserMessageData | BotMessageData)[];
     loading: boolean;
@@ -327,5 +382,9 @@ export interface IAppContext {
     userDetailsVisible: boolean;
     badgeCount: number;
     resetEnabled: boolean;
+    detailsIconEnabled: boolean;
+    resetRequested: boolean;
+    readingSpeed: number;
+    chatStarted: boolean;
     AppContext: AppContext;
 }

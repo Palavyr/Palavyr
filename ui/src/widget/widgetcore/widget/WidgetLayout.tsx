@@ -18,7 +18,6 @@ export const WidgetLayout = ({ initializer, titleAvatar = "", profileAvatar = ""
     const { repository } = useContext(DashboardContext);
 
     const initialize = React.useCallback(async (context: IAppContext) => {
-        context.dropMessages();
         initializer(context, repository);
     }, []);
 
