@@ -37,6 +37,7 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, dem
         marginTop: preCheckErrors.length > 0 ? "0rem" : "2rem",
         marginBottom: preCheckErrors.length > 0 ? "0rem" : "2rem",
         height: "660px",
+        maxHeight: "80vh",
         width: "420px",
         borderRadius: "9px",
         border: "0px",

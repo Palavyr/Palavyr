@@ -1,10 +1,9 @@
-import { PopperProps, Popper, TextField, CircularProgress, makeStyles, Paper, PaperProps, Fade } from "@material-ui/core";
+import { PopperProps, Popper, TextField, CircularProgress, makeStyles, Paper, PaperProps } from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
 import { SelectedOption, SetState, WidgetPreferences } from "@Palavyr-Types";
 import classNames from "classnames";
 import React, { useContext, useEffect, useState } from "react";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
-import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 const useStyles = makeStyles(() => ({
@@ -108,7 +107,6 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
             {options && (
                 <Autocomplete
                     popupIcon={<ArrowDropDownIcon className={cls.icon} />}
-                    // closeIcon={<ArrowDropUpIcon className={cls.icon} />}
                     disabled={disabled}
                     size="small"
                     open={open !== undefined ? open : true}
@@ -151,7 +149,6 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
                             InputProps={{
                                 ...params.InputProps,
                                 disableUnderline: true,
-                                // style: { borderBottom: "1px solid black" },
                                 endAdornment: (
                                     <>
                                         {loading ? <CircularProgress color="inherit" size={20} /> : null}
