@@ -1,4 +1,4 @@
-import { ContextProperties, DynamicResponses, KeyValues, UserMessageData, BotMessageData, WidgetPreferences, FileAssetResource } from "@Palavyr-Types";
+import { ContextProperties, DynamicResponses, KeyValues, UserMessageData, BotMessageData, WidgetPreferences, FileAssetResource, KeyValue } from "@Palavyr-Types";
 import { useState } from "react";
 
 export interface BehaviorState {
@@ -262,8 +262,8 @@ export const useAppContext = (): IAppContext => {
         });
     };
 
-    const setKeyValues = (keyValues: KeyValues) => {
-        setAppContext((appContext: AppContext) => ({ ...appContext, keyValues }));
+    const addKeyValue = (keyValue: KeyValue) => {
+        setAppContext((appContext: AppContext) => ({ ...appContext, keyValues: [...appContext.keyValues, keyValue] }));
     };
 
     const requestReset = () => {
@@ -293,7 +293,7 @@ export const useAppContext = (): IAppContext => {
         setWidgetPreferences,
         setResponseFileAsset,
         setDynamicResponses,
-        setKeyValues,
+        addKeyValue,
 
         addNewUserMessage,
         addNewBotMessage,
@@ -351,7 +351,7 @@ export interface IAppContext {
     setWidgetPreferences: (widgetPreferences: any) => void;
     setResponseFileAsset: (responseFileAssetResource: FileAssetResource) => void;
     setDynamicResponses: (dynamicResponses: DynamicResponses) => void;
-    setKeyValues: (keyValues: KeyValues) => void;
+    addKeyValue: (keyValue: KeyValue) => void;
 
     addNewUserMessage: (message: UserMessageData) => void;
     addNewBotMessage: (message: BotMessageData) => void;

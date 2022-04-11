@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReplayIcon from "@material-ui/icons/Replay";
 import classNames from "classnames";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
@@ -54,15 +54,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 export const BrandingStrip = ({ context }: { context: IAppContext }) => {
-    const cls = useStyles({ resetEnabled: context.resetEnabled });
-    const wcls = useWidgetStyles();
-    // we don't need to enable this. We just allow users to click the restart button and if they do, then we treat
-    // the convo as if someone just left.
-    // When they hit it, we DO NOT reset set the user info form details (name, email, locale, phone), but we do
-    // 1. load the selector
-    // 2. clear all other context (responses, keyvalues, etc)
+    const [resetEnabled, setResetEnabled] = useState<boolean>(false);
 
     const location = useLocation();
+    const cls = useStyles({ resetEnabled: context.resetEnabled });
+    const wcls = useWidgetStyles();
     let secretKey = new URLSearchParams(location.search).get("key");
     if (!secretKey) {
         secretKey = "123";
@@ -78,6 +74,14 @@ export const BrandingStrip = ({ context }: { context: IAppContext }) => {
         }
     };
 
+    useEffect(() => {
+        if (context.resetEnabled === true) {
+            setResetEnabled(true);
+        } else {
+            setResetEnabled(false);
+        }
+    }, [context.resetEnabled]);
+
     return (
         <div className={classNames(wcls.pwrow, wcls.pfooter, cls.container)}>
             <div style={{ alignItems: "center", display: "flex" }}>
@@ -90,7 +94,7 @@ export const BrandingStrip = ({ context }: { context: IAppContext }) => {
             </div>
             <div style={{ display: "flex", flexGrow: 1 }} />
             <div style={{ alignItems: "center", display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
-                {context.resetEnabled && (
+                {resetEnabled && (
                     <Tooltip key="replay" title="Restart">
                         <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={resetOnClick} />
                     </Tooltip>

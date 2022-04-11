@@ -1,4 +1,4 @@
-import { WidgetNodeResource, WidgetConversationUpdate, WidgetNodes, ContextProperties, DynamicResponses, KeyValue, UserMessageData } from "@Palavyr-Types";
+import { WidgetNodeResource, WidgetConversationUpdate, WidgetNodes, KeyValue, UserMessageData } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 
 import { floor, max, min } from "lodash";
@@ -55,7 +55,7 @@ export const responseAction = async (
     if (response) {
         if (node.isCritical) {
             const keyValue = { [node.text]: response.toString() } as KeyValue;
-            context.setKeyValues([...context.AppContext.keyValues, keyValue]);
+            context.addKeyValue(keyValue);
         }
 
         if (node.isDynamicTableNode && node.dynamicType) {
@@ -82,7 +82,6 @@ export const responseAction = async (
         context.addNewUserMessage(userResponse);
     }
 
-    const timeout = computeReadingTime(child, context.readingSpeed);
 
     if (callback) callback();
 
@@ -101,20 +100,18 @@ export const responseAction = async (
         }
     }
 
+    const timeout = computeReadingTime(child, context.readingSpeed);
     setTimeout(() => {
         context.enableMessageLoader();
-        // TODO need to check if reset is requested
 
         setTimeout(() => {
-            // todo; need to check if rest is requested -- everywhere...
-
             renderNextBotMessage(context, child, nodeList, client, convoId);
             context.disableMessageLoader();
             if (context.chatStarted) {
                 context.enableReset();
             }
         }, timeout);
-    }, 2000);
+    }, 1500);
 };
 
 export const CSS_LINKER_and_NODE_TYPE = {

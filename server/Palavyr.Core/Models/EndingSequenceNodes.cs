@@ -131,7 +131,7 @@ namespace Palavyr.Core.Models
         public ConversationNode CreateRestart(string intentId, string accountId, params string[] nodeChildrenIds)
         {
             var nodeId = InternalNodeTypeOptions.Restart.StringName;
-            var text = "Thanks for your time. If you'd like to select another option, use the arrow button at the bottom of the window.";
+            var text = "Thanks for your time. Feel free to restart the chat using the arrow icon below.";
 
             return ConversationNode.CreateNew(
                 nodeId,
