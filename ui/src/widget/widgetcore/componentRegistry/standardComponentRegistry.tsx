@@ -159,13 +159,13 @@ export class StandardComponents {
 
             const [status, setStatus] = useState<string | null>(null);
 
-            const onFormSubmit = (e: { preventDefault: () => void }) => {
+            const onFormSubmit = async (e: { preventDefault: () => void }) => {
                 if (designer) return;
                 e.preventDefault();
                 setDisabled(true);
                 setConvoId(convoId);
                 context.enableDetailsIcon();
-                responseAction(context, node, child, nodeList, client, convoId, isDemo);
+                await responseAction(context, node, child, nodeList, client, convoId, isDemo);
             };
 
             useEffect(() => {
@@ -197,7 +197,10 @@ export class StandardComponents {
 
             useEffect(() => {
                 if (designer) return;
-                responseAction(context, node, child, nodeList, client, convoId, isDemo);
+
+                (async () => {
+                    await responseAction(context, node, child, nodeList, client, convoId, isDemo);
+                })();
             }, []);
 
             return <BotResponse message={node.text} />;
@@ -212,10 +215,10 @@ export class StandardComponents {
             const [disabled, setDisabled] = useState<boolean>(false);
             const { context, isDemo } = useContext(WidgetContext);
 
-            const onClick = (valueOption: string) => {
+            const onClick = async (valueOption: string) => {
                 if (designer) return;
                 const response = valueOption;
-                responseAction(context, node, child, nodeList, client, convoId, isDemo, response);
+                await responseAction(context, node, child, nodeList, client, convoId, isDemo, response);
                 setDisabled(true);
             };
 
@@ -241,10 +244,10 @@ export class StandardComponents {
             const [disabled, setDisabled] = useState<boolean>(false);
             const { context, isDemo } = useContext(WidgetContext);
 
-            const onClick = (child: WidgetNodeResource) => {
+            const onClick = async (child: WidgetNodeResource) => {
                 if (designer) return;
                 const response = child.optionPath;
-                responseAction(context, node, child, nodeList, client, convoId, isDemo, response);
+                await responseAction(context, node, child, nodeList, client, convoId, isDemo, response);
                 setDisabled(true);
             };
 
@@ -282,7 +285,7 @@ export class StandardComponents {
 
             const onClick = async () => {
                 if (designer) return;
-                responseAction(context, node, child, nodeList, client, convoId, isDemo, response);
+                await responseAction(context, node, child, nodeList, client, convoId, isDemo, response);
                 setDisabled(true);
                 setInputDisabled(true);
             };
@@ -342,9 +345,9 @@ export class StandardComponents {
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
-            const onClick = () => {
+            const onClick = async () => {
                 if (designer) return;
-                responseAction(context, node, child, nodeList, client, convoId, isDemo, response.toString());
+                await responseAction(context, node, child, nodeList, client, convoId, isDemo, response.toString());
                 setDisabled(true);
                 setInputDisabled(true);
             };
@@ -403,10 +406,12 @@ export class StandardComponents {
 
             useEffect(() => {
                 if (designer) return;
-                setTimeout(() => {
-                    if (designer) return;
-                    responseAction(context, node, child, nodeList, client, convoId, isDemo);
-                }, 2500);
+                (async () => {
+                    setTimeout(async () => {
+                        if (designer) return;
+                        await responseAction(context, node, child, nodeList, client, convoId, isDemo);
+                    }, 2500);
+                })();
             }, []);
 
             return fileAsset ? <FileAsset fileAsset={fileAsset} /> : <></>;
@@ -421,10 +426,12 @@ export class StandardComponents {
             const { context, isDemo } = useContext(WidgetContext);
 
             useEffect(() => {
-                setTimeout(() => {
-                    if (designer) return;
-                    responseAction(context, node, child, nodeList, client, convoId, isDemo);
-                }, 2500);
+                (async () => {
+                    setTimeout(async () => {
+                        if (designer) return;
+                        await responseAction(context, node, child, nodeList, client, convoId, isDemo);
+                    }, 2500);
+                })();
             }, []);
 
             return <FileAsset fileAsset={node.fileAssetResource!} />;
@@ -442,10 +449,10 @@ export class StandardComponents {
             const { preferences, context, isDemo } = useContext(WidgetContext);
             const cls = useStyles(preferences);
 
-            const onClick = () => {
+            const onClick = async () => {
                 if (designer) return;
                 setResponse(response);
-                responseAction(context, node, child, nodeList, client, convoId, isDemo, response);
+                await responseAction(context, node, child, nodeList, client, convoId, isDemo, response);
                 setDisabled(true);
                 setInputDisabled(true);
             };
@@ -483,13 +490,13 @@ export class StandardComponents {
             const { preferences, context, isDemo } = useContext(WidgetContext);
             const cls = useStyles(preferences);
 
-            const onClick = () => {
+            const onClick = async () => {
                 if (designer) return;
                 if (response) {
                     context.setNumIndividuals(response);
                     setDisabled(true);
                     setInputDisabled(true);
-                    responseAction(context, node, child, nodeList, client, convoId, isDemo, response.toString());
+                    await responseAction(context, node, child, nodeList, client, convoId, isDemo, response.toString());
                 }
             };
 
@@ -572,7 +579,7 @@ export class StandardComponents {
                 setLoading(true);
                 const response = await sendEmail();
                 const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
-                responseAction(context, node, child, nodeList, client, convoId, isDemo, null, () => setLoading(false));
+                await responseAction(context, node, child, nodeList, client, convoId, isDemo, null, () => setLoading(false));
             };
             return (
                 <>
@@ -608,7 +615,7 @@ export class StandardComponents {
             const onClick = async () => {
                 if (designer) return;
                 setLoading(true);
-                responseAction(context, node, child, nodeList, client, convoId, isDemo, null, () => setLoading(false));
+                await responseAction(context, node, child, nodeList, client, convoId, isDemo, null, () => setLoading(false));
             };
             return (
                 <>
@@ -656,7 +663,7 @@ export class StandardComponents {
                 setLoading(true);
                 const response = await sendFallbackEmail();
                 const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
-                responseAction(context, node, child, nodeList, client, convoId, isDemo, null, () => setLoading(false));
+                await responseAction(context, node, child, nodeList, client, convoId, isDemo, null, () => setLoading(false));
                 setDisabled(true);
             };
 
@@ -676,10 +683,12 @@ export class StandardComponents {
             const { context, isDemo } = useContext(WidgetContext);
 
             useEffect(() => {
-                setTimeout(async () => {
-                    if (designer) return;
-                    responseAction(context, node, child, nodeList, client, convoId, isDemo, null);
-                }, 1500);
+                (async () => {
+                    setTimeout(async () => {
+                        if (designer) return;
+                        await responseAction(context, node, child, nodeList, client, convoId, isDemo, null);
+                    }, 1500);
+                })();
             }, []);
 
             return <BotResponse message={node.text} />;

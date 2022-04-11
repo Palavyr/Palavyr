@@ -51,7 +51,9 @@ export const responseAction = async (
     callback: (() => void) | null = null
 ) => {
     // LOCK THE RESET BUTTON on activation of this block
+
     context.disableReset();
+
     if (response) {
         if (node.isCritical) {
             const keyValue = { [node.text]: response.toString() } as KeyValue;
