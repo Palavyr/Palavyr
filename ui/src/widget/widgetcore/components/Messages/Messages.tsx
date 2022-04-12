@@ -69,23 +69,23 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
 
     const messageRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
-        // console.log(messageRef)
-        // console.log(messageRef.current)
-        scrollToBottom(messageRef.current);
-    }, [context.messages, context.loading]);
+    const scrollToBottom = () => {
+        if (messageRef.current) {
+            messageRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
 
     useEffect(() => {
         if (context.messages.length > 0) {
-            scrollToBottom(messageRef.current);
+            scrollToBottom();
         }
     }, [context.messages, context.loading]);
 
     return (
-        <div id="messages" className={classNames(wcls.pwrow, wcls.pcontent, cls.messageTubeContainer)} ref={messageRef}>
+        <div id="messages" className={classNames(wcls.pwrow, wcls.pcontent, cls.messageTubeContainer)}>
             {context.messages.length > 0 && context.messages.map((message, index) => <MessageSlice message={message} showTimeStamp={showTimeStamp} key={`${index}-${message.timestamp}`} />)}
             {context.loading && <Loader />}
-            <div style={{ height: "6rem" }} />
+            <div style={{ height: "3rem" }} ref={messageRef} />
         </div>
     );
 };
