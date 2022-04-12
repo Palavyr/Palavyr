@@ -36,6 +36,13 @@ const useStyles = makeStyles(theme => ({
         },
         color: theme.palette.common.white,
     },
+    replayIconDisabled: {
+        fontSize: "1rem",
+        "&:hover": {
+            cursor: "wait",
+        },
+        color: theme.palette.warning.main,
+    },
     iconRoot: {
         marginRight: ".3rem",
         marginLeft: ".3rem",
@@ -94,18 +101,22 @@ export const BrandingStrip = ({ context }: { context: IAppContext }) => {
             </div>
             <div style={{ display: "flex", flexGrow: 1 }} />
             <div style={{ alignItems: "center", display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
-                {resetEnabled && (
+                {resetEnabled ? (
                     <Tooltip key="replay" title="Restart">
                         <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={resetOnClick} />
+                    </Tooltip>
+                ) : (
+                    <Tooltip key="replay-disabled" title="Restart">
+                        <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIconDisabled} onClick={() => null} />
                     </Tooltip>
                 )}
                 <Tooltip key="speed-check" title="Chat Speed">
                     <TextSpeedSwitch
                         onChange={(_: any, checked: boolean) => {
                             if (checked) {
-                                context.setReadingSpeed(30);
+                                context.setReadingSpeed(10);
                             } else {
-                                context.setReadingSpeed(1);
+                                context.setReadingSpeed(2);
                             }
                         }}
                     />

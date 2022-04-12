@@ -120,9 +120,9 @@ export class StandardComponents {
 
                 let secretKey = new URLSearchParams(location.search).get("key") as string;
                 widgetSelection(secretKey, newOption.areaDisplay, newOption.areaId);
-                renderNextBotMessage(context, rootNode, nodes, client, convoId);
                 context.enableReset();
                 context.setChatStarted();
+                renderNextBotMessage(context, rootNode, nodes, client, convoId);
             };
 
             // const renderThatDoesntCheckOUtResponse = (node, messageResponse, nodeList, client, convoId) => {
@@ -195,12 +195,14 @@ export class StandardComponents {
         return () => {
             const { context, isDemo } = useContext(WidgetContext);
 
+            const callback = useCallback(async () => {
+                context.disableReset();
+                await responseAction(context, node, child, nodeList, client, convoId, isDemo);
+            }, [responseAction, context, context.disableReset]);
+
             useEffect(() => {
                 if (designer) return;
-
-                (async () => {
-                    await responseAction(context, node, child, nodeList, client, convoId, isDemo);
-                })();
+                callback();
             }, []);
 
             return <BotResponse message={node.text} />;
@@ -404,15 +406,16 @@ export class StandardComponents {
                 fileAsset = context.AppContext.responseFileAsset;
             }
 
+            const callback = useCallback(async () => {
+                setTimeout(async () => {
+                    await responseAction(context, node, child, nodeList, client, convoId, isDemo);
+                }, 2500);
+            }, [responseAction]);
+
             useEffect(() => {
                 if (designer) return;
-                (async () => {
-                    setTimeout(async () => {
-                        if (designer) return;
-                        await responseAction(context, node, child, nodeList, client, convoId, isDemo);
-                    }, 2500);
-                })();
-            }, []);
+                callback();
+            }, [callback]);
 
             return fileAsset ? <FileAsset fileAsset={fileAsset} /> : <></>;
         };
@@ -422,17 +425,18 @@ export class StandardComponents {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const [loaded, setLoaded] = useState<boolean>(false);
             const { context, isDemo } = useContext(WidgetContext);
 
+            const callback = useCallback(async () => {
+                setTimeout(async () => {
+                    await responseAction(context, node, child, nodeList, client, convoId, isDemo);
+                }, 2500);
+            }, [responseAction]);
+
             useEffect(() => {
-                (async () => {
-                    setTimeout(async () => {
-                        if (designer) return;
-                        await responseAction(context, node, child, nodeList, client, convoId, isDemo);
-                    }, 2500);
-                })();
-            }, []);
+                if (designer) return;
+                callback();
+            }, [callback]);
 
             return <FileAsset fileAsset={node.fileAssetResource!} />;
         };
@@ -594,13 +598,17 @@ export class StandardComponents {
         return () => {
             const { isDemo } = useContext(WidgetContext);
 
-            useEffect(() => {
-                (async () => {
-                    if (designer) return;
-                    if (isDemo) return;
+            const callback = useCallback(async () => {
+                setTimeout(async () => {
                     await client.Widget.Post.UpdateConvoRecord({ IsComplete: true, ConversationId: convoId });
-                })();
-            }, []);
+                }, 1500);
+            }, [responseAction]);
+
+            useEffect(() => {
+                if (designer) return;
+                if (isDemo) return;
+                callback();
+            }, [callback]);
             return <BotResponse message={node.text} />;
         };
     }
@@ -682,14 +690,16 @@ export class StandardComponents {
         return () => {
             const { context, isDemo } = useContext(WidgetContext);
 
+            const callback = useCallback(async () => {
+                setTimeout(async () => {
+                    await responseAction(context, node, child, nodeList, client, convoId, isDemo);
+                }, 1500);
+            }, [responseAction]);
+
             useEffect(() => {
-                (async () => {
-                    setTimeout(async () => {
-                        if (designer) return;
-                        await responseAction(context, node, child, nodeList, client, convoId, isDemo, null);
-                    }, 1500);
-                })();
-            }, []);
+                if (designer) return;
+                callback();
+            }, [callback]);
 
             return <BotResponse message={node.text} />;
         };

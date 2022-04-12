@@ -84,7 +84,6 @@ export const responseAction = async (
         context.addNewUserMessage(userResponse);
     }
 
-
     if (callback) callback();
 
     if (!isDemo) {
@@ -105,15 +104,16 @@ export const responseAction = async (
     const timeout = computeReadingTime(child, context.readingSpeed);
     setTimeout(() => {
         context.enableMessageLoader();
-
         setTimeout(() => {
-            renderNextBotMessage(context, child, nodeList, client, convoId);
-            context.disableMessageLoader();
             if (context.chatStarted) {
                 context.enableReset();
             }
+            setTimeout(() => {
+                context.disableMessageLoader();
+                renderNextBotMessage(context, child, nodeList, client, convoId);
+            }, 200);
         }, timeout);
-    }, 1500);
+    }, 1400);
 };
 
 export const CSS_LINKER_and_NODE_TYPE = {
