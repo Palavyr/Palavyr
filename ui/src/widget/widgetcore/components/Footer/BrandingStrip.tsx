@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import ReplayIcon from "@material-ui/icons/Replay";
 import classNames from "classnames";
@@ -39,11 +39,16 @@ const useStyles = makeStyles(theme => ({
     replayIconDisabled: {
         fontSize: "1rem",
         "&:hover": {
-            cursor: "wait",
+            cursor: "progress",
         },
-        color: theme.palette.warning.main,
+        color: theme.palette.error.main,
     },
     iconRoot: {
+        marginRight: ".3rem",
+        marginLeft: ".3rem",
+        alignItems: "center",
+    },
+    iconRootDisabled: {
         marginRight: ".3rem",
         marginLeft: ".3rem",
     },
@@ -57,6 +62,9 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         justifyContent: "space-between",
         backgroundColor: "#264B94",
+        color: "white",
+    },
+    switchroot: {
         color: "white",
     },
 }));
@@ -88,7 +96,6 @@ export const BrandingStrip = ({ context }: { context: IAppContext }) => {
             setResetEnabled(false);
         }
     }, [context.resetEnabled]);
-
     return (
         <div className={classNames(wcls.pwrow, wcls.pfooter, cls.container)}>
             <div style={{ alignItems: "center", display: "flex" }}>
@@ -106,12 +113,15 @@ export const BrandingStrip = ({ context }: { context: IAppContext }) => {
                         <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={resetOnClick} />
                     </Tooltip>
                 ) : (
-                    <Tooltip key="replay-disabled" title="Restart">
+                    <Tooltip key="replay-disabled" title="Restart Disabled">
                         <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIconDisabled} onClick={() => null} />
                     </Tooltip>
                 )}
                 <Tooltip key="speed-check" title="Chat Speed">
                     <TextSpeedSwitch
+                        // color="primary"
+                        style={{ opacity: 1 }}
+                        classes={{ root: cls.switchroot }}
                         onChange={(_: any, checked: boolean) => {
                             if (checked) {
                                 context.setReadingSpeed(10);
