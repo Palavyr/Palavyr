@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     replayIconDisabled: {
         fontSize: "1rem",
         "&:hover": {
-            cursor: "progress",
+            cursor: "default",
         },
         color: theme.palette.error.main,
     },
@@ -119,7 +119,6 @@ export const BrandingStrip = ({ context }: { context: IAppContext }) => {
                 )}
                 <Tooltip key="speed-check" title="Chat Speed">
                     <TextSpeedSwitch
-                        // color="primary"
                         style={{ opacity: 1 }}
                         classes={{ root: cls.switchroot }}
                         onChange={(_: any, checked: boolean) => {

@@ -71,7 +71,7 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
 
     const scrollToBottom = () => {
         if (messageRef.current) {
-            messageRef.current.scrollIntoView({ behavior: "smooth" });
+            messageRef.current.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
         }
     };
 
