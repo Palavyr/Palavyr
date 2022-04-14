@@ -15,7 +15,7 @@ export const WidgetApp = () => {
     const [isReady, setIsReady] = useState<boolean | null>(null);
     const [preferences, setWidgetPrefs] = useState<WidgetPreferences>();
     const secretKey = new URLSearchParams(useLocation().search).get("key");
-    const isDemo = new URLSearchParams(useLocation().search).get("demo");
+    const isDemo = new URLSearchParams(useLocation().search).get("demo") ?? false;
 
     const context = useAppContext();
 
