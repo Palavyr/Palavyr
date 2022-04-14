@@ -50,7 +50,7 @@ export const WidgetApp = () => {
 
     return (
         <div style={{ height: "100%", width: "100%" }}>
-            {preferences && isDemo && (
+            {preferences && isDemo !== undefined && (
                 <WidgetContext.Provider value={{ isDemo: isDemo === "true", context, preferences, setConvoId, convoId }}>
                     {isReady ? (
                         <>
