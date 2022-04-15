@@ -55,8 +55,7 @@ import { ConfirmYourResetLink } from "@landing/components/passwordReset/ConfirmY
 import { RESET_PASSWORD_FORM, RESET_PASSWORD_VERIFY, RESET_PASSWORD_SUCCESS } from "@constants";
 import { RenderPasswordDialog } from "@landing/components/passwordReset/SubmitNewPassword";
 import { RenderResetSuccess } from "@landing/components/passwordReset/PasswordResetSuccess";
-import { EnableAreas } from "@frontend/dashboard/content/responseConfiguration/areaSettings/enableAreas/EnableIntents";
-import { SetAreasHelp } from "frontend/dashboard/content/help/SetAreasHelp";
+import { SetIntentsHelp } from "frontend/dashboard/content/help/SetAreasHelp";
 import { DefaultEmailTemplate } from "frontend/dashboard/content/settings/account/DefaultEmailTemplate";
 import { DefaultEmailTemplateHelp } from "frontend/dashboard/content/help/DefaultEmailTemplateHelp";
 import { FileAssetReview } from "@frontend/dashboard/content/fileAssetReview/FileAssetReview";
@@ -73,6 +72,7 @@ import { WidgetDesignerPage } from "frontend/dashboard/content/designer/WidgetDe
 import { AppPageView } from "@common/Analytics/gtag";
 import { IntentSettingsHelp } from "@frontend/dashboard/content/help/IntentSettingsHelp";
 import { SignupPage } from "@landing/SignupPage";
+import { EnableIntents } from "@frontend/dashboard/content/responseConfiguration/areaSettings/enableAreas/EnableIntents";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -127,7 +127,7 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<IntentSettings />), <IntentSettingsHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/pricingpreview/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<ConfigurationPreview />), <PreviewHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/set-areas" component={withLayout(EnableAreas, <SetAreasHelp />)} />
+                <ProtectedRoute exact path="/dashboard/set-areas" component={withLayout(EnableIntents, <SetIntentsHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/settings/password" component={withLayout(withGeneralSettingsTabs(<ChangePassword />), <ChangePasswordHelp />)} />
                 <ProtectedRoute exact path="/dashboard/settings/email" component={withLayout(withGeneralSettingsTabs(<ChangeEmail />), <ChangeDefaultEmailHelp />)} />

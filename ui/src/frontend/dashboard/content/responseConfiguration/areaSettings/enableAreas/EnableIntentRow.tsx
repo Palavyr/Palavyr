@@ -32,7 +32,7 @@ export interface EnableAreaRowProps {
     rowNumber: number;
 }
 
-export const EnableAreaRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) => {
+export const EnableIntentRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) => {
     const { repository } = useContext(DashboardContext);
     const [isEnabled, setIsEnabled] = useState<boolean | null>(null);
 
@@ -56,7 +56,6 @@ export const EnableAreaRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) =
                 <Typography variant="h6">{areasEnabled.areaName}</Typography>
             </TableCell>
             <TableCell className={classNames(cls.cell, cls.wide)}>
-
                 <OsTypeToggle controlledState={isEnabled === true} onChange={onToggleChange} enabledLabel="Enabled" disabledLabel="Disabled" />
             </TableCell>
         </TableRow>

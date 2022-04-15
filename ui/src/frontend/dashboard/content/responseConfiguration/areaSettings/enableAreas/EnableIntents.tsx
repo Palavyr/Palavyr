@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { useCallback } from "react";
-import { EnableAreaRow } from "./EnableIntentRow";
+import { EnableIntentRow } from "./EnableIntentRow";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -34,34 +34,34 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-export const EnableAreas = () => {
+export const EnableIntents = () => {
     const { repository, setViewName } = useContext(DashboardContext);
-    setViewName("Enable / Disable Areas");
+    setViewName("Enable / Disable Intents");
 
     const cls = useStyles();
-    const [areaIds, setAreaIds] = useState<AreasEnabled[]>([]);
+    const [intentIds, setIntentIds] = useState<AreasEnabled[]>([]);
 
-    const loadAreas = useCallback(async () => {
-        const areaData = await repository.Area.GetAreas();
-        const areaIdentifiers = areaData.map((x: AreaTable) => {
+    const loadIntents = useCallback(async () => {
+        const intentData = await repository.Area.GetAreas();
+        const areaIdentifiers = intentData.map((x: AreaTable) => {
             return {
                 areaId: x.areaIdentifier,
                 isEnabled: x.isEnabled,
                 areaName: x.areaName,
             };
         });
-        setAreaIds(areaIdentifiers);
+        setIntentIds(areaIdentifiers);
     }, []);
 
     useEffect(() => {
-        loadAreas();
+        loadIntents();
     }, []);
 
     return (
         <>
             <HeaderStrip
-                title="Enable or disable your Areas"
-                subtitle="Use these toggles to enable or disable your configured areas. If an area is disabled, it will not appear in your chat widget."
+                title="Enable or disable your Intents"
+                subtitle="Use these toggles to enable or disable your configured intents. If an intent is disabled, it will not appear in your chat widget."
             />
             <TableContainer className={cls.container}>
                 <Table component={Paper} className={cls.paper}>
@@ -70,7 +70,7 @@ export const EnableAreas = () => {
                             <TableCell></TableCell>
                             <TableCell className={classNames(cls.center)}>
                                 <PalavyrText className={cls.header} variant="h4">
-                                    Area Name
+                                    Intent Name
                                 </PalavyrText>
                             </TableCell>
                             <TableCell className={classNames(cls.center)}>
@@ -81,8 +81,8 @@ export const EnableAreas = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortByPropertyAlphabetical((x: AreasEnabled) => x.areaName, areaIds).map((x: AreasEnabled, index: number) => {
-                            return <EnableAreaRow key={index} rowNumber={index + 1} areasEnabled={x} />;
+                        {sortByPropertyAlphabetical((x: AreasEnabled) => x.areaName, intentIds).map((x: AreasEnabled, index: number) => {
+                            return <EnableIntentRow key={index} rowNumber={index + 1} areasEnabled={x} />;
                         })}
                     </TableBody>
                 </Table>

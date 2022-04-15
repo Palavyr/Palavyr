@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const SetAreasHelp = () => {
+export const SetIntentsHelp = () => {
 
     return (<div> Some Help </div>)
 }
