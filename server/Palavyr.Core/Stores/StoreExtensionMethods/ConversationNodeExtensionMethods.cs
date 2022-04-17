@@ -23,7 +23,7 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
 
         public static async Task<ConversationNode?> UpdateConversationNodeText(this IEntityStore<ConversationNode> convoNodeStore, string areaId, string nodeId, string nodeTextUpdate)
         {
-            var node = await convoNodeStore.Get(nodeId, s => s.NodeId);
+            var node = await convoNodeStore.GetOrNull(nodeId, s => s.NodeId);
             if (node != null)
             {
                 node.Text = nodeTextUpdate;

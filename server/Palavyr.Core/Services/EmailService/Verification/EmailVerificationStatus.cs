@@ -6,26 +6,26 @@ using Amazon.SimpleEmail.Model;
 
 namespace Palavyr.Core.Services.EmailService.Verification
 {
-    public class EmailVerificationStatus : IEmailVerificationStatus
+    public interface ICloudEmailService
     {
-        private readonly IRequestEmailVerification requestEmailVerification;
+        Task<(bool, IdentityVerificationAttributes)> CheckEmailVerificationStatus(string emailAddress);
+    }
+    
+    public class CloudEmailService : ICloudEmailService
+    {
         private readonly IAmazonSimpleEmailService emailClient;
 
-        public EmailVerificationStatus(
-            IRequestEmailVerification requestEmailVerification,
-            IAmazonSimpleEmailService emailClient
-        )
+        public CloudEmailService(IAmazonSimpleEmailService emailClient)
         {
-            this.requestEmailVerification = requestEmailVerification;
             this.emailClient = emailClient;
         }
 
-        public async Task<(bool, IdentityVerificationAttributes)> RequestEmailVerificationStatus(string emailAddress)
+        public async Task<(bool, IdentityVerificationAttributes)> CheckEmailVerificationStatus(string emailAddress)
         {
             // First check if email is already verified or has attempted to be verified
             var identityRequest = new GetIdentityVerificationAttributesRequest()
             {
-                Identities = new List<string>() {emailAddress},
+                Identities = new List<string>() { emailAddress },
             };
             GetIdentityVerificationAttributesResponse response;
             try
@@ -38,12 +38,35 @@ namespace Palavyr.Core.Services.EmailService.Verification
             }
 
             var found = response.VerificationAttributes.TryGetValue(emailAddress, out var status);
+
             return (found, status);
+        }
+    }
+
+
+    public class EmailVerificationStatus : IEmailVerificationStatus
+    {
+        private readonly IRequestEmailVerification requestEmailVerification;
+        private readonly ICloudEmailService emailClient;
+
+        public EmailVerificationStatus(
+            IRequestEmailVerification requestEmailVerification,
+            ICloudEmailService emailClient
+        )
+        {
+            this.requestEmailVerification = requestEmailVerification;
+            this.emailClient = emailClient;
+        }
+
+        public async Task<(bool, IdentityVerificationAttributes)> RequestEmailVerificationStatus(string emailAddress)
+        {
+            return await emailClient.CheckEmailVerificationStatus(emailAddress);
+
         }
 
         public async Task<bool> CheckVerificationStatus(string emailAddress)
         {
-            var (found, status) = await RequestEmailVerificationStatus(emailAddress);
+            var (found, status) = await emailClient.CheckEmailVerificationStatus(emailAddress);
             if (found)
             {
                 switch (status.VerificationStatus.Value)
@@ -58,6 +81,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
                         return false;
                 }
             }
+
             return false;
         }
 
@@ -99,8 +123,8 @@ namespace Palavyr.Core.Services.EmailService.Verification
                 "To complete email verification, go to your inbox and look for an email with the subject line 'Amazon Web Services – Email Address Verification Request' and click the verification link. This link will expire in 24 hours.",
                 "Email Verification Submitted");
         }
- 
-        
+
+
         public async Task<EmailVerificationResponse> GetVerificationResponse(string emailAddress)
         {
             var (found, status) = await RequestEmailVerificationStatus(emailAddress);
@@ -109,6 +133,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
             {
                 return HandleFoundEmail(status, emailAddress);
             }
+
             return await HandleNotFoundEmail(status, emailAddress);
         }
     }

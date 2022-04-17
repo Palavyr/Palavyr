@@ -55,7 +55,7 @@ import { ConfirmYourResetLink } from "@landing/components/passwordReset/ConfirmY
 import { RESET_PASSWORD_FORM, RESET_PASSWORD_VERIFY, RESET_PASSWORD_SUCCESS } from "@constants";
 import { RenderPasswordDialog } from "@landing/components/passwordReset/SubmitNewPassword";
 import { RenderResetSuccess } from "@landing/components/passwordReset/PasswordResetSuccess";
-import { SetIntentsHelp } from "frontend/dashboard/content/help/SetAreasHelp";
+import { SetIntentsHelp } from "@frontend/dashboard/content/help/SetIntentsHelp";
 import { DefaultEmailTemplate } from "frontend/dashboard/content/settings/account/DefaultEmailTemplate";
 import { DefaultEmailTemplateHelp } from "frontend/dashboard/content/help/DefaultEmailTemplateHelp";
 import { FileAssetReview } from "@frontend/dashboard/content/fileAssetReview/FileAssetReview";

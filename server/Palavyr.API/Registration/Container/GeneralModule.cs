@@ -120,7 +120,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<FileAssetDeleter>().As<IFileAssetDeleter>();
             builder.RegisterType<CompilePdfServerRequest>().As<ICompilePdfServerRequest>();
             builder.RegisterType<IntentDeleter>().As<IIntentDeleter>();
-
+            builder.RegisterType<CloudEmailService>().As<ICloudEmailService>();
 
             builder.RegisterType<FileAssetKeyResolver>().As<IFileAssetKeyResolver>();
             builder.RegisterType<NodeLinker>().As<IFileAssetLinker<NodeLinker>>();
