@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.API.Controllers.Intents

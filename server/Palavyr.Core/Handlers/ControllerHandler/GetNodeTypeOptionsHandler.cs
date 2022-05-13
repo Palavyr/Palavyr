@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -34,14 +35,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             var fullNodeTypeOptionsList = defaultNodeTypeOptions.AddAdditionalNodes(dynamicTableData);
 
-            return new GetNodeTypeOptionsResponse(fullNodeTypeOptionsList.ToArray());
+            return new GetNodeTypeOptionsResponse(fullNodeTypeOptionsList);
         }
     }
 
     public class GetNodeTypeOptionsResponse
     {
-        public GetNodeTypeOptionsResponse(NodeTypeOption[] response) => Response = response;
-        public NodeTypeOption[] Response { get; set; }
+        public GetNodeTypeOptionsResponse(IEnumerable<NodeTypeOptionResource> response) => Response = response;
+        public IEnumerable<NodeTypeOptionResource> Response { get; set; }
     }
 
     public class GetNodeTypeOptionsRequest : IRequest<GetNodeTypeOptionsResponse>

@@ -32,7 +32,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetSupportedUnitIdsResponse
     {
-        public List<QuantUnit> Response { get; set; }
-        public GetSupportedUnitIdsResponse(List<QuantUnit> response) => Response = response;
+        public List<QuantityUnitResource> Response { get; set; }
+        public GetSupportedUnitIdsResponse(List<QuantityUnitResource> response) => Response = response;
     }
 }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Response.Tables.Static
 {
@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Static
         }
 
         [HttpGet(Route)]
-        public async Task<List<StaticTablesMeta>> GetStaticTablesMetas(string intentId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<StaticTablesMetaResource>> GetStaticTablesMetas(string intentId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetStaticTableMetasRequest(intentId), cancellationToken);
             return response.Response;

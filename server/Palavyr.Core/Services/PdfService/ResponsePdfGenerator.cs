@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;

@@ -5,12 +5,19 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.DynamicTableService
 {
+    public class DynamicTableDataResource<TResource> where TResource : IPricingStrategyTableRowResource
+    {
+        public List<TResource> TableRows { get; set; }
+        public bool IsInUse { get; set; }
+    }
+    
     public class DynamicTableData<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
     {
         public List<TEntity> TableRows { get; set; }
@@ -22,7 +29,7 @@ namespace Palavyr.Core.Services.DynamicTableService
         Task DeleteDynamicTable(DynamicTableRequest request);
         Task<DynamicTableData<TEntity>> GetDynamicTableRows(DynamicTableRequest request); // TODO: return new object with 'is in use in palavyr tree'
         TEntity GetDynamicRowTemplate(DynamicTableRequest request);
-        Task<List<TEntity>> SaveDynamicTable(DynamicTableRequest request, DynamicTable dynamicTable);
+        Task<IEnumerable<TEntity>> SaveDynamicTable(DynamicTableRequest request, DynamicTable dynamicTable);
     }
 
     public class DynamicTableCommandExecutor<TEntity> : IDynamicTableCommandExecutor<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
@@ -31,7 +38,6 @@ namespace Palavyr.Core.Services.DynamicTableService
         private readonly IPricingStrategyEntityStore<TEntity> pricingStrategyEntityStore;
         private readonly IDynamicTableCompilerRetriever retriever;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IEntityStore<Account> accountStore;
         private readonly IAccountIdTransport accountIdTransport;
         private string AccountId => accountIdTransport.AccountId;
 
@@ -39,7 +45,6 @@ namespace Palavyr.Core.Services.DynamicTableService
             IPricingStrategyEntityStore<TEntity> pricingStrategyEntityStore,
             IDynamicTableCompilerRetriever retriever,
             IEntityStore<ConversationNode> convoNodeStore,
-            IEntityStore<Account> accountStore,
             IAccountIdTransport accountIdTransport,
             ILogger<TEntity> logger
         )
@@ -47,7 +52,6 @@ namespace Palavyr.Core.Services.DynamicTableService
             this.pricingStrategyEntityStore = pricingStrategyEntityStore;
             this.retriever = retriever;
             this.convoNodeStore = convoNodeStore;
-            this.accountStore = accountStore;
             this.accountIdTransport = accountIdTransport;
             this.logger = logger;
         }
@@ -63,8 +67,8 @@ namespace Palavyr.Core.Services.DynamicTableService
         {
             logger.LogInformation($"Getting dynamic table rows: {request.TableId}");
             var (areaIdentifier, tableId) = request;
-            var tableRows = await pricingStrategyEntityStore.GetAllRows(areaIdentifier, tableId);
-            if (tableRows.Count == 0)
+            var tableRows = (await pricingStrategyEntityStore.GetAllRows(areaIdentifier, tableId)).ToList();
+            if (tableRows.ToList().Count == 0)
             {
                 tableRows = new List<TEntity>()
                 {
@@ -94,7 +98,6 @@ namespace Palavyr.Core.Services.DynamicTableService
                 TableRows = tableRows,
                 IsInUse = currentDynamic.Count() > 0
             };
-            // return tableRows;
         }
 
         public TEntity GetDynamicRowTemplate(DynamicTableRequest request)
@@ -104,7 +107,7 @@ namespace Palavyr.Core.Services.DynamicTableService
             return (new TEntity()).CreateTemplate(AccountId, areaIdentifier, tableId);
         }
 
-        public async Task<List<TEntity>> SaveDynamicTable(DynamicTableRequest request, DynamicTable dynamicTable)
+        public async Task<IEnumerable<TEntity>> SaveDynamicTable(DynamicTableRequest request, DynamicTable dynamicTable)
         {
             var workingEntity = new TEntity();
             workingEntity.EnsureValid();

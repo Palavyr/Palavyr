@@ -2,15 +2,15 @@
 
 namespace Palavyr.Core.Services.Units
 {
-    public class QuantUnit
+    public class QuantityUnitResource
     {
         public string UnitGroup { get; set; } // length, area, weight, currency
         public string UnitPrettyName { get; set; } // m, ft, m^2...
         public UnitIds UnitId { get; set; }
 
-        public static QuantUnit Create(string prettyName, string groupName, UnitIds unitId)
+        public static QuantityUnitResource Create(string prettyName, string groupName, UnitIds unitId)
         {
-            return new QuantUnit
+            return new QuantityUnitResource
             {
                 UnitPrettyName = prettyName,
                 UnitGroup = groupName,

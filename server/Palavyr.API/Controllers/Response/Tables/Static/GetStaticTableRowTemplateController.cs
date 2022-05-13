@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Response.Tables.Static
 {
@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Static
         }
 
         [HttpGet(Route)]
-        public async Task<StaticTableRow> Get(
+        public async Task<StaticTableRowResource> Get(
             [FromRoute]
             string intentId,
             [FromRoute]

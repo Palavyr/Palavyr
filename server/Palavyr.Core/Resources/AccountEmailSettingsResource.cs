@@ -1,17 +1,17 @@
-namespace Palavyr.Core.Models.Resources.Responses
+namespace Palavyr.Core.Resources.Responses
 {
-    public class AccountEmailSettingsResponse
+    public class AccountEmailSettingsResource
     {
         public string EmailAddress { get; set; }
         public bool IsVerified { get; set; }
         public bool AwaitingVerification { get; set; }
 
-        public static AccountEmailSettingsResponse CreateNew(
+        public static AccountEmailSettingsResource CreateNew(
             string emailAddress, 
             bool isVerified,
             bool awaitingVerification)
         {
-            return new AccountEmailSettingsResponse()
+            return new AccountEmailSettingsResource()
             {
                 EmailAddress = emailAddress,
                 IsVerified = isVerified,

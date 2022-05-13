@@ -7,7 +7,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
     /// Node type option represents the object used to configure the tree in the dashboard
     ///  
     /// </summary>
-    public class NodeTypeOption
+    public class NodeTypeOptionResource
     {
         // Groups
         public static readonly string MultipleChoice = "Multiple Choice";
@@ -130,7 +130,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         public virtual string StringName => null!;
 
-        public static NodeTypeOption Create(
+        public static NodeTypeOptionResource Create(
             string value,
             string text,
             List<string> pathOptions,
@@ -153,7 +153,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool loopbackAnchor = false
         )
         {
-            return new NodeTypeOption()
+            return new NodeTypeOptionResource()
             {
                 Value = value,
                 Text = text,

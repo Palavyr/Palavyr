@@ -1,4 +1,4 @@
-namespace Palavyr.Core.Models.Resources.Responses
+namespace Palavyr.Core.Resources
 {
     public class ResponseVariable
     {

@@ -10,7 +10,7 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
@@ -76,7 +76,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             }
         }
 
-        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
+        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOptionResource> nodes)
         {
             var rawRows = await GetTableRows(dynamicTableMeta);
             var categories = GetCategories(rawRows);
@@ -84,7 +84,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var widgetResponseKey = dynamicTableMeta.MakeUniqueIdentifier();
 
             nodes.AddAdditionalNode(
-                NodeTypeOption.Create(
+                NodeTypeOptionResource.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Category"),
                     dynamicTableMeta.ConvertToPrettyName("Category (1)"),
                     new List<string>() { "Continue" },
@@ -92,7 +92,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     true,
                     true,
                     false,
-                    NodeTypeOption.CustomTables,
+                    NodeTypeOptionResource.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                     NodeTypeCode.X,
                     resolveOrder: 0,
@@ -104,7 +104,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             // need special threshold node -- like takenumber with conditions - min and max. Auto Add new nodes at 
             // compile time to set nodes for min and max. Hmmmm
             nodes.AddAdditionalNode(
-                NodeTypeOption.Create(
+                NodeTypeOptionResource.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Threshold"),
                     dynamicTableMeta.ConvertToPrettyName("Threshold (2)"),
                     new List<string>() { "Continue" },
@@ -112,7 +112,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     true,
                     false,
                     false,
-                    NodeTypeOption.CustomTables,
+                    NodeTypeOptionResource.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
                     NodeTypeCode.III,
                     resolveOrder: 1,
@@ -237,7 +237,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var tableId = dynamicTableMeta.TableId;
             var areaId = dynamicTableMeta.AreaIdentifier;
             var table = await repository.GetAllRows(areaId, tableId);
-            return ValidationLogic(table, dynamicTableMeta.TableTag);
+            return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
         }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area _, CultureInfo culture)

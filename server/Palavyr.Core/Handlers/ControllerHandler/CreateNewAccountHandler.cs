@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources.Responses;
 using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler

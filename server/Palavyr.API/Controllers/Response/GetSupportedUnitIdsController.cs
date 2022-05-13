@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.Response
         }
 
         [HttpGet(Route)]
-        public async Task<List<QuantUnit>> Get(CancellationToken cancellationToken)
+        public async Task<List<QuantityUnitResource>> Get(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetSupportedUnitIdsRequest(), cancellationToken);
             return response.Response;

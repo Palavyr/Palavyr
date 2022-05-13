@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -11,24 +13,30 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly ILogger<GetStaticTablesMetasTemplateHandler> logger;
         private readonly IAccountIdTransport accountIdTransport;
+        private readonly IMapToNew<StaticTablesMeta, StaticTablesMetaResource> mapper;
 
-        public GetStaticTablesMetasTemplateHandler(ILogger<GetStaticTablesMetasTemplateHandler> logger, IAccountIdTransport accountIdTransport)
+        public GetStaticTablesMetasTemplateHandler(
+            ILogger<GetStaticTablesMetasTemplateHandler> logger,
+            IAccountIdTransport accountIdTransport,
+            IMapToNew<StaticTablesMeta, StaticTablesMetaResource> mapper)
         {
             this.logger = logger;
             this.accountIdTransport = accountIdTransport;
+            this.mapper = mapper;
         }
 
         public async Task<GetStaticTablesMetasTemplateResponse> Handle(GetStaticTablesMetasTemplateRequest request, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
-            return new GetStaticTablesMetasTemplateResponse(StaticTablesMeta.CreateNewMetaTemplate(request.IntentId, accountIdTransport.AccountId));
+            var resource = await mapper.Map(StaticTablesMeta.CreateNewMetaTemplate(request.IntentId, accountIdTransport.AccountId));
+            return new GetStaticTablesMetasTemplateResponse(resource);
         }
     }
 
     public class GetStaticTablesMetasTemplateResponse
     {
-        public GetStaticTablesMetasTemplateResponse(StaticTablesMeta response) => Response = response;
-        public StaticTablesMeta Response { get; set; }
+        public GetStaticTablesMetasTemplateResponse(StaticTablesMetaResource response) => Response = response;
+        public StaticTablesMetaResource Response { get; set; }
     }
 
     public class GetStaticTablesMetasTemplateRequest : IRequest<GetStaticTablesMetasTemplateResponse>

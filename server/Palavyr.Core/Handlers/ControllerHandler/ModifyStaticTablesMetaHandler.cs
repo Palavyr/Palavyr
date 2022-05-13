@@ -2,7 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -14,15 +16,18 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private readonly IEntityStore<Area> intentStore;
         private readonly IEntityStore<StaticTablesMeta> staticTableMetaStore;
         private readonly IAccountIdTransport accountIdTransport;
+        private readonly IMapToNew<StaticTablesMeta, StaticTablesMetaResource> mapper;
 
         public ModifyStaticTablesMetaHandler(
             IEntityStore<Area> intentStore,
             IEntityStore<StaticTablesMeta> staticTableMetaStore,
-            IAccountIdTransport accountIdTransport)
+            IAccountIdTransport accountIdTransport,
+            IMapToNew<StaticTablesMeta, StaticTablesMetaResource> mapper )
         {
             this.intentStore = intentStore;
             this.staticTableMetaStore = staticTableMetaStore;
             this.accountIdTransport = accountIdTransport;
+            this.mapper = mapper;
         }
 
         public async Task<ModifyStaticTablesMetaResponse> Handle(ModifyStaticTablesMetaRequest request, CancellationToken cancellationToken)
@@ -33,14 +38,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             var clearedMetas = StaticTablesMeta.BindTemplateList(request.StaticTableMetaUpdate, accountIdTransport.AccountId);
             intent.StaticTablesMetas = clearedMetas;
-            return new ModifyStaticTablesMetaResponse(clearedMetas);
+
+            var resource = await mapper.MapMany(clearedMetas);
+            return new ModifyStaticTablesMetaResponse(resource);
         }
     }
 
     public class ModifyStaticTablesMetaResponse
     {
-        public ModifyStaticTablesMetaResponse(List<StaticTablesMeta> response) => Response = response;
-        public List<StaticTablesMeta> Response { get; set; }
+        public ModifyStaticTablesMetaResponse(IEnumerable<StaticTablesMetaResource> response) => Response = response;
+        public IEnumerable<StaticTablesMetaResource> Response { get; set; }
     }
 
     public class ModifyStaticTablesMetaRequest : IRequest<ModifyStaticTablesMetaResponse>

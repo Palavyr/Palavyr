@@ -2,27 +2,33 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Resources;
+using Palavyr.Core.Resources.Responses;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetAvailableSubstitutionVariablesHandler : IRequestHandler<GetAvailableSubstitutionVariablesRequest, GetAvailableSubstitutionVariablesResponse>
     {
-        public GetAvailableSubstitutionVariablesHandler()
+        private readonly IMapToNew<ResponseVariableDefinition, ResponseVariableResource> mapper;
+
+        public GetAvailableSubstitutionVariablesHandler(IMapToNew<ResponseVariableDefinition, ResponseVariableResource> mapper)
         {
+            this.mapper = mapper;
         }
 
         public async Task<GetAvailableSubstitutionVariablesResponse> Handle(GetAvailableSubstitutionVariablesRequest request, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
-            return new GetAvailableSubstitutionVariablesResponse(ResponseVariableDefinition.GetAvailableVariables());
+            var resource = await mapper.Map(new ResponseVariableDefinition());
+            return new GetAvailableSubstitutionVariablesResponse(resource);
         }
     }
 
     public class GetAvailableSubstitutionVariablesResponse
     {
-        public GetAvailableSubstitutionVariablesResponse(List<ResponseVariable> response) => Response = response;
-        public List<ResponseVariable> Response { get; set; }
+        public GetAvailableSubstitutionVariablesResponse(ResponseVariableResource resource) => Resource = resource;
+        public ResponseVariableResource Resource { get; set; }
     }
 
     public class GetAvailableSubstitutionVariablesRequest : IRequest<GetAvailableSubstitutionVariablesResponse>

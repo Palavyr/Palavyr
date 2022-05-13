@@ -10,14 +10,14 @@ namespace PalavyrServer.UnitTests.Core.ExtensionMethods
     [Trait("Extension Methods ", "Node Type Options")]
     public class NodeTypeOptionsExtensionsFixtures : IAsyncLifetime
     {
-        public List<NodeTypeOption> NodeList { get; set; }
+        public List<NodeTypeOptionResource> NodeList { get; set; }
 
 
         [Fact]
         public void AddAdditionalNode_addsNode()
         {
-            var newNode = NodeTypeOption.Create(
-                "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+            var newNode = NodeTypeOptionResource.Create(
+                "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOptionResource.MultipleChoice,
                 DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.IV);
             NodeList.AddAdditionalNode(newNode);
             NodeList.ShouldContain(newNode);
@@ -27,14 +27,14 @@ namespace PalavyrServer.UnitTests.Core.ExtensionMethods
         [Fact]
         public void AddAdditionalNode_addsNodes()
         {
-            var node1 = NodeTypeOption.Create(
-                "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+            var node1 = NodeTypeOptionResource.Create(
+                "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOptionResource.MultipleChoice,
                 DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III);
-            var node2 = NodeTypeOption.Create(
-                "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+            var node2 = NodeTypeOptionResource.Create(
+                "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOptionResource.MultipleChoice,
                 DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III);
 
-            var newNodes = new List<NodeTypeOption>()
+            var newNodes = new List<NodeTypeOptionResource>()
             {
                 node1, node2
             };
@@ -48,13 +48,13 @@ namespace PalavyrServer.UnitTests.Core.ExtensionMethods
 
         public Task InitializeAsync()
         {
-            NodeList = new List<NodeTypeOption>()
+            NodeList = new List<NodeTypeOptionResource>()
             {
-                NodeTypeOption.Create(
-                    "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+                NodeTypeOptionResource.Create(
+                    "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOptionResource.MultipleChoice,
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III),
-                NodeTypeOption.Create(
-                    "three", "four", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+                NodeTypeOptionResource.Create(
+                    "three", "four", new List<string>(), new List<string>(), true, true, true, NodeTypeOptionResource.MultipleChoice,
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III)
             };
             return Task.CompletedTask;

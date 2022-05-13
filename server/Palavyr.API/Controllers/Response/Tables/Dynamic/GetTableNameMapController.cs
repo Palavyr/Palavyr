@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
@@ -18,7 +19,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpGet(Route)]
-        public async Task<Dictionary<string, string>> Get(CancellationToken cancellationToken)
+        public async Task<IEnumerable<PricingStrategyTableTypeResource>> Get(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetTableNameMapRequest(), cancellationToken);
             return response.Response;

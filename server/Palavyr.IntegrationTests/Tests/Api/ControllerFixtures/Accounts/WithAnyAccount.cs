@@ -5,7 +5,7 @@ using Palavyr.API.Controllers.Accounts;
 using Palavyr.API.Controllers.Accounts.Setup;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources.Responses;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods;

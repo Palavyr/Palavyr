@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 
-namespace Palavyr.Core.Models.Resources.Requests
+namespace Palavyr.Core.Resources.Requests
 {
     public class DynamicTable
     {

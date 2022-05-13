@@ -1,13 +1,13 @@
-namespace Palavyr.Core.Models.Resources.Responses
+namespace Palavyr.Core.Resources.Responses
 {
-    public class PhoneDetails
+    public class PhoneDetailsResource
     {
         public string PhoneNumber { get; set; }
         public string Locale { get; set; }
 
-        public static PhoneDetails Create(string phoneNumber, string locale)
+        public static PhoneDetailsResource Create(string phoneNumber, string locale)
         {
-            return new PhoneDetails()
+            return new PhoneDetailsResource()
             {
                 PhoneNumber = phoneNumber,
                 Locale = locale

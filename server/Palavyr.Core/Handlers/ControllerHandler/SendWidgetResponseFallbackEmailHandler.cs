@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources.Requests;
+using Palavyr.Core.Resources.Responses;
 using Palavyr.Core.Services.EmailService.EmailResponse;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -18,15 +18,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<SendWidgetResponseFallbackEmailResponse> Handle(SendWidgetResponseFallbackEmailRequest request, CancellationToken cancellationToken)
         {
-            var fallbackResultResponse = await responseEmailSender.SendFallbackResponse(request.IntentId, request.EmailRequest, request.IsDemo);
-            return new SendWidgetResponseFallbackEmailResponse(fallbackResultResponse);
+            var sendLiveEmailResultResource = await responseEmailSender.SendFallbackResponse(request.IntentId, request.EmailRequest, request.IsDemo);
+            return new SendWidgetResponseFallbackEmailResponse(sendLiveEmailResultResource);
         }
     }
 
     public class SendWidgetResponseFallbackEmailResponse
     {
-        public SendWidgetResponseFallbackEmailResponse(SendEmailResultResponse response) => Response = response;
-        public SendEmailResultResponse Response { get; set; }
+        public SendWidgetResponseFallbackEmailResponse(SendLiveEmailResultResource resource) => Resource = resource;
+        public SendLiveEmailResultResource Resource { get; set; }
     }
 
     public class SendWidgetResponseFallbackEmailRequest : IRequest<SendWidgetResponseFallbackEmailResponse>

@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources.Requests;
+using Palavyr.Core.Resources.Responses;
 using Palavyr.Core.Services.EmailService.EmailResponse;
 using Palavyr.Core.Stores;
 
@@ -42,8 +42,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class SendWidgetResponseEmailResponse
     {
-        public SendWidgetResponseEmailResponse(SendEmailResultResponse response) => Response = response;
-        public SendEmailResultResponse Response { get; set; }
+        public SendWidgetResponseEmailResponse(SendLiveEmailResultResource resource) => Resource = resource;
+        public SendLiveEmailResultResource Resource { get; set; }
     }
 
     public class SendWidgetResponseEmailRequest : IRequest<SendWidgetResponseEmailResponse>

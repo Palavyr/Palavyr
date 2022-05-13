@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources.Responses;
 using Palavyr.Core.Services.ConversationServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -12,9 +12,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetEnquiriesHandler : IRequestHandler<GetEnquiriesRequest, GetEnquiriesResponse>
     {
         private readonly IConversationRecordRetriever conversationRecordRetriever;
-        private readonly IMapToNew<ConversationRecord, Enquiry> mapper;
+        private readonly IMapToNew<ConversationRecord, EnquiryResource> mapper;
 
-        public GetEnquiriesHandler(IConversationRecordRetriever conversationRecordRetriever, IMapToNew<ConversationRecord, Enquiry> mapper)
+        public GetEnquiriesHandler(IConversationRecordRetriever conversationRecordRetriever, IMapToNew<ConversationRecord, EnquiryResource> mapper)
         {
             this.conversationRecordRetriever = conversationRecordRetriever;
             this.mapper = mapper;
@@ -35,13 +35,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public int PageSize { get; set; }
         public int TotalRecords { get; set; }
         public int TotalPages { get; set; }
-        public IEnumerable<Enquiry> Data { get; set; }
+        public IEnumerable<EnquiryResource> Data { get; set; }
     }
 
     public class GetEnquiriesResponse
     {
-        public GetEnquiriesResponse(IEnumerable<Enquiry> response) => Response = response;
-        public IEnumerable<Enquiry> Response { get; set; }
+        public GetEnquiriesResponse(IEnumerable<EnquiryResource> response) => Response = response;
+        public IEnumerable<EnquiryResource> Response { get; set; }
     }
 
     public class GetEnquiriesRequest : IRequest<GetEnquiriesResponse>

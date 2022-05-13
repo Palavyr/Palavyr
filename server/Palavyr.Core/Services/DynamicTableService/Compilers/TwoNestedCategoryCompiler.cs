@@ -8,7 +8,7 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Stores;
@@ -71,7 +71,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return Task.FromResult(false);
         }
 
-        public PricingStrategyValidationResult ValidationLogic(List<TwoNestedCategory> table, string tableTag)
+        public PricingStrategyValidationResult ValidationLogic(IEnumerable<TwoNestedCategory> table, string tableTag)
         {
             var reasons = new List<string>();
             var valid = true;
@@ -147,7 +147,6 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return await GetAllRowsMatchingResponseId(dynamicResponseId);
         }
 
-
         private CategoryRetriever GetInnerAndOuterCategories(List<TwoNestedCategory> rawRows)
         {
             // This table type does not facilitate multiple branches. I.e. the inner categories are all the same for all of the outer categories.
@@ -182,7 +181,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             }
         }
 
-        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
+        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOptionResource> nodes)
         {
             var rawRows = await GetTableRows(dynamicTableMeta);
             var (innerCategories, outerCategories) = GetInnerAndOuterCategories(rawRows);
@@ -190,7 +189,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             // Outer-category
             nodes.AddAdditionalNode(
-                NodeTypeOption.Create(
+                NodeTypeOptionResource.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Outer-Categories"),
                     dynamicTableMeta.ConvertToPrettyName("Outer"),
                     new List<string>() { "Continue" },
@@ -198,7 +197,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     true,
                     true,
                     false,
-                    NodeTypeOption.CustomTables,
+                    NodeTypeOptionResource.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                     NodeTypeCode.X,
                     resolveOrder: 0,
@@ -209,7 +208,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             // inner-categories
             nodes.AddAdditionalNode(
-                NodeTypeOption.Create(
+                NodeTypeOptionResource.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Inner-Categories"),
                     dynamicTableMeta.ConvertToPrettyName("Inner"),
                     new List<string>() { "Continue" },
@@ -217,7 +216,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     true,
                     true,
                     false,
-                    NodeTypeOption.CustomTables,
+                    NodeTypeOptionResource.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                     NodeTypeCode.X,
                     resolveOrder: 1,

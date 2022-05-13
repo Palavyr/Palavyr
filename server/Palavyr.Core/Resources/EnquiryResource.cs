@@ -1,8 +1,8 @@
 ﻿using Palavyr.Core.Mappers;
 
-namespace Palavyr.Core.Models.Resources.Responses
+namespace Palavyr.Core.Resources.Responses
 {
-    public class Enquiry
+    public class EnquiryResource
     {
         public int? Id { get; set; }
         public string ConversationId { get; set; }

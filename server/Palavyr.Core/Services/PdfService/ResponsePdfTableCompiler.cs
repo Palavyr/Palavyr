@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 

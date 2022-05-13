@@ -2,8 +2,8 @@
 using Autofac;
 using Palavyr.API.Controllers.WidgetLive;
 using Palavyr.Core.Models;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources.Requests;
+using Palavyr.Core.Resources.Responses;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
@@ -53,7 +53,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             };
 
             // act
-            var response = await ClientApiKey.PostWithApiKey<SendEmailResultResponse>(Route.Replace("{intentId}", intentId), emailRequest);
+            var response = await ClientApiKey.PostWithApiKey<SendLiveEmailResultResource>(Route.Replace("{intentId}", intentId), emailRequest);
 
             // assert
             response.NextNodeId.ShouldBe(EndingSequenceAttacher.EmailSuccessfulNodeId);

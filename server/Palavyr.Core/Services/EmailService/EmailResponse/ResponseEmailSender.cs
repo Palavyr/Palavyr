@@ -8,8 +8,8 @@ using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources.Requests;
+using Palavyr.Core.Resources.Responses;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.PdfService;
@@ -22,8 +22,8 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
     public interface IResponseEmailSender
     {
-        Task<SendEmailResultResponse> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isdemo);
-        Task<SendEmailResultResponse> SendFallbackResponse(string intentId, EmailRequest emailRequest, bool isDemo);
+        Task<SendLiveEmailResultResource> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isdemo);
+        Task<SendLiveEmailResultResource> SendFallbackResponse(string intentId, EmailRequest emailRequest, bool isDemo);
     }
 
     public class ResponseEmailSender : IResponseEmailSender
@@ -63,7 +63,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             this.client = client;
         }
 
-        public async Task<SendEmailResultResponse> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isDemo)
+        public async Task<SendLiveEmailResultResource> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isDemo)
         {
             var responses = criticalResponses.Compile(emailRequest.KeyValues);
             var culture = await accountStore.GetCulture();
@@ -96,7 +96,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             return responseResult;
         }
 
-        public async Task<SendEmailResultResponse> SendFallbackResponse(string intentId, EmailRequest emailRequest, bool isDemo)
+        public async Task<SendLiveEmailResultResource> SendFallbackResponse(string intentId, EmailRequest emailRequest, bool isDemo)
         {
             var sendAttachmentsOnFallback = await SendAttachmentsWhenFallback(intentId);
 
@@ -126,7 +126,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             }
         }
 
-        private async Task<SendEmailResultResponse> Send(CompileSenderDetails.CompiledSenderDetails details, string[] attachments, FileAssetResource? fileAssetResource = null)
+        private async Task<SendLiveEmailResultResource> Send(CompileSenderDetails.CompiledSenderDetails details, string[] attachments, FileAssetResource? fileAssetResource = null)
         {
             bool ok;
             if (attachments.Length == 0)
@@ -148,8 +148,8 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                     notifyIntentOwner: true); // Attachments here should be local file paths that are temporary
 
             return ok
-                ? SendEmailResultResponse.CreateSuccess(EndingSequenceAttacher.EmailSuccessfulNodeId, fileAssetResource)
-                : SendEmailResultResponse.CreateFailure(EndingSequenceAttacher.EmailFailedNodeId);
+                ? SendLiveEmailResultResource.CreateSuccess(EndingSequenceAttacher.EmailSuccessfulNodeId, fileAssetResource)
+                : SendLiveEmailResultResource.CreateFailure(EndingSequenceAttacher.EmailFailedNodeId);
         }
 
         private async Task<bool> SendAttachmentsWhenFallback(string intentId)

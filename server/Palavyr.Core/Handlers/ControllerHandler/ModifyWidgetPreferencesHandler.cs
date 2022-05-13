@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -11,11 +13,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
         private readonly ILogger<ModifyWidgetPreferencesHandler> logger;
+        private readonly IMapToNew<WidgetPreference, WidgetPreferenceResource> mapper;
 
-        public ModifyWidgetPreferencesHandler(IEntityStore<WidgetPreference> widgetPreferenceStore, ILogger<ModifyWidgetPreferencesHandler> logger)
+        public ModifyWidgetPreferencesHandler(
+            IEntityStore<WidgetPreference> widgetPreferenceStore,
+            ILogger<ModifyWidgetPreferencesHandler> logger,
+            IMapToNew<WidgetPreference, WidgetPreferenceResource> mapper)
         {
             this.widgetPreferenceStore = widgetPreferenceStore;
             this.logger = logger;
+            this.mapper = mapper;
         }
 
         public async Task<ModifyWidgetPreferencesResponse> Handle(ModifyWidgetPreferencesRequest request, CancellationToken cancellationToken)
@@ -92,14 +99,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 widgetPreferences.ChatBubbleColor = request.ChatBubbleColor;
             }
 
-            return new ModifyWidgetPreferencesResponse(widgetPreferences);
+            var resource = await mapper.Map(widgetPreferences);
+            return new ModifyWidgetPreferencesResponse(resource);
         }
     }
 
     public class ModifyWidgetPreferencesResponse
     {
-        public ModifyWidgetPreferencesResponse(WidgetPreference response) => Response = response;
-        public WidgetPreference Response { get; set; }
+        public ModifyWidgetPreferencesResponse(WidgetPreferenceResource response) => Response = response;
+        public WidgetPreferenceResource Response { get; set; }
     }
 
     public class ModifyWidgetPreferencesRequest : WidgetPreference, IRequest<ModifyWidgetPreferencesResponse>

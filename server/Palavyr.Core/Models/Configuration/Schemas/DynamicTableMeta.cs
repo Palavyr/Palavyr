@@ -48,8 +48,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             {
                 CreateNew(
                     "default",
-                    DynamicTableTypes.DefaultTable.PrettyName,
-                    DynamicTableTypes.DefaultTable.TableType,
+                    PricingStrategyTableTypes.DefaultTable.PrettyName,
+                    PricingStrategyTableTypes.DefaultTable.TableType,
                     Guid.NewGuid().ToString(),
                     areaId,
                     accountId,

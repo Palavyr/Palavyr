@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         public const string Route = "configure-intro/{introId}/node-type-options";
 
         [HttpGet(Route)]
-        public async Task<NodeTypeOption[]> GetIntro([FromRoute] string introId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<NodeTypeOptionResource>> GetIntro([FromRoute] string introId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetIntroductionNodeTypeOptionsRequest(introId), cancellationToken);
             return response.Response;

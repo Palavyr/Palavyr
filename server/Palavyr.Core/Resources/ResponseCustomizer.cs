@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Stores;
 
-namespace Palavyr.Core.Models.Resources.Responses
+namespace Palavyr.Core.Resources.Responses
 {
     public interface IResponseCustomizer
     {

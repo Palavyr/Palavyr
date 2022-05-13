@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources.Responses;
 using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.Core.Mappers
 {
-    public class EnquiryReviewMapper : IMapToNew<ConversationRecord, Enquiry>
+    public class EnquiryReviewMapper : IMapToNew<ConversationRecord, EnquiryResource>
     {
         private readonly ILinkCreator linkCreator;
 
@@ -14,7 +14,7 @@ namespace Palavyr.Core.Mappers
             this.linkCreator = linkCreator;
         }
 
-        public async Task<Enquiry> Map(ConversationRecord @from)
+        public async Task<EnquiryResource> Map(ConversationRecord @from)
         {
             var fileAssetResource = new FileAssetResource();
 
@@ -25,7 +25,7 @@ namespace Palavyr.Core.Mappers
                 fileAssetResource.Link = link;
             }
 
-            return new Enquiry
+            return new EnquiryResource
             {
                 Id = @from.Id,
                 ConversationId = @from.ConversationId,

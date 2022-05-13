@@ -7,7 +7,7 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
@@ -42,9 +42,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             await Task.CompletedTask;
         }
 
-        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
+        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOptionResource> nodes)
         {
-            var nodeTypeOption = NodeTypeOption.Create(
+            var nodeTypeOption = NodeTypeOptionResource.Create(
                 dynamicTableMeta.MakeUniqueIdentifier(),
                 dynamicTableMeta.ConvertToPrettyName(),
                 new List<string>() { "Continue" },
@@ -52,7 +52,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 true,
                 false,
                 false,
-                NodeTypeOption.CustomTables,
+                NodeTypeOptionResource.CustomTables,
                 DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
                 NodeTypeCode.II,
                 resolveOrder: 0,
@@ -141,13 +141,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var tableId = dynamicTableMeta.TableId;
             var areaId = dynamicTableMeta.AreaIdentifier;
             var thresholds = await repository.GetAllRows(areaId, tableId);
-            return ValidationLogic(thresholds, dynamicTableMeta.TableTag);
+            return ValidationLogic(thresholds.ToList(), dynamicTableMeta.TableTag);
         }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {
             var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses<BasicThreshold>(tableMeta.TableId);
-            var responseParts = DynamicTableTypes.CreateBasicThreshold().CreateDynamicResponseParts(availableBasicThreshold.First().TableId, availableBasicThreshold.First().Threshold.ToString());
+            var responseParts = PricingStrategyTableTypes.CreateBasicThreshold().CreateDynamicResponseParts(availableBasicThreshold.First().TableId, availableBasicThreshold.First().Threshold.ToString());
             var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;
         }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -21,7 +22,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpGet(Route)]
-        public async Task<NodeTypeOption[]> Get([FromRoute] string intentId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<NodeTypeOptionResource>> Get([FromRoute] string intentId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetNodeTypeOptionsRequest(intentId), cancellationToken);
             return response.Response;

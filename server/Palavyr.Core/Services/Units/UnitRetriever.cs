@@ -10,10 +10,10 @@ namespace Palavyr.Core.Services.Units
     {
         List<string> GetUnitTypes();
         List<UnitIds> GetUnitIds();
-        List<QuantUnit> GetUnitDefinitions();
+        List<QuantityUnitResource> GetUnitDefinitions();
 
-        List<QuantUnit> GetUnitDefinitionsByType(string type);
-        QuantUnit GetUnitDefinitionById(UnitIds id);
+        List<QuantityUnitResource> GetUnitDefinitionsByType(string type);
+        QuantityUnitResource GetUnitDefinitionById(UnitIds id);
         public UnitIds ConvertToUnitId(string id);
     }
 
@@ -38,12 +38,12 @@ namespace Palavyr.Core.Services.Units
             return unitIds;
         }
 
-        public List<QuantUnit> GetUnitDefinitions()
+        public List<QuantityUnitResource> GetUnitDefinitions()
         {
             return units.UnitDefinitions;
         }
 
-        public List<QuantUnit> GetUnitDefinitionsByType(string type)
+        public List<QuantityUnitResource> GetUnitDefinitionsByType(string type)
         {
             var types = GetUnitTypes();
             if (!types.Contains(type))
@@ -55,7 +55,7 @@ namespace Palavyr.Core.Services.Units
             return definitions;
         }
 
-        public QuantUnit GetUnitDefinitionById(UnitIds id)
+        public QuantityUnitResource GetUnitDefinitionById(UnitIds id)
         {
             if (!Enum.IsDefined(typeof(UnitIds), id))
             {

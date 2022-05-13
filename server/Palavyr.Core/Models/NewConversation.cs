@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.Core.Models
 {

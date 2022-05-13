@@ -7,7 +7,7 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
@@ -42,10 +42,10 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             await Task.CompletedTask;
         }
 
-        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
+        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOptionResource> nodes)
         {
             nodes.AddAdditionalNode(
-                NodeTypeOption.Create(
+                NodeTypeOptionResource.Create(
                     dynamicTableMeta.MakeUniqueIdentifier(),
                     dynamicTableMeta.ConvertToPrettyName(),
                     new List<string>() { "Continue" },
@@ -53,7 +53,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     true,
                     false,
                     false,
-                    NodeTypeOption.CustomTables,
+                    NodeTypeOptionResource.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber, // this is for the tree, so okay, but it should be what the dynamic table item type is. We don't have access to that here, so we just say its a number.
                     NodeTypeCode.II,
                     dynamicType: dynamicTableMeta.MakeUniqueIdentifier(),
@@ -173,13 +173,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var tableId = dynamicTableMeta.TableId;
             var areaId = dynamicTableMeta.AreaIdentifier;
             var table = await repository.GetAllRows(areaId, tableId);
-            return ValidationLogic(table, dynamicTableMeta.TableTag);
+            return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
         }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {
             var availablePercentOfThreshold = await responseRetriever.RetrieveAllAvailableResponses<PercentOfThreshold>(tableMeta.TableId);
-            var responseParts = DynamicTableTypes.CreatePercentOfThreshold().CreateDynamicResponseParts(availablePercentOfThreshold.First().TableId, availablePercentOfThreshold.First().Threshold.ToString());
+            var responseParts = PricingStrategyTableTypes.CreatePercentOfThreshold().CreateDynamicResponseParts(availablePercentOfThreshold.First().TableId, availablePercentOfThreshold.First().Threshold.ToString());
             var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;
         }

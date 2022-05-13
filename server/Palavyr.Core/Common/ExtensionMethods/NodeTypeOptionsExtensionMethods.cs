@@ -7,17 +7,17 @@ namespace Palavyr.Core.Common.ExtensionMethods
 {
     public static class NodeTypeOptionsExtensionMethods
     {
-        public static List<NodeTypeOption> AddAdditionalNode(
-            this List<NodeTypeOption> nodeTypeOptions,
-            NodeTypeOption additionalNode)
+        public static List<NodeTypeOptionResource> AddAdditionalNode(
+            this List<NodeTypeOptionResource> nodeTypeOptions,
+            NodeTypeOptionResource additionalNode)
         {
             nodeTypeOptions.Add(additionalNode);
             return nodeTypeOptions;
         }
 
-        public static List<NodeTypeOption> AddAdditionalNodes(
-            this List<NodeTypeOption> nodeTypeOptions,
-            List<NodeTypeOption> additionalNodes)
+        public static List<NodeTypeOptionResource> AddAdditionalNodes(
+            this List<NodeTypeOptionResource> nodeTypeOptions,
+            List<NodeTypeOptionResource> additionalNodes)
         {
             nodeTypeOptions.AddRange(additionalNodes);
             return nodeTypeOptions;

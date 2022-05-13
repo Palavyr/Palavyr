@@ -32,7 +32,7 @@ namespace Palavyr.Core.Stores
             this.metaQueryExecutor = contextProvider.ConfigurationContext().DynamicTableMetas;
         }
 
-        public async Task<List<TEntity>> GetAllRows(string areaIdentifier, string tableId)
+        public async Task<IEnumerable<TEntity>> GetAllRows(string areaIdentifier, string tableId)
         {
             return await readonlyQueryExecutor
                 .Where(
@@ -95,15 +95,15 @@ namespace Palavyr.Core.Stores
             queryExecutor.RemoveRange(allRows);
         }
 
-        public async Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string dynamicTypeId)
+        public async Task<IEnumerable<TEntity>> GetAllRowsMatchingDynamicResponseId(string dynamicTypeId)
         {
             var rows = await readonlyQueryExecutor
-                .Where(tableRow => dynamicTypeId.EndsWith(tableRow.TableId)) //&& dynamicResponseId.EndsWith(tableRow.TableId)) // TODO: shhould be dynamicType?
+                .Where(tableRow => dynamicTypeId.EndsWith(tableRow.TableId))
                 .ToListAsync();
             return rows;
         }
 
-        public async Task<List<ConversationNode>> GetConversationNodeByIds(List<string> ids)
+        public async Task<IEnumerable<ConversationNode>> GetConversationNodeByIds(List<string> ids)
         {
             return await convoNodeStore
                 .Query()

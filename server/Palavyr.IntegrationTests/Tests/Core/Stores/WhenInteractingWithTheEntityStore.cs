@@ -82,7 +82,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
                             A.RandomString(),
                             A.RandomId(),
                             false,
-                            NodeTypeOption.InfoProvide, AccountId));
+                            NodeTypeOptionResource.InfoProvide, AccountId));
                 var store = ResolveStore<ConversationHistory>();
 
                 // act
@@ -106,7 +106,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
                             A.RandomString(),
                             A.RandomId(),
                             false,
-                            NodeTypeOption.InfoProvide,
+                            NodeTypeOptionResource.InfoProvide,
                             MisMatchedAccount));
                 var store = ResolveStore<ConversationHistory>();
 
@@ -282,7 +282,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
                             A.RandomString(),
                             A.RandomId(),
                             false,
-                            NodeTypeOption.InfoProvide,
+                            NodeTypeOptionResource.InfoProvide,
                             AccountId));
 
                 await store.CreateMany(newEntities);

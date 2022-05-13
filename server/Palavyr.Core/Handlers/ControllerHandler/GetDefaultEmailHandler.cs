@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources.Responses;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -32,8 +32,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             account.DefaultEmailIsVerified = verificationResponse.IsVerified();
             
-
-            var response = AccountEmailSettingsResponse.CreateNew(
+            var response = AccountEmailSettingsResource.CreateNew(
                 account.EmailAddress,
                 verificationResponse.IsVerified(),
                 verificationResponse.IsPending()
@@ -44,8 +43,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetDefaultEmailResponse
     {
-        public GetDefaultEmailResponse(AccountEmailSettingsResponse response) => Response = response;
-        public AccountEmailSettingsResponse Response { get; set; }
+        public GetDefaultEmailResponse(AccountEmailSettingsResource resource) => Resource = resource;
+        public AccountEmailSettingsResource Resource { get; set; }
     }
 
     public class GetDefaultEmailRequest : IRequest<GetDefaultEmailResponse>

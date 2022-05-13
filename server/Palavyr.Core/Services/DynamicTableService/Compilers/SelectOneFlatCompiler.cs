@@ -7,7 +7,7 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Services.DynamicTableService.NodeUpdaters;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
@@ -61,12 +61,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
         public async Task CompileToConfigurationNodes(
             DynamicTableMeta dynamicTableMeta,
-            List<NodeTypeOption> nodes)
+            List<NodeTypeOptionResource> nodes)
         {
             var rows = await GetTableRows(dynamicTableMeta);
             var valueOptions = rows.Select(x => x.Option).ToList();
 
-            var nodeTypeOption = NodeTypeOption.Create(
+            var nodeTypeOption = NodeTypeOptionResource.Create(
                 dynamicTableMeta.MakeUniqueIdentifier(),
                 dynamicTableMeta.ConvertToPrettyName(),
                 dynamicTableMeta.ValuesAsPaths ? valueOptions : new List<string>() { "Continue" },
@@ -74,7 +74,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 true,
                 dynamicTableMeta.ValuesAsPaths,
                 false,
-                NodeTypeOption.CustomTables,
+                NodeTypeOptionResource.CustomTables,
                 dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                 dynamicTableMeta.ValuesAsPaths ? NodeTypeCode.XI : NodeTypeCode.X,
                 shouldRenderChildren: true,
@@ -144,13 +144,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var tableId = dynamicTableMeta.TableId;
             var areaId = dynamicTableMeta.AreaIdentifier;
             var table = await repository.GetAllRows(areaId, tableId);
-            return ValidationLogic(table, dynamicTableMeta.TableTag);
+            return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
         }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {
             var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses<SelectOneFlat>(tableMeta.TableId);
-            var responseParts = DynamicTableTypes.CreateSelectOneFlat().CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Option);
+            var responseParts = PricingStrategyTableTypes.CreateSelectOneFlat().CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Option);
             var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;
         }

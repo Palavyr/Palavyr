@@ -30,8 +30,8 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
             {
                 DynamicTableMeta.CreateNew(
                     tableTag,
-                    DynamicTableTypes.DefaultTable.PrettyName,
-                    DynamicTableTypes.DefaultTable.TableType,
+                    PricingStrategyTableTypes.DefaultTable.PrettyName,
+                    PricingStrategyTableTypes.DefaultTable.TableType,
                     tableId,
                     areaIdentifier,
                     accountId,

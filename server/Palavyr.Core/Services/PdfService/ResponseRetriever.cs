@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Palavyr.Core.Stores;
@@ -18,7 +19,7 @@ namespace Palavyr.Core.Services.PdfService
         {
             var repository = (IPricingStrategyEntityStore<TEntity>) lifetimeScope.Resolve(typeof(IPricingStrategyEntityStore<TEntity>));
             var rows = await repository.GetAllRowsMatchingDynamicResponseId(dynamicResponseId);
-            return rows;
+            return rows.ToList();
         }
     }
 }

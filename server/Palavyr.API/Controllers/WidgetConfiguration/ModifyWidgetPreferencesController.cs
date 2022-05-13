@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         }
 
         [HttpPut(Route)]
-        public async Task<WidgetPreference> SaveWidgetPreferences(
+        public async Task<WidgetPreferenceResource> SaveWidgetPreferences(
             [FromBody]
             ModifyWidgetPreferencesRequest request,
             CancellationToken cancellationToken

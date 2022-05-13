@@ -9,7 +9,7 @@ namespace Palavyr.Core.Models.Nodes
 {
     public interface IRequiredNodeCalculator
     {
-        Task<IEnumerable<NodeTypeOption>> FindRequiredNodes(Area area);
+        Task<IEnumerable<NodeTypeOptionResource>> FindRequiredNodes(Area area);
     }
 
     public class RequiredNodeCalculator : IRequiredNodeCalculator
@@ -29,9 +29,9 @@ namespace Palavyr.Core.Models.Nodes
                 .Any(p => p);
         }
 
-        public async Task<IEnumerable<NodeTypeOption>> FindRequiredNodes(Area area)
+        public async Task<IEnumerable<NodeTypeOptionResource>> FindRequiredNodes(Area area)
         {
-            var allRequiredNodes = new List<NodeTypeOption>();
+            var allRequiredNodes = new List<NodeTypeOptionResource>();
 
             if (CheckForPerIndividual(area))
             {

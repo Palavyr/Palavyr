@@ -21,7 +21,7 @@ namespace Palavyr.Core.Services.DynamicTableService
         protected async Task<List<TEntity>> GetTableRows(DynamicTableMeta dynamicTableMeta)
         {
             var (areaId, tableId) = dynamicTableMeta;
-            var rows = await repository.GetAllRows(areaId, tableId);
+            var rows = (await repository.GetAllRows(areaId, tableId)).ToList();
 
             var indexArray = new List<int> { };
             var orderedEntities = new List<TEntity>() { };
@@ -40,7 +40,7 @@ namespace Palavyr.Core.Services.DynamicTableService
                 }
             }
 
-            if (indexArray.Distinct().Count() != rows.Count) // defensive in case we forget to add rowOrder correctly...
+            if (indexArray.Distinct().Count() != rows.Count()) // defensive in case we forget to add rowOrder correctly...
             {
                 return rows;
             }
@@ -75,15 +75,14 @@ namespace Palavyr.Core.Services.DynamicTableService
             var responseKeys = dynamicResponseParts.SelectMany(row => row.Keys).ToList();
             var nodes = await repository.GetConversationNodeByIds(responseKeys);
             var sorted = nodes.OrderBy(x => x.ResolveOrder)
-                .Select(x => x.NodeId)
-                .ToList();
-
+                    .Select(x => x.NodeId)
+                    .ToList();
             return sorted;
         }
-        
+
         protected async Task<List<TEntity>> GetAllRowsMatchingResponseId(string dynamicResponseId)
         {
-            return await repository.GetAllRowsMatchingDynamicResponseId(dynamicResponseId);
+            return (await repository.GetAllRowsMatchingDynamicResponseId(dynamicResponseId)).ToList();
         }
     }
 }

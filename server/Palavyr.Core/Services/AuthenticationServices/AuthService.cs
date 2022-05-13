@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources.Responses;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 

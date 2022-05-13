@@ -38,7 +38,7 @@ namespace Palavyr.API.Controllers.Conversation
 
             // node is a dynamic table node type
             // Comes in as e.g. SelectOneFlat-234234-324-2342-324
-            foreach (var dynamicTableType in DynamicTableTypes.GetDynamicTableTypes())
+            foreach (var dynamicTableType in PricingStrategyTableTypes.GetDynamicTableTypes())
             {
                 if (nodeType.StartsWith(dynamicTableType.TableType))
                 {

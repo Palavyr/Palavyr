@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.FileAssetServices;

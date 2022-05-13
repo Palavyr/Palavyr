@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.Core.Models.Configuration.Constant
 {
@@ -34,7 +35,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         }
 
         public static ConversationNode MapNodeTypeOptionToConversationNode(
-            this NodeTypeOption nodeTypeOption,
+            this NodeTypeOptionResource nodeTypeOptionResource,
             string nodeId,
             string text,
             bool isRoot,
@@ -51,7 +52,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool loopbackAnchor = false
         )
         {
-            if (nodeComponentType == null && nodeTypeOption.NodeComponentType == null)
+            if (nodeComponentType == null && nodeTypeOptionResource.NodeComponentType == null)
             {
                 throw new Exception("NodeComponent must be set for dynamic table node types"); // TODO: can I enforce this via the compiler? Rosalyn Analyzer
             }
@@ -68,25 +69,25 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsRoot = isRoot,
                 NodeChildrenString = nodeChildrenString, //"node-456,node-789",
                 NodeType = nodeType,
-                NodeComponentType = nodeComponentType ?? nodeTypeOption.NodeComponentType,
+                NodeComponentType = nodeComponentType ?? nodeTypeOptionResource.NodeComponentType,
                 OptionPath = optionPath,
-                ValueOptions = string.Join(Delimiters.ValueOptionDelimiter, nodeTypeOption.ValueOptions),
+                ValueOptions = string.Join(Delimiters.ValueOptionDelimiter, nodeTypeOptionResource.ValueOptions),
                 AccountId = accountId,
                 AreaIdentifier = areaIdentifier,
-                IsMultiOptionType = nodeTypeOption.IsMultiOptionType,
-                IsTerminalType = nodeTypeOption.IsTerminalType,
+                IsMultiOptionType = nodeTypeOptionResource.IsMultiOptionType,
+                IsTerminalType = nodeTypeOptionResource.IsTerminalType,
                 IsDynamicTableNode = isDynamic,
                 ResolveOrder = resolveOrder,
                 DynamicType = dynamicType,
-                ShouldRenderChildren = nodeTypeOption.ShouldRenderChildren,
-                IsAnabranchType = nodeTypeOption.IsAnabranchType,
-                IsAnabranchMergePoint = nodeTypeOption.IsAnabranchMergePoint,
-                IsMultiOptionEditable = nodeTypeOption.IsMultiOptionEditable,
-                ShouldShowMultiOption = nodeTypeOption.ShouldShowMultiOption,
-                IsCurrency = nodeTypeOption.IsCurrency,
+                ShouldRenderChildren = nodeTypeOptionResource.ShouldRenderChildren,
+                IsAnabranchType = nodeTypeOptionResource.IsAnabranchType,
+                IsAnabranchMergePoint = nodeTypeOptionResource.IsAnabranchMergePoint,
+                IsMultiOptionEditable = nodeTypeOptionResource.IsMultiOptionEditable,
+                ShouldShowMultiOption = nodeTypeOptionResource.ShouldShowMultiOption,
+                IsCurrency = nodeTypeOptionResource.IsCurrency,
                 IsCritical = isCritical,
                 IsLoopbackAnchorType = loopbackAnchor,
-                NodeTypeCode = nodeTypeOption.NodeTypeCode
+                NodeTypeCode = nodeTypeOptionResource.NodeTypeCode
             };
         }
     }

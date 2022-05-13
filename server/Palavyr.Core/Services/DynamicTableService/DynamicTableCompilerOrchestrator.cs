@@ -62,9 +62,9 @@ namespace Palavyr.Core.Services.DynamicTableService
             return new List<Table>() { table };
         }
 
-        public async Task<List<NodeTypeOption>> CompileTablesToConfigurationNodes(IEnumerable<DynamicTableMeta> dynamicTableMetas, string areaId)
+        public async Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<DynamicTableMeta> dynamicTableMetas, string areaId)
         {
-            var nodes = new List<NodeTypeOption>() { };
+            var nodes = new List<NodeTypeOptionResource>() { };
             foreach (var dynamicTableMeta in dynamicTableMetas)
             {
                 var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(dynamicTableMeta.TableType);

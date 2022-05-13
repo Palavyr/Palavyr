@@ -30,16 +30,16 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         }
 
-        public static List<NodeTypeOption> IntroNodeOptionList =>
-            new List<NodeTypeOption>()
+        public static List<NodeTypeOptionResource> IntroNodeOptionList =>
+            new List<NodeTypeOptionResource>()
             {
                 new ProvideInfo(),
                 new CollectDetails(),
                 new Selection()
             };
 
-        public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
-            new List<NodeTypeOption>()
+        public static List<NodeTypeOptionResource> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
+            new List<NodeTypeOptionResource>()
             {
                 new YesNo(),
                 new YesNoNotSure(),
@@ -93,7 +93,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static CollectDetails CreateCollectDetails() => new CollectDetails();
 
 
-        public class LoopbackAnchor : NodeTypeOption
+        public class LoopbackAnchor : NodeTypeOptionResource
         {
             public new static string StringName => nameof(LoopbackAnchor);
 
@@ -119,7 +119,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class Loopback : NodeTypeOption
+        public class Loopback : NodeTypeOptionResource
         {
             public new static string StringName => nameof(Loopback);
 
@@ -145,7 +145,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         }
 
 
-        public class EndWithoutEmail : NodeTypeOption
+        public class EndWithoutEmail : NodeTypeOptionResource
         {
             public new static string StringName => nameof(EndWithoutEmail);
 
@@ -170,7 +170,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class ShowFileAsset : NodeTypeOption
+        public class ShowFileAsset : NodeTypeOptionResource
 
         {
             public new static string StringName => nameof(ShowFileAsset);
@@ -197,7 +197,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class ShowImage : NodeTypeOption
+        public class ShowImage : NodeTypeOptionResource
         {
             public new static string StringName => nameof(ShowImage);
 
@@ -224,7 +224,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         }
 
 
-        public class Anabranch : NodeTypeOption
+        public class Anabranch : NodeTypeOptionResource
         {
             public new static string StringName => nameof(Anabranch);
 
@@ -249,7 +249,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class TakeCurrency : NodeTypeOption
+        public class TakeCurrency : NodeTypeOptionResource
         {
             public new static string StringName => nameof(TakeCurrency);
 
@@ -274,7 +274,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class TakeNumberIndividuals : NodeTypeOption
+        public class TakeNumberIndividuals : NodeTypeOptionResource
         {
             public new static string StringName => nameof(TakeNumberIndividuals);
 
@@ -299,7 +299,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class TakeNumber : NodeTypeOption
+        public class TakeNumber : NodeTypeOptionResource
         {
             public new static string StringName => nameof(TakeNumber);
 
@@ -325,7 +325,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         }
 
 
-        public class YesNo : NodeTypeOption
+        public class YesNo : NodeTypeOptionResource
         {
             public new static string StringName => nameof(YesNo);
             public const string Yes = "Yes";
@@ -353,7 +353,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         }
 
 
-        public class YesNoNotSure : NodeTypeOption
+        public class YesNoNotSure : NodeTypeOptionResource
         {
             public new static string StringName => nameof(YesNoNotSure);
 
@@ -378,7 +378,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class YesNotSureCombined : NodeTypeOption
+        public class YesNotSureCombined : NodeTypeOptionResource
         {
             public new static string StringName => nameof(YesNotSureCombined);
 
@@ -403,7 +403,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class NoNotSureCombined : NodeTypeOption
+        public class NoNotSureCombined : NodeTypeOptionResource
         {
             public new static string StringName => nameof(NoNotSureCombined);
 
@@ -428,7 +428,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class TakeText : NodeTypeOption
+        public class TakeText : NodeTypeOptionResource
         {
             public new static string StringName => nameof(TakeText);
 
@@ -454,7 +454,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         }
 
 
-        public class CollectDetails : NodeTypeOption
+        public class CollectDetails : NodeTypeOptionResource
         {
             public new static string StringName => nameof(CollectDetails);
 
@@ -479,7 +479,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class Selection : NodeTypeOption
+        public class Selection : NodeTypeOptionResource
         {
             public new static string StringName => nameof(Selection);
 
@@ -504,7 +504,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class ProvideInfo : NodeTypeOption
+        public class ProvideInfo : NodeTypeOptionResource
         {
             public new static string StringName => nameof(ProvideInfo);
 
@@ -529,7 +529,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class MultipleChoiceAsPath : NodeTypeOption
+        public class MultipleChoiceAsPath : NodeTypeOptionResource
         {
             public new static string StringName => nameof(MultipleChoiceAsPath);
 
@@ -554,7 +554,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class MultipleChoiceContinue : NodeTypeOption
+        public class MultipleChoiceContinue : NodeTypeOptionResource
         {
             public new static string StringName => nameof(MultipleChoiceContinue);
 
@@ -580,7 +580,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         }
 
         //Ending Sequences
-        public class TooComplicated : NodeTypeOption
+        public class TooComplicated : NodeTypeOptionResource
         {
             public new static string StringName => nameof(TooComplicated);
 
@@ -605,7 +605,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class SendResponse : NodeTypeOption
+        public class SendResponse : NodeTypeOptionResource
         {
             public new static string StringName => nameof(SendResponse);
 
@@ -631,7 +631,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         }
         
         
-        public class ProvideInfoWithPdfLink : NodeTypeOption
+        public class ProvideInfoWithPdfLink : NodeTypeOptionResource
         {
             public new static string StringName => nameof(ProvideInfoWithPdfLink);
 

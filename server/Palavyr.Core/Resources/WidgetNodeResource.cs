@@ -1,7 +1,6 @@
 ﻿using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
 
-namespace Palavyr.Core.Models.Configuration.Constant
+namespace Palavyr.Core.Resources
 {
     public class WidgetNodeResource
     {

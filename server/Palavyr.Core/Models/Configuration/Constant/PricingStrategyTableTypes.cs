@@ -3,7 +3,7 @@ using Palavyr.Core.Models.Aliases;
 
 namespace Palavyr.Core.Models.Configuration.Constant
 {
-    public abstract class DynamicType
+    public abstract class PricingStrategyType
     {
         public readonly string tableType;
 
@@ -19,19 +19,19 @@ namespace Palavyr.Core.Models.Configuration.Constant
         }
     }
 
-    public static class DynamicTableTypes
+    public static class PricingStrategyTableTypes
     {
         // TODO: Deprecate these. Probs don't need them.
-        public static DynamicType DefaultTable = new SelectOneFlat();
+        public static PricingStrategyType DefaultTable = new SelectOneFlat();
         public static SelectOneFlat CreateSelectOneFlat() => new SelectOneFlat();
         public static PercentOfThreshold CreatePercentOfThreshold() => new PercentOfThreshold();
         public static BasicThreshold CreateBasicThreshold() => new BasicThreshold();
         public static TwoNestedCategory CreateTwoNestedCategory() => new TwoNestedCategory();
         public static CategoryNestedThreshold CreateCategoryNestedThreshold() => new CategoryNestedThreshold();
 
-        public static List<DynamicType> GetDynamicTableTypes()
+        public static List<PricingStrategyType> GetDynamicTableTypes()
         {
-            return new List<DynamicType>
+            return new List<PricingStrategyType>
             {
                 // TODO: List these using reflection checking for IDynamic Table implementations
                 new SelectOneFlat(),
@@ -42,7 +42,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             };
         }
 
-        public class CategoryNestedThreshold : DynamicType
+        public class CategoryNestedThreshold : PricingStrategyType
         {
             public CategoryNestedThreshold()
             {
@@ -52,7 +52,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         }
 
         // TODO: Define these next to the compilers
-        public class TwoNestedCategory : DynamicType
+        public class TwoNestedCategory : PricingStrategyType
         {
             public TwoNestedCategory()
             {
@@ -61,7 +61,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class SelectOneFlat : DynamicType
+        public class SelectOneFlat : PricingStrategyType
         {
             public SelectOneFlat()
             {
@@ -70,7 +70,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class PercentOfThreshold : DynamicType
+        public class PercentOfThreshold : PricingStrategyType
         {
             public PercentOfThreshold()
             {
@@ -79,7 +79,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class BasicThreshold : DynamicType
+        public class BasicThreshold : PricingStrategyType
         {
             public static readonly string tableType = nameof(BasicThreshold);
 

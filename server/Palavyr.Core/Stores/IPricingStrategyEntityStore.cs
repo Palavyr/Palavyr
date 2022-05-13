@@ -7,7 +7,7 @@ namespace Palavyr.Core.Stores
 {
     public interface IPricingStrategyEntityStore<TEntity> where TEntity : class
     {
-        Task<List<TEntity>> GetAllRows(string areaIdentifier, string tableId);
+        Task<IEnumerable<TEntity>> GetAllRows(string areaIdentifier, string tableId);
 
         Task SaveTable(
             string areaIdentifier,
@@ -26,8 +26,8 @@ namespace Palavyr.Core.Stores
 
         Task DeleteTable(string areaIdentifier, string tableId);
 
-        Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string dynamicResponseId);
+        Task<IEnumerable<TEntity>> GetAllRowsMatchingDynamicResponseId(string dynamicResponseId);
 
-        Task<List<ConversationNode>> GetConversationNodeByIds(List<string> ids);
+        Task<IEnumerable<ConversationNode>> GetConversationNodeByIds(List<string> ids);
     }
 }

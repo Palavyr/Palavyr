@@ -44,8 +44,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             var newTableMeta = DynamicTableMeta.CreateNew(
                 tableTag,
-                DynamicTableTypes.DefaultTable.PrettyName,
-                DynamicTableTypes.DefaultTable.TableType,
+                PricingStrategyTableTypes.DefaultTable.PrettyName,
+                PricingStrategyTableTypes.DefaultTable.TableType,
                 tableId,
                 request.IntentId,
                 accountIdTransport.AccountId,

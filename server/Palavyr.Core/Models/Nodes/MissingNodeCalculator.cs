@@ -8,17 +8,17 @@ namespace Palavyr.Core.Models.Nodes
     public interface IMissingNodeCalculator
     {
         string[] CalculateMissingNodes(
-            NodeTypeOption[] requiredDynamicNodeTypes,
+            NodeTypeOptionResource[] requiredDynamicNodeTypes,
             List<ConversationNode> conversationNodes,
             List<DynamicTableMeta> dynamicTableMetas,
             List<StaticTablesMeta> staticTablesMetas);
 
-        NodeTypeOption[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes);
+        NodeTypeOptionResource[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOptionResource[] requiredNodes);
 
-        NodeTypeOption[] SearchTerminalResponseBranchesForMissingRequiredNodes(
+        NodeTypeOptionResource[] SearchTerminalResponseBranchesForMissingRequiredNodes(
             ConversationNode node,
             ConversationNode[] nodeList,
-            NodeTypeOption[] requiredNodes // array of node type names
+            NodeTypeOptionResource[] requiredNodes // array of node type names
         );
     }
 
@@ -32,7 +32,7 @@ namespace Palavyr.Core.Models.Nodes
         }
 
         public string[] CalculateMissingNodes(
-            NodeTypeOption[] requiredDynamicNodeTypes,
+            NodeTypeOptionResource[] requiredDynamicNodeTypes,
             List<ConversationNode> conversationNodes,
             List<DynamicTableMeta> dynamicTableMetas,
             List<StaticTablesMeta> staticTablesMetas)
@@ -49,9 +49,9 @@ namespace Palavyr.Core.Models.Nodes
             return allMissingNodeTypes.ToArray();
         }
 
-        public NodeTypeOption[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes)
+        public NodeTypeOptionResource[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOptionResource[] requiredNodes)
         {
-            var allMissingNodeTypes = new List<NodeTypeOption>();
+            var allMissingNodeTypes = new List<NodeTypeOptionResource>();
             var terminalNodes = GetCompletePathTerminalNodes(nodeList);
 
             foreach (var terminalNode in terminalNodes)
@@ -73,13 +73,13 @@ namespace Palavyr.Core.Models.Nodes
                 .ToArray();
         }
 
-        public NodeTypeOption[] SearchTerminalResponseBranchesForMissingRequiredNodes(
+        public NodeTypeOptionResource[] SearchTerminalResponseBranchesForMissingRequiredNodes(
             ConversationNode node,
             ConversationNode[] nodeList,
-            NodeTypeOption[] requiredNodes // array of node type names
+            NodeTypeOptionResource[] requiredNodes // array of node type names
         )
         {
-            var requiredNodesClone = new List<NodeTypeOption>(requiredNodes);
+            var requiredNodesClone = new List<NodeTypeOptionResource>(requiredNodes);
             if (requiredNodesClone.Select(x => x.Value).Contains(node.NodeType))
             {
                 requiredNodesClone.RemoveAt(requiredNodesClone.Select(x => x.Value).ToList().FindIndex(x => x == node.NodeType));

@@ -1,17 +1,17 @@
 using Palavyr.Core.Mappers;
 
 #nullable enable
-namespace Palavyr.Core.Models.Resources.Responses
+namespace Palavyr.Core.Resources.Responses
 {
-    public class SendEmailResultResponse
+    public class SendLiveEmailResultResource
     {
         public string NextNodeId { get; set; }
         public bool Result { get; set; }
         public FileAssetResource? FileAsset { get; set; }
         
-        public static SendEmailResultResponse CreateSuccess(string nextNodeId, FileAssetResource? fileAsset)
+        public static SendLiveEmailResultResource CreateSuccess(string nextNodeId, FileAssetResource? fileAsset)
         {
-            return new SendEmailResultResponse
+            return new SendLiveEmailResultResource
             {
                 NextNodeId = nextNodeId,
                 Result = true,
@@ -19,9 +19,9 @@ namespace Palavyr.Core.Models.Resources.Responses
             };
         }
 
-        public static SendEmailResultResponse CreateFailure(string nextNodeId)
+        public static SendLiveEmailResultResource CreateFailure(string nextNodeId)
         {
-            return new SendEmailResultResponse
+            return new SendLiveEmailResultResource
             {
                 NextNodeId = nextNodeId,
                 Result = false

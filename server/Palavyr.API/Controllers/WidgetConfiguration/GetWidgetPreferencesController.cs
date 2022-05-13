@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         }
 
         [HttpGet(Route)]
-        public async Task<WidgetPreference> GetWidgetPreferences(CancellationToken cancellationToken)
+        public async Task<WidgetPreferenceResource> GetWidgetPreferences(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetWidgetPreferencesRequest(), cancellationToken);
             return response.Response;
