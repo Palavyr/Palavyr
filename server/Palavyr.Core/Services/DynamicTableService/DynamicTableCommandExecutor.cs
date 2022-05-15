@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Requests;
 using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
@@ -26,10 +26,10 @@ namespace Palavyr.Core.Services.DynamicTableService
 
     public interface IDynamicTableCommandExecutor<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
     {
-        Task DeleteDynamicTable(DynamicTableRequest request);
-        Task<DynamicTableData<TEntity>> GetDynamicTableRows(DynamicTableRequest request); // TODO: return new object with 'is in use in palavyr tree'
-        TEntity GetDynamicRowTemplate(DynamicTableRequest request);
-        Task<IEnumerable<TEntity>> SaveDynamicTable(DynamicTableRequest request, DynamicTable dynamicTable);
+        Task DeleteDynamicTable(string intentId, string tableId);
+        Task<DynamicTableData<TEntity>> GetDynamicTableRows(string intentId, string tableId); // TODO: return new object with 'is in use in palavyr tree'
+        TEntity GetDynamicRowTemplate(string intentId, string tableId);
+        Task<IEnumerable<TEntity>> SaveDynamicTable(string intentId, string tableId, DynamicTable dynamicTable);
     }
 
     public class DynamicTableCommandExecutor<TEntity> : IDynamicTableCommandExecutor<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
@@ -56,29 +56,27 @@ namespace Palavyr.Core.Services.DynamicTableService
             this.logger = logger;
         }
 
-        public async Task DeleteDynamicTable(DynamicTableRequest request)
+        public async Task DeleteDynamicTable(string intentId, string tableId)
         {
-            logger.LogInformation($"Deleting dynamic table: {request.TableId}");
-            var (areaIdentifier, tableId) = request;
-            await pricingStrategyEntityStore.DeleteTable(areaIdentifier, tableId);
+            logger.LogInformation($"Deleting dynamic table: {tableId}");
+            await pricingStrategyEntityStore.DeleteTable(intentId, tableId);
         }
 
-        public async Task<DynamicTableData<TEntity>> GetDynamicTableRows(DynamicTableRequest request)
+        public async Task<DynamicTableData<TEntity>> GetDynamicTableRows(string intentId, string tableId)
         {
-            logger.LogInformation($"Getting dynamic table rows: {request.TableId}");
-            var (areaIdentifier, tableId) = request;
-            var tableRows = (await pricingStrategyEntityStore.GetAllRows(areaIdentifier, tableId)).ToList();
+            logger.LogInformation($"Getting dynamic table rows: {tableId}");
+            var tableRows = (await pricingStrategyEntityStore.GetAllRows(intentId, tableId)).ToList();
             if (tableRows.ToList().Count == 0)
             {
                 tableRows = new List<TEntity>()
                 {
-                    (new TEntity()).CreateTemplate(AccountId, areaIdentifier, tableId)
+                    (new TEntity()).CreateTemplate(AccountId, intentId, tableId)
                 };
             }
 
-            await pricingStrategyEntityStore.UpdateRows(areaIdentifier, tableId, tableRows);
+            await pricingStrategyEntityStore.UpdateRows(intentId, tableId, tableRows);
 
-            var convoNodes = await convoNodeStore.GetMany(areaIdentifier, s => s.AreaIdentifier);
+            var convoNodes = await convoNodeStore.GetMany(intentId, s => s.AreaIdentifier);
 
             var currentDynamic = convoNodes.Where(
                 x =>
@@ -100,21 +98,19 @@ namespace Palavyr.Core.Services.DynamicTableService
             };
         }
 
-        public TEntity GetDynamicRowTemplate(DynamicTableRequest request)
+        public TEntity GetDynamicRowTemplate(string intentId, string tableId)
         {
-            logger.LogInformation($"Getting dynamic table row template: {request.TableId}");
-            var (areaIdentifier, tableId) = request;
-            return (new TEntity()).CreateTemplate(AccountId, areaIdentifier, tableId);
+            logger.LogInformation($"Getting dynamic table row template: {tableId}");
+            return (new TEntity()).CreateTemplate(AccountId, intentId, tableId);
         }
 
-        public async Task<IEnumerable<TEntity>> SaveDynamicTable(DynamicTableRequest request, DynamicTable dynamicTable)
+        public async Task<IEnumerable<TEntity>> SaveDynamicTable(string intentId, string tableId, DynamicTable dynamicTable)
         {
             var workingEntity = new TEntity();
             workingEntity.EnsureValid();
             var entityCompiler = retriever.RetrieveCompiler(workingEntity.GetType().Name);
 
-            logger.LogInformation($"Saving dynamic table: {request.TableId}");
-            var (areaIdentifier, tableId) = request;
+            logger.LogInformation($"Saving dynamic table: {tableId}");
 
             var validationResult = entityCompiler.ValidatePricingStrategyPreSave(dynamicTable);
             if (!validationResult.IsValid)
@@ -124,14 +120,14 @@ namespace Palavyr.Core.Services.DynamicTableService
 
             var mappedTableRows = workingEntity.UpdateTable(dynamicTable);
             await pricingStrategyEntityStore.SaveTable(
-                areaIdentifier,
+                intentId,
                 tableId,
                 mappedTableRows,
                 dynamicTable.TableTag,
-                typeof(TEntity).Name, async () => await entityCompiler.UpdateConversationNode(dynamicTable, tableId, areaIdentifier)
+                typeof(TEntity).Name, async () => await entityCompiler.UpdateConversationNode(dynamicTable, tableId, intentId)
             );
 
-            return await pricingStrategyEntityStore.GetAllRows(areaIdentifier, tableId);
+            return await pricingStrategyEntityStore.GetAllRows(intentId, tableId);
         }
     }
 }

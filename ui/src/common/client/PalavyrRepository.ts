@@ -149,27 +149,27 @@ export class PalavyrRepository {
                     return response;
                 },
 
-                createDynamicTable: async (areaIdentifier: string) => {
-                    const response = this.client.post<DynamicTableMeta, {}>(`tables/dynamic/${areaIdentifier}`);
-                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, areaIdentifier].join("-"));
+                createDynamicTable: async (intentId: string) => {
+                    const response = this.client.post<DynamicTableMeta, {}>(`tables/dynamic/${intentId}`);
+                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
                     return response;
                 },
 
-                deleteDynamicTable: async (areaIdentifier: string, tableType: string, tableId: string) => {
-                    const response = this.client.delete(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`);
-                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, areaIdentifier].join("-"));
+                deleteDynamicTable: async (intent: string, tableType: string, tableId: string) => {
+                    const response = this.client.delete(`tables/dynamic/${tableType}/intent/${intent}/table/${tableId}`);
+                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intent].join("-"));
                     return response;
                 },
 
-                getDynamicTableDataTemplate: async <T>(areaIdentifier: string, tableType: string, tableId: string) =>
-                    this.client.get<T>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}/template`),
+                getDynamicTableDataTemplate: async <T>(intentId: string, tableType: string, tableId: string) =>
+                    this.client.get<T>(`tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}/template`),
 
-                getDynamicTableRows: async (areaIdentifier: string, tableType: string, tableId: string) =>
-                    this.client.get<DynamicTableData>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
+                getDynamicTableRows: async (intentId: string, tableType: string, tableId: string) =>
+                    this.client.get<DynamicTableData>(`tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`),
 
-                saveDynamicTable: async <T>(areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) => {
-                    const response = this.client.put<T, {}>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData });
-                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, areaIdentifier].join("-"));
+                saveDynamicTable: async <T>(intentId: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) => {
+                    const response = this.client.put<T, {}>(`tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData });
+                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
                     return response;
                 },
             },

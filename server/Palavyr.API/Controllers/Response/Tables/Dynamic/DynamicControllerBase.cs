@@ -5,9 +5,10 @@ using Palavyr.API.ModelBinding;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Requests;
 using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Services.DynamicTableService;
-you need to write 6 more mappers at the moment. can you change the api so that you dont have to use one of the mapers?
+// you need to write 6 more mappers at the moment. can you change the api so that you dont have to use one of the mapers?
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
     [ApiController]
@@ -28,32 +29,32 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             this.tableDataMapper = tableDataMapper;
         }
 
-        [HttpDelete("area/{areaId}/table/{tableId}")]
-        public async Task DeleteDynamicTable([FromRequest] DynamicTableRequest request)
+        [HttpDelete("intent/{intentId}/table/{tableId}")]
+        public async Task DeleteDynamicTable([FromRoute] string intentId, [FromRoute] string tableId)
         {
-            await executor.DeleteDynamicTable(request);
+            await executor.DeleteDynamicTable(intentId, tableId);
         }
 
-        [HttpGet("area/{areaId}/table/{tableId}/template")]
-        public async Task<TResource> GetDynamicRowTemplate([FromRequest] DynamicTableRequest request)
+        [HttpGet("intent/{intentId}/table/{tableId}/template")]
+        public async Task<TResource> GetDynamicRowTemplate([FromRoute] string intentId, [FromRoute] string tableId)
         {
-            var template = executor.GetDynamicRowTemplate(request);
+            var template = executor.GetDynamicRowTemplate(intentId, tableId);
             var resource = await entityMapper.Map(template);
             return resource;
         }
 
-        [HttpGet("area/{areaId}/table/{tableId}")]
-        public async Task<DynamicTableDataResource<TResource>> GetDynamicTableRows([FromRequest] DynamicTableRequest request)
+        [HttpGet("intent/{intentId}/table/{tableId}")]
+        public async Task<DynamicTableDataResource<TResource>> GetDynamicTableRows([FromRoute] string intentId, [FromRoute] string tableId)
         {
-            var rows = await executor.GetDynamicTableRows(request);
+            var rows = await executor.GetDynamicTableRows(intentId, tableId);
             var resource = await tableDataMapper.Map(rows);
             return resource;
         }
 
-        [HttpPut("area/{areaId}/table/{tableId}")]
-        public async Task<IEnumerable<TResource>> SaveDynamicTable([FromRequest] DynamicTableRequest request, [FromBody] DynamicTable dynamicTable)
+        [HttpPut("intent/{intentId}/table/{tableId}")]
+        public async Task<IEnumerable<TResource>> SaveDynamicTable([FromRoute] string intentId, [FromRoute] string tableId, [FromBody] DynamicTable dynamicTable)
         {
-            var rows = await executor.SaveDynamicTable(request, dynamicTable);
+            var rows = await executor.SaveDynamicTable(intentId, tableId, dynamicTable);
             var resource = await entityMapper.MapMany(rows);
             return resource;
         }
