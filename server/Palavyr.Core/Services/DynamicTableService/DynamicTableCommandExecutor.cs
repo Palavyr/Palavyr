@@ -6,7 +6,6 @@ using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Requests;
-using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 

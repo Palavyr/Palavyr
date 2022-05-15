@@ -2,7 +2,6 @@
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Requests;
-using Palavyr.Core.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {

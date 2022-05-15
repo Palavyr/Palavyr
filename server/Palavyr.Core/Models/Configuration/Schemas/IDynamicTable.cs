@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Palavyr.Core.Requests;
-using Palavyr.Core.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {

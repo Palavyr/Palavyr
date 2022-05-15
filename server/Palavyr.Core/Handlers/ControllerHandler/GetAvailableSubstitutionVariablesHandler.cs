@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Resources;
-using Palavyr.Core.Resources.Responses;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

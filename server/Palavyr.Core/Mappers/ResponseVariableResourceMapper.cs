@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Palavyr.Core.Resources;
-using Palavyr.Core.Resources.Responses;
 
 namespace Palavyr.Core.Mappers
 {

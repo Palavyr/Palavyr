@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.API.ModelBinding;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Requests;
-using Palavyr.Core.Resources.Requests;
 using Palavyr.Core.Services.DynamicTableService;
 // you need to write 6 more mappers at the moment. can you change the api so that you dont have to use one of the mapers?
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
