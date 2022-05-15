@@ -7,7 +7,7 @@ using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
-    public interface IDynamicTableController<TResource> where TResource : IPricingStrategyTableRowResource, new()
+    public interface IDynamicTableController<TEntity, TResource> where TResource : IPricingStrategyTableRowResource, new()
     {
         Task DeleteDynamicTable(string intentId, string tableId);
         Task<TResource> GetDynamicRowTemplate([FromRoute] string intentId, [FromRoute] string tableId);
@@ -16,7 +16,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 
         Task<IEnumerable<TResource>> SaveDynamicTable(
             [FromRoute] string intentId, [FromRoute] string tableId,
-            [FromBody] DynamicTable dynamicTable);
+            [FromBody] DynamicTable<TEntity> dynamicTable);
 
     }
 }

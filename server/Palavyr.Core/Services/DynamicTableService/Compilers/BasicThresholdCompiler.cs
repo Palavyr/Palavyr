@@ -37,8 +37,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<BasicThreshold>(DynamicTable<BasicThreshold> table, string tableId, string intentId)
         {
+
             await Task.CompletedTask;
         }
 
@@ -129,11 +130,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
         }
 
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave(DynamicTable dynamicTable)
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(DynamicTable<TEntity> dynamicTable)
         {
-            var table = dynamicTable.BasicThreshold;
+            // var table = dynamicTable.BasicThreshold;
+            var table = dynamicTable.TableData;
             var tableTag = dynamicTable.TableTag;
-            return ValidationLogic(table, tableTag);
+            return ValidationLogic(table as List<BasicThreshold>, tableTag);
         }
 
         public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)

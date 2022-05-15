@@ -28,7 +28,7 @@ namespace Palavyr.Core.Services.DynamicTableService
         Task DeleteDynamicTable(string intentId, string tableId);
         Task<DynamicTableData<TEntity>> GetDynamicTableRows(string intentId, string tableId); // TODO: return new object with 'is in use in palavyr tree'
         TEntity GetDynamicRowTemplate(string intentId, string tableId);
-        Task<IEnumerable<TEntity>> SaveDynamicTable(string intentId, string tableId, DynamicTable dynamicTable);
+        Task<IEnumerable<TEntity>> SaveDynamicTable(string intentId, string tableId, DynamicTable<TEntity> dynamicTable);
     }
 
     public class DynamicTableCommandExecutor<TEntity> : IDynamicTableCommandExecutor<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
@@ -103,7 +103,7 @@ namespace Palavyr.Core.Services.DynamicTableService
             return (new TEntity()).CreateTemplate(AccountId, intentId, tableId);
         }
 
-        public async Task<IEnumerable<TEntity>> SaveDynamicTable(string intentId, string tableId, DynamicTable dynamicTable)
+        public async Task<IEnumerable<TEntity>> SaveDynamicTable(string intentId, string tableId, DynamicTable<TEntity> dynamicTable)
         {
             var workingEntity = new TEntity();
             workingEntity.EnsureValid();

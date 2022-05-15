@@ -16,4 +16,10 @@ namespace Palavyr.Core.Requests
         // add new Dynamic Table type rows properties
         public string? TableTag { get; set; }
     }
+
+    public class DynamicTable<T>
+    {
+        public List<T> TableData { get; set; }
+        public string? TableTag { get; set; }
+    }
 }

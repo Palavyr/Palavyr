@@ -110,9 +110,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
         }
 
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave(DynamicTable dynamicTable)
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<T>(DynamicTable<T> dynamicTable)
         {
-            var table = dynamicTable.TwoNestedCategory;
+            var table = dynamicTable.TableData as List<TwoNestedCategory>;
             var tableTag = dynamicTable.TableTag;
             return ValidationLogic(table, tableTag);
         }
@@ -164,9 +164,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             };
         }
 
-        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(DynamicTable<T> table, string tableId, string areaIdentifier)
         {
-            var update = table.TwoNestedCategory;
+            var update = table.TableData as List<TwoNestedCategory>;
 
             var (innerCategories, outerCategories) = GetInnerAndOuterCategories(update);
 

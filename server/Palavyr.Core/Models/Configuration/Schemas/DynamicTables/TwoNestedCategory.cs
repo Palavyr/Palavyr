@@ -71,10 +71,10 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             };
         }
 
-        public List<TwoNestedCategory> UpdateTable(DynamicTable table)
+        public List<TwoNestedCategory> UpdateTable(DynamicTable<TwoNestedCategory> table)
         {
             var mappedTableRows = new List<TwoNestedCategory>();
-            foreach (var row in table.TwoNestedCategory)
+            foreach (var row in table.TableData)
             {
                 mappedTableRows.Add(
                     CreateNew(

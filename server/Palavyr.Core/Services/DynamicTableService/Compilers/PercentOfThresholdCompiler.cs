@@ -37,7 +37,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(DynamicTable<T> table, string tableId, string areaIdentifier)
         {
             await Task.CompletedTask;
         }
@@ -161,9 +161,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
         }
 
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave(DynamicTable dynamicTable)
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(DynamicTable<TEntity> dynamicTable)
         {
-            var table = dynamicTable.PercentOfThreshold;
+            var table = dynamicTable.TableData as List<PercentOfThreshold>;
             var tableTag = dynamicTable.TableTag;
             return ValidationLogic(table, tableTag);
         }

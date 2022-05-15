@@ -76,10 +76,10 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             };
         }
 
-        public List<BasicThreshold> UpdateTable(DynamicTable table)
+        public List<BasicThreshold> UpdateTable(DynamicTable<BasicThreshold> table)
         {
             var mappedTableRows = new List<BasicThreshold>();
-            foreach (var row in table.BasicThreshold!)
+            foreach (var row in table.TableData)
             {
                 var mappedRow = CreateNew(
                     row.AccountId,

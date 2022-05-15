@@ -11,14 +11,14 @@ namespace Palavyr.Core.Services.DynamicTableService
 {
     public interface IDynamicTablesCompiler
     {
-        Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier);
+        Task UpdateConversationNode<TEntity>(DynamicTable<TEntity> table, string tableId, string areaIdentifier);
 
         Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOptionResource> nodes);
 
         Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture);
         Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents);
 
-        PricingStrategyValidationResult ValidatePricingStrategyPreSave(DynamicTable dynamicTable);
+        PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(DynamicTable<TEntity> dynamicTable);
         Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta);
         Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture);
     }

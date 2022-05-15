@@ -42,9 +42,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.dynamicTableMetaStore = dynamicTableMetaStore;
         }
 
-        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(DynamicTable<T> table, string tableId, string areaIdentifier)
         {
-            var currentSelectOneFlatUpdate = table.SelectOneFlat;
+            var currentSelectOneFlatUpdate = table.TableData as List<SelectOneFlat>;
 
             var tableMeta = await dynamicTableMetaStore.Get(tableId, s => s.TableId);
 
@@ -132,9 +132,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
         }
 
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave(DynamicTable dynamicTable)
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<T>(DynamicTable<T> dynamicTable)
         {
-            var table = dynamicTable.SelectOneFlat;
+            var table = dynamicTable.TableData as List<SelectOneFlat>;
             var tableTag = dynamicTable.TableTag;
             return ValidationLogic(table, tableTag);
         }

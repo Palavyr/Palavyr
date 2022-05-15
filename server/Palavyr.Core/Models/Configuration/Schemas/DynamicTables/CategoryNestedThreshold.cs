@@ -91,10 +91,10 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             };
         }
 
-        public List<CategoryNestedThreshold> UpdateTable(DynamicTable table)
+        public List<CategoryNestedThreshold> UpdateTable(DynamicTable<CategoryNestedThreshold> table)
         {
             var mappedTableRows = new List<CategoryNestedThreshold>();
-            foreach (var row in table.CategoryNestedThreshold)
+            foreach (var row in table.TableData)
             {
                 mappedTableRows.Add(
                     CreateNew(

@@ -105,10 +105,10 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             };
         }
 
-        public List<PercentOfThreshold> UpdateTable(DynamicTable table)
+        public List<PercentOfThreshold> UpdateTable(DynamicTable<PercentOfThreshold> table)
         {
             var mappedTableRows = new List<PercentOfThreshold>();
-            foreach (var row in table.PercentOfThreshold!)
+            foreach (var row in table.TableData)
             {
                 var mappedRow = CreateNew(
                     row.AccountId,

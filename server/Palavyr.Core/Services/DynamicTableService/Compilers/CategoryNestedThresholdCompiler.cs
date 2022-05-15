@@ -59,10 +59,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return categories;
         }
 
-        public async Task UpdateConversationNode(DynamicTable table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<TEntity>(DynamicTable<TEntity> table, string tableId, string areaIdentifier)
         {
-            var update = table.CategoryNestedThreshold;
-            var category = GetCategories(update);
+            var category = GetCategories(table.TableData as List<CategoryNestedThreshold>);
 
             var nodes = await convoNodeStore
                 .Query()
@@ -87,7 +86,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 NodeTypeOptionResource.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Category"),
                     dynamicTableMeta.ConvertToPrettyName("Category (1)"),
-                    new List<string>() { "Continue" },
+                    new List<string> { "Continue" },
                     categories,
                     true,
                     true,
@@ -107,8 +106,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 NodeTypeOptionResource.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Threshold"),
                     dynamicTableMeta.ConvertToPrettyName("Threshold (2)"),
-                    new List<string>() { "Continue" },
-                    new List<string>() { "Continue" },
+                    new List<string> { "Continue" },
+                    new List<string> { "Continue" },
                     true,
                     false,
                     false,
@@ -139,10 +138,10 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             var dynamicMeta = await dynamicTableMetaStore.Get(records.First().TableId, s => s.TableId);
             var thresholdResult = thresholdEvaluator.Evaluate(responseAmountAsDouble, itemRows);
-            return new List<TableRow>()
+            return new List<TableRow>
             {
                 new TableRow(
-                    dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : string.Join(" @ ", new[] { category, responseAmountAsDouble.ToString("C", culture) }),
+                    dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : string.Join(" @ ", category, responseAmountAsDouble.ToString("C", culture)),
                     thresholdResult.ValueMin,
                     thresholdResult.ValueMax,
                     false,
@@ -195,7 +194,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             if (itemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
             {
-                reasons.Add($"One or more categories did not contain text");
+                reasons.Add("One or more categories did not contain text");
                 valid = false;
             }
 
@@ -225,11 +224,11 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
         }
 
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave(DynamicTable dynamicTable)
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(DynamicTable<TEntity> dynamicTable)
         {
-            var table = dynamicTable.CategoryNestedThreshold;
+            var table = dynamicTable.TableData;
             var tableTag = dynamicTable.TableTag;
-            return ValidationLogic(table, tableTag);
+            return ValidationLogic(table as List<CategoryNestedThreshold>, tableTag);
         }
 
         public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
@@ -243,7 +242,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area _, CultureInfo culture)
         {
             var availableNestedThreshold = await responseRetriever.RetrieveAllAvailableResponses<CategoryNestedThreshold>(tableMeta.TableId);
-            var currentRows = new List<TableRow>()
+            var currentRows = new List<TableRow>
             {
                 new TableRow(
                     tableMeta.UseTableTagAsResponseDescription ? tableMeta.TableTag : availableNestedThreshold.First().ItemName,

@@ -11,7 +11,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
     [ApiController]
     public abstract class DynamicControllerBase<TEntity, TResource>
-        : PalavyrBaseController, IDynamicTableController<TResource> where TEntity : class, IDynamicTable<TEntity>, new() where TResource : IPricingStrategyTableRowResource, new()
+        : PalavyrBaseController, IDynamicTableController<TEntity, TResource> where TEntity : class, IDynamicTable<TEntity>, new() where TResource : IPricingStrategyTableRowResource, new()
     {
         private readonly IDynamicTableCommandExecutor<TEntity> executor;
         private readonly IMapToNew<TEntity, TResource> entityMapper;
@@ -50,7 +50,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpPut("intent/{intentId}/table/{tableId}")]
-        public async Task<IEnumerable<TResource>> SaveDynamicTable([FromRoute] string intentId, [FromRoute] string tableId, [FromBody] DynamicTable dynamicTable)
+        public async Task<IEnumerable<TResource>> SaveDynamicTable([FromRoute] string intentId, [FromRoute] string tableId, [FromBody] DynamicTable<TEntity> dynamicTable)
         {
             var rows = await executor.SaveDynamicTable(intentId, tableId, dynamicTable);
             var resource = await entityMapper.MapMany(rows);

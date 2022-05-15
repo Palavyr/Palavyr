@@ -57,10 +57,10 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             };
         }
 
-        public List<SelectOneFlat> UpdateTable(DynamicTable table)
+        public List<SelectOneFlat> UpdateTable(DynamicTable<SelectOneFlat> table)
         {
             var mappedTableRows = new List<SelectOneFlat>();
-            foreach (var row in table.SelectOneFlat)
+            foreach (var row in table.TableData)
             {
                 var mappedRow = CreateNew(
                     row.AccountId,
