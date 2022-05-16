@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
@@ -16,17 +17,20 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class CreateDynamicTableHandler : IRequestHandler<CreateDynamicTableRequest, CreateDynamicTableResponse>
     {
+        private readonly IMapToNew<DynamicTableMeta, DynamicTableMetaResource> mapper;
         private readonly IEntityStore<SelectOneFlat> selectOneFlatStore;
         private readonly IEntityStore<Area> intentStore;
         private readonly ILogger<CreateDynamicTableHandler> logger;
         private readonly IAccountIdTransport accountIdTransport;
 
         public CreateDynamicTableHandler(
+            IMapToNew<DynamicTableMeta, DynamicTableMetaResource> mapper,
             IEntityStore<SelectOneFlat> selectOneFlatStore,
             IEntityStore<Area> intentStore,
             ILogger<CreateDynamicTableHandler> logger,
             IAccountIdTransport accountIdTransport)
         {
+            this.mapper = mapper;
             this.selectOneFlatStore = selectOneFlatStore;
             this.intentStore = intentStore;
             this.logger = logger;
@@ -58,14 +62,17 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var defaultTable = defaultDynamicTable.CreateTemplate(accountIdTransport.AccountId, request.IntentId, tableId);
 
             await selectOneFlatStore.Create(defaultTable);
-            return new CreateDynamicTableResponse(newTableMeta);
+
+            var resource = await mapper.Map(newTableMeta);
+            
+            return new CreateDynamicTableResponse(resource);
         }
     }
 
     public class CreateDynamicTableResponse
     {
-        public CreateDynamicTableResponse(DynamicTableMeta response) => Response = response;
-        public DynamicTableMeta Response { get; set; }
+        public CreateDynamicTableResponse(DynamicTableMetaResource response) => Response = response;
+        public DynamicTableMetaResource Response { get; set; }
     }
 
     public class CreateDynamicTableRequest : IRequest<CreateDynamicTableResponse>

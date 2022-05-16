@@ -6,6 +6,7 @@ using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Requests;
+using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
@@ -13,7 +14,7 @@ namespace Palavyr.Core.Services.DynamicTableService
 {
     public class DynamicTableDataResource<TResource> where TResource : IPricingStrategyTableRowResource
     {
-        public List<TResource> TableRows { get; set; }
+        public IEnumerable<TResource> TableRows { get; set; }
         public bool IsInUse { get; set; }
     }
     

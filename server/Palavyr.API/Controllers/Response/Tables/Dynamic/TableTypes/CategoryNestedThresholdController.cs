@@ -1,18 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Mappers;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
 {
-    [Route("api/tables/dynamic/CategoryNestedThreshold")]
+    [Route("api/tables/dynamic/" + nameof(CategoryNestedThreshold))]
     [ApiController]
-    public class CategoryNestedThresholdController : DynamicControllerBase<CategoryNestedThreshold, CategoryNestedThresholdResource>
+    public class CategoryNestedThresholdController : PricingStrategyControllerBase<CategoryNestedThreshold, CategoryNestedThresholdResource>
     {
-        public CategoryNestedThresholdController(
-            IDynamicTableCommandExecutor<CategoryNestedThreshold> executor,
-            IMapToNew<CategoryNestedThreshold, CategoryNestedThresholdResource> entityMapper,
-            IMapToNew<DynamicTableData<CategoryNestedThreshold>, DynamicTableDataResource<CategoryNestedThresholdResource>> tableDataMapper) : base(executor, entityMapper, tableDataMapper)
+        public CategoryNestedThresholdController(IMediator mediator) : base(mediator)
         {
         }
     }

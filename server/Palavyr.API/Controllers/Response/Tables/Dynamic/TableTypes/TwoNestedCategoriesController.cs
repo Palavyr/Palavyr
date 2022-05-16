@@ -1,19 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Mappers;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
 {
-    [Route("api/tables/dynamic/TwoNestedCategory")]
+    [Route("api/tables/dynamic/" + nameof(TwoNestedCategory))]
     [ApiController]
-    public class TwoNestedCategoriesController : DynamicControllerBase<TwoNestedCategory, TwoNestedCategoryResource>
+    public class TwoNestedCategoriesController : PricingStrategyControllerBase<TwoNestedCategory, TwoNestedCategoryResource>
     {
-        public TwoNestedCategoriesController(
-            IDynamicTableCommandExecutor<TwoNestedCategory> executor,
-            IMapToNew<TwoNestedCategory, TwoNestedCategoryResource> entityMapper,
-            IMapToNew<DynamicTableData<TwoNestedCategory>, DynamicTableDataResource<TwoNestedCategoryResource>> tableDataMapper)
-            : base(executor, entityMapper, tableDataMapper)
+        public TwoNestedCategoriesController(IMediator mediator) : base(mediator)
         {
         }
     }

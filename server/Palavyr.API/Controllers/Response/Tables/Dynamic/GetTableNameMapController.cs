@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Resources;
+using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {

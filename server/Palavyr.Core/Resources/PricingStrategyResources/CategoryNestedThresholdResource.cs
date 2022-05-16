@@ -1,6 +1,6 @@
-﻿namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
+﻿namespace Palavyr.Core.Resources.PricingStrategyResources
 {
-    public class TwoNestedCategoryResource : IPricingStrategyTableRowResource
+    public class CategoryNestedThresholdResource : PricingStrategyTableRowResource
     {
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
@@ -13,6 +13,7 @@
         public string ItemId { get; set; }
         public int ItemOrder { get; set; }
         public string ItemName { get; set; }
-        public string InnerItemName { get; set; }
+        public double Threshold { get; set; }
+        public bool TriggerFallback { get; set; }
     }
 }

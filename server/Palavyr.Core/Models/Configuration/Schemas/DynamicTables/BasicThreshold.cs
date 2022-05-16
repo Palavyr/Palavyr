@@ -5,21 +5,6 @@ using Palavyr.Core.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class BasicThresholdResource : IPricingStrategyTableRowResource
-    {
-        public string AccountId { get; set; }
-        public string AreaIdentifier { get; set; }
-        public string TableId { get; set; }
-        public string RowId { get; set; }
-        public double Threshold { get; set; }
-        public double ValueMin { get; set; }
-        public double ValueMax { get; set; }
-        public bool Range { get; set; }
-        public string ItemName { get; set; }
-        public int RowOrder { get; set; }
-        public bool TriggerFallback { get; set; }
-
-    }
     public class BasicThreshold : Entity, IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange, IOrderableThreshold, IHaveAccountId
     {
         public string AccountId { get; set; }

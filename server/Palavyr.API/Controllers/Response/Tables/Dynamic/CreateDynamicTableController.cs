@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpPost(Route)]
-        public async Task<DynamicTableMeta> Create(
+        public async Task<DynamicTableMetaResource> Create(
             [FromRoute]
             string intentId,
             CancellationToken cancellationToken)

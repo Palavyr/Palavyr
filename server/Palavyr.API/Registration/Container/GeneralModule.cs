@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Autofac;
+using MediatR;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Handlers.PricingStrategyHandlers;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -42,6 +46,8 @@ using Module = Autofac.Module;
 
 namespace Palavyr.API.Registration.Container
 {
+  
+
     public class GeneralModule : Module
     {
         protected override void Load(ContainerBuilder builder)
@@ -72,7 +78,6 @@ namespace Palavyr.API.Registration.Container
                 .As(typeof(IEntityStore<>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-
 
             builder.RegisterGeneric(typeof(PricingStrategyEntityStore<>)).As(typeof(IPricingStrategyEntityStore<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandExecutor<>)).As(typeof(IDynamicTableCommandExecutor<>)).InstancePerLifetimeScope();

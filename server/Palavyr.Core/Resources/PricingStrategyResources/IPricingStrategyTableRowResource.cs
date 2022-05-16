@@ -1,4 +1,4 @@
-﻿namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
+﻿namespace Palavyr.Core.Resources.PricingStrategyResources
 {
     public interface IPricingStrategyTableRowResource
     {

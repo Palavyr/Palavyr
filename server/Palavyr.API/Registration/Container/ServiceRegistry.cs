@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +12,6 @@ namespace Palavyr.API.Registration.Container
 {
     public static class ServiceRegistry
     {
-
-        public static void RegisterMediator(IServiceCollection serviceCollection)
-        {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.Contains("Palavyr.API") || x.FullName.Contains("Palavyr.Core"));
-            serviceCollection.AddMediatR(assemblies.ToArray());
-        }
-
         public static void RegisterHealthChecks(IServiceCollection services)
         {
             services.AddHealthChecks();

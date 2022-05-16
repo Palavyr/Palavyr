@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Registration.Configuration;
 using Palavyr.API.Registration.Container;
+using Palavyr.API.Registration.Container.MediatorModule;
 using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API
@@ -58,7 +59,7 @@ namespace Palavyr.API
             RegisterStores(services, config);
             ServiceRegistry.RegisterHealthChecks(services);
             ServiceRegistry.RegisterIisConfiguration(services, environ);
-            ServiceRegistry.RegisterMediator(services);
+            MediatorRegistry.RegisterMediator(services);
         }
 
         public void Configure(

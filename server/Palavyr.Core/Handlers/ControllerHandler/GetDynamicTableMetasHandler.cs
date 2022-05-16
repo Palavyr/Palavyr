@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Services.Units;
 using Palavyr.Core.Stores;
 
@@ -28,8 +29,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetDynamicTableMetasResponse> Handle(GetDynamicTableMetasRequest request, CancellationToken cancellationToken)
         {
             logger.LogDebug("Retrieve Dynamic Table Metas");
-            var tableTypes = await dynamicTableMetaStore.GetMany(request.IntentId, s => s.AreaIdentifier); 
-            
+            var tableTypes = await dynamicTableMetaStore.GetMany(request.IntentId, s => s.AreaIdentifier);
+
             var tableResources = tableTypes.Select(
                     x =>
                     {
@@ -52,20 +53,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             return new GetDynamicTableMetasResponse(tableResources);
         }
-    }
-
-    public class DynamicTableMetaResource
-    {
-        public int? Id { get; set; }
-        public string TableTag { get; set; }
-        public string TableType { get; set; }
-        public string TableId { get; set; }
-        public string AreaIdentifier { get; set; }
-        public bool ValuesAsPaths { get; set; }
-        public string PrettyName { get; set; }
-        public string UnitPrettyName { get; set; }
-        public string UnitGroup { get; set; }
-        public UnitIds UnitId { get; set; }
     }
 
 

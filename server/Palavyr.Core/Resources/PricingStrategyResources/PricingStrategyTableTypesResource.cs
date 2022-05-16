@@ -1,4 +1,4 @@
-﻿namespace Palavyr.Core.Resources
+﻿namespace Palavyr.Core.Resources.PricingStrategyResources
 {
     public class PricingStrategyTableTypeResource
     {

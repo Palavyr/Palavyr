@@ -1,18 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Mappers;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
 {
-    [Route("api/tables/dynamic/PercentOfThreshold")]
+    [Route("api/tables/dynamic/" + nameof(PercentOfThreshold))]
     [ApiController]
-    public class PercentOfThresholdController : DynamicControllerBase<PercentOfThreshold, PercentOfThresholdResource>
+    public class PercentOfThresholdController : PricingStrategyControllerBase<PercentOfThreshold, PercentOfThresholdResource>
     {
-        public PercentOfThresholdController(
-            IDynamicTableCommandExecutor<PercentOfThreshold> executor,
-            IMapToNew<PercentOfThreshold, PercentOfThresholdResource> entityMapper,
-            IMapToNew<DynamicTableData<PercentOfThreshold>, DynamicTableDataResource<PercentOfThresholdResource>> tableDataMapper) : base(executor, entityMapper, tableDataMapper)
+        public PercentOfThresholdController(IMediator mediator) : base(mediator)
         {
         }
     }
