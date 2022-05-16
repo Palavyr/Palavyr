@@ -38,7 +38,8 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
         }
     }
 
-    public class GetPricingStrategyTableRowsRequest<T, TR> : IRequest<GetPricingStrategyTableRowsResponse<TR>> where TR : IPricingStrategyTableRowResource
+    public class GetPricingStrategyTableRowsRequest<T, TR> : IRequest<GetPricingStrategyTableRowsResponse<TR>> 
+        where TR : IPricingStrategyTableRowResource
     {
         public string IntentId { get; set; }
         public string TableId { get; set; }

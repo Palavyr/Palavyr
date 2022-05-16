@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Sessions;

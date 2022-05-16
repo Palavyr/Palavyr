@@ -12,7 +12,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 {
     public class SavePricingStrategyTableHandler<T, TR> 
         : IRequestHandler<SavePricingStrategyTableRequest<T, TR>, SavePricingStrategyTableResponse<TR>>
-        where T : class, IDynamicTable<T>, IRequest<TR>, new()
+        where T : class, IDynamicTable<T>, new()
         where TR : IPricingStrategyTableRowResource
     {
         private readonly IDynamicTableCommandExecutor<T> executor;

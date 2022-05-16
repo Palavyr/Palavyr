@@ -10,7 +10,6 @@ namespace Palavyr.API.Registration.Container.MediatorModule
         {
             var isRequestHandler = sourceType.IsGenericType &&
                                    (sourceType.GetGenericTypeDefinition() == typeof(IRequestHandler<,>));
-            // || sourceType.GetGenericTypeDefinition() == typeof(IRequestHandler<>));
             if (!isRequestHandler) return next();
 
             var requestType = sourceType.GenericTypeArguments[0];
@@ -22,24 +21,25 @@ namespace Palavyr.API.Registration.Container.MediatorModule
                                         || requestType.GetGenericTypeDefinition() == typeof(SavePricingStrategyTableRequest<,>)
                                     );
             if (!shouldConvertType) return next();
+
             var returnTypeA = requestType.GenericTypeArguments[0];
             var returnTypeB = requestType.GenericTypeArguments[1];
 
             if (requestType.GetGenericTypeDefinition() == typeof(GetPricingStrategyTableRowsRequest<,>))
             {
-                return typeof(GetPricingStrategyTableRowsHandler<,>).MakeGenericType(returnTypeA, requestType.GenericTypeArguments[1]);
+                return typeof(GetPricingStrategyTableRowsHandler<,>).MakeGenericType(returnTypeA, returnTypeB);
             }
             else if (requestType.GetGenericTypeDefinition() == typeof(GetPricingStrategyTableRowTemplateRequest<,>))
             {
-                return typeof(GetPricingStrategyTableRowTemplateHandler<,>).MakeGenericType(returnTypeA, requestType.GenericTypeArguments[1]);
+                return typeof(GetPricingStrategyTableRowTemplateHandler<,>).MakeGenericType(returnTypeA, returnTypeB);
             }
             else if (requestType.GetGenericTypeDefinition() == typeof(DeletePricingStrategyTableRequest<,>))
             {
-                return typeof(DeletePricingStrategyTableHandler<,>).MakeGenericType(returnTypeA);
+                return typeof(DeletePricingStrategyTableHandler<,>).MakeGenericType(returnTypeA, returnTypeB);
             }
             else if (requestType.GetGenericTypeDefinition() == typeof(SavePricingStrategyTableRequest<,>))
             {
-                return typeof(SavePricingStrategyTableHandler<,>).MakeGenericType(returnTypeA, requestType.GenericTypeArguments[1]);
+                return typeof(SavePricingStrategyTableHandler<,>).MakeGenericType(returnTypeA, returnTypeB);
             }
             else
             {

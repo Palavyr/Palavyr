@@ -168,7 +168,7 @@ export class PalavyrRepository {
                     this.client.get<DynamicTableData>(`tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`),
 
                 saveDynamicTable: async <T>(intentId: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) => {
-                    const response = this.client.put<T, {}>(`tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData });
+                    const response = this.client.put<T, {}>(`tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`, { TableTag: tableTag, TableData: tableData });
                     SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
                     return response;
                 },

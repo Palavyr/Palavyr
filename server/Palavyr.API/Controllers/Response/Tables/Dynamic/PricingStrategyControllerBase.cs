@@ -9,7 +9,6 @@ using Palavyr.Core.Requests;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.DynamicTableService;
 
-// you need to write 6 more mappers at the moment. can you change the api so that you dont have to use one of the mapers?
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
     [ApiController]
@@ -19,9 +18,8 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         where TResource : IPricingStrategyTableRowResource, new()
     {
         private readonly IMediator mediator;
-
-        public PricingStrategyControllerBase(
-            IMediator mediator)
+        public const string BaseRoute = "api/tables/dynamic/";
+        public PricingStrategyControllerBase(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -29,9 +27,13 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         [HttpDelete("intent/{intentId}/table/{tableId}")]
         public async Task Delete([FromRoute] string intentId, [FromRoute] string tableId, CancellationToken cancellationToken)
         {
-            await mediator.Publish(new DeletePricingStrategyTableRequest<TEntity, TResource>() { IntentId = intentId, TableId = tableId }, cancellationToken);
+            await mediator.Send(
+                new DeletePricingStrategyTableRequest<TEntity, TResource>()
+                {
+                    IntentId = intentId,
+                    TableId = tableId
+                }, cancellationToken);
         }
-
 
         [HttpPut("intent/{intentId}/table/{tableId}")]
         public async Task<IEnumerable<TResource>> SaveDynamicTable([FromRoute] string intentId, [FromRoute] string tableId, [FromBody] DynamicTable<TEntity> dynamicTable)
@@ -40,11 +42,11 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
                 new SavePricingStrategyTableRequest<TEntity, TResource>()
                 {
                     TableId = tableId,
-                    IntentId = intentId
+                    IntentId = intentId,
+                    DynamicTable = dynamicTable
                 });
             return resource.Resource;
         }
-
 
         [HttpGet("intent/{intentId}/table/{tableId}")]
         public async Task<DynamicTableDataResource<TResource>> GetPricingStrategyTableRows([FromRoute] string intentId, [FromRoute] string tableId)
@@ -61,7 +63,12 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         [HttpGet("intent/{intentId}/table/{tableId}/template")]
         public async Task<TResource> GetDynamicRowTemplate([FromRoute] string intentId, [FromRoute] string tableId)
         {
-            var response = await mediator.Send(new GetPricingStrategyTableRowTemplateRequest<TEntity, TResource>());
+            var response = await mediator.Send(
+                new GetPricingStrategyTableRowTemplateRequest<TEntity, TResource>()
+                {
+                    IntentId = intentId,
+                    TableId = tableId
+                });
             return response.Resource;
         }
     }

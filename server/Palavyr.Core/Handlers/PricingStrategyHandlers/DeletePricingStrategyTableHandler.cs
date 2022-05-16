@@ -9,7 +9,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 {
     public class DeletePricingStrategyTableHandler<T, TR>
         : IRequestHandler<DeletePricingStrategyTableRequest<T, TR>, DeletePricingStrategyTableResponse<TR>>
-        where T : class, IDynamicTable<T>, IRequest<TR>, new()
+        where T : class, IDynamicTable<T>, new()
         where TR : IPricingStrategyTableRowResource
     {
         private readonly IDynamicTableCommandExecutor<T> executor;
@@ -28,18 +28,20 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
         }
     }
 
-    public class DeletePricingStrategyTableRequest<T, TR> : IRequest<DeletePricingStrategyTableResponse<TR>> where T : class
+    public class DeletePricingStrategyTableRequest<T, TR> : IRequest<DeletePricingStrategyTableResponse<TR>>
+        where TR : IPricingStrategyTableRowResource
     {
         public string IntentId { get; set; }
         public string TableId { get; set; }
     }
 
     public class DeletePricingStrategyTableResponse<TR>
+        where TR : IPricingStrategyTableRowResource
+
     {
     }
 
     public class EmptyResponse : IPricingStrategyTableRowResource
     {
-        
     }
 }
