@@ -1,5 +1,4 @@
-﻿using Palavyr.Core.Services.StripeServices.Products;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+﻿using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Stripe;
 using Test.Common.Random;
 
@@ -10,8 +9,6 @@ namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
         private readonly BaseIntegrationFixture test;
         private string subId;
         private string customerId;
-        private TestProductRegistry productRegistry = new TestProductRegistry();
-        private Price price;
         private Subscription sub;
         
         

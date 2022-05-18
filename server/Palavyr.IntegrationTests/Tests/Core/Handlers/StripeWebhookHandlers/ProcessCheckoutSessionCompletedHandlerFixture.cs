@@ -70,7 +70,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
                 ctx =>
                 {
                     var sub = Substitute.For<IStripeSubscriptionRetriever>();
-                    sub.GetSubscription(default).ReturnsForAnyArgs(subscription);
+                    sub.GetSubscription(default!).ReturnsForAnyArgs(subscription);
                     return sub;
                 }).As<IStripeSubscriptionRetriever>();
 

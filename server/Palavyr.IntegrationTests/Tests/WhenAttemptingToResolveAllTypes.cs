@@ -20,7 +20,7 @@ namespace Palavyr.IntegrationTests.Tests
             var allTypes = AppDomain
                 .CurrentDomain
                 .GetAssemblies()
-                .Where(x => x.FullName.Contains("Palavyr"))
+                .Where(x => x.FullName!.Contains("Palavyr"))
                 .SelectMany(x => x.GetTypes())
                 .Where(x => x.IsInterface)
                 .ToList();

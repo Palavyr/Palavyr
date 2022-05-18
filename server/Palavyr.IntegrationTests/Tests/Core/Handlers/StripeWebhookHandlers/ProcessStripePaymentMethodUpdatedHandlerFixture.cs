@@ -31,7 +31,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 
             await handler.Handle(@event, CancellationToken);
 
-            await mockClient.ReceivedWithAnyArgs().SendEmail(default, default, default, default, default);
+            await mockClient.ReceivedWithAnyArgs().SendEmail(default!, default!, default!, default!, default!);
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             var emailRequest = new EmailRequest
             {
                 ConversationId = record.ConversationId,
-                DynamicResponses = null,
+                DynamicResponses = null!,
                 EmailAddress = "test.palavyr@example.com",
                 Name = "Palavyr",
                 Phone = "123456"

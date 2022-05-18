@@ -3,6 +3,8 @@ using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Resources
 {
+    
+    
     public class IntentResource
     {
         public string AreaIdentifier { get; set; }

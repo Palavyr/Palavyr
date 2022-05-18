@@ -32,8 +32,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
     public class StripeWebhookRoutingServiceFixture : InMemoryIntegrationFixture
     {
         private IStripeEventWebhookRoutingService router = null!;
-        private ILogger<IStripeSubscriptionService> logger = null!;
-        private StagingProductRegistry registry = null!;
 
         public StripeWebhookRoutingServiceFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
@@ -251,7 +249,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
         private async Task<Event> WriteAMockEvent(string eventType, IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore, string? signature = null)
         {
             var @event = CreateAMockEvent(eventType);
-            await stripeWebhookStore.AddStripeEvent(@event.Id, signature);
+            await stripeWebhookStore.AddStripeEvent(@event.Id, signature!);
             return @event;
         }
 
@@ -282,7 +280,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
                     return result;
                 }
 
-                return default;
+                return default!;
             }
 
             public async Task<object?> Send(object request, CancellationToken cancellationToken = new CancellationToken())

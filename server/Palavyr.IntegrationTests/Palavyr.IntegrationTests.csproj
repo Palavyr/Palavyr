@@ -4,14 +4,11 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Palavyr.IntegrationTests</RootNamespace>
       <UserSecretsId>d50d54cd-7578-46ae-be18-9c2ea74993b6</UserSecretsId>
+      <Nullable>enable</Nullable>
   </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="6.0.3" />
-        <PackageReference Include="AsyncFixer" Version="1.5.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="FluentValidation" Version="10.3.6" />
         <PackageReference Include="MediatR" Version="9.0.0" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />

@@ -106,7 +106,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
                 ctx =>
                 {
                     var sub = Substitute.For<IStripeCustomerService>();
-                    sub.DeleteStripeTestCustomers(default);
+                    sub.DeleteStripeTestCustomers(default!);
                     return sub;
                 });
         }
