@@ -52,21 +52,20 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             return filtered;
         }
     }
-}
 
-public class DeleteImagesResponse
-{
-    public DeleteImagesResponse(IEnumerable<FileAssetResource> response) => Response = response;
-    public IEnumerable<FileAssetResource> Response { get; set; }
-}
-
-public class DeleteImagesRequest : IRequest<DeleteImagesResponse>
-{
-    public DeleteImagesRequest(string[] fileIds)
+    public class DeleteImagesResponse
     {
-        FileIds = fileIds;
+        public DeleteImagesResponse(IEnumerable<FileAssetResource> response) => Response = response;
+        public IEnumerable<FileAssetResource> Response { get; set; }
     }
 
-    public string[] FileIds { get; set; }
-}
+    public class DeleteImagesRequest : IRequest<DeleteImagesResponse>
+    {
+        public DeleteImagesRequest(string[] fileIds)
+        {
+            FileIds = fileIds;
+        }
 
+        public string[] FileIds { get; set; }
+    }
+}

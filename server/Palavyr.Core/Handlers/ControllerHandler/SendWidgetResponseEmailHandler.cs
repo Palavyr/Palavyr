@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Resources.Requests;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Requests;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.EmailService.EmailResponse;
 using Palavyr.Core.Stores;
 

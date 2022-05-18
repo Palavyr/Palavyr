@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -31,7 +31,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(account.EmailAddress);
 
             account.DefaultEmailIsVerified = verificationResponse.IsVerified();
-            
+
             var response = AccountEmailSettingsResource.CreateNew(
                 account.EmailAddress,
                 verificationResponse.IsVerified(),

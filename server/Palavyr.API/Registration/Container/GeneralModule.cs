@@ -12,7 +12,7 @@ using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Nodes;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AmazonServices;

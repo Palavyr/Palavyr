@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Intents
 {
@@ -17,7 +17,7 @@ namespace Palavyr.API.Controllers.Intents
         }
 
         [HttpPost(Route)]
-        public async Task<Area> Create(
+        public async Task<IntentResource> Create(
             [FromBody]
             CreateIntentRequest request,
             CancellationToken cancellationToken)

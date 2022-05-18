@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Intents
 {
@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.Intents
         }
 
         [HttpGet(Route)]
-        public async Task<List<Area>> Get(CancellationToken cancellationToken)
+        public async Task<IEnumerable<IntentResource>> Get(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetAllAreasRequest(), cancellationToken);
             return response.Response;

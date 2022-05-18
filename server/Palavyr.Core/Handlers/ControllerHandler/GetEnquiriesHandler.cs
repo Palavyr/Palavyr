@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.ConversationServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler

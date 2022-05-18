@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Services.StripeServices.Products;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Payments.Products
 {
@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.Payments.Products
         }
 
         [HttpGet(Route)]
-        public async Task<ProductIds> Get(CancellationToken cancellationToken)
+        public async Task<ProductIdResource> Get(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetProductIdsRequest(), cancellationToken);
             return response.Response;

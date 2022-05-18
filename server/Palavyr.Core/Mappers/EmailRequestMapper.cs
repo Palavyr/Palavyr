@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Resources.Requests;
+using Palavyr.Core.Requests;
 
 namespace Palavyr.Core.Mappers
 {

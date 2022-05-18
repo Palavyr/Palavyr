@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.Core.Mappers

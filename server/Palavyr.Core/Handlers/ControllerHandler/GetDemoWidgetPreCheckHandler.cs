@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 

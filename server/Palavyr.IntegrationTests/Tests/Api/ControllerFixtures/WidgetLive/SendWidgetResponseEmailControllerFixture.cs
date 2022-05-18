@@ -2,8 +2,8 @@
 using Autofac;
 using Palavyr.API.Controllers.WidgetLive;
 using Palavyr.Core.Models;
-using Palavyr.Core.Resources.Requests;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Requests;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;

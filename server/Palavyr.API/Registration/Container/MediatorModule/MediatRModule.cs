@@ -14,7 +14,7 @@ namespace Palavyr.API.Registration.Container.MediatorModule
             serviceCollection
                 .AddMediatR(assemblies.ToArray())
                 .AddTransient<IMediatorServiceTypeConverter, TestConverter>()
-                .AddTransient<ServiceFactory>(
+                .AddTransient(
                     sp =>
                         MediatorServiceFactory.Wrap(sp.GetService, sp.GetServices<IMediatorServiceTypeConverter>()))
                 .AddTransient(typeof(GetPricingStrategyTableRowsHandler<,>))

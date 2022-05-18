@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.Core.Services.AccountServices
 {

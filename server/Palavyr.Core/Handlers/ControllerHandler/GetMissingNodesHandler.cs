@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Nodes;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -45,15 +45,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var requiredDynamicNodeTypes = await requiredNodeCalculator.FindRequiredNodes(area);
             var allMissingNodeTypeNames = missingNodeCalculator.CalculateMissingNodes(requiredDynamicNodeTypes.ToArray(), request.Transactions, dynamicTableMetas, staticTableMetas);
             var nodeOrderCheckResult = nodeOrderChecker.AllDynamicTypesAreOrderedCorrectlyByResolveOrder(request.Transactions.ToArray());
-            var errorResponse = new TreeErrorsResponse(allMissingNodeTypeNames, nodeOrderCheckResult.ConcatenatedNodeTypes.ToArray());
+            var errorResponse = new TreeErrorsResource(allMissingNodeTypeNames, nodeOrderCheckResult.ConcatenatedNodeTypes.ToArray());
             return new GetMissingNodesResponse(errorResponse);
         }
     }
 
     public class GetMissingNodesResponse
     {
-        public GetMissingNodesResponse(TreeErrorsResponse response) => Response = response;
-        public TreeErrorsResponse Response { get; set; }
+        public GetMissingNodesResponse(TreeErrorsResource resource) => Resource = resource;
+        public TreeErrorsResource Resource { get; set; }
     }
 
     public class GetMissingNodesRequest : IRequest<GetMissingNodesResponse>

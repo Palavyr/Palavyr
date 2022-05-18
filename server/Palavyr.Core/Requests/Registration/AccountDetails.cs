@@ -1,4 +1,4 @@
-﻿namespace Palavyr.Core.Resources.Requests.Registration
+﻿namespace Palavyr.Core.Requests.Registration
 {
     public class AccountDetails
     {

@@ -1,5 +1,5 @@
 ﻿#nullable enable
-namespace Palavyr.Core.Resources.Requests
+namespace Palavyr.Core.Requests
 {
     public class LoginCredentialsRequest
     {

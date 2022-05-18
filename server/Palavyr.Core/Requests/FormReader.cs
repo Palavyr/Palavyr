@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Palavyr.Core.Resources.Requests
+namespace Palavyr.Core.Requests
 {
     public class FormReader
     {

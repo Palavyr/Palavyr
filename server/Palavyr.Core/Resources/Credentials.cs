@@ -1,4 +1,4 @@
-﻿namespace Palavyr.Core.Resources.Responses
+﻿namespace Palavyr.Core.Resources
 {
     public class Credentials
     {

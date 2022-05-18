@@ -2,9 +2,9 @@
 
 namespace Palavyr.Core.Services.AccountServices.PlanTypes
 {
-    public class FreePlanTypeMetaBase : PlanTypeMetaBase
+    public class FreePlanTypeMeta : PlanTypeMetaBase
     {
-        public FreePlanTypeMetaBase()
+        public FreePlanTypeMeta()
         {
             AllowedAttachments = 0;
             AllowedStaticTables = 1;
@@ -21,9 +21,9 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class LytePlanTypeMetaBase : PlanTypeMetaBase
+    public class LytePlanTypeMeta : PlanTypeMetaBase
     {
-        public LytePlanTypeMetaBase()
+        public LytePlanTypeMeta()
         {
             AllowedAttachments = 0;
             AllowedStaticTables = 2;
@@ -40,9 +40,9 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class PremiumPlanTypeMetaBase : PlanTypeMetaBase
+    public class PremiumPlanTypeMeta : PlanTypeMetaBase
     {
-        public PremiumPlanTypeMetaBase()
+        public PremiumPlanTypeMeta()
         {
             AllowedAttachments = 2;
             AllowedStaticTables = 2;
@@ -59,9 +59,9 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class ProPlanTypeMetaBase : PlanTypeMetaBase
+    public class ProPlanTypeMeta : PlanTypeMetaBase
     {
-        public ProPlanTypeMetaBase()
+        public ProPlanTypeMeta()
         {
             AllowedAttachments = 999999;
             AllowedStaticTables = 999999;
@@ -72,7 +72,7 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
             AllowedEmailNotifications = true;
             AllowedInlineEmailEditor = true;
             AllowedSmsNotifications = true;
-            
+
             PlanType = Account.PlanTypeEnum.Pro.ToString();
             IsFreePlan = false;
         }

@@ -34,19 +34,19 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
             var planType = await planTypeRetriever.GetCurrentPlanType();
             if (planType == Account.PlanTypeEnum.Free.ToString())
             {
-                return new FreePlanTypeMetaBase();
+                return new FreePlanTypeMeta();
             }
             else if (planType == Account.PlanTypeEnum.Lyte.ToString())
             {
-                return new LytePlanTypeMetaBase();
+                return new LytePlanTypeMeta();
             }
             else if (planType == Account.PlanTypeEnum.Premium.ToString())
             {
-                return new PremiumPlanTypeMetaBase();
+                return new PremiumPlanTypeMeta();
             }
             else if (planType == Account.PlanTypeEnum.Pro.ToString())
             {
-                return new ProPlanTypeMetaBase();
+                return new ProPlanTypeMeta();
             }
             else
             {

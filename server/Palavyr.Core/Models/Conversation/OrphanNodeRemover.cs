@@ -6,12 +6,12 @@ namespace Palavyr.Core.Models.Conversation
 {
     public interface IOrphanRemover
     {
-        List<ConversationNode> RemoveOrphanedNodes(List<ConversationNode> conversationNodes);
+        List<ConversationNode> RemoveOrphanedNodes(IEnumerable<ConversationNode> conversationNodes);
     }
 
     public class OrphanRemover : IOrphanRemover
     {
-        public List<ConversationNode> RemoveOrphanedNodes(List<ConversationNode> conversationNodes)
+        public List<ConversationNode> RemoveOrphanedNodes(IEnumerable<ConversationNode> conversationNodes)
         {
             var uniqueReferences = CompileAllReferences(conversationNodes);
             
@@ -32,7 +32,7 @@ namespace Palavyr.Core.Models.Conversation
             return uniqueReferences.Contains(node.NodeId);
         }
 
-        private string[] CompileAllReferences(List<ConversationNode> conversation)
+        private string[] CompileAllReferences(IEnumerable<ConversationNode> conversation)
         {
             var references = new List<string>();
             foreach (var conversationNode in conversation)

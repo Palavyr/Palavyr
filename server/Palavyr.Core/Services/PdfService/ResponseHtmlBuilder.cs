@@ -5,11 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Requests;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.PdfService.PdfSections;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
-using Palavyr.Core.Resources.Requests;
-using Palavyr.Core.Resources.Responses;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 

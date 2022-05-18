@@ -1,7 +1,7 @@
 using Palavyr.Core.Mappers;
 
 #nullable enable
-namespace Palavyr.Core.Resources.Responses
+namespace Palavyr.Core.Resources
 {
     public class SendLiveEmailResultResource
     {

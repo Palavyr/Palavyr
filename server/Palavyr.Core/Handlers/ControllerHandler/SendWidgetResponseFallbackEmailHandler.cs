@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Resources.Requests;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Requests;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.EmailService.EmailResponse;
 
 namespace Palavyr.Core.Handlers.ControllerHandler

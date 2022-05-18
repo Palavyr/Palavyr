@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Palavyr.Core.Models.Aliases;
 
-namespace Palavyr.Core.Resources.Requests
+namespace Palavyr.Core.Requests
 {
     public class EmailRequest
     {

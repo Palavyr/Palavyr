@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -17,7 +18,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet(Route)]
-        public async Task<PlanStatus> Get(CancellationToken cancellationToken)
+        public async Task<PlanStatusResource> Get(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetCurrentPlanRequest(), cancellationToken);
             return response.Response;

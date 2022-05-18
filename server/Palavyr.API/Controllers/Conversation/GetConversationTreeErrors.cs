@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Conversation
 {
@@ -20,13 +20,13 @@ namespace Palavyr.API.Controllers.Conversation
         }
 
         [HttpPost(Route)]
-        public async Task<TreeErrorsResponse> Get(
+        public async Task<TreeErrorsResource> Get(
             [FromBody]
             GetMissingNodesRequest request,
             CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);
-            return response.Response;
+            return response.Resource;
         }
     }
 }

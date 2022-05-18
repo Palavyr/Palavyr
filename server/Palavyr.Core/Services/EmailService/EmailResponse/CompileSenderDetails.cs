@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Resources.Requests;
-using Palavyr.Core.Resources.Responses;
+using Palavyr.Core.Requests;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 

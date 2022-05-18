@@ -1,13 +1,13 @@
 ﻿#nullable enable
-namespace Palavyr.Core.Resources.Responses
+namespace Palavyr.Core.Resources
 {
-    public class TreeErrorsResponse
+    public class TreeErrorsResource
     {
         public string[] MissingNodes { get; set; }
         public string[] OutOfOrder { get; set; }
         public bool AnyErrors { get; set; }
 
-        public TreeErrorsResponse(string[] missingNodes, string[]? outOfOrder)
+        public TreeErrorsResource(string[] missingNodes, string[]? outOfOrder)
         {
             MissingNodes = missingNodes;
             OutOfOrder = outOfOrder ?? new string[] { };

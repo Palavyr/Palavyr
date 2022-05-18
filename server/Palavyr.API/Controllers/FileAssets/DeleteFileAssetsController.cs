@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Mappers;
 
 namespace Palavyr.API.Controllers.FileAssets

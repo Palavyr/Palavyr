@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
@@ -15,17 +17,20 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private readonly ILogger<CreateIntentHandler> logger;
         private readonly IAccountIdTransport accountIdTransport;
         private readonly IEntityStore<Area> intentStore;
+        private readonly IMapToNew<Area, IntentResource> mapper;
 
         public CreateIntentHandler(
             IEntityStore<Account> accountStore,
             ILogger<CreateIntentHandler> logger,
             IAccountIdTransport accountIdTransport,
-            IEntityStore<Area> intentStore)
+            IEntityStore<Area> intentStore,
+            IMapToNew<Area, IntentResource> mapper)
         {
             this.accountStore = accountStore;
             this.logger = logger;
             this.accountIdTransport = accountIdTransport;
             this.intentStore = intentStore;
+            this.mapper = mapper;
         }
 
         public async Task<CreateIntentResponse> Handle(CreateIntentRequest request, CancellationToken cancellationToken)
@@ -39,21 +44,24 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var newIntent = Area.CreateNewArea(request.AreaName, accountIdTransport.AccountId, defaultEmail, isVerified);
             var intent = await intentStore.Create(newIntent);
 
-            return new CreateIntentResponse(intent);
+            var resource = await mapper.Map(intent);
+            return new CreateIntentResponse(resource);
         }
     }
-    
+
     public class CreateIntentRequest : IRequest<CreateIntentResponse>
     {
         public string AreaName { get; set; }
     }
-    
-    public class UpdateIntentNameRequest : CreateIntentRequest {} 
+
+    public class UpdateIntentNameRequest : CreateIntentRequest
+    {
+    }
 
     public class CreateIntentResponse
     {
-        public readonly Area Response;
+        public readonly IntentResource Response;
 
-        public CreateIntentResponse(Area response) => Response = response;
+        public CreateIntentResponse(IntentResource response) => Response = response;
     }
 }
