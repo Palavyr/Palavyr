@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Resources;
 using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers

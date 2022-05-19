@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Models.Nodes
 {
@@ -14,11 +14,11 @@ namespace Palavyr.Core.Models.Nodes
 
     public class RequiredNodeCalculator : IRequiredNodeCalculator
     {
-        private readonly IDynamicTableCompilerRetriever dynamicTableCompilerRetriever;
+        private readonly IPricingStrategyTableCompilerRetriever pricingStrategyTableCompilerRetriever;
 
-        public RequiredNodeCalculator(IDynamicTableCompilerRetriever dynamicTableCompilerRetriever)
+        public RequiredNodeCalculator(IPricingStrategyTableCompilerRetriever pricingStrategyTableCompilerRetriever)
         {
-            this.dynamicTableCompilerRetriever = dynamicTableCompilerRetriever;
+            this.pricingStrategyTableCompilerRetriever = pricingStrategyTableCompilerRetriever;
         }
 
         bool CheckForPerIndividual(Area area)
@@ -40,7 +40,7 @@ namespace Palavyr.Core.Models.Nodes
 
             foreach (var dynamicTableMeta in area.DynamicTableMetas)
             {
-                var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(dynamicTableMeta.TableType);
+                var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(dynamicTableMeta.TableType);
                 await compiler.CompileToConfigurationNodes(dynamicTableMeta, allRequiredNodes);
             }
 

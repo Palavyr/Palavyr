@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 using Shouldly;
 using Test.Common;
 using Test.Common.ExtensionsMethods;
 using Xunit;
 
-namespace PalavyrServer.UnitTests.Core.Services.DynamicTableService
+namespace PalavyrServer.UnitTests.Core.Services.PricingStrategyServices
 {
     public class ConversationOptionSplitterFixture : IAsyncLifetime, IUnitTestFixture
     {
@@ -15,7 +15,7 @@ namespace PalavyrServer.UnitTests.Core.Services.DynamicTableService
         [Fact]
         public void WhenAListOfValueOptionsAreProvided_TheyAreJoinedCorrectly()
         {
-            var options = new[] {"Option1", "Option2", "Option3"};
+            var options = new[] { "Option1", "Option2", "Option3" };
 
             var result = splitter.JoinValueOptions(options);
 
@@ -25,7 +25,7 @@ namespace PalavyrServer.UnitTests.Core.Services.DynamicTableService
         [Fact]
         public void WhenAListOfOptionValuesAreProvide_AndAnOptionIsEmpty_ThatOptionShouldNotBeIncluded()
         {
-            var options = new[] {"Option1", "", "Option3"};
+            var options = new[] { "Option1", "", "Option3" };
 
             var result = splitter.JoinValueOptions(options);
 
@@ -39,7 +39,7 @@ namespace PalavyrServer.UnitTests.Core.Services.DynamicTableService
 
             var result = splitter.SplitValueOptions(options);
 
-            result.ShouldBe(new[] {"Option1", "Option2", "Option3,Test"});
+            result.ShouldBe(new[] { "Option1", "Option2", "Option3,Test" });
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace PalavyrServer.UnitTests.Core.Services.DynamicTableService
             var guid = StaticGuidUtils.CreateNewId();
             var sut = "wow-" + guid;
             var result = splitter.GetTableIdFromDynamicNodeType(sut);
-            
+
             result.ShouldBe(guid);
         }
 

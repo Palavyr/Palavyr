@@ -1,6 +1,6 @@
 ﻿using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Nodes;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Test.Common.ExtensionsMethods
 {

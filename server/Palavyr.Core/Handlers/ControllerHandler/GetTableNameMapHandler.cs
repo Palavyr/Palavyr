@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Resources;
 using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Handlers.ControllerHandler

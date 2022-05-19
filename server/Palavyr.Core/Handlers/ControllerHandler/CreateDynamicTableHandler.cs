@@ -9,6 +9,7 @@ using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -17,14 +18,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class CreateDynamicTableHandler : IRequestHandler<CreateDynamicTableRequest, CreateDynamicTableResponse>
     {
-        private readonly IMapToNew<DynamicTableMeta, DynamicTableMetaResource> mapper;
+        private readonly IMapToNew<DynamicTableMeta, PricingStrategyTableMetaResource> mapper;
         private readonly IEntityStore<SelectOneFlat> selectOneFlatStore;
         private readonly IEntityStore<Area> intentStore;
         private readonly ILogger<CreateDynamicTableHandler> logger;
         private readonly IAccountIdTransport accountIdTransport;
 
         public CreateDynamicTableHandler(
-            IMapToNew<DynamicTableMeta, DynamicTableMetaResource> mapper,
+            IMapToNew<DynamicTableMeta, PricingStrategyTableMetaResource> mapper,
             IEntityStore<SelectOneFlat> selectOneFlatStore,
             IEntityStore<Area> intentStore,
             ILogger<CreateDynamicTableHandler> logger,
@@ -71,8 +72,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class CreateDynamicTableResponse
     {
-        public CreateDynamicTableResponse(DynamicTableMetaResource response) => Response = response;
-        public DynamicTableMetaResource Response { get; set; }
+        public CreateDynamicTableResponse(PricingStrategyTableMetaResource response) => Response = response;
+        public PricingStrategyTableMetaResource Response { get; set; }
     }
 
     public class CreateDynamicTableRequest : IRequest<CreateDynamicTableResponse>

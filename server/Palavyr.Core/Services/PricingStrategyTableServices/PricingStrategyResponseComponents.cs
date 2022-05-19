@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using Palavyr.Core.Models.Aliases;
 
-namespace Palavyr.Core.Services.DynamicTableService
+namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
-    public class DynamicResponseComponents
+    public class PricingStrategyResponseComponents
     {
-        public IDynamicTablesCompiler Compiler { get; }
+        public IPricingStrategyTableCompiler Compiler { get; }
         public DynamicResponseParts Responses { get; }
         public string DynamicTableName { get; }
         public List<string> DynamicTableKeys { get; }
 
-        public DynamicResponseComponents(IDynamicTablesCompiler compiler, DynamicResponseParts responses, string dynamicTableName, List<string> dynamicTableKeys)
+        public PricingStrategyResponseComponents(IPricingStrategyTableCompiler compiler, DynamicResponseParts responses, string dynamicTableName, List<string> dynamicTableKeys)
         {
             Compiler = compiler;
             Responses = responses;

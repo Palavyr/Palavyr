@@ -3,19 +3,19 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources.PricingStrategyResources;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 {
     public class DeletePricingStrategyTableHandler<T, TR>
         : IRequestHandler<DeletePricingStrategyTableRequest<T, TR>, DeletePricingStrategyTableResponse<TR>>
-        where T : class, IDynamicTable<T>, new()
+        where T : class, IPricingStrategyTable<T>, new()
         where TR : IPricingStrategyTableRowResource
     {
-        private readonly IDynamicTableCommandExecutor<T> executor;
+        private readonly IPricingStrategyTableCommandExecutor<T> executor;
 
         public DeletePricingStrategyTableHandler(
-            IDynamicTableCommandExecutor<T> executor
+            IPricingStrategyTableCommandExecutor<T> executor
         )
         {
             this.executor = executor;
@@ -23,7 +23,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 
         public async Task<DeletePricingStrategyTableResponse<TR>> Handle(DeletePricingStrategyTableRequest<T, TR> notification, CancellationToken cancellationToken)
         {
-            await executor.DeleteDynamicTable(notification.IntentId, notification.TableId);
+            await executor.DeleteTable(notification.IntentId, notification.TableId);
             return new DeletePricingStrategyTableResponse<TR>(); // This returns nothing. It just facilitates the registration...
         }
     }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.Units;
 using Palavyr.Core.Stores;
 
@@ -35,7 +35,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                     x =>
                     {
                         var unitDefinition = unitRetriever.GetUnitDefinitionById(x.UnitId);
-                        return new DynamicTableMetaResource
+                        return new PricingStrategyTableMetaResource
                         {
                             Id = x.Id,
                             TableTag = x.TableTag,
@@ -58,8 +58,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetDynamicTableMetasResponse
     {
-        public GetDynamicTableMetasResponse(DynamicTableMetaResource[] response) => Response = response;
-        public DynamicTableMetaResource[] Response { get; set; }
+        public GetDynamicTableMetasResponse(PricingStrategyTableMetaResource[] response) => Response = response;
+        public PricingStrategyTableMetaResource[] Response { get; set; }
     }
 
     public class GetDynamicTableMetasRequest : IRequest<GetDynamicTableMetasResponse>

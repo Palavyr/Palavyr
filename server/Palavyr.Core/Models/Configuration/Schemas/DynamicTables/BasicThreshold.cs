@@ -5,7 +5,7 @@ using Palavyr.Core.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class BasicThreshold : Entity, IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange, IOrderableThreshold, IHaveAccountId
+    public class BasicThreshold : Entity, IOrderedTable, IPricingStrategyTable<BasicThreshold>, IHaveRange, IOrderableThreshold, IHaveAccountId
     {
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
@@ -61,7 +61,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             };
         }
 
-        public List<BasicThreshold> UpdateTable(DynamicTable<BasicThreshold> table)
+        public List<BasicThreshold> UpdateTable(PricingStrategyTable<BasicThreshold> table)
         {
             var mappedTableRows = new List<BasicThreshold>();
             foreach (var row in table.TableData)

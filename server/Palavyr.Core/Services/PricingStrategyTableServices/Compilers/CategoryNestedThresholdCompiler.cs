@@ -11,15 +11,15 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Requests;
-using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Services.PricingStrategyTableServices.Thresholds;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
-namespace Palavyr.Core.Services.DynamicTableService.Compilers
+namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 {
-    public interface ICategoryNestedThresholdCompiler : IDynamicTablesCompiler
+    public interface ICategoryNestedThresholdCompiler : IPricingStrategyTableCompiler
     {
     }
 
@@ -59,7 +59,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return categories;
         }
 
-        public async Task UpdateConversationNode<TEntity>(DynamicTable<TEntity> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<TEntity>(PricingStrategyTable<TEntity> table, string tableId, string areaIdentifier)
         {
             var category = GetCategories(table.TableData as List<CategoryNestedThreshold>);
 
@@ -151,19 +151,19 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             };
         }
 
-        public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
+        public async Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents pricingStrategyResponseComponents)
         {
             if (node.ResolveOrder == 0)
             {
                 return false;
             }
 
-            var convoNodeIds = CollectNodeIds(dynamicResponseComponents);
+            var convoNodeIds = CollectNodeIds(pricingStrategyResponseComponents);
 
             var convoNodes = await convoNodeStore.GetMany(convoNodeIds.ToArray(), c => c.NodeId);
             var categoryNode = convoNodes.Single(x => x.ResolveOrder == 0);
 
-            var categoryResponse = dynamicResponseComponents.Responses
+            var categoryResponse = pricingStrategyResponseComponents.Responses
                 .Single(x => x.ContainsKey(categoryNode.NodeId!))
                 .Values.Single();
 
@@ -224,10 +224,10 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
         }
 
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(DynamicTable<TEntity> dynamicTable)
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(PricingStrategyTable<TEntity> pricingStrategyTable)
         {
-            var table = dynamicTable.TableData;
-            var tableTag = dynamicTable.TableTag;
+            var table = pricingStrategyTable.TableData;
+            var tableTag = pricingStrategyTable.TableTag;
             return ValidationLogic(table as List<CategoryNestedThreshold>, tableTag);
         }
 
@@ -261,10 +261,10 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return await GetAllRowsMatchingResponseId(dynamicResponseId);
         }
 
-        List<string> CollectNodeIds(DynamicResponseComponents dynamicResponseComponents)
+        List<string> CollectNodeIds(PricingStrategyResponseComponents pricingStrategyResponseComponents)
         {
             var nodeIds = new List<string>();
-            foreach (var response in dynamicResponseComponents.Responses)
+            foreach (var response in pricingStrategyResponseComponents.Responses)
             {
                 nodeIds.AddRange(response.Keys);
             }

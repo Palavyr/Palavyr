@@ -13,9 +13,9 @@ using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Stores;
 
-namespace Palavyr.Core.Services.DynamicTableService.Compilers
+namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 {
-    public interface ITwoNestedCategoryCompiler : IDynamicTablesCompiler
+    public interface ITwoNestedCategoryCompiler : IPricingStrategyTableCompiler
     {
     }
 
@@ -66,7 +66,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         }
 
 
-        public Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
+        public Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents pricingStrategyResponseComponents)
         {
             return Task.FromResult(false);
         }
@@ -110,10 +110,10 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
         }
 
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<T>(DynamicTable<T> dynamicTable)
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<T>(PricingStrategyTable<T> pricingStrategyTable)
         {
-            var table = dynamicTable.TableData as List<TwoNestedCategory>;
-            var tableTag = dynamicTable.TableTag;
+            var table = pricingStrategyTable.TableData as List<TwoNestedCategory>;
+            var tableTag = pricingStrategyTable.TableTag;
             return ValidationLogic(table, tableTag);
         }
 
@@ -164,7 +164,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             };
         }
 
-        public async Task UpdateConversationNode<T>(DynamicTable<T> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(PricingStrategyTable<T> table, string tableId, string areaIdentifier)
         {
             var update = table.TableData as List<TwoNestedCategory>;
 

@@ -1,14 +1,15 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.Core.Mappers
 {
-    public class PricingStrategyMetaResourceMapper : IMapToNew<DynamicTableMeta, DynamicTableMetaResource>
+    public class PricingStrategyMetaResourceMapper : IMapToNew<DynamicTableMeta, PricingStrategyTableMetaResource>
     {
-        public async Task<DynamicTableMetaResource> Map(DynamicTableMeta @from)
+        public async Task<PricingStrategyTableMetaResource> Map(DynamicTableMeta @from)
         {
             await Task.CompletedTask;
-            return new DynamicTableMetaResource()
+            return new PricingStrategyTableMetaResource()
             {
                 TableId = @from.TableId,
                 TableType = @from.TableType,

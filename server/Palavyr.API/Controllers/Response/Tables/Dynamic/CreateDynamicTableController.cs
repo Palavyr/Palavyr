@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
@@ -19,7 +20,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpPost(Route)]
-        public async Task<DynamicTableMetaResource> Create(
+        public async Task<PricingStrategyTableMetaResource> Create(
             [FromRoute]
             string intentId,
             CancellationToken cancellationToken)

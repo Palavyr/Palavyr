@@ -3,24 +3,24 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class PerformInternalCheckHandler : IRequestHandler<PerformInternalCheckRequest, PerformInternalCheckResponse>
     {
-        private readonly IDynamicResponseComponentExtractor dynamicResponseComponentExtractor;
+        private readonly IPricingStrategyResponseComponentExtractor pricingStrategyResponseComponentExtractor;
 
         public PerformInternalCheckHandler(
-            IDynamicResponseComponentExtractor dynamicResponseComponentExtractor
+            IPricingStrategyResponseComponentExtractor pricingStrategyResponseComponentExtractor
         )
         {
-            this.dynamicResponseComponentExtractor = dynamicResponseComponentExtractor;
+            this.pricingStrategyResponseComponentExtractor = pricingStrategyResponseComponentExtractor;
         }
 
         public async Task<PerformInternalCheckResponse> Handle(PerformInternalCheckRequest request, CancellationToken cancellationToken)
         {
-            var dynamicResponseComponents = dynamicResponseComponentExtractor
+            var dynamicResponseComponents = pricingStrategyResponseComponentExtractor
                 .ExtractDynamicTableComponents(request.CurrentDynamicResponseState);
             var result = await dynamicResponseComponents.Compiler.PerformInternalCheck(
                 request.Node,

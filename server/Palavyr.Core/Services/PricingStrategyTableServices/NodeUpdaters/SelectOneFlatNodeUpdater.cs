@@ -8,7 +8,7 @@ using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Sessions;
 
-namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
+namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
 {
     public interface ISelectOneFlatNodeUpdater
     {

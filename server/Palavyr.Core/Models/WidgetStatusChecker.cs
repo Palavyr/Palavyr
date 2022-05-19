@@ -7,7 +7,7 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Resources;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -25,7 +25,7 @@ namespace Palavyr.Core.Models
     public class WidgetStatusChecker : IWidgetStatusChecker
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IDynamicTableCompilerOrchestrator orchestrator;
+        private readonly IPricingStrategyTableCompilerOrchestrator orchestrator;
         private readonly IRequiredNodeCalculator requiredNodeCalculator;
         private readonly IMissingNodeCalculator missingNodeCalculator;
         private readonly INodeOrderChecker nodeOrderChecker;
@@ -36,7 +36,7 @@ namespace Palavyr.Core.Models
 
         public WidgetStatusChecker(
             IEntityStore<ConversationNode> convoNodeStore,
-            IDynamicTableCompilerOrchestrator orchestrator,
+            IPricingStrategyTableCompilerOrchestrator orchestrator,
             IRequiredNodeCalculator requiredNodeCalculator,
             IMissingNodeCalculator missingNodeCalculator,
             INodeOrderChecker nodeOrderChecker,

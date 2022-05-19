@@ -5,7 +5,7 @@ using Palavyr.Core.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class TwoNestedCategory : Entity, IOrderedTable, IDynamicTable<TwoNestedCategory>, IHaveRange, IMultiItem, IHaveAccountId
+    public class TwoNestedCategory : Entity, IOrderedTable, IPricingStrategyTable<TwoNestedCategory>, IHaveRange, IMultiItem, IHaveAccountId
     {
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
@@ -71,7 +71,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             };
         }
 
-        public List<TwoNestedCategory> UpdateTable(DynamicTable<TwoNestedCategory> table)
+        public List<TwoNestedCategory> UpdateTable(PricingStrategyTable<TwoNestedCategory> table)
         {
             var mappedTableRows = new List<TwoNestedCategory>();
             foreach (var row in table.TableData)

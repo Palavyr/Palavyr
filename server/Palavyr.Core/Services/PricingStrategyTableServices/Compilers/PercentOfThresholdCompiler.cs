@@ -8,14 +8,14 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Requests;
-using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Services.PricingStrategyTableServices.Thresholds;
 using Palavyr.Core.Stores;
 
-namespace Palavyr.Core.Services.DynamicTableService.Compilers
+namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 {
-    public interface IPercentOfThresholdCompiler : IDynamicTablesCompiler
+    public interface IPercentOfThresholdCompiler : IPricingStrategyTableCompiler
     {
     }
 
@@ -37,7 +37,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task UpdateConversationNode<T>(DynamicTable<T> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(PricingStrategyTable<T> table, string tableId, string areaIdentifier)
         {
             await Task.CompletedTask;
         }
@@ -108,7 +108,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return tableRows;
         }
 
-        public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents _)
+        public async Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents _)
         {
             var currentResponseAsDouble = double.Parse(response);
             var records = await repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
@@ -161,10 +161,10 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
         }
 
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(DynamicTable<TEntity> dynamicTable)
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(PricingStrategyTable<TEntity> pricingStrategyTable)
         {
-            var table = dynamicTable.TableData as List<PercentOfThreshold>;
-            var tableTag = dynamicTable.TableTag;
+            var table = pricingStrategyTable.TableData as List<PercentOfThreshold>;
+            var tableTag = pricingStrategyTable.TableTag;
             return ValidationLogic(table, tableTag);
         }
 

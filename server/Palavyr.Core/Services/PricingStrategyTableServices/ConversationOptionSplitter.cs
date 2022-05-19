@@ -3,7 +3,7 @@ using System.Linq;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Constant;
 
-namespace Palavyr.Core.Services.DynamicTableService
+namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
     public interface IConversationOptionSplitter
     {

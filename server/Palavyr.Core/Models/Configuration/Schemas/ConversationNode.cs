@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {

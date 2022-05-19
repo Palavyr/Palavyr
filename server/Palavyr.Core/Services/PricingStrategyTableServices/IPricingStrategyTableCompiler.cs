@@ -7,18 +7,18 @@ using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
-namespace Palavyr.Core.Services.DynamicTableService
+namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
-    public interface IDynamicTablesCompiler
+    public interface IPricingStrategyTableCompiler
     {
-        Task UpdateConversationNode<TEntity>(DynamicTable<TEntity> table, string tableId, string areaIdentifier);
+        Task UpdateConversationNode<TEntity>(PricingStrategyTable<TEntity> table, string tableId, string areaIdentifier);
 
         Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOptionResource> nodes);
 
         Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture);
-        Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents);
+        Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents pricingStrategyResponseComponents);
 
-        PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(DynamicTable<TEntity> dynamicTable);
+        PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(PricingStrategyTable<TEntity> pricingStrategyTable);
         Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta);
         Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture);
     }

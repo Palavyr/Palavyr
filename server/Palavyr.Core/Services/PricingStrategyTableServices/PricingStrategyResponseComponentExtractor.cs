@@ -4,20 +4,20 @@ using System.Linq;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 
-namespace Palavyr.Core.Services.DynamicTableService
+namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
-    public interface IDynamicResponseComponentExtractor
+    public interface IPricingStrategyResponseComponentExtractor
     {
-        DynamicResponseComponents ExtractDynamicTableComponents(DynamicResponse dynamicResponse);
+        PricingStrategyResponseComponents ExtractDynamicTableComponents(DynamicResponse dynamicResponse);
     }
 
-    public class DynamicResponseComponentExtractor : IDynamicResponseComponentExtractor
+    public class PricingStrategyResponseComponentExtractor : IPricingStrategyResponseComponentExtractor
     {
-        private readonly IDynamicTableCompilerRetriever dynamicTableCompilerRetriever;
+        private readonly IPricingStrategyTableCompilerRetriever pricingStrategyTableCompilerRetriever;
 
-        public DynamicResponseComponentExtractor(IDynamicTableCompilerRetriever dynamicTableCompilerRetriever)
+        public PricingStrategyResponseComponentExtractor(IPricingStrategyTableCompilerRetriever pricingStrategyTableCompilerRetriever)
         {
-            this.dynamicTableCompilerRetriever = dynamicTableCompilerRetriever;
+            this.pricingStrategyTableCompilerRetriever = pricingStrategyTableCompilerRetriever;
         }
 
         List<string> GetTableKeys(DynamicResponse dynamicResponse)
@@ -33,15 +33,15 @@ namespace Palavyr.Core.Services.DynamicTableService
             return tableKey.Split(Delimiters.DynamicTableKeyDelimiter).First();
         }
         
-        public DynamicResponseComponents ExtractDynamicTableComponents(DynamicResponse dynamicResponse)
+        public PricingStrategyResponseComponents ExtractDynamicTableComponents(DynamicResponse dynamicResponse)
         {
             var dynamicTableKeys = GetTableKeys(dynamicResponse);
             
             var responses = dynamicResponse[dynamicTableKeys.Single()];
             var dynamicTableName = GetDynamicTableName(dynamicTableKeys.Single());
-            var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(dynamicTableName);
+            var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(dynamicTableName);
 
-            return new DynamicResponseComponents(compiler, responses, dynamicTableName, dynamicTableKeys);
+            return new PricingStrategyResponseComponents(compiler, responses, dynamicTableName, dynamicTableKeys);
         }
     }
 }

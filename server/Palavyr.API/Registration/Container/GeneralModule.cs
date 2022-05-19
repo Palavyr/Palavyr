@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Autofac;
-using MediatR;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Handlers.PricingStrategyHandlers;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -22,10 +18,6 @@ using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Services.ConversationServices;
 using Palavyr.Core.Services.Deletion;
-using Palavyr.Core.Services.DynamicTableService;
-using Palavyr.Core.Services.DynamicTableService.Compilers;
-using Palavyr.Core.Services.DynamicTableService.NodeUpdaters;
-using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.EmailService.EmailResponse;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
@@ -36,6 +28,10 @@ using Palavyr.Core.Services.Localization;
 using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Services.PricingStrategyTableServices;
+using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
+using Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters;
+using Palavyr.Core.Services.PricingStrategyTableServices.Thresholds;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.TemporaryPaths;
 using Palavyr.Core.Services.Units;
@@ -80,7 +76,7 @@ namespace Palavyr.API.Registration.Container
                 .InstancePerLifetimeScope();
 
             builder.RegisterGeneric(typeof(PricingStrategyEntityStore<>)).As(typeof(IPricingStrategyEntityStore<>)).InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(DynamicTableCommandExecutor<>)).As(typeof(IDynamicTableCommandExecutor<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(PricingStrategyTableCommandExecutor<>)).As(typeof(IPricingStrategyTableCommandExecutor<>)).InstancePerLifetimeScope();
 
             builder.RegisterType<MissingNodeCalculator>().As<IMissingNodeCalculator>();
             builder.RegisterType<RequiredNodeCalculator>().As<IRequiredNodeCalculator>();
@@ -113,9 +109,9 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<CustomerSessionService>().As<ICustomerSessionService>();
             builder.RegisterType<DangerousAccountDeleter>().As<IDangerousAccountDeleter>();
             builder.RegisterType<DetermineCurrentEnvironment>().As<IDetermineCurrentEnvironment>();
-            builder.RegisterType<DynamicResponseComponentExtractor>().As<IDynamicResponseComponentExtractor>();
-            builder.RegisterType<DynamicTableCompilerOrchestrator>().As<IDynamicTableCompilerOrchestrator>();
-            builder.RegisterType<DynamicTableCompilerRetriever>().As<IDynamicTableCompilerRetriever>();
+            builder.RegisterType<PricingStrategyResponseComponentExtractor>().As<IPricingStrategyResponseComponentExtractor>();
+            builder.RegisterType<PricingStrategyTableCompilerOrchestrator>().As<IPricingStrategyTableCompilerOrchestrator>();
+            builder.RegisterType<PricingStrategyTableCompilerRetriever>().As<IPricingStrategyTableCompilerRetriever>();
             builder.RegisterType<EmailVerificationService>().As<IEmailVerificationService>();
             builder.RegisterType<EmailVerificationStatus>().As<IEmailVerificationStatus>();
             builder.RegisterType<EndingSequenceAttacher>().As<IEndingSequenceAttacher>();

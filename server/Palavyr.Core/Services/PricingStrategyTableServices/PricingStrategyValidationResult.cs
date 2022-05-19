@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 
-namespace Palavyr.Core.Services.DynamicTableService
+namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
     public class PricingStrategyValidationResult
     {

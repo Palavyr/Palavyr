@@ -6,10 +6,9 @@ using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Stores;
 
-
-namespace Palavyr.Core.Services.DynamicTableService
+namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
-    public abstract class BaseCompiler<TEntity> where TEntity : class, IDynamicTable<TEntity>
+    public abstract class BaseCompiler<TEntity> where TEntity : class, IPricingStrategyTable<TEntity>
     {
         protected readonly IPricingStrategyEntityStore<TEntity> repository;
 

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -14,23 +14,23 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetNodeTypeOptionsHandler : IRequestHandler<GetNodeTypeOptionsRequest, GetNodeTypeOptionsResponse>
     {
         private readonly ILogger<GetNodeTypeOptionsHandler> logger;
-        private readonly IDynamicTableCompilerOrchestrator dynamicTableCompilerOrchestrator;
+        private readonly IPricingStrategyTableCompilerOrchestrator pricingStrategyTableCompilerOrchestrator;
         private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
 
         public GetNodeTypeOptionsHandler(
             ILogger<GetNodeTypeOptionsHandler> logger,
-            IDynamicTableCompilerOrchestrator dynamicTableCompilerOrchestrator,
+            IPricingStrategyTableCompilerOrchestrator pricingStrategyTableCompilerOrchestrator,
             IEntityStore<DynamicTableMeta> dynamicTableMetaStore)
         {
             this.logger = logger;
-            this.dynamicTableCompilerOrchestrator = dynamicTableCompilerOrchestrator;
+            this.pricingStrategyTableCompilerOrchestrator = pricingStrategyTableCompilerOrchestrator;
             this.dynamicTableMetaStore = dynamicTableMetaStore;
         }
 
         public async Task<GetNodeTypeOptionsResponse> Handle(GetNodeTypeOptionsRequest request, CancellationToken cancellationToken)
         {
             var dynamicTableMetas = await dynamicTableMetaStore.GetMany(request.IntentId, s => s.AreaIdentifier);
-            var dynamicTableData = await dynamicTableCompilerOrchestrator.CompileTablesToConfigurationNodes(dynamicTableMetas, request.IntentId);
+            var dynamicTableData = await pricingStrategyTableCompilerOrchestrator.CompileTablesToConfigurationNodes(dynamicTableMetas, request.IntentId);
             var defaultNodeTypeOptions = DefaultNodeTypeOptions.DefaultNodeTypeOptionsList;
 
             var fullNodeTypeOptionsList = defaultNodeTypeOptions.AddAdditionalNodes(dynamicTableData);

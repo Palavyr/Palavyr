@@ -4,7 +4,7 @@ using Palavyr.Core.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class SelectOneFlat : Entity, IOrderedTable, IDynamicTable<SelectOneFlat>, IHaveAccountId
+    public class SelectOneFlat : Entity, IOrderedTable, IPricingStrategyTable<SelectOneFlat>, IHaveAccountId
     {
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
@@ -45,7 +45,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             };
         }
 
-        public List<SelectOneFlat> UpdateTable(DynamicTable<SelectOneFlat> table)
+        public List<SelectOneFlat> UpdateTable(PricingStrategyTable<SelectOneFlat> table)
         {
             var mappedTableRows = new List<SelectOneFlat>();
             foreach (var row in table.TableData)

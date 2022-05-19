@@ -8,10 +8,10 @@ using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Services.CloudKeyResolvers;
-using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.PdfService.PdfServer;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 using Palavyr.Core.Services.TemporaryPaths;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -29,7 +29,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IResponsePdfPreviewKeyResolver previewKeyResolver;
         private readonly ITemporaryPath temporaryPath;
         private readonly ICriticalResponses criticalResponses;
-        private readonly IDynamicTableCompilerRetriever compilerRetriever;
+        private readonly IPricingStrategyTableCompilerRetriever compilerRetriever;
         private readonly IGuidUtils guidUtils;
 
         public PreviewResponseGenerator(
@@ -42,7 +42,7 @@ namespace Palavyr.Core.Services.PdfService
             IResponsePdfPreviewKeyResolver previewKeyResolver,
             ITemporaryPath temporaryPath,
             ICriticalResponses criticalResponses,
-            IDynamicTableCompilerRetriever compilerRetriever,
+            IPricingStrategyTableCompilerRetriever compilerRetriever,
             IGuidUtils guidUtils
         )
         {

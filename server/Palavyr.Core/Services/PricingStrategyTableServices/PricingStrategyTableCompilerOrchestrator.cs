@@ -6,25 +6,25 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
-namespace Palavyr.Core.Services.DynamicTableService
+namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
-    public class DynamicTableCompilerOrchestrator : IDynamicTableCompilerOrchestrator
+    public class PricingStrategyTableCompilerOrchestrator : IPricingStrategyTableCompilerOrchestrator
     {
-        private readonly IDynamicResponseComponentExtractor dynamicResponseComponentExtractor;
-        private readonly IDynamicTableCompilerRetriever dynamicTableCompilerRetriever;
+        private readonly IPricingStrategyResponseComponentExtractor pricingStrategyResponseComponentExtractor;
+        private readonly IPricingStrategyTableCompilerRetriever pricingStrategyTableCompilerRetriever;
 
-        public DynamicTableCompilerOrchestrator(
-            IDynamicResponseComponentExtractor dynamicResponseComponentExtractor,
-            IDynamicTableCompilerRetriever dynamicTableCompilerRetriever
+        public PricingStrategyTableCompilerOrchestrator(
+            IPricingStrategyResponseComponentExtractor pricingStrategyResponseComponentExtractor,
+            IPricingStrategyTableCompilerRetriever pricingStrategyTableCompilerRetriever
         )
         {
-            this.dynamicResponseComponentExtractor = dynamicResponseComponentExtractor;
-            this.dynamicTableCompilerRetriever = dynamicTableCompilerRetriever;
+            this.pricingStrategyResponseComponentExtractor = pricingStrategyResponseComponentExtractor;
+            this.pricingStrategyTableCompilerRetriever = pricingStrategyTableCompilerRetriever;
         }
 
-        public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
+        public async Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents pricingStrategyResponseComponents)
         {
-            var result = await dynamicResponseComponents.Compiler.PerformInternalCheck(node, response, dynamicResponseComponents);
+            var result = await pricingStrategyResponseComponents.Compiler.PerformInternalCheck(node, response, pricingStrategyResponseComponents);
             return result;
         }
 
@@ -45,7 +45,7 @@ namespace Palavyr.Core.Services.DynamicTableService
                 //
                 // var dynamicTableName = dynamicTableKey.Split("-").First();
                 // var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(dynamicTableName);
-                var dynamicResponseComponents = dynamicResponseComponentExtractor.ExtractDynamicTableComponents(dynamicResponse);
+                var dynamicResponseComponents = pricingStrategyResponseComponentExtractor.ExtractDynamicTableComponents(dynamicResponse);
 
                 // List<TableRow> rows;
                 // rows = await compiler.CompileToPdfTableRow(accountId, responses, dynamicTableKeys, culture);
@@ -67,7 +67,7 @@ namespace Palavyr.Core.Services.DynamicTableService
             var nodes = new List<NodeTypeOptionResource>() { };
             foreach (var dynamicTableMeta in dynamicTableMetas)
             {
-                var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(dynamicTableMeta.TableType);
+                var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(dynamicTableMeta.TableType);
                 await compiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
             }
 
@@ -79,7 +79,7 @@ namespace Palavyr.Core.Services.DynamicTableService
             var validationResults = new List<PricingStrategyValidationResult>();
             foreach (var pricingStrategy in pricingStrategyMetas)
             {
-                var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(pricingStrategy.TableType);
+                var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(pricingStrategy.TableType);
                 var validationResult = await compiler.ValidatePricingStrategyPostSave(pricingStrategy);
                 validationResults.Add(validationResult);
             }

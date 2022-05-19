@@ -6,9 +6,9 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
-namespace Palavyr.Core.Services.DynamicTableService
+namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
-    public interface IDynamicTableCompilerOrchestrator
+    public interface IPricingStrategyTableCompilerOrchestrator
     {
         Task<List<Table>> CompileTablesToPdfRows(
             DynamicResponses dynamicResponses,
@@ -18,7 +18,7 @@ namespace Palavyr.Core.Services.DynamicTableService
 
         Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<DynamicTableMeta> dynamicTableMetas, string areaId);
 
-        Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents);
+        Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents pricingStrategyResponseComponents);
         Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<DynamicTableMeta> pricingStrategyMetas);
     }
 }

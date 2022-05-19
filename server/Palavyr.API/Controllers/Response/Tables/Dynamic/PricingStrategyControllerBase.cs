@@ -7,14 +7,14 @@ using Palavyr.Core.Handlers.PricingStrategyHandlers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Resources.PricingStrategyResources;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
     [ApiController]
     public abstract class PricingStrategyControllerBase<TEntity, TResource>
         : PalavyrBaseController, IDynamicTableController<TEntity, TResource>
-        where TEntity : class, IDynamicTable<TEntity>, new()
+        where TEntity : class, IPricingStrategyTable<TEntity>, new()
         where TResource : IPricingStrategyTableRowResource, new()
     {
         private readonly IMediator mediator;
@@ -36,20 +36,20 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpPut("intent/{intentId}/table/{tableId}")]
-        public async Task<IEnumerable<TResource>> SaveDynamicTable([FromRoute] string intentId, [FromRoute] string tableId, [FromBody] DynamicTable<TEntity> dynamicTable)
+        public async Task<IEnumerable<TResource>> SaveDynamicTable([FromRoute] string intentId, [FromRoute] string tableId, [FromBody] PricingStrategyTable<TEntity> pricingStrategyTable)
         {
             var resource = await mediator.Send(
                 new SavePricingStrategyTableRequest<TEntity, TResource>()
                 {
                     TableId = tableId,
                     IntentId = intentId,
-                    DynamicTable = dynamicTable
+                    PricingStrategyTable = pricingStrategyTable
                 });
             return resource.Resource;
         }
 
         [HttpGet("intent/{intentId}/table/{tableId}")]
-        public async Task<DynamicTableDataResource<TResource>> GetPricingStrategyTableRows([FromRoute] string intentId, [FromRoute] string tableId)
+        public async Task<PricingStrategyTableDataResource<TResource>> GetPricingStrategyTableRows([FromRoute] string intentId, [FromRoute] string tableId)
         {
             var response = await mediator.Send(
                 new GetPricingStrategyTableRowsRequest<TEntity, TResource>()

@@ -3,28 +3,11 @@ using System.Collections.Generic;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.Units;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
-    public class DynamicTableMetaResource : IPricingStrategyTableRowResource
-    {
-        public int? Id { get; set; }
-        public string TableTag { get; set; }
-        public string TableType { get; set; }
-        public string TableId { get; set; }
-        public string AreaIdentifier { get; set; }
-        public bool ValuesAsPaths { get; set; }
-        public string PrettyName { get; set; }
-        public string UnitPrettyName { get; set; }
-        public string UnitGroup { get; set; }
-        public UnitIds UnitId { get; set; }
-        public string AccountId { get; set; }
-    }
-
     public class DynamicTableMeta : Entity, ITable, IHaveAccountId
     {
         public string TableTag { get; set; }

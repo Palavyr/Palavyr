@@ -4,20 +4,20 @@ using MediatR;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources.PricingStrategyResources;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 {
     public class GetPricingStrategyTableRowTemplateHandler<T, TR>
         : IRequestHandler<GetPricingStrategyTableRowTemplateRequest<T, TR>, GetPricingStrategyTableRowTemplateResponse<TR>>
-        where T : class, IDynamicTable<T>, new()
+        where T : class, IPricingStrategyTable<T>, new()
         where TR : IPricingStrategyTableRowResource
     {
-        private readonly IDynamicTableCommandExecutor<T> executor;
+        private readonly IPricingStrategyTableCommandExecutor<T> executor;
         private readonly IMapToNew<T, TR> entityMapper;
 
         public GetPricingStrategyTableRowTemplateHandler(
-            IDynamicTableCommandExecutor<T> executor,
+            IPricingStrategyTableCommandExecutor<T> executor,
             IMapToNew<T, TR> entityMapper
         )
         {
@@ -27,7 +27,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 
         public async Task<GetPricingStrategyTableRowTemplateResponse<TR>> Handle(GetPricingStrategyTableRowTemplateRequest<T, TR> request, CancellationToken cancellationToken)
         {
-            var template = executor.GetDynamicRowTemplate(request.IntentId, request.TableId);
+            var template = executor.GetRowTemplate(request.IntentId, request.TableId);
             var resource = await entityMapper.Map(template);
             return new GetPricingStrategyTableRowTemplateResponse<TR>(resource);
         }
@@ -35,7 +35,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 
     public class GetPricingStrategyTableRowTemplateRequest<T, TR>
         : IRequest<GetPricingStrategyTableRowTemplateResponse<TR>>
-        where T : class, IDynamicTable<T>, new()
+        where T : class, IPricingStrategyTable<T>, new()
         where TR : IPricingStrategyTableRowResource
     {
         public string IntentId { get; set; }

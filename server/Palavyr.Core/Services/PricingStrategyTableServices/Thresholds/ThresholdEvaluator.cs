@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Palavyr.Core.Models.Contracts;
 
-namespace Palavyr.Core.Services.DynamicTableService.Thresholds
+namespace Palavyr.Core.Services.PricingStrategyTableServices.Thresholds
 {
     public interface IThresholdEvaluator
     {

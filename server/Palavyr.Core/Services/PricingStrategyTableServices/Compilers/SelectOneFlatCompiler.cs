@@ -8,14 +8,14 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Requests;
-using Palavyr.Core.Services.DynamicTableService.NodeUpdaters;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters;
 using Palavyr.Core.Stores;
 
-namespace Palavyr.Core.Services.DynamicTableService.Compilers
+namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 {
-    public interface ISelectOneFlatCompiler : IDynamicTablesCompiler
+    public interface ISelectOneFlatCompiler : IPricingStrategyTableCompiler
     {
     }
 
@@ -25,7 +25,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         private readonly ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater;
         private readonly IResponseRetriever responseRetriever;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<DynamicTableMeta> pricingStrategyTableMetaStore;
 
         public SelectOneFlatCompiler(
             IPricingStrategyEntityStore<SelectOneFlat> repository,
@@ -33,20 +33,20 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater,
             IResponseRetriever responseRetriever,
             IEntityStore<ConversationNode> convoNodeStore,
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(repository)
+            IEntityStore<DynamicTableMeta> pricingStrategyTableMetaStore) : base(repository)
         {
             this.splitter = splitter;
             this.selectOneFlatNodeUpdater = selectOneFlatNodeUpdater;
             this.responseRetriever = responseRetriever;
             this.convoNodeStore = convoNodeStore;
-            this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
         }
 
-        public async Task UpdateConversationNode<T>(DynamicTable<T> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(PricingStrategyTable<T> table, string tableId, string areaIdentifier)
         {
             var currentSelectOneFlatUpdate = table.TableData as List<SelectOneFlat>;
 
-            var tableMeta = await dynamicTableMetaStore.Get(tableId, s => s.TableId);
+            var tableMeta = await pricingStrategyTableMetaStore.Get(tableId, s => s.TableId);
 
             var conversationNodes = await convoNodeStore.GetMany(areaIdentifier, s => s.AreaIdentifier);
             var node = conversationNodes.SingleOrDefault(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId);
@@ -91,7 +91,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var record = await RetrieveAllAvailableResponses(dynamicResponseId);
 
             var option = record.Single(tableRow => tableRow.Option == responseValue);
-            var dynamicMeta = await dynamicTableMetaStore.Get(option.TableId, s => s.TableId);
+            var dynamicMeta = await pricingStrategyTableMetaStore.Get(option.TableId, s => s.TableId);
 
             var row = new TableRow(
                 dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : option.Option,
@@ -103,7 +103,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return new List<TableRow>() { row };
         }
 
-        public Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
+        public Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents pricingStrategyResponseComponents)
         {
             return Task.FromResult(false);
         }
@@ -132,10 +132,10 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
         }
 
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<T>(DynamicTable<T> dynamicTable)
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<T>(PricingStrategyTable<T> pricingStrategyTable)
         {
-            var table = dynamicTable.TableData as List<SelectOneFlat>;
-            var tableTag = dynamicTable.TableTag;
+            var table = pricingStrategyTable.TableData as List<SelectOneFlat>;
+            var tableTag = pricingStrategyTable.TableTag;
             return ValidationLogic(table, tableTag);
         }
 

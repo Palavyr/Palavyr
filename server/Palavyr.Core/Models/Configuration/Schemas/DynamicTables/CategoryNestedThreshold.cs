@@ -5,7 +5,7 @@ using Palavyr.Core.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class CategoryNestedThreshold : Entity, IOrderedTable, IDynamicTable<CategoryNestedThreshold>, IHaveRange, IMultiItem, IOrderableThreshold, IHaveAccountId
+    public class CategoryNestedThreshold : Entity, IOrderedTable, IPricingStrategyTable<CategoryNestedThreshold>, IHaveRange, IMultiItem, IOrderableThreshold, IHaveAccountId
     {
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
@@ -74,7 +74,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             };
         }
 
-        public List<CategoryNestedThreshold> UpdateTable(DynamicTable<CategoryNestedThreshold> table)
+        public List<CategoryNestedThreshold> UpdateTable(PricingStrategyTable<CategoryNestedThreshold> table)
         {
             var mappedTableRows = new List<CategoryNestedThreshold>();
             foreach (var row in table.TableData)
