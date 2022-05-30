@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Sessions;
+using Palavyr.Core.Validators;
 
 namespace Palavyr.API.CustomMiddleware
 {
@@ -29,5 +30,13 @@ namespace Palavyr.API.CustomMiddleware
     {
         public CancellationToken CancellationToken { get; set; }
         public SetCancellationTokenRequest(CancellationToken contextRequestAborted) => CancellationToken = contextRequestAborted;
+    }
+    
+    public class SetCancellationTokenRequestValidator : INotificationValidator<SetCancellationTokenRequest>
+    {
+        public async Task Validate(SetCancellationTokenRequest notification)
+        {
+            await Task.CompletedTask;
+        }
     }
 }

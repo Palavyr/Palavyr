@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AmazonServices;
@@ -14,7 +15,7 @@ namespace Palavyr.Core.Mappers
             this.linkCreator = linkCreator;
         }
 
-        public async Task<EnquiryResource> Map(ConversationRecord @from)
+        public async Task<EnquiryResource> Map(ConversationRecord @from, CancellationToken cancellationToken)
         {
             var fileAssetResource = new FileAssetResource();
 

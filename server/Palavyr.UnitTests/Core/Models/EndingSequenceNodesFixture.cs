@@ -96,6 +96,7 @@ namespace PalavyrServer.UnitTests.Core.Models
         [Fact]
         public async Task CreatesEmailSendFailedFirstAttempt()
         {
+            await Task.CompletedTask;
             var node = endingSequenceNodes.CreateEmailSendFailedFirstAttempt(A.RandomId(), A.RandomAccountId(), "id-1");
 
             node.NodeType.ShouldBe("EmailSendFailedFirstAttempt");

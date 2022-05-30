@@ -35,7 +35,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var introConvo = await convoNodeStore.RawReadonlyQuery().Where(x => x.AreaIdentifier == account.IntroductionId).ToArrayAsync(cancellationToken);
             var intro = EndingSequenceAttacher.CleanTheIntroConvoEnding(introConvo);
 
-            var resource = await mapper.MapMany(intro);
+            var resource = await mapper.MapMany(intro, cancellationToken);
             return new GetIntroductionSequenceResponse(resource);
         }
     }

@@ -33,7 +33,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetConfiguredIntentsResponse> Handle(GetConfiguredIntentsRequest request, CancellationToken cancellationToken)
         {
             var activeIntents = await intentStore.Query().Where(x => x.IsEnabled).ToListAsync(CancellationToken);
-            var resource = await mapper.MapMany(activeIntents);
+            var resource = await mapper.MapMany(activeIntents, cancellationToken);
 
             return new GetConfiguredIntentsResponse(resource);
         }

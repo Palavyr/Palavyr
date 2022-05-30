@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -30,7 +31,7 @@ namespace Palavyr.Core.Mappers
             this.guidFinder = guidFinder;
         }
 
-        public async Task<WidgetNodeResource> Map(ConversationNode @from)
+        public async Task<WidgetNodeResource> Map(ConversationNode @from, CancellationToken cancellationToken)
         {
             FileAssetResource? fileAssetResource = null;
             if (!string.IsNullOrEmpty(@from.ImageId))

@@ -1,5 +1,6 @@
 using System;
 using Autofac;
+using MediatR;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
@@ -38,12 +39,11 @@ using Palavyr.Core.Services.Units;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.Delete;
+using Palavyr.Core.Validators;
 using Module = Autofac.Module;
 
 namespace Palavyr.API.Registration.Container
 {
-  
-
     public class GeneralModule : Module
     {
         protected override void Load(ContainerBuilder builder)
@@ -74,9 +74,19 @@ namespace Palavyr.API.Registration.Container
                 .As(typeof(IEntityStore<>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+            builder
+                .RegisterGeneric(typeof(INotificationValidator<>))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+            builder
+                .RegisterGeneric(typeof(IRequestValidator<,>))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
 
-            builder.RegisterGeneric(typeof(PricingStrategyEntityStore<>)).As(typeof(IPricingStrategyEntityStore<>)).InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(PricingStrategyTableCommandExecutor<>)).As(typeof(IPricingStrategyTableCommandExecutor<>)).InstancePerLifetimeScope();
+            
+
+            builder.RegisterGeneric(typeof(PricingStrategyTableCommandExecutor<,>)).As(typeof(IPricingStrategyTableCommandExecutor<,>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(ResponseRetriever<>)).As(typeof(IResponseRetriever<>));
 
             builder.RegisterType<MissingNodeCalculator>().As<IMissingNodeCalculator>();
             builder.RegisterType<RequiredNodeCalculator>().As<IRequiredNodeCalculator>();
@@ -155,7 +165,6 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ResponsePdfGenerator>().As<IResponsePdfGenerator>();
             builder.RegisterType<ResponsePdfPreviewKeyResolver>().As<IResponsePdfPreviewKeyResolver>();
             builder.RegisterType<ResponsePdfTableCompiler>().As<IResponsePdfTableCompiler>();
-            builder.RegisterType<ResponseRetriever>().As<IResponseRetriever>();
             builder.RegisterType<Is3FileUploader>().As<IS3FileUploader>();
             builder.RegisterType<Is3FileDeleter>().As<IS3FileDeleter>();
 
@@ -185,6 +194,9 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterDecorator<LogoAssetSaverDatabaseUpdaterDecorator, ILogoAssetSaver>();
             builder.RegisterDecorator<ResponseHtmlCustomizationDecorator, IResponseHtmlBuilder>();
             builder.RegisterDecorator<ResponsePdfGeneratorUpdateConversationRecordDecorator, IResponsePdfGenerator>();
+            
+            builder.RegisterGenericDecorator(typeof(NotificationHandlerValidationDecorator<>), typeof(INotificationHandler<>));
+            builder.RegisterGenericDecorator(typeof(RequestHandlerValidationDecorator<,>), typeof(IRequestHandler<,>));
         }
     }
 }

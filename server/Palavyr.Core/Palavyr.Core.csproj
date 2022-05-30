@@ -49,19 +49,11 @@
         <PackageReference Include="Seq.Extensions.Logging" Version="4.0.2" />
         <PackageReference Include="Serilog" Version="2.10.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+        <PackageReference Include="Shouldly" Version="4.0.3" />
         <PackageReference Include="Stripe.net" Version="39.38.0" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
         <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.51.0" />
         <PackageReference Include="MimeKit" Version="2.11.0" />
         <PackageReference Include="TestStack.ConventionTests.Autofac" Version="4.0.2" />
-    </ItemGroup>
-    <ItemGroup>
-      <Compile Remove="Validators\**" />
-    </ItemGroup>
-    <ItemGroup>
-      <EmbeddedResource Remove="Validators\**" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Remove="Validators\**" />
     </ItemGroup>
 </Project>

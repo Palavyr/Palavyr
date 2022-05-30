@@ -11,13 +11,13 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
     public interface IDynamicTableController<TEntity, TResource> where TResource : IPricingStrategyTableRowResource, new()
     {
         Task Delete(string intentId, string tableId, CancellationToken cancellationToken);
-        Task<TResource> GetDynamicRowTemplate([FromRoute] string intentId, [FromRoute] string tableId);
-        Task<PricingStrategyTableDataResource<TResource>> GetPricingStrategyTableRows([FromRoute] string intentId, [FromRoute] string tableId);
+        Task<TResource> GetRowTemplate([FromRoute] string intentId, [FromRoute] string tableId);
+        Task<PricingStrategyTableDataResource<TResource>> GetTable([FromRoute] string intentId, [FromRoute] string tableId);
 
 
-        Task<IEnumerable<TResource>> SaveDynamicTable(
+        Task<IEnumerable<TResource>> SaveTable(
             [FromRoute] string intentId, [FromRoute] string tableId,
-            [FromBody] PricingStrategyTable<TEntity> pricingStrategyTable);
+            [FromBody] PricingStrategyTable<TResource> pricingStrategyTable);
 
     }
 }

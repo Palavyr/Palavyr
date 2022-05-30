@@ -17,10 +17,10 @@ namespace Palavyr.API.Registration.Container.MediatorModule
                 .AddTransient(
                     sp =>
                         MediatorServiceFactory.Wrap(sp.GetService, sp.GetServices<IMediatorServiceTypeConverter>()))
-                .AddTransient(typeof(GetPricingStrategyTableRowsHandler<,>))
-                .AddTransient(typeof(GetPricingStrategyTableRowTemplateHandler<,>))
-                .AddTransient(typeof(DeletePricingStrategyTableHandler<,>))
-                .AddTransient(typeof(SavePricingStrategyTableHandler<,>))
+                .AddTransient(typeof(GetPricingStrategyTableRowsHandler<,,>))
+                .AddTransient(typeof(GetPricingStrategyTableRowTemplateHandler<,,>))
+                .AddTransient(typeof(DeletePricingStrategyTableHandler<,,>))
+                .AddTransient(typeof(SavePricingStrategyTableHandler<,,>))
                 .BuildServiceProvider();
         }
     }

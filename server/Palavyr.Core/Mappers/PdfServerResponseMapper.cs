@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
@@ -21,7 +22,7 @@ namespace Palavyr.Core.Mappers
             this.guidUtils = guidUtils;
         }
 
-        public async Task<FileAsset> Map(PdfServerResponse @from)
+        public async Task<FileAsset> Map(PdfServerResponse @from, CancellationToken cancellationToken)
         {
             var extension = Path.GetExtension(@from.FileNameWithExtension);
             if (extension is null) throw new DomainException("File extensions cannot be null in the mapper");

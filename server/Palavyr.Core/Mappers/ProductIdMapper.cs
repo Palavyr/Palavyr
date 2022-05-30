@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.StripeServices.Products;
 
@@ -6,7 +7,7 @@ namespace Palavyr.Core.Mappers
 {
     public class ProductIdMapper : IMapToNew<ProductIds, ProductIdResource>
     {
-        public async Task<ProductIdResource> Map(ProductIds @from)
+        public async Task<ProductIdResource> Map(ProductIds @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
             return new ProductIdResource

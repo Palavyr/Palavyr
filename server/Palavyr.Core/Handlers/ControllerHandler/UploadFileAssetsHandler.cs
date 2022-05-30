@@ -29,7 +29,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 fileAssets.Add(fileAsset);
             }
 
-            var resources = await mapper.MapMany(fileAssets);
+            var resources = await mapper.MapMany(fileAssets, cancellationToken);
             return new UploadFileAssetsResponse(resources);
         }
     }

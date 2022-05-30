@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
@@ -8,20 +9,23 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
-    public abstract class BaseCompiler<TEntity> where TEntity : class, IPricingStrategyTable<TEntity>
+    public abstract class BaseCompiler<TEntity> where TEntity : class, IPricingStrategyTable<TEntity>, IEntity, ITable
     {
-        protected readonly IPricingStrategyEntityStore<TEntity> repository;
+        private readonly IEntityStore<TEntity> entityStore;
+        private readonly IEntityStore<ConversationNode> convoNodeStore;
 
-        public BaseCompiler(IPricingStrategyEntityStore<TEntity> repository)
+        public BaseCompiler(
+            IEntityStore<TEntity> entityStore,
+            IEntityStore<ConversationNode> convoNodeStore)
         {
-            this.repository = repository;
+            this.entityStore = entityStore;
+            this.convoNodeStore = convoNodeStore;
         }
 
         protected async Task<List<TEntity>> GetTableRows(DynamicTableMeta dynamicTableMeta)
         {
             var (areaId, tableId) = dynamicTableMeta;
-            var rows = (await repository.GetAllRows(areaId, tableId)).ToList();
-
+            var rows = await entityStore.GetMany(tableId, s => s.TableId);
             var indexArray = new List<int> { };
             var orderedEntities = new List<TEntity>() { };
 
@@ -72,16 +76,19 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
         protected async Task<List<string>> GetResponsesOrderedByResolveOrder(DynamicResponseParts dynamicResponseParts)
         {
             var responseKeys = dynamicResponseParts.SelectMany(row => row.Keys).ToList();
-            var nodes = await repository.GetConversationNodeByIds(responseKeys);
+            var nodes = await convoNodeStore.GetMany(responseKeys, s => s.NodeId);
             var sorted = nodes.OrderBy(x => x.ResolveOrder)
-                    .Select(x => x.NodeId)
-                    .ToList();
+                .Select(x => x.NodeId)
+                .ToList();
             return sorted;
         }
 
         protected async Task<List<TEntity>> GetAllRowsMatchingResponseId(string dynamicResponseId)
         {
-            return (await repository.GetAllRowsMatchingDynamicResponseId(dynamicResponseId)).ToList();
+            return await entityStore
+                .RawReadonlyQuery()
+                .Where(x => dynamicResponseId.EndsWith(x.TableId))
+                .ToListAsync(entityStore.CancellationToken);
         }
     }
 }

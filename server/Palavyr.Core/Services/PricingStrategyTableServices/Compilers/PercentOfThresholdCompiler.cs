@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -21,23 +22,27 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 
     public class PercentOfThresholdCompiler : BaseCompiler<PercentOfThreshold>, IPercentOfThresholdCompiler
     {
+        private readonly IEntityStore<PercentOfThreshold> psStore;
         private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly IThresholdEvaluator thresholdEvaluator;
-        private readonly IResponseRetriever responseRetriever;
+        private readonly IResponseRetriever<PercentOfThreshold> responseRetriever;
 
         public PercentOfThresholdCompiler(
-            IPricingStrategyEntityStore<PercentOfThreshold> repository,
+            // IPricingStrategyEntityStore<PercentOfThreshold> repository,
+            IEntityStore<PercentOfThreshold> psStore,
+            IEntityStore<ConversationNode> convoNodeStore,
             IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
             IThresholdEvaluator thresholdEvaluator,
-            IResponseRetriever responseRetriever
-        ) : base(repository)
+            IResponseRetriever<PercentOfThreshold> responseRetriever
+        ) : base(psStore, convoNodeStore)
         {
+            this.psStore = psStore;
             this.dynamicTableMetaStore = dynamicTableMetaStore;
             this.thresholdEvaluator = thresholdEvaluator;
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task UpdateConversationNode<T>(PricingStrategyTable<T> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(List<T> table, string tableId, string areaIdentifier)
         {
             await Task.CompletedTask;
         }
@@ -111,7 +116,13 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents _)
         {
             var currentResponseAsDouble = double.Parse(response);
-            var records = await repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
+            
+            var records = await psStore
+                .RawReadonlyQuery()
+                .Where(x => node.DynamicType.EndsWith(x.TableId))
+                .ToListAsync(psStore.CancellationToken);
+            
+            // var records = await repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
             var uniqueItemIds = records.Select(x => x.ItemId).Distinct();
 
             var isTooComplicated = false;
@@ -171,14 +182,16 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
         {
             var tableId = dynamicTableMeta.TableId;
-            var areaId = dynamicTableMeta.AreaIdentifier;
-            var table = await repository.GetAllRows(areaId, tableId);
+            // var areaId = dynamicTableMeta.AreaIdentifier;
+
+            var table = await psStore.GetMany(tableId, s => s.TableId);
+            // var table = await repository.GetAllRows(areaId, tableId);
             return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
         }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {
-            var availablePercentOfThreshold = await responseRetriever.RetrieveAllAvailableResponses<PercentOfThreshold>(tableMeta.TableId);
+            var availablePercentOfThreshold = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
             var responseParts = PricingStrategyTableTypes.CreatePercentOfThreshold().CreateDynamicResponseParts(availablePercentOfThreshold.First().TableId, availablePercentOfThreshold.First().Threshold.ToString());
             var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;

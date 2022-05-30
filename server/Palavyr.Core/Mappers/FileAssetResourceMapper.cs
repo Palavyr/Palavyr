@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AmazonServices;
 
@@ -13,7 +14,7 @@ namespace Palavyr.Core.Mappers
             this.linkCreator = linkCreator;
         }
 
-        public async Task<FileAssetResource> Map(FileAsset @from)
+        public async Task<FileAssetResource> Map(FileAsset @from, CancellationToken cancellationToken)
         {
             var fileName = string.Join(string.Empty, @from.RiskyNameStem, @from.Extension);
             var link = await linkCreator.CreateLink(@from.FileId); // can probably just use the overload instead

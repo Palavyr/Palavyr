@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Validators;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
@@ -44,12 +46,18 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class CreateLoginRequest : IRequest<CreateLoginRequestResponse>
     {
-        public string Username { get; set; }
+        [Required]
         public string EmailAddress { get; set; }
+        
+        [Required]
         public string Password { get; set; }
-        public string SessionToken { get; set; }
+    }
 
-        public string OldPassword { get; set; }
-        public string PhoneNumber { get; set; }
+    public class CreateLoginRequestValidator : IRequestValidator<CreateLoginRequest, CreateLoginRequestResponse>
+    {
+        public async Task Validate(CreateLoginRequest request)
+        {
+            await Task.CompletedTask;
+        }
     }
 }

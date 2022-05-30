@@ -4,7 +4,7 @@
     {
         public string[] AdditionalMessages { get; set; }
 
-        public MultiMessageDomainException(string primaryMessage, string[] additionalMessages = null) : base(primaryMessage)
+        public MultiMessageDomainException(string primaryMessage, string[]? additionalMessages = null) : base(primaryMessage)
         {
             AdditionalMessages = additionalMessages ?? new string[] { };
         }

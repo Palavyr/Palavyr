@@ -3,21 +3,22 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 {
-    // register these
-    public class GetPricingStrategyTableRowsHandler<T, TR> : IRequestHandler<GetPricingStrategyTableRowsRequest<T, TR>, GetPricingStrategyTableRowsResponse<TR>>
-        where T : class, IPricingStrategyTable<T>, new()
+    public class GetPricingStrategyTableRowsHandler<T, TR, TCompiler> : IRequestHandler<GetPricingStrategyTableRowsRequest<T, TR, TCompiler>, GetPricingStrategyTableRowsResponse<TR>>
+        where T : class, IPricingStrategyTable<T>, IEntity, ITable, new()
         where TR : IPricingStrategyTableRowResource
+        where TCompiler : IPricingStrategyTableCompiler
     {
-        private readonly IPricingStrategyTableCommandExecutor<T> executor;
+        private readonly IPricingStrategyTableCommandExecutor<T, TCompiler> executor;
         private readonly IMapToNew<T, TR> entityMapper;
 
         public GetPricingStrategyTableRowsHandler(
-            IPricingStrategyTableCommandExecutor<T> executor,
+            IPricingStrategyTableCommandExecutor<T, TCompiler> executor,
             IMapToNew<T, TR> entityMapper
         )
         {
@@ -25,10 +26,10 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
             this.entityMapper = entityMapper;
         }
 
-        public async Task<GetPricingStrategyTableRowsResponse<TR>> Handle(GetPricingStrategyTableRowsRequest<T, TR> request, CancellationToken cancellationToken)
+        public async Task<GetPricingStrategyTableRowsResponse<TR>> Handle(GetPricingStrategyTableRowsRequest<T, TR, TCompiler> request, CancellationToken cancellationToken)
         {
             var data = await executor.GetTableRows(request.IntentId, request.TableId);
-            var mapped = await entityMapper.MapMany(data.TableRows);
+            var mapped = await entityMapper.MapMany(data.TableRows, cancellationToken);
             var resource = new PricingStrategyTableDataResource<TR>()
             {
                 TableRows = mapped,
@@ -38,8 +39,9 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
         }
     }
 
-    public class GetPricingStrategyTableRowsRequest<T, TR> : IRequest<GetPricingStrategyTableRowsResponse<TR>> 
+    public class GetPricingStrategyTableRowsRequest<T, TR, TCompiler> : IRequest<GetPricingStrategyTableRowsResponse<TR>> 
         where TR : IPricingStrategyTableRowResource
+        where TCompiler : IPricingStrategyTableCompiler
     {
         public string IntentId { get; set; }
         public string TableId { get; set; }

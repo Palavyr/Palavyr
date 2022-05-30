@@ -13,15 +13,24 @@ namespace Palavyr.Core.Stores
     {
         void ResetCancellationToken(CancellationTokenSource tokenSource);
         Task<TEntity> Get(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
+        Task<TEntity> Get(int id);
+        
         Task<TEntity> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
+        Task<TEntity> GetOrNull(int id);
+
         Task<List<TEntity>> GetMany(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<List<TEntity>> GetMany(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
+        Task<List<TEntity>> GetMany(IEnumerable<int> ids);
         Task<TEntity[]> GetAll();
         Task<TEntity[]> GetPaginated(int skip, int take);
         Task<TEntity> Create(TEntity entity);
         Task CreateMany(IEnumerable<TEntity> entities);
         Task<TEntity> Update(TEntity entity);
+        Task<TEntity> CreateOrUpdate(TEntity entity);
+        Task<List<TEntity>> CreateOrUpdateMany(IEnumerable<TEntity> entities);
         Task Delete(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression);
+        Task DeleteMany(IEnumerable<int> ids);
+        Task Delete(int id);
         Task Delete(TEntity entity);
         Task Delete(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task Delete(IEnumerable<TEntity> entities);

@@ -1,5 +1,5 @@
 import React from "react";
-import { DynamicTable, DynamicTableProps, QuantUnitDefinition, TableNameMap } from "@Palavyr-Types";
+import { DynamicTable, DynamicTableProps, PricingStrategyTableTypeResource, QuantUnitDefinition, TableNameMap } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
 import { dynamicTableComponentMap } from "./DynamicTableRegistry";
 
@@ -43,7 +43,7 @@ export const includesUnit = (localTable: DynamicTable) => {
 };
 
 export interface PricingStrategyTableProps {
-    availableDynamicTableOptions: Array<string>;
+    availableDynamicTableOptions: PricingStrategyTableTypeResource[];
     tableNameMap: TableNameMap;
     areaIdentifier: string;
     showDebug: boolean;

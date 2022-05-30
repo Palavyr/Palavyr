@@ -28,7 +28,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             var staticTables = await staticTableMetaStore.GetStaticTablesComplete(request.IntentId);
 
-            var resource = await mapper.MapMany(staticTables);
+            var resource = await mapper.MapMany(staticTables, cancellationToken);
             return new GetStaticTableMetasResponse(resource);
         }
     }

@@ -2,46 +2,53 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Requests;
+using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
-    public class PricingStrategyTableData<TEntity> where TEntity : class, IPricingStrategyTable<TEntity>, new()
+    public class PricingStrategyTableData<TEntity> where TEntity : class, IPricingStrategyTable<TEntity>, IEntity, ITable, new()
     {
         public List<TEntity> TableRows { get; set; }
         public bool IsInUse { get; set; }
     }
 
-    public interface IPricingStrategyTableCommandExecutor<TEntity> where TEntity : class, IPricingStrategyTable<TEntity>, new()
+    public interface IPricingStrategyTableCommandExecutor<TEntity, TCompiler>
+        where TEntity : class, IPricingStrategyTable<TEntity>, IEntity, ITable, new()
+        where TCompiler : IPricingStrategyTableCompiler
     {
         Task DeleteTable(string intentId, string tableId);
         Task<PricingStrategyTableData<TEntity>> GetTableRows(string intentId, string tableId); // TODO: return new object with 'is in use in palavyr tree'
         TEntity GetRowTemplate(string intentId, string tableId);
-        Task<IEnumerable<TEntity>> SaveTable(string intentId, string tableId, PricingStrategyTable<TEntity> pricingStrategyTable);
+        Task<IEnumerable<TEntity>> SaveTable(string intentId, string tableId, string? tableTag, List<TEntity> pricingStrategyTable);
     }
 
-    public class PricingStrategyTableCommandExecutor<TEntity> : IPricingStrategyTableCommandExecutor<TEntity> where TEntity : class, IPricingStrategyTable<TEntity>, new()
+    public class PricingStrategyTableCommandExecutor<TEntity, TCompiler>
+        : IPricingStrategyTableCommandExecutor<TEntity, TCompiler>
+        where TEntity : class, IPricingStrategyTable<TEntity>, IEntity, ITable, new()
+        where TCompiler : class, IPricingStrategyTableCompiler
     {
         private ILogger<TEntity> logger;
-        private readonly IPricingStrategyEntityStore<TEntity> pricingStrategyEntityStore;
+        private readonly IEntityStore<TEntity> pricingStrategyStore;
+        private readonly IEntityStore<DynamicTableMeta> psMetaStore;
         private readonly IPricingStrategyTableCompilerRetriever retriever;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IAccountIdTransport accountIdTransport;
         private string AccountId => accountIdTransport.AccountId;
 
         public PricingStrategyTableCommandExecutor(
-            IPricingStrategyEntityStore<TEntity> pricingStrategyEntityStore,
+            IEntityStore<TEntity> pricingStrategyStore,
+            IEntityStore<DynamicTableMeta> psMetaStore,
             IPricingStrategyTableCompilerRetriever retriever,
             IEntityStore<ConversationNode> convoNodeStore,
             IAccountIdTransport accountIdTransport,
             ILogger<TEntity> logger
         )
         {
-            this.pricingStrategyEntityStore = pricingStrategyEntityStore;
+            this.pricingStrategyStore = pricingStrategyStore;
+            this.psMetaStore = psMetaStore;
             this.retriever = retriever;
             this.convoNodeStore = convoNodeStore;
             this.accountIdTransport = accountIdTransport;
@@ -51,22 +58,22 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
         public async Task DeleteTable(string intentId, string tableId)
         {
             logger.LogInformation($"Deleting dynamic table: {tableId}");
-            await pricingStrategyEntityStore.DeleteTable(intentId, tableId);
+            await pricingStrategyStore.Delete(tableId, s => s.TableId);
         }
 
         public async Task<PricingStrategyTableData<TEntity>> GetTableRows(string intentId, string tableId)
         {
             logger.LogInformation($"Getting dynamic table rows: {tableId}");
-            var tableRows = (await pricingStrategyEntityStore.GetAllRows(intentId, tableId)).ToList();
+            var tableRows = await pricingStrategyStore.GetMany(tableId, s => s.TableId);
             if (tableRows.ToList().Count == 0)
             {
+                var newEntity = (new TEntity()).CreateTemplate(AccountId, intentId, tableId);
+                await pricingStrategyStore.Create(newEntity);
                 tableRows = new List<TEntity>()
                 {
-                    (new TEntity()).CreateTemplate(AccountId, intentId, tableId)
+                    newEntity
                 };
             }
-
-            await pricingStrategyEntityStore.UpdateRows(intentId, tableId, tableRows);
 
             var convoNodes = await convoNodeStore.GetMany(intentId, s => s.AreaIdentifier);
 
@@ -75,12 +82,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
                 {
                     if (!x.IsDynamicTableNode) return false;
                     if (x.DynamicType == null) return false;
-                    if (x.DynamicType != null && x.DynamicType.EndsWith(tableId))
-                    {
-                        return true;
-                    }
-
-                    return false;
+                    return x.DynamicType.EndsWith(tableId);
                 });
 
             return new PricingStrategyTableData<TEntity>
@@ -96,31 +98,17 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             return (new TEntity()).CreateTemplate(AccountId, intentId, tableId);
         }
 
-        public async Task<IEnumerable<TEntity>> SaveTable(string intentId, string tableId, PricingStrategyTable<TEntity> pricingStrategyTable)
+        public async Task<IEnumerable<TEntity>> SaveTable(string intentId, string tableId, string tableTag, List<TEntity> tableUpdate)
         {
-            var workingEntity = new TEntity();
-            workingEntity.EnsureValid();
-            var entityCompiler = retriever.RetrieveCompiler<TEntity>();
-            // var entityCompiler = retriever.RetrieveCompiler(workingEntity.GetType().Name);
+            var entityCompiler = retriever.RetrieveCompiler<TCompiler>();
+            await entityCompiler.UpdateConversationNode(tableUpdate, tableId, intentId);
 
-            logger.LogInformation($"Saving dynamic table: {tableId}");
+            var meta = await psMetaStore.Get(tableId, s => s.TableId);
+            meta.TableTag = tableTag;
+            meta.TableType = typeof(TEntity).Name;
 
-            var validationResult = entityCompiler.ValidatePricingStrategyPreSave(pricingStrategyTable);
-            if (!validationResult.IsValid)
-            {
-                throw new MultiMessageDomainException("Failed to validate the pricing strategy", validationResult.Reasons.ToArray());
-            }
-
-            var mappedTableRows = workingEntity.UpdateTable(pricingStrategyTable);
-            await pricingStrategyEntityStore.SaveTable(
-                intentId,
-                tableId,
-                mappedTableRows,
-                pricingStrategyTable.TableTag!,
-                typeof(TEntity).Name, async () => await entityCompiler.UpdateConversationNode(pricingStrategyTable, tableId, intentId)
-            );
-
-            return await pricingStrategyEntityStore.GetAllRows(intentId, tableId);
+            await pricingStrategyStore.CreateOrUpdateMany(tableUpdate);
+            return await pricingStrategyStore.GetMany(tableId, s => s.TableId);
         }
     }
 }

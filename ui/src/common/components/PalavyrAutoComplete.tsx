@@ -1,20 +1,8 @@
 import { CHAT_DEMO_LISTBOX_zINDEX } from "@constants";
 import { FormControl, FormHelperText, InputLabel, makeStyles, TextField } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
+import { Autocomplete, AutocompleteProps, AutocompleteRenderInputParams, UseAutocompleteProps } from "@material-ui/lab";
 import classNames from "classnames";
 import React from "react";
-
-export interface PalavyrAutoCompleteProps<T> {
-    label: string;
-    options: T[];
-    shouldDisableSelect: boolean;
-    size?: "small" | "medium" | undefined;
-    className?: string;
-    onChange: (event: any, option: T) => void;
-    groupby?(option: T): string;
-    getOptionLabel?(option: T): string;
-    getOptionSelected?(option: T, value: T): boolean;
-}
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -56,26 +44,32 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const PalavyrAutoComplete = <T extends {}>({ label, options, shouldDisableSelect, onChange, groupby, getOptionLabel, getOptionSelected, size = "small", className }: PalavyrAutoCompleteProps<T>) => {
+export interface PalavyrAutoCompleteProps<T> extends Omit<AutocompleteProps<string | T | (string | T)[], any, true, any>, "renderInput"> {
+    label?: string;
+    renderInput?: (params: AutocompleteRenderInputParams) => React.ReactNode;
+}
+export const PalavyrAutoComplete = <T extends {}>(props: PalavyrAutoCompleteProps<T>) => {
     const cls = useStyles();
     return (
         <div>
             <FormControl className={cls.formControl}>
-                <InputLabel id="autocomplete-label"></InputLabel>
-                {options && (
+                <InputLabel id="palavyr-autocomplete-label">{props.label}</InputLabel>
+                {props.options && (
                     <Autocomplete
-                        size={size}
-                        disabled={shouldDisableSelect}
-                        getOptionSelected={getOptionSelected ? getOptionSelected : undefined}
+                        {...props}
+                        onChange={props.onChange ?? undefined}
+                        defaultValue={props.defaultValue ?? undefined}
+                        value={props.value ?? undefined}
+                        className={classNames(cls.autocomplete, props.className)}
+                        classes={{ root: cls.otherbox, popper: cls.popper }}
                         disableClearable
                         clearOnEscape
-                        className={classNames(cls.autocomplete, className)}
-                        classes={{ root: cls.otherbox, popper: cls.popper }}
-                        onChange={onChange}
-                        options={options}
-                        groupBy={groupby && groupby}
-                        getOptionLabel={getOptionLabel}
-                        renderInput={params => <TextField {...params} InputLabelProps={{ className: cls.inputLabel }} className={cls.inputLabel} data-lpignore="true" label={label} />}
+                        renderInput={
+                            props.renderInput ??
+                            ((params: AutocompleteRenderInputParams) => (
+                                <TextField {...params} InputLabelProps={{ className: cls.inputLabel }} className={cls.inputLabel} data-lpignore="true" label={props.label} />
+                            ))
+                        }
                     />
                 )}
                 <FormHelperText className={cls.formControl}>Select</FormHelperText>

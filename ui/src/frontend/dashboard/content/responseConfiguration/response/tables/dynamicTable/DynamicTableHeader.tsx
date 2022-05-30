@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { DynamicTable, QuantUnitDefinition, SetState, TableNameMap } from "@Palavyr-Types";
+import { DynamicTable, PricingStrategyTableTypeResource, QuantUnitDefinition, SetState, TableNameMap } from "@Palavyr-Types";
 import { Box } from "@material-ui/core";
 import { UnitSelector, PricingStrategySelector } from "./DynamicTableSelector";
 import { cloneDeep } from "lodash";
@@ -10,7 +10,7 @@ import { TextInput } from "@common/components/TextField/TextInput";
 import { useStyles, includesUnit } from "./PricingStrategyTable";
 
 export interface DynamicTableHeaderProps {
-    availableDynamicTableOptions: Array<string>;
+    availableDynamicTableOptions: PricingStrategyTableTypeResource[];
     tableNameMap: TableNameMap;
     unitTypes: QuantUnitDefinition[];
     inUse: boolean;
@@ -37,14 +37,11 @@ export const DynamicTableHeader = ({ availableDynamicTableOptions, tableNameMap,
         };
     }, [localTable, unitTypes]);
 
-    const onPricingStrategyChange = async (_: any, value: string) => {
-        const newTableTypeSelection = value;
-
+    const onPricingStrategyChange = async (_: any, value: PricingStrategyTableTypeResource) => {
         // this needs to map to the form used in the table dataresponse format (e.g. SelectOneFlat)
-        const newTableTypeSelectionFormatted = tableNameMap[newTableTypeSelection];
 
-        localTable.tableMeta.tableType = newTableTypeSelectionFormatted;
-        localTable.tableMeta.prettyName = newTableTypeSelection;
+        localTable.tableMeta.tableType = value.tableType;
+        localTable.tableMeta.prettyName = value.prettyName;
 
         const updatedTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(localTable.tableMeta);
 
@@ -71,8 +68,8 @@ export const DynamicTableHeader = ({ availableDynamicTableOptions, tableNameMap,
                 <PricingStrategySelector
                     toolTipTitle={disabledSelector ? "Disabled when pricing strategy is used in the Palavyr configuration." : ""}
                     disabled={disabledSelector}
-                    pricingStrategySelection={localTable.tableMeta.prettyName}
-                    getOptionLabel={(option: string) => option}
+                    pricingStrategySelection={availableDynamicTableOptions.filter((x: PricingStrategyTableTypeResource) => x.tableType === localTable.tableMeta.tableType)[0]}
+                    getOptionLabel={(option: PricingStrategyTableTypeResource) => option.prettyName}
                     handleChange={onPricingStrategyChange}
                     tableOptions={availableDynamicTableOptions}
                     helperText="Select Pricing Strategy"

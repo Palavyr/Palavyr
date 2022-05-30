@@ -1,6 +1,8 @@
-﻿namespace Palavyr.Core.Resources.PricingStrategyResources
+﻿using Palavyr.Core.Models.Contracts;
+
+namespace Palavyr.Core.Resources.PricingStrategyResources
 {
-    public interface IPricingStrategyTableRowResource
+    public interface IPricingStrategyTableRowResource : IId
     {
     }
 }

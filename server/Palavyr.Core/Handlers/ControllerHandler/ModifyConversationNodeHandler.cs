@@ -49,7 +49,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             intent.ConversationNodes = convoUpdate;
 
 
-            var resource = await mapper.MapMany(convoUpdate);
+            var resource = await mapper.MapMany(convoUpdate, cancellationToken);
             return new ModifyConversationNodeResponse(resource);
         }
     }

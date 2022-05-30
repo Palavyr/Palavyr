@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 
@@ -12,9 +13,9 @@ namespace Palavyr.Core.Mappers
         {
             this.staticTableRowMapper = staticTableRowMapper;
         }
-        public async Task<StaticTablesMetaResource> Map(StaticTablesMeta @from)
+        public async Task<StaticTablesMetaResource> Map(StaticTablesMeta @from, CancellationToken cancellationToken)
         {
-            var tableRows = await staticTableRowMapper.MapMany(@from.StaticTableRows);
+            var tableRows = await staticTableRowMapper.MapMany(@from.StaticTableRows, cancellationToken);
             return new StaticTablesMetaResource
             {
                 TableOrder = @from.TableOrder,

@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -21,25 +22,27 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 
     public class BasicThresholdCompiler : BaseCompiler<BasicThreshold>, IBasicThresholdCompiler
     {
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableStore;
+        private readonly IEntityStore<DynamicTableMeta> pricingStrategyMetaStore;
+        private readonly IEntityStore<BasicThreshold> basicThresholdStore;
         private readonly IThresholdEvaluator thresholdEvaluator;
-        private readonly IResponseRetriever responseRetriever;
+        private readonly IResponseRetriever<BasicThreshold> responseRetriever;
 
         public BasicThresholdCompiler(
-            IEntityStore<DynamicTableMeta> dynamicTableStore,
-            IPricingStrategyEntityStore<BasicThreshold> repository,
+            IEntityStore<DynamicTableMeta> pricingStrategyMetaStore,
+            IEntityStore<BasicThreshold> basicThresholdStore,
+            IEntityStore<ConversationNode> convoNodeStore,
             IThresholdEvaluator thresholdEvaluator,
-            IResponseRetriever responseRetriever
-        ) : base(repository)
+            IResponseRetriever<BasicThreshold> responseRetriever
+        ) : base(basicThresholdStore, convoNodeStore)
         {
-            this.dynamicTableStore = dynamicTableStore;
+            this.pricingStrategyMetaStore = pricingStrategyMetaStore;
+            this.basicThresholdStore = basicThresholdStore;
             this.thresholdEvaluator = thresholdEvaluator;
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task UpdateConversationNode<BasicThreshold>(PricingStrategyTable<BasicThreshold> table, string tableId, string intentId)
+        public async Task UpdateConversationNode<BasicThreshold>(List<BasicThreshold> table, string tableId, string intentId)
         {
-
             await Task.CompletedTask;
         }
 
@@ -71,7 +74,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             var responseValueAsDouble = double.Parse(responseValue);
             var allRows = await RetrieveAllAvailableResponses(dynamicResponseId);
 
-            var dynamicMeta = await dynamicTableStore.Get(allRows.First().TableId, s => s.TableId);
+            var dynamicMeta = await pricingStrategyMetaStore.Get(allRows.First().TableId, s => s.TableId);
 
             var itemsToCreateRowsFor = allRows.Where(x => !string.IsNullOrWhiteSpace(x.ItemName)).Select(row => row.ItemName).Distinct();
 
@@ -101,7 +104,10 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents _)
         {
-            var thresholds = await repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
+            var thresholds = await basicThresholdStore.RawReadonlyQuery()
+                .Where(tableRow => node.DynamicType.EndsWith(tableRow.TableId))
+                .ToListAsync(basicThresholdStore.CancellationToken);
+
             var currentResponseAsDouble = double.Parse(response);
             var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, thresholds);
             return isTooComplicated;
@@ -141,14 +147,13 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
         {
             var tableId = dynamicTableMeta.TableId;
-            var areaId = dynamicTableMeta.AreaIdentifier;
-            var thresholds = await repository.GetAllRows(areaId, tableId);
+            var thresholds = await basicThresholdStore.GetMany(tableId, s => s.TableId);
             return ValidationLogic(thresholds.ToList(), dynamicTableMeta.TableTag);
         }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {
-            var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses<BasicThreshold>(tableMeta.TableId);
+            var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
             var responseParts = PricingStrategyTableTypes.CreateBasicThreshold().CreateDynamicResponseParts(availableBasicThreshold.First().TableId, availableBasicThreshold.First().Threshold.ToString());
             var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;

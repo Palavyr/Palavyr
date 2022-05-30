@@ -29,7 +29,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             await attachmentDeleter.DeleteAttachment(request.FileId, request.IntentId);
             var fileAssets = await attachmentRetriever.GetAttachmentLinksForIntent(request.IntentId);
 
-            var resources = await mapper.MapMany(fileAssets);
+            var resources = await mapper.MapMany(fileAssets, cancellationToken);
             return new DeleteAttachmentResponse(resources);
         }
     }

@@ -39,7 +39,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var clearedMetas = StaticTablesMeta.BindTemplateList(request.StaticTableMetaUpdate, accountIdTransport.AccountId);
             intent.StaticTablesMetas = clearedMetas;
 
-            var resource = await mapper.MapMany(clearedMetas);
+            var resource = await mapper.MapMany(clearedMetas, cancellationToken);
             return new ModifyStaticTablesMetaResponse(resource);
         }
     }

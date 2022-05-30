@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿using System;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
@@ -27,10 +27,11 @@ namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
 
         public async Task Unlink(string fileId, string _)
         {
+            if (fileId == null) throw new ArgumentNullException(nameof(fileId));
             var nodes = await convoNodeStore.GetMany(fileId, s => s.ImageId);
             foreach (var node in nodes)
             {
-                node.ImageId = "";
+                node.ImageId = string.Empty;
             }
         }
     }

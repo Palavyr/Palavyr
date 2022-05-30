@@ -820,7 +820,7 @@ export interface Modifier {
 }
 
 export type DynamicTableProps = {
-    availableDynamicTableOptions: string[];
+    availableDynamicTableOptions: PricingStrategyTableTypeResource[];
     tableNameMap: TableNameMap;
     unitTypes: QuantUnitDefinition[];
     inUse: boolean;
@@ -838,9 +838,11 @@ export type DynamicTableComponentMap = {
     [key: string]: (props: DynamicTableProps) => JSX.Element;
 };
 
-export type TableNameMap = {
-    [tableName: string]: string;
-};
+export type PricingStrategyTableTypeResource = {
+    prettyName: string;
+    tableType: string;
+}
+export type TableNameMap = PricingStrategyTableTypeResource[];
 
 export type TreeErrors = {
     missingNodes: string[];

@@ -21,7 +21,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             // map that provides e.g. Select One Flat: SelectOneFlat.
             var availableTables = PricingStrategyTableTypes.GetDynamicTableTypes();
-            var resource = await mapper.MapMany(availableTables);
+            var resource = await mapper.MapMany(availableTables, cancellationToken);
             return new GetTableNameMapResponse(resource);
         }
     }

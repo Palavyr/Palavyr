@@ -1,25 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Autofac;
+using Microsoft.EntityFrameworkCore;
+using Palavyr.Core.Models.Contracts;
+using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.PdfService
 {
-    public class ResponseRetriever : IResponseRetriever
+    public class ResponseRetriever<TEntity> : IResponseRetriever<TEntity> where TEntity : class, IEntity, ITable
     {
-        private readonly ILifetimeScope lifetimeScope;
+        private readonly IEntityStore<TEntity> entityStore;
+        private readonly IAccountIdTransport accountIdTransport;
 
-        public ResponseRetriever(ILifetimeScope lifetimeScope)
+        public ResponseRetriever(IEntityStore<TEntity> entityStore, IAccountIdTransport accountIdTransport)
         {
-            this.lifetimeScope = lifetimeScope;
+            this.entityStore = entityStore;
+            this.accountIdTransport = accountIdTransport;
         }
 
-        public async Task<List<TEntity>> RetrieveAllAvailableResponses<TEntity>(string dynamicResponseId) where TEntity : class
+        public async Task<List<TEntity>> RetrieveAllAvailableResponses(string dynamicResponseId)
         {
-            var repository = (IPricingStrategyEntityStore<TEntity>) lifetimeScope.Resolve(typeof(IPricingStrategyEntityStore<TEntity>));
-            var rows = await repository.GetAllRowsMatchingDynamicResponseId(dynamicResponseId);
-            return rows.ToList();
+            return await entityStore
+                .RawReadonlyQuery()
+                .Where(x => x.AccountId == accountIdTransport.AccountId)
+                .Where(x => dynamicResponseId.EndsWith(x.TableId))
+                .ToListAsync(entityStore.CancellationToken);
         }
     }
 }

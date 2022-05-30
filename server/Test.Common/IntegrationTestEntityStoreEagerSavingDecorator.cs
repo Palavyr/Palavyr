@@ -52,9 +52,19 @@ namespace Test.Common
             return result;
         }
 
+        public async Task<TEntity> Get(int id)
+        {
+            return await inner.Get(id);
+        }
+
         public async Task<TEntity> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
             return await inner.GetOrNull(id, propertySelectorExpression);
+        }
+
+        public async Task<TEntity> GetOrNull(int id)
+        {
+            return await inner.GetOrNull(id);
         }
 
         public async Task<List<TEntity>> GetMany(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression)
@@ -69,9 +79,21 @@ namespace Test.Common
             return result;
         }
 
+        public async Task<List<TEntity>> GetMany(IEnumerable<int> ids)
+        {
+            return await inner.GetMany(ids);
+        }
+
         public async Task<TEntity[]> GetAll()
         {
             return await inner.GetAll();
+        }
+
+        public async Task<List<TEntity>> CreateOrUpdateMany(IEnumerable<TEntity> entities)
+        {
+            var result = await inner.CreateOrUpdateMany(entities);
+            await unitOfWorkContextProvider.DangerousCommitAllContexts();
+            return result;
         }
 
         public async Task Delete(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression)
@@ -80,11 +102,27 @@ namespace Test.Common
             await unitOfWorkContextProvider.DangerousCommitAllContexts();
         }
 
+        public async Task DeleteMany(IEnumerable<int> ids)
+        {
+            await inner.DeleteMany(ids);
+            await unitOfWorkContextProvider.DangerousCommitAllContexts();
+        }
+
+        public Task Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<TEntity> Update(TEntity entity)
         {
             var result = await inner.Update(entity);
             await unitOfWorkContextProvider.DangerousCommitAllContexts();
             return result;
+        }
+
+        public Task<TEntity> CreateOrUpdate(TEntity entity)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task Delete(TEntity entity)

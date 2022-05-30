@@ -24,7 +24,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             var records = await conversationRecordRetriever.RetrieveConversationRecords();
 
-            var enquiries = await mapper.MapMany(records);
+            var enquiries = await mapper.MapMany(records, cancellationToken);
             return new GetEnquiriesResponse(enquiries);
         }
     }

@@ -19,6 +19,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             var currentArea = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
             currentArea.EmailTemplate = request.EmailTemplate;
+
             return new ModifyAreaEmailTemplateResponse(currentArea.EmailTemplate);
         }
     }

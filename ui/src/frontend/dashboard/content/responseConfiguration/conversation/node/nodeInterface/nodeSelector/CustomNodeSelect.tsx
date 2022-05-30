@@ -2,6 +2,7 @@ import React from "react";
 import { NodeOption, NodeTypeOptions } from "@Palavyr-Types";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
+import { TextField } from "@material-ui/core";
 
 export interface ISelectNodeType {
     onChange: (event: any, nodeOption: NodeOption) => void;
@@ -15,14 +16,15 @@ export const CustomNodeSelect = ({ onChange, label, nodeTypeOptions, shouldDisab
     const groupGetter = (val: NodeOption) => val.groupName;
     const sortedNodeOptions = sortByPropertyAlphabetical(groupGetter, nodeTypeOptions);
     return (
-        <PalavyrAutoComplete
+        <PalavyrAutoComplete<NodeOption>
             label={label}
             options={sortedNodeOptions}
-            shouldDisableSelect={shouldDisabledNodeTypeSelector}
+            disabled={shouldDisabledNodeTypeSelector}
             onChange={onChange}
-            groupby={(nodeOption: NodeOption) => nodeOption.groupName}
+            groupBy={(nodeOption: NodeOption) => nodeOption.groupName}
             getOptionLabel={(option: NodeOption) => option.text}
             getOptionSelected={(option: NodeOption, value: NodeOption) => option.value === value.value}
+            renderInput={params => <TextField {...params} label={label} variant="standard" />}
         />
     );
 };

@@ -22,7 +22,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<DeleteImagesResponse> Handle(DeleteImagesRequest request, CancellationToken cancellationToken)
         {
             var fileAssets = await fileAssetDeleter.RemoveFiles(request.FileIds);
-            var mapped = await mapper.MapMany(FilterResponsesOut(fileAssets));
+            var mapped = await mapper.MapMany(FilterResponsesOut(fileAssets), cancellationToken);
             return new DeleteImagesResponse(mapped);
         }
 

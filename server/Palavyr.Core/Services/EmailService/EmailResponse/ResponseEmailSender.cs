@@ -22,7 +22,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
     public interface IResponseEmailSender
     {
-        Task<SendLiveEmailResultResource> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isdemo);
+        Task<SendLiveEmailResultResource> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isDemo);
         Task<SendLiveEmailResultResource> SendFallbackResponse(string intentId, EmailRequest emailRequest, bool isDemo);
     }
 
@@ -83,7 +83,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                     isDemo
                 );
                 additionalFiles.Add(fileAsset.ToCloudFileDownloadRequest());
-                fileAssetResource = await mapper.Map(fileAsset);
+                fileAssetResource = await mapper.Map(fileAsset, default);
             }
 
             var senderDetails = await compileSenderDetails.Compile(intentId, emailRequest);

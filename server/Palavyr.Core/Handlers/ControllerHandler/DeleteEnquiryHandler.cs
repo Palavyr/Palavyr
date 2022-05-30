@@ -39,7 +39,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             var filtered = records.Where(r => FilterRecentlyDeleted(r));
 
-            var enquiries = await mapper.MapMany(filtered);
+            var enquiries = await mapper.MapMany(filtered, cancellationToken);
             return new DeleteEnquiryResponse(enquiries);
         }
     }

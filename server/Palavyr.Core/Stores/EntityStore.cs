@@ -162,9 +162,25 @@ namespace Palavyr.Core.Stores
             return entity;
         }
 
+        public async Task<TEntity> Get(int id)
+        {
+            var entity = await RestrictToCurrentAccount(QueryExecutor).Where(x => x.Id == id).SingleOrDefaultAsync(CancellationToken);
+            if (entity is null)
+            {
+                throw new DomainException("Entity not found.");
+            }
+
+            return entity;
+        }
+
         public async Task<TEntity?> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
             return await RestrictToCurrentAccount(QueryExecutor).CustomWhere(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
+        }
+
+        public async Task<TEntity> GetOrNull(int id)
+        {
+            return await RestrictToCurrentAccount(QueryExecutor).Where(x => x.Id == id).SingleOrDefaultAsync(CancellationToken);
         }
 
         public async Task<List<TEntity>> GetMany(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression)
@@ -190,10 +206,19 @@ namespace Palavyr.Core.Stores
             return result;
         }
 
+        public async Task<List<TEntity>> GetMany(IEnumerable<int> ids)
+        {
+            var idList = ids.ToList();
+            return await RestrictToCurrentAccount(QueryExecutor)
+                .Where(x => idList.Contains((int)x.Id))
+                .ToListAsync(CancellationToken);
+        }
+
         public async Task<TEntity[]> GetAll()
         {
             return await RestrictToCurrentAccount(QueryExecutor).ToArrayAsync(CancellationToken);
         }
+
 
         public async Task<TEntity> Update(TEntity entity)
         {
@@ -206,6 +231,61 @@ namespace Palavyr.Core.Stores
             AssertAccountIsCorrect(entity);
             var entityEntry = QueryExecutor.Update(entity);
             return entityEntry.Entity;
+        }
+
+        public async Task<TEntity> CreateOrUpdate(TEntity entity)
+        {
+            await Task.CompletedTask;
+            AssertAccountIsCorrect(entity);
+            if (entity.Id is null)
+            {
+                var entityEntry = await QueryExecutor.AddAsync(entity, CancellationToken);
+                return entityEntry.Entity;
+            }
+            else
+            {
+                var entityEntry = QueryExecutor.Update(entity);
+                return entityEntry.Entity;
+            }
+        }
+
+        public async Task<List<TEntity>> CreateOrUpdateMany(IEnumerable<TEntity> entities)
+        {
+            await Task.CompletedTask;
+            foreach (var entity in entities)
+            {
+                AssertAccountIsCorrect(entity);
+            }
+
+            var toReturn = new List<TEntity>();
+            foreach (var entity in entities)
+            {
+                
+                if (entity.Id is null)
+                {
+                    var entityEntry = await QueryExecutor.AddAsync(entity, CancellationToken);
+                    toReturn.Add(entityEntry.Entity);
+                }
+                else
+                {
+                    var entityEntry = QueryExecutor.Update(entity);
+                    toReturn.Add(entityEntry.Entity);
+                }
+            }
+
+            return toReturn;
+        }
+
+        public async Task DeleteMany(IEnumerable<int> ids)
+        {
+            var entities = await GetMany(ids);
+            await Delete(entities);
+        }
+
+        public async Task Delete(int id)
+        {
+            var entity = await Get(id);
+            await Delete(entity);
         }
 
         public async Task Delete(TEntity entity)

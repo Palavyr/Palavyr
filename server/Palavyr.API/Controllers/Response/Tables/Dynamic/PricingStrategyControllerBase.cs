@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices;
@@ -12,10 +13,11 @@ using Palavyr.Core.Services.PricingStrategyTableServices;
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
     [ApiController]
-    public abstract class PricingStrategyControllerBase<TEntity, TResource>
+    public abstract class PricingStrategyControllerBase<TEntity, TResource, TCompiler>
         : PalavyrBaseController, IDynamicTableController<TEntity, TResource>
-        where TEntity : class, IPricingStrategyTable<TEntity>, new()
+        where TEntity : class, IPricingStrategyTable<TEntity>, IEntity, new()
         where TResource : IPricingStrategyTableRowResource, new()
+        where TCompiler : IPricingStrategyTableCompiler
     {
         private readonly IMediator mediator;
         public const string BaseRoute = "api/tables/dynamic/";
@@ -28,7 +30,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         public async Task Delete([FromRoute] string intentId, [FromRoute] string tableId, CancellationToken cancellationToken)
         {
             await mediator.Send(
-                new DeletePricingStrategyTableRequest<TEntity, TResource>()
+                new DeletePricingStrategyTableRequest<TEntity, TResource, TCompiler>()
                 {
                     IntentId = intentId,
                     TableId = tableId
@@ -36,23 +38,23 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpPut("intent/{intentId}/table/{tableId}")]
-        public async Task<IEnumerable<TResource>> SaveDynamicTable([FromRoute] string intentId, [FromRoute] string tableId, [FromBody] PricingStrategyTable<TEntity> pricingStrategyTable)
+        public async Task<IEnumerable<TResource>> SaveTable([FromRoute] string intentId, [FromRoute] string tableId, [FromBody] PricingStrategyTable<TResource> pricingStrategyTable)
         {
             var resource = await mediator.Send(
-                new SavePricingStrategyTableRequest<TEntity, TResource>()
+                new SavePricingStrategyTableRequest<TEntity, TResource, TCompiler>()
                 {
                     TableId = tableId,
                     IntentId = intentId,
-                    PricingStrategyTable = pricingStrategyTable
+                    PricingStrategyTableResource = pricingStrategyTable
                 });
             return resource.Resource;
         }
 
         [HttpGet("intent/{intentId}/table/{tableId}")]
-        public async Task<PricingStrategyTableDataResource<TResource>> GetPricingStrategyTableRows([FromRoute] string intentId, [FromRoute] string tableId)
+        public async Task<PricingStrategyTableDataResource<TResource>> GetTable([FromRoute] string intentId, [FromRoute] string tableId)
         {
             var response = await mediator.Send(
-                new GetPricingStrategyTableRowsRequest<TEntity, TResource>()
+                new GetPricingStrategyTableRowsRequest<TEntity, TResource, TCompiler>()
                 {
                     IntentId = intentId,
                     TableId = tableId
@@ -61,10 +63,10 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpGet("intent/{intentId}/table/{tableId}/template")]
-        public async Task<TResource> GetDynamicRowTemplate([FromRoute] string intentId, [FromRoute] string tableId)
+        public async Task<TResource> GetRowTemplate([FromRoute] string intentId, [FromRoute] string tableId)
         {
             var response = await mediator.Send(
-                new GetPricingStrategyTableRowTemplateRequest<TEntity, TResource>()
+                new GetPricingStrategyTableRowTemplateRequest<TEntity, TResource, TCompiler>()
                 {
                     IntentId = intentId,
                     TableId = tableId

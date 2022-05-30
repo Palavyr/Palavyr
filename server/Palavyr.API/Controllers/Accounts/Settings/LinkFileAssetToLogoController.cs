@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Services.LogoServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -12,7 +11,6 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         private readonly IMediator mediator;
         public const string Route = "file-assets/link/{fileId}/logo";
 
-        private readonly ILogoAssetSaver logoAssetSaver;
 
         public LinkFileAssetToLogoController(IMediator mediator)
         {

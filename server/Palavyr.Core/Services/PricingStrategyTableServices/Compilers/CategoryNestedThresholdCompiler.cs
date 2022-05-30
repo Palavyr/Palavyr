@@ -10,6 +10,7 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
@@ -27,9 +28,10 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<CategoryNestedThreshold> psStore;
         private readonly IConversationOptionSplitter splitter;
         private readonly IThresholdEvaluator thresholdEvaluator;
-        private readonly IResponseRetriever responseRetriever;
+        private readonly IResponseRetriever<CategoryNestedThreshold> responseRetriever;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
 
         private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
@@ -37,31 +39,32 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         public CategoryNestedThresholdCompiler(
             IEntityStore<ConversationNode> convoNodeStore,
             IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
-            IPricingStrategyEntityStore<CategoryNestedThreshold> repository,
+            IEntityStore<CategoryNestedThreshold> psStore,
             IConversationOptionSplitter splitter,
             IThresholdEvaluator thresholdEvaluator,
-            IResponseRetriever responseRetriever,
+            IResponseRetriever<CategoryNestedThreshold> responseRetriever,
             ICancellationTokenTransport cancellationTokenTransport
-        ) : base(repository)
+        ) : base(psStore, convoNodeStore)
         {
             this.convoNodeStore = convoNodeStore;
             this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.psStore = psStore;
             this.splitter = splitter;
             this.thresholdEvaluator = thresholdEvaluator;
             this.responseRetriever = responseRetriever;
             this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
-        public List<string> GetCategories(List<CategoryNestedThreshold> rawRows)
+        public List<string> GetCategories<TEntity>(List<TEntity> rawRows)
         {
-            var rows = rawRows.OrderBy(row => row.RowOrder).ToList();
-            var categories = rows.Select(row => row.ItemName).Distinct().ToList();
+            var rows = rawRows.OrderBy(row => ((IOrderedRow)row).RowOrder).ToList();
+            var categories = rows.Select(row => ((IMultiItem)row).ItemName).Distinct().ToList();
             return categories;
         }
 
-        public async Task UpdateConversationNode<TEntity>(PricingStrategyTable<TEntity> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<TEntity>(List<TEntity> table, string tableId, string areaIdentifier)
         {
-            var category = GetCategories(table.TableData as List<CategoryNestedThreshold>);
+            var category = GetCategories(table); // as List<CategoryNestedThreshold>);
 
             var nodes = await convoNodeStore
                 .Query()
@@ -121,11 +124,18 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             );
         }
 
+        private async Task<List<CategoryNestedThreshold>> GetAllRowsMatchingDynamicResponseId(string id)
+        {
+            return await psStore.RawReadonlyQuery()
+                .Where(tableRow => id.EndsWith(tableRow.TableId))
+                .ToListAsync(psStore.CancellationToken);
+        }
+
         public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
         {
             // dynamicResponseIds is dynamic table keys
             var responseId = GetSingleResponseId(dynamicResponseIds);
-            var records = await repository.GetAllRowsMatchingDynamicResponseId(responseId);
+            var records = await GetAllRowsMatchingDynamicResponseId(responseId);
 
             var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponseParts);
             var category = GetResponseByResponseId(orderedResponseIds[0], dynamicResponseParts);
@@ -167,7 +177,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                 .Single(x => x.ContainsKey(categoryNode.NodeId!))
                 .Values.Single();
 
-            var records = await repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
+            var records = await GetAllRowsMatchingDynamicResponseId(node.DynamicType);
 
             var categoryThresholds = records
                 .Where(rec => rec.ItemName == categoryResponse);
@@ -226,22 +236,21 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 
         public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(PricingStrategyTable<TEntity> pricingStrategyTable)
         {
-            var table = pricingStrategyTable.TableData;
-            var tableTag = pricingStrategyTable.TableTag;
+            var table = pricingStrategyTable.TableData!;
+            var tableTag = pricingStrategyTable.TableTag!;
             return ValidationLogic(table as List<CategoryNestedThreshold>, tableTag);
         }
 
         public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
         {
             var tableId = dynamicTableMeta.TableId;
-            var areaId = dynamicTableMeta.AreaIdentifier;
-            var table = await repository.GetAllRows(areaId, tableId);
+            var table = await psStore.GetMany(tableId, s => s.TableId);
             return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
         }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area _, CultureInfo culture)
         {
-            var availableNestedThreshold = await responseRetriever.RetrieveAllAvailableResponses<CategoryNestedThreshold>(tableMeta.TableId);
+            var availableNestedThreshold = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
             var currentRows = new List<TableRow>
             {
                 new TableRow(

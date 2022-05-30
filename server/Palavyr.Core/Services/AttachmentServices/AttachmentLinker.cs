@@ -23,7 +23,7 @@ namespace Palavyr.Core.Services.AttachmentServices
             this.accountIdTransport = accountIdTransport;
         }
 
-        public async Task Link(string fileId, string intentId)
+        public async Task Link(string fileId, string? intentId)
         {
             var attachment = new AttachmentLinkRecord
             {

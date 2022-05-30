@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
@@ -15,7 +16,7 @@ namespace Palavyr.Core.Mappers
             this.accountIdTransport = accountIdTransport;
         }
 
-        public async Task<ConversationNode> Map(ConversationDesignerNodeResource @from)
+        public async Task<ConversationNode> Map(ConversationDesignerNodeResource @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
             return ConversationNode.CreateNew(

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, Suspense, useContext } from "react";
-import { DynamicTable, QuantUnitDefinition, TableData, TableNameMap } from "@Palavyr-Types";
+import { DynamicTable, PricingStrategyTableTypeResource, QuantUnitDefinition, TableData, TableNameMap } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Button, FormControlLabel, Checkbox } from "@material-ui/core";
 import { PricingStrategyTable } from "./PricingStrategyTable";
@@ -22,8 +22,8 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
     const { repository, planTypeMeta, setSuccessOpen } = useContext(DashboardContext);
 
     const [showDebug, setShowDebug] = useState<boolean>(false);
-    const [availableTables, setAvailableTables] = useState<Array<string>>([]);
-    const [tableNameMap, setTableNameMap] = useState<TableNameMap>({});
+    const [availableTables, setAvailableTables] = useState<PricingStrategyTableTypeResource[]>([]);
+    const [tableNameMap, setTableNameMap] = useState<TableNameMap>([]);
     const [showTotals, setShowTotals] = useState<boolean | null>(null);
     const [unitTypes, setUnitTypes] = useState<QuantUnitDefinition[]>([]);
     const [inUse, setInUse] = useState<boolean>(false);
@@ -61,7 +61,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
             const quantTypes = await repository.Configuration.Units.GetSupportedUnitIds();
 
             // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
-            setAvailableTables(Object.keys(tableNameMap));
+            setAvailableTables(tableNameMap);
             // map of pricing trategy pretty names
             setTableNameMap(tableNameMap);
             // Set array of quant unit types to select from
@@ -75,7 +75,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
         const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, newMeta.tableType, newMeta.tableId);
 
         const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
-        const availableTables = Object.keys(tableNameMap);
+        const availableTables = tableNameMap;
         setAvailableTables(availableTables);
         // map of pricing trategy pretty names
         setTableNameMap(tableNameMap);

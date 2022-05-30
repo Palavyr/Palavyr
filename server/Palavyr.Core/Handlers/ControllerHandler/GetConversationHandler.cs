@@ -24,7 +24,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             var conversation = await convoNodeStore.GetMany(request.IntentId, s => s.AreaIdentifier);
 
-            var resource = await mapper.MapMany(conversation);
+            var resource = await mapper.MapMany(conversation, cancellationToken);
             return new GetConversationResponse(resource);
         }
     }

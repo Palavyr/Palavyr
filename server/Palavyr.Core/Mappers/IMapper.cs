@@ -6,7 +6,7 @@ namespace Palavyr.Core.Mappers
 {
     public interface IMapToNew<in TFrom, TTo>
     {
-        Task<TTo> Map(TFrom @from);
+        Task<TTo> Map(TFrom @from, CancellationToken cancellationToken = default);
     }
 
     public interface IMapToPreExisting<in TFrom, in TTo>
@@ -16,12 +16,12 @@ namespace Palavyr.Core.Mappers
 
     public static class IMapperExtensionMethods
     {
-        public static async Task<IEnumerable<TTo>> MapMany<TFrom, TTo>(this IMapToNew<TFrom, TTo> mapper, IEnumerable<TFrom> sources)
+        public static async Task<IEnumerable<TTo>> MapMany<TFrom, TTo>(this IMapToNew<TFrom, TTo> mapper, IEnumerable<TFrom> sources, CancellationToken cancellationToken)
         {
             var resources = new List<TTo>();
             foreach (var source in sources)
             {
-                var result = await mapper.Map(source);
+                var result = await mapper.Map(source, cancellationToken);
                 resources.Add(result);
             }
 

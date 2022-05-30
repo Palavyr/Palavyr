@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 
@@ -13,7 +14,7 @@ namespace Palavyr.Core.Mappers
             this.feeMapper = feeMapper;
         }
 
-        public async Task<StaticTableRowResource> Map(StaticTableRow @from)
+        public async Task<StaticTableRowResource> Map(StaticTableRow @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
             return new StaticTableRowResource

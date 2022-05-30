@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Services.PdfService
 {
-    public interface IResponseRetriever
+    public interface IResponseRetriever<TEntity> where TEntity : class, IEntity, ITable
     {
-        Task<List<TEntity>> RetrieveAllAvailableResponses<TEntity>(string dynamicResponseId) where TEntity : class;
+        Task<List<TEntity>> RetrieveAllAvailableResponses(string dynamicResponseId);
     }
 }

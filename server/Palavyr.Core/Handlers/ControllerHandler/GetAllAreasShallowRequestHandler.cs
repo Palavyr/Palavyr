@@ -27,7 +27,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             logger.LogDebug("Return all areas");
             var intents = await intentStore.GetMany(intentStore.AccountId, s => s.AccountId);
-            var resource = await mapper.MapMany(intents);
+            var resource = await mapper.MapMany(intents, cancellationToken);
             return new GetAllAreasResponse(resource);
         }
     }

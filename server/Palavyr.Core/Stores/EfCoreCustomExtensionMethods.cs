@@ -49,19 +49,5 @@ namespace Palavyr.Core.Stores
             var lambda = Expression.Lambda<Func<TEntity, bool>>(callLikeExpression, parameterExpression);
             return query.Where(lambda);
         }
-
-        // public static IQueryable<TEntity> CustomWhere<TEntity>(
-        //     this IQueryable<TEntity> query,
-        //     IEnumerable<string> ids,
-        //     Expression<Func<TEntity, string>> propertySelectorExpression)
-        // {
-        //     ids = ids.ToArray();
-        //     if (ids.Count() == 0)
-        //     {
-        //         return query;
-        //     }
-        //
-        //     return InnerWhere(query, propertySelectorExpression, Expression.Constant($"%{string.Join(",", ids)}%"));
-        // }
     }
 }

@@ -1,13 +1,14 @@
+import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 import { makeStyles, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import { QuantUnitDefinition } from "@Palavyr-Types";
+import { PricingStrategyTableTypeResource, QuantUnitDefinition } from "@Palavyr-Types";
 import React, { ChangeEvent } from "react";
 
 export interface PricingStrategySelectorProps {
-    pricingStrategySelection: string;
-    tableOptions: string[];
-    handleChange: (event: ChangeEvent<{ name?: string | undefined; value: unknown }>, value: string) => void;
-    getOptionLabel: (option: string) => string;
+    pricingStrategySelection: PricingStrategyTableTypeResource;
+    tableOptions: PricingStrategyTableTypeResource[];
+    handleChange: (event: any, value: PricingStrategyTableTypeResource) => void;
+    getOptionLabel: (option: PricingStrategyTableTypeResource) => string;
     disabled?: boolean;
     toolTipTitle?: string;
     helperText?: string;
@@ -26,7 +27,7 @@ export const PricingStrategySelector = ({ toolTipTitle, disabled, pricingStrateg
     return (
         <div className={cls.selector}>
             {pricingStrategySelection && (
-                <Autocomplete
+                <PalavyrAutoComplete<PricingStrategyTableTypeResource>
                     disableClearable
                     disabled={disabled}
                     value={pricingStrategySelection}

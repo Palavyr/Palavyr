@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 
@@ -6,7 +7,7 @@ namespace Palavyr.Core.Mappers
 {
     public class IntentResourceMapper : IMapToNew<Area, IntentResource>
     {
-        public async Task<IntentResource> Map(Area @from)
+        public async Task<IntentResource> Map(Area @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
             return new IntentResource

@@ -53,7 +53,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 .Where(x => x.AreaIdentifier == intentId)
                 .ToListAsync(convoNodeStore.CancellationToken);
             var completeConversation = endingSequenceAttacher.AttachEndingSequenceToNodeList(standardNodesNoTracking, intentId, accountIdTransport.AccountId);
-            var widgetNodes = await mapper.MapMany(completeConversation);
+            var widgetNodes = await mapper.MapMany(completeConversation, cancellationToken);
 
             var newConvo = NewConversation.CreateNew(widgetNodes.ToList());
 

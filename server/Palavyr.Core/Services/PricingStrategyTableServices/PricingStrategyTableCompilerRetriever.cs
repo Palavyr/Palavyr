@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Reflection;
 using Autofac;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
     public interface IPricingStrategyTableCompilerRetriever
     {
         IPricingStrategyTableCompiler RetrieveCompiler(string pricingStrategyTableType);
-        IPricingStrategyTableCompiler RetrieveCompiler<TPricingStrategy>() where TPricingStrategy : class, IPricingStrategyTable<TPricingStrategy>;
+        IPricingStrategyTableCompiler RetrieveCompiler<TCompiler>() where TCompiler : class, IPricingStrategyTableCompiler;
     }
 
     public class PricingStrategyTableCompilerRetriever : IPricingStrategyTableCompilerRetriever
@@ -35,9 +34,9 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             }
         }
 
-        public IPricingStrategyTableCompiler RetrieveCompiler<TPricingStrategy>() where TPricingStrategy : class, IPricingStrategyTable<TPricingStrategy>
+        public IPricingStrategyTableCompiler RetrieveCompiler<TCompiler>() where TCompiler : class, IPricingStrategyTableCompiler
         {
-            return (IPricingStrategyTableCompiler)lifetimeScope.Resolve(typeof(TPricingStrategy));
+            return lifetimeScope.Resolve<TCompiler>();
         }
     }
 }

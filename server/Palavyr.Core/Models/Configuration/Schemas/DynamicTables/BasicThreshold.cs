@@ -80,7 +80,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 );
                 mappedTableRows.Add(mappedRow);
             }
-
+        
             return mappedTableRows;
         }
 

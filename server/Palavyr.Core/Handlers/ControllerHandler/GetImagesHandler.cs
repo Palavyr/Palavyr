@@ -32,7 +32,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             }
 
             var filteredAssets = FilterResponsesOut(fileAssets);
-            var resources = await mapper.MapMany(filteredAssets);
+            var resources = await mapper.MapMany(filteredAssets, cancellationToken);
             return new GetFileAssetsResponse(resources);
         }
 

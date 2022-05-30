@@ -6,6 +6,9 @@ using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
 {
+    // TODO: each linker type really needs it own implementation. This interface doesn't really capture the truth of these link and unlink methods
+    // TODO: Since implementations have unique signature needs, null-ref bugs become a real possibility. If implementations can't adhere to the 
+    // TODO: contract while achieving type safety, then the abstraction probably isn't appropriate.
     public class LogoLinker : IFileAssetLinker<LogoLinker>
     {
         private readonly IEntityStore<Logo> logoStore;

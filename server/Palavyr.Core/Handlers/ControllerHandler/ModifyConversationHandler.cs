@@ -28,11 +28,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<ModifyConversationResponse> Handle(ModifyConversationRequest request, CancellationToken cancellationToken)
         {
-            var mappedUpdates = await modelMapper.MapMany(request.Transactions);
+            var mappedUpdates = await modelMapper.MapMany(request.Transactions, cancellationToken);
 
             var updatedConvo = await conversationNodeUpdater.UpdateConversation(request.IntentId, mappedUpdates, cancellationToken);
 
-            var resource = await resourceMapper.MapMany(updatedConvo);
+            var resource = await resourceMapper.MapMany(updatedConvo, cancellationToken);
             return new ModifyConversationResponse(resource);
         }
     }

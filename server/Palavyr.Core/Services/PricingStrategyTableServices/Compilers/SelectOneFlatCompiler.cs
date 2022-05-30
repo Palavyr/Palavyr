@@ -21,20 +21,22 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 
     public class SelectOneFlatCompiler : BaseCompiler<SelectOneFlat>, ISelectOneFlatCompiler
     {
+        private readonly IEntityStore<SelectOneFlat> psStore;
         private readonly IConversationOptionSplitter splitter;
         private readonly ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater;
-        private readonly IResponseRetriever responseRetriever;
+        private readonly IResponseRetriever<SelectOneFlat> responseRetriever;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IEntityStore<DynamicTableMeta> pricingStrategyTableMetaStore;
 
         public SelectOneFlatCompiler(
-            IPricingStrategyEntityStore<SelectOneFlat> repository,
+            IEntityStore<SelectOneFlat> psStore,
             IConversationOptionSplitter splitter,
             ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater,
-            IResponseRetriever responseRetriever,
+            IResponseRetriever<SelectOneFlat> responseRetriever,
             IEntityStore<ConversationNode> convoNodeStore,
-            IEntityStore<DynamicTableMeta> pricingStrategyTableMetaStore) : base(repository)
+            IEntityStore<DynamicTableMeta> pricingStrategyTableMetaStore) : base(psStore, convoNodeStore)
         {
+            this.psStore = psStore;
             this.splitter = splitter;
             this.selectOneFlatNodeUpdater = selectOneFlatNodeUpdater;
             this.responseRetriever = responseRetriever;
@@ -42,9 +44,9 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
         }
 
-        public async Task UpdateConversationNode<T>(PricingStrategyTable<T> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(List<T> table, string tableId, string areaIdentifier)
         {
-            var currentSelectOneFlatUpdate = table.TableData as List<SelectOneFlat>;
+            var currentSelectOneFlatUpdate = table as List<SelectOneFlat>;
 
             var tableMeta = await pricingStrategyTableMetaStore.Get(tableId, s => s.TableId);
 
@@ -142,14 +144,14 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
         {
             var tableId = dynamicTableMeta.TableId;
-            var areaId = dynamicTableMeta.AreaIdentifier;
-            var table = await repository.GetAllRows(areaId, tableId);
+
+            var table = await psStore.GetMany(tableId, s => s.TableId);
             return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
         }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {
-            var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses<SelectOneFlat>(tableMeta.TableId);
+            var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
             var responseParts = PricingStrategyTableTypes.CreateSelectOneFlat().CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Option);
             var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;

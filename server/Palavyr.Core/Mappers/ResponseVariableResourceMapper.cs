@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Resources;
 
@@ -6,7 +7,7 @@ namespace Palavyr.Core.Mappers
 {
     public class ResponseVariableResourceMapper : IMapToNew<ResponseVariableDefinition, ResponseVariableResource>
     {
-        public async Task<ResponseVariableResource> Map(ResponseVariableDefinition @from)
+        public async Task<ResponseVariableResource> Map(ResponseVariableDefinition @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
             return new ResponseVariableResource

@@ -22,18 +22,20 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
     public class TwoNestedCategoryCompiler : BaseCompiler<TwoNestedCategory>, ITwoNestedCategoryCompiler
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
+        private readonly IEntityStore<TwoNestedCategory> psStore;
         private readonly IConversationOptionSplitter splitter;
-        private readonly IResponseRetriever responseRetriever;
+        private readonly IResponseRetriever<TwoNestedCategory> responseRetriever;
         private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
 
         public TwoNestedCategoryCompiler(
             IEntityStore<ConversationNode> convoNodeStore,
-            IPricingStrategyEntityStore<TwoNestedCategory> repository,
+            IEntityStore<TwoNestedCategory> psStore,
             IConversationOptionSplitter splitter,
-            IResponseRetriever responseRetriever,
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(repository)
+            IResponseRetriever<TwoNestedCategory> responseRetriever,
+            IEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(psStore, convoNodeStore)
         {
             this.convoNodeStore = convoNodeStore;
+            this.psStore = psStore;
             this.splitter = splitter;
             this.responseRetriever = responseRetriever;
             this.dynamicTableMetaStore = dynamicTableMetaStore;
@@ -121,13 +123,15 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         {
             var tableId = dynamicTableMeta.TableId;
             var areaId = dynamicTableMeta.AreaIdentifier;
-            var table = await repository.GetAllRows(areaId, tableId);
+
+            var table = await psStore.GetMany(tableId, s => s.TableId);
+            // var table = await repository.GetAllRows(areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
         }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area _, CultureInfo culture)
         {
-            var availableTwoNested = await responseRetriever.RetrieveAllAvailableResponses<TwoNestedCategory>(tableMeta.TableId);
+            var availableTwoNested = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
             var currentRows = new List<TableRow>()
             {
                 new TableRow(
@@ -164,9 +168,9 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             };
         }
 
-        public async Task UpdateConversationNode<T>(PricingStrategyTable<T> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(List<T> table, string tableId, string areaIdentifier)
         {
-            var update = table.TableData as List<TwoNestedCategory>;
+            var update = table as List<TwoNestedCategory>;
 
             var (innerCategories, outerCategories) = GetInnerAndOuterCategories(update);
 
