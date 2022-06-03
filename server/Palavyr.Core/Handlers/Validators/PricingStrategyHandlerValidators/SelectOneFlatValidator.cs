@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentValidation;
+using Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators.GenericValidator;
 using Palavyr.Core.Resources.PricingStrategyResources;
-using Palavyr.Core.Validators.PricingStrategyHandlerValidators.GenericValidator;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
-namespace Palavyr.Core.Validators.PricingStrategyHandlerValidators
+namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 {
     
     public class BasicThresholdResourceValidator : IPricingStrategyResourceValidator<BasicThresholdResource>
     {
-        public async Task Validate(List<BasicThresholdResource> pricingStrategyRequest)
+        public BasicThresholdResourceValidator()
         {
-            await Task.CompletedTask;
-            throw new NotImplementedException();
+            
         }
+        // public async Task Validate(List<BasicThresholdResource> pricingStrategyRequest)
+        // {
+        //     await Task.CompletedTask;
+        //     throw new NotImplementedException();
+        // }
     }
     
     

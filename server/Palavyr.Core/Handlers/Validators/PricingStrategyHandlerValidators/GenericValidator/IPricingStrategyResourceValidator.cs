@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Palavyr.Core.Resources.PricingStrategyResources;
 
-namespace Palavyr.Core.Validators.PricingStrategyHandlerValidators.GenericValidator
+namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators.GenericValidator
 {
     public interface IPricingStrategyResourceValidator<TR>
         where TR : IPricingStrategyTableRowResource

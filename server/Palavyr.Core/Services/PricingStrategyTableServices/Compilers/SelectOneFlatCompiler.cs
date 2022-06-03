@@ -15,7 +15,7 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 {
-    public interface ISelectOneFlatCompiler : IPricingStrategyTableCompiler
+    public interface ISelectOneFlatCompiler : IPricingStrategyTableCompiler<SelectOneFlat>
     {
     }
 

@@ -1,10 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 
-namespace Palavyr.Core.Handlers.ControllerHandler
+namespace Palavyr.Core.Mappers
 {
     public class ConversationNodeResourceMapper : IMapToNew<ConversationNode, ConversationDesignerNodeResource>
     {

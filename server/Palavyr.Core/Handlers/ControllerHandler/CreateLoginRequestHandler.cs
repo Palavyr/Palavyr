@@ -6,7 +6,6 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.Core.Validators;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
@@ -51,13 +50,5 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         
         [Required]
         public string Password { get; set; }
-    }
-
-    public class CreateLoginRequestValidator : IRequestValidator<CreateLoginRequest, CreateLoginRequestResponse>
-    {
-        public async Task Validate(CreateLoginRequest request)
-        {
-            await Task.CompletedTask;
-        }
     }
 }

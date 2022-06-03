@@ -39,7 +39,6 @@ using Palavyr.Core.Services.Units;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.Delete;
-using Palavyr.Core.Validators;
 using Module = Autofac.Module;
 
 namespace Palavyr.API.Registration.Container
@@ -72,14 +71,6 @@ namespace Palavyr.API.Registration.Container
             builder
                 .RegisterGeneric(typeof(EntityStore<>))
                 .As(typeof(IEntityStore<>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-            builder
-                .RegisterGeneric(typeof(INotificationValidator<>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-            builder
-                .RegisterGeneric(typeof(IRequestValidator<,>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
@@ -194,9 +185,14 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterDecorator<LogoAssetSaverDatabaseUpdaterDecorator, ILogoAssetSaver>();
             builder.RegisterDecorator<ResponseHtmlCustomizationDecorator, IResponseHtmlBuilder>();
             builder.RegisterDecorator<ResponsePdfGeneratorUpdateConversationRecordDecorator, IResponsePdfGenerator>();
+        
             
-            builder.RegisterGenericDecorator(typeof(NotificationHandlerValidationDecorator<>), typeof(INotificationHandler<>));
-            builder.RegisterGenericDecorator(typeof(RequestHandlerValidationDecorator<,>), typeof(IRequestHandler<,>));
+            // TODO: Decorator is not appropriate for the validation pipeline through the mediator. 
+            // TODO: Need to use a pattern that searches for available validators, and skips when it can't find any.
+            // TODO: Decorators require that all handlers have a validator... which is not ideal since some handlers don't
+            // TODO: require validation of any kind.
+            // builder.RegisterGenericDecorator(typeof(NotificationHandlerValidationDecorator<>), typeof(INotificationHandler<>));
+            // builder.RegisterGenericDecorator(typeof(RequestHandlerValidationDecorator<,>), typeof(IRequestHandler<,>));
         }
     }
 }

@@ -20,11 +20,12 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 {
-    public interface ICategoryNestedThresholdCompiler : IPricingStrategyTableCompiler
+    public interface ICategoryNestedThresholdCompiler<CategoryNestedThreshold> : IPricingStrategyTableCompiler<CategoryNestedThreshold>
     {
     }
 
-    public class CategoryNestedThresholdCompiler : BaseCompiler<CategoryNestedThreshold>, ICategoryNestedThresholdCompiler
+    public class CategoryNestedThresholdCompiler<CategoryNestedThreshold> : BaseCompiler<CategoryNestedThreshold>, ICategoryNestedThresholdCompiler<CategoryNestedThreshold>
+        where CategoryNestedThreshold : class, IPricingStrategyTable<CategoryNestedThreshold>, IEntity, ITable
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
