@@ -123,7 +123,6 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, 
                 setLocalTable={setLocalTable}
                 setTables={setTables}
                 availableDynamicTableOptions={availableDynamicTableOptions}
-                tableNameMap={tableNameMap}
                 unitTypes={unitTypes}
                 inUse={inUse}
             />

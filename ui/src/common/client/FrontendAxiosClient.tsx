@@ -218,7 +218,8 @@ export class AxiosClient implements IAxiosClient {
             const errorObject = JSON.parse(rawError.response.data);
             return { message: errorObject.Message, additionalMessages: errorObject.AdditionalMessages, statusCode: errorObject.StatusCode };
         } catch {
-            const serverErrorMessage = { message: "Failed to retrieve data from the server." } as ErrorResponse;
+            const serverErrorMessage = { message: "Failed to retrieve data from the server." + rawError.response } as ErrorResponse;
+
             this.apiErrors?.SetErrorPanel(serverErrorMessage);
             throw new Error(serverErrorMessage.message);
         }

@@ -117,7 +117,6 @@ export const TwoNestedCategories = ({
                 setLocalTable={setLocalTable}
                 setTables={setTables}
                 availableDynamicTableOptions={availableDynamicTableOptions}
-                tableNameMap={tableNameMap}
                 unitTypes={unitTypes}
                 inUse={inUse}
             />

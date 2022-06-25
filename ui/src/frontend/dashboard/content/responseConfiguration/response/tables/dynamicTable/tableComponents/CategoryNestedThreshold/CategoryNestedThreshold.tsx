@@ -111,7 +111,6 @@ export const CategoryNestedThreshold = ({
                 setLocalTable={setLocalTable}
                 setTables={setTables}
                 availableDynamicTableOptions={availableDynamicTableOptions}
-                tableNameMap={tableNameMap}
                 unitTypes={unitTypes}
                 inUse={inUse}
             />

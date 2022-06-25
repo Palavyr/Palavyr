@@ -11,7 +11,6 @@ import { useStyles, includesUnit } from "./PricingStrategyTable";
 
 export interface DynamicTableHeaderProps {
     availableDynamicTableOptions: PricingStrategyTableTypeResource[];
-    tableNameMap: TableNameMap;
     unitTypes: QuantUnitDefinition[];
     inUse: boolean;
     setLocalTable: SetState<DynamicTable>;
@@ -25,7 +24,7 @@ const unpackUnitMeta = (unitId: number, unitTypes: QuantUnitDefinition[]) => {
     return quantDef;
 };
 
-export const DynamicTableHeader = ({ availableDynamicTableOptions, tableNameMap, unitTypes, inUse, setLocalTable, localTable }: DynamicTableHeaderProps) => {
+export const DynamicTableHeader = ({ availableDynamicTableOptions, unitTypes, inUse, setLocalTable, localTable }: DynamicTableHeaderProps) => {
     const cls = useStyles();
     const [disabledSelector, setDisabledSelector] = useState<boolean>(false);
     const { repository } = useContext(DashboardContext);

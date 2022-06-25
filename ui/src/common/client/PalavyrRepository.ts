@@ -144,6 +144,7 @@ export class PalavyrRepository {
                 getDynamicTableTypes: async () => this.client.get<TableNameMap>(`tables/dynamic/table-name-map`),
 
                 modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta) => {
+                    console.log(dynamicTableMeta);
                     return this.client.put<DynamicTableMeta, {}>(`tables/dynamic/modify`, dynamicTableMeta);
                     // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, dynamicTableMeta.areaIdentifier].join("-"));
                     // return response;

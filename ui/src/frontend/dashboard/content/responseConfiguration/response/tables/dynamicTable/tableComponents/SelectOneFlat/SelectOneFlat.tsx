@@ -121,7 +121,6 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, areaIdentifier, d
                 setLocalTable={setLocalTable}
                 setTables={setTables}
                 availableDynamicTableOptions={availableDynamicTableOptions}
-                tableNameMap={tableNameMap}
                 unitTypes={unitTypes}
                 inUse={inUse}
             />
