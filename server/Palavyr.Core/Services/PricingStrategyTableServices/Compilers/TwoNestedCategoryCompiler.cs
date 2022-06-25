@@ -73,61 +73,59 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             return Task.FromResult(false);
         }
 
-        public PricingStrategyValidationResult ValidationLogic(IEnumerable<TwoNestedCategory> table, string tableTag)
-        {
-            var reasons = new List<string>();
-            var valid = true;
+        // public PricingStrategyValidationResult ValidationLogic(IEnumerable<TwoNestedCategory> table, string tableTag)
+        // {
+        //     var reasons = new List<string>();
+        //     var valid = true;
+        //
+        //     var itemIds = table.Select(x => x.ItemId).Distinct().ToList();
+        //     var itemNames = table.Select(x => x.ItemName).Distinct().ToList();
+        //     var numCategories = itemIds.Count();
+        //     if (itemNames.Count() != numCategories)
+        //     {
+        //         reasons.Add($"Duplicate outer category values found in {tableTag}");
+        //         valid = false;
+        //     }
+        //
+        //     if (itemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
+        //     {
+        //         reasons.Add($"One or more outer categories did not contain text in {tableTag}");
+        //         valid = false;
+        //     }
+        //
+        //     var itemId = itemIds.First();
+        //     var innerItemNames = table.Where(x => x.ItemId == itemId).Select(x => x.InnerItemName).ToList();
+        //     if (innerItemNames.Count() != innerItemNames.Distinct().Count())
+        //     {
+        //         reasons.Add($"Duplicate inner category values found in {tableTag}");
+        //         valid = false;
+        //     }
+        //
+        //     if (innerItemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
+        //     {
+        //         reasons.Add($"One or more inner categories did not contain text in {tableTag}");
+        //         valid = false;
+        //     }
+        //
+        //     return valid
+        //         ? PricingStrategyValidationResult.CreateValid(tableTag)
+        //         : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
+        // }
 
-            var itemIds = table.Select(x => x.ItemId).Distinct().ToList();
-            var itemNames = table.Select(x => x.ItemName).Distinct().ToList();
-            var numCategories = itemIds.Count();
-            if (itemNames.Count() != numCategories)
-            {
-                reasons.Add($"Duplicate outer category values found in {tableTag}");
-                valid = false;
-            }
+        // public PricingStrategyValidationResult ValidatePricingStrategyPreSave<T>(PricingStrategyTable<T> pricingStrategyTable)
+        // {
+        //     var table = pricingStrategyTable.TableData as List<TwoNestedCategory>;
+        //     var tableTag = pricingStrategyTable.TableTag;
+        //     return ValidationLogic(table, tableTag);
+        // }
 
-            if (itemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
-            {
-                reasons.Add($"One or more outer categories did not contain text in {tableTag}");
-                valid = false;
-            }
-
-            var itemId = itemIds.First();
-            var innerItemNames = table.Where(x => x.ItemId == itemId).Select(x => x.InnerItemName).ToList();
-            if (innerItemNames.Count() != innerItemNames.Distinct().Count())
-            {
-                reasons.Add($"Duplicate inner category values found in {tableTag}");
-                valid = false;
-            }
-
-            if (innerItemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
-            {
-                reasons.Add($"One or more inner categories did not contain text in {tableTag}");
-                valid = false;
-            }
-
-            return valid
-                ? PricingStrategyValidationResult.CreateValid(tableTag)
-                : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
-        }
-
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<T>(PricingStrategyTable<T> pricingStrategyTable)
-        {
-            var table = pricingStrategyTable.TableData as List<TwoNestedCategory>;
-            var tableTag = pricingStrategyTable.TableTag;
-            return ValidationLogic(table, tableTag);
-        }
-
-        public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
-        {
-            var tableId = dynamicTableMeta.TableId;
-            var areaId = dynamicTableMeta.AreaIdentifier;
-
-            var table = await psStore.GetMany(tableId, s => s.TableId);
-            // var table = await repository.GetAllRows(areaId, tableId);
-            return ValidationLogic(table, dynamicTableMeta.TableTag);
-        }
+        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
+        // {
+        //     var tableId = dynamicTableMeta.TableId;
+        //
+        //     var table = await psStore.GetMany(tableId, s => s.TableId);
+        //     return ValidationLogic(table, dynamicTableMeta.TableTag);
+        // }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area _, CultureInfo culture)
         {

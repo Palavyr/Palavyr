@@ -66,7 +66,7 @@ namespace Palavyr.Core.Models
             return result;
         }
 
-        private async Task<PreCheckResult> StatusCheck(List<Area> areas, bool widgetState, bool demo, ILogger logger)
+        private async Task<PreCheckResult> StatusCheck(List<Area> intents, bool widgetState, bool demo, ILogger logger)
         {
             logger.LogDebug("Attempting RunConversationsPreCheck...");
 
@@ -93,15 +93,15 @@ namespace Palavyr.Core.Models
             }
 
             var numberOfEnabledIntents = 0;
-            foreach (var area in areas)
+            foreach (var intent in intents)
             {
                 var error = new PreCheckError()
                 {
-                    AreaName = area.AreaName
+                    AreaName = intent.AreaName
                 };
 
-                var nodeList = area.ConversationNodes.ToArray();
-                var allRequiredNodes = (await requiredNodeCalculator.FindRequiredNodes(area)).ToList();
+                var nodeList = intent.ConversationNodes.ToArray();
+                var allRequiredNodes = (await requiredNodeCalculator.FindRequiredNodes(intent)).ToList();
 
                 logger.LogDebug($"Required Nodes Found. Number of required nodes: {allRequiredNodes.Count}");
 
@@ -110,19 +110,19 @@ namespace Palavyr.Core.Models
                 var nodesSatisfied = AllRequiredNodesSatisfied(nodeList, allRequiredNodes.ToArray(), error);
                 var dynamicNodesAreOrdered = DynamicNodesAreOrdered(nodeList, error);
                 var allImageNodesHaveImagesSet = AllImageNodesSet(nodeList, error);
-                var allCategoricalPricingStrategiesAreUnique = await AllCategoricalPricingStrategiesAreUnique(area, error);
+                // var allCategoricalPricingStrategiesAreUnique = await AllCategoricalPricingStrategiesAreUnique(intent, error);
 
-                var checks = new List<bool>() { nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered, allImageNodesHaveImagesSet, allCategoricalPricingStrategiesAreUnique };
+                var checks = new List<bool>() { nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered, allImageNodesHaveImagesSet};//, allCategoricalPricingStrategiesAreUnique };
 
                 var areaChecksPassed = checks.TrueForAll(x => x);
                 if (!areaChecksPassed)
                 {
                     isReady = false;
                     errors.Add(error);
-                    logger.LogDebug($"Area not currently ready: {area.AreaName}");
+                    logger.LogDebug($"Area not currently ready: {intent.AreaName}");
                 }
 
-                if (area.IsEnabled)
+                if (intent.IsEnabled)
                 {
                     numberOfEnabledIntents++;
                 }
@@ -194,25 +194,25 @@ namespace Palavyr.Core.Models
             return isReady;
         }
 
-        private async Task<bool> AllCategoricalPricingStrategiesAreUnique(Area area, PreCheckError error)
-        {
-            var pricingStrategies = area.DynamicTableMetas;
-            var results = await orchestrator.ValidatePricingStrategies(pricingStrategies);
-            var ready = true;
-            if (results.Count > 0)
-            {
-                foreach (var result in results)
-                {
-                    if (!result.IsValid && result.Reasons != null)
-                    {
-                        ready = false;
-                        error.Reasons.AddRange(result.Reasons);
-                    }
-                }
-            }
-
-            return ready;
-        }
+        // private async Task<bool> AllCategoricalPricingStrategiesAreUnique(Area area, PreCheckError error)
+        // {
+        //     var pricingStrategies = area.DynamicTableMetas;
+        //     var results = await orchestrator.ValidatePricingStrategies(pricingStrategies);
+        //     var ready = true;
+        //     if (results.Count > 0)
+        //     {
+        //         foreach (var result in results)
+        //         {
+        //             if (!result.IsValid && result.Reasons != null)
+        //             {
+        //                 ready = false;
+        //                 error.Reasons.AddRange(result.Reasons);
+        //             }
+        //         }
+        //     }
+        //
+        //     return ready;
+        // }
 
         private bool AllImageNodesSet(ConversationNode[] nodeList, PreCheckError error)
         {

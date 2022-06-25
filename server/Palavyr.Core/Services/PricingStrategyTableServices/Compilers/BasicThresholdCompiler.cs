@@ -113,43 +113,43 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             return isTooComplicated;
         }
 
-        private PricingStrategyValidationResult ValidationLogic(List<BasicThreshold> table, string tableTag)
-        {
-            var reasons = new List<string>();
-            var valid = true;
+        // private PricingStrategyValidationResult ValidationLogic(List<BasicThreshold> table, string tableTag)
+        // {
+        //     var reasons = new List<string>();
+        //     var valid = true;
+        //
+        //     if (table.Select(x => x.Threshold).Distinct().Count() != table.Count)
+        //     {
+        //         reasons.Add($"Duplicate threshold values found in {tableTag}");
+        //         valid = false;
+        //     }
+        //
+        //     if (table.Any(x => x.Threshold < 0))
+        //     {
+        //         reasons.Add($"Negative threshold value found in {tableTag}");
+        //         valid = false;
+        //     }
+        //
+        //
+        //     return valid
+        //         ? PricingStrategyValidationResult.CreateValid(tableTag)
+        //         : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
+        // }
 
-            if (table.Select(x => x.Threshold).Distinct().Count() != table.Count)
-            {
-                reasons.Add($"Duplicate threshold values found in {tableTag}");
-                valid = false;
-            }
+        // public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(PricingStrategyTable<TEntity> pricingStrategyTable)
+        // {
+        //     // var table = dynamicTable.BasicThreshold;
+        //     var table = pricingStrategyTable.TableData;
+        //     var tableTag = pricingStrategyTable.TableTag;
+        //     return ValidationLogic(table as List<BasicThreshold>, tableTag);
+        // }
 
-            if (table.Any(x => x.Threshold < 0))
-            {
-                reasons.Add($"Negative threshold value found in {tableTag}");
-                valid = false;
-            }
-
-
-            return valid
-                ? PricingStrategyValidationResult.CreateValid(tableTag)
-                : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
-        }
-
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(PricingStrategyTable<TEntity> pricingStrategyTable)
-        {
-            // var table = dynamicTable.BasicThreshold;
-            var table = pricingStrategyTable.TableData;
-            var tableTag = pricingStrategyTable.TableTag;
-            return ValidationLogic(table as List<BasicThreshold>, tableTag);
-        }
-
-        public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
-        {
-            var tableId = dynamicTableMeta.TableId;
-            var thresholds = await basicThresholdStore.GetMany(tableId, s => s.TableId);
-            return ValidationLogic(thresholds.ToList(), dynamicTableMeta.TableTag);
-        }
+        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
+        // {
+        //     var tableId = dynamicTableMeta.TableId;
+        //     var thresholds = await basicThresholdStore.GetMany(tableId, s => s.TableId);
+        //     return ValidationLogic(thresholds.ToList(), dynamicTableMeta.TableTag);
+        // }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {

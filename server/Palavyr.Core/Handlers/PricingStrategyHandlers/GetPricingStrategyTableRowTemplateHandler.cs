@@ -12,14 +12,14 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
     public class GetPricingStrategyTableRowTemplateHandler<T, TR, TCompiler>
         : IRequestHandler<GetPricingStrategyTableRowTemplateRequest<T, TR, TCompiler>, GetPricingStrategyTableRowTemplateResponse<TR>>
         where T : class, IPricingStrategyTable<T>, IEntity, ITable, new()
-        where TR : IPricingStrategyTableRowResource
-        where TCompiler : IPricingStrategyTableCompiler
+        where TR : class, IPricingStrategyTableRowResource
+        where TCompiler : class, IPricingStrategyTableCompiler
     {
-        private readonly IPricingStrategyTableCommandExecutor<T, TCompiler> executor;
+        private readonly IPricingStrategyTableCommandExecutor<T, TR, TCompiler> executor;
         private readonly IMapToNew<T, TR> entityMapper;
 
         public GetPricingStrategyTableRowTemplateHandler(
-            IPricingStrategyTableCommandExecutor<T, TCompiler> executor,
+            IPricingStrategyTableCommandExecutor<T, TR, TCompiler> executor,
             IMapToNew<T, TR> entityMapper
         )
         {

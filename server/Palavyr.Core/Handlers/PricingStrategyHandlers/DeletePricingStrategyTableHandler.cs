@@ -11,12 +11,12 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
     public class DeletePricingStrategyTableHandler<T, TR, TCompiler>
         : IRequestHandler<DeletePricingStrategyTableRequest<T, TR, TCompiler>, DeletePricingStrategyTableResponse<TR>>
         where T : class, IPricingStrategyTable<T>, IEntity, ITable, new()
-        where TR : IPricingStrategyTableRowResource
-        where TCompiler : IPricingStrategyTableCompiler
+        where TR : class, IPricingStrategyTableRowResource
+        where TCompiler : class, IPricingStrategyTableCompiler
     {
-        private readonly IPricingStrategyTableCommandExecutor<T, TCompiler> executor;
+        private readonly IPricingStrategyTableCommandExecutor<T, TR, TCompiler> executor;
 
-        public DeletePricingStrategyTableHandler(IPricingStrategyTableCommandExecutor<T, TCompiler> executor)
+        public DeletePricingStrategyTableHandler(IPricingStrategyTableCommandExecutor<T, TR, TCompiler> executor)
         {
             this.executor = executor;
         }
@@ -38,7 +38,6 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 
     public class DeletePricingStrategyTableResponse<TR>
         where TR : IPricingStrategyTableRowResource
-
     {
     }
 

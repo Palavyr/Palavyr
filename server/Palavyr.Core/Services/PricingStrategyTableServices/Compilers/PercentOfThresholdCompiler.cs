@@ -139,55 +139,55 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             return isTooComplicated;
         }
 
-        private PricingStrategyValidationResult ValidationLogic(List<PercentOfThreshold> table, string tableTag)
-        {
-            var reasons = new List<string>();
-            var valid = true;
+        // private PricingStrategyValidationResult ValidationLogic(List<PercentOfThreshold> table, string tableTag)
+        // {
+        //     var reasons = new List<string>();
+        //     var valid = true;
+        //
+        //     var itemIds = table.Select(x => x.ItemId).Distinct();
+        //
+        //     foreach (var itemId in itemIds)
+        //     {
+        //         var thresholds = table.Where(x => x.ItemId == itemId).Select(x => x.Threshold).ToList();
+        //         if (thresholds.Distinct().Count() != thresholds.Count())
+        //         {
+        //             reasons.Add($"Duplicate threshold values found in {tableTag}");
+        //             valid = false;
+        //         }
+        //
+        //         if (thresholds.Any(x => x < 0))
+        //         {
+        //             reasons.Add($"Negative threshold value found in {tableTag}");
+        //             valid = false;
+        //         }
+        //
+        //         if (!valid)
+        //         {
+        //             break;
+        //         }
+        //     }
+        //
+        //     return valid
+        //         ? PricingStrategyValidationResult.CreateValid(tableTag)
+        //         : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
+        // }
 
-            var itemIds = table.Select(x => x.ItemId).Distinct();
+        // public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(PricingStrategyTable<TEntity> pricingStrategyTable)
+        // {
+        //     var table = pricingStrategyTable.TableData as List<PercentOfThreshold>;
+        //     var tableTag = pricingStrategyTable.TableTag;
+        //     return ValidationLogic(table, tableTag);
+        // }
 
-            foreach (var itemId in itemIds)
-            {
-                var thresholds = table.Where(x => x.ItemId == itemId).Select(x => x.Threshold).ToList();
-                if (thresholds.Distinct().Count() != thresholds.Count())
-                {
-                    reasons.Add($"Duplicate threshold values found in {tableTag}");
-                    valid = false;
-                }
-
-                if (thresholds.Any(x => x < 0))
-                {
-                    reasons.Add($"Negative threshold value found in {tableTag}");
-                    valid = false;
-                }
-
-                if (!valid)
-                {
-                    break;
-                }
-            }
-
-            return valid
-                ? PricingStrategyValidationResult.CreateValid(tableTag)
-                : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
-        }
-
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(PricingStrategyTable<TEntity> pricingStrategyTable)
-        {
-            var table = pricingStrategyTable.TableData as List<PercentOfThreshold>;
-            var tableTag = pricingStrategyTable.TableTag;
-            return ValidationLogic(table, tableTag);
-        }
-
-        public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
-        {
-            var tableId = dynamicTableMeta.TableId;
-            // var areaId = dynamicTableMeta.AreaIdentifier;
-
-            var table = await psStore.GetMany(tableId, s => s.TableId);
-            // var table = await repository.GetAllRows(areaId, tableId);
-            return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
-        }
+        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
+        // {
+        //     var tableId = dynamicTableMeta.TableId;
+        //     // var areaId = dynamicTableMeta.AreaIdentifier;
+        //
+        //     var table = await psStore.GetMany(tableId, s => s.TableId);
+        //     // var table = await repository.GetAllRows(areaId, tableId);
+        //     return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
+        // }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {

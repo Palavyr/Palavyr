@@ -1,5 +1,6 @@
 using System;
 using Autofac;
+using FluentValidation;
 using MediatR;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
@@ -74,9 +75,14 @@ namespace Palavyr.API.Registration.Container
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
-            
+            builder
+                .RegisterGeneric(typeof(AbstractValidator<>))
+                .As(typeof(IValidator<>))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
 
-            builder.RegisterGeneric(typeof(PricingStrategyTableCommandExecutor<,>)).As(typeof(IPricingStrategyTableCommandExecutor<,>)).InstancePerLifetimeScope();
+
+            builder.RegisterGeneric(typeof(PricingStrategyTableCommandExecutor<,,>)).As(typeof(IPricingStrategyTableCommandExecutor<,,>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(ResponseRetriever<>)).As(typeof(IResponseRetriever<>));
 
             builder.RegisterType<MissingNodeCalculator>().As<IMissingNodeCalculator>();
@@ -185,8 +191,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterDecorator<LogoAssetSaverDatabaseUpdaterDecorator, ILogoAssetSaver>();
             builder.RegisterDecorator<ResponseHtmlCustomizationDecorator, IResponseHtmlBuilder>();
             builder.RegisterDecorator<ResponsePdfGeneratorUpdateConversationRecordDecorator, IResponsePdfGenerator>();
-        
-            
+
+
             // TODO: Decorator is not appropriate for the validation pipeline through the mediator. 
             // TODO: Need to use a pattern that searches for available validators, and skips when it can't find any.
             // TODO: Decorators require that all handlers have a validator... which is not ideal since some handlers don't

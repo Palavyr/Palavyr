@@ -32,7 +32,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             DynamicResponses dynamicResponses,
             CultureInfo culture,
             bool includeTotals
-        ) 
+        )
         {
             var tableRows = new List<TableRow>();
             foreach (var dynamicResponse in dynamicResponses)
@@ -74,17 +74,18 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             return nodes;
         }
 
-        public async Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<DynamicTableMeta> pricingStrategyMetas)
-        {
-            var validationResults = new List<PricingStrategyValidationResult>();
-            foreach (var pricingStrategy in pricingStrategyMetas)
-            {
-                var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(pricingStrategy.TableType);
-                var validationResult = await compiler.ValidatePricingStrategyPostSave(pricingStrategy);
-                validationResults.Add(validationResult);
-            }
-
-            return validationResults;
-        }
+        // public async Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<DynamicTableMeta> pricingStrategyMetas)
+        // {
+        //     var validationResults = new List<PricingStrategyValidationResult>();
+        //     foreach (var pricingStrategy in pricingStrategyMetas)
+        //     {
+        //         var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(pricingStrategy.TableType);
+        //         var validationResult = await compiler.ValidatePricingStrategyPostSave(pricingStrategy);
+        //         validationResults.Add(validationResult);
+        //     }
+        //
+        //     return validationResults;
+        // }
     }
+    
 }

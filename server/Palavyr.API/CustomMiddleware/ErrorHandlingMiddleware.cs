@@ -46,13 +46,13 @@ namespace Palavyr.API.CustomMiddleware
                 {
                     case StripeException stripeException:
                         logger.LogInformation("Encountered an exception with Stripe");
-                        logger.LogError($"{stripeException.Message}");
+                        logger.LogError("{Exception}, stripeException.Message");
                         message = ex.Message;
                         break;
 
                     case IOException ioException:
                         logger.LogInformation("File IO exception.");
-                        logger.LogError($"{ioException.Message}");
+                        logger.LogError("{Exception}", ioException.Message);
                         break;
 
                     case HttpRequestException httpRequestException:

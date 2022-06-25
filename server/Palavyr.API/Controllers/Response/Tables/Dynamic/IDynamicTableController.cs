@@ -8,7 +8,7 @@ using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
-    public interface IDynamicTableController<TEntity, TResource> where TResource : IPricingStrategyTableRowResource, new()
+    public interface IDynamicTableController<TEntity, TResource> where TResource : class, IPricingStrategyTableRowResource, new()
     {
         Task Delete(string intentId, string tableId, CancellationToken cancellationToken);
         Task<TResource> GetRowTemplate([FromRoute] string intentId, [FromRoute] string tableId);

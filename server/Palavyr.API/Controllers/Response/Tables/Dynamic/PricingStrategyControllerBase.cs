@@ -16,8 +16,8 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
     public abstract class PricingStrategyControllerBase<TEntity, TResource, TCompiler>
         : PalavyrBaseController, IDynamicTableController<TEntity, TResource>
         where TEntity : class, IPricingStrategyTable<TEntity>, IEntity, new()
-        where TResource : IPricingStrategyTableRowResource, new()
-        where TCompiler : IPricingStrategyTableCompiler
+        where TResource : class, IPricingStrategyTableRowResource, new()
+        where TCompiler : class, IPricingStrategyTableCompiler
     {
         private readonly IMediator mediator;
         public const string BaseRoute = "api/tables/dynamic/";

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
@@ -15,31 +17,37 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
     public class SavePricingStrategyTableHandler<T, TR, TCompiler>
         : IRequestHandler<SavePricingStrategyTableRequest<T, TR, TCompiler>, SavePricingStrategyTableResponse<TR>>
         where T : class, IPricingStrategyTable<T>, IEntity, ITable, new()
-        where TR : IPricingStrategyTableRowResource
-        where TCompiler : IPricingStrategyTableCompiler
+        where TR : class, IPricingStrategyTableRowResource
+        where TCompiler : class, IPricingStrategyTableCompiler
     {
         private readonly IEntityStore<T> entityStore;
-        private readonly IPricingStrategyTableCommandExecutor<T, TCompiler> executor;
+        private readonly IPricingStrategyTableCommandExecutor<T, TR, TCompiler> executor;
         private readonly IMapToNew<T, TR> resourceMapper;
         private readonly IMapToNew<TR, T> newEntityMapper;
+        private readonly IValidator<List<TR>> pricingStrategyValidator;
         private readonly IMapToPreExisting<TR, T> mapToExisting;
 
         public SavePricingStrategyTableHandler(
             IEntityStore<T> entityStore,
-            IPricingStrategyTableCommandExecutor<T, TCompiler> executor,
+            IPricingStrategyTableCommandExecutor<T, TR, TCompiler> executor,
             IMapToNew<T, TR> resourceMapper,
             IMapToNew<TR, T> newEntityMapper,
+            IValidator<List<TR>> pricingStrategyValidator,
             IMapToPreExisting<TR, T> mapToExisting)
         {
             this.entityStore = entityStore;
             this.executor = executor;
             this.resourceMapper = resourceMapper;
             this.newEntityMapper = newEntityMapper;
+            this.pricingStrategyValidator = pricingStrategyValidator;
             this.mapToExisting = mapToExisting;
         }
 
         public async Task<SavePricingStrategyTableResponse<TR>> Handle(SavePricingStrategyTableRequest<T, TR, TCompiler> request, CancellationToken cancellationToken)
         {
+            var validationResult = await pricingStrategyValidator.ValidateAsync(request.PricingStrategyTableResource.TableData, cancellationToken);
+            if (!validationResult.IsValid) throw new DomainException("Bad request");
+
             var tableUpdate = await MapTable(request.PricingStrategyTableResource.TableData, cancellationToken);
 
             var rows = await executor.SaveTable(request.IntentId, request.TableId, request.PricingStrategyTableResource.TableTag, tableUpdate);
@@ -72,7 +80,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 
     public class SavePricingStrategyTableRequest<T, TR, TCompiler> : IRequest<SavePricingStrategyTableResponse<TR>>
         where T : class, IPricingStrategyTable<T>, IEntity, new()
-        where TR : IPricingStrategyTableRowResource
+        where TR : class, IPricingStrategyTableRowResource
         where TCompiler : IPricingStrategyTableCompiler
     {
         public string IntentId { get; set; }

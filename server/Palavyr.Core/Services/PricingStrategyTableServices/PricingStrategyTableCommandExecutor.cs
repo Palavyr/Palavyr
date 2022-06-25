@@ -1,23 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
+using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
-    public class PricingStrategyTableData<TEntity> where TEntity : class, IPricingStrategyTable<TEntity>, IEntity, ITable, new()
+    public class PricingStrategyTableData<TEntity> where TEntity
+        : class, IPricingStrategyTable<TEntity>, IEntity, ITable, new()
     {
         public List<TEntity> TableRows { get; set; }
         public bool IsInUse { get; set; }
     }
 
-    public interface IPricingStrategyTableCommandExecutor<TEntity, TCompiler>
+    public interface IPricingStrategyTableCommandExecutor<TEntity, TR, TCompiler>
         where TEntity : class, IPricingStrategyTable<TEntity>, IEntity, ITable, new()
-        where TCompiler : IPricingStrategyTableCompiler
+        where TCompiler : class, IPricingStrategyTableCompiler
+        where TR : class, IPricingStrategyTableRowResource
     {
         Task DeleteTable(string intentId, string tableId);
         Task<PricingStrategyTableData<TEntity>> GetTableRows(string intentId, string tableId); // TODO: return new object with 'is in use in palavyr tree'
@@ -25,10 +30,11 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
         Task<IEnumerable<TEntity>> SaveTable(string intentId, string tableId, string? tableTag, List<TEntity> pricingStrategyTable);
     }
 
-    public class PricingStrategyTableCommandExecutor<TEntity, TCompiler>
-        : IPricingStrategyTableCommandExecutor<TEntity, TCompiler>
+    public class PricingStrategyTableCommandExecutor<TEntity, TCompiler, TR>
+        : IPricingStrategyTableCommandExecutor<TEntity, TR, TCompiler>
         where TEntity : class, IPricingStrategyTable<TEntity>, IEntity, ITable, new()
         where TCompiler : class, IPricingStrategyTableCompiler
+        where TR : class, IPricingStrategyTableRowResource
     {
         private ILogger<TEntity> logger;
         private readonly IEntityStore<TEntity> pricingStrategyStore;
@@ -36,7 +42,11 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
         private readonly IPricingStrategyTableCompilerRetriever retriever;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IAccountIdTransport accountIdTransport;
+        private readonly IValidator<TR> pricingStrategyValidator;
+        private readonly ICancellationTokenTransport cancellationTokenTransport;
+
         private string AccountId => accountIdTransport.AccountId;
+        private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
 
         public PricingStrategyTableCommandExecutor(
             IEntityStore<TEntity> pricingStrategyStore,
@@ -44,6 +54,8 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             IPricingStrategyTableCompilerRetriever retriever,
             IEntityStore<ConversationNode> convoNodeStore,
             IAccountIdTransport accountIdTransport,
+           
+            ICancellationTokenTransport cancellationTokenTransport,
             ILogger<TEntity> logger
         )
         {
@@ -52,18 +64,20 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             this.retriever = retriever;
             this.convoNodeStore = convoNodeStore;
             this.accountIdTransport = accountIdTransport;
+            this.pricingStrategyValidator = pricingStrategyValidator;
+            this.cancellationTokenTransport = cancellationTokenTransport;
             this.logger = logger;
         }
 
         public async Task DeleteTable(string intentId, string tableId)
         {
-            logger.LogInformation($"Deleting dynamic table: {tableId}");
+            logger.LogInformation("Deleting dynamic table: {TableId}", tableId);
             await pricingStrategyStore.Delete(tableId, s => s.TableId);
         }
 
         public async Task<PricingStrategyTableData<TEntity>> GetTableRows(string intentId, string tableId)
         {
-            logger.LogInformation($"Getting dynamic table rows: {tableId}");
+            logger.LogInformation("Getting dynamic table rows: {TableId}", tableId);
             var tableRows = await pricingStrategyStore.GetMany(tableId, s => s.TableId);
             if (tableRows.ToList().Count == 0)
             {
@@ -94,7 +108,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
 
         public TEntity GetRowTemplate(string intentId, string tableId)
         {
-            logger.LogInformation($"Getting dynamic table row template: {tableId}");
+            logger.LogInformation("Getting dynamic table row template: {TableId}", tableId);
             return (new TEntity()).CreateTemplate(AccountId, intentId, tableId);
         }
 

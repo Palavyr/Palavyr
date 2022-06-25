@@ -7,7 +7,6 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Requests;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters;
@@ -15,7 +14,7 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 {
-    public interface ISelectOneFlatCompiler : IPricingStrategyTableCompiler<SelectOneFlat>
+    public interface ISelectOneFlatCompiler : IPricingStrategyTableCompiler
     {
     }
 
@@ -110,44 +109,44 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             return Task.FromResult(false);
         }
 
-        private PricingStrategyValidationResult ValidationLogic(List<SelectOneFlat> table, string tableTag)
-        {
-            var reasons = new List<string>();
-            var valid = true;
+        // private PricingStrategyValidationResult ValidationLogic(List<SelectOneFlat> table, string tableTag)
+        // {
+        //     var reasons = new List<string>();
+        //     var valid = true;
+        //
+        //     var itemNames = table.Select(x => x.Option).ToList();
+        //
+        //     if (itemNames.Count() != itemNames.Distinct().Count())
+        //     {
+        //         reasons.Add($"Duplicate threshold values found in {tableTag}");
+        //         valid = false;
+        //     }
+        //
+        //     if (itemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
+        //     {
+        //         reasons.Add($"One or more categories did not contain text in {tableTag}");
+        //         valid = false;
+        //     }
+        //
+        //     return valid
+        //         ? PricingStrategyValidationResult.CreateValid(tableTag)
+        //         : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
+        // }
 
-            var itemNames = table.Select(x => x.Option).ToList();
+        // public PricingStrategyValidationResult ValidatePricingStrategyPreSave<T>(PricingStrategyTable<T> pricingStrategyTable)
+        // {
+        //     var table = pricingStrategyTable.TableData as List<SelectOneFlat>;
+        //     var tableTag = pricingStrategyTable.TableTag;
+        //     return ValidationLogic(table, tableTag);
+        // }
 
-            if (itemNames.Count() != itemNames.Distinct().Count())
-            {
-                reasons.Add($"Duplicate threshold values found in {tableTag}");
-                valid = false;
-            }
-
-            if (itemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
-            {
-                reasons.Add($"One or more categories did not contain text in {tableTag}");
-                valid = false;
-            }
-
-            return valid
-                ? PricingStrategyValidationResult.CreateValid(tableTag)
-                : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
-        }
-
-        public PricingStrategyValidationResult ValidatePricingStrategyPreSave<T>(PricingStrategyTable<T> pricingStrategyTable)
-        {
-            var table = pricingStrategyTable.TableData as List<SelectOneFlat>;
-            var tableTag = pricingStrategyTable.TableTag;
-            return ValidationLogic(table, tableTag);
-        }
-
-        public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
-        {
-            var tableId = dynamicTableMeta.TableId;
-
-            var table = await psStore.GetMany(tableId, s => s.TableId);
-            return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
-        }
+        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
+        // {
+        //     var tableId = dynamicTableMeta.TableId;
+        //
+        //     var table = await psStore.GetMany(tableId, s => s.TableId);
+        //     return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
+        // }
 
         public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {

@@ -9,16 +9,17 @@ using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 {
-    public class GetPricingStrategyTableRowsHandler<T, TR, TCompiler> : IRequestHandler<GetPricingStrategyTableRowsRequest<T, TR, TCompiler>, GetPricingStrategyTableRowsResponse<TR>>
+    public class GetPricingStrategyTableRowsHandler<T, TR, TCompiler> 
+        : IRequestHandler<GetPricingStrategyTableRowsRequest<T, TR, TCompiler>, GetPricingStrategyTableRowsResponse<TR>>
         where T : class, IPricingStrategyTable<T>, IEntity, ITable, new()
-        where TR : IPricingStrategyTableRowResource
-        where TCompiler : IPricingStrategyTableCompiler
+        where TR : class, IPricingStrategyTableRowResource
+        where TCompiler : class, IPricingStrategyTableCompiler
     {
-        private readonly IPricingStrategyTableCommandExecutor<T, TCompiler> executor;
+        private readonly IPricingStrategyTableCommandExecutor<T, TR, TCompiler> executor;
         private readonly IMapToNew<T, TR> entityMapper;
 
         public GetPricingStrategyTableRowsHandler(
-            IPricingStrategyTableCommandExecutor<T, TCompiler> executor,
+            IPricingStrategyTableCommandExecutor<T, TR, TCompiler> executor,
             IMapToNew<T, TR> entityMapper
         )
         {

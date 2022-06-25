@@ -19,6 +19,6 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
         Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<DynamicTableMeta> dynamicTableMetas, string areaId);
 
         Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents pricingStrategyResponseComponents);
-        Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<DynamicTableMeta> pricingStrategyMetas);
+        // Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<DynamicTableMeta> pricingStrategyMetas);
     }
 }
