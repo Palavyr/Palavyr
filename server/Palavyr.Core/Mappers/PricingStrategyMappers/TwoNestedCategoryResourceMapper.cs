@@ -12,6 +12,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers
             await Task.CompletedTask;
             return new TwoNestedCategoryResource
             {
+                Id = @from.Id,
                 AccountId = @from.AccountId,
                 AreaIdentifier = @from.AreaIdentifier,
                 TableId = @from.TableId,

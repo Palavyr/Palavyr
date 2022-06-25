@@ -54,12 +54,14 @@ namespace Palavyr.API
             services.AddHttpContextAccessor();
             services.AddControllers().AddControllersAsServices();
             services.AddAuthentication().AddCertificate();
+            
             CorsConfiguration.ConfigureCorsService(services, environ);
             Configurations.ConfigureStripe(config);
             RegisterStores(services, config);
             ServiceRegistry.RegisterHealthChecks(services);
             ServiceRegistry.RegisterIisConfiguration(services, environ);
             MediatorRegistry.RegisterMediator(services);
+            
         }
 
         public void Configure(
@@ -69,7 +71,6 @@ namespace Palavyr.API
         {
             PalavyrAccessChecker.AssertEnvironmentsDoNoOverlap();
 
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -78,7 +79,7 @@ namespace Palavyr.API
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseMiddleware<SetCancellationTokenTransportMiddleware>();
             app.UseMiddleware<UnitOfWorkMiddleware>();
             app.UseMiddleware<SetAccountIdContextMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests

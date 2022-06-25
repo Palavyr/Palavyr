@@ -1,16 +1,19 @@
 using System;
+using System.Collections.Generic;
 using Autofac;
 using FluentValidation;
 using MediatR;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Resources;
+using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AmazonServices;
@@ -69,18 +72,26 @@ namespace Palavyr.API.Registration.Container
                 .AsClosedTypesOf(typeof(IMapToPreExisting<,>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+
             builder
                 .RegisterGeneric(typeof(EntityStore<>))
                 .As(typeof(IEntityStore<>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
-            builder
-                .RegisterGeneric(typeof(AbstractValidator<>))
-                .As(typeof(IValidator<>))
+            builder.RegisterAssemblyTypes(typeof(Startup).Assembly)
+                .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
+            // pricing strategy validators
+            builder.RegisterType<BasicThresholdResourceValidator>().As<IValidator<List<BasicThresholdResource>>>();
+            builder.RegisterType<CategoryNestedThresholdValidator>().As<IValidator<List<CategoryNestedThresholdResource>>>();
+            builder.RegisterType<PercentOfThresholdResourceValidator>().As<IValidator<List<PercentOfThresholdResource>>>();
+            builder.RegisterType<SelectOneFlatResourceValidator>().As<IValidator<List<SelectOneFlatResource>>>();
+            builder.RegisterType<TwoNestedCategoryResourceValidator>().As<IValidator<List<TwoNestedCategoryResource>>>();
+            
+            
 
             builder.RegisterGeneric(typeof(PricingStrategyTableCommandExecutor<,,>)).As(typeof(IPricingStrategyTableCommandExecutor<,,>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(ResponseRetriever<>)).As(typeof(IResponseRetriever<>));

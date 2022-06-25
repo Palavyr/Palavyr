@@ -45,6 +45,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyDynamicTableMetaRequest : IRequest<ModifyDynamicTableMetaResponse>
     {
+        public ModifyDynamicTableMetaRequest()
+        {
+            
+        }
+
         public int Id { get; set; }
         public string TableTag { get; set; }
         public string TableType { get; set; }

@@ -14,20 +14,19 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                 .ChildRules(
                     r =>
                     {
-                        r.RuleFor(x => x.Range).NotEmpty().NotNull();
-                        r.RuleFor(x => x.Threshold).NotEmpty().NotNull();
-                        r.RuleFor(x => x.AccountId).NotEmpty().NotNull();
-                        r.RuleFor(x => x.AreaIdentifier).NotEmpty().NotNull();
-                        r.RuleFor(x => x.ItemName).NotEmpty().NotNull();
-                        r.RuleFor(x => x.RowId).NotEmpty().NotNull();
-                        r.RuleFor(x => x.TableId).NotNull().NotEmpty();
-                        r.RuleFor(x => x.RowOrder).NotEmpty().NotNull().GreaterThanOrEqualTo(0);
+                        r.RuleFor(x => x.Range).NotNull();
+                        r.RuleFor(x => x.Threshold).NotNull().GreaterThanOrEqualTo(0);
+                        r.RuleFor(x => x.AccountId).NotEmpty();
+                        r.RuleFor(x => x.AreaIdentifier).NotEmpty();
+                        r.RuleFor(x => x.ItemName).NotEmpty();
+                        r.RuleFor(x => x.RowId).NotEmpty();
+                        r.RuleFor(x => x.TableId).NotNull();
+                        r.RuleFor(x => x.RowOrder).NotNull().GreaterThanOrEqualTo(0);
                         r.RuleFor(x => x.TriggerFallback).NotNull();
                         r.RuleFor(x => x.ValueMin).NotNull().GreaterThanOrEqualTo(0);
-                        r.RuleFor(x => x.ValueMax).NotNull().LessThanOrEqualTo(int.MaxValue);
-                        r.RuleFor(x => x.ValueMax).NotEmpty().When(x => x.Range);
+                        r.RuleFor(x => x.ValueMax).NotNull().LessThanOrEqualTo(int.MaxValue).When(x => x.Range);
                         r.RuleFor(x => x.ValueMax).GreaterThanOrEqualTo(x => x.ValueMin).When(x => x.Range);
-                        r.RuleFor(x => x.Modifier).ShouldNotBeNull();
+                        r.RuleFor(x => x.Modifier).NotNull();
                     });
             RuleFor(x => x).Must(MustHaveDistinctThresholds).WithMessage("Thresholds must all be unique values.");
             RuleFor(x => x).Must(HaveUniqueItemOrders).WithMessage("Item orders must be unique");

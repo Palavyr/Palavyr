@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -46,7 +47,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
         public async Task<SavePricingStrategyTableResponse<TR>> Handle(SavePricingStrategyTableRequest<T, TR, TCompiler> request, CancellationToken cancellationToken)
         {
             var validationResult = await pricingStrategyValidator.ValidateAsync(request.PricingStrategyTableResource.TableData, cancellationToken);
-            if (!validationResult.IsValid) throw new DomainException("Bad request");
+            if (!validationResult.IsValid) throw new MultiMessageDomainException("Bad Request: ", validationResult.Errors.Select(x => x.ErrorMessage).Distinct().ToArray());
 
             var tableUpdate = await MapTable(request.PricingStrategyTableResource.TableData, cancellationToken);
 

@@ -144,9 +144,9 @@ export class PalavyrRepository {
                 getDynamicTableTypes: async () => this.client.get<TableNameMap>(`tables/dynamic/table-name-map`),
 
                 modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta) => {
-                    const response = this.client.put<DynamicTableMeta, {}>(`tables/dynamic/modify`, dynamicTableMeta);
-                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, dynamicTableMeta.areaIdentifier].join("-"));
-                    return response;
+                    return this.client.put<DynamicTableMeta, {}>(`tables/dynamic/modify`, dynamicTableMeta);
+                    // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, dynamicTableMeta.areaIdentifier].join("-"));
+                    // return response;
                 },
 
                 createDynamicTable: async (intentId: string) => {

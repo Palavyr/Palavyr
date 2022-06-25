@@ -21,19 +21,18 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                     r =>
                     {
                         r.RuleFor(x => x.Range).NotNull();
-                        r.RuleFor(x => x.AccountId).NotNull().NotEmpty();
-                        r.RuleFor(x => x.AreaIdentifier).NotNull().NotEmpty();
-                        r.RuleFor(x => x.ItemId).NotNull().NotEmpty();
-                        r.RuleFor(x => x.ItemName).NotNull().NotEmpty();
-                        r.RuleFor(x => x.ItemOrder).GreaterThanOrEqualTo(0).NotNull();
-                        r.RuleFor(x => x.RowId).NotNull().NotEmpty();
-                        r.RuleFor(x => x.RowOrder).GreaterThanOrEqualTo(0);
-                        r.RuleFor(x => x.TableId).NotNull().NotEmpty();
+                        r.RuleFor(x => x.AccountId).NotEmpty();
+                        r.RuleFor(x => x.AreaIdentifier).NotEmpty();
+                        r.RuleFor(x => x.ItemId).NotEmpty();
+                        r.RuleFor(x => x.ItemName).NotEmpty();
+                        r.RuleFor(x => x.ItemOrder).NotNull().GreaterThanOrEqualTo(0);
+                        r.RuleFor(x => x.RowId).NotEmpty();
+                        r.RuleFor(x => x.RowOrder).NotNull().GreaterThanOrEqualTo(0);
+                        r.RuleFor(x => x.TableId).NotEmpty();
                         r.RuleFor(x => x.ValueMin).NotNull().GreaterThanOrEqualTo(0);
-                        r.RuleFor(x => x.ValueMax).NotNull().LessThanOrEqualTo(int.MaxValue);
-                        r.RuleFor(x => x.ValueMax).NotEmpty().When(x => x.Range);
-                        r.RuleFor(x => x.ValueMax).GreaterThanOrEqualTo(x => x.ValueMin).When(x => x.Range);
-                        r.RuleFor(x => x.InnerItemName).NotNull().NotEmpty();
+                        r.RuleFor(x => x.ValueMax).NotNull().LessThanOrEqualTo(int.MaxValue).When(x => x.Range);
+                        r.RuleFor(x => x.ValueMax).NotNull().GreaterThanOrEqualTo(x => x.ValueMin).When(x => x.Range);
+                        r.RuleFor(x => x.InnerItemName).NotEmpty();
                     });
         }
 

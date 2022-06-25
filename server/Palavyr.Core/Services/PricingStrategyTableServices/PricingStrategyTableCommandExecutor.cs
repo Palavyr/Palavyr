@@ -42,11 +42,15 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
         private readonly IPricingStrategyTableCompilerRetriever retriever;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IAccountIdTransport accountIdTransport;
-        private readonly IValidator<TR> pricingStrategyValidator;
-        private readonly ICancellationTokenTransport cancellationTokenTransport;
 
         private string AccountId => accountIdTransport.AccountId;
-        private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
+
+        public async Task DeleteTable(string intentId, string tableId)
+        {
+            logger.LogInformation("Deleting dynamic table: {TableId}", tableId);
+            await psMetaStore.Delete(tableId, s => s.TableId);
+            await pricingStrategyStore.Delete(tableId, s => s.TableId);
+        }
 
         public PricingStrategyTableCommandExecutor(
             IEntityStore<TEntity> pricingStrategyStore,
@@ -54,8 +58,6 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             IPricingStrategyTableCompilerRetriever retriever,
             IEntityStore<ConversationNode> convoNodeStore,
             IAccountIdTransport accountIdTransport,
-           
-            ICancellationTokenTransport cancellationTokenTransport,
             ILogger<TEntity> logger
         )
         {
@@ -64,15 +66,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             this.retriever = retriever;
             this.convoNodeStore = convoNodeStore;
             this.accountIdTransport = accountIdTransport;
-            this.pricingStrategyValidator = pricingStrategyValidator;
-            this.cancellationTokenTransport = cancellationTokenTransport;
             this.logger = logger;
-        }
-
-        public async Task DeleteTable(string intentId, string tableId)
-        {
-            logger.LogInformation("Deleting dynamic table: {TableId}", tableId);
-            await pricingStrategyStore.Delete(tableId, s => s.TableId);
         }
 
         public async Task<PricingStrategyTableData<TEntity>> GetTableRows(string intentId, string tableId)
@@ -120,6 +114,15 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             var meta = await psMetaStore.Get(tableId, s => s.TableId);
             meta.TableTag = tableTag;
             meta.TableType = typeof(TEntity).Name;
+
+            // need to delete rows if there are fewer than before
+            var currentTableRows = await pricingStrategyStore.GetMany(tableId, s => s.TableId);
+            if (tableUpdate.Count < currentTableRows.Count)
+            {
+                var toKeepIds = tableUpdate.Select(x => x.Id).Where(x => x != null).ToList();
+                var thoseToDelete = currentTableRows.Where(r => !toKeepIds.Contains(r.Id)).Select(x => x.Id).Cast<int>();
+                await pricingStrategyStore.DeleteMany(thoseToDelete);
+            }
 
             await pricingStrategyStore.CreateOrUpdateMany(tableUpdate);
             return await pricingStrategyStore.GetMany(tableId, s => s.TableId);
