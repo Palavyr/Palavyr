@@ -43,4 +43,8 @@
     <ItemGroup>
       <Compile Remove="Tests\Core\Services\AccountServices\**" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="DataCreators\PricingStrategyBuilders" />
+    </ItemGroup>
 </Project>

@@ -38,6 +38,8 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 
         private bool HaveUniqueItemOrders(List<TwoNestedCategoryResource> arg)
         {
+            
+            
             var itemOrders = arg.Select(x => x.ItemOrder).ToList();
             return itemOrders.Count() == itemOrders.Distinct().Count();
         }
@@ -73,8 +75,8 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 
         private bool HaveCorrectlyOrderedRows(List<TwoNestedCategoryResource> arg)
         {
-            var tableIdGroups = arg.GroupBy(x => x.TableId);
-            foreach (var group in tableIdGroups)
+            var itemGroups = arg.GroupBy(x => x.ItemId);
+            foreach (var group in itemGroups)
             {
                 var rowOrders = group.Select(x => x.RowOrder).ToList();
                 if (!Enumerable.SequenceEqual(rowOrders, rowOrders.OrderBy(x => x)))
@@ -88,8 +90,8 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 
         private bool HaveCorrectlyOrderedItems(List<TwoNestedCategoryResource> arg)
         {
-            var tableOrders = arg.Select(x => x.ItemOrder).Distinct().ToList();
-            return Enumerable.SequenceEqual(tableOrders, tableOrders.OrderBy(x => x));
+            var itemOrders = arg.Select(x => x.ItemOrder).Distinct().ToList();
+            return Enumerable.SequenceEqual(itemOrders, itemOrders.OrderBy(x => x));
         }
     }
 }

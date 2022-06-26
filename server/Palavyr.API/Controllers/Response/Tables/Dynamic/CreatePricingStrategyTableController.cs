@@ -7,13 +7,13 @@ using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
-    public class CreateDynamicTableController : PalavyrBaseController
+    public class CreatePricingStrategyTableController : PalavyrBaseController
     {
         private readonly IMediator mediator;
         public const string Route = "tables/dynamic/{intentId}";
 
 
-        public CreateDynamicTableController(IMediator mediator)
+        public CreatePricingStrategyTableController(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -24,6 +24,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             string intentId,
             CancellationToken cancellationToken)
         {
+            // This should be part of the pricing Strategy
             var response = await mediator.Send(new CreateDynamicTableRequest(intentId), cancellationToken);
             return response.Response;
         }

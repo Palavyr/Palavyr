@@ -3,10 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Requests;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices;
 
@@ -73,5 +75,17 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
                 });
             return response.Resource;
         }
+        
+        [HttpPost("tables/dynamic/{intentId}"]
+        public async Task<PricingStrategyTableMetaResource> Create(
+            [FromRoute]
+            string intentId,
+            CancellationToken cancellationToken)
+        {
+            // This should be part of the pricing Strategy
+            var response = await mediator.Send(new CreateDynamicTableRequest<TEntity, TResource, TCompiler>(intentId), cancellationToken);
+            return response.Response;
+        }
+        
     }
 }
