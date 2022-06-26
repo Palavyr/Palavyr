@@ -31,6 +31,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             logger.LogDebug("Retrieve Dynamic Table Metas");
             var tableTypes = await dynamicTableMetaStore.GetMany(request.IntentId, s => s.AreaIdentifier);
 
+            
+            // TODO: Write a mapper for this
             var tableResources = tableTypes.Select(
                     x =>
                     {

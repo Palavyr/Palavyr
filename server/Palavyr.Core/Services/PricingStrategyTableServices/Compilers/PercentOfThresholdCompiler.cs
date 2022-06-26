@@ -42,7 +42,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task UpdateConversationNode<T>(List<T> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(List<T> table, string tableId, string intentId)
         {
             await Task.CompletedTask;
         }

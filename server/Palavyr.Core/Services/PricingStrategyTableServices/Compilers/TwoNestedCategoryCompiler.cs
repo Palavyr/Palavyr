@@ -166,7 +166,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             };
         }
 
-        public async Task UpdateConversationNode<T>(List<T> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(List<T> table, string tableId, string intentId)
         {
             var update = table as List<TwoNestedCategory>;
 

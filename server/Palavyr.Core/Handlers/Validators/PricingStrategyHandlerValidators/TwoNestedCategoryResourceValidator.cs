@@ -32,7 +32,7 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                         r.RuleFor(x => x.ValueMin).NotNull().GreaterThanOrEqualTo(0);
                         r.RuleFor(x => x.ValueMax).NotNull().LessThanOrEqualTo(int.MaxValue).When(x => x.Range);
                         r.RuleFor(x => x.ValueMax).NotNull().GreaterThanOrEqualTo(x => x.ValueMin).When(x => x.Range);
-                        r.RuleFor(x => x.InnerItemName).NotEmpty();
+                        r.RuleFor(x => x.InnerItemName).NotEmpty().WithMessage("Inner Category must not be empty");
                     });
         }
 

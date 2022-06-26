@@ -38,7 +38,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 AreaIdentifier = areaId,
                 AccountId = accountId,
                 PrettyName = prettyName,
-                UnitId = unitId
+                UnitId = unitId,
+                
             };
         }
 

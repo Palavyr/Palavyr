@@ -43,18 +43,18 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
         }
 
-        public async Task UpdateConversationNode<T>(List<T> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<T>(List<T> table, string tableId, string intentId)
         {
             var currentSelectOneFlatUpdate = table as List<SelectOneFlat>;
 
             var tableMeta = await pricingStrategyTableMetaStore.Get(tableId, s => s.TableId);
 
-            var conversationNodes = await convoNodeStore.GetMany(areaIdentifier, s => s.AreaIdentifier);
+            var conversationNodes = await convoNodeStore.GetMany(intentId, s => s.AreaIdentifier);
             var node = conversationNodes.SingleOrDefault(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId);
 
             if (node != null && currentSelectOneFlatUpdate != null)
             {
-                await selectOneFlatNodeUpdater.UpdateConversationNode(currentSelectOneFlatUpdate, tableMeta, node, conversationNodes, areaIdentifier);
+                await selectOneFlatNodeUpdater.UpdateConversationNode(currentSelectOneFlatUpdate, tableMeta, node, conversationNodes, intentId);
             }
 
             // do not save the context changes here. Following the unit of work pattern,we collect all changes, validate, and then save/commit..

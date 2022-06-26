@@ -11,7 +11,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
     public interface IPricingStrategyTableCompiler
     {
-        Task UpdateConversationNode<TEntity>(List<TEntity> table, string tableId, string areaIdentifier);
+        Task UpdateConversationNode<TEntity>(List<TEntity> table, string tableId, string intentId);
 
         Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOptionResource> nodes);
 

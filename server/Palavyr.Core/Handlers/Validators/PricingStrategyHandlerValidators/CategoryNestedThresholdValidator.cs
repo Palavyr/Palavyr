@@ -33,12 +33,13 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
             RuleFor(c => c).Must(HaveDistinctRowOrders).WithMessage("Row orders must be distinct");
             RuleFor(c => c).Must(HaveCorrectlyOrderedItems).WithMessage("Items must be correctly ordered");
             RuleFor(c => c).Must(HaveCorrectlyOrderedRows).WithMessage("Rows must be correctly ordered");
+            RuleFor(c => c).Must(HaveItemWithMatchingOrderIds).WithMessage("Categories for a single item must have matching order Ids");
         }
 
 
         private bool HaveCorrectlyOrderedRows(List<CategoryNestedThresholdResource> arg)
         {
-            var tableIdGroups = arg.GroupBy(x => x.TableId);
+            var tableIdGroups = arg.GroupBy(x => x.ItemId);
             foreach (var group in tableIdGroups)
             {
                 var rowOrders = group.Select(x => x.RowOrder).ToList();
@@ -59,7 +60,7 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 
         private bool HaveDistinctRowOrders(List<CategoryNestedThresholdResource> arg)
         {
-            foreach (var group in arg.GroupBy(x => x.TableId))
+            foreach (var group in arg.GroupBy(x => x.ItemId))
             {
                 var orders = group.Select(x => x.RowOrder).ToList();
                 if (orders.Count != orders.Distinct().Count())
@@ -71,15 +72,35 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
             return true;
         }
 
+        private bool HaveItemWithMatchingOrderIds(List<CategoryNestedThresholdResource> arg)
+        {
+            foreach (var group in arg.GroupBy(x => x.ItemId))
+            {
+                var o = group.Select(x => x.ItemOrder).ToList();
+                if (o.Distinct().Count() > 1)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private bool HaveDistinctItemOrders(List<CategoryNestedThresholdResource> arg)
         {
-            var orders = arg.Select(x => x.ItemOrder).ToList();
+            var orders = new List<int>();
+            foreach (var group in arg.GroupBy(x => x.ItemId))
+            {
+                var o = group.Select(x => x.ItemOrder).ToList();
+                orders.Add(o.Distinct().Single());
+            }
+
             return orders.Count == orders.Distinct().Count();
         }
 
         private bool HaveDistinctThresholds(List<CategoryNestedThresholdResource> arg)
         {
-            var tableIdGroups = arg.GroupBy(x => x.TableId);
+            var tableIdGroups = arg.GroupBy(x => x.ItemId);
             var isValid = true;
             foreach (var group in tableIdGroups)
             {

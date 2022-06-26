@@ -62,15 +62,15 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             return categories;
         }
 
-        public async Task UpdateConversationNode<TEntity>(List<TEntity> table, string tableId, string areaIdentifier)
+        public async Task UpdateConversationNode<TEntity>(List<TEntity> table, string tableId, string intentId)
         {
-            var category = GetCategories(table); 
-
-            var nodes = await convoNodeStore
-                .Query()
-                .Where(n => n.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(n.NodeType) == tableId)
+            var category = GetCategories(table);
+            var allNodes = await convoNodeStore.GetMany(intentId, s => s.AreaIdentifier);
+            var nodes = allNodes
+                .Where(n => n.IsDynamicTableNode)
+                .Where(n => splitter.GetTableIdFromDynamicNodeType(n.NodeType) == tableId)
                 .OrderBy(x => x.ResolveOrder)
-                .ToListAsync(CancellationToken);
+                .ToList();
 
             if (nodes.Count > 0)
             {

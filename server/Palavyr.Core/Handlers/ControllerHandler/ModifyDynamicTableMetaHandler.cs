@@ -23,12 +23,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<ModifyDynamicTableMetaResponse> Handle(ModifyDynamicTableMetaRequest request, CancellationToken cancellationToken)
         {
-            if (request.Id == null)
-            {
-                throw new DomainException("Model Id is needed at this time");
-            }
+            // if (request.Id == null)
+            // {
+            //     throw new DomainException("Model Id is needed at this time");
+            // }
 
             var currentMeta = await dynamicTableMetaStore.Get(request.TableId, s => s.TableId);
+
+            // TODO: Write a IMapToExisting<
             currentMeta.UpdateProperties(request, unitRetriever);
 
             var updatedMeta = await dynamicTableMetaStore.Update(currentMeta);

@@ -42,7 +42,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             var intent = await intentStore.GetIntentComplete(request.IntentId);
 
-            var dynamicTables = intent.DynamicTableMetas.ToList();
+            var dynamicTables = intent.DynamicTableMetas;
 
             var tableId = Guid.NewGuid().ToString();
             var tableTag = "Default-" + StaticGuidUtils.CreatePseudoRandomString(5);
@@ -65,7 +65,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             await selectOneFlatStore.Create(defaultTable);
 
             var resource = await mapper.Map(newTableMeta);
-            
+            // OH DEAR. I guess we aren't sending back some default values like the ID because we don't create the ID until we save the the thing and thats
+            // on the damn way out
             return new CreateDynamicTableResponse(resource);
         }
     }

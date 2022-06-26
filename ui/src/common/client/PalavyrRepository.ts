@@ -152,7 +152,7 @@ export class PalavyrRepository {
 
                 createDynamicTable: async (intentId: string) => {
                     const response = this.client.post<DynamicTableMeta, {}>(`tables/dynamic/${intentId}`);
-                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
+                    // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
                     return response;
                 },
 
