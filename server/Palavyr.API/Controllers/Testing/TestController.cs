@@ -16,7 +16,7 @@ namespace Palavyr.API.Controllers.Testing
             this.testDataProvider = new TestDataProvider();
         }
 
-        [HttpGet("test")]
+        [HttpGet(TestRequest.Route)]
         [ResponseCache(Duration = 300)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IReadOnlyCollection<string>> Test()
@@ -25,5 +25,10 @@ namespace Palavyr.API.Controllers.Testing
             var testData = testDataProvider.ProvideData();
             return testData;
         }
+    }
+
+    public class TestRequest
+    {
+        public const string Route = "test";
     }
 }

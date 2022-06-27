@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using Palavyr.API.Controllers.Accounts.Settings;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.DataCreators;
@@ -12,8 +13,6 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
 {
     public class WhenGettingAnApiKeyForAnAccountThatDoesNotExist : InMemoryIntegrationFixture
     {
-        private const string Route = GetApiKeyController.Uri;
-
         public WhenGettingAnApiKeyForAnAccountThatDoesNotExist(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
@@ -21,7 +20,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
         [Fact]
         public async Task GetApiKeyFails()
         {
-            var result = await Client.GetAsync(Route);
+            var result = await Client.GetHttp<GetApiKeyRequest>(CancellationToken);
             result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 

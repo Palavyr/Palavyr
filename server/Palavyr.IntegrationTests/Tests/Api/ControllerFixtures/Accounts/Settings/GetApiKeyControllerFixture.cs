@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Palavyr.API.Controllers.Accounts.Settings;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
-using Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -11,9 +11,8 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
 {
     public class GetApiKeyControllerFixture : RealDatabaseIntegrationFixture
     {
-        private const string Route = GetApiKeyController.Uri;
-
-        public GetApiKeyControllerFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public GetApiKeyControllerFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory)
+            : base(testOutputHelper, factory)
         {
         }
 
@@ -28,15 +27,15 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
         [Fact]
         public async Task GetApiKeyTest()
         {
-            var response = await Client.GetAsync(Route);
-            response.EnsureSuccessStatusCode();
+            var response = await Client.GetString<GetApiKeyRequest>(CancellationToken);
+            response.ShouldNotBeEmpty();
+
         }
 
         [Fact]
         public async Task GetApiKeySuccess()
         {
-            
-            var response = await Client.GetAsync<string>(Route);
+            var response = await Client.GetString<GetApiKeyRequest>(CancellationToken);
             Assert.Equal(response, ApiKey);
         }
     }

@@ -9,6 +9,7 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
+using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Nodes;
@@ -96,6 +97,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterGeneric(typeof(PricingStrategyTableCommandExecutor<,,>)).As(typeof(IPricingStrategyTableCommandExecutor<,,>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(ResponseRetriever<>)).As(typeof(IResponseRetriever<>));
 
+            builder.RegisterType<PricingStrategyTypeLister>().As<IPricingStrategyTypeLister>();
             builder.RegisterType<MissingNodeCalculator>().As<IMissingNodeCalculator>();
             builder.RegisterType<RequiredNodeCalculator>().As<IRequiredNodeCalculator>();
             builder.RegisterType<TreeRootFinder>().As<ITreeRootFinder>();

@@ -7,6 +7,12 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
     public class BasicThreshold : Entity, IOrderedTable, IPricingStrategyTable<BasicThreshold>, IHaveRange, IOrderableThreshold, IHaveAccountId
     {
+        private const string PrettyName = "Simple Threshold";
+
+        public BasicThreshold()
+        {
+        }
+
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }
@@ -18,10 +24,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public string ItemName { get; set; }
         public int RowOrder { get; set; }
         public bool TriggerFallback { get; set; }
-
-        public BasicThreshold()
-        {
-        }
 
         public BasicThreshold CreateNew(
             string accountId,
@@ -87,6 +89,17 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public bool EnsureValid()
         {
             return true;
+        }
+
+
+        public string GetPrettyName()
+        {
+            return PrettyName;
+        }
+
+        public string GetTableType()
+        {
+            return GetType().Name;
         }
     }
 }

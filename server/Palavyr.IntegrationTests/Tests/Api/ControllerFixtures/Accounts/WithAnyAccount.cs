@@ -2,13 +2,11 @@
 using System.Threading.Tasks;
 using Autofac;
 using Palavyr.API.Controllers.Accounts;
-using Palavyr.API.Controllers.Accounts.Setup;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Shouldly;
 using Test.Common.Random;
@@ -31,7 +29,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
                 Password = password
             };
 
-            var result = await Client.PostWithContent<Credentials>(CreateNewAccountDefaultController.Route, request);
+            var result = await Client.Post<CreateNewAccountRequest, Credentials>(request, CancellationToken);
             return result;
         }
 

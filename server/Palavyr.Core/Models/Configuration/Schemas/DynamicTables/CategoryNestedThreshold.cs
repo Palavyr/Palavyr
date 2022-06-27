@@ -7,6 +7,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
     public class CategoryNestedThreshold : Entity, IOrderedTable, IPricingStrategyTable<CategoryNestedThreshold>, IHaveRange, IMultiItem, IOrderableThreshold, IHaveAccountId
     {
+        private const string PrettyName = "Category with Nested Threshold";
+
+        
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }
@@ -102,6 +105,17 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public bool EnsureValid()
         {
             return true;
+        }
+        
+        public string GetPrettyName()
+        {
+            return PrettyName;
+        }
+
+
+        public string GetTableType()
+        {
+            return GetType().Name;
         }
     }
 }

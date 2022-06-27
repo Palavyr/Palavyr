@@ -15,6 +15,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
     /// </summary>
     public class PercentOfThreshold : Entity, IComparable<PercentOfThreshold>, IOrderedTable, IPricingStrategyTable<PercentOfThreshold>, IOrderableThreshold, IMultiItem, IHaveAccountId
     {
+        private const string PrettyName = "Percent Of Threshold";
+
+
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }
@@ -119,6 +122,17 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public int CompareTo(PercentOfThreshold other)
         {
             return other.Threshold.CompareTo(Threshold);
+        }
+
+        public string GetPrettyName()
+        {
+            return PrettyName;
+        }
+
+
+        public string GetTableType()
+        {
+            return GetType().Name;
         }
     }
 }

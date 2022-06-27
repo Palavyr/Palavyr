@@ -13,16 +13,19 @@ namespace Palavyr.API.Controllers.Conversation
     public class GetIsSplitMergeTypeController : PalavyrBaseController
     {
         private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IPricingStrategyTypeLister pricingStrategyTypeLister;
         public const string Route = "configure-conversations/check-is-split-merge/{nodeType}";
 
         string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";
 
         public GetIsSplitMergeTypeController(
             IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
-            ILogger<GetIsSplitMergeTypeController> logger
+            ILogger<GetIsSplitMergeTypeController> logger,
+            IPricingStrategyTypeLister pricingStrategyTypeLister
         )
         {
             this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.pricingStrategyTypeLister = pricingStrategyTypeLister;
         }
 
         [HttpGet(Route)]
@@ -38,9 +41,9 @@ namespace Palavyr.API.Controllers.Conversation
 
             // node is a dynamic table node type
             // Comes in as e.g. SelectOneFlat-234234-324-2342-324
-            foreach (var dynamicTableType in PricingStrategyTableTypes.GetDynamicTableTypes())
+            foreach (var dynamicTableType in pricingStrategyTypeLister.ListPricingStrategies())
             {
-                if (nodeType.StartsWith(dynamicTableType.TableType))
+                if (nodeType.StartsWith(dynamicTableType.GetTableType()))
                 {
                     var tableId = Regex.Match(nodeType, GUIDPattern, RegexOptions.IgnoreCase).Value;
                     var table = await dynamicTableMetaStore.Get(tableId, s => s.TableId);

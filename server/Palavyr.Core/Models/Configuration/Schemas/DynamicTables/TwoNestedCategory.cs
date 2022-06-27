@@ -7,6 +7,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
     public class TwoNestedCategory : Entity, IOrderedTable, IPricingStrategyTable<TwoNestedCategory>, IHaveRange, IMultiItem, IHaveAccountId
     {
+        private const string PrettyName = "Two Nested Categories";
+
+        
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }
@@ -98,6 +101,18 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public bool EnsureValid()
         {
             return true;
+        }
+
+        public string GetPrettyName()
+        {
+            return PrettyName;
+        }
+
+
+
+        public string GetTableType()
+        {
+            return GetType().Name;
         }
     }
 }

@@ -6,6 +6,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
     public class SelectOneFlat : Entity, IOrderedTable, IPricingStrategyTable<SelectOneFlat>, IHaveAccountId
     {
+        private const string PrettyName = "Simple Select One Option";
+
+
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }
@@ -15,9 +18,17 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public bool Range { get; set; }
         public int RowOrder { get; set; }
 
-        public static SelectOneFlat CreateNew(string accountId, string areaIdentifier, string option, double valueMin, double valueMax, bool range, string tableId, int rowOrder)
+        public static SelectOneFlat CreateNew(
+            string accountId,
+            string areaIdentifier,
+            string option,
+            double valueMin,
+            double valueMax,
+            bool range,
+            string tableId,
+            int rowOrder)
         {
-            return new SelectOneFlat()
+            return new SelectOneFlat
             {
                 AccountId = accountId,
                 AreaIdentifier = areaIdentifier,
@@ -41,7 +52,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 ValueMax = 0.00,
                 Range = false,
                 TableId = tableId,
-                
             };
         }
 
@@ -70,6 +80,17 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public bool EnsureValid()
         {
             return true; // TODO implement validation logic. This is called in the handler
+        }
+
+        public string GetPrettyName()
+        {
+            return PrettyName;
+        }
+
+
+        public string GetTableType()
+        {
+            return GetType().Name;
         }
     }
 }

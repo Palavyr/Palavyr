@@ -127,7 +127,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         //     return ValidationLogic(table, dynamicTableMeta.TableTag);
         // }
 
-        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area _, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area intent, CultureInfo culture)
         {
             var availableTwoNested = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
             var currentRows = new List<TableRow>()

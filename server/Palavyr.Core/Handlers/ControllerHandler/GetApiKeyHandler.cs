@@ -25,13 +25,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         }
     }
 
+    public class GetApiKeyRequest : IRequest<GetApiKeyResponse>
+    {
+        public const string Route = "account/settings/api-key";
+    }
+
     public class GetApiKeyResponse
     {
         public GetApiKeyResponse(string response) => Response = response;
         public string Response { get; set; }
-    }
-
-    public class GetApiKeyRequest : IRequest<GetApiKeyResponse>
-    {
     }
 }

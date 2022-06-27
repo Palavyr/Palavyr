@@ -7,9 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods
+namespace Palavyr.Client
 {
-    public static class ClientCallExtensionMethods
+    internal static class ClientCallExtensionMethods
     {
         public static async Task<HttpResponseMessage> PostAsyncWithoutContent(this HttpClient client, string route)
         {
@@ -36,6 +36,14 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMe
             return await message.ReadResponse<TResponse>();
         }
 
+        public static async Task<TResponse> PutWithContent<TResponse>(this HttpClient client, string route, object data, CancellationToken cancellationToken)
+        {
+            var json = JsonConvert.SerializeObject(data);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var message = await client.PutAsync(route, content, cancellationToken);
+            return await message.ReadResponse<TResponse>();
+        }
+
         public static async Task<T> ReadResponse<T>(this HttpResponseMessage message)
         {
             var objectString = await message.Content.ReadAsStringAsync();
@@ -52,7 +60,6 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMe
         {
             var response = await client.GetAsync(routeUri);
             return await response.ReadResponse<T>();
-
         }
     }
 }

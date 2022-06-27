@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.IntegrationTests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Common", "Test.Common\Test.Common.csproj", "{D5CEC399-5A10-4B79-BE4D-D366FCD3F8B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.Client", "Palavyr.Client\Palavyr.Client.csproj", "{6EC2CA61-7304-4167-97F0-F1D6368240B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{D5CEC399-5A10-4B79-BE4D-D366FCD3F8B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5CEC399-5A10-4B79-BE4D-D366FCD3F8B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5CEC399-5A10-4B79-BE4D-D366FCD3F8B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EC2CA61-7304-4167-97F0-F1D6368240B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EC2CA61-7304-4167-97F0-F1D6368240B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EC2CA61-7304-4167-97F0-F1D6368240B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EC2CA61-7304-4167-97F0-F1D6368240B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

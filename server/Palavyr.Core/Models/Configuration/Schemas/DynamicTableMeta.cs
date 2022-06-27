@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.Units;
 
@@ -49,8 +50,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             {
                 CreateNew(
                     "default",
-                    PricingStrategyTableTypes.DefaultTable.PrettyName,
-                    PricingStrategyTableTypes.DefaultTable.TableType,
+                    new SelectOneFlat().GetPrettyName(), // TODO: Do this better
+                    new SelectOneFlat().GetTableType(),
                     Guid.NewGuid().ToString(),
                     areaId,
                     accountId,

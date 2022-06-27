@@ -248,7 +248,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         //     return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
         // }
 
-        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area _, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area intent, CultureInfo culture)
         {
             var availableNestedThreshold = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
             var currentRows = new List<TableRow>

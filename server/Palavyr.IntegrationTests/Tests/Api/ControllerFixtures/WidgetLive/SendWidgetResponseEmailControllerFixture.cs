@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
 using Palavyr.API.Controllers.WidgetLive;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
-using Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.DataCreators;
 using Palavyr.IntegrationTests.Tests.Mocks;
@@ -53,7 +53,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             };
 
             // act
-            var response = await ClientApiKey.PostWithApiKey<SendLiveEmailResultResource>(Route.Replace("{intentId}", intentId), emailRequest);
+            var response = await ApikeyClient.Post<SendWidgetResponseEmailRequest, SendLiveEmailResultResource>(emailRequest, CancellationToken, s => s.Replace("{intentId}", intentId));
 
             // assert
             response.NextNodeId.ShouldBe(EndingSequenceAttacher.EmailSuccessfulNodeId);

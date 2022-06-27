@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Palavyr.API.Controllers.Testing;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Xunit;
@@ -20,28 +21,28 @@ namespace Palavyr.IntegrationTests.Tests
         [Fact]
         public async Task HomeExists()
         {
-            var response = await Client.GetAsync("");
+            var response = await Client.GetHttp<TestRequest>(CancellationToken);
             response.EnsureSuccessStatusCode();
         }
 
         [Fact]
         public async Task RouteExists()
         {
-            var response = await Client.GetAsync("test");
+            var response = await Client.GetHttp<TestRequest>(CancellationToken);
             response.EnsureSuccessStatusCode();
         }
 
         [Fact]
         public async Task GetMediaTypeTest()
         {
-            var response = await Client.GetAsync("test");
+            var response = await Client.GetHttp<TestRequest>(CancellationToken);
             Assert.Equal("application/json", response?.Content?.Headers?.ContentType?.MediaType);
         }
 
         [Fact]
         public async Task ReturnsContent()
         {
-            var response = await Client.GetAsync("test");
+            var response = await Client.GetHttp<TestRequest>(CancellationToken);
             Assert.NotNull(response.Content);
             Assert.True(response.Content.Headers.ContentLength > 0);
         }
@@ -50,7 +51,7 @@ namespace Palavyr.IntegrationTests.Tests
         public async Task ReturnsExpectedJson()
         {
             var expected = "[\"One\",\"Two\",\"Three\"]";
-            var response = await Client.GetStringAsync("test");
+            var response = await Client.GetString<TestRequest>(CancellationToken);
             Assert.Equal(expected, response);
         }
 
@@ -58,7 +59,7 @@ namespace Palavyr.IntegrationTests.Tests
         public async Task ReturnsExpectedObject()
         {
             var expected = new[] {"One", "Two", "Three"};
-            var responseStream = await Client.GetStreamAsync("test");
+            var responseStream = await Client.Client.GetStreamAsync(TestRequest.Route);
             var model = await JsonSerializer.DeserializeAsync<List<string>>(responseStream, new JsonSerializerOptions() {PropertyNameCaseInsensitive = true});
 
             Assert.NotNull(model);
@@ -69,7 +70,7 @@ namespace Palavyr.IntegrationTests.Tests
         public async Task ReturnsExpectedResponse()
         {
             var expected = new[] {"One", "Two", "Three"};
-            var model = await Client.GetFromJsonAsync<List<string>>("test");
+            var model = await Client.Client.GetFromJsonAsync<List<string>>("test");
 
             Assert.NotNull(model);
             Assert.Equal(expected.OrderBy(s => s), model.OrderBy(s => s));
@@ -78,7 +79,7 @@ namespace Palavyr.IntegrationTests.Tests
         [Fact]
         public async Task SetsExpectedCacheDuration()
         {
-            var response = await Client.GetAsync("test");
+            var response = await Client.Client.GetAsync("test");
             var headers = response.Headers.CacheControl;
 
             Assert.True(headers.MaxAge.HasValue);

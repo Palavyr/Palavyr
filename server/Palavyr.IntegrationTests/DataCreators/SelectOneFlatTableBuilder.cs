@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
+using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
@@ -18,10 +22,17 @@ namespace Palavyr.IntegrationTests.DataCreators
     {
         private readonly BaseIntegrationFixture test;
         private readonly List<SelectOneFlatResource> table = new List<SelectOneFlatResource>();
+        private string? intentId;
 
         public SelectOneFlatTableBuilder(BaseIntegrationFixture test)
         {
             this.test = test;
+        }
+
+        public SelectOneFlatTableBuilder WithIntent(string intentId)
+        {
+            this.intentId = intentId;
+            return this;
         }
 
         public SelectOneFlatTableBuilder WithRow(SelectOneFlatResource rowResource)
@@ -50,7 +61,17 @@ namespace Palavyr.IntegrationTests.DataCreators
 
         public async Task<List<SelectOneFlatResource>> BuildAndMake()
         {
-            await test.Client.PostAsync()
+            var response = await test
+                .Client
+                .Post<CreatePricingStrategyTableRequest<
+                        SelectOneFlat,
+                        SelectOneFlatResource,
+                        SelectOneFlatCompiler>,
+                    List<SelectOneFlatResource>>(
+                    table,
+                    test.CancellationToken,
+                    route => route.Replace("{intentId}", intentId ?? A.RandomId()));
+            return response;
         }
     }
 }

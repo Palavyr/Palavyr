@@ -76,14 +76,14 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             return response.Resource;
         }
         
-        [HttpPost("tables/dynamic/{intentId}"]
+        [HttpPost("tables/dynamic/{intentId}")]
         public async Task<PricingStrategyTableMetaResource> Create(
             [FromRoute]
             string intentId,
             CancellationToken cancellationToken)
         {
             // This should be part of the pricing Strategy
-            var response = await mediator.Send(new CreateDynamicTableRequest<TEntity, TResource, TCompiler>(intentId), cancellationToken);
+            var response = await mediator.Send(new CreatePricingStrategyTableRequest<TEntity, TResource, TCompiler>(intentId), cancellationToken);
             return response.Response;
         }
         

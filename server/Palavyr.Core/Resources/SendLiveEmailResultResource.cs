@@ -1,6 +1,6 @@
 using Palavyr.Core.Mappers;
 
-#nullable enable
+
 namespace Palavyr.Core.Resources
 {
     public class SendLiveEmailResultResource
@@ -8,7 +8,7 @@ namespace Palavyr.Core.Resources
         public string NextNodeId { get; set; }
         public bool Result { get; set; }
         public FileAssetResource? FileAsset { get; set; }
-        
+
         public static SendLiveEmailResultResource CreateSuccess(string nextNodeId, FileAssetResource? fileAsset)
         {
             return new SendLiveEmailResultResource

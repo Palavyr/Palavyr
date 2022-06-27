@@ -14,15 +14,18 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
         private readonly ILogger<GetIsMultiOptionTypeHandler> logger;
+        private readonly IPricingStrategyTypeLister pricingStrategyTypeLister;
         private readonly IGuidFinder guidFinder;
 
         public GetIsMultiOptionTypeHandler(
             ILogger<GetIsMultiOptionTypeHandler> logger,
+            IPricingStrategyTypeLister pricingStrategyTypeLister,
             IGuidFinder guidFinder,
             IEntityStore<DynamicTableMeta> dynamicTableMetaStore)
         {
             this.dynamicTableMetaStore = dynamicTableMetaStore;
             this.logger = logger;
+            this.pricingStrategyTypeLister = pricingStrategyTypeLister;
             this.guidFinder = guidFinder;
         }
 
@@ -38,9 +41,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             // node is a dynamic table node type
             // Comes in as e.g. SelectOneFlat-234234-324-2342-324
-            foreach (var dynamicTableType in PricingStrategyTableTypes.GetDynamicTableTypes())
+            foreach (var dynamicTableType in pricingStrategyTypeLister.ListPricingStrategies())
             {
-                if (request.NodeType.StartsWith(dynamicTableType.TableType))
+                if (request.NodeType.StartsWith(dynamicTableType.GetTableType()))
                 {
                     var tableId = guidFinder.FindFirstGuidSuffixOrNull(request.NodeType);
                     var table = await dynamicTableMetaStore.Get(tableId, s => s.TableId);

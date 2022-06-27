@@ -148,10 +148,10 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         //     return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
         // }
 
-        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area intent, CultureInfo culture)
         {
             var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
-            var responseParts = PricingStrategyTableTypes.CreateSelectOneFlat().CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Option);
+            var responseParts = PricingStrategyResponsePartJoiner.CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Option);
             var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
             return currentRows;
         }

@@ -11,7 +11,6 @@ namespace Palavyr.API.Controllers.Accounts.Setup
     public class CreateNewAccountDefaultController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "account/create/default";
 
         public CreateNewAccountDefaultController(IMediator mediator)
         {
@@ -19,7 +18,7 @@ namespace Palavyr.API.Controllers.Accounts.Setup
         }
 
         [AllowAnonymous]
-        [HttpPost(Route)]
+        [HttpPost(CreateNewAccountRequest.Route)]
         public async Task<Credentials> Create(
             [FromBody]
             CreateNewAccountRequest request,
