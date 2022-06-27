@@ -16,7 +16,7 @@ namespace Palavyr.IntegrationTests.Tests
         [Fact]
         public async Task HealthCheckTest()
         {
-            var response = await Client.Client.GetAsync("/healthcheck");
+            var response = await Client.GetHttp<HealthCheckRequest>(CancellationToken);
             response.EnsureSuccessStatusCode();
         }
 
@@ -25,5 +25,10 @@ namespace Palavyr.IntegrationTests.Tests
             await Task.CompletedTask;
             WebHostFactory.Dispose();
         }
+    }
+
+    public class HealthCheckRequest
+    {
+        public const string Route = "/healthcheck";
     }
 }
