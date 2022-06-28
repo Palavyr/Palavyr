@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 namespace Palavyr.Core.Services.AttachmentServices
 {
     public class AttachmentMeta

@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 using System.Reflection;
 using Autofac;
 using Microsoft.AspNetCore.TestHost;

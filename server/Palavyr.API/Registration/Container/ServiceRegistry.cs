@@ -32,13 +32,16 @@ namespace Palavyr.API.Registration.Container
         {
             services.AddDbContext<AccountsContext>(
                 opt =>
-                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.AccountDbStringKey)));
+                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.AccountDbStringKey)),
+                ServiceLifetime.Transient);
             services.AddDbContext<ConvoContext>(
                 opt =>
-                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.ConvoDbStringKey)));
+                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.ConvoDbStringKey)),
+                ServiceLifetime.Transient);
             services.AddDbContext<DashContext>(
                 opt =>
-                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.ConfigurationDbStringKey)));
+                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.ConfigurationDbStringKey)),
+                ServiceLifetime.Transient);
         }
     }
 }

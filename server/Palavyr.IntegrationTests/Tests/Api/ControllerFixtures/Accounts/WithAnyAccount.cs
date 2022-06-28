@@ -1,9 +1,12 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.API.Controllers.Accounts;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
@@ -52,16 +55,27 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
             var password = A.RandomId();
 
             var credentials = await Create(email, password);
+            var accountStore = ResolveStore<Account>();
+            var current = await accountStore
+                .RawReadonlyQuery()
+                .SingleOrDefaultAsync(x => x.EmailAddress == credentials.EmailAddress, CancellationToken);
+            current.ShouldNotBeNull();
+            
+            
             await Delete(credentials);
+
+            var result = await accountStore
+                .RawReadonlyQuery()
+                .SingleOrDefaultAsync(x => x.EmailAddress == credentials.EmailAddress, CancellationToken);
+
+            result.ShouldBeNull();
         }
 
         private async Task Delete(Credentials credentials)
         {
             var tempClient = ConfigurableClient(credentials.SessionId);
-            var result = await tempClient.PostAsync(DeleteAccountController.Route, null);
-            result.EnsureSuccessStatusCode();
+            await tempClient.Delete<DeleteAccountRequest>(CancellationToken);
         }
-
 
         public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {

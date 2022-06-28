@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 using System;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.GlobalConstants;

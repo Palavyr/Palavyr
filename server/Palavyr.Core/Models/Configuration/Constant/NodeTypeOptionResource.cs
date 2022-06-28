@@ -1,4 +1,4 @@
-#nullable enable
+
 using System.Collections.Generic;
 
 namespace Palavyr.Core.Models.Configuration.Constant

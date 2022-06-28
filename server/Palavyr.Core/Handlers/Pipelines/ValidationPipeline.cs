@@ -11,7 +11,7 @@ using Palavyr.Core.Exceptions;
 
 namespace Palavyr.Core.Handlers.Pipelines
 {
-    public class ValidationPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TRequest>
+    public class ValidationPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TRequest>, IRequest<TResponse>
     {
         private readonly IEnumerable<IValidator<TRequest>> validators;
 

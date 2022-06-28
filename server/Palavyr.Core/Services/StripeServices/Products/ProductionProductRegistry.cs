@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 using System.Linq;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;

@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 using System;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Accounts.Schemas;

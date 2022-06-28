@@ -1,6 +1,6 @@
 ﻿using System;
 
-#nullable enable
+
 
 namespace Palavyr.Core.Services.PdfService
 {

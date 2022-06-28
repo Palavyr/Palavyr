@@ -1,4 +1,4 @@
-#nullable enable
+
 using System.Globalization;
 using System.Linq;
 using Palavyr.Core.Exceptions;

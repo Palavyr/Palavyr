@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,13 +41,11 @@ namespace Palavyr.Core.Stores
             typeof(ConversationRecord)
         };
 
-        private readonly DbContext currentContext;
-
         public EntityStore(IUnitOfWorkContextProvider contextProvider, IAccountIdTransport accountIdTransport, ICancellationTokenTransport cancellationTokenTransport)
         {
             this.AccountIdTransport = accountIdTransport;
             this.CancellationTokenTransport = cancellationTokenTransport;
-            this.currentContext = ChooseContext(contextProvider);
+            ChooseContext(contextProvider);
             this.QueryExecutor = ChooseContext(contextProvider).Set<TEntity>();
         }
 

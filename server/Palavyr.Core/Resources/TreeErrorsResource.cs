@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 namespace Palavyr.Core.Resources
 {
     public class TreeErrorsResource

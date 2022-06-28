@@ -1,5 +1,4 @@
-﻿#nullable enable
-using Palavyr.Core.Common.UniqueIdentifiers;
+﻿using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Test.Common.Constants;
 

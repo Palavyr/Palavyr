@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 using System.Threading.Tasks;
 
 namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers

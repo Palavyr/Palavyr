@@ -10,7 +10,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
     {
         public string AreaIdentifier { get; set; }
         public string AreaName { get; set; }
-        public string AreaDisplayTitle { get; set; }
+        public string? AreaDisplayTitle { get; set; }
         public string Prologue { get; set; }
         public string Epilogue { get; set; }
         public string EmailTemplate { get; set; }

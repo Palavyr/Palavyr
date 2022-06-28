@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,14 +29,16 @@ namespace Palavyr.Core.Stores.Delete
         public UltraDangerousGlobalDeleter(
             IServiceProvider serviceProvider,
             IUnitOfWorkContextProvider unitOfWorkContextProvider,
-            IEntityStore<Account> accountStore,
             IDetermineCurrentEnvironment currentEnvironment,
             IFileAssetDeleter fileAssetDeleter,
             DashContext dashContext,
             ConvoContext convoContext,
             AccountsContext accountsContext,
             AccountIdTransport accountIdTransport,
-            ICancellationTokenTransport cancellationTokenTransport) : base(serviceProvider, unitOfWorkContextProvider, fileAssetDeleter, dashContext, convoContext, accountsContext, accountIdTransport, cancellationTokenTransport)
+            ICancellationTokenTransport cancellationTokenTransport)
+            : base(
+                serviceProvider,
+                unitOfWorkContextProvider, fileAssetDeleter, dashContext, convoContext, accountsContext, accountIdTransport, cancellationTokenTransport)
         {
             this.currentEnvironment = currentEnvironment;
         }
@@ -64,8 +66,6 @@ namespace Palavyr.Core.Stores.Delete
         private readonly IUnitOfWorkContextProvider contextProvider;
         private readonly IFileAssetDeleter fileAssetDeleter;
         private readonly DashContext dashContext; // Try not to call these contexts directly.
-        private readonly ConvoContext convoContext;
-        private readonly AccountsContext accountsContext;
         private readonly IAccountIdTransport accountIdTransport;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
         private readonly List<IEntityType> allEntities = new List<IEntityType>();
@@ -88,8 +88,6 @@ namespace Palavyr.Core.Stores.Delete
             this.contextProvider = contextProvider;
             this.fileAssetDeleter = fileAssetDeleter;
             this.dashContext = dashContext;
-            this.convoContext = convoContext;
-            this.accountsContext = accountsContext;
             this.accountIdTransport = accountIdTransport;
             this.cancellationTokenTransport = cancellationTokenTransport;
 

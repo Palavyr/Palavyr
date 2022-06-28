@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using MediatR;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Xunit;
@@ -27,7 +28,7 @@ namespace Palavyr.IntegrationTests.Tests
         }
     }
 
-    public class HealthCheckRequest
+    public class HealthCheckRequest : IRequest<object>
     {
         public const string Route = "/healthcheck";
     }

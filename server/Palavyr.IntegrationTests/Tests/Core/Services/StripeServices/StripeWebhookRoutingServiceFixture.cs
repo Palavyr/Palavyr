@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -285,6 +284,16 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
                 await Task.CompletedTask;
                 ReceivedTypes.Add(request.GetType());
                 return default;
+            }
+
+            public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = new CancellationToken())
+            {
+                throw new NotImplementedException();
+            }
+
+            public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = new CancellationToken())
+            {
+                throw new NotImplementedException();
             }
 
             public async Task Publish(object notification, CancellationToken cancellationToken = new CancellationToken())

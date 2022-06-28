@@ -323,7 +323,7 @@ export class PalavyrRepository {
 
             deleteCompanyLogo: async () => this.client.delete(`file-assets/unlink/logo`),
             DeleteAccount: async () => {
-                const result = this.client.post(`account/delete-account`);
+                const result = this.client.delete(`account/delete-account`);
                 SessionStorage.ClearAllCacheValues();
                 return result;
             },

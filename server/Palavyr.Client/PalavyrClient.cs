@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace Palavyr.Client
 {
@@ -18,19 +21,26 @@ namespace Palavyr.Client
 
         public HttpRequestHeaders DefaultRequestHeaders { get; set; }
 
-        private string GetUriFromRequest<TRequest>()
+        private string GetUriFromRequest<TRequest>() where TRequest : IRequest<object>
         {
-            var fieldInfo = typeof(TRequest)?.GetType().GetField("Route");
-            if (fieldInfo is null) throw new Exception("Couldn't find the Uri on the request!");
-            return (string)fieldInfo?.GetRawConstantValue();
+            var fieldInfos = typeof(TRequest).GetFields(
+                BindingFlags.Public |
+                BindingFlags.Static | BindingFlags.FlattenHierarchy);
+
+            var route = (string)fieldInfos
+                .Where(fi => fi.IsLiteral && !fi.IsInitOnly)
+                .Single(x => x.Name == "Route")
+                .GetRawConstantValue();
+
+            return route;
         }
 
-        public async Task<TResource> GetResource<TRequest, TResource>(CancellationToken cancellationToken)
+        public async Task<TResource> GetResource<TRequest, TResource>(CancellationToken cancellationToken) where TRequest : IRequest<object>
         {
             return await Get<TRequest, TResource>(cancellationToken);
         }
 
-        public Task<TResource> Post<TRequest, TResource>(object data, CancellationToken cancellationToken, Func<string, string>? routeFormatter = null)
+        public Task<TResource> Post<TRequest, TResource>(object data, CancellationToken cancellationToken, Func<string, string>? routeFormatter = null) where TRequest : IRequest<object>
         {
             var route = GetUriFromRequest<TRequest>();
             if (routeFormatter != null)
@@ -48,36 +58,36 @@ namespace Palavyr.Client
             }
         }
 
-        public async Task<TResource> Put<TRequest, TResource>(object data, CancellationToken cancellationToken)
+        public async Task<TResource> Put<TRequest, TResource>(object data, CancellationToken cancellationToken) where TRequest : IRequest<object>
         {
             var route = GetUriFromRequest<TRequest>();
             return await Client.PutWithContent<TResource>(route, data, cancellationToken);
         }
 
-        public async Task Delete<TRequest>(CancellationToken cancellationToken)
+        public async Task Delete<TRequest>(CancellationToken cancellationToken) where TRequest : IRequest<object>
         {
             var route = GetUriFromRequest<TRequest>();
             await Client.DeleteAsync(route, cancellationToken);
         }
 
-        public async Task<bool> GetBool<TRequest>(CancellationToken cancellationToken)
+        public async Task<bool> GetBool<TRequest>(CancellationToken cancellationToken) where TRequest : IRequest<object>
         {
             return await Get<TRequest, bool>(cancellationToken);
         }
 
-        public async Task<string> GetString<TRequest>(CancellationToken cancellationToken)
+        public async Task<string> GetString<TRequest>(CancellationToken cancellationToken) where TRequest : IRequest<object>
         {
             return await Get<TRequest, string>(cancellationToken);
         }
 
-        public async Task<HttpResponseMessage> GetHttp<TRequest>(CancellationToken cancellationToken)
+        public async Task<HttpResponseMessage> GetHttp<TRequest>(CancellationToken cancellationToken) where TRequest : IRequest<object>
         {
             var uri = GetUriFromRequest<TRequest>();
             var response = await Client.GetAsync(uri, cancellationToken);
             return response;
         }
 
-        private async Task<TResponse> Get<TRequest, TResponse>(CancellationToken cancellationToken)
+        private async Task<TResponse> Get<TRequest, TResponse>(CancellationToken cancellationToken) where TRequest : IRequest<object>
         {
             Client.Timeout = TimeSpan.FromSeconds(60);
             try

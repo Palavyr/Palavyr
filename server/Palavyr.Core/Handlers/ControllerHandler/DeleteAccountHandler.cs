@@ -7,7 +7,7 @@ using Palavyr.Core.Stores.Delete;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class DeleteAccountHandler : INotificationHandler<DeleteAccountNotification>
+    public class DeleteAccountHandler : IRequestHandler<DeleteAccountRequest>
     {
         private readonly IDangerousAccountDeleter dangerousAccountDeleter;
         private readonly ILogger<DeleteAccountHandler> logger;
@@ -24,14 +24,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             this.accountIdTransport = accountIdTransport;
         }
 
-        public async Task Handle(DeleteAccountNotification notification, CancellationToken _)
+        public async Task<Unit> Handle(DeleteAccountRequest request, CancellationToken _)
         {
-            logger.LogInformation($"Deleting details for account: {accountIdTransport.AccountId}");
+            logger.LogInformation("Deleting details for account: {Account}", accountIdTransport.AccountId);
             await dangerousAccountDeleter.DeleteAllThings();
+            return default;
         }
     }
 
-    public class DeleteAccountNotification : INotification
+    public class DeleteAccountRequest : IRequest<object>, IRequest<Unit>
     {
+        public const string Route = "account/delete-account";
     }
 }

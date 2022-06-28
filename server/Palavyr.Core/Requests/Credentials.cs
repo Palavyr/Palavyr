@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 namespace Palavyr.Core.Requests
 {
     public class LoginCredentialsRequest

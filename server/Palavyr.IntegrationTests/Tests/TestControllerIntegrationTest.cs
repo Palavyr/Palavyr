@@ -51,16 +51,18 @@ namespace Palavyr.IntegrationTests.Tests
         public async Task ReturnsExpectedJson()
         {
             var expected = "[\"One\",\"Two\",\"Three\"]";
-            var response = await Client.GetString<TestRequest>(CancellationToken);
-            Assert.Equal(expected, response);
+            var response = await Client.GetHttp<TestRequest>(CancellationToken);
+
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Equal(expected, result);
         }
 
         [Fact]
         public async Task ReturnsExpectedObject()
         {
-            var expected = new[] {"One", "Two", "Three"};
+            var expected = new[] { "One", "Two", "Three" };
             var responseStream = await Client.Client.GetStreamAsync(TestRequest.Route);
-            var model = await JsonSerializer.DeserializeAsync<List<string>>(responseStream, new JsonSerializerOptions() {PropertyNameCaseInsensitive = true});
+            var model = await JsonSerializer.DeserializeAsync<List<string>>(responseStream, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
             Assert.NotNull(model);
             Assert.Equal(expected.OrderBy(s => s), model.OrderBy(s => s));
@@ -69,7 +71,7 @@ namespace Palavyr.IntegrationTests.Tests
         [Fact]
         public async Task ReturnsExpectedResponse()
         {
-            var expected = new[] {"One", "Two", "Three"};
+            var expected = new[] { "One", "Two", "Three" };
             var model = await Client.Client.GetFromJsonAsync<List<string>>("test");
 
             Assert.NotNull(model);
@@ -90,7 +92,7 @@ namespace Palavyr.IntegrationTests.Tests
         public override async Task DisposeAsync()
         {
             await Task.CompletedTask;
-             WebHostFactory.Dispose();
+            WebHostFactory.Dispose();
         }
     }
 }

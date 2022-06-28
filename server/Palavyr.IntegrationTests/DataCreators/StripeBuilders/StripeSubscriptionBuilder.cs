@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 using System;
 using System.Collections.Generic;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;

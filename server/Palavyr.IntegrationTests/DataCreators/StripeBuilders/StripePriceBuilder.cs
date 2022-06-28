@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 using Palavyr.Core.Services.StripeServices.Products;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Stripe;
