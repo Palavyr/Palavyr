@@ -63,7 +63,6 @@ namespace Palavyr.API.Registration.Container
                 RegionEndpoint = RegionEndpoint.USEast1,
             };
 
-            base.Load(builder);
             builder.Register(
                     context => { return new AmazonS3Client(credentials, s3Config); })
                 .As<IAmazonS3>()
@@ -75,6 +74,7 @@ namespace Palavyr.API.Registration.Container
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<SmtpEmailClient>().As<ISmtpEmailClient>();
+            base.Load(builder);
         }
     }
 }

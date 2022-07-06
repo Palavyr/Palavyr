@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Conversation.Schemas

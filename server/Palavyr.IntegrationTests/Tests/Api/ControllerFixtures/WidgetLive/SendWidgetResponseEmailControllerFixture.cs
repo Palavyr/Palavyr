@@ -20,7 +20,6 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
 {
     public class SendWidgetResponseEmailControllerFixture : RealDatabaseIntegrationFixture
     {
-        private readonly string Route = SendWidgetResponseEmailController.Route;
 
         public SendWidgetResponseEmailControllerFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {

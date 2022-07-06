@@ -54,7 +54,11 @@ namespace Palavyr.API
             services.AddHttpContextAccessor();
             services.AddControllers().AddControllersAsServices();
             services.AddAuthentication().AddCertificate();
-            
+            services.AddHttpsRedirection(
+                opts =>
+                {
+                    opts.HttpsPort = 5001;
+                });
             CorsConfiguration.ConfigureCorsService(services, environ);
             Configurations.ConfigureStripe(config);
             RegisterStores(services, config);

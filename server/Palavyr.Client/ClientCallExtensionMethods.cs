@@ -33,6 +33,8 @@ namespace Palavyr.Client
             var json = JsonConvert.SerializeObject(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var message = await client.PostAsync(requestUri, content, cancellationToken);
+            message.EnsureSuccessStatusCode();
+
             return await message.ReadResponse<TResponse>();
         }
 

@@ -13,7 +13,6 @@ namespace Palavyr.API.Controllers.WidgetLive
     public class SendWidgetResponseEmailController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "widget/area/{intentId}/email/send";
 
         public SendWidgetResponseEmailController(IMediator mediator)
         {
@@ -21,7 +20,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         }
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-        [HttpPost(Route)]
+        [HttpPost(SendWidgetResponseEmailRequest.Route)]
         public async Task<SendLiveEmailResultResource> SendEmail(
             [FromRoute]
             string intentId,

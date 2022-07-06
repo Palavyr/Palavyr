@@ -78,17 +78,17 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             var accountContext = scopedServices.GetService<AccountsContext>();
             var convoContext = scopedServices.GetService<ConvoContext>();
 
-            // accountContext.Database.EnsureDeleted();
-            // dashContext.Database.EnsureDeleted();
-            // convoContext.Database.EnsureDeleted();
+            accountContext.Database.EnsureDeleted();
+            dashContext.Database.EnsureDeleted();
+            convoContext.Database.EnsureDeleted();
 
             accountContext.Database.EnsureCreated();
             dashContext.Database.EnsureCreated();
             convoContext.Database.EnsureCreated();
 
-            var tempCancellationToken = new CancellationTokenTransport(new CancellationToken());
-            var contextProvider = new UnitOfWorkContextProvider(dashContext, accountContext, convoContext, tempCancellationToken);
-            ResetDbs(scopedServices, contextProvider, tempCancellationToken);
+            // var tempCancellationToken = new CancellationTokenTransport(new CancellationToken());
+            // var contextProvider = new UnitOfWorkContextProvider(dashContext, accountContext, convoContext, tempCancellationToken);
+            // ResetDbs(scopedServices, contextProvider, tempCancellationToken);
 
             return Task.CompletedTask;
         }

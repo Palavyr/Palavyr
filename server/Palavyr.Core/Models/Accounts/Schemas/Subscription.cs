@@ -1,4 +1,6 @@
-﻿using Palavyr.Core.Models.Contracts;
+﻿#nullable disable
+
+using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {

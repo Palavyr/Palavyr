@@ -1,4 +1,5 @@
-﻿
+﻿#nullable disable
+
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Palavyr.Core.Common.UniqueIdentifiers;

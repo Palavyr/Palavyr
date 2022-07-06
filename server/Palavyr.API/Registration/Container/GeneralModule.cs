@@ -91,8 +91,6 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PercentOfThresholdResourceValidator>().As<IValidator<List<PercentOfThresholdResource>>>();
             builder.RegisterType<SelectOneFlatResourceValidator>().As<IValidator<List<SelectOneFlatResource>>>();
             builder.RegisterType<TwoNestedCategoryResourceValidator>().As<IValidator<List<TwoNestedCategoryResource>>>();
-            
-            
 
             builder.RegisterGeneric(typeof(PricingStrategyTableCommandExecutor<,,>)).As(typeof(IPricingStrategyTableCommandExecutor<,,>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(ResponseRetriever<>)).As(typeof(IResponseRetriever<>));
@@ -189,13 +187,12 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<BasicThresholdCompiler>().As<IBasicThresholdCompiler>();
             builder.RegisterType<CategoryNestedThresholdCompiler>().As<ICategoryNestedThresholdCompiler>();
 
-
             builder.RegisterType<StaticTableCompiler>().As<IStaticTableCompiler>();
             builder.RegisterType<TemporaryPath>().As<ITemporaryPath>();
             builder.RegisterType<ThresholdEvaluator>().As<IThresholdEvaluator>();
             builder.RegisterType<UnitRetriever>().As<IUnitRetriever>();
             builder.RegisterType<WidgetStatusChecker>().As<IWidgetStatusChecker>();
-            builder.RegisterType<UnitOfWorkContextProvider>().As<IUnitOfWorkContextProvider>();
+            builder.RegisterType<UnitOfWorkContextProvider>().As<IUnitOfWorkContextProvider>().InstancePerLifetimeScope();
 
             builder.RegisterDecorator<FileAssetDeleterDeleteDatabaseRecordDecorator, IFileAssetDeleter>();
             builder.RegisterDecorator<FileAssetDeleterDereferenceDecorator, IFileAssetDeleter>();
@@ -204,14 +201,6 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterDecorator<LogoAssetSaverDatabaseUpdaterDecorator, ILogoAssetSaver>();
             builder.RegisterDecorator<ResponseHtmlCustomizationDecorator, IResponseHtmlBuilder>();
             builder.RegisterDecorator<ResponsePdfGeneratorUpdateConversationRecordDecorator, IResponsePdfGenerator>();
-
-
-            // TODO: Decorator is not appropriate for the validation pipeline through the mediator. 
-            // TODO: Need to use a pattern that searches for available validators, and skips when it can't find any.
-            // TODO: Decorators require that all handlers have a validator... which is not ideal since some handlers don't
-            // TODO: require validation of any kind.
-            // builder.RegisterGenericDecorator(typeof(NotificationHandlerValidationDecorator<>), typeof(INotificationHandler<>));
-            // builder.RegisterGenericDecorator(typeof(RequestHandlerValidationDecorator<,>), typeof(IRequestHandler<,>));
         }
     }
 }

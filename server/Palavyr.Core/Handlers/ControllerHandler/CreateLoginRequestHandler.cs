@@ -22,7 +22,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<CreateLoginRequestResponse> Handle(CreateLoginRequest request, CancellationToken cancellationToken)
         {
-            logger.LogDebug("Login Request Received.");
+            logger.LogDebug("Login Request Received");
             try
             {
                 var credentials = await authService.PerformLoginAction(request);

@@ -1,4 +1,6 @@
-﻿namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
+﻿#nullable disable
+
+namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
     public class CategoryMultiplyByCount
     {

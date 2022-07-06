@@ -12,9 +12,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetTableNameMapHandler : IRequestHandler<GetTableNameMapRequest, GetTableNameMapResponse>
     {
         private readonly IMapToNew<IHaveAPrettyNameAndTableType, PricingStrategyTableTypeResource> mapper;
-        private readonly PricingStrategyTypeLister pricingStrategyTypeLister;
+        private readonly IPricingStrategyTypeLister pricingStrategyTypeLister;
 
-        public GetTableNameMapHandler(IMapToNew<IHaveAPrettyNameAndTableType, PricingStrategyTableTypeResource> mapper, PricingStrategyTypeLister pricingStrategyTypeLister)
+        public GetTableNameMapHandler(IMapToNew<IHaveAPrettyNameAndTableType, PricingStrategyTableTypeResource> mapper, IPricingStrategyTypeLister pricingStrategyTypeLister)
         {
             this.mapper = mapper;
             this.pricingStrategyTypeLister = pricingStrategyTypeLister;

@@ -1,4 +1,3 @@
-
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -107,9 +106,9 @@ namespace Palavyr.Core.Services.AuthenticationServices
             var sessionEntity = await sessionStore.DangerousRawQuery().AddAsync(newSession);
             var session = sessionEntity.Entity;
 
-            logger.LogDebug("Committing the new session to the DB.");
+            logger.LogDebug("Committing the new session to the DB");
 
-            logger.LogDebug("Session saved to DB. Returning auth response.");
+            logger.LogDebug("Session saved to DB. Returning auth response");
             return Credentials.CreateAuthenticatedResponse(
                 session.SessionId,
                 session.ApiKey,
@@ -121,7 +120,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
         {
             // update the current active state
             // if the current_period_end plus a few days is in the future, then active stays true
-            logger.LogDebug("Updated current active state given the subscription status.");
+            logger.LogDebug("Updated current active state given the subscription status");
             var periodEndWithBuffer = account.CurrentPeriodEnd.AddDays(GracePeriod); // 5 day grace period if they don't pay.
             if (account.PlanType != Account.PlanTypeEnum.Free && DateTime.Now > periodEndWithBuffer)
             {

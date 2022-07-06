@@ -66,6 +66,7 @@ namespace Palavyr.Core.Stores.Delete
         private readonly IUnitOfWorkContextProvider contextProvider;
         private readonly IFileAssetDeleter fileAssetDeleter;
         private readonly DashContext dashContext; // Try not to call these contexts directly.
+        private readonly AccountsContext accountsContext;
         private readonly IAccountIdTransport accountIdTransport;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
         private readonly List<IEntityType> allEntities = new List<IEntityType>();
@@ -88,6 +89,7 @@ namespace Palavyr.Core.Stores.Delete
             this.contextProvider = contextProvider;
             this.fileAssetDeleter = fileAssetDeleter;
             this.dashContext = dashContext;
+            this.accountsContext = accountsContext;
             this.accountIdTransport = accountIdTransport;
             this.cancellationTokenTransport = cancellationTokenTransport;
 
@@ -144,8 +146,10 @@ namespace Palavyr.Core.Stores.Delete
         private async Task DeleteAccountEntities()
         {
             if (!fileAssetsDeleted) throw new DomainException("Cannot Delete Account without first deleting file assets.");
-
+            
             var accountStore = lifetimeScope.GetService<IEntityStore<Account>>();
+            // var account = await accountsContext.Accounts.SingleOrDefaultAsync(x => x.AccountId == accountStore?.AccountId, accountStore?.CancellationToken ?? new CancellationToken());
+            
             var account = await accountStore.GetAccount();
             var stripeCustomerId = account.StripeCustomerId;
 

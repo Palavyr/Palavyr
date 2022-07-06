@@ -48,6 +48,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class SendWidgetResponseEmailRequest : IRequest<SendWidgetResponseEmailResponse>
     {
+        public const string Route = "widget/area/{intentId}/email/send";
+
         public SendWidgetResponseEmailRequest(EmailRequest emailRequest, string intentId, bool isDemo)
         {
             EmailRequest = emailRequest;

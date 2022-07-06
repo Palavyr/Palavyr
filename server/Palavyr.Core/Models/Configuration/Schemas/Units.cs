@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#nullable disable
+
+using System.Collections.Generic;
 using Palavyr.Core.Services.Units;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
