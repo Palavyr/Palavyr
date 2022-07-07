@@ -28,7 +28,7 @@ namespace Palavyr.API.CustomMiddleware
         {
             // context.Response.OnCompleted(
             //     async o => { await unitOfWorkContextProvider.CloseUnitOfWork(); }, context);
-
+            ;
             await next(context);
 
             await unitOfWorkContextProvider.CloseUnitOfWork();

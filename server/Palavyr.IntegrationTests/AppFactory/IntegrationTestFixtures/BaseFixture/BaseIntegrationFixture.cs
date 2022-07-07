@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,10 +46,24 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public WebApplicationFactory<Startup> WebHostFactory { get; set; } = null!;
 
-        public PalavyrClient Client => new PalavyrClient(WebHostFactory.ConfigureInMemoryClient(SessionId));
-        public PalavyrClient ApikeyClient => new PalavyrClient(WebHostFactory.ConfigureInMemoryApiKeyClient(ApiKey));
+        public PalavyrClient Client => LazyClient.Value;
 
-        public Func<string, PalavyrClient> ConfigurableClient => sessionId => new PalavyrClient(WebHostFactory.ConfigureInMemoryClient(sessionId));
+        public Lazy<PalavyrClient> LazyClient =>
+            new Lazy<PalavyrClient>(
+                () => { return new PalavyrClient(WebHostFactory.ConfigureInMemoryClient(SessionId)); });
+
+
+        public PalavyrClient ApikeyClient => LazyApikeyClient.Value;
+
+        public Lazy<PalavyrClient> LazyApikeyClient =>
+            new Lazy<PalavyrClient>(
+                () => { return new PalavyrClient(WebHostFactory.ConfigureInMemoryApiKeyClient(ApiKey)); });
+
+        public Func<string, PalavyrClient> ConfigurableClient => sessionId => LazyConfigurableClient(sessionId).Value;
+
+        public Func<string, Lazy<PalavyrClient>> LazyConfigurableClient =>
+            sessionId => new Lazy<PalavyrClient>(
+                () => { return new PalavyrClient(WebHostFactory.ConfigureInMemoryClient(sessionId)); });
 
         public CancellationToken CancellationToken => new CancellationTokenSource(Timeout).Token;
         public TimeSpan Timeout => TimeSpan.FromMinutes(3);

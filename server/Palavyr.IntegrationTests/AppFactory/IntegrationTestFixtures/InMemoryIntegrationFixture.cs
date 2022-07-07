@@ -26,8 +26,8 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
                             .ConfigureAppConfiguration(
                                 (context, configBuilder) => { configBuilder.AddConfiguration(TestConfiguration.GetTestConfiguration(Assembly.GetExecutingAssembly())); })
                             .ConfigureTestContainer<ContainerBuilder>(builder => { CustomizeContainer(builder); })
-                            .ConfigureInMemoryDatabase(dbRoot)
-                            .UseTestServer();
+                            .ConfigureInMemoryDatabase(dbRoot);
+                            // .UseTestServer();
                     });
         }
     }

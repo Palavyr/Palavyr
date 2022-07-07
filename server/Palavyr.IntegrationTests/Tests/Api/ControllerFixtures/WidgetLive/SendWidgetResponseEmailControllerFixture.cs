@@ -3,6 +3,7 @@ using Autofac;
 using Palavyr.API.Controllers.WidgetLive;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models;
+using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
@@ -40,12 +41,15 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             var record = await this.CreateConversationRecordBuilder().WithIntentId(intentId).Build();
 
             // create intent without response PDF set
-            await this.CreateIntentBuilder().WithoutResponsePdf().WithIntentId(intentId).Build(); //SendPdfResponse needs to be false for this test
+            await this.CreateIntentBuilder()
+                .WithoutResponsePdf()
+                .WithIntentId(intentId)
+                .Build(); //SendPdfResponse needs to be false for this test
 
             var emailRequest = new EmailRequest
             {
                 ConversationId = record.ConversationId,
-                DynamicResponses = null!,
+                DynamicResponses = new DynamicResponses(),
                 EmailAddress = "test.palavyr@example.com",
                 Name = "Palavyr",
                 Phone = "123456"
