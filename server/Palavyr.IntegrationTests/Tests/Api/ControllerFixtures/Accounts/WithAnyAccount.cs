@@ -58,8 +58,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
                 .RawReadonlyQuery()
                 .SingleOrDefaultAsync(x => x.EmailAddress == credentials.EmailAddress, CancellationToken);
             current.ShouldNotBeNull();
-            
-            
+
             await Delete(credentials);
 
             var result = await accountStore

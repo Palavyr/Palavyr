@@ -15,10 +15,10 @@ namespace Palavyr.API.Controllers.Accounts
             this.mediator = mediator;
         }
 
-        [HttpPost(DeleteAccountRequest.Route)]
+        [HttpDelete(DeleteAccountRequest.Route)]
         public async Task DeleteAccount(CancellationToken cancellationToken)
         {
-            await mediator.Publish(new DeleteAccountRequest(), cancellationToken);
+            await mediator.Send(new DeleteAccountRequest(), cancellationToken);
         }
     }
 }
