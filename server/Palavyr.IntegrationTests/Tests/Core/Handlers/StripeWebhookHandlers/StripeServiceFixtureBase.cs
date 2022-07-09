@@ -9,7 +9,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 {
     public abstract class StripeServiceFixtureBase : InMemoryIntegrationFixture
     {
-        protected StripeServiceFixtureBase(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        protected StripeServiceFixtureBase(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

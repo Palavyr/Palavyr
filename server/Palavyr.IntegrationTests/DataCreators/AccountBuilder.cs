@@ -1,7 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
@@ -9,6 +10,36 @@ using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
+    public static class CreateDefaultTestAccountBuilderExtensionMethods
+    {
+        public static DefaultTestAccountBuilder CreateDefaultTestAccountBuilder(this BaseIntegrationFixture test)
+        {
+            return new DefaultTestAccountBuilder(test);
+        }
+    }
+
+    public class DefaultTestAccountBuilder
+    {
+        private readonly BaseIntegrationFixture test;
+
+        public DefaultTestAccountBuilder(BaseIntegrationFixture test)
+        {
+            this.test = test;
+        }
+
+        public async Task<Credentials> Build(string email, string password)
+        {
+            var response = await test.Client.Post<CreateNewAccountRequest, Credentials>(
+                new CreateNewAccountRequest
+                {
+                    EmailAddress = email,
+                    Password = password
+                }, test.CancellationToken);
+            return response;
+        }
+    }
+
+
     public static class CreateAccountBuilder
     {
         public static DefaultAccountAndSessionBuilder CreateDefaultAccountAndSessionBuilder(this BaseIntegrationFixture test)
@@ -123,7 +154,7 @@ namespace Palavyr.IntegrationTests.DataCreators
         }
 
 
-        public async Task<Account> Build()
+        public async Task<Credentials> Build()
         {
             var email = this.emailAddress ?? "test@gmail.com";
             var pass = this.password ?? "123456";
@@ -136,31 +167,38 @@ namespace Palavyr.IntegrationTests.DataCreators
             var planT = this.planType ?? Account.PlanTypeEnum.Free;
             var periodEnd = this.currentPeriodEnd ?? DateTime.UtcNow;
             var apiKey = this.apikey ?? test.ApiKey;
-            
-            
-            var defaultAccount = new Account
-            {
-                EmailAddress = email,
-                Password = pass,
-                AccountId = id,
-                ApiKey = apiKey,
-                AccountType = accType,
-                StripeCustomerId = custId,
-                PhoneNumber = null,
-                Locale = "en-AU",
-                HasUpgraded = hasUpgraded,
-                PaymentInterval = payinterval,
-                PlanType = planT,
-                Active = active,
-                CurrentPeriodEnd = periodEnd,
-                IntroductionId = A.RandomId()
-            };
 
-            await test.CreateAndSave(defaultAccount);
-            await test.CreateAndSave(Session.CreateNew(test.SessionId, test.AccountId, test.ApiKey));
-            
 
-            return defaultAccount;
+            // var defaultAccount = new Account
+            // {
+            //     EmailAddress = email,
+            //     Password = pass,
+            //     AccountId = id,
+            //     ApiKey = apiKey,
+            //     AccountType = accType,
+            //     StripeCustomerId = custId,
+            //     PhoneNumber = null,
+            //     Locale = "en-AU",
+            //     HasUpgraded = hasUpgraded,
+            //     PaymentInterval = payinterval,
+            //     PlanType = planT,
+            //     Active = active,
+            //     CurrentPeriodEnd = periodEnd,
+            //     IntroductionId = A.RandomId()
+            // };
+
+            var newAccount = await test.Client.Post<CreateNewAccountRequest, CreateNewAccountResponse>(
+                new CreateNewAccountRequest
+                {
+                    EmailAddress = email,
+                    Password = pass
+                }, test.CancellationToken);
+
+            // await test.CreateAndSave(defaultAccount);
+            // await test.CreateAndSave(Session.CreateNew(test.SessionId, test.AccountId, test.ApiKey));
+
+
+            return newAccount.Response;
         }
     }
 }

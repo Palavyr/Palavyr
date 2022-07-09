@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 

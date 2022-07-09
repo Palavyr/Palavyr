@@ -38,7 +38,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
             return base.CustomizeContainer(builder);
         }
 
-        public ProcessStripeInvoicePaymentFailedHandlerFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public ProcessStripeInvoicePaymentFailedHandlerFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
     }

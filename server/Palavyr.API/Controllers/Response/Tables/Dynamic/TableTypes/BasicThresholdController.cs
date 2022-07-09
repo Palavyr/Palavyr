@@ -6,7 +6,7 @@ using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
 {
-    [Route(BaseRoute + nameof(BasicThreshold))]
+    [Route(BaseRoute + nameof(BasicThreshold), Order = 0)]
     [ApiController]
     public class BasicThresholdController : PricingStrategyControllerBase<BasicThreshold, BasicThresholdResource, IBasicThresholdCompiler>
     {

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Palavyr.API;
 using Palavyr.Client;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.FileAssetServices;
@@ -28,30 +29,35 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture
 {
-    public abstract class BaseIntegrationFixture : IClassFixture<IntegrationTestAutofacWebApplicationFactory>, IAsyncLifetime
+    public abstract class BaseIntegrationFixture : IClassFixture<ServerFactory>, IAsyncLifetime
     {
-        public readonly string AccountId = Guid.NewGuid().ToString();
-        public readonly string ApiKey = Guid.NewGuid().ToString();
+        public string SessionId;
+        public string AccountId;
+        public string ApiKey;
         public readonly string StripeCustomerId = Guid.NewGuid().ToString();
-        public readonly string SessionId = Guid.NewGuid().ToString();
-        public readonly string EmailAddress = $"{Guid.NewGuid()}@gmail.com";
-        public readonly string Password = Guid.NewGuid().ToString();
-
+        public readonly string EmailAddress = $"test-{Guid.NewGuid()}@gmail.com";
+        public readonly string Password = "Password01!";
         public readonly Lazy<AutofacServiceProvider> ServiceProvider;
-
         protected internal virtual bool SaveStoreActionsImmediately => true;
+        public readonly ServerFactory Factory;
+
+        protected BaseIntegrationFixture(ITestOutputHelper testOutputHelper, ServerFactory factory)
+        {
+            TestOutputHelper = testOutputHelper;
+            Factory = factory;
+
+            ServiceProvider = new Lazy<AutofacServiceProvider>(
+                () => { return (AutofacServiceProvider)WebHostFactory.Services; });
+        }
 
         public ITestOutputHelper TestOutputHelper { get; set; }
-        public readonly IntegrationTestAutofacWebApplicationFactory Factory;
-
         public WebApplicationFactory<Startup> WebHostFactory { get; set; } = null!;
 
-        public PalavyrClient Client => LazyClient.Value;
+        public PalavyrClient Client => new PalavyrClient(WebHostFactory.ConfigureInMemoryClient(SessionId));
 
         public Lazy<PalavyrClient> LazyClient =>
             new Lazy<PalavyrClient>(
                 () => { return new PalavyrClient(WebHostFactory.ConfigureInMemoryClient(SessionId)); });
-
 
         public PalavyrClient ApikeyClient => LazyApikeyClient.Value;
 
@@ -67,8 +73,8 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public CancellationToken CancellationToken => new CancellationTokenSource(Timeout).Token;
         public TimeSpan Timeout => TimeSpan.FromMinutes(3);
-
         public ILogger Logger => WebHostFactory.Services.GetService<ILogger>();
+
 
         public IEntityStore<TEntity> ResolveStore<TEntity>() where TEntity : class, IEntity
         {
@@ -84,14 +90,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public AutofacServiceProvider Container => ServiceProvider.Value;
         public IConfiguration Configuration => TestConfiguration.GetTestConfiguration(Assembly.GetExecutingAssembly());
 
-        protected BaseIntegrationFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory)
-        {
-            TestOutputHelper = testOutputHelper;
-            Factory = factory;
-
-            ServiceProvider = new Lazy<AutofacServiceProvider>(
-                () => { return (AutofacServiceProvider)WebHostFactory.Services; });
-        }
 
         public virtual ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
@@ -151,7 +149,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public virtual async Task InitializeAsync()
         {
-            SetAccountIdTransport();
             await Task.CompletedTask;
         }
 
@@ -159,8 +156,9 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         {
             await DeleteTestStripeCustomers();
             SetCancellationToken();
-            var deleter = ResolveType<IDangerousAccountDeleter>();
-            await deleter.DeleteAllThings();
+
+            var tempClient = ConfigurableClient(SessionId);
+            await tempClient.Delete<DeleteAccountRequest>(CancellationToken);
 
             var sessionStore = ResolveStore<Session>();
             await sessionStore.Delete(SessionId, s => s.SessionId);
@@ -170,43 +168,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
             await provider.DisposeContexts();
 
             WebHostFactory.Dispose();
-        }
-    }
-
-    public class IntegrationTestMediatorRequestHandlerDecorator<TEvent, TResponse> : IRequestHandler<TEvent, TResponse> where TEvent : IRequest<TResponse>
-    {
-        private readonly IRequestHandler<TEvent, TResponse> inner;
-        private readonly IUnitOfWorkContextProvider unitOfWorkContextProvider;
-
-        public IntegrationTestMediatorRequestHandlerDecorator(IRequestHandler<TEvent, TResponse> inner, IUnitOfWorkContextProvider unitOfWorkContextProvider)
-        {
-            this.inner = inner;
-            this.unitOfWorkContextProvider = unitOfWorkContextProvider;
-        }
-
-        public async Task<TResponse> Handle(TEvent request, CancellationToken cancellationToken)
-        {
-            var response = await inner.Handle(request, cancellationToken);
-            await unitOfWorkContextProvider.DangerousCommitAllContexts();
-            return response;
-        }
-    }
-
-    public class IntegrationTestMediatorNotificationHandlerDecorator<TEvent> : INotificationHandler<TEvent> where TEvent : INotification
-    {
-        private readonly INotificationHandler<TEvent> inner;
-        private readonly IUnitOfWorkContextProvider unitOfWorkContextProvider;
-
-        public IntegrationTestMediatorNotificationHandlerDecorator(INotificationHandler<TEvent> inner, IUnitOfWorkContextProvider unitOfWorkContextProvider)
-        {
-            this.inner = inner;
-            this.unitOfWorkContextProvider = unitOfWorkContextProvider;
-        }
-
-        public async Task Handle(TEvent notification, CancellationToken cancellationToken)
-        {
-            await inner.Handle(notification, cancellationToken);
-            await unitOfWorkContextProvider.DangerousCommitAllContexts();
         }
     }
 }

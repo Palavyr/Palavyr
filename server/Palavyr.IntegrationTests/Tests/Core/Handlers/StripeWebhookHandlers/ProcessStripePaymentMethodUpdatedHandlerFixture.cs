@@ -12,7 +12,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 {
     public class ProcessStripePaymentMethodUpdatedHandlerFixture : StripeServiceFixtureBase
     {
-        public ProcessStripePaymentMethodUpdatedHandlerFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public ProcessStripePaymentMethodUpdatedHandlerFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

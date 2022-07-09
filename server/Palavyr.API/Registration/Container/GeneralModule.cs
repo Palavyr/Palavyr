@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using Autofac;
 using FluentValidation;
-using MediatR;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
@@ -54,6 +54,7 @@ namespace Palavyr.API.Registration.Container
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
+
             // Experimental
             ///////!!! SPECIAL DANGER ZONE !!!//////////
             builder.RegisterType<AccountIdTransport>().As<IAccountIdTransport>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
@@ -80,6 +81,12 @@ namespace Palavyr.API.Registration.Container
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
+            builder
+                .RegisterGeneric(typeof(PricingStrategyTemplateCreator<>))
+                .As(typeof(IPricingStrategyTemplateCreator<>))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
             builder.RegisterAssemblyTypes(typeof(Startup).Assembly)
                 .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
                 .AsImplementedInterfaces()
@@ -96,6 +103,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterGeneric(typeof(ResponseRetriever<>)).As(typeof(IResponseRetriever<>));
 
             builder.RegisterType<PricingStrategyTypeLister>().As<IPricingStrategyTypeLister>();
+
+
             builder.RegisterType<MissingNodeCalculator>().As<IMissingNodeCalculator>();
             builder.RegisterType<RequiredNodeCalculator>().As<IRequiredNodeCalculator>();
             builder.RegisterType<TreeRootFinder>().As<ITreeRootFinder>();

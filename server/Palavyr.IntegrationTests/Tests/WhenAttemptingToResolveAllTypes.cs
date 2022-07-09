@@ -58,7 +58,7 @@ namespace Palavyr.IntegrationTests.Tests
         }
 
 
-        public WhenAttemptingToResolveAllTypes(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory)
+        public WhenAttemptingToResolveAllTypes(ITestOutputHelper testOutputHelper, ServerFactory factory)
             : base(testOutputHelper, factory)
         {
             this.testOutputHelper = testOutputHelper;

@@ -41,11 +41,22 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
         where TR : IPricingStrategyTableRowResource
         where TCompiler : IPricingStrategyTableCompiler
     {
+        public const string Route = "intent/{intentId}/table/{tableId}/template";
+
+        public static string FormatRoute(string intentId, string tableId)
+        {
+            return Route.Replace("{intentId}", intentId).Replace("{tableId}", tableId);
+        }
+
         public string IntentId { get; set; }
         public string TableId { get; set; }
+
+        public GetPricingStrategyTableRowTemplateRequest()
+        {
+        }
     }
 
-    public class GetPricingStrategyTableRowTemplateResponse<TR> where TR : IPricingStrategyTableRowResource
+public class GetPricingStrategyTableRowTemplateResponse<TR> where TR : IPricingStrategyTableRowResource
     {
         public GetPricingStrategyTableRowTemplateResponse(TR resource) => Resource = resource;
         public TR Resource { get; set; }

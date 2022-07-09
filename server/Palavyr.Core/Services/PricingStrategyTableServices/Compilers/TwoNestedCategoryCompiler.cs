@@ -8,7 +8,6 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Requests;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Stores;

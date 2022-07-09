@@ -18,7 +18,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
 {
     public class WithAnyAccount : RealDatabaseIntegrationFixture
     {
-        public WithAnyAccount(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public WithAnyAccount(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

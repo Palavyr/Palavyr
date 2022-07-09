@@ -69,7 +69,7 @@ namespace Palavyr.Core.Services.AccountServices
             var accountExists = await AccountExists(emailAddress);
             if (accountExists)
             {
-                logger.LogDebug($"Account for email address {emailAddress} already exists");
+                logger.LogDebug("Account for email address {EmailAddress} already exists", emailAddress);
                 return Credentials.CreateUnauthenticatedResponse(AccountAlreadyExists);
             }
 

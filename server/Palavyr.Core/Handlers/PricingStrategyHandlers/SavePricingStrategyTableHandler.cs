@@ -84,9 +84,20 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
         where TR : class, IPricingStrategyTableRowResource
         where TCompiler : IPricingStrategyTableCompiler
     {
+        public const string Route = "intent/{intentId}/table/{tableId}";
+
+        public static string FormatRoute(string intentId, string tableId)
+        {
+            return Route.Replace("{intentId}", intentId).Replace("{tableId", tableId);
+        }
+
         public string IntentId { get; set; }
         public string TableId { get; set; }
         public PricingStrategyTable<TR> PricingStrategyTableResource { get; set; }
+
+        public SavePricingStrategyTableRequest()
+        {
+        }
     }
 
     public class SavePricingStrategyTableResponse<TR> where TR : IPricingStrategyTableRowResource

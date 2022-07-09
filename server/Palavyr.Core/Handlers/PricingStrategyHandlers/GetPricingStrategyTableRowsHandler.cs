@@ -9,7 +9,7 @@ using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 {
-    public class GetPricingStrategyTableRowsHandler<T, TR, TCompiler> 
+    public class GetPricingStrategyTableRowsHandler<T, TR, TCompiler>
         : IRequestHandler<GetPricingStrategyTableRowsRequest<T, TR, TCompiler>, GetPricingStrategyTableRowsResponse<TR>>
         where T : class, IPricingStrategyTable<T>, IEntity, ITable, new()
         where TR : class, IPricingStrategyTableRowResource
@@ -40,13 +40,22 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
         }
     }
 
-    public class GetPricingStrategyTableRowsRequest<T, TR, TCompiler> : IRequest<GetPricingStrategyTableRowsResponse<TR>> 
+    public class GetPricingStrategyTableRowsRequest<T, TR, TCompiler> : IRequest<GetPricingStrategyTableRowsResponse<TR>>
         where TR : IPricingStrategyTableRowResource
         where TCompiler : IPricingStrategyTableCompiler
+        
     {
+        public const string Route = "intent/{intentId}/table/{tableId}";
+
+        public static string FormatRoute(string intentId, string tableId)
+        {
+            return Route.Replace("{intentId}", intentId).Replace("{tableId}", tableId);
+        }
+
         public string IntentId { get; set; }
         public string TableId { get; set; }
     }
+
 
     public class GetPricingStrategyTableRowsResponse<TR> where TR : IPricingStrategyTableRowResource
     {

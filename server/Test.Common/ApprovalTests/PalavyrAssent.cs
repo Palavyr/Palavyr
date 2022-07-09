@@ -10,7 +10,7 @@ namespace Test.Common.ApprovalTests
     {
         public static void PalavyrAssent(this object testFixture, string received, [CallerMemberName] string? testName = null, [CallerFilePath] string? filePath = null)
         {
-            var config = new Assent.Configuration()
+            var config = new Configuration()
                 .UsingExtension("txt")
                 .UseNamer(filePath, testName);
 

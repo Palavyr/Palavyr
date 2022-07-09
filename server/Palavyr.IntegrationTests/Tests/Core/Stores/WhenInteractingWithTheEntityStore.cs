@@ -19,7 +19,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
 {
     public class StoreBaseFixture : InMemoryIntegrationFixture
     {
-        public StoreBaseFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public StoreBaseFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 
@@ -61,7 +61,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
                 await Should.ThrowAsync<AccountMisMatchException>(async () => await store.Create(newEntity));
             }
 
-            public AndCreatingAnEntity(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+            public AndCreatingAnEntity(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
             {
             }
         }
@@ -114,14 +114,14 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
                 await Should.ThrowAsync<AccountMisMatchException>(async () => await store.CreateMany(newEntities));
             }
 
-            public AndCreatingMany(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+            public AndCreatingMany(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
             {
             }
         }
 
         public class AndGettingASingleEntity : StoreBaseFixture
         {
-            public AndGettingASingleEntity(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+            public AndGettingASingleEntity(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
             {
             }
 
@@ -177,7 +177,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
 
         public class AndGettingManyEntities : StoreBaseFixture
         {
-            public AndGettingManyEntities(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+            public AndGettingManyEntities(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
             {
             }
 
@@ -265,7 +265,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
 
         public class AndGettingAllEntities : StoreBaseFixture
         {
-            public AndGettingAllEntities(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+            public AndGettingAllEntities(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
             {
             }
 
@@ -295,7 +295,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
 
         public class AndUpdatingAnEntity : StoreBaseFixture
         {
-            public AndUpdatingAnEntity(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+            public AndUpdatingAnEntity(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
             {
             }
 
@@ -326,7 +326,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
 
         public class AndDeletingEntities : StoreBaseFixture
         {
-            public AndDeletingEntities(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+            public AndDeletingEntities(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
             {
             }
 
@@ -335,7 +335,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
             {
                 // arrange
                 var store = ResolveStore<Area>();
-                var entity = await store.Create(Area.CreateNewArea(A.RandomName(), AccountId, EmailAddress, true));
+                var entity = await store.Create(Area.CreateNewIntent(A.RandomName(), AccountId, EmailAddress, true));
 
                 await store.Delete(entity);
 
@@ -351,7 +351,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
                 var context = ResolveType<IUnitOfWorkContextProvider>();
 
                 var accountA = A.RandomId();
-                var newA = Area.CreateNewArea(A.RandomName(), accountA, EmailAddress, true);
+                var newA = Area.CreateNewIntent(A.RandomName(), accountA, EmailAddress, true);
                 await store.DangerousRawQuery().AddAsync(newA);
                 await context.DangerousCommitAllContexts();
 
@@ -382,8 +382,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
 
                 var accountA = A.RandomId();
                 var accountB = A.RandomId();
-                var newA = Area.CreateNewArea(A.RandomName(), accountA, EmailAddress, true);
-                var newB = Area.CreateNewArea(A.RandomName(), accountB, EmailAddress, true);
+                var newA = Area.CreateNewIntent(A.RandomName(), accountA, EmailAddress, true);
+                var newB = Area.CreateNewIntent(A.RandomName(), accountB, EmailAddress, true);
 
                 await store.DangerousRawQuery().AddAsync(newA);
                 await store.DangerousRawQuery().AddAsync(newB);
@@ -407,8 +407,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Stores
                 // arrange
                 var store = ResolveStore<Area>();
 
-                var newA = Area.CreateNewArea(A.RandomName(), AccountId, EmailAddress, true);
-                var newB = Area.CreateNewArea(A.RandomName(), AccountId, EmailAddress, true);
+                var newA = Area.CreateNewIntent(A.RandomName(), AccountId, EmailAddress, true);
+                var newB = Area.CreateNewIntent(A.RandomName(), AccountId, EmailAddress, true);
 
                 await store.CreateMany(new[] { newA, newB });
 

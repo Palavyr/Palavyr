@@ -2,6 +2,7 @@
 using System.Linq;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
 
 namespace Palavyr.API.Registration.Container.MediatorModule
@@ -21,6 +22,7 @@ namespace Palavyr.API.Registration.Container.MediatorModule
                 .AddTransient(typeof(GetPricingStrategyTableRowTemplateHandler<,,>))
                 .AddTransient(typeof(DeletePricingStrategyTableHandler<,,>))
                 .AddTransient(typeof(SavePricingStrategyTableHandler<,,>))
+                .AddTransient(typeof(CreatePricingStrategyTableHandler<,,>))
                 .BuildServiceProvider();
         }
     }

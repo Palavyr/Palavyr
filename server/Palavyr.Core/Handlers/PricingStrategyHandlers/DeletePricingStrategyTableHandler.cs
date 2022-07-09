@@ -32,6 +32,8 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
         where TR : IPricingStrategyTableRowResource
         where TCompiler : IPricingStrategyTableCompiler
     {
+        public const string Route = "intent/{intentId}/table/{tableId}";
+
         public string IntentId { get; set; }
         public string TableId { get; set; }
     }
@@ -44,5 +46,6 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
     public class EmptyResponse : IPricingStrategyTableRowResource
     {
         public int? Id { get; set; }
+        public string TableId { get; set; }
     }
 }

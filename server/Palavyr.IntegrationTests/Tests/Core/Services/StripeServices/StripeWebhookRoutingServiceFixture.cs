@@ -29,7 +29,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
     {
         private IStripeEventWebhookRoutingService router = null!;
 
-        public StripeWebhookRoutingServiceFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public StripeWebhookRoutingServiceFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

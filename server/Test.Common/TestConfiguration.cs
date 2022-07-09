@@ -27,9 +27,6 @@ namespace Test.Common
             myConfiguration.Add(ApplicationConstants.ConfigSections.PdfServerHost, "Pdf.Server.Host");
             myConfiguration.Add(ApplicationConstants.ConfigSections.PdfServerPort, "Pdf.Server.Port");
 
-
-            // var assembly = Assembly.GetExecutingAssembly();
-
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(myConfiguration)
                 .AddUserSecrets(assembly, false)

@@ -5,7 +5,7 @@ using Test.Common;
 
 namespace Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory
 {
-    public class IntegrationTestAutofacWebApplicationFactory : AutofacWebApplicationFactory, IIntegrationTestFixture
+    public class ServerFactory : AutofacWebApplicationFactory, IIntegrationTestFixture
     {
         protected override IHostBuilder CreateHostBuilder()
         {

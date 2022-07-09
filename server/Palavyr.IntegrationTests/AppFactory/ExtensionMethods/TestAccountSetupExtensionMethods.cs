@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Palavyr.IntegrationTests.DataCreators;
 
@@ -7,7 +7,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {
     public static class TestAccountSetupExtensionMethods
     {
-        public static async Task<Account> SetupProAccount(this BaseIntegrationFixture baseIntegrationFixture)
+        public static async Task<Credentials> SetupProAccount(this BaseIntegrationFixture baseIntegrationFixture)
         {
             return await baseIntegrationFixture
                 .SetStandardAccountProperties()
@@ -15,7 +15,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                 .Build();
         }
 
-        public static async Task<Account> SetupLyteAccount(this BaseIntegrationFixture baseIntegrationFixture)
+        public static async Task<Credentials> SetupLyteAccount(this BaseIntegrationFixture baseIntegrationFixture)
         {
             return await baseIntegrationFixture
                 .SetStandardAccountProperties()
@@ -23,7 +23,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                 .Build();
         }
 
-        public static async Task<Account> SetupFreeAccount(this BaseIntegrationFixture baseIntegrationFixture)
+        public static async Task<Credentials> SetupFreeAccount(this BaseIntegrationFixture baseIntegrationFixture)
         {
             return await baseIntegrationFixture
                 .SetStandardAccountProperties()

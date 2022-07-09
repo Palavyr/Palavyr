@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;

@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
-using Palavyr.API.Controllers.Accounts.Settings;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
@@ -13,7 +12,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
 {
     public class WhenGettingAnApiKeyForAnAccountThatDoesNotExist : InMemoryIntegrationFixture
     {
-        public WhenGettingAnApiKeyForAnAccountThatDoesNotExist(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public WhenGettingAnApiKeyForAnAccountThatDoesNotExist(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

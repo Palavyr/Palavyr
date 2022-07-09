@@ -17,7 +17,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
         private StripeSubscriptionService service = null!;
         private StagingProductRegistry registry = null!;
 
-        public StripeSubscriptionServiceFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public StripeSubscriptionServiceFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

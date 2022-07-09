@@ -25,7 +25,7 @@
 //             CancellationToken cancellationToken)
 //         {
 //             // This should be part of the pricing Strategy
-//             var response = await mediator.Send(new CreateDynamicTableRequest<(intentId), cancellationToken);
+//             var response = await mediator.Send(new CreatePricingStrategyTableRequest<>()<(intentId), cancellationToken);
 //             return response.Response;
 //         }
 //     }

@@ -77,7 +77,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
             return base.CustomizeContainer(builder);
         }
 
-        public ProcessCheckoutSessionCompletedHandlerFixtureBase(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public ProcessCheckoutSessionCompletedHandlerFixtureBase(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
     }

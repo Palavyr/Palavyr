@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
-using Palavyr.API.Controllers.WidgetLive;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Aliases;
@@ -21,8 +20,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
 {
     public class SendWidgetResponseEmailControllerFixture : RealDatabaseIntegrationFixture
     {
-
-        public SendWidgetResponseEmailControllerFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public SendWidgetResponseEmailControllerFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

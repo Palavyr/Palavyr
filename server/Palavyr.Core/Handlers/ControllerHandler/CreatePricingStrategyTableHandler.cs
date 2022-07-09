@@ -66,7 +66,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             dynamicTables.Add(newTableMeta);
             intent.DynamicTableMetas = dynamicTables;
 
-            await pricingStrategyStore.Create(templateCreator.CreateTemplate(request.IntentId, tableId));
+            var template = templateCreator.CreateTemplate(request.IntentId, tableId);
+            await pricingStrategyStore.Create(template);
 
             var resource = await mapper.Map(newTableMeta);
 
@@ -126,11 +127,20 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         where TR : IPricingStrategyTableRowResource
         where TCompiler : IPricingStrategyTableCompiler
     {
-        public const string Route = "tables/dynamic/{intentId}";
+        public const string Route = "create/{intentId}";
+
+        public static string FormatRoute(string intentId)
+        {
+            return Route.Replace("{intentId}", intentId);
+        }
 
         public CreatePricingStrategyTableRequest(string intentId)
         {
             IntentId = intentId;
+        }
+
+        public CreatePricingStrategyTableRequest()
+        {
         }
 
         public string IntentId { get; set; }

@@ -10,13 +10,12 @@ namespace Palavyr.API.Controllers.Intents
     public class CreateAreaController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "intents/create";
         public CreateAreaController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpPost(Route)]
+        [HttpPost(CreateIntentRequest.Route)]
         public async Task<IntentResource> Create(
             [FromBody]
             CreateIntentRequest request,

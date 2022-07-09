@@ -12,7 +12,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 {
     public class NewStripeEventReceivedEventHandlerFixture : StripeServiceFixtureBase
     {
-        public NewStripeEventReceivedEventHandlerFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public NewStripeEventReceivedEventHandlerFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Common.ExtensionMethods.PathExtensions;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -23,12 +24,13 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
     {
         private readonly IMediator mediator;
         public const string BaseRoute = "api/tables/dynamic/";
+
         public PricingStrategyControllerBase(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpDelete("intent/{intentId}/table/{tableId}")]
+        [HttpDelete(DeletePricingStrategyTableRequest<TEntity, TResource, TCompiler>.Route)]
         public async Task Delete([FromRoute] string intentId, [FromRoute] string tableId, CancellationToken cancellationToken)
         {
             await mediator.Send(
@@ -39,7 +41,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
                 }, cancellationToken);
         }
 
-        [HttpPut("intent/{intentId}/table/{tableId}")]
+        [HttpPut(SavePricingStrategyTableRequest<TEntity, TResource, TCompiler>.Route)]
         public async Task<IEnumerable<TResource>> SaveTable([FromRoute] string intentId, [FromRoute] string tableId, [FromBody] PricingStrategyTable<TResource> pricingStrategyTable)
         {
             var resource = await mediator.Send(
@@ -52,7 +54,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             return resource.Resource;
         }
 
-        [HttpGet("intent/{intentId}/table/{tableId}")]
+        [HttpGet(GetPricingStrategyTableRowsRequest<TResource, TResource, TCompiler>.Route)]
         public async Task<PricingStrategyTableDataResource<TResource>> GetTable([FromRoute] string intentId, [FromRoute] string tableId)
         {
             var response = await mediator.Send(
@@ -64,7 +66,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             return response.Resource;
         }
 
-        [HttpGet("intent/{intentId}/table/{tableId}/template")]
+        [HttpGet(GetPricingStrategyTableRowTemplateRequest<TEntity, TResource, TCompiler>.Route)]
         public async Task<TResource> GetRowTemplate([FromRoute] string intentId, [FromRoute] string tableId)
         {
             var response = await mediator.Send(
@@ -75,17 +77,25 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
                 });
             return response.Resource;
         }
-        
-        [HttpPost("tables/dynamic/{intentId}")]
+
+        [HttpPost(CreatePricingStrategyTableRequest<TEntity, TResource, TCompiler>.Route)]
         public async Task<PricingStrategyTableMetaResource> Create(
             [FromRoute]
             string intentId,
             CancellationToken cancellationToken)
         {
-            // This should be part of the pricing Strategy
             var response = await mediator.Send(new CreatePricingStrategyTableRequest<TEntity, TResource, TCompiler>(intentId), cancellationToken);
             return response.Response;
         }
-        
+
+        public static string AssembleRoute<T>(string trunk)
+        {
+            var getRoute = UriUtils.Join(
+                BaseRoute,
+                typeof(T).Name,
+                trunk
+            ).Replace("api/", "");
+            return getRoute;
+        }
     }
 }

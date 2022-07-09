@@ -14,7 +14,7 @@ namespace Palavyr.IntegrationTests.Tests
 {
     public class TestControllerIntegrationTest : InMemoryIntegrationFixture
     {
-        public TestControllerIntegrationTest(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public TestControllerIntegrationTest(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

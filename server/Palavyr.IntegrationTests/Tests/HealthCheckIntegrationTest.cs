@@ -9,7 +9,7 @@ namespace Palavyr.IntegrationTests.Tests
 {
     public class HealthCheckIntegrationTest : InMemoryIntegrationFixture
     {
-        public HealthCheckIntegrationTest(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory)
+        public HealthCheckIntegrationTest(ITestOutputHelper testOutputHelper, ServerFactory factory)
             : base(testOutputHelper, factory)
         {
         }

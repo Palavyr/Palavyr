@@ -1,5 +1,6 @@
 ﻿using System;
 using MediatR;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
 
 namespace Palavyr.API.Registration.Container.MediatorModule
@@ -36,6 +37,10 @@ namespace Palavyr.API.Registration.Container.MediatorModule
             {
                 return typeof(SavePricingStrategyTableHandler<,,>).MakeGenericType(tEntity, tResource, tCompiler);
             }
+            else if (requestType.GetGenericTypeDefinition() == typeof(CreatePricingStrategyTableRequest<,,>))
+            {
+                return typeof(CreatePricingStrategyTableHandler<,,>).MakeGenericType(tEntity, tResource, tCompiler);
+            }
             else
             {
                 throw new Exception($"Pricing strategy handler {requestType.GetGenericTypeDefinition()} not found. Add it to the TestConverter.cs");
@@ -57,6 +62,7 @@ namespace Palavyr.API.Registration.Container.MediatorModule
                        || requestType.GetGenericTypeDefinition() == typeof(GetPricingStrategyTableRowTemplateRequest<,,>)
                        || requestType.GetGenericTypeDefinition() == typeof(DeletePricingStrategyTableRequest<,,>)
                        || requestType.GetGenericTypeDefinition() == typeof(SavePricingStrategyTableRequest<,,>)
+                       || requestType.GetGenericTypeDefinition() == typeof(CreatePricingStrategyTableRequest<,,>)
                    );
         }
 

@@ -4,7 +4,6 @@
     {
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
-        public string TableId { get; set; }
         public string RowId { get; set; }
         public double Threshold { get; set; }
         public double ValueMin { get; set; }

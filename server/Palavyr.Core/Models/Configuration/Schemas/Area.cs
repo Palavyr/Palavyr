@@ -42,7 +42,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         {
         }
 
-        public static Area CreateNewArea(string areaName, string accountId, string emailAddress, bool emailIsVerified)
+        public static Area CreateNewIntent(string areaName, string accountId, string emailAddress, bool emailIsVerified)
         {
             var intentId = Guid.NewGuid().ToString();
             return new Area

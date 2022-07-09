@@ -2,7 +2,6 @@
 using System.Linq;
 using FluentValidation;
 using Palavyr.Core.Resources.PricingStrategyResources;
-using Shouldly;
 
 namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 {
@@ -28,7 +27,7 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                         r.RuleFor(x => x.ValueMax).GreaterThanOrEqualTo(x => x.ValueMin).When(x => x.Range);
                         r.RuleFor(x => x.Modifier).NotNull();
                     });
-            RuleFor(x => x).Must(MustHaveDistinctThresholds).WithMessage("Thresholds must all be unique values.");
+            RuleFor(x => x).Must(MustHaveDistinctThresholds).WithMessage("Thresholds must all be unique values");
             RuleFor(x => x).Must(HaveUniqueItemOrders).WithMessage("Item orders must be unique");
             RuleFor(x => x).Must(HaveUniqueRowOrders).WithMessage("Row orders must be unique");
             RuleFor(x => x).Must(HaveCorrectlyOrderedItems).WithMessage("Items must be correctly ordered");

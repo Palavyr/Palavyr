@@ -11,12 +11,12 @@ namespace Palavyr.Client
 {
     internal static class ClientCallExtensionMethods
     {
-        public static async Task<HttpResponseMessage> PostAsyncWithoutContent(this HttpClient client, string route)
+        public static async Task<HttpResponseMessage> PostAsyncWithoutContent(this HttpClient client, string route, CancellationToken cancellationToken)
         {
-            return await client.PostAsync(route, new StringContent(""));
+            return await client.PostAsync(route, new StringContent(""), cancellationToken);
         }
 
-        public static async Task<TResponse> PostWithApiKey<TResponse>(this HttpClient client, string requestUri, object data, CancellationToken cancellationToken = default)
+        public static async Task<TResource> PostWithApiKey<TResource>(this HttpClient client, string requestUri, object data, CancellationToken cancellationToken = default)
         {
             if (!client.DefaultRequestHeaders.TryGetValues("test-only-apikey", out var enumerable))
             {
@@ -25,7 +25,7 @@ namespace Palavyr.Client
 
             var apikey = enumerable.ToArray().First();
             var requestUriWithApiKey = $"{requestUri}?key={apikey}";
-            return await client.PostWithContent<TResponse>(requestUriWithApiKey, data, cancellationToken);
+            return await client.PostWithContent<TResource>(requestUriWithApiKey, data, cancellationToken);
         }
 
         public static async Task<TResponse> PostWithContent<TResponse>(this HttpClient client, string requestUri, object data, CancellationToken cancellationToken = default)

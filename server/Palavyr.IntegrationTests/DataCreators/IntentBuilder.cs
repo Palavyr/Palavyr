@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Test.Common.Random;
 
@@ -16,11 +18,13 @@ namespace Palavyr.IntegrationTests.DataCreators
     public class IntentBuilder
     {
         private readonly BaseIntegrationFixture test;
-        private bool? sendPdfResponse = null!;
+        private bool? sendPdfResponse;
         private string intentId;
         private string accountId;
         private string emailTemplate;
         private string subject;
+
+        private string? name;
 
         public IntentBuilder(BaseIntegrationFixture test)
         {
@@ -57,25 +61,18 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
-        public async Task<Area> Build()
+        public IntentBuilder WithName(string name)
         {
-            var intentId = this.intentId ?? A.RandomId();
-            var sendPdf = this.sendPdfResponse ?? false;
-            var accountId = this.accountId ?? test.AccountId;
-            var emailTemplate = this.emailTemplate ?? A.RandomString();
-            var subject = this.subject ?? A.RandomString();
+            this.name = name;
+            return this;
+        }
 
-            var intent = new Area
-            {
-                AreaIdentifier = intentId,
-                SendPdfResponse = sendPdf,
-                AccountId = accountId,
-                EmailTemplate = emailTemplate,
-                Subject = subject
-            };
+        public async Task<IntentResource> Build()
+        {
 
-            await test.CreateAndSave(intent);
-            return intent;
+            var nm = name ?? A.RandomName();
+            var newIntent = await test.Client.Post<CreateIntentRequest, IntentResource>(new CreateIntentRequest { AreaName = nm }, test.CancellationToken);
+            return newIntent;
         }
     }
 }

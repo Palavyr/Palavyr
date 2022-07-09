@@ -28,7 +28,7 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                         r.RuleFor(x => x.ValueMax).NotNull().LessThanOrEqualTo(int.MaxValue).When(x => x.Range);
                         r.RuleFor(x => x.ValueMax).GreaterThanOrEqualTo(x => x.ValueMin).When(x => x.Range);
                     });
-            RuleFor(c => c).Must(HaveDistinctThresholds).WithMessage("Thresholds must all be unique values.");
+            RuleFor(c => c).Must(HaveDistinctThresholds).WithMessage("Thresholds must all be unique values");
             RuleFor(c => c).Must(HaveDistinctItemOrders).WithMessage("Item orders must be distinct");
             RuleFor(c => c).Must(HaveDistinctRowOrders).WithMessage("Row orders must be distinct");
             RuleFor(c => c).Must(HaveCorrectlyOrderedItems).WithMessage("Items must be correctly ordered");

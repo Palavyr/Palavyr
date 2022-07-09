@@ -41,7 +41,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var isVerified = account.DefaultEmailIsVerified;
 
             logger.LogInformation($"Creating new area for account: {accountIdTransport.AccountId} called {request.AreaName}");
-            var newIntent = Area.CreateNewArea(request.AreaName, accountIdTransport.AccountId, defaultEmail, isVerified);
+            var newIntent = Area.CreateNewIntent(request.AreaName, accountIdTransport.AccountId, defaultEmail, isVerified);
             var intent = await intentStore.Create(newIntent);
 
             var resource = await mapper.Map(intent);
@@ -51,6 +51,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class CreateIntentRequest : IRequest<CreateIntentResponse>
     {
+        public const string Route = "intents/create";
+
         public string AreaName { get; set; }
     }
 

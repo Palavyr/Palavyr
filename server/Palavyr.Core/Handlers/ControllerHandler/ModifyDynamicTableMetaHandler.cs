@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.Units;
 using Palavyr.Core.Stores;

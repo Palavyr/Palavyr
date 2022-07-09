@@ -11,7 +11,6 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Requests;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.PricingStrategyTableServices.Thresholds;
