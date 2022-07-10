@@ -130,8 +130,8 @@ namespace Palavyr.IntegrationTests.DataCreators
                     row.TableId = currentTable.TableRows.First().TableId;
                 }
 
-                currentTable.TableRows.ToList().AddRange(additionalRows);
-
+                currentTable.AddRows(additionalRows);
+ 
                 var saveRoute = PricingStrategyControllerBase<TEntity, TResource, TCompiler>
                     .AssembleRoute<TEntity>(
                         SavePricingStrategyTableRequest<TEntity, TResource, TCompiler>.FormatRoute(intentId, currentTable.TableRows.First().TableId)
@@ -139,7 +139,7 @@ namespace Palavyr.IntegrationTests.DataCreators
 
                 await test
                     .Client
-                    .Post<SavePricingStrategyTableRequest<TEntity, TResource, TCompiler>, IEnumerable<TResource>>(
+                    .Put<SavePricingStrategyTableRequest<TEntity, TResource, TCompiler>, PricingStrategyTableDataResource<TResource>>(
                         currentTable,
                         test.CancellationToken,
                         s => saveRoute);

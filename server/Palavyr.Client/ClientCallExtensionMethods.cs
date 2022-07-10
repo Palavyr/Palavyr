@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.Serialization;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Palavyr.Core.Exceptions;
 
 namespace Palavyr.Client
 {
@@ -32,18 +34,21 @@ namespace Palavyr.Client
         {
             var json = JsonConvert.SerializeObject(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var message = await client.PostAsync(requestUri, content, cancellationToken);
-            message.EnsureSuccessStatusCode();
+            var response = await client.PostAsync(requestUri, content, cancellationToken);
+            TryEnsureSuccess(response);
 
-            return await message.ReadResponse<TResponse>();
+            return await response.ReadResponse<TResponse>();
         }
 
         public static async Task<TResponse> PutWithContent<TResponse>(this HttpClient client, string route, object data, CancellationToken cancellationToken)
         {
             var json = JsonConvert.SerializeObject(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var message = await client.PutAsync(route, content, cancellationToken);
-            return await message.ReadResponse<TResponse>();
+            var response = await client.PutAsync(route, content, cancellationToken);
+
+            TryEnsureSuccess(response);
+
+            return await response.ReadResponse<TResponse>();
         }
 
         public static async Task<T> ReadResponse<T>(this HttpResponseMessage message)
@@ -62,6 +67,34 @@ namespace Palavyr.Client
         {
             var response = await client.GetAsync(routeUri);
             return await response.ReadResponse<T>();
+        }
+
+        private static async Task TryEnsureSuccess(HttpResponseMessage message)
+        {
+            try
+            {
+                message.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = await message.ReadResponse<ErrorResponse>();
+                Console.WriteLine(errorResponse.Message);
+                foreach (var additionalMessage in errorResponse.AdditionalMessages)
+                {
+                    Console.WriteLine(additionalMessage);
+                }
+
+                var stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("-- Server Error --");
+                stringBuilder.AppendLine(ex.Message);
+                stringBuilder.AppendLine(errorResponse.Message);
+                foreach (var addMessage in errorResponse.AdditionalMessages)
+                {
+                    stringBuilder.AppendLine(addMessage);
+                }
+                
+                throw new Exception(stringBuilder.ToString());
+            }
         }
     }
 }

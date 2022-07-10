@@ -53,7 +53,7 @@ namespace Palavyr.Core.Stores
         {
             if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
             {
-                return queryExecutor.Where(x => ((IHaveAccountId)x).AccountId == AccountIdTransport.AccountId);
+                return queryExecutor.Where(x => ((IHaveAccountId)x).AccountId == AccountId);
             }
 
             return queryExecutor;
@@ -63,7 +63,7 @@ namespace Palavyr.Core.Stores
         {
             if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
             {
-                return localEntities.Where(x => ((IHaveAccountId)x).AccountId == AccountIdTransport.AccountId);
+                return localEntities.Where(x => ((IHaveAccountId)x).AccountId == AccountId);
             }
 
             return localEntities;

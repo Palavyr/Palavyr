@@ -2,9 +2,12 @@
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Client;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.GlobalConstants;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Stores;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
@@ -33,8 +36,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
                         // .UseTestServer();
                     });
         }
-        
-        
     }
 
     public abstract class RealDatabaseIntegrationFixture : NewRealDatabaseIntegrationFixture
@@ -56,9 +57,13 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
             SessionId = credentials.SessionId;
             ApiKey = credentials.ApiKey;
 
+            var sessionStore = ResolveStore<Session>();
+            var session = await sessionStore.DangerousRawQuery().SingleOrDefaultAsync(x => x.SessionId == SessionId);
+            if (session is null) throw new PalavyrStartupException("Failed to set the session");
+            AccountId = session.AccountId;
+
             Client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.SessionId, SessionId);
 
-            
             var unitOfWork = ResolveType<IUnitOfWorkContextProvider>();
             await unitOfWork.DangerousCommitAllContexts();
             await base.InitializeAsync();

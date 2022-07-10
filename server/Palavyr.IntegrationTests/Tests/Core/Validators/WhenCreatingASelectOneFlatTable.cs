@@ -5,6 +5,7 @@ using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
@@ -15,10 +16,10 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Validators
 {
-    public class WhenCreatingASelectOneFlatTable : InMemoryIntegrationFixture
+    public class WhenCreatingASelectOneFlatTable : RealDatabaseIntegrationFixture
     {
         [Fact]
-        public async Task TheTableShouldBeValid()
+        public async Task ARoundTripShouldSucceed()
         {
             var selectOneFlatTableMeta = await this.CreatePricingStrategyTableBuilder<SelectOneFlatResource>()
                 .WithRow(this.CreateSelectOneFlatResourceBuilder().Build())
@@ -36,10 +37,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Validators
             var currentTable = await Client.GetResource<GetPricingStrategyTableRowsRequest<
                 SelectOneFlat,
                 SelectOneFlatResource,
-                SelectOneFlatCompiler>, List<SelectOneFlatResource>>(CancellationToken, _ => getRoute);
+                SelectOneFlatCompiler>, PricingStrategyTableDataResource<SelectOneFlatResource>>(CancellationToken, _ => getRoute);
 
-
-            currentTable.First().AccountId.ShouldBe(this.AccountId);
+            currentTable.TableRows.First().AccountId.ShouldBe(this.AccountId);
         }
 
         public WhenCreatingASelectOneFlatTable(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)

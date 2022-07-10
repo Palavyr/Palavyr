@@ -1,11 +1,14 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Resources;
@@ -61,6 +64,11 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
             SessionId = credentials.SessionId;
             ApiKey = credentials.ApiKey;
 
+            var sessionStore = ResolveStore<Session>();
+            var session = await sessionStore.DangerousRawQuery().SingleOrDefaultAsync(x => x.SessionId == SessionId);
+            if (session is null) throw new PalavyrStartupException("Failed to set the session");
+            AccountId = session.AccountId;
+            
             Client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.SessionId, SessionId);
 
             var unitOfWork = ResolveType<IUnitOfWorkContextProvider>();

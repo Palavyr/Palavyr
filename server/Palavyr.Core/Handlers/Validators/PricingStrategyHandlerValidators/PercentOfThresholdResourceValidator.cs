@@ -2,14 +2,15 @@
 using System.Linq;
 using FluentValidation;
 using Palavyr.Core.Resources.PricingStrategyResources;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 {
-    public class PercentOfThresholdResourceValidator : AbstractValidator<List<PercentOfThresholdResource>>
+    public class PercentOfThresholdResourceValidator : AbstractValidator<PricingStrategyTableDataResource<PercentOfThresholdResource>>
     {
         public PercentOfThresholdResourceValidator()
         {
-            RuleForEach(cr => cr)
+            RuleForEach(cr => cr.TableRows)
                 .ChildRules(
                     r =>
                     {
@@ -27,11 +28,11 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                         r.RuleFor(x => x.ValueMax).GreaterThanOrEqualTo(x => x.ValueMin).When(x => x.Range);
                         r.RuleFor(x => x.Modifier).NotNull();
                     });
-            RuleFor(x => x).Must(MustHaveDistinctThresholds).WithMessage("Thresholds must all be unique values");
-            RuleFor(x => x).Must(HaveUniqueItemOrders).WithMessage("Item orders must be unique");
-            RuleFor(x => x).Must(HaveUniqueRowOrders).WithMessage("Row orders must be unique");
-            RuleFor(x => x).Must(HaveCorrectlyOrderedItems).WithMessage("Items must be correctly ordered");
-            RuleFor(x => x).Must(HaveCorrectlyOrderedRows).WithMessage("Rows must be correctly Ordered");
+            RuleFor(x => x.TableRows).Must(MustHaveDistinctThresholds).WithMessage("Thresholds must all be unique values");
+            RuleFor(x => x.TableRows).Must(HaveUniqueItemOrders).WithMessage("Item orders must be unique");
+            RuleFor(x => x.TableRows).Must(HaveUniqueRowOrders).WithMessage("Row orders must be unique");
+            RuleFor(x => x.TableRows).Must(HaveCorrectlyOrderedItems).WithMessage("Items must be correctly ordered");
+            RuleFor(x => x.TableRows).Must(HaveCorrectlyOrderedRows).WithMessage("Rows must be correctly Ordered");
         }
 
         private bool HaveUniqueRowOrders(List<PercentOfThresholdResource> arg)

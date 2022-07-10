@@ -120,7 +120,7 @@ namespace Palavyr.IntegrationTests.DataCreators
                     newTable,
                     test.CancellationToken,
                     s => SavePricingStrategyTableRequest<SelectOneFlat, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(intentId ?? newTable.First().AreaIdentifier, newTable.First().TableId));
-            newTable = response.Resource.ToList();
+            newTable = response.Resource.TableRows;
             return newTable;
         }
     }

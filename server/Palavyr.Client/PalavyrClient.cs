@@ -61,6 +61,7 @@ namespace Palavyr.Client
                     var response = await Client.PostAsyncWithoutContent(route, cancellationToken);
                     return await response.ReadResponse<TResource>();
                 }
+
                 return await Client.PostWithApiKey<TResource>(route, data, cancellationToken);
             }
             else
@@ -70,13 +71,20 @@ namespace Palavyr.Client
                     var response = await Client.PostAsyncWithoutContent(route, cancellationToken);
                     return await response.ReadResponse<TResource>();
                 }
+
                 return await Client.PostWithContent<TResource>(route, data, cancellationToken);
             }
         }
 
-        public async Task<TResource> Put<TRequest, TResource>(object data, CancellationToken cancellationToken) where TRequest : IRequest<object>
+        public async Task<TResource> Put<TRequest, TResource>(object data, CancellationToken cancellationToken, Func<string, string>? routeFormatter = null) where TRequest : IRequest<object>
         {
             var route = GetUriFromRequest<TRequest>();
+
+            if (routeFormatter != null)
+            {
+                route = routeFormatter(route);
+            }
+
             return await Client.PutWithContent<TResource>(route, data, cancellationToken);
         }
 
@@ -103,6 +111,7 @@ namespace Palavyr.Client
             {
                 route = routeFormatter(route);
             }
+
             var response = await Client.GetAsync(route, cancellationToken);
             return response;
         }

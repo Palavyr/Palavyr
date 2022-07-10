@@ -2,14 +2,15 @@
 using System.Linq;
 using FluentValidation;
 using Palavyr.Core.Resources.PricingStrategyResources;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 {
-    public class BasicThresholdResourceValidator : AbstractValidator<List<BasicThresholdResource>>
+    public class BasicThresholdResourceValidator : AbstractValidator<PricingStrategyTableDataResource<BasicThresholdResource>>
     {
         public BasicThresholdResourceValidator()
         {
-            RuleForEach(c => c)
+            RuleForEach(c => c.TableRows)
                 .ChildRules(
                     r =>
                     {
@@ -27,9 +28,9 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                         r.RuleFor(x => x.ValueMax).NotNull().GreaterThanOrEqualTo(x => x.ValueMin).When(x => x.Range);
                     });
 
-            RuleFor(x => x).Must(MustHaveDistinctThresholds).WithMessage("Thresholds must all be unique values.");
-            RuleFor(x => x).Must(HaveDistinctRowOrders).WithMessage("Row orders must be unique");
-            RuleFor(x => x).Must(BeOrderedCorrectly).WithMessage("Rows must be ordered correctly");
+            RuleFor(x => x.TableRows).Must(MustHaveDistinctThresholds).WithMessage("Thresholds must all be unique values.");
+            RuleFor(x => x.TableRows).Must(HaveDistinctRowOrders).WithMessage("Row orders must be unique");
+            RuleFor(x => x.TableRows).Must(BeOrderedCorrectly).WithMessage("Rows must be ordered correctly");
         }
 
         private bool BeOrderedCorrectly(List<BasicThresholdResource> arg)

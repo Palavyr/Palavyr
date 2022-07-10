@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Mappers;
@@ -31,11 +32,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
         {
             var data = await executor.GetTableRows(request.IntentId, request.TableId);
             var mapped = await entityMapper.MapMany(data.TableRows, cancellationToken);
-            var resource = new PricingStrategyTableDataResource<TR>()
-            {
-                TableRows = mapped,
-                IsInUse = data.IsInUse
-            };
+            var resource = new PricingStrategyTableDataResource<TR>(tableRows: mapped.ToList(), data.TableTag, isInUse: data.IsInUse);
             return new GetPricingStrategyTableRowsResponse<TR>(resource);
         }
     }

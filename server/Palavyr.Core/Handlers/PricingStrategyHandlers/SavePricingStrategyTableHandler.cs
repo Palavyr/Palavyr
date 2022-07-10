@@ -8,7 +8,6 @@ using Palavyr.Core.Exceptions;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Requests;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices;
 using Palavyr.Core.Stores;
@@ -25,7 +24,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
         private readonly IPricingStrategyTableCommandExecutor<T, TR, TCompiler> executor;
         private readonly IMapToNew<T, TR> resourceMapper;
         private readonly IMapToNew<TR, T> newEntityMapper;
-        private readonly IValidator<List<TR>> pricingStrategyValidator;
+        private readonly IValidator<PricingStrategyTableDataResource<TR>> pricingStrategyValidator;
         private readonly IMapToPreExisting<TR, T> mapToExisting;
 
         public SavePricingStrategyTableHandler(
@@ -33,7 +32,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
             IPricingStrategyTableCommandExecutor<T, TR, TCompiler> executor,
             IMapToNew<T, TR> resourceMapper,
             IMapToNew<TR, T> newEntityMapper,
-            IValidator<List<TR>> pricingStrategyValidator,
+            IValidator<PricingStrategyTableDataResource<TR>> pricingStrategyValidator,
             IMapToPreExisting<TR, T> mapToExisting)
         {
             this.entityStore = entityStore;
@@ -46,21 +45,21 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 
         public async Task<SavePricingStrategyTableResponse<TR>> Handle(SavePricingStrategyTableRequest<T, TR, TCompiler> request, CancellationToken cancellationToken)
         {
-            var validationResult = await pricingStrategyValidator.ValidateAsync(request.PricingStrategyTableResource.TableData, cancellationToken);
+            var validationResult = await pricingStrategyValidator.ValidateAsync(request.PricingStrategyTableResource, cancellationToken);
             if (!validationResult.IsValid) throw new MultiMessageDomainException("Bad Request: ", validationResult.Errors.Select(x => x.ErrorMessage).Distinct().ToArray());
 
-            var tableUpdate = await MapTable(request.PricingStrategyTableResource.TableData, cancellationToken);
+            var tableUpdate = await MapTable(request.PricingStrategyTableResource, cancellationToken);
 
             var rows = await executor.SaveTable(request.IntentId, request.TableId, request.PricingStrategyTableResource.TableTag, tableUpdate);
 
-            var resource = await resourceMapper.MapMany(rows, cancellationToken);
-            return new SavePricingStrategyTableResponse<TR>(resource);
+            var resource = await resourceMapper.MapMany(rows, cancellationToken); // TODO - this should give me a PricingStrategyTableResource<TR>
+            return new SavePricingStrategyTableResponse<TR>(new PricingStrategyTableDataResource<TR>(resource.ToList(), request.PricingStrategyTableResource.TableTag, request.PricingStrategyTableResource.IsInUse));
         }
 
-        private async Task<List<T>> MapTable(List<TR> tableRowResources, CancellationToken cancellationToken)
+        private async Task<List<T>> MapTable(PricingStrategyTableDataResource<TR> tableRowResources, CancellationToken cancellationToken)
         {
             var update = new List<T>();
-            foreach (var tableRowResource in tableRowResources)
+            foreach (var tableRowResource in tableRowResources.TableRows)
             {
                 if (tableRowResource.Id is null)
                 {
@@ -88,12 +87,12 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 
         public static string FormatRoute(string intentId, string tableId)
         {
-            return Route.Replace("{intentId}", intentId).Replace("{tableId", tableId);
+            return Route.Replace("{intentId}", intentId).Replace("{tableId}", tableId);
         }
 
         public string IntentId { get; set; }
         public string TableId { get; set; }
-        public PricingStrategyTable<TR> PricingStrategyTableResource { get; set; }
+        public PricingStrategyTableDataResource<TR> PricingStrategyTableResource { get; set; }
 
         public SavePricingStrategyTableRequest()
         {
@@ -102,7 +101,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 
     public class SavePricingStrategyTableResponse<TR> where TR : IPricingStrategyTableRowResource
     {
-        public SavePricingStrategyTableResponse(IEnumerable<TR> resource) => Resource = resource;
-        public IEnumerable<TR> Resource { get; set; }
+        public SavePricingStrategyTableResponse(PricingStrategyTableDataResource<TR> resource) => Resource = resource;
+        public PricingStrategyTableDataResource<TR> Resource { get; set; }
     }
 }

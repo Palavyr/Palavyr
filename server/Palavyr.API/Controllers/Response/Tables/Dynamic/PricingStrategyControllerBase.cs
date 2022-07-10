@@ -8,7 +8,6 @@ using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Requests;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices;
@@ -42,7 +41,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpPut(SavePricingStrategyTableRequest<TEntity, TResource, TCompiler>.Route)]
-        public async Task<IEnumerable<TResource>> SaveTable([FromRoute] string intentId, [FromRoute] string tableId, [FromBody] PricingStrategyTable<TResource> pricingStrategyTable)
+        public async Task<PricingStrategyTableDataResource<TResource>> SaveTable([FromRoute] string intentId, [FromRoute] string tableId, [FromBody] PricingStrategyTableDataResource<TResource> pricingStrategyTable, CancellationToken cancellationToken)
         {
             var resource = await mediator.Send(
                 new SavePricingStrategyTableRequest<TEntity, TResource, TCompiler>()
@@ -50,31 +49,32 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
                     TableId = tableId,
                     IntentId = intentId,
                     PricingStrategyTableResource = pricingStrategyTable
-                });
+                }, cancellationToken);
             return resource.Resource;
         }
 
         [HttpGet(GetPricingStrategyTableRowsRequest<TResource, TResource, TCompiler>.Route)]
-        public async Task<PricingStrategyTableDataResource<TResource>> GetTable([FromRoute] string intentId, [FromRoute] string tableId)
+        public async Task<PricingStrategyTableDataResource<TResource>> GetTable([FromRoute] string intentId, [FromRoute] string tableId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(
                 new GetPricingStrategyTableRowsRequest<TEntity, TResource, TCompiler>()
                 {
                     IntentId = intentId,
                     TableId = tableId
-                });
+                }, cancellationToken);
             return response.Resource;
         }
 
+
         [HttpGet(GetPricingStrategyTableRowTemplateRequest<TEntity, TResource, TCompiler>.Route)]
-        public async Task<TResource> GetRowTemplate([FromRoute] string intentId, [FromRoute] string tableId)
+        public async Task<TResource> GetRowTemplate([FromRoute] string intentId, [FromRoute] string tableId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(
                 new GetPricingStrategyTableRowTemplateRequest<TEntity, TResource, TCompiler>()
                 {
                     IntentId = intentId,
                     TableId = tableId
-                });
+                }, cancellationToken);
             return response.Resource;
         }
 

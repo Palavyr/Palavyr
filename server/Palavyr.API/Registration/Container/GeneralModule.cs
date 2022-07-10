@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using Autofac;
 using FluentValidation;
+using MediatR;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Handlers.Pipelines;
 using Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
@@ -52,14 +54,10 @@ namespace Palavyr.API.Registration.Container
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterModule<TransportModule>();
+
+
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-
-            // Experimental
-            ///////!!! SPECIAL DANGER ZONE !!!//////////
-            builder.RegisterType<AccountIdTransport>().As<IAccountIdTransport>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
-            builder.RegisterType<CancellationTokenTransport>().As<ICancellationTokenTransport>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
-            ///////////// ///////////// ////////// ////////// ////////// /////////// ///////////// ///////////// ////////// ////////// ////////// /////////// 
 
             builder.RegisterType<DetermineCurrentOperatingSystem>().As<IDetermineCurrentOperatingSystem>();
             builder.RegisterType<Units>().AsSelf().SingleInstance();
@@ -92,12 +90,19 @@ namespace Palavyr.API.Registration.Container
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
+            // validation pipeline
+            // ValidationPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+            // builder.RegisterGeneric(typeof(ValidationPipeline<,>))
+            //     .As(typeof(IPipelineBehavior<,>))
+            //     .AsImplementedInterfaces()
+            //     .InstancePerLifetimeScope();
+
             // pricing strategy validators
-            builder.RegisterType<BasicThresholdResourceValidator>().As<IValidator<List<BasicThresholdResource>>>();
-            builder.RegisterType<CategoryNestedThresholdValidator>().As<IValidator<List<CategoryNestedThresholdResource>>>();
-            builder.RegisterType<PercentOfThresholdResourceValidator>().As<IValidator<List<PercentOfThresholdResource>>>();
-            builder.RegisterType<SelectOneFlatResourceValidator>().As<IValidator<List<SelectOneFlatResource>>>();
-            builder.RegisterType<TwoNestedCategoryResourceValidator>().As<IValidator<List<TwoNestedCategoryResource>>>();
+            builder.RegisterType<BasicThresholdResourceValidator>().As<IValidator<PricingStrategyTableDataResource<BasicThresholdResource>>>();
+            builder.RegisterType<CategoryNestedThresholdValidator>().As<IValidator<PricingStrategyTableDataResource<CategoryNestedThresholdResource>>>();
+            builder.RegisterType<PercentOfThresholdResourceValidator>().As<IValidator<PricingStrategyTableDataResource<PercentOfThresholdResource>>>();
+            builder.RegisterType<SelectOneFlatResourceValidator>().As<IValidator<PricingStrategyTableDataResource<SelectOneFlatResource>>>();
+            builder.RegisterType<TwoNestedCategoryResourceValidator>().As<IValidator<PricingStrategyTableDataResource<TwoNestedCategoryResource>>>();
 
             builder.RegisterGeneric(typeof(PricingStrategyTableCommandExecutor<,,>)).As(typeof(IPricingStrategyTableCommandExecutor<,,>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(ResponseRetriever<>)).As(typeof(IResponseRetriever<>));

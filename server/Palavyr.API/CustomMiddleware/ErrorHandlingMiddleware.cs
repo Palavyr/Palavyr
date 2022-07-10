@@ -91,14 +91,14 @@ namespace Palavyr.API.CustomMiddleware
                         statusCode = StatusCodes.Status500InternalServerError;
                         message = microserviceException.Message;
                         break;
-                    
+
                     case DependencyResolutionException dependencyResolutionException:
                         logger.LogDebug("A dependency wasn't registered!");
                         logger.LogDebug(dependencyResolutionException.Message);
                         statusCode = StatusCodes.Status500InternalServerError;
                         message = "Sorry! We made a mistake internally! Please reach out and let us know!";
                         break;
-                    
+
                     case AccountMisMatchException accountMisMatchException:
                         logger.LogCritical("An attempt was made to access data across accounts. This is not allowed.");
                         logger.LogCritical(accountMisMatchException.Message);
@@ -130,12 +130,17 @@ namespace Palavyr.API.CustomMiddleware
             }
         }
 
-        public async Task FormatErrors(HttpContext context, string message, string[] additionalMessage, int statusCode)
+        public async Task FormatErrors(HttpContext context, string message, string[] additionalMessages, int statusCode)
         {
             context.Response.ContentType = "application/json; charset=UTF-8";
             context.Response.StatusCode = statusCode;
 
-            var errorResponse = new ErrorResponse(message, additionalMessage, statusCode).ToString();
+            foreach (var additionalMessage in additionalMessages)
+            {
+                logger.LogError(additionalMessage);
+            }
+
+            var errorResponse = new ErrorResponse(message, additionalMessages, statusCode);
 
             // I found it very challenging to write directly to the response body with a structure I can control, so I'm clearing the lot
             // and serializing my own structure. I'll handle this in the client error response handler
@@ -149,25 +154,6 @@ namespace Palavyr.API.CustomMiddleware
             var serializer = JsonSerializer.Create();
             serializer.Serialize(writer, errorResponse);
             await writer.FlushAsync();
-        }
-    }
-
-    public class ErrorResponse
-    {
-        public string Message { get; set; }
-        public string[] AdditionalMessages { get; set; }
-        public int StatusCode { get; set; }
-
-        public ErrorResponse(string messages, string[] additionalMessages, int statusCode)
-        {
-            Message = messages;
-            AdditionalMessages = additionalMessages;
-            StatusCode = statusCode;
-        }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
         }
     }
 }

@@ -2,14 +2,17 @@
 using System.Linq;
 using FluentValidation;
 using Palavyr.Core.Resources.PricingStrategyResources;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 {
-    public class SelectOneFlatResourceValidator : AbstractValidator<List<SelectOneFlatResource>>
+    public class SelectOneFlatResourceValidator : AbstractValidator<PricingStrategyTableDataResource<SelectOneFlatResource>>
     {
         public SelectOneFlatResourceValidator()
         {
-            RuleForEach(c => c)
+            RuleFor(c => c.TableTag).NotEmpty().WithMessage("A table tag must be provided");
+            
+            RuleForEach(c => c.TableRows)
                 .ChildRules(
                     r =>
                     {
@@ -24,10 +27,10 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                         r.RuleFor(x => x.ValueMax).NotNull().When(x => x.Range == true);
                         r.RuleFor(x => x.ValueMax).GreaterThanOrEqualTo(x => x.ValueMin).When(x => x.Range);
                     });
-            RuleFor(c => c).Must(CategoriesMustBeUnique).WithMessage("Options must be unique.");
-            RuleFor(c => c).Must(HaveCorrectlyOrderedRows).WithMessage("Rows must be correctly ordered");
+            RuleFor(c => c.TableRows).Must(CategoriesMustBeUnique).WithMessage("Options must be unique.");
+            RuleFor(c => c.TableRows).Must(HaveCorrectlyOrderedRows).WithMessage("Rows must be correctly ordered");
         }
-        
+
         // Do we need this...
         private bool HaveCorrectlyOrderedRows(List<SelectOneFlatResource> arg)
         {

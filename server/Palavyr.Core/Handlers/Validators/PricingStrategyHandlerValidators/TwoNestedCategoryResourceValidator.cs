@@ -2,21 +2,22 @@
 using System.Linq;
 using FluentValidation;
 using Palavyr.Core.Resources.PricingStrategyResources;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 {
-    public class TwoNestedCategoryResourceValidator : AbstractValidator<List<TwoNestedCategoryResource>>
+    public class TwoNestedCategoryResourceValidator : AbstractValidator<PricingStrategyTableDataResource<TwoNestedCategoryResource>>
     {
         public TwoNestedCategoryResourceValidator()
         {
-            RuleFor(c => c).Must(HaveUniqueOuterCategories).WithMessage("Outer categories must be unique");
-            RuleFor(c => c).Must(HaveUniqueInnerCategories).WithMessage("Inner categories must be unique");
-            RuleFor(c => c).Must(HaveUniqueRowOrders).WithMessage("Row orders must be unique");
-            RuleFor(c => c).Must(HaveUniqueItemOrders).WithMessage("Item orders must be unique");
-            RuleFor(c => c).Must(HaveCorrectlyOrderedItems).WithMessage("Items must be correctly ordered");
-            RuleFor(c => c).Must(HaveCorrectlyOrderedRows).WithMessage("Rows must be correctly ordered");
+            RuleFor(c => c.TableRows).Must(HaveUniqueOuterCategories).WithMessage("Outer categories must be unique");
+            RuleFor(c => c.TableRows).Must(HaveUniqueInnerCategories).WithMessage("Inner categories must be unique");
+            RuleFor(c => c.TableRows).Must(HaveUniqueRowOrders).WithMessage("Row orders must be unique");
+            RuleFor(c => c.TableRows).Must(HaveUniqueItemOrders).WithMessage("Item orders must be unique");
+            RuleFor(c => c.TableRows).Must(HaveCorrectlyOrderedItems).WithMessage("Items must be correctly ordered");
+            RuleFor(c => c.TableRows).Must(HaveCorrectlyOrderedRows).WithMessage("Rows must be correctly ordered");
 
-            RuleForEach(c => c)
+            RuleForEach(c => c.TableRows)
                 .ChildRules(
                     r =>
                     {

@@ -2,14 +2,15 @@
 using System.Linq;
 using FluentValidation;
 using Palavyr.Core.Resources.PricingStrategyResources;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 {
-    public class CategoryNestedThresholdValidator : AbstractValidator<List<CategoryNestedThresholdResource>>
+    public class CategoryNestedThresholdValidator : AbstractValidator<PricingStrategyTableDataResource<CategoryNestedThresholdResource>>
     {
         public CategoryNestedThresholdValidator()
         {
-            RuleForEach(c => c)
+            RuleForEach(c => c.TableRows)
                 .ChildRules(
                     r =>
                     {
@@ -28,12 +29,12 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                         r.RuleFor(x => x.ValueMax).NotNull().LessThanOrEqualTo(int.MaxValue).When(x => x.Range);
                         r.RuleFor(x => x.ValueMax).GreaterThanOrEqualTo(x => x.ValueMin).When(x => x.Range);
                     });
-            RuleFor(c => c).Must(HaveDistinctThresholds).WithMessage("Thresholds must all be unique values");
-            RuleFor(c => c).Must(HaveDistinctItemOrders).WithMessage("Item orders must be distinct");
-            RuleFor(c => c).Must(HaveDistinctRowOrders).WithMessage("Row orders must be distinct");
-            RuleFor(c => c).Must(HaveCorrectlyOrderedItems).WithMessage("Items must be correctly ordered");
-            RuleFor(c => c).Must(HaveCorrectlyOrderedRows).WithMessage("Rows must be correctly ordered");
-            RuleFor(c => c).Must(HaveItemWithMatchingOrderIds).WithMessage("Categories for a single item must have matching order Ids");
+            RuleFor(c => c.TableRows).Must(HaveDistinctThresholds).WithMessage("Thresholds must all be unique values");
+            RuleFor(c => c.TableRows).Must(HaveDistinctItemOrders).WithMessage("Item orders must be distinct");
+            RuleFor(c => c.TableRows).Must(HaveDistinctRowOrders).WithMessage("Row orders must be distinct");
+            RuleFor(c => c.TableRows).Must(HaveCorrectlyOrderedItems).WithMessage("Items must be correctly ordered");
+            RuleFor(c => c.TableRows).Must(HaveCorrectlyOrderedRows).WithMessage("Rows must be correctly ordered");
+            RuleFor(c => c.TableRows).Must(HaveItemWithMatchingOrderIds).WithMessage("Categories for a single item must have matching order Ids");
         }
 
 

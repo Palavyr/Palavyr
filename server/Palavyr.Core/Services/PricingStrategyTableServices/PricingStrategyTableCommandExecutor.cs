@@ -15,6 +15,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
     {
         public List<TEntity> TableRows { get; set; }
         public bool IsInUse { get; set; }
+        public string TableTag { get; set; }
     }
 
     public interface IPricingStrategyTableCommandExecutor<TEntity, TR, TCompiler>
@@ -90,11 +91,13 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
                     if (x.DynamicType == null) return false;
                     return x.DynamicType.EndsWith(tableId);
                 });
+            var meta = await psMetaStore.Get(tableId, s => s.TableId);
 
             return new PricingStrategyTableData<TEntity>
             {
                 TableRows = tableRows,
-                IsInUse = currentDynamic.Count() > 0
+                IsInUse = currentDynamic.Count() > 0,
+                TableTag = meta.TableTag
             };
         }
 
