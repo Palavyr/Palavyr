@@ -8,7 +8,7 @@ namespace Palavyr.Core.Requests
         public string Name { get; set; }
         public string Phone { get; set; }
         public string EmailAddress { get; set; }
-        public string ConversationId { get; set; }
+        public string? ConversationId { get; set; }
         public int NumIndividuals { get; set; }
 
         public List<Dictionary<string, string>> KeyValues { get; set; } = new List<Dictionary<string, string>>();

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Resources;
@@ -38,9 +39,21 @@ namespace Palavyr.IntegrationTests.DataCreators
                     Password = password
                 }, testBase.CancellationToken);
 
+            testBase.SessionId = credentials.SessionId;
+            testBase.ApiKey = credentials.ApiKey;
+
+            // TODO: If we make the client lazy again, does it break everything? bc if not, then we can just do this
+            // testBase.Client.AddHeader(ApplicationConstants.MagicUrlStrings.SessionId, credentials.SessionId);
+
             // with the mocks registered, we update the account to Pro
             // the upgrade path is deliberately hard - it only happens via the stripe webhooks
             await testBase.Client.Post<ProcessStripeNotificationWebhookRequest, Unit>(testBase.CancellationToken);
+
+            // activate the account
+            await testBase.Client.Post<ConfirmEmailAddressRequest, bool>(
+                testBase.CancellationToken,
+                r => ConfirmEmailAddressRequest.FormatRoute(IntegrationTest.ConfirmationToken));
+
             return credentials;
         }
     }

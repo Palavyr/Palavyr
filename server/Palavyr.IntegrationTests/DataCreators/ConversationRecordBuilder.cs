@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models;
+using Palavyr.Core.Resources;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Test.Common.Random;
 
@@ -18,7 +21,7 @@ namespace Palavyr.IntegrationTests.DataCreators
     public class ConversationRecordBuilder
     {
         private readonly IntegrationTest test;
-        private string? intentName;
+        private string? name;
         private string? intentId;
         private string? email;
         private bool isDemo = false;
@@ -29,9 +32,9 @@ namespace Palavyr.IntegrationTests.DataCreators
         }
 
 
-        public ConversationRecordBuilder WithIntentName(string intentName)
+        public ConversationRecordBuilder WithName(string intentName)
         {
-            this.intentName = intentName;
+            this.name = intentName;
             return this;
         }
 
@@ -56,10 +59,18 @@ namespace Palavyr.IntegrationTests.DataCreators
         public async Task<NewConversationResource> Build()
         {
             var id = this.intentId ?? A.RandomId();
-            var name = this.intentName ?? A.RandomName();
+            var name = this.name ?? A.RandomName();
             var email = this.email ?? A.RandomTestEmail();
             var isDemo = this.isDemo;
-            
+
+            var intents = await test.Client.GetResource<GetAllIntentsRequest, IEnumerable<IntentResource>>(test.CancellationToken);
+            var intent = intents.SingleOrDefault(x => x.AreaIdentifier == id);
+            if (intent is null)
+            {
+                intent = await test.CreateIntentBuilder().Build();
+                id = intent.AreaIdentifier;
+            }
+
             var newConversationRecordRequest = new CreateNewConversationHistoryRequest
             {
                 IntentId = id,

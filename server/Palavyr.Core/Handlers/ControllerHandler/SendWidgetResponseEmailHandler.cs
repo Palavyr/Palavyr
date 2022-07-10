@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Requests;
@@ -30,6 +31,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             if (!request.IsDemo)
             {
+                if (request.EmailRequest.ConversationId is null) throw new DomainException("Conversation Id must be supplied in production");
                 var convoRecord = await convoRecordStore.Get(request.EmailRequest.ConversationId, s => s.ConversationId);
                 await mapper.Map(request.EmailRequest, convoRecord, cancellationToken);
                 await convoRecordStore.Update(convoRecord);

@@ -11,16 +11,15 @@ namespace Palavyr.API.Controllers.Intents
     public class GetAllAreasShallowController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "areas";
         public GetAllAreasShallowController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpGet(Route)]
+        [HttpGet(GetAllIntentsRequest.Route)]
         public async Task<IEnumerable<IntentResource>> Get(CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetAllAreasRequest(), cancellationToken);
+            var response = await mediator.Send(new GetAllIntentsRequest(), cancellationToken);
             return response.Response;
         }
     }

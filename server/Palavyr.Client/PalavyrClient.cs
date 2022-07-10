@@ -21,6 +21,16 @@ namespace Palavyr.Client
 
         public HttpRequestHeaders DefaultRequestHeaders { get; set; }
 
+        public void AddHeader(string key, string value)
+        {
+            if (Client.DefaultRequestHeaders.Contains(key))
+            {
+                Client.DefaultRequestHeaders.Remove(key);
+            }
+
+            Client.DefaultRequestHeaders.Add(key, value);
+        }
+
         private string GetUriFromRequest<TRequest>() where TRequest : IRequest<object>
         {
             var fieldInfos = typeof(TRequest).GetFields(
@@ -29,8 +39,10 @@ namespace Palavyr.Client
 
             var route = (string)fieldInfos
                 .Where(fi => fi.IsLiteral && !fi.IsInitOnly)
-                .Single(x => x.Name == "Route")
+                .SingleOrDefault(x => x.Name == "Route")
                 .GetRawConstantValue();
+
+            if (route is null) throw new Exception($"This request ({typeof(TRequest).Name}) doesn't yet hold the route definition!");
 
             return route;
         }

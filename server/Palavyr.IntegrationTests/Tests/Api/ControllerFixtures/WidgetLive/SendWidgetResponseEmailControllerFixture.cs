@@ -1,15 +1,12 @@
 ﻿using System.Threading.Tasks;
-using Autofac;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Resources;
-using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.DataCreators;
-using Palavyr.IntegrationTests.Mocks;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
@@ -26,17 +23,17 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
         [Fact]
         public async Task SendEmailWithoutPdfResponse()
         {
-            // arrange 
-            var intentId = A.RandomId();
-
-            var record = await this.CreateConversationRecordBuilder().WithIntentId(intentId).Build();
-
+            // TODO: NEED TO TRY AND MAKE A "MODIFY INTENT" Controller and have the consolidate all the intent pieces
+            // right now for w/e/ reason, we've got a separate controller for each piece of the intent.
+            // good god. review the UI code to check feasibility...
+            
             // create intent without response PDF set
-            await this.CreateIntentBuilder()
+            var intent = await this.CreateIntentBuilder()
                 .WithoutResponsePdf()
-                .WithIntentId(intentId)
                 .Build(); //SendPdfResponse needs to be false for this test
 
+            var record = await this.CreateConversationRecordBuilder().WithIntentId(intent.AreaIdentifier).Build();
+            
             var emailRequest = new EmailRequest
             {
                 ConversationId = record.ConversationId,
@@ -53,12 +50,6 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             response.NextNodeId.ShouldBe(EndingSequenceAttacher.EmailSuccessfulNodeId);
             response.Result.ShouldBeTrue();
             response.FileAsset.ShouldBeNull();
-        }
-
-        public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
-        {
-            builder.RegisterType<MockSeSEmail>().As<ISesEmail>();
-            return base.CustomizeContainer(builder);
         }
     }
 }

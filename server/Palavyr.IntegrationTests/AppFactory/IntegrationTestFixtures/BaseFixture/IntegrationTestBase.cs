@@ -39,6 +39,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public readonly string StripeCustomerId = Guid.NewGuid().ToString();
         public readonly string EmailAddress = A.RandomTestEmail();
         public readonly string Password = "Password01!";
+        public static readonly string ConfirmationToken = "RogerWilco";
         public readonly Lazy<AutofacServiceProvider> ServiceProvider;
         protected internal virtual bool SaveStoreActionsImmediately => true;
         public readonly ServerFactory Factory;

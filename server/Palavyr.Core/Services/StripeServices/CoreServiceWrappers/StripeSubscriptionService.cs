@@ -30,7 +30,7 @@ namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
             }
             catch (StripeException ex)
             {
-                logger.LogDebug($"Could not find Stripe Subscription: {ex.Message}");
+                logger.LogDebug("Could not find Stripe Subscription: {Message}", ex.Message);
                 throw new DomainException($"Could not find Stripe Subscription: {ex.Message}");
             }
 

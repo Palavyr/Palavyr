@@ -1,24 +1,29 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Stores;
+using Session = Stripe.Checkout.Session;
 
 namespace Palavyr.IntegrationTests.Mocks
 {
-    public class MockProcessStripeCheckoutSessionCompletedHandler : INotificationHandler<CheckoutSessionCompletedNotification>
+    public class MockStripeSubscriptionSetter : IStripeSubscriptionSetter
     {
         private readonly IEntityStore<Account> accountStore;
 
-        public MockProcessStripeCheckoutSessionCompletedHandler(IEntityStore<Account> accountStore)
+        public MockStripeSubscriptionSetter(IEntityStore<Account> accountStore)
         {
             this.accountStore = accountStore;
         }
-        public async Task Handle(CheckoutSessionCompletedNotification notification, CancellationToken cancellationToken)
+
+        public async Task SetSubscription(Session session, CancellationToken cancellationToken)
         {
-            var account = await accountStore.Get(notification.session.CustomerId, s => s.StripeCustomerId);
+            var account = await accountStore
+                .DangerousRawQuery()
+                .SingleOrDefaultAsync(x => x.StripeCustomerId == session.CustomerId);
+
             account.PlanType = Account.PlanTypeEnum.Pro;
             account.HasUpgraded = true;
             account.CurrentPeriodEnd = DateTime.Now.AddYears(100);

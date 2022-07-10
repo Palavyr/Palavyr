@@ -2,6 +2,7 @@
 using MediatR;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
@@ -20,7 +21,9 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
         {
             builder.RegisterType<MockEmailVerificationService>().As<IEmailVerificationService>();
             builder.RegisterType<MockStripeWebhookAuthService>().As<IStripeWebhookAuthService>();
-            builder.RegisterType<MockProcessStripeCheckoutSessionCompletedHandler>().As<INotificationHandler<CheckoutSessionCompletedNotification>>();
+            builder.RegisterType<MockStripeSubscriptionSetter>().As<IStripeSubscriptionSetter>();
+            builder.RegisterType<MockSeSEmail>().As<ISesEmail>();
+
             return base.CustomizeContainer(builder);
         }
     }

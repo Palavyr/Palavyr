@@ -6,11 +6,11 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class ModifyIntentIsCompleteHandler : IRequestHandler<ModifyIntentIsCompleteRequest, ModifyIntentIsCompleteResponse>
+    public class ModifyIntentIsEnabledHandler : IRequestHandler<ModifyIntentIsCompleteRequest, ModifyIntentIsCompleteResponse>
     {
         private readonly IEntityStore<Area> intentStore;
 
-        public ModifyIntentIsCompleteHandler(IEntityStore<Area> intentStore)
+        public ModifyIntentIsEnabledHandler(IEntityStore<Area> intentStore)
         {
             this.intentStore = intentStore;
         }

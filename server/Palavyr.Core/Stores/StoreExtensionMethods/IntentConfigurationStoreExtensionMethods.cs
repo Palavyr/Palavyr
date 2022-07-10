@@ -25,8 +25,10 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
         public static async Task<Area> GetIntentOnly(this IEntityStore<Area> intentStore, string intentId)
         {
             var intentComplete = await intentStore
-                .Query()
-                .SingleAsync(row => row.AreaIdentifier == intentId, intentStore.CancellationToken);
+                .Get(intentId, s => s.AreaIdentifier);
+            // var intentComplete = await intentStore
+                // .Query()
+                // .SingleAsync(row => row.AreaIdentifier == intentId, intentStore.CancellationToken);
             return intentComplete;
         }
 

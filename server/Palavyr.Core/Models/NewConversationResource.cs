@@ -9,6 +9,10 @@ namespace Palavyr.Core.Models
         public string ConversationId { get; set; }
         public List<WidgetNodeResource> ConversationNodes { get; set; }
 
+        public NewConversationResource()
+        {
+        }
+
         private NewConversationResource(string conversationId, List<WidgetNodeResource> conversationNodes)
         {
             ConversationId = conversationId;

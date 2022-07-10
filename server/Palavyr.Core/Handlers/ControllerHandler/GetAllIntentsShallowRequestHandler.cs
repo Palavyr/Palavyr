@@ -10,35 +10,36 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class GetAllAreasShallowRequestHandler : IRequestHandler<GetAllAreasRequest, GetAllAreasResponse>
+    public class GetAllIntentsShallowRequestHandler : IRequestHandler<GetAllIntentsRequest, GetAllIntentsResponse>
     {
         private readonly IEntityStore<Area> intentStore;
-        private readonly ILogger<GetAllAreasShallowRequestHandler> logger;
+        private readonly ILogger<GetAllIntentsShallowRequestHandler> logger;
         private readonly IMapToNew<Area, IntentResource> mapper;
 
-        public GetAllAreasShallowRequestHandler(IEntityStore<Area> intentStore, ILogger<GetAllAreasShallowRequestHandler> logger, IMapToNew<Area, IntentResource> mapper)
+        public GetAllIntentsShallowRequestHandler(IEntityStore<Area> intentStore, ILogger<GetAllIntentsShallowRequestHandler> logger, IMapToNew<Area, IntentResource> mapper)
         {
             this.intentStore = intentStore;
             this.logger = logger;
             this.mapper = mapper;
         }
 
-        public async Task<GetAllAreasResponse> Handle(GetAllAreasRequest request, CancellationToken cancellationToken)
+        public async Task<GetAllIntentsResponse> Handle(GetAllIntentsRequest request, CancellationToken cancellationToken)
         {
             logger.LogDebug("Return all areas");
             var intents = await intentStore.GetMany(intentStore.AccountId, s => s.AccountId);
             var resource = await mapper.MapMany(intents, cancellationToken);
-            return new GetAllAreasResponse(resource);
+            return new GetAllIntentsResponse(resource);
         }
     }
 
-    public class GetAllAreasRequest : IRequest<GetAllAreasResponse>
+    public class GetAllIntentsRequest : IRequest<GetAllIntentsResponse>
     {
+        public const string Route = "areas";
     }
 
-    public class GetAllAreasResponse
+    public class GetAllIntentsResponse
     {
-        public GetAllAreasResponse(IEnumerable<IntentResource> response)
+        public GetAllIntentsResponse(IEnumerable<IntentResource> response)
         {
             Response = response;
         }
