@@ -12,12 +12,12 @@ using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 {
-    public class StripeSubscriptionServiceFixture : StripeServiceFixtureBase
+    public class StripeSubscriptionServiceTest : StripeServiceTestBaseBase
     {
         private StripeSubscriptionService service = null!;
         private StagingProductRegistry registry = null!;
 
-        public StripeSubscriptionServiceFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
+        public StripeSubscriptionServiceTest(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

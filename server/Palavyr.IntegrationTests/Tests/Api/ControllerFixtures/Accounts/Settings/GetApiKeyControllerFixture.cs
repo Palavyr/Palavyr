@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Settings
 {
-    public class GetApiKeyControllerFixture : RealDatabaseIntegrationFixture
+    public class GetApiKeyControllerFixture : IntegrationTest
     {
         public GetApiKeyControllerFixture(ITestOutputHelper testOutputHelper, ServerFactory factory)
             : base(testOutputHelper, factory)

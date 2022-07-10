@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
 using Autofac;
 using FluentValidation;
-using MediatR;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Handlers.Pipelines;
 using Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;

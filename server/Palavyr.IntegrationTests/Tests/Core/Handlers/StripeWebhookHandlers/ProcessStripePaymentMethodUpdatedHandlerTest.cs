@@ -10,9 +10,9 @@ using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 {
-    public class ProcessStripePaymentMethodUpdatedHandlerFixture : StripeServiceFixtureBase
+    public class ProcessStripePaymentMethodUpdatedHandlerTest : StripeServiceTestBaseBase
     {
-        public ProcessStripePaymentMethodUpdatedHandlerFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
+        public ProcessStripePaymentMethodUpdatedHandlerTest(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

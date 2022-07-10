@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Stripe;
 using Test.Common.Random;
 
@@ -9,14 +9,14 @@ namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
 {
     public class StripeSubscriptionBuilder
     {
-        private readonly BaseIntegrationFixture test;
+        private readonly IntegrationTest test;
         private Price? price;
 
         private DateTime? periodEnd;
         private string customerId;
         private PriceRecurring? priceRecurring;
 
-        public StripeSubscriptionBuilder(BaseIntegrationFixture test)
+        public StripeSubscriptionBuilder(IntegrationTest test)
         {
             this.test = test;
         }

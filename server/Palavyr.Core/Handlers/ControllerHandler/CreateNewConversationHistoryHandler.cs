@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -20,6 +21,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private readonly IEntityStore<ConversationRecord> convoRecordStore;
         private readonly IAccountIdTransport accountIdTransport;
         private readonly IMapToNew<ConversationNode, WidgetNodeResource> mapper;
+        private readonly IMapToNew<ConversationRecord, ConversationRecordResource> recordResourceMapper;
         private readonly IEndingSequenceAttacher endingSequenceAttacher;
         private readonly ILogger<CreateNewConversationHistoryHandler> logger;
         private readonly IEntityStore<Area> intentStore;
@@ -29,6 +31,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             IEntityStore<ConversationRecord> convoRecordStore,
             IAccountIdTransport accountIdTransport,
             IMapToNew<ConversationNode, WidgetNodeResource> mapper,
+            IMapToNew<ConversationRecord, ConversationRecordResource> recordResourceMapper,
             IEndingSequenceAttacher endingSequenceAttacher,
             ILogger<CreateNewConversationHistoryHandler> logger,
             IEntityStore<Area> intentStore)
@@ -37,6 +40,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             this.convoRecordStore = convoRecordStore;
             this.accountIdTransport = accountIdTransport;
             this.mapper = mapper;
+            this.recordResourceMapper = recordResourceMapper;
             this.endingSequenceAttacher = endingSequenceAttacher;
             this.logger = logger;
             this.intentStore = intentStore;
@@ -55,10 +59,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var completeConversation = endingSequenceAttacher.AttachEndingSequenceToNodeList(standardNodesNoTracking, intentId, accountIdTransport.AccountId);
             var widgetNodes = await mapper.MapMany(completeConversation, cancellationToken);
 
-            var newConvo = NewConversation.CreateNew(widgetNodes.ToList());
+            var newConvoResource = NewConversationResource.CreateNew(widgetNodes.ToList());
 
             var intent = await intentStore.Get(intentId, s => s.AreaIdentifier);
-            var newConversationRecord = ConversationRecord.CreateDefault(newConvo.ConversationId, accountIdTransport.AccountId, intent.AreaName, intentId);
+            var newConversationRecord = ConversationRecord.CreateDefault(newConvoResource.ConversationId, accountIdTransport.AccountId, intent.AreaName, intentId);
 
             if (!string.IsNullOrEmpty(recordUpdate.Email))
             {
@@ -75,18 +79,67 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 await convoRecordStore.Create(newConversationRecord);
             }
 
-            return new CreateNewConversationHistoryResponse(newConvo);
+            // TODO: Map from convoRecord to ConvoRecordResource
+            // var resource = await recordResourceMapper.Map(newConversationRecord, cancellationToken);
+            return new CreateNewConversationHistoryResponse(newConvoResource);
+        }
+    }
+
+    public class ConversationRecordResource
+    {
+        public string ConversationId { get; set; } // This will be used when collecting enquiries. Then used to get the 
+        public string ResponsePdfId { get; set; }
+        public DateTime TimeStamp { get; set; }
+        public string AccountId { get; set; }
+        public string AreaName { get; set; }
+        public string EmailTemplateUsed { get; set; }
+        public bool Seen { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string AreaIdentifier { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool IsFallback { get; set; }
+        public string Locale { get; set; } // TODO: Correct This
+        public bool IsComplete { get; set; }
+    }
+
+    public class ConversationRecordResourceMapper : IMapToNew<ConversationRecord, ConversationRecordResource>
+    {
+        public async Task<ConversationRecordResource> Map(ConversationRecord from, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return new ConversationRecordResource
+            {
+                ConversationId = from.ConversationId, // This will be used when collecting enquiries. Then used to get the 
+                ResponsePdfId = from.ResponsePdfId,
+                TimeStamp = from.TimeStamp,
+                AccountId = from.AccountId,
+                AreaName = from.AreaName,
+                EmailTemplateUsed = from.EmailTemplateUsed,
+                Seen = from.Seen,
+                Name = from.Name,
+                Email = from.Email,
+                PhoneNumber = from.PhoneNumber,
+                AreaIdentifier = from.AreaIdentifier,
+                IsDeleted = from.IsDeleted,
+                IsFallback = from.IsFallback,
+                Locale = from.Locale, // TODO: Correct This
+                IsComplete = from.IsComplete
+            };
         }
     }
 
     public class CreateNewConversationHistoryResponse
     {
-        public NewConversation Response { get; set; }
-        public CreateNewConversationHistoryResponse(NewConversation response) => Response = response;
+        public NewConversationResource Response { get; set; }
+        public CreateNewConversationHistoryResponse(NewConversationResource response) => Response = response;
     }
 
     public class CreateNewConversationHistoryRequest : IRequest<CreateNewConversationHistoryResponse>
     {
+        public const string Route = "widget/create";
+
         public string IntentId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }

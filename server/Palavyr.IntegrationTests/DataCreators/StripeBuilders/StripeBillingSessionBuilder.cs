@@ -1,14 +1,14 @@
-﻿using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+﻿using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
 {
     public class StripeBillingSessionBuilder
     {
-        private readonly BaseIntegrationFixture test;
+        private readonly IntegrationTest test;
         private string? custId;
 
-        public StripeBillingSessionBuilder(BaseIntegrationFixture test)
+        public StripeBillingSessionBuilder(IntegrationTest test)
         {
             this.test = test;
         }

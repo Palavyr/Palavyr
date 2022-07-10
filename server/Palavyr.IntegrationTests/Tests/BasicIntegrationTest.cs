@@ -12,9 +12,9 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests
 {
-    public class TestControllerIntegrationTest : InMemoryIntegrationFixture
+    public class BasicIntegrationTest : IntegrationTest
     {
-        public TestControllerIntegrationTest(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
+        public BasicIntegrationTest(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

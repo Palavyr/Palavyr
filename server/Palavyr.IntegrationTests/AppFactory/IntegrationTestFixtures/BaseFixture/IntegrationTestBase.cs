@@ -6,6 +6,8 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,32 +21,52 @@ using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
-using Palavyr.Core.Stores.Delete;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Test.Common;
+using Test.Common.Random;
 using Test.Common.TestFileAssetServices;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture
 {
-    public abstract class BaseIntegrationFixture : IClassFixture<ServerFactory>, IAsyncLifetime
+    public abstract class IntegrationTestBase<DbType> : IClassFixture<ServerFactory>, IAsyncLifetime where DbType : DbTypes
     {
         public string SessionId;
         public string AccountId;
         public string ApiKey;
         public readonly string StripeCustomerId = Guid.NewGuid().ToString();
-        public readonly string EmailAddress = $"test-{Guid.NewGuid()}@gmail.com";
+        public readonly string EmailAddress = A.RandomTestEmail();
         public readonly string Password = "Password01!";
         public readonly Lazy<AutofacServiceProvider> ServiceProvider;
         protected internal virtual bool SaveStoreActionsImmediately => true;
         public readonly ServerFactory Factory;
 
-        protected BaseIntegrationFixture(ITestOutputHelper testOutputHelper, ServerFactory factory)
+        protected IntegrationTestBase(ITestOutputHelper testOutputHelper, ServerFactory factory)
         {
             TestOutputHelper = testOutputHelper;
             Factory = factory;
+
+            WebHostFactory = Factory
+                .WithWebHostBuilder(
+                    builder =>
+                    {
+                        builder
+                            .ConfigureAppConfiguration(
+                                (context, configBuilder) => { configBuilder.AddConfiguration(TestConfiguration.GetTestConfiguration(Assembly.GetExecutingAssembly())); })
+                            .ConfigureTestContainer<ContainerBuilder>(b => CustomizeContainer(b));
+                        if (typeof(DbType).Name == nameof(DbTypes.Real))
+                        {
+                            builder.ConfigureAndCreateRealTestDatabase();
+                        }
+                        else if (typeof(DbType).Name == nameof(DbTypes.InMemory))
+                        {
+                            var dbRoot = new InMemoryDatabaseRoot();
+                            builder.ConfigureInMemoryDatabase(dbRoot);
+                        }
+                    });
+
 
             ServiceProvider = new Lazy<AutofacServiceProvider>(
                 () => { return (AutofacServiceProvider)WebHostFactory.Services; });
@@ -54,22 +76,9 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public WebApplicationFactory<Startup> WebHostFactory { get; set; } = null!;
 
         public PalavyrClient Client => new PalavyrClient(WebHostFactory.ConfigureInMemoryClient(SessionId));
-
-        public Lazy<PalavyrClient> LazyClient =>
-            new Lazy<PalavyrClient>(
-                () => { return new PalavyrClient(WebHostFactory.ConfigureInMemoryClient(SessionId)); });
-
-        public PalavyrClient ApikeyClient => LazyApikeyClient.Value;
-
-        public Lazy<PalavyrClient> LazyApikeyClient =>
-            new Lazy<PalavyrClient>(
-                () => { return new PalavyrClient(WebHostFactory.ConfigureInMemoryApiKeyClient(ApiKey)); });
-
-        public Func<string, PalavyrClient> ConfigurableClient => sessionId => LazyConfigurableClient(sessionId).Value;
-
-        public Func<string, Lazy<PalavyrClient>> LazyConfigurableClient =>
-            sessionId => new Lazy<PalavyrClient>(
-                () => { return new PalavyrClient(WebHostFactory.ConfigureInMemoryClient(sessionId)); });
+        public PalavyrClient ApikeyClient => new PalavyrClient(WebHostFactory.ConfigureInMemoryApiKeyClient(ApiKey));
+        public Func<string, PalavyrClient> ConfigurableClient => sessionId => new PalavyrClient(WebHostFactory.ConfigureInMemoryClient(sessionId));
+        public Func<string, PalavyrClient> ConfigurableApiKeyClient => apikey => new PalavyrClient(WebHostFactory.ConfigureInMemoryApiKeyClient(apikey));
 
         public CancellationToken CancellationToken => new CancellationTokenSource(Timeout).Token;
         public TimeSpan Timeout => TimeSpan.FromMinutes(3);
@@ -125,8 +134,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         private protected virtual async Task DeleteTestStripeCustomers()
         {
             await Task.CompletedTask;
-            // var customerService = ResolveType<IStripeCustomerService>();
-            // await customerService.DeleteSingleStripeTestCustomer(StripeCustomerId);
         }
 
         public void SetAccountIdTransport()
@@ -155,7 +162,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public virtual async Task DisposeAsync()
         {
             await DeleteTestStripeCustomers();
-            SetCancellationToken();
 
             var tempClient = ConfigurableClient(SessionId);
             await tempClient.Delete<DeleteAccountRequest>(CancellationToken);

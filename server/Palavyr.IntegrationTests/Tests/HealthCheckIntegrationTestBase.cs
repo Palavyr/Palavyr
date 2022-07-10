@@ -7,9 +7,9 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests
 {
-    public class HealthCheckIntegrationTest : InMemoryIntegrationFixture
+    public class HealthCheckIntegrationTestBase : IntegrationTest
     {
-        public HealthCheckIntegrationTest(ITestOutputHelper testOutputHelper, ServerFactory factory)
+        public HealthCheckIntegrationTestBase(ITestOutputHelper testOutputHelper, ServerFactory factory)
             : base(testOutputHelper, factory)
         {
         }

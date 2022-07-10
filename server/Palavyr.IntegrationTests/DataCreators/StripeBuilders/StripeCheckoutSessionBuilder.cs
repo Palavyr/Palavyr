@@ -1,4 +1,4 @@
-﻿using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+﻿using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Stripe;
 using Test.Common.Random;
 
@@ -6,13 +6,13 @@ namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
 {
     public class StripeCheckoutSessionBuilder
     {
-        private readonly BaseIntegrationFixture test;
+        private readonly IntegrationTest test;
         private string subId;
         private string customerId;
         private Subscription sub;
         
         
-        public StripeCheckoutSessionBuilder(BaseIntegrationFixture test)
+        public StripeCheckoutSessionBuilder(IntegrationTest test)
         {
             this.test = test;
         }

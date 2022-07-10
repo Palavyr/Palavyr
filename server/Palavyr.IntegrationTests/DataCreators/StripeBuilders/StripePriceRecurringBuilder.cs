@@ -1,14 +1,14 @@
-﻿using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+﻿using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Stripe;
 
 namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
 {
     public class StripePriceRecurringBuilder
     {
-        private readonly BaseIntegrationFixture test;
+        private readonly IntegrationTest test;
         private string? interval;
 
-        public StripePriceRecurringBuilder(BaseIntegrationFixture test)
+        public StripePriceRecurringBuilder(IntegrationTest test)
         {
             this.test = test;
         }

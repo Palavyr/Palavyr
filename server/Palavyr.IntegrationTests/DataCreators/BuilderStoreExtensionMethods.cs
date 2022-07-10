@@ -2,13 +2,13 @@
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Sessions;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
     public static class BuilderStoreExtensionMethods
     {
-        public static async Task CreateAndSave<TEntity>(this BaseIntegrationFixture test, TEntity entity) where TEntity : class, IEntity
+        public static async Task CreateAndSave<TEntity>(this IntegrationTest test, TEntity entity) where TEntity : class, IEntity
         {
             var accToken = test.ResolveType<IAccountIdTransport>();
             if (!accToken.IsSet())

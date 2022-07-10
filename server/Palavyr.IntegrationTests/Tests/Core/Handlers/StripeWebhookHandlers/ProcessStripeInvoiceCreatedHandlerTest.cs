@@ -8,14 +8,14 @@ using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.DataCreators.StripeBuilders;
-using Palavyr.IntegrationTests.Tests.Mocks;
+using Palavyr.IntegrationTests.Mocks;
 using Test.Common.ApprovalTests;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 {
-    public class ProcessStripeInvoiceCreatedHandlerFixture : StripeServiceFixtureBase
+    public class ProcessStripeInvoiceCreatedHandlerTest : StripeServiceTestBaseBase
     {
         [Fact]
         public async Task Handles()
@@ -48,7 +48,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
             return base.CustomizeContainer(builder);
         }
 
-        public ProcessStripeInvoiceCreatedHandlerFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
+        public ProcessStripeInvoiceCreatedHandlerTest(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
     }

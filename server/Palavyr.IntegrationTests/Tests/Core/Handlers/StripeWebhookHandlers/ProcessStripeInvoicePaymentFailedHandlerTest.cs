@@ -1,41 +1,34 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
+using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.DataCreators.StripeBuilders;
-using Palavyr.IntegrationTests.Tests.Mocks;
+using Palavyr.IntegrationTests.Mocks;
 using Test.Common.ApprovalTests;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 {
-    public class ProcessStripeInvoicePaymentSuccessHandlerFixture : StripeServiceFixtureBase
+    public class ProcessStripeInvoicePaymentFailedHandlerTest : StripeServiceTestBaseBase
     {
         [Fact]
-        public async Task Handles()
+        public async Task HandlesEvent()
         {
-            var subscription = this.CreateStripeSubscriptionBuilder()
-                .WithCurrentPeriodEnd(DateTime.Now.AddDays(15))
-                .Build();
-            var invoice = await this.CreateStripeInvoiceBuilder()
-                .WithSubscription(subscription)
-                .Build();
-
-            var @event = new InvoicePaymentSuccessfulEvent(invoice);
+            var invoice = await this.CreateStripeInvoiceBuilder().Build();
+            var @event = new InvoicePaymentFailedEvent(invoice);
             var emailer = Container.GetService<ISesEmail>();
-            var logger = Container.GetService<ILogger<ProcessStripeInvoicePaymentSuccessHandler>>();
-            var handler = new ProcessStripeInvoicePaymentSuccessHandler(ResolveStore<Account>(), logger, emailer);
+            var logger = Container.GetService<ILogger<ProcessStripeInvoicePaymentFailedHandler>>();
+            var handler = new ProcessStripeInvoicePaymentFailedHandler(logger, ResolveStore<Account>(), emailer);
 
             await handler.Handle(@event, CancellationToken);
 
             var ses = (IGetEmailSent)Container.GetService<ISesEmail>();
-
+ 
             this.PalavyrAssent(ses.GetSentHtml());
         }
 
@@ -45,7 +38,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
             return base.CustomizeContainer(builder);
         }
 
-        public ProcessStripeInvoicePaymentSuccessHandlerFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
+        public ProcessStripeInvoicePaymentFailedHandlerTest(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
     }

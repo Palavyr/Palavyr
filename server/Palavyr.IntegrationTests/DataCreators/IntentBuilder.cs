@@ -1,15 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
     public static partial class BuilderExtensionMethods
     {
-        public static IntentBuilder CreateIntentBuilder(this BaseIntegrationFixture test)
+        public static IntentBuilder CreateIntentBuilder(this IntegrationTest test)
         {
             return new IntentBuilder(test);
         }
@@ -17,7 +16,7 @@ namespace Palavyr.IntegrationTests.DataCreators
 
     public class IntentBuilder
     {
-        private readonly BaseIntegrationFixture test;
+        private readonly IntegrationTest test;
         private bool? sendPdfResponse;
         private string intentId;
         private string accountId;
@@ -26,7 +25,7 @@ namespace Palavyr.IntegrationTests.DataCreators
 
         private string? name;
 
-        public IntentBuilder(BaseIntegrationFixture test)
+        public IntentBuilder(IntegrationTest test)
         {
             this.test = test;
         }

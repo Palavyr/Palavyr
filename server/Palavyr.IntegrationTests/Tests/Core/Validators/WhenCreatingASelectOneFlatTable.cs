@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
@@ -16,7 +15,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Validators
 {
-    public class WhenCreatingASelectOneFlatTable : RealDatabaseIntegrationFixture
+    public class WhenCreatingASelectOneFlatTable : IntegrationTest
     {
         [Fact]
         public async Task ARoundTripShouldSucceed()

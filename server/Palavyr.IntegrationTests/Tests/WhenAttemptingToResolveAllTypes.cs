@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests
 {
-    public class WhenAttemptingToResolveAllTypes : InMemoryIntegrationFixture
+    public class WhenAttemptingToResolveAllTypes : IntegrationTest
     {
         private readonly ITestOutputHelper testOutputHelper;
 

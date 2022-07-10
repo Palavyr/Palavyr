@@ -31,7 +31,7 @@ namespace Palavyr.Core.Services.StripeServices
 
         public async Task ProcessStripeEvent(Event stripeEvent, string signature, CancellationToken cancellationToken)
         {
-            // TODO: write a cleanup task to remove old stripe events (older than say a week?
+            // TODO: write a cleanup task to remove old stripe events (older than say a week?)
             var response = await mediator.Send(new NewStripeEventReceivedEvent(signature), cancellationToken);
             if (response == null || (response != null && response.ShouldCancelProcessing))
             {

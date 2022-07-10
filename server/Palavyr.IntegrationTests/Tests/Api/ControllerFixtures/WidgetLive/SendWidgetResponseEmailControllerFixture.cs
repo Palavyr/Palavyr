@@ -7,10 +7,9 @@ using Palavyr.Core.Requests;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.DataCreators;
-using Palavyr.IntegrationTests.Tests.Mocks;
+using Palavyr.IntegrationTests.Mocks;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
@@ -18,16 +17,10 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
 {
-    public class SendWidgetResponseEmailControllerFixture : RealDatabaseIntegrationFixture
+    public class SendWidgetResponseEmailControllerFixture : IntegrationTest
     {
         public SendWidgetResponseEmailControllerFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
-        }
-
-        public override async Task InitializeAsync()
-        {
-            await this.SetupProAccount();
-            await base.InitializeAsync();
         }
 
         [Fact]

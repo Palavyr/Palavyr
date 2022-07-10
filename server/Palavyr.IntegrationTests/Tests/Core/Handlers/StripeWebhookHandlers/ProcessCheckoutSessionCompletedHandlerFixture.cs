@@ -16,7 +16,7 @@ using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 {
-    public class ProcessCheckoutSessionCompletedHandlerFixtureBase : StripeServiceFixtureBase
+    public class ProcessCheckoutSessionCompletedHandlerTestBaseBase : StripeServiceTestBaseBase
     {
         private IStripeSubscriptionService service = null!;
         private ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger = null!;
@@ -77,7 +77,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
             return base.CustomizeContainer(builder);
         }
 
-        public ProcessCheckoutSessionCompletedHandlerFixtureBase(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
+        public ProcessCheckoutSessionCompletedHandlerTestBaseBase(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
     }

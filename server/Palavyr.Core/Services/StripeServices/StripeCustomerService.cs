@@ -70,7 +70,7 @@ namespace Palavyr.Core.Services.StripeServices
                 }
                 catch
                 {
-                    logger.LogError("This customer ID doesn't exist anymore. It was probably deleted already manually.");
+                    logger.LogError("This customer ID doesn't exist anymore. It was probably deleted already manually");
                 }
             }
             else

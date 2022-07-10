@@ -1,14 +1,12 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Autofac;
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Resources;
-using Palavyr.Core.Services.AccountServices;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
@@ -16,7 +14,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
 {
-    public class WithAnyAccount : RealDatabaseIntegrationFixture
+    public class WithAnyAccount : IntegrationTest<DbTypes.Real>
     {
         public WithAnyAccount(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
@@ -74,30 +72,11 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
             await tempClient.Delete<DeleteAccountRequest>(CancellationToken);
         }
 
-        public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
-        {
-            builder.RegisterType<MockEmailVerificationService>().As<IEmailVerificationService>();
-            return base.CustomizeContainer(builder);
-        }
-
         public override async Task DisposeAsync()
         {
             await Task.CompletedTask;
             Client.DefaultRequestHeaders.Remove("Authorization");
             Client.DefaultRequestHeaders.Remove(ApplicationConstants.MagicUrlStrings.SessionId);
-        }
-    }
-
-    public class MockEmailVerificationService : IEmailVerificationService
-    {
-        public Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(true);
-        }
-
-        public Task<bool> SendConfirmationTokenEmail(string emailAddress, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(true);
         }
     }
 }

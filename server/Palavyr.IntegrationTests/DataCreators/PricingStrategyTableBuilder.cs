@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
@@ -12,13 +11,13 @@ using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
     public static partial class BuilderExtensionMethods
     {
-        public static PricingStrategyTableBuilder<TResource> CreatePricingStrategyTableBuilder<TResource>(this BaseIntegrationFixture test) where TResource : class, IPricingStrategyTableRowResource, new()
+        public static PricingStrategyTableBuilder<TResource> CreatePricingStrategyTableBuilder<TResource>(this IntegrationTest test) where TResource : class, IPricingStrategyTableRowResource, new()
         {
             return new PricingStrategyTableBuilder<TResource>(test);
         }
@@ -26,11 +25,11 @@ namespace Palavyr.IntegrationTests.DataCreators
 
     public class PricingStrategyTableBuilder<TResource> where TResource : class, IPricingStrategyTableRowResource, new()
     {
-        private readonly BaseIntegrationFixture test;
+        private readonly IntegrationTest test;
         private readonly List<TResource> additionalRows = new List<TResource>();
         private string? intentId;
 
-        public PricingStrategyTableBuilder(BaseIntegrationFixture test)
+        public PricingStrategyTableBuilder(IntegrationTest test)
         {
             this.test = test;
         }

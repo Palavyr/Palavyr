@@ -13,15 +13,15 @@ namespace Palavyr.API.Controllers.WidgetLive
     public class CreateNewConversationHistoryController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "widget/create";
+        
 
         public CreateNewConversationHistoryController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpPost(Route)]
-        public async Task<NewConversation> Create(
+        [HttpPost(CreateNewConversationHistoryRequest.Route)]
+        public async Task<NewConversationResource> Create(
             [FromQuery]
             bool demo,
             [FromBody]

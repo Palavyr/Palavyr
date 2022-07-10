@@ -25,11 +25,11 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.StripeServices
 {
-    public class StripeWebhookRoutingServiceFixture : InMemoryIntegrationFixture
+    public class StripeWebhookRoutingServiceTestBase : IntegrationTest
     {
         private IStripeEventWebhookRoutingService router = null!;
 
-        public StripeWebhookRoutingServiceFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
+        public StripeWebhookRoutingServiceTestBase(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

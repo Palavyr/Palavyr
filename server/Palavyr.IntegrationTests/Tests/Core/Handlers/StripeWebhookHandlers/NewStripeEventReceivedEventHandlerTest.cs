@@ -10,9 +10,9 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 {
-    public class NewStripeEventReceivedEventHandlerFixture : StripeServiceFixtureBase
+    public class NewStripeEventReceivedEventHandlerTest : StripeServiceTestBaseBase
     {
-        public NewStripeEventReceivedEventHandlerFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
+        public NewStripeEventReceivedEventHandlerTest(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 

@@ -40,6 +40,16 @@ namespace Palavyr.Client
             return await Get<TRequest, TResource>(cancellationToken, routeFormatter);
         }
 
+        /// <summary>
+        /// When posting and we don't expect a result
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <param name="routeFormatter"></param>
+        /// <typeparam name="TRequest"></typeparam>
+        public async Task<object> Post<TRequest>(CancellationToken cancellationToken, Func<string, string>? routeFormatter = null) where TRequest : IRequest<object>
+        {
+            return await Post<TRequest, object>(cancellationToken, routeFormatter);
+        }
 
         public async Task<TResource> Post<TRequest, TResource>(CancellationToken cancellationToken, Func<string, string>? routeFormatter = null) where TRequest : IRequest<object>
         {

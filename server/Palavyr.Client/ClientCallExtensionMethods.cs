@@ -54,6 +54,8 @@ namespace Palavyr.Client
         public static async Task<T> ReadResponse<T>(this HttpResponseMessage message)
         {
             var objectString = await message.Content.ReadAsStringAsync();
+            if (string.IsNullOrEmpty(objectString)) return default; // TODO: Double check
+
             var deserialized = JsonConvert.DeserializeObject<T>(objectString);
             if (deserialized == null)
             {

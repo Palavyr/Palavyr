@@ -3,18 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
     public static partial class BuilderExtensionMethods
     {
-        public static SelectOneFlatResourceBuilder CreateSelectOneFlatResourceBuilder(this BaseIntegrationFixture test)
+        public static SelectOneFlatResourceBuilder CreateSelectOneFlatResourceBuilder(this IntegrationTest test)
         {
             return new SelectOneFlatResourceBuilder(test);
         }
@@ -22,7 +21,7 @@ namespace Palavyr.IntegrationTests.DataCreators
 
     public class SelectOneFlatResourceBuilder
     {
-        private readonly BaseIntegrationFixture test;
+        private readonly IntegrationTest test;
         private string? accountId;
         private string? intentId;
         private string? tableId;
@@ -32,7 +31,7 @@ namespace Palavyr.IntegrationTests.DataCreators
         private bool? range;
         private int? rowOrder;
 
-        public SelectOneFlatResourceBuilder(BaseIntegrationFixture test)
+        public SelectOneFlatResourceBuilder(IntegrationTest test)
         {
             this.test = test;
         }

@@ -1,56 +1,62 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.IntegrationTests.AppFactory;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
-using Test.Common.Random;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
     public static class CreateDefaultTestAccountBuilderExtensionMethods
     {
-        public static DefaultTestAccountBuilder CreateDefaultTestAccountBuilder(this BaseIntegrationFixture test)
+        public static DefaultTestAccountBuilder CreateDefaultTestAccountBuilder(this IntegrationTest testBase)
         {
-            return new DefaultTestAccountBuilder(test);
+            return new DefaultTestAccountBuilder(testBase);
         }
     }
 
     public class DefaultTestAccountBuilder
     {
-        private readonly BaseIntegrationFixture test;
+        private readonly IntegrationTest testBase;
 
-        public DefaultTestAccountBuilder(BaseIntegrationFixture test)
+
+        public DefaultTestAccountBuilder(IntegrationTest testBase)
         {
-            this.test = test;
+            this.testBase = testBase;
         }
 
         public async Task<Credentials> Build(string email, string password)
         {
-            var response = await test.Client.Post<CreateNewAccountRequest, Credentials>(
+            var credentials = await testBase.Client.Post<CreateNewAccountRequest, Credentials>(
                 new CreateNewAccountRequest
                 {
                     EmailAddress = email,
                     Password = password
-                }, test.CancellationToken);
-            return response;
+                }, testBase.CancellationToken);
+
+            // with the mocks registered, we update the account to Pro
+            // the upgrade path is deliberately hard - it only happens via the stripe webhooks
+            await testBase.Client.Post<ProcessStripeNotificationWebhookRequest, Unit>(testBase.CancellationToken);
+            return credentials;
         }
     }
 
 
     public static class CreateAccountBuilder
     {
-        public static DefaultAccountAndSessionBuilder CreateDefaultAccountAndSessionBuilder(this BaseIntegrationFixture test)
+        public static DefaultAccountAndSessionBuilder CreateDefaultAccountAndSessionBuilder(this IntegrationTest testBase)
         {
-            return new DefaultAccountAndSessionBuilder(test);
+            return new DefaultAccountAndSessionBuilder(testBase);
         }
     }
 
     public class DefaultAccountAndSessionBuilder
     {
-        private readonly BaseIntegrationFixture test;
+        private readonly IntegrationTest testBase;
         private string? emailAddress;
         private string? password;
         private string? accountId;
@@ -66,9 +72,9 @@ namespace Palavyr.IntegrationTests.DataCreators
         private readonly DateTime futureDate = DateTime.Parse("01/01/2200");
         private readonly DateTime pastDate = DateTime.Parse("01/01/2200");
 
-        public DefaultAccountAndSessionBuilder(BaseIntegrationFixture test)
+        public DefaultAccountAndSessionBuilder(IntegrationTest testBase)
         {
-            this.test = test;
+            this.testBase = testBase;
         }
 
         public DefaultAccountAndSessionBuilder AsActive()
@@ -86,7 +92,7 @@ namespace Palavyr.IntegrationTests.DataCreators
 
         public DefaultAccountAndSessionBuilder WithDefaultEmailAddress()
         {
-            this.emailAddress = this.test.EmailAddress;
+            this.emailAddress = this.testBase.EmailAddress;
             return this;
         }
 
@@ -137,15 +143,15 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
-        public DefaultAccountAndSessionBuilder WithFreePlan()
-        {
-            this.planType = Account.PlanTypeEnum.Free;
-            this.currentPeriodEnd = Convert.ToDateTime(pastDate);
-            this.paymentInterval = Account.PaymentIntervalEnum.Null;
-            this.hasUpgrade = false;
-
-            return this;
-        }
+        // public DefaultAccountAndSessionBuilder WithFreePlan()
+        // {
+        //     this.planType = Account.PlanTypeEnum.Free;
+        //     this.currentPeriodEnd = Convert.ToDateTime(pastDate);
+        //     this.paymentInterval = Account.PaymentIntervalEnum.Null;
+        //     this.hasUpgrade = false;
+        //
+        //     return this;
+        // }
 
         public DefaultAccountAndSessionBuilder WithStripeCustomerId(string id)
         {
@@ -153,49 +159,25 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
-
-        public async Task<Credentials> Build()
+        public async Task<Credentials> BuildAndMake()
         {
             var email = this.emailAddress ?? "test@gmail.com";
             var pass = this.password ?? "123456";
-            var id = this.accountId ?? test.AccountId;
-            var accType = this.accountType ?? AccountType.Default;
-            var active = this.asActive ?? false;
-            var custId = this.customerId ?? test.StripeCustomerId;
-            var payinterval = this.paymentInterval ?? Account.PaymentIntervalEnum.Null;
-            var hasUpgraded = this.hasUpgrade ?? false;
-            var planT = this.planType ?? Account.PlanTypeEnum.Free;
-            var periodEnd = this.currentPeriodEnd ?? DateTime.UtcNow;
-            var apiKey = this.apikey ?? test.ApiKey;
 
-
-            // var defaultAccount = new Account
-            // {
-            //     EmailAddress = email,
-            //     Password = pass,
-            //     AccountId = id,
-            //     ApiKey = apiKey,
-            //     AccountType = accType,
-            //     StripeCustomerId = custId,
-            //     PhoneNumber = null,
-            //     Locale = "en-AU",
-            //     HasUpgraded = hasUpgraded,
-            //     PaymentInterval = payinterval,
-            //     PlanType = planT,
-            //     Active = active,
-            //     CurrentPeriodEnd = periodEnd,
-            //     IntroductionId = A.RandomId()
-            // };
-
-            var newAccount = await test.Client.Post<CreateNewAccountRequest, CreateNewAccountResponse>(
+            var newAccount = await testBase.Client.Post<CreateNewAccountRequest, CreateNewAccountResponse>(
                 new CreateNewAccountRequest
                 {
                     EmailAddress = email,
                     Password = pass
-                }, test.CancellationToken);
+                }, testBase.CancellationToken);
 
-            // await test.CreateAndSave(defaultAccount);
-            // await test.CreateAndSave(Session.CreateNew(test.SessionId, test.AccountId, test.ApiKey));
+            if (planType != null)
+            {
+                var accountStore = testBase.ResolveStore<Account>();
+                var account = await accountStore
+                    .DangerousRawQuery()
+                    .SingleOrDefaultAsync(x => x.AccountId == testBase.AccountId);
+            }
 
 
             return newAccount.Response;
