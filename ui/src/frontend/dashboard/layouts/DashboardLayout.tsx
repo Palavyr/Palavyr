@@ -202,7 +202,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         const planTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();
         setPlanTypeMeta(planTypeMeta);
 
-        const areas = await repository.Area.GetAreas();
+        const areas = await repository.Intent.GetAllIntents();
         setAreaNameDetails(sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, fetchSidebarInfo(areas)));
 
         const locale = await repository.Settings.Account.GetLocale(true); // readonly == true

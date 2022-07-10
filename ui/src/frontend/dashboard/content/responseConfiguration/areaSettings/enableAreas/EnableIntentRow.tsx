@@ -39,7 +39,7 @@ export const EnableIntentRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps)
     const cls = useStyles({ isEnabled });
 
     const onToggleChange = async () => {
-        const updatedIsEnabled = await repository.Area.UpdateIsEnabled(!isEnabled, areasEnabled.areaId);
+        const updatedIsEnabled = await repository.Intent.ToggleIsEnabled(!isEnabled, areasEnabled.areaId);
         setIsEnabled(updatedIsEnabled);
     };
 

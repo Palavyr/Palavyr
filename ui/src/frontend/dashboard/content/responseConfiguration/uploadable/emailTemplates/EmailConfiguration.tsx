@@ -20,7 +20,7 @@ export const EmailConfiguration = () => {
     const [useAreaFallbackEmail, setUseAreaFallbackEmail] = useState<boolean>(false);
 
     const onUseAreaFallbackEmailToggle = async () => {
-        const updatedUsAreaFallback = await repository.Area.UpdateUseAreaFallbackEmail(!useAreaEmail, areaIdentifier);
+        const updatedUsAreaFallback = await repository.Intent.ToggleUseAreaFallbackEmail(!useAreaEmail, areaIdentifier);
         setUseAreaEmail(updatedUsAreaFallback);
         setUseAreaFallbackEmail(!useAreaFallbackEmail);
     };
@@ -34,7 +34,7 @@ export const EmailConfiguration = () => {
     }, []);
 
     const loadSettings = useCallback(async () => {
-        const areas = await repository.Area.GetAreas();
+        const areas = await repository.Intent.GetAllIntents();
         const areaData = areas.filter((x) => x.areaIdentifier === areaIdentifier)[0];
         setSettings({
             ...settings,

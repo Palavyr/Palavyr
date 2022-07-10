@@ -32,7 +32,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
 
     const loadTableData = useCallback(async () => {
         const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
-        const showTotals = await repository.Area.getShowDynamicTotals(areaIdentifier);
+        const showTotals = await repository.Intent.getShowDynamicTotals(areaIdentifier);
 
         // show fee totals totals row
         setShowTotals(showTotals);
@@ -98,7 +98,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
 
     const changeShowTotals = async (e: { target: { checked: any } }) => {
         const newShowTotals = e.target.checked;
-        const shouldShow = await repository.Area.setShowDynamicTotals(areaIdentifier, newShowTotals);
+        const shouldShow = await repository.Intent.setShowDynamicTotals(areaIdentifier, newShowTotals);
         setShowTotals(shouldShow);
         setSuccessOpen(true);
     };

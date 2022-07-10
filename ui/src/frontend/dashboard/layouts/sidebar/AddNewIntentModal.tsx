@@ -45,7 +45,7 @@ export const AddNewIntentModal = ({ open, handleClose, setNewArea }: AddNewInten
     const onAdd = async () => {
         setButtonDisabled(true);
         if (areaName.trim() !== "") {
-            const newArea = await repository.Area.createArea(areaName);
+            const newArea = await repository.Intent.CreateIntent(areaName);
             setNewArea(newArea);
         }
         handleClose();

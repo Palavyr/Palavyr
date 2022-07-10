@@ -58,7 +58,7 @@ export const IntentSettings = () => {
     const history = useHistory();
 
     const loadSettings = useCallback(async () => {
-        const areas = await repository.Area.GetAreas();
+        const areas = await repository.Intent.GetAllIntents();
         const areaData = areas.filter(x => x.areaIdentifier === areaIdentifier)[0];
 
         setSettings({
@@ -86,7 +86,7 @@ export const IntentSettings = () => {
 
     const handleIntentNameChange = async (newAreaName: string) => {
         if (newAreaName === settings.areaName) return;
-        const updatedAreaName = await repository.Area.updateAreaName(areaIdentifier, newAreaName);
+        const updatedAreaName = await repository.Intent.UpdateIntentName(areaIdentifier, newAreaName);
         const updatedSettings = { ...settings, areaName: updatedAreaName };
         setSettings(updatedSettings);
         window.location.reload(); // reloads the sidebar...
@@ -94,14 +94,14 @@ export const IntentSettings = () => {
 
     const handleIntentDisplayTitleChange = async (newAreaDisplayTitle: any) => {
         if (newAreaDisplayTitle === settings.areaTitle) return;
-        const updatedDisplayTitle = await repository.Area.updateDisplayTitle(areaIdentifier, newAreaDisplayTitle);
+        const updatedDisplayTitle = await repository.Intent.updateDisplayTitle(areaIdentifier, newAreaDisplayTitle);
         window.location.reload();
         const updatedSettings = { ...settings, areaTitle: updatedDisplayTitle };
         setSettings(updatedSettings);
     };
 
     const handleIntentDelete = async () => {
-        await repository.Area.deleteArea(areaIdentifier);
+        await repository.Intent.deleteArea(areaIdentifier);
         history.push("/dashboard");
         window.location.reload();
     };
@@ -132,7 +132,7 @@ export const IntentSettings = () => {
     };
 
     const onIntentEnabledToggleChange = async () => {
-        const updatedisEnabled = await repository.Area.UpdateIsEnabled(!isEnabledState, areaIdentifier);
+        const updatedisEnabled = await repository.Intent.ToggleIsEnabled(!isEnabledState, areaIdentifier);
         setIsEnabledState(updatedisEnabled);
     };
 

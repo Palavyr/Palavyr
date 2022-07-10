@@ -124,7 +124,7 @@ export const ResponseConfiguration = () => {
     const [sendPdfWithResponse, setSendPdfWithResponse] = useState<boolean | null>(null);
 
     const onToggleSendPdfWithResponse = async () => {
-        const toSend = await repository.Area.toggleSendPdfResponse(areaIdentifier);
+        const toSend = await repository.Intent.toggleSendPdfResponse(areaIdentifier);
         setSendPdfWithResponse(toSend);
     };
 

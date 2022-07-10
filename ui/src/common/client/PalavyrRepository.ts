@@ -91,23 +91,23 @@ export class PalavyrRepository {
         getProducts: async () => this.client.get<ProductIds>(`products/all`),
     };
 
-    public Area = {
-        UpdateIsEnabled: async (areaToggleStateUpdate: boolean, intentId: string) => {
+    public Intent = {
+        ToggleIsEnabled: async (areaToggleStateUpdate: boolean, intentId: string) => {
             const update = this.client.put<boolean, {}>(`areas/area-toggle`, { IsEnabled: areaToggleStateUpdate, IntentId: intentId });
             SessionStorage.clearCacheValue(CacheIds.Areas);
             return update;
         },
-        UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, intentId: string) =>
+        ToggleUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, intentId: string) =>
             this.client.put<boolean, {}>(`intents/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate, IntentId: intentId }),
-        GetAreas: async () => this.client.get<Areas>("areas", CacheIds.Areas),
-        createArea: async (areaName: string) => {
+        GetAllIntents: async () => this.client.get<Areas>("areas", CacheIds.Areas),
+        CreateIntent: async (areaName: string) => {
             const newArea = await this.client.post<AreaTable, {}>(`intents/create`, { AreaName: areaName });
             const areas = SessionStorage.getCacheValue(CacheIds.Areas) as Areas;
             areas.push(newArea);
             SessionStorage.setCacheValue(CacheIds.Areas, areas);
             return newArea;
         },
-        updateAreaName: (areaIdentifier: string, areaName: string) => {
+        UpdateIntentName: (areaIdentifier: string, areaName: string) => {
             const result = this.client.put<string, {}>(`areas/update/name/${areaIdentifier}`, { AreaName: areaName });
             SessionStorage.clearCacheValue(CacheIds.Areas);
             return result;

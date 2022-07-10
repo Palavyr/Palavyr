@@ -42,7 +42,7 @@ export const EnableIntents = () => {
     const [intentIds, setIntentIds] = useState<AreasEnabled[]>([]);
 
     const loadIntents = useCallback(async () => {
-        const intentData = await repository.Area.GetAreas();
+        const intentData = await repository.Intent.GetAllIntents();
         const areaIdentifiers = intentData.map((x: AreaTable) => {
             return {
                 areaId: x.areaIdentifier,
