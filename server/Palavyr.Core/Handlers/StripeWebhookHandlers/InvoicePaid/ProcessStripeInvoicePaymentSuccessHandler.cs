@@ -9,21 +9,24 @@ using Palavyr.Core.Stores;
 using Stripe;
 using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
-namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid
+namespace Palavyr.Core.Handlers.StripeWebhookHandlers.InvoicePaid
 {
     public class ProcessStripeInvoicePaymentSuccessHandler : INotificationHandler<InvoicePaymentSuccessfulEvent>
     {
         private readonly IEntityStore<Account> accountStore;
+        private readonly IStripeWebhookAccountGetter stripeWebhookAccountGetter;
         private readonly ILogger<ProcessStripeInvoicePaymentSuccessHandler> logger;
         private readonly ISesEmail emailClient;
 
         public ProcessStripeInvoicePaymentSuccessHandler(
             IEntityStore<Account> accountStore,
+            IStripeWebhookAccountGetter stripeWebhookAccountGetter,
             ILogger<ProcessStripeInvoicePaymentSuccessHandler> logger,
             ISesEmail emailClient
         )
         {
             this.accountStore = accountStore;
+            this.stripeWebhookAccountGetter = stripeWebhookAccountGetter;
             this.logger = logger;
             this.emailClient = emailClient;
         }
@@ -31,12 +34,7 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid
         public async Task Handle(InvoicePaymentSuccessfulEvent notification, CancellationToken cancellationToken)
         {
             var invoice = notification.Invoice;
-            var account = await accountStore.Get(invoice.CustomerId, s => s.StripeCustomerId);
-            if (account == null)
-            {
-                logger.LogDebug("Error retrieving account by customer ID");
-                throw new Exception("ERROR TODO: EMAIL paul.e.gradie@gmail.com to manually set status");
-            }
+            var account = await stripeWebhookAccountGetter.GetAccount(invoice.CustomerId);
 
             account.CurrentPeriodEnd = invoice.Subscription.CurrentPeriodEnd;
 

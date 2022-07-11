@@ -2,7 +2,7 @@
 
 namespace Palavyr.IntegrationTests.DataCreators.StripeBuilders
 {
-    public static partial class StripeBuilderExtensionMethods
+    public static class StripeBuilderExtensionMethods
     {
         public static StripeSubscriptionBuilder CreateStripeSubscriptionBuilder(this IntegrationTest test)
         {

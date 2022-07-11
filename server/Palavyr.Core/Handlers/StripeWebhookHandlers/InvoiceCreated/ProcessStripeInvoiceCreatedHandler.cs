@@ -9,31 +9,33 @@ using Palavyr.Core.Stores;
 using Stripe;
 using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
-namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated
+namespace Palavyr.Core.Handlers.StripeWebhookHandlers.InvoiceCreated
 {
     public class ProcessStripeInvoiceCreatedHandler : INotificationHandler<StripeInvoiceCreatedEvent>
     {
+        private readonly IStripeWebhookAccountGetter stripeWebhookAccountGetter;
         private readonly ILogger<ProcessStripeInvoiceCreatedHandler> logger;
         private readonly ISesEmail emailClient;
         private readonly IEntityStore<Account> accountStore;
 
         public ProcessStripeInvoiceCreatedHandler(
+            IStripeWebhookAccountGetter stripeWebhookAccountGetter,
             ILogger<ProcessStripeInvoiceCreatedHandler> logger,
             ISesEmail emailClient,
             IEntityStore<Account> accountStore)
         {
+            this.stripeWebhookAccountGetter = stripeWebhookAccountGetter;
             this.logger = logger;
             this.emailClient = emailClient;
             this.accountStore = accountStore;
         }
 
-        public async Task Handle(StripeInvoiceCreatedEvent notifcation, CancellationToken cancellationToken)
+        public async Task Handle(StripeInvoiceCreatedEvent notification, CancellationToken cancellationToken)
         {
-            var invoiceCreated = notifcation.invoice;
-            logger.LogDebug(invoiceCreated.Currency);
-            Console.WriteLine();
+            var invoiceCreated = notification.invoice;
+            logger.LogDebug("{Currency}", invoiceCreated.Currency);
 
-            var account = await accountStore.Get(invoiceCreated.CustomerId, s => s.StripeCustomerId);
+            var account = await stripeWebhookAccountGetter.GetAccount(invoiceCreated.CustomerId);
 
             string dueDate;
             if (invoiceCreated.DueDate is null)

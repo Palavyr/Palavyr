@@ -9,7 +9,6 @@ namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
     public class ModifyAreaEmailTemplateController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "email/email-template";
 
 
         public ModifyAreaEmailTemplateController(
@@ -19,7 +18,7 @@ namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
             this.mediator = mediator;
         }
 
-        [HttpPut(Route)]
+        [HttpPut(ModifyAreaEmailTemplateRequest.Route)]
         public async Task<string> Modify([FromBody] ModifyAreaEmailTemplateRequest request, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);

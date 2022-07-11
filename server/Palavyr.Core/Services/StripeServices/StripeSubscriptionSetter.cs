@@ -18,30 +18,25 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
     public class StripeSubscriptionSetter : IStripeSubscriptionSetter
     {
         private readonly IEntityStore<Account> accountStore;
+        private readonly IStripeWebhookAccountGetter stripeWebhookAccountGetter;
         private readonly ILogger<StripeSubscriptionSetter> logger;
         private readonly IStripeSubscriptionService stripeSubscriptionService;
 
         public StripeSubscriptionSetter(
             IEntityStore<Account> accountStore,
+            IStripeWebhookAccountGetter stripeWebhookAccountGetter,
             ILogger<StripeSubscriptionSetter> logger,
             IStripeSubscriptionService stripeSubscriptionService)
         {
             this.accountStore = accountStore;
+            this.stripeWebhookAccountGetter = stripeWebhookAccountGetter;
             this.logger = logger;
             this.stripeSubscriptionService = stripeSubscriptionService;
         }
 
         public async Task SetSubscription(Session session, CancellationToken cancellationToken)
         {
-            var account = await accountStore
-                .DangerousRawQuery()
-                .SingleOrDefaultAsync(x => x.StripeCustomerId == session.CustomerId);
-
-            if (account == null)
-            {
-                throw new Exception("ERROR TODO: EMAIL paul.e.gradie@gmail.com to manually set status");
-            }
-
+            var account = await stripeWebhookAccountGetter.GetAccount(session.CustomerId);
             var subscription = await stripeSubscriptionService.GetSubscription(session);
 
             var planTypeEnum = await stripeSubscriptionService.GetPlanTypeEnum(subscription);

@@ -1,10 +1,12 @@
-﻿using System.Security.Authentication;
+﻿using System.Linq;
+using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
+using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.StripeServices;
 using Stripe;
 
@@ -43,6 +45,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             var httpContext = request.HttpContext;
             var (stripeEvent, signature) = await stripeWebhookAuthService.AuthenticateWebhookRequest(httpContext);
+            
+            
             if (stripeEvent == null)
             {
                 logger.LogDebug("Stripe webhook authentication failed. Check that you are using the correct webhook auth key");

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data.Setup.WelcomeEmail;
+using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;

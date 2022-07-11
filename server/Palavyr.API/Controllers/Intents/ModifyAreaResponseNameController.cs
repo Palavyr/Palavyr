@@ -1,4 +1,6 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,35 +10,84 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.API.Controllers.Intents
 {
-    [Authorize]
     public class ModifyIntentNameController : PalavyrBaseController
     {
-        private readonly IEntityStore<Area> intentStore;
-        private readonly ILogger<ModifyIntentNameController> logger;
+        private readonly IMediator mediator;
 
         public ModifyIntentNameController(
-            IEntityStore<Area> intentStore,
-            ILogger<ModifyIntentNameController> logger
+            IMediator mediator
         )
+        {
+            this.mediator = mediator;
+        }
+
+        public class IntentNameBody
+        {
+            public string AreaName { get; set; }
+        }
+
+        [HttpPut(ModifyIntentNameRequest.Route)]
+        public async Task<string> Modify(
+            [FromBody]
+            IntentNameBody intentNameText,
+            string intentId,
+            CancellationToken cancellationToken
+        )
+        {
+            var response = await mediator.Send(new ModifyIntentNameRequest(), cancellationToken);
+            return response.IntentName;
+        }
+    }
+
+    public class ModifyIntentNameHandler : IRequestHandler<ModifyIntentNameRequest, ModifyIntentNameResponse>
+    {
+        private readonly IEntityStore<Area> intentStore;
+        private readonly ILogger<ModifyIntentNameHandler> logger;
+
+        public ModifyIntentNameHandler(
+            IEntityStore<Area> intentStore,
+            ILogger<ModifyIntentNameHandler> logger)
         {
             this.intentStore = intentStore;
             this.logger = logger;
         }
 
-        [HttpPut("areas/update/name/{intentId}")]
-        public async Task<string> Modify(
-            [FromBody]
-            UpdateIntentNameRequest intentNameText,
-            string intentId
-        )
+        public async Task<ModifyIntentNameResponse> Handle(ModifyIntentNameRequest request, CancellationToken cancellationToken)
         {
+            var intentId = request.IntentId;
+            var newName = request.AreaName;
+
             var intent = await intentStore.Get(intentId, s => s.AreaIdentifier);
-            if (intentNameText.AreaName != intent.AreaName)
+            if (newName != intent.AreaName)
             {
-                intent.AreaName = intentNameText.AreaName;
+                intent.AreaName = newName;
             }
 
-            return intentNameText.AreaName;
+            return new ModifyIntentNameResponse(newName);
+        }
+    }
+
+
+    public class ModifyIntentNameRequest : IRequest<ModifyIntentNameResponse>
+    {
+        public const string Route = "areas/update/name/{intentId}";
+
+        public static string FormatRoute(string intentId)
+        {
+            return Route.Replace("{intentId}", intentId);
+        }
+
+        public string AreaName { get; set; }
+        public string IntentId { get; set; }
+    }
+
+    public class ModifyIntentNameResponse
+    {
+        public string IntentName { get; }
+
+        public ModifyIntentNameResponse(string intentName)
+        {
+            IntentName = intentName;
         }
     }
 }

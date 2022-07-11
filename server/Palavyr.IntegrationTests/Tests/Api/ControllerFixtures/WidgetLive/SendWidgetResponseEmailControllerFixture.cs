@@ -8,7 +8,6 @@ using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
-using Test.Common.Random;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -44,7 +43,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             };
 
             // act
-            var response = await ApikeyClient.Post<SendWidgetResponseEmailRequest, SendLiveEmailResultResource>(emailRequest, CancellationToken, s => s.Replace("{intentId}", intentId));
+            var response = await ApikeyClient.Post<SendWidgetResponseEmailRequest, SendLiveEmailResultResource>(emailRequest, CancellationToken, s => s.Replace("{intentId}", intent.AreaIdentifier));
 
             // assert
             response.NextNodeId.ShouldBe(EndingSequenceAttacher.EmailSuccessfulNodeId);

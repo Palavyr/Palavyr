@@ -55,10 +55,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public string AreaName { get; set; }
     }
-
-    public class UpdateIntentNameRequest : CreateIntentRequest
-    {
-    }
+    
 
     public class CreateIntentResponse
     {

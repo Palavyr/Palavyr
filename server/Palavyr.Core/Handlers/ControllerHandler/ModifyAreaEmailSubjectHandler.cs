@@ -35,6 +35,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyAreaEmailSubjectRequest : IRequest<ModifyAreaEmailSubjectResponse>
     {
+        public const string Route = "email/subject";
+
         public string Subject { get; set; }
         public string IntentId { get; set; }
     }

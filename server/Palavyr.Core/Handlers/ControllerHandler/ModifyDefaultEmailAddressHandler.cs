@@ -7,6 +7,7 @@ using Amazon.SimpleEmail.Model;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
+using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;

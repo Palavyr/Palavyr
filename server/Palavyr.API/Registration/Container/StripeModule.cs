@@ -44,7 +44,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<StripeProductService>().As<IStripeProductService>().InstancePerDependency();
             builder.RegisterType<StripeCustomerManagementPortalService>().As<IStripeCustomerManagementPortalService>();
             builder.RegisterType<StripeSubscriptionRetriever>().As<IStripeSubscriptionRetriever>();
-
+            builder.RegisterType<StripeWebhookAccountGetter>().As<IStripeWebhookAccountGetter>();
             builder.RegisterType<StripeSubscriptionSetter>().As<IStripeSubscriptionSetter>();
             
             builder.Register(

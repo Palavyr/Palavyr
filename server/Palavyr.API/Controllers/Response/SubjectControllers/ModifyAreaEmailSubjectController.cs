@@ -9,7 +9,6 @@ namespace Palavyr.API.Controllers.Response.SubjectControllers
     public class ModifyAreaEmailSubjectController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "email/subject";
 
         public ModifyAreaEmailSubjectController(
             IMediator mediator)
@@ -17,7 +16,7 @@ namespace Palavyr.API.Controllers.Response.SubjectControllers
             this.mediator = mediator;
         }
 
-        [HttpPut(Route)]
+        [HttpPut(ModifyAreaEmailSubjectRequest.Route)]
         public async Task<string> Modify(
             [FromBody]
             ModifyAreaEmailSubjectRequest request,

@@ -36,7 +36,7 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
         public async Task Handle(PriceUpdatedEvent notification, CancellationToken cancellationToken)
         {
             var priceUpdate = notification.price;
-            var accounts = await accountStore.Query()
+            var accounts = await accountStore.RawReadonlyQuery()
                 .Where(row => row.PlanType == Account.PlanTypeEnum.Premium || row.PlanType == Account.PlanTypeEnum.Pro)
                 .ToListAsync(CancellationToken);
             

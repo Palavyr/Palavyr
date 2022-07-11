@@ -1,15 +1,16 @@
-﻿using Humanizer;
+﻿using System;
+using Humanizer;
 
-namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated
+namespace Palavyr.Core.Handlers.StripeWebhookHandlers.InvoicePaid
 {
-    public static class InvoiceCreatedEmail
+    public static class PaymentSucceededEmail
     {
-        public static string GetInvoiceCreatedEmailText(string currency, string amountDue, string dueDate)
+        public static string GetPaymentSucceededEmailText(DateTime endDate)
         {
-            return $"Your next invoice. Amount: {currency}{amountDue} - Due Date: {dueDate.Humanize()} on {dueDate}";
+            return $"Thank you for your payment. Your subscription will be valid until {endDate.Humanize()}";
         }
 
-        public static string GetInvoiceCreatedEmailHtml(string currency, string amountDue, string dueDate)
+        public static string GetPaymentSucceededEmailHtml(DateTime endDate)
         {
             return $@"
 <!DOCTYPE html>
@@ -59,28 +60,26 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCrea
                 '
                 id='body'
             >
+            <div style='text-align: center;'>
+
+                <h2>Payment Successful</h2>
+            </div>
                 <div style='text-align: center'>
-                    <h2>Your next invoice</h2>
+                    <img src='https://palavyr-public-assets.s3.amazonaws.com/paymentSuccess.gif' />
                 </div>
-                <div style='text-align: center'>
-                    <span>(Whenever you are ready)</span>
-                    <img src='https://palavyr-public-assets.s3.amazonaws.com/whenYouAreReady.gif' width='400px'/>
-                </div>
-                <p></p>
                 <p>
-                    Amount Due: {currency}{amountDue}.00
+                    Thanks for recent payment. It really goes a long way to keeping Palavyr going.
                 </p>
                 <p>
-                    Due Date: {dueDate}
-                </p>
-                <p>
-                    This invoice will be automatically billed at the end of this billing period.
+                    Your subscription will continue to be valid through the next payment period: {endDate.Humanize()}
                 </p>
                 <p>
                     If you have any questions, need any help, or run into any issues while using Palavyr.com, reach out
                     to us at info.palavyr@gmail.com
                 </p>
-                <p>Thanks again for subscribing!</p>
+                <p>
+                    Thanks again!
+                </p>
                 <p>
                     Sincerely,
                     <br /><br />

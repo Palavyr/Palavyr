@@ -8,30 +8,43 @@ using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Stores;
 using Stripe;
 using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
-namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.SubscriptionCreated
+
+namespace Palavyr.Core.Handlers.StripeWebhookHandlers.SubscriptionCreated
 {
     public class ProcessStripeSubscriptionCreatedHandler : INotificationHandler<SubscriptionCreatedEvent>
     {
+        private readonly IStripeWebhookAccountGetter stripeWebhookAccountGetter;
         private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<ProcessStripeSubscriptionCreatedHandler> logger;
         private readonly ISesEmail client;
 
         public ProcessStripeSubscriptionCreatedHandler(
+            IStripeWebhookAccountGetter stripeWebhookAccountGetter,
             IEntityStore<Account> accountStore,
             ILogger<ProcessStripeSubscriptionCreatedHandler> logger,
             ISesEmail client
         )
         {
+            this.stripeWebhookAccountGetter = stripeWebhookAccountGetter;
             this.accountStore = accountStore;
             this.logger = logger;
             this.client = client;
         }
-
+        
+        // to test this in an automated way, we'll need to craete ana ccount, start a silent process
+        // for the duration of the test, listen, and then start a second event triggering the 
+        // webhook with an event (via the cli). use the --add option to provide the custerom id
+        // so that the api can actually find itin the database. Durr
+        
+        //cus_M2PtMYOgAdgwhS
+        // --add [resource]:[path1].[path2]=[value]
+        // Add the param path1.path2 to the `resource. Example: --add payment_intent:customer=customerId
         public async Task Handle(SubscriptionCreatedEvent @event, CancellationToken cancellationToken)
         {
             var subscription = @event.subscription;
 
-            var account = await subscription.GetAccount(accountStore, logger);
+            var account = await stripeWebhookAccountGetter.GetAccount(subscription.CustomerId);
+            
             var customerEmail = account.EmailAddress;
             var htmlBody = SubscriptionCreated.GetSubscriptionCreatedHtml();
             var textBody = SubscriptionCreated.GetSubscriptionCreatedText();

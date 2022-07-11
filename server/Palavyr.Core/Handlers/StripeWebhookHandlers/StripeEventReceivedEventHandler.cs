@@ -18,7 +18,7 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
         public async Task Handle(StripeEventProcessedSuccessfullyEvent notification, CancellationToken cancellationToken)
         {
             var newRecord = StripeWebhookReceivedRecord.CreateNewRecord(notification.Id, notification.Signature);
-            await stripeWebhookStore.Create(newRecord);
+            stripeWebhookStore.DangerousRawQuery().Add(newRecord);
         }
     }
 

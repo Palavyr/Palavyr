@@ -61,22 +61,25 @@ namespace Palavyr.IntegrationTests.DataCreators
             if (sendPdfResponse != null)
             {
                 newIntent.SendPdfResponse = this.sendPdfResponse.Value;
-                await test.Client.Post<ModifySendResponsePdfController
+                await test.Client.Post<ModifySendResponseRequest, bool>(test.CancellationToken, s => ModifySendResponseRequest.FormatRoute(newIntent.AreaIdentifier));
             }
 
             if (emailTemplate != null && !string.IsNullOrEmpty(emailTemplate))
             {
                 newIntent.EmailTemplate = emailTemplate;
+                await test.Client.Post<ModifyAreaEmailTemplateRequest, string>(test.CancellationToken);
             }
 
             if (subject != null && !string.IsNullOrEmpty(subject))
             {
                 newIntent.Subject = subject;
+                await test.Client.Post<ModifyAreaEmailSubjectRequest, string>(test.CancellationToken);
             }
 
             if (name != null && !string.IsNullOrEmpty(name))
             {
                 newIntent.AreaName = name;
+                await test.Client.Post<ModifyIntentNameRequest, string>(test.CancellationToken, _ => ModifyIntentNameRequest.FormatRoute(newIntent.AreaIdentifier));
             }
 
             

@@ -12,22 +12,25 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
     public class ProcessStripePaymentMethodUpdatedHandler : INotificationHandler<PaymentMethodUpdatedEvent>
     {
         private readonly ISesEmail emailClient;
+        private readonly IStripeWebhookAccountGetter stripeWebhookAccountGetter;
         private readonly IEntityStore<Account> accountStore;
 
         public ProcessStripePaymentMethodUpdatedHandler(
             ISesEmail emailClient,
+            IStripeWebhookAccountGetter stripeWebhookAccountGetter,
             IEntityStore<Account> accountStore
         )
         {
             this.emailClient = emailClient;
+            this.stripeWebhookAccountGetter = stripeWebhookAccountGetter;
             this.accountStore = accountStore;
         }
 
         public async Task Handle(PaymentMethodUpdatedEvent notification, CancellationToken cancellationToken)
         {
             var paymentMethodUpdate = notification.paymentMethod;
-            var account = await accountStore.Get(paymentMethodUpdate.CustomerId, s => s.StripeCustomerId);
-
+            var account = await stripeWebhookAccountGetter.GetAccount(paymentMethodUpdate.CustomerId);
+            
             if (paymentMethodUpdate.Livemode)
             {
                 if (account == null)

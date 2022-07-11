@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
+using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;

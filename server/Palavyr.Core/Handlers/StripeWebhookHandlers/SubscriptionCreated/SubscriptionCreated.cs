@@ -1,4 +1,4 @@
-﻿namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.SubscriptionCreated
+﻿namespace Palavyr.Core.Handlers.StripeWebhookHandlers.SubscriptionCreated
 {
     public static class SubscriptionCreated
     {

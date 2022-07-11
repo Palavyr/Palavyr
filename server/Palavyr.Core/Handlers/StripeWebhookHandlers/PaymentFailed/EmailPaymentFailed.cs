@@ -1,7 +1,7 @@
 ﻿using System;
 using Humanizer;
 
-namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed
+namespace Palavyr.Core.Handlers.StripeWebhookHandlers.PaymentFailed
 {
     public class EmailPaymentFailed
     {

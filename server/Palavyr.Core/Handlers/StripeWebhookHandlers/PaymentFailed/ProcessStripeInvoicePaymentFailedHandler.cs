@@ -9,7 +9,7 @@ using Stripe;
 using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 
-namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed
+namespace Palavyr.Core.Handlers.StripeWebhookHandlers.PaymentFailed
 {
     public interface IProcessStripeInvoicePaymentFailedHandler
     {
@@ -18,16 +18,19 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFail
 
     public class ProcessStripeInvoicePaymentFailedHandler : INotificationHandler<InvoicePaymentFailedEvent>
     {
+        private readonly IStripeWebhookAccountGetter stripeWebhookAccountGetter;
         private readonly ILogger<ProcessStripeInvoicePaymentFailedHandler> logger;
         private readonly IEntityStore<Account> accountStore;
         private readonly ISesEmail emailClient;
 
         public ProcessStripeInvoicePaymentFailedHandler(
+            IStripeWebhookAccountGetter stripeWebhookAccountGetter,
             ILogger<ProcessStripeInvoicePaymentFailedHandler> logger,
             IEntityStore<Account> accountStore,
             ISesEmail emailClient
         )
         {
+            this.stripeWebhookAccountGetter = stripeWebhookAccountGetter;
             this.logger = logger;
             this.accountStore = accountStore;
             this.emailClient = emailClient;
@@ -36,7 +39,8 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFail
         public async Task Handle(InvoicePaymentFailedEvent notification, CancellationToken cancellationToken)
         {
             var invoice = notification.invoice;
-            var account = await accountStore.Get(invoice.CustomerId, s => s.StripeCustomerId);
+
+            var account = await stripeWebhookAccountGetter.GetAccount(invoice.CustomerId);
 
             // if we don't get payment, we don't update the currentPeriodEnd. We check this at the beginning of each login, so
             // if we don't update, then time moves forward, and eventually the login will set IsActive to false. If isActive is false,

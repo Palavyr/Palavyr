@@ -1,6 +1,9 @@
-﻿using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Stores;
 
@@ -17,7 +20,14 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 
         public async Task<NewStripeEventReceivedEventResponse> Handle(NewStripeEventReceivedEvent notification, CancellationToken cancellationToken)
         {
-            var records = await stripeWebhookStore.GetMany(notification.Signature, s => s.PayloadSignature);
+            var records = await stripeWebhookStore
+                .RawReadonlyQuery()
+                .Where(x => x.PayloadSignature == notification.Signature)
+                .ToListAsync(cancellationToken);
+            if (records is null)
+            {
+                throw new Exception("Couldn't find any records");
+            }
             var exists = records.Count > 0;
             return new NewStripeEventReceivedEventResponse(shouldCancelProcessing: exists);
         }
