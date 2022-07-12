@@ -1,6 +1,4 @@
 ﻿using Autofac;
-using MediatR;
-using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.StripeServices;

@@ -190,7 +190,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<S3Downloader>().As<IS3Downloader>();
             builder.RegisterType<SafeFileNameCreator>().As<ISafeFileNameCreator>();
             builder.RegisterType<SelectOneFlatNodeUpdater>().As<ISelectOneFlatNodeUpdater>();
-            builder.RegisterType<SesEmail>().As<ISesEmail>();
+            builder.RegisterType<SesEmail>().As<ISesEmail>().InstancePerLifetimeScope();
 
             builder.RegisterType<SelectOneFlatCompiler>().As<ISelectOneFlatCompiler>();
             builder.RegisterType<TwoNestedCategoryCompiler>().As<ITwoNestedCategoryCompiler>();

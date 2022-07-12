@@ -1,14 +1,12 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Stores;
 using Session = Stripe.Checkout.Session;
 
-namespace Palavyr.Core.Handlers.StripeWebhookHandlers
+namespace Palavyr.Core.Services.StripeServices
 {
     public interface IStripeSubscriptionSetter
     {

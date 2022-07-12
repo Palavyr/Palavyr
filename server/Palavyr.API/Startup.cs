@@ -1,4 +1,3 @@
-
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -54,18 +53,17 @@ namespace Palavyr.API
             services.AddHttpContextAccessor();
             services.AddControllers().AddControllersAsServices();
             services.AddAuthentication().AddCertificate();
-            services.AddHttpsRedirection(
-                opts =>
-                {
-                    opts.HttpsPort = 5001;
-                });
+            // services.AddHttpsRedirection(
+            //     opts =>
+            //     {
+            //         opts.HttpsPort = 5001;
+            //     });
             CorsConfiguration.ConfigureCorsService(services, environ);
             Configurations.ConfigureStripe(config);
             RegisterStores(services, config);
             ServiceRegistry.RegisterHealthChecks(services);
             ServiceRegistry.RegisterIisConfiguration(services, environ);
             MediatorRegistry.RegisterMediator(services);
-            
         }
 
         public void Configure(

@@ -29,6 +29,7 @@ namespace Palavyr.IntegrationTests.Mocks
                 .SingleOrDefaultAsync(x => x.AuthenticationToken == IntegrationTest.ConfirmationToken);
             var account = await accountStore.Get(verificationRecord.AccountId, s => s.AccountId);
             account.Active = true;
+            
             return true;
         }
 

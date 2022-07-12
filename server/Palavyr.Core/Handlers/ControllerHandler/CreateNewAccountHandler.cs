@@ -17,7 +17,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<CreateNewAccountResponse> Handle(CreateNewAccountRequest request, CancellationToken cancellationToken)
         {
-            var credentials = await setupService.CreateNewAccountViaDefaultAsync(request.EmailAddress, request.Password, cancellationToken);
+            var credentials = await setupService.CreateNewAccount(request.EmailAddress, request.Password, cancellationToken);
             return new CreateNewAccountResponse(credentials);
         }
     }

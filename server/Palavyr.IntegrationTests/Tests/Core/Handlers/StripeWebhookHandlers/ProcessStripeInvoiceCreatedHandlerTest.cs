@@ -39,13 +39,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 
             var ses = (IGetEmailSent)Container.GetService<ISesEmail>();
 
+            // TODO: The order of the mock registrations is wrong - the real rego i shappening avfter the mco!K?
             this.PalavyrAssent(ses.GetSentHtml());
-        }
-
-        public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
-        {
-            builder.RegisterType<MockSeSEmail>().As<ISesEmail>().SingleInstance();
-            return base.CustomizeContainer(builder);
         }
 
         public ProcessStripeInvoiceCreatedHandlerTest(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)

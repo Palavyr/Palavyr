@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Stripe.BillingPortal;
 
-namespace Palavyr.Core.Handlers.StripeWebhookHandlers
+namespace Palavyr.Core.Services.StripeServices
 {
     public interface IStripeCustomerManagementPortalService
     {

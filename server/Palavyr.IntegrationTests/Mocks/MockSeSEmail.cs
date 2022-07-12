@@ -12,8 +12,8 @@ namespace Palavyr.IntegrationTests.Mocks
 
     public class MockSeSEmail : ISesEmail, IGetEmailSent
     {
-        public string SentText { get; set; }
-        public string SentHtml { get; set; }
+        public string SentText { get; set; } = "uhljhl";
+        public string SentHtml { get; set; } = "ljhlkjhlk";
 
         public string GetSentText()
         {

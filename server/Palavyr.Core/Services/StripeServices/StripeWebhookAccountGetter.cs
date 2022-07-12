@@ -6,7 +6,7 @@ using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
-namespace Palavyr.Core.Handlers.StripeWebhookHandlers
+namespace Palavyr.Core.Services.StripeServices
 {
     public class StripeWebhookAccountGetter : IStripeWebhookAccountGetter
     {

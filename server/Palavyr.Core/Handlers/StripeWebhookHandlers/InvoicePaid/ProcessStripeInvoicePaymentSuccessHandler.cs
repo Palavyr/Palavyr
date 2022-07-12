@@ -2,32 +2,24 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
-using Palavyr.Core.Stores;
+using Palavyr.Core.Services.StripeServices;
 using Stripe;
-using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers.InvoicePaid
 {
     public class ProcessStripeInvoicePaymentSuccessHandler : INotificationHandler<InvoicePaymentSuccessfulEvent>
     {
-        private readonly IEntityStore<Account> accountStore;
         private readonly IStripeWebhookAccountGetter stripeWebhookAccountGetter;
-        private readonly ILogger<ProcessStripeInvoicePaymentSuccessHandler> logger;
         private readonly ISesEmail emailClient;
 
         public ProcessStripeInvoicePaymentSuccessHandler(
-            IEntityStore<Account> accountStore,
             IStripeWebhookAccountGetter stripeWebhookAccountGetter,
-            ILogger<ProcessStripeInvoicePaymentSuccessHandler> logger,
             ISesEmail emailClient
         )
         {
-            this.accountStore = accountStore;
             this.stripeWebhookAccountGetter = stripeWebhookAccountGetter;
-            this.logger = logger;
             this.emailClient = emailClient;
         }
 
@@ -51,7 +43,6 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers.InvoicePaid
             {
                 throw new Exception($"This email should be verified: {account.EmailAddress}");
             }
-            // }
         }
     }
 

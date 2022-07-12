@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
+using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.StripeServices.Products;
+using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Stripe;
 using Xunit;
@@ -29,8 +29,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
                 // TODO: Configure
             };
 
-            var accountStore = ResolveStore<Account>();
-            var handler = new ProcessStripeSubscriptionUpdatedHandler(accountStore, service, registry, Substitute.For<ILogger<ProcessStripeSubscriptionUpdatedHandler>>());
+            var accountGetter = new StripeWebhookAccountGetter(ResolveStore<Account>(), ResolveType<IAccountIdTransport>());
+
+            var handler = new ProcessStripeSubscriptionUpdatedHandler(accountGetter, service);
             await Task.CompletedTask;
             // act
             // await handler.Handle(new SubscriptionUpdatedEvent(subscription), CancellationToken.None);

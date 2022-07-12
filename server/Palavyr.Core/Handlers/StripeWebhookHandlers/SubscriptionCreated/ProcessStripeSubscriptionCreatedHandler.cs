@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Stores;
 using Stripe;
 using Account = Palavyr.Core.Models.Accounts.Schemas.Account;

@@ -63,7 +63,7 @@ namespace Palavyr.Core.Services.AccountServices
             return session;
         }
 
-        public async Task<Credentials> CreateNewAccountViaDefaultAsync(string emailAddress, string password, CancellationToken cancellationToken)
+        public async Task<Credentials> CreateNewAccount(string emailAddress, string password, CancellationToken cancellationToken)
         {
             // confirm account doesn't already exist
             var accountExists = await AccountExists(emailAddress);

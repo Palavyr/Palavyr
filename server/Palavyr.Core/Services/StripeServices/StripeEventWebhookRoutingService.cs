@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Handlers.StripeWebhookHandlers.InvoiceCreated;
 using Palavyr.Core.Handlers.StripeWebhookHandlers.InvoicePaid;
 using Palavyr.Core.Handlers.StripeWebhookHandlers.PaymentFailed;
@@ -9,7 +10,7 @@ using Palavyr.Core.Handlers.StripeWebhookHandlers.SubscriptionCreated;
 using Stripe;
 using Stripe.Checkout;
 
-namespace Palavyr.Core.Handlers.StripeWebhookHandlers
+namespace Palavyr.Core.Services.StripeServices
 {
     public interface IStripeEventWebhookRoutingService
     {

@@ -2,9 +2,12 @@
 using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Handlers.StripeWebhookHandlers.PaymentFailed;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.DataCreators.StripeBuilders;
 using Palavyr.IntegrationTests.Mocks;
@@ -23,7 +26,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
             var @event = new InvoicePaymentFailedEvent(invoice);
             var emailer = Container.GetService<ISesEmail>();
             var logger = Container.GetService<ILogger<ProcessStripeInvoicePaymentFailedHandler>>();
-            var handler = new ProcessStripeInvoicePaymentFailedHandler(logger, ResolveStore<Account>(), emailer);
+            var accountGetter = new StripeWebhookAccountGetter(ResolveStore<Account>(), ResolveType<IAccountIdTransport>());
+            var handler = new ProcessStripeInvoicePaymentFailedHandler(accountGetter, logger, emailer);
 
             await handler.Handle(@event, CancellationToken);
 

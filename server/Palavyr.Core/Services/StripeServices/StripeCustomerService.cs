@@ -10,7 +10,7 @@ using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Stripe;
 
-namespace Palavyr.Core.Handlers.StripeWebhookHandlers
+namespace Palavyr.Core.Services.StripeServices
 {
     public interface IStripeCustomerService
     {

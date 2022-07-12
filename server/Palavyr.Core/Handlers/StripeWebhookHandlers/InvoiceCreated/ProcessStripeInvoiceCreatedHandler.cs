@@ -5,9 +5,8 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
-using Palavyr.Core.Stores;
+using Palavyr.Core.Services.StripeServices;
 using Stripe;
-using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers.InvoiceCreated
 {
@@ -16,18 +15,15 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers.InvoiceCreated
         private readonly IStripeWebhookAccountGetter stripeWebhookAccountGetter;
         private readonly ILogger<ProcessStripeInvoiceCreatedHandler> logger;
         private readonly ISesEmail emailClient;
-        private readonly IEntityStore<Account> accountStore;
 
         public ProcessStripeInvoiceCreatedHandler(
             IStripeWebhookAccountGetter stripeWebhookAccountGetter,
             ILogger<ProcessStripeInvoiceCreatedHandler> logger,
-            ISesEmail emailClient,
-            IEntityStore<Account> accountStore)
+            ISesEmail emailClient)
         {
             this.stripeWebhookAccountGetter = stripeWebhookAccountGetter;
             this.logger = logger;
             this.emailClient = emailClient;
-            this.accountStore = accountStore;
         }
 
         public async Task Handle(StripeInvoiceCreatedEvent notification, CancellationToken cancellationToken)

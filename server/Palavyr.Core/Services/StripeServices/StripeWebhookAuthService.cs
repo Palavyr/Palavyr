@@ -9,7 +9,7 @@ using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Stores;
 using Stripe;
 
-namespace Palavyr.Core.Handlers.StripeWebhookHandlers
+namespace Palavyr.Core.Services.StripeServices
 {
     public interface IStripeWebhookAuthService
     {

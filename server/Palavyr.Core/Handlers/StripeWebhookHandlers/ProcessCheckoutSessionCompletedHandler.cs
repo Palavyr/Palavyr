@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Services.StripeServices;
 using Session = Stripe.Checkout.Session;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers

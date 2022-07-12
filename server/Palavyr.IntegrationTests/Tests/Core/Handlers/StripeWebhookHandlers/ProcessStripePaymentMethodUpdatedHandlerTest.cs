@@ -2,6 +2,8 @@
 using NSubstitute;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Stripe;
 using Xunit;
@@ -27,7 +29,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Handlers.StripeWebhookHandlers
 
             var mockClient = Substitute.For<ISesEmail>();
             var @event = new PaymentMethodUpdatedEvent(paymentMethod);
-            var handler = new ProcessStripePaymentMethodUpdatedHandler(mockClient, ResolveStore<Account>());
+            var accountGetter = new StripeWebhookAccountGetter(ResolveStore<Account>(), ResolveType<IAccountIdTransport>());
+
+            var handler = new ProcessStripePaymentMethodUpdatedHandler(mockClient, accountGetter);
 
             await handler.Handle(@event, CancellationToken);
 

@@ -4,9 +4,8 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
-using Palavyr.Core.Stores;
+using Palavyr.Core.Services.StripeServices;
 using Stripe;
-using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers.PaymentFailed
@@ -20,19 +19,16 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers.PaymentFailed
     {
         private readonly IStripeWebhookAccountGetter stripeWebhookAccountGetter;
         private readonly ILogger<ProcessStripeInvoicePaymentFailedHandler> logger;
-        private readonly IEntityStore<Account> accountStore;
         private readonly ISesEmail emailClient;
 
         public ProcessStripeInvoicePaymentFailedHandler(
             IStripeWebhookAccountGetter stripeWebhookAccountGetter,
             ILogger<ProcessStripeInvoicePaymentFailedHandler> logger,
-            IEntityStore<Account> accountStore,
             ISesEmail emailClient
         )
         {
             this.stripeWebhookAccountGetter = stripeWebhookAccountGetter;
             this.logger = logger;
-            this.accountStore = accountStore;
             this.emailClient = emailClient;
         }
 
