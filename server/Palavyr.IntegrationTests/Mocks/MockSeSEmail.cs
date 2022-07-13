@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 
-namespace Palavyr.IntegrationTests.Mocks
+namespace IntegrationTests.Mocks
 {
     public interface IGetEmailSent
     {

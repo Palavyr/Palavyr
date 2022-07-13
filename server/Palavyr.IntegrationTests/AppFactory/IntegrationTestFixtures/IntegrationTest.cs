@@ -1,18 +1,16 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+using IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using IntegrationTests.DataCreators;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Stores;
-using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
-using Palavyr.IntegrationTests.DataCreators;
 using Xunit.Abstractions;
 
 // https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-3.1#inject-mock-services 
-namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
+namespace IntegrationTests.AppFactory.IntegrationTestFixtures
 {
     public abstract class IntegrationTest : IntegrationTest<DbTypes.Real>
     {

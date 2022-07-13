@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Stores;
 
-namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture
+namespace IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture
 {
     public class IntegrationTestMediatorNotificationHandlerDecorator<TEvent> : INotificationHandler<TEvent> where TEvent : INotification
     {

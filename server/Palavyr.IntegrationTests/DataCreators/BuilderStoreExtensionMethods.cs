@@ -1,10 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Sessions;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 
-namespace Palavyr.IntegrationTests.DataCreators
+namespace IntegrationTests.DataCreators
 {
     public static class BuilderStoreExtensionMethods
     {

@@ -1,17 +1,17 @@
 ﻿using System.Threading.Tasks;
+using IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+using IntegrationTests.AppFactory.IntegrationTestFixtures;
+using IntegrationTests.DataCreators;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Resources;
-using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
-using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
+namespace IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
 {
     public class SendWidgetResponseEmailControllerFixture : IntegrationTest
     {

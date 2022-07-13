@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
+using IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+using IntegrationTests.AppFactory.IntegrationTestFixtures;
 using MediatR;
-using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Palavyr.IntegrationTests.Tests
+namespace IntegrationTests.Tests
 {
     public class HealthCheckIntegrationTestBase : IntegrationTest
     {

@@ -1,4 +1,4 @@
-﻿namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture
+﻿namespace IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture
 {
     public class DbTypes
     {

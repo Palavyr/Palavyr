@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palavyr.API", "Palavyr.API\Palavyr.API.csproj", "{F94028DC-D62A-40BB-AF9C-B90979A6E82A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palavyr.UnitTests", "Palavyr.UnitTests\Palavyr.UnitTests.csproj", "{3CCE0B8A-0DA0-4611-A651-E1F6280D8D02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureTests", "PureTests\PureTests.csproj", "{3CCE0B8A-0DA0-4611-A651-E1F6280D8D02}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palavyr.Data.Migrator", "Palavyr.Data.Migrator\Palavyr.Data.Migrator.csproj", "{6AAB3D29-1B99-4F80-AC7E-39DD8EFC5EE6}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Common", "Test.Common\Test.Common.csproj", "{D5CEC399-5A10-4B79-BE4D-D366FCD3F8B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.Client", "Palavyr.Client\Palavyr.Client.csproj", "{6EC2CA61-7304-4167-97F0-F1D6368240B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComponentTests", "ComponentTests\ComponentTests.csproj", "{3BA05E8C-FA85-4410-89C1-367536C4B68A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{6EC2CA61-7304-4167-97F0-F1D6368240B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EC2CA61-7304-4167-97F0-F1D6368240B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EC2CA61-7304-4167-97F0-F1D6368240B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BA05E8C-FA85-4410-89C1-367536C4B68A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BA05E8C-FA85-4410-89C1-367536C4B68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BA05E8C-FA85-4410-89C1-367536C4B68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BA05E8C-FA85-4410-89C1-367536C4B68A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,5 +70,6 @@ Global
 		{3CCE0B8A-0DA0-4611-A651-E1F6280D8D02} = {4205BA0C-DAB4-429E-963B-88A095E9AD29}
 		{87699D0C-7890-44DF-93B5-B62C6D80EBFA} = {4205BA0C-DAB4-429E-963B-88A095E9AD29}
 		{D5CEC399-5A10-4B79-BE4D-D366FCD3F8B1} = {4205BA0C-DAB4-429E-963B-88A095E9AD29}
+		{3BA05E8C-FA85-4410-89C1-367536C4B68A} = {4205BA0C-DAB4-429E-963B-88A095E9AD29}
 	EndGlobalSection
 EndGlobal

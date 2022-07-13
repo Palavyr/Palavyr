@@ -1,13 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Stores;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 
-namespace Palavyr.IntegrationTests.Mocks
+namespace IntegrationTests.Mocks
 {
     public class MockEmailVerificationService : IEmailVerificationService
     {

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Palavyr.IntegrationTests.AppFactory.TestAuthentication
+namespace IntegrationTests.AppFactory.TestAuthentication
 {
     public class TestAuthenticationHandler : AuthenticationHandler<TestAuthenticationSchemeOptions>
     {

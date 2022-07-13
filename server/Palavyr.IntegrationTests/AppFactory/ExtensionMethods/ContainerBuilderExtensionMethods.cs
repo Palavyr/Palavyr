@@ -2,7 +2,7 @@
 using Autofac;
 using Palavyr.Core.Sessions;
 
-namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
+namespace IntegrationTests.AppFactory.ExtensionMethods
 {
     public static class ContainerBuilderExtensionMethods
     {

@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Test.Common.Random;
 
-namespace Palavyr.IntegrationTests.DataCreators
+namespace IntegrationTests.DataCreators
 {
     public static partial class BuilderExtensionMethods
     {

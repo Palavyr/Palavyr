@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>Palavyr.IntegrationTests</RootNamespace>
+        <RootNamespace>IntegrationTests</RootNamespace>
       <UserSecretsId>d50d54cd-7578-46ae-be18-9c2ea74993b6</UserSecretsId>
       <Nullable>enable</Nullable>
   </PropertyGroup>

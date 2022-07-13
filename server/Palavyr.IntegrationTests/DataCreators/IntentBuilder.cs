@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
+using IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.API.Controllers.Intents;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Resources;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Test.Common.Random;
 
-namespace Palavyr.IntegrationTests.DataCreators
+namespace IntegrationTests.DataCreators
 {
     public static partial class BuilderExtensionMethods
     {

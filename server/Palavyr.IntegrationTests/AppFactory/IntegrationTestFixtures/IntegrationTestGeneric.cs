@@ -1,13 +1,13 @@
 ﻿using Autofac;
+using IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+using IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using IntegrationTests.Mocks;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.StripeServices;
-using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
-using Palavyr.IntegrationTests.Mocks;
 using Xunit.Abstractions;
 
-namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
+namespace IntegrationTests.AppFactory.IntegrationTestFixtures
 {
     public abstract class IntegrationTest<DbType> : IntegrationTestBase<DbType> where DbType : DbTypes
     {
@@ -23,6 +23,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
             builder.RegisterType<MockSeSEmail>().As<ISesEmail>();
 
             return base.CustomizeContainer(builder);
-        }
+        }   
     }
 }

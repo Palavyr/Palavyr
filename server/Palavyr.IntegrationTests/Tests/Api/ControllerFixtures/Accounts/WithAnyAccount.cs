@@ -1,18 +1,18 @@
 ﻿using System.Threading.Tasks;
+using IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+using IntegrationTests.AppFactory.IntegrationTestFixtures;
+using IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Resources;
-using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
+namespace IntegrationTests.Tests.Api.ControllerFixtures.Accounts
 {
     public class WithAnyAccount : IntegrationTest<DbTypes.Real>
     {

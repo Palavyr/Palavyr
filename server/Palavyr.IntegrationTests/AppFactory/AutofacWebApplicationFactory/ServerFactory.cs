@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Palavyr.API;
 using Test.Common;
 
-namespace Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory
+namespace IntegrationTests.AppFactory.AutofacWebApplicationFactory
 {
     public class ServerFactory : AutofacWebApplicationFactory, IIntegrationTestFixture
     {

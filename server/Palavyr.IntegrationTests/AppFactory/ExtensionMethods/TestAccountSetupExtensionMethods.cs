@@ -1,4 +1,4 @@
-﻿namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
+﻿namespace IntegrationTests.AppFactory.ExtensionMethods
 {
     public static class TestAccountSetupExtensionMethods
     {

@@ -48,22 +48,23 @@ namespace Palavyr.API
             SetServices(services, configuration, env);
         }
 
+        public static void NonWebHostConfiguration(IServiceCollection services, IConfiguration config)
+        {
+            Configurations.ConfigureStripe(config);
+            RegisterStores(services, config);
+            ServiceRegistry.RegisterHealthChecks(services);
+            MediatorRegistry.RegisterMediator(services);
+        }
+
         public static void SetServices(IServiceCollection services, IConfiguration config, IWebHostEnvironment environ)
         {
             services.AddHttpContextAccessor();
             services.AddControllers().AddControllersAsServices();
             services.AddAuthentication().AddCertificate();
-            // services.AddHttpsRedirection(
-            //     opts =>
-            //     {
-            //         opts.HttpsPort = 5001;
-            //     });
+
             CorsConfiguration.ConfigureCorsService(services, environ);
-            Configurations.ConfigureStripe(config);
-            RegisterStores(services, config);
-            ServiceRegistry.RegisterHealthChecks(services);
             ServiceRegistry.RegisterIisConfiguration(services, environ);
-            MediatorRegistry.RegisterMediator(services);
+            NonWebHostConfiguration(services, config);
         }
 
         public void Configure(

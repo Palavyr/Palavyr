@@ -1,5 +1,4 @@
 IGetEmailSent
-IGetData
 IDynamicTableController`2
 IForbiddenEntityStore
 IEntityStore`1
@@ -7,7 +6,6 @@ IHaveTempDirectory
 IHaveLocalFileName
 IHaveTemporaryPath
 IHaveBeenDownloadedFromCloudToLocal
-IProcessStripeInvoicePaymentFailedHandler
 IPricingStrategyTableCompiler
 IPricingStrategyTableCommandExecutor`3
 IResponseRetriever`1
@@ -35,5 +33,6 @@ IHaveAPrettyNameAndTableType
 ICreatePricingStrategyTemplate`1
 IMapToNew`2
 IMapToPreExisting`2
+IProcessStripeInvoicePaymentFailedHandler
 IPricingStrategyTemplateCreator`1
 IPalavyrClient

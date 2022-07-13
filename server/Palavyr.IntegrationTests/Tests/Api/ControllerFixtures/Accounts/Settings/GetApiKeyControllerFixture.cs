@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
+using IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+using IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Settings
+namespace IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Settings
 {
     public class GetApiKeyControllerFixture : IntegrationTest
     {

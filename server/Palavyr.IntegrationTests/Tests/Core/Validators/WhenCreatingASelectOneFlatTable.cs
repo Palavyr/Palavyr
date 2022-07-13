@@ -1,19 +1,19 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+using IntegrationTests.AppFactory.IntegrationTestFixtures;
+using IntegrationTests.DataCreators;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices;
 using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
-using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
-using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Palavyr.IntegrationTests.Tests.Core.Validators
+namespace IntegrationTests.Tests.Core.Validators
 {
     public class WhenCreatingASelectOneFlatTable : IntegrationTest
     {

@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+using IntegrationTests.AppFactory.ExtensionMethods;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -15,22 +17,18 @@ using NSubstitute;
 using Palavyr.API;
 using Palavyr.Client;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Handlers.StripeWebhookHandlers;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
-using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Test.Common;
 using Test.Common.Random;
 using Test.Common.TestFileAssetServices;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture
+namespace IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture
 {
     public abstract class IntegrationTestBase<DbType> : IClassFixture<ServerFactory>, IAsyncLifetime where DbType : DbTypes
     {
@@ -43,14 +41,11 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public static readonly string ConfirmationToken = "RogerWilco";
         public readonly Lazy<AutofacServiceProvider> ServiceProvider;
         protected internal virtual bool SaveStoreActionsImmediately => true;
-        public readonly ServerFactory Factory;
 
         protected IntegrationTestBase(ITestOutputHelper testOutputHelper, ServerFactory factory)
         {
             TestOutputHelper = testOutputHelper;
-            Factory = factory;
-
-            WebHostFactory = Factory
+            WebHostFactory = factory
                 .WithWebHostBuilder(
                     builder =>
                     {
@@ -68,7 +63,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
                             builder.ConfigureInMemoryDatabase(dbRoot);
                         }
                     });
-
 
             ServiceProvider = new Lazy<AutofacServiceProvider>(
                 () => { return (AutofacServiceProvider)WebHostFactory.Services; });
@@ -132,12 +126,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
                 });
         }
 
-
-        private protected virtual async Task DeleteTestStripeCustomers()
-        {
-            await Task.CompletedTask;
-        }
-
         public void SetAccountIdTransport()
         {
             var transport = ResolveType<IAccountIdTransport>();
@@ -163,16 +151,10 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public virtual async Task DisposeAsync()
         {
-            await DeleteTestStripeCustomers();
-
             var tempClient = ConfigurableClient(SessionId);
             await tempClient.Delete<DeleteAccountRequest>(CancellationToken);
 
-            var sessionStore = ResolveStore<Session>();
-            await sessionStore.Delete(SessionId, s => s.SessionId);
-
             var provider = ResolveType<IUnitOfWorkContextProvider>();
-            await provider.DangerousCommitAllContexts();
             await provider.DisposeContexts();
 
             WebHostFactory.Dispose();

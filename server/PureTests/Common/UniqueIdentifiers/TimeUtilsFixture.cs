@@ -1,0 +1,4 @@
+namespace Pure.Common.UniqueIdentifiers
+{
+
+}

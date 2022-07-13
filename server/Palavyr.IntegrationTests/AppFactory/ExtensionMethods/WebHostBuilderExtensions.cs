@@ -1,11 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Palavyr.API;
 using Palavyr.Core.GlobalConstants;
 
-namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
+namespace IntegrationTests.AppFactory.ExtensionMethods
 {
     public static class WebHostBuilderExtensions
     {

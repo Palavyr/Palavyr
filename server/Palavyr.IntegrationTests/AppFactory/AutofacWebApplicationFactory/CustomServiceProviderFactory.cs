@@ -5,7 +5,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory
+namespace IntegrationTests.AppFactory.AutofacWebApplicationFactory
 {
     public class CustomServiceProviderFactory : IServiceProviderFactory<ContainerBuilder>
     {

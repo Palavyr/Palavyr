@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.Core.Common.ExtensionMethods.PathExtensions;
 using Palavyr.Core.Handlers.ControllerHandler;
@@ -11,9 +12,8 @@ using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 
-namespace Palavyr.IntegrationTests.DataCreators
+namespace IntegrationTests.DataCreators
 {
     public static partial class BuilderExtensionMethods
     {

@@ -16,7 +16,7 @@ using Palavyr.Core.Stores.Delete;
 using Test.Common;
 using Test.Common.TestFileAssetServices;
 
-namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
+namespace IntegrationTests.AppFactory.ExtensionMethods
 {
     public static class DbConfigurationExtensions
     {

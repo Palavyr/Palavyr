@@ -7,7 +7,7 @@ using Palavyr.Core.GlobalConstants;
 
 //https://github.com/autofac/Autofac/issues/1207#issuecomment-701961371
 
-namespace Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory
+namespace IntegrationTests.AppFactory.AutofacWebApplicationFactory
 {
     public class AutofacWebApplicationFactory : WebApplicationFactory<Startup>
     {

@@ -1,4 +1,4 @@
-﻿namespace Palavyr.IntegrationTests.AppFactory
+﻿namespace IntegrationTests.AppFactory
 {
     public static class IntegrationConstants
     {
