@@ -17,14 +17,11 @@ namespace Component.AppFactory.ComponentTestBase.BaseFixture
 {
     public class ComponentClassFixture
     {
-        public ComponentClassFixture()
-        {
-        }
-
         public IContainer ConfigureClassFixture(Action<ContainerBuilder> additionalConfiguration)
         {
+            // datase is all in memory
             var configurationBuilder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.test.json", true);
+                .AddJsonFile("appsettings.test.json", false);
             var config = configurationBuilder.Build();
 
             var services = new ServiceCollection();
@@ -34,7 +31,7 @@ namespace Component.AppFactory.ComponentTestBase.BaseFixture
                     logger.AddSerilog();
                     logger.AddSeq();
                 });
-            
+
             WireUpDatabases(services);
             RegisterServices(services, config);
 
@@ -45,8 +42,7 @@ namespace Component.AppFactory.ComponentTestBase.BaseFixture
             additionalConfiguration(builder);
             return builder.Build();
         }
-        
-        
+
 
         public void RegisterServices(IServiceCollection serviceCollection, IConfiguration config)
         {

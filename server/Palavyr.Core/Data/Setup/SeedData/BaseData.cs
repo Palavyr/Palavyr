@@ -12,10 +12,10 @@ namespace Palavyr.Core.Data.Setup.SeedData
         public WidgetPreference WidgetPreference { get; set; }
         public List<ConversationNode> DefaultConversationNodes { get; set; }
         public List<ConversationNode> IntroductionConversationNodes { get; set; }
-        
+
         public List<DynamicTableMeta> DefaultDynamicTableMetas { get; set; } = new List<DynamicTableMeta>();
         public readonly List<SelectOneFlat> DefaultDynamicTables = new List<SelectOneFlat>();
-        
+
 
         public const string AreaName = "Buying a Dog";
         private const string TableTag = "Dog Color Types";
@@ -24,21 +24,20 @@ namespace Palavyr.Core.Data.Setup.SeedData
 
         protected BaseSeedData(string accountId, string defaultEmail, string introId)
         {
-            var areaIdentifier = StaticGuidUtils.CreateNewId();
-            var dynamicTableId = StaticGuidUtils.CreateNewId();
+            var intentId = StaticGuidUtils.CreateNewId();
+            var pricingStrategyTableId = StaticGuidUtils.CreateNewId();
 
-            DefaultConversationNodes = CreateDefaultConversation.CreateDefault(accountId, areaIdentifier, dynamicTableId);
+            DefaultConversationNodes = CreateDefaultConversation.CreateDefault(accountId, intentId, pricingStrategyTableId);
 
             IntroductionConversationNodes = ConversationNode.CreateDefaultRootNode(introId, accountId);
-                
-                
-            DefaultDynamicTables = CreateDefaultDynamicTable.CreateDefaultTable(TableTag, accountId, areaIdentifier, dynamicTableId);
-            DefaultDynamicTableMetas = CreateDefaultDynamicTable.CreateDefaultMeta(TableTag, accountId, dynamicTableId, areaIdentifier);
+
+            DefaultDynamicTables = CreateDefaultDynamicTable.CreateDefaultTable(TableTag, accountId, intentId, pricingStrategyTableId);
+            DefaultDynamicTableMetas = CreateDefaultDynamicTable.CreateDefaultMeta(TableTag, accountId, pricingStrategyTableId, intentId);
             WidgetPreference = WidgetPreference.CreateDefault(accountId);
             Areas = new List<Area>
             {
                 CreateDefaultArea.CreateDefault(
-                    areaIdentifier,
+                    intentId,
                     accountId,
                     AreaName,
                     DefaultConversationNodes,

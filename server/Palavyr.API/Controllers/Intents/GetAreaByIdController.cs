@@ -15,7 +15,6 @@ namespace Palavyr.API.Controllers.Intents
     // I Don't think this is even being used any more by the client.
 
     [Obsolete]
-    [Authorize]
     public class GetAreaByIdController : PalavyrBaseController
     {
         private readonly IEntityStore<Area> intentStore;

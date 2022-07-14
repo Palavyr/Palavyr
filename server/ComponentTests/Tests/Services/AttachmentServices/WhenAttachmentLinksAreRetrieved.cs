@@ -6,15 +6,15 @@
 // using Microsoft.Extensions.DependencyInjection;
 // using Palavyr.Core.Services.AmazonServices;
 // using Palavyr.Core.Services.AttachmentServices;
-// using Palavyr.IntegrationTests.AppFactory;
-// using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-// using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
-// using Palavyr.IntegrationTests.DataCreators;
+// using IntegrationTests.AppFactory;
+// using IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+// using IntegrationTests.AppFactory.IntegrationTestFixtures;
+// using IntegrationTests.DataCreators;
 // using Shouldly;
 // using Xunit;
 // using Xunit.Abstractions;
 //
-// namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
+// namespace IntegrationTests.Tests.Core.Services.AttachmentServices
 // {
 //     public class WhenAttachmentLinksAreRetrieved : InMemoryIntegrationFixture
 //     {

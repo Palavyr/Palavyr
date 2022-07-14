@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Palavyr.Testing", "Palavyr.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.Core", "Palavyr.Core\Palavyr.Core.csproj", "{70003649-ABC7-4113-807F-1F87A6CC47CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.IntegrationTests", "Palavyr.IntegrationTests\Palavyr.IntegrationTests.csproj", "{87699D0C-7890-44DF-93B5-B62C6D80EBFA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{87699D0C-7890-44DF-93B5-B62C6D80EBFA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Common", "Test.Common\Test.Common.csproj", "{D5CEC399-5A10-4B79-BE4D-D366FCD3F8B1}"
 EndProject

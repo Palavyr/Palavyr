@@ -5,17 +5,17 @@
 // using Microsoft.AspNetCore.Http;
 // using Microsoft.Extensions.Configuration;
 // using Palavyr.Core.Services.AmazonServices.S3Service;
-// using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+// using IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 // using Xunit;
 // using Microsoft.Extensions.DependencyInjection;
-// using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
-// using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+// using IntegrationTests.AppFactory.ExtensionMethods;
+// using IntegrationTests.AppFactory.IntegrationTestFixtures;
 // using Shouldly;
 // using Test.Common.ExtensionsMethods;
 // using Test.Common.Random;
 // using Xunit.Abstractions;
 //
-// namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
+// namespace IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
 // {
 //     public class S3SaverFixture : InMemoryIntegrationFixture, IAsyncLifetime
 //     {

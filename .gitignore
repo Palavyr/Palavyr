@@ -248,3 +248,6 @@ widget/build/*
 ui/dist*
 
 *HTMLTEST.html
+
+localdev.env
+appsettings.development.json

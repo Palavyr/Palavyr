@@ -4,10 +4,10 @@
 // using Palavyr.Core.Models.Contracts;
 // using Palavyr.Core.Resources.PricingStrategyResources;
 // using Palavyr.Core.Services.PricingStrategyTableServices;
-// using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+// using IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 // using Test.Common.Random;
 //
-// namespace Palavyr.IntegrationTests.DataCreators
+// namespace IntegrationTests.DataCreators
 // {
 //     public static partial class BuilderExtensionMethods
 //     {

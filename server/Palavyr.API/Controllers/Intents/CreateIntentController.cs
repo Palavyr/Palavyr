@@ -7,10 +7,10 @@ using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Intents
 {
-    public class CreateAreaController : PalavyrBaseController
+    public class CreateNewIntentController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public CreateAreaController(IMediator mediator)
+        public CreateNewIntentController(IMediator mediator)
         {
             this.mediator = mediator;
         }

@@ -46,23 +46,22 @@ namespace IntegrationTests.AppFactory.ExtensionMethods
 
         private static void AddRealDatabaseContexts(IServiceCollection services)
         {
-            // services.AddSingleton<DBTracker>();
             services.AddDbContext<AccountsContext>(
                 opt =>
                 {
-                    opt.UseNpgsql(IntegrationConstants.AccountDbConnString);
+                    opt.UseNpgsql(ConnectionStringBuilder.BuildAccountConnectionString());
                     opt.SuppressWarnings();
                 });
             services.AddDbContext<DashContext>(
                 opt =>
                 {
-                    opt.UseNpgsql(IntegrationConstants.DashDbConnString);
+                    opt.UseNpgsql(ConnectionStringBuilder.BuildConfigurationConnectionString());
                     opt.SuppressWarnings();
                 });
             services.AddDbContext<ConvoContext>(
                 opt =>
                 {
-                    opt.UseNpgsql(IntegrationConstants.ConvoDbConnString);
+                    opt.UseNpgsql(ConnectionStringBuilder.BuildConversationConnectionString());
                     opt.SuppressWarnings();
                 });
         }
@@ -97,8 +96,6 @@ namespace IntegrationTests.AppFactory.ExtensionMethods
             var accountDbName = "TestAccountDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
             var dashDbName = "TestDashDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
             var convoDbName = "TestConvoDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
-
-            // services.AddSingleton<DBTracker>();
 
             services.AddDbContext<AccountsContext>(
                 opt =>

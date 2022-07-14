@@ -16,15 +16,13 @@ namespace IntegrationTests.AppFactory.AutofacWebApplicationFactory
             builder.UseServiceProviderFactory(new CustomServiceProviderFactory());
             return base.CreateHost(builder);
         }
-        
-
 
         protected override void ConfigureClient(HttpClient client)
         {
             client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.Action, ApplicationConstants.MagicUrlStrings.SessionAction);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            client.BaseAddress = new Uri(IntegrationConstants.BaseUri);
+            client.BaseAddress = new Uri(BaseUriBuilder.BuildBaseUri());
             base.ConfigureClient(client);
         }
     }
