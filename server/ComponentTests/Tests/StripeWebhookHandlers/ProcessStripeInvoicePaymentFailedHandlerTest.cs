@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Component.AppFactory.ComponentTestBase.BaseFixture;
 using Component.Mocks;
 using MediatR;
@@ -32,7 +33,7 @@ namespace Component.Tests.StripeWebhookHandlers
 
             var result = ResolveType<ISesEmail>() as IGetEmailSent;
 
-            this.PalavyrAssent(result?.GetSentHtml());
+            this.PalavyrAssent(result?.GetSentHtml(), ignoreLines: new List<int>(){ 33 });
         }
 
         public ProcessStripeInvoicePaymentFailedHandlerTest(ComponentClassFixture fixture) : base(fixture)

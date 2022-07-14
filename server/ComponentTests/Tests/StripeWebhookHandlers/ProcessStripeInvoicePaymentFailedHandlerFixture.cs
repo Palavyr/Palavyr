@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Autofac;
 using Component.AppFactory.ComponentTestBase.BaseFixture;
@@ -32,7 +34,7 @@ namespace Component.Tests.StripeWebhookHandlers
             await handler.Handle(@event, CancellationToken);
 
             var result = ResolveType<ISesEmail>() as IGetEmailSent;
-            this.PalavyrAssent(result.GetSentHtml());
+            this.PalavyrAssent(result.GetSentHtml(), ignoreLines: new List<int>() { 33 });
         }
 
         public override void OverrideCustomization(ContainerBuilder fixtureUnBuiltContainer)

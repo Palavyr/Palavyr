@@ -95,8 +95,8 @@ namespace Component.AppFactory.ComponentTestBase.BaseFixture
                 builder.RegisterGenericDecorator(typeof(IntegrationTestEntityStoreEagerSavingDecorator<>), typeof(IEntityStore<>));
             }
 
-            builder.RegisterGenericDecorator(typeof(IntegrationTestMediatorNotificationHandlerDecorator<>), typeof(INotificationHandler<>));
-            builder.RegisterGenericDecorator(typeof(IntegrationTestMediatorRequestHandlerDecorator<,>), typeof(IRequestHandler<,>));
+            // builder.RegisterGenericDecorator(typeof(IntegrationTestMediatorNotificationHandlerDecorator<>), typeof(INotificationHandler<>));
+            // builder.RegisterGenericDecorator(typeof(IntegrationTestMediatorRequestHandlerDecorator<,>), typeof(IRequestHandler<,>));
 
             builder.RegisterType<MockEmailVerificationService>().As<IEmailVerificationService>();
             builder.RegisterType<MockStripeWebhookAuthService>().As<IStripeWebhookAuthService>();
