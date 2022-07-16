@@ -3,7 +3,7 @@
     public class PercentOfThresholdResource : PricingStrategyTableRowResource
     {
         public string AccountId { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public string RowId { get; set; }
         public double Threshold { get; set; }
         public double ValueMin { get; set; }

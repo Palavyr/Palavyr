@@ -17,7 +17,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
             PricingStrategyTableMeta tableTableMeta,
             ConversationNode node,
             List<ConversationNode> conversationNodes,
-            string areaIdentifier
+            string intentId
         );
     }
 
@@ -43,23 +43,23 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
             PricingStrategyTableMeta tableTableMeta,
             ConversationNode node,
             List<ConversationNode> conversationNodes,
-            string areaIdentifier
+            string intentId
         )
         {
             List<ConversationNode> updatedNodes;
             if (tableTableMeta.ValuesAsPaths)
             {
-                updatedNodes = await ConvertToAsPaths(currentSelectOneFlatUpdate, node, areaIdentifier, accountIdTransport.AccountId, conversationNodes);
+                updatedNodes = await ConvertToAsPaths(currentSelectOneFlatUpdate, node, intentId, accountIdTransport.AccountId, conversationNodes);
             }
             else
             {
                 updatedNodes = await ConvertToAsContinue(node, conversationNodes);
             }
 
-            await nodeUpdater.UpdateConversation(areaIdentifier, updatedNodes, CancellationToken.None);
+            await nodeUpdater.UpdateConversation(intentId, updatedNodes, CancellationToken.None);
         }
 
-        private async Task<List<ConversationNode>> ConvertToAsPaths(List<CategorySelectTableRow> currentSelectOneFlatUpdate, ConversationNode node, string areaIdentifier, string accountId, List<ConversationNode> conversationNodes)
+        private async Task<List<ConversationNode>> ConvertToAsPaths(List<CategorySelectTableRow> currentSelectOneFlatUpdate, ConversationNode node, string intentId, string accountId, List<ConversationNode> conversationNodes)
         {
             // 1. from not as paths
             // 2. add 1 or more siblings
@@ -83,7 +83,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
             {
                 for (var i = 0; i < numberOfIncomingOptions - currentNumberOfOptions; i++)
                 {
-                    var newDefaultNode = ConversationNode.CreateDefaultNode(areaIdentifier, accountId).Single();
+                    var newDefaultNode = ConversationNode.CreateDefaultNode(intentId, accountId).Single();
                     conversationNodes.Add(newDefaultNode);
                     node.AddChildId(newDefaultNode.NodeId!, splitter);
                     newNodeChildren.Add(newDefaultNode.NodeId);

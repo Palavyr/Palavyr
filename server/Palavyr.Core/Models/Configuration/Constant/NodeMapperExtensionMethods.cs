@@ -18,7 +18,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         {
             return new WidgetNodeResource
             {
-                AreaIdentifier = node.IntentId,
+                IntentId = node.IntentId,
                 Text = node.Text,
                 NodeType = node.NodeType,
                 NodeComponentType = node.NodeComponentType,
@@ -42,7 +42,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             string nodeChildrenString,
             string nodeType,
             string accountId,
-            string areaIdentifier,
+            string intentId,
             string optionPath,
             bool isDynamic,
             bool isCritical = false,
@@ -73,7 +73,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 OptionPath = optionPath,
                 ValueOptions = string.Join(Delimiters.ValueOptionDelimiter, nodeTypeOptionResource.ValueOptions),
                 AccountId = accountId,
-                IntentId = areaIdentifier,
+                IntentId = intentId,
                 IsMultiOptionType = nodeTypeOptionResource.IsMultiOptionType,
                 IsTerminalType = nodeTypeOptionResource.IsTerminalType,
                 IsDynamicTableNode = isDynamic,

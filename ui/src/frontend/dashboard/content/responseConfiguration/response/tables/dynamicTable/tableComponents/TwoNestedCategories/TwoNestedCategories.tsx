@@ -33,7 +33,7 @@ export const TwoNestedCategories = ({
     showDebug,
     tableId,
     setTables,
-    areaIdentifier,
+    intentId,
     deleteAction,
     tables,
     tableIndex,
@@ -49,12 +49,12 @@ export const TwoNestedCategories = ({
 
     useEffect(() => {
         setLocalTable(table);
-    }, [areaIdentifier, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {
             if (localTable) {
-                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.areaIdentifier, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                 localTable.tableRows = tableRows;
                 setLocalTable(cloneDeep(localTable));
             }
@@ -65,7 +65,7 @@ export const TwoNestedCategories = ({
                 setLocalTable(cloneDeep(localTable));
             }
         };
-    }, [areaIdentifier, localTable?.tableMeta.tableType]);
+    }, [intentId, localTable?.tableMeta.tableType]);
 
     const modifier = new TwoNestedCategoriesModifier(updatedRows => {
         if (localTable) {
@@ -76,11 +76,11 @@ export const TwoNestedCategories = ({
     });
 
     const addOuterCategory = async () => {
-        if (localTable) await modifier.addOuterCategory(localTable.tableRows, repository, areaIdentifier, tableId);
+        if (localTable) await modifier.addOuterCategory(localTable.tableRows, repository, intentId, tableId);
     };
 
     const addInnerCategory = async () => {
-        if (localTable) await modifier.addInnerCategory(localTable.tableRows, repository, areaIdentifier, tableId);
+        if (localTable) await modifier.addInnerCategory(localTable.tableRows, repository, intentId, tableId);
     };
 
     const onSave = async () => {
@@ -90,7 +90,7 @@ export const TwoNestedCategories = ({
             if (isValid) {
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(localTable.tableMeta);
                 const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<TwoNestedCategoryData[]>(
-                    areaIdentifier,
+                    intentId,
                     DynamicTableTypes.TwoNestedCategory,
                     tableRows,
                     localTable.tableMeta.tableId,

@@ -14,14 +14,14 @@ namespace Test.Common.Builders.Conversations
 
     public class ConversationNodeBuilder
     {
-        public ConversationNode CreateRootNode(string accountId = DefaultConstants.AccountId, string areaIdentifier = DefaultConstants.AreaIdentifier)
+        public ConversationNode CreateRootNode(string accountId = DefaultConstants.AccountId, string intentId = DefaultConstants.IntentId)
         {
             return new ConversationNode
             {
                 IsRoot = true,
                 NodeId = StaticGuidUtils.CreateNewId(),
                 Text = "Root Node",
-                IntentId = areaIdentifier,
+                IntentId = intentId,
                 AccountId = accountId,
             };
         }

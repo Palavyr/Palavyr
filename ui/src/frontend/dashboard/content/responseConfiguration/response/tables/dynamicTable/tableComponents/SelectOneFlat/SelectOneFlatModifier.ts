@@ -16,9 +16,9 @@ export class SelectOneFlatModifier implements Modifier {
         this.onClick(cloneDeep(newState));
     }
 
-    async addOption(tableData: SelectOneFlatData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
+    async addOption(tableData: SelectOneFlatData[], repository: PalavyrRepository, intentId: string, tableId: string) {
         // this is a difficult situation - we need to allow for an array of objects of various types (dynamic table types)
-        const newTableTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<SelectOneFlatData>(areaIdentifier, this.tableType, tableId);
+        const newTableTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<SelectOneFlatData>(intentId, this.tableType, tableId);
         newTableTemplate.rowOrder = tableData.length;
         tableData.push(newTableTemplate);
         this.setTables(tableData);

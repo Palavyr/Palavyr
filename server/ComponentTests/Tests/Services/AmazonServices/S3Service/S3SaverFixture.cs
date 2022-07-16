@@ -35,9 +35,9 @@
 //         {
 //             var formFile = A.RandomFormFile();
 //             
-//             var areaId = A.RandomName();
+//             var intentId = A.RandomName();
 //             var fileName = A.RandomName();
-//             s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
+//             s3Key = s3KeyResolver.ResolveAttachmentKey(intentId, fileName);
 //
 //             await is3FileUploader.StreamObjectToS3(testUserDataBucket, formFile, s3Key);
 //             var result = await is3Downloader.CheckIfFileExists(testUserDataBucket, s3Key);
@@ -51,9 +51,9 @@
 //             using var stream = File.OpenRead(tempFile);
 //             var formFile = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
 //
-//             var areaId = A.RandomName();
+//             var intentId = A.RandomName();
 //             var fileName = A.RandomName();
-//             s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
+//             s3Key = s3KeyResolver.ResolveAttachmentKey(intentId, fileName);
 //
 //             Should.Throw<AmazonS3Exception>(async () => await is3FileUploader.StreamObjectToS3("Palavyr-does-not-exist", formFile, s3Key));
 //

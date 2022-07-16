@@ -17,14 +17,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<ModifyIntentFallbackEmailSubjectResponse> Handle(ModifyIntentFallbackEmailSubjectRequest request, CancellationToken cancellationToken)
         {
-            var curArea = await intentStore.Get(request.IntentId, s => s.IntentId);
+            var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
 
-            if (request.Subject != curArea.FallbackSubject)
+            if (request.Subject != intent.FallbackSubject)
             {
-                curArea.FallbackSubject = request.Subject;
+                intent.FallbackSubject = request.Subject;
             }
 
-            return new ModifyIntentFallbackEmailSubjectResponse(curArea.FallbackSubject);
+            return new ModifyIntentFallbackEmailSubjectResponse(intent.FallbackSubject);
         }
     }
 

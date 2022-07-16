@@ -25,7 +25,7 @@ namespace Palavyr.Core.Mappers
                 Range = @from.Range,
                 PerPerson = @from.PerPerson,
                 TableOrder = @from.TableOrder,
-                AreaIdentifier = @from.IntentId,
+                IntentId = @from.IntentId,
                 AccountId = @from.AccountId
             };
         }

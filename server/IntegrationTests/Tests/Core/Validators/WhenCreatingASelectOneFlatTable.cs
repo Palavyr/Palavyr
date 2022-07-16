@@ -31,7 +31,7 @@ namespace IntegrationTests.Tests.Core.Validators
                         CategorySelectTableRow,
                         SelectOneFlatResource,
                         SelectOneFlatCompiler>
-                    .FormatRoute(selectOneFlatTableMeta.AreaIdentifier, selectOneFlatTableMeta.TableId));
+                    .FormatRoute(selectOneFlatTableMeta.IntentId, selectOneFlatTableMeta.TableId));
 
             var currentTable = await Client.GetResource<GetPricingStrategyTableRowsRequest<
                 CategorySelectTableRow,

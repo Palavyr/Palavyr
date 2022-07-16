@@ -34,8 +34,8 @@ export class PalavyrWidgetRepository {
         newConversationHistory: (secretKey: SecretKey, isDemo: boolean) => `widget/create?key=${secretKey}&demo=${isDemo}`,
         updateConvoHistory: (secretKey: SecretKey) => `widget/conversation?key=${secretKey}`,
         updateConvoRecord: (secretKey: SecretKey) => `widget/record?key=${secretKey}`,
-        confirmationEmail: (secretKey: SecretKey, intentId: string, isDemo: boolean) => `widget/area/${intentId}/email/send?key=${secretKey}&demo=${isDemo}`,
-        fallbackEmail: (secretKey: SecretKey, intentId: string, isDemo: boolean) => `widget/area/${intentId}/email/fallback/send?key=${secretKey}&demo=${isDemo}`,
+        confirmationEmail: (secretKey: SecretKey, intentId: string, isDemo: boolean) => `widget/intent/${intentId}/email/send?key=${secretKey}&demo=${isDemo}`,
+        fallbackEmail: (secretKey: SecretKey, intentId: string, isDemo: boolean) => `widget/intent/${intentId}/email/fallback/send?key=${secretKey}&demo=${isDemo}`,
         internalCheck: (secretKey: SecretKey) => `widget/internal-check?key=${secretKey}`,
         getIntroSequence: (secretKey: SecretKey) => `account/settings/intro-sequence?key=${secretKey}`,
     };

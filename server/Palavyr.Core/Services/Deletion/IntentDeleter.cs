@@ -9,7 +9,7 @@ namespace Palavyr.Core.Services.Deletion
 {
     public interface IIntentDeleter
     {
-        Task DeleteArea(string areaId, CancellationToken cancellationToken);
+        Task DeleteIntent(string intentId, CancellationToken cancellationToken);
     }
 
     public class IntentDeleter : IIntentDeleter
@@ -19,14 +19,14 @@ namespace Palavyr.Core.Services.Deletion
 
         public IntentDeleter(
             IEntityStore<Intent> intentStore,
-            ILogger<IIntentDeleter> logger
+            ILogger<IntentDeleter> logger
         )
         {
             this.intentStore = intentStore;
             this.logger = logger;
         }
 
-        public async Task DeleteArea(string intentId, CancellationToken cancellationToken)
+        public async Task DeleteIntent(string intentId, CancellationToken cancellationToken)
         {
             var completeIntent = await intentStore.GetIntentComplete(intentId);
             await intentStore.Delete(completeIntent);

@@ -16,9 +16,9 @@ namespace Palavyr.Core.Models
         ConversationNode CreateRetrySendEmailSecondAttempt(string intentId, string accountId, params string[] nodeChildrenIds);
         ConversationNode CreateFallbackEmailSendFailedFirstAttempt(string intentId, string accountId, params string[] nodeChildrenIds);
         ConversationNode CreateFallbackRetrySendEmailSecondAttempt(string intentId, string accountId, params string[] nodeChildrenIds);
-        ConversationNode CreateMayWeSendAnInformationalEmailForTooComplicated(string areaId, string accountId, params string[] nodeChildrenIds);
-        ConversationNode CreateSendFallbackEmail(string areaId, string accountId, params string[] nodeChildrenIds);
-        ConversationNode CreateGenericTooComplicated(string areaId, string accountId, params string[] nodeChildrenIds);
+        ConversationNode CreateMayWeSendAnInformationalEmailForTooComplicated(string intentId, string accountId, params string[] nodeChildrenIds);
+        ConversationNode CreateSendFallbackEmail(string intentId, string accountId, params string[] nodeChildrenIds);
+        ConversationNode CreateGenericTooComplicated(string intentId, string accountId, params string[] nodeChildrenIds);
 
         ConversationNode CreateShowResponseFileAsset(string intentId, string accountId, params string[] nodeChildrenIds);
     }
@@ -243,7 +243,7 @@ namespace Palavyr.Core.Models
             );
         }
 
-        public ConversationNode CreateMayWeSendAnInformationalEmailForTooComplicated(string areaId, string accountId, params string[] nodeChildrenIds)
+        public ConversationNode CreateMayWeSendAnInformationalEmailForTooComplicated(string intentId, string accountId, params string[] nodeChildrenIds)
         {
             var nodeId = guidUtils.CreateNewId();
             var text = "We'd like to send you a follow-up email with some general information regarding your enquiry. Would that be okay?";
@@ -252,7 +252,7 @@ namespace Palavyr.Core.Models
                 nodeId,
                 DefaultNodeTypeOptions.YesNo.StringName,
                 text,
-                areaId,
+                intentId,
                 nodeChildrenString: TreeUtils.CreateNodeChildrenString(nodeChildrenIds),
                 "",
                 TreeUtils.JoinValueOptionsOnDelimiter(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
@@ -266,7 +266,7 @@ namespace Palavyr.Core.Models
             );
         }
 
-        public ConversationNode CreateSendFallbackEmail(string areaId, string accountId, params string[] nodeChildrenIds)
+        public ConversationNode CreateSendFallbackEmail(string intentId, string accountId, params string[] nodeChildrenIds)
         {
             var nodeId = guidUtils.CreateNewId();
 
@@ -274,7 +274,7 @@ namespace Palavyr.Core.Models
                 nodeId,
                 InternalNodeTypeOptions.SendTooComplicatedEmail.StringName,
                 "Wait just a moment while I send an email.",
-                areaId,
+                intentId,
                 nodeChildrenString: TreeUtils.CreateNodeChildrenString(nodeChildrenIds),
                 DefaultNodeTypeOptions.YesNo.Yes,
                 "",
@@ -288,7 +288,7 @@ namespace Palavyr.Core.Models
             );
         }
 
-        public ConversationNode CreateGenericTooComplicated(string areaId, string accountId, params string[] nodeChildrenIds)
+        public ConversationNode CreateGenericTooComplicated(string intentId, string accountId, params string[] nodeChildrenIds)
         {
             var nodeId = guidUtils.CreateNewId();
 
@@ -297,7 +297,7 @@ namespace Palavyr.Core.Models
                 nodeId,
                 DefaultNodeTypeOptions.TooComplicated.StringName,
                 text,
-                areaId,
+                intentId,
                 nodeChildrenString: TreeUtils.CreateNodeChildrenString(nodeChildrenIds),
                 "",
                 "",

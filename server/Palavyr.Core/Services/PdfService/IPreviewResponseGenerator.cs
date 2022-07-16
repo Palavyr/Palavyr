@@ -6,6 +6,6 @@ namespace Palavyr.Core.Services.PdfService
 {
     public interface IPreviewResponseGenerator
     {
-        Task<FileAsset> CreatePdfResponsePreviewAsync(string areaId, CultureInfo culture);
+        Task<FileAsset> CreatePdfResponsePreviewAsync(string intentId, CultureInfo culture);
     }
 }

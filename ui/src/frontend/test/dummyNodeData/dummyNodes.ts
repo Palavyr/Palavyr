@@ -7,7 +7,7 @@ export const ParentNode: ConvoNode = {
     nodeChildrenString: "xyz-2,xyz-3",
     isCritical: true,
     isRoot: true,
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
     optionPath: "",
     valueOptions: "", // an array, but bc of the dtabase we store as a string delimited by |peg|
     id: 0,
@@ -35,7 +35,7 @@ export const ChildNode1: ConvoNode = {
     nodeChildrenString: "",
     isCritical: true,
     isRoot: true,
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
     optionPath: "Yes",
     valueOptions: "", // an array, but bc of the dtabase we store as a string delimited by |peg|
     id: 0,
@@ -62,7 +62,7 @@ export const ChildNode2: ConvoNode = {
     nodeChildrenString: "",
     isCritical: true,
     isRoot: true,
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
     optionPath: "No",
     valueOptions: "", // an array, but bc of the dtabase we store as a string delimited by |peg|
     id: 0,

@@ -105,7 +105,7 @@
 //             // bool? useTableTagAsResponseDescription = false;
 //             // private UnitIds? unitId;
 //
-//             var intentId = this.intentId ?? (await test.CreateIntentBuilder().WithAccountId(accId).Build()).AreaIdentifier;
+//             var intentId = this.intentId ?? (await test.CreateIntentBuilder().WithAccountId(accId).Build()).IntentId;
 //             var tag = this.tableTag ?? A.RandomName();
 //             var pname = this.prettyName ?? A.RandomName();
 //             // var tType = this.tableType ?? "SelectOneFlat"; // TODO - nah
@@ -118,7 +118,7 @@
 //             return new DynamicTableMeta
 //             {
 //                 AccountId = accountId ?? test.AccountId,
-//                 AreaIdentifier = intentId,
+//                 IntentId = intentId,
 //                 TableTag = tag,
 //                 PrettyName = pname,
 //                 TableType = tType,

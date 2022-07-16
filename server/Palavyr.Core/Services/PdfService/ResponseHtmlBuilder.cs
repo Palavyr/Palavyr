@@ -78,7 +78,7 @@ namespace Palavyr.Core.Services.PdfService
                             <div>");
             var userDataBucket = configuration.GetUserDataBucket();
             previewBuilder.Append(HeaderSection.GetHeader(options, linkCreator, userDataBucket));
-            previewBuilder.Append(AreaTitleSection.GetAreaDisplayTitle(intent.AreaDisplayTitle, emailRequest.ConversationId));
+            previewBuilder.Append(IntentTitleSection.GetIntentDisplayTitle(intent.IntentName, emailRequest.ConversationId));
             previewBuilder.Append(PrologueSection.GetPrologue(intent.Prologue));
             previewBuilder.Append(TablesSection.GetEstimateTables(responseTables));
             previewBuilder.Append(EpilogueSection.GetEpilogue(intent.Epilogue));

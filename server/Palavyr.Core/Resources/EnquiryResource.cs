@@ -9,7 +9,7 @@ namespace Palavyr.Core.Resources
         public FileAssetResource FileAssetResource { get; set; }
         public string TimeStamp { get; set; }
         public string AccountId { get; set; }
-        public string AreaName { get; set; }
+        public string IntentName { get; set; }
         public string EmailTemplateUsed { get; set; }
         public bool Seen { get; set; }
         public string Name { get; set; }

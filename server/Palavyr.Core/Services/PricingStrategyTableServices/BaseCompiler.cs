@@ -24,7 +24,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
 
         protected async Task<List<TEntity>> GetTableRows(PricingStrategyTableMeta pricingStrategyTableMeta)
         {
-            var (areaId, tableId) = pricingStrategyTableMeta;
+            var (intentId, tableId) = pricingStrategyTableMeta;
             var rows = await entityStore.GetMany(tableId, s => s.TableId);
             var indexArray = new List<int> { };
             var orderedEntities = new List<TEntity>() { };

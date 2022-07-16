@@ -12,7 +12,7 @@ export default {
 const Template = (args: IntentContentProps) => <IntentContent {...args} />;
 export const Primary = Template.bind({});
 Primary.args = {
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
     areaName: "Test Name",
     classes: "",
     setLoaded: () => {},

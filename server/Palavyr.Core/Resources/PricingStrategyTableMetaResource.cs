@@ -9,7 +9,7 @@ namespace Palavyr.Core.Resources
         public string TableTag { get; set; }
         public string TableType { get; set; }
         public string TableId { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public bool ValuesAsPaths { get; set; }
         public string PrettyName { get; set; }
         public string UnitPrettyName { get; set; }

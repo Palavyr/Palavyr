@@ -2,10 +2,10 @@
 
 namespace Palavyr.Core.Services.PdfService.PdfSections
 {
-    public static class AreaTitleSection
+    public static class IntentTitleSection
     {
         
-        private static string CreateAreaDisplayTitle(string title, string conversationId)
+        private static string CreateIntentDisplayTitle(string title, string conversationId)
         {            
             var builder = new StringBuilder();
             builder.Append($@"<section id='TITLE' style='padding-top: 2.2rem; text-align: center; margin-bottom: 10mm;'>");
@@ -16,9 +16,9 @@ namespace Palavyr.Core.Services.PdfService.PdfSections
             return builder.ToString();
         }
 
-        public static string GetAreaDisplayTitle(string title, string conversationId)
+        public static string GetIntentDisplayTitle(string title, string conversationId)
         {
-            return CreateAreaDisplayTitle(title, conversationId);
+            return CreateIntentDisplayTitle(title, conversationId);
         }
     }
 }

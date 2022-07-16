@@ -15,7 +15,7 @@ namespace Palavyr.Core.Mappers
                 TableId = @from.TableId,
                 TableType = @from.TableType,
                 TableTag = @from.TableTag,
-                AreaIdentifier = @from.IntentId,
+                IntentId = @from.IntentId,
                 AccountId = @from.AccountId,
                 PrettyName = @from.PrettyName,
                 UnitId = @from.UnitId

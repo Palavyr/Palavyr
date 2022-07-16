@@ -17,9 +17,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<ModifySendResponseResponse> Handle(ModifySendResponseRequest request, CancellationToken cancellationToken)
         {
-            var area = await intentStore.Get(request.IntentId, s => s.IntentId);
-            var newState = !area.SendPdfResponse;
-            area.SendPdfResponse = newState;
+            var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
+            var newState = !intent.SendPdfResponse;
+            intent.SendPdfResponse = newState;
             return new ModifySendResponseResponse(newState);
         }
     }
@@ -46,7 +46,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             return Route.Replace("{intentId}", intentId);
         }
 
-        public const string Route = "area/send-pdf/{intentId}";
+        public const string Route = "intent/send-pdf/{intentId}";
         public string IntentId { get; set; }
     }
 }

@@ -10,12 +10,12 @@ import { IAppContext } from "widget/hook";
 // / <reference types="react-dom" />
 
 /*
-The front end needs to send a request to an end point with a PARAM, :areaIdentifier, and this
-will be sent to C# backend API which will use the accountID and areaIdentifier to retrieve from a particular endpoint
+The front end needs to send a request to an end point with a PARAM, :intentId, and this
+will be sent to C# backend API which will use the accountID and intentId to retrieve from a particular endpoint
 
-something like /endpoints/:accountId/:areaIdentifier/?authToken=23b23k5iuhi2u5b2kjb2k34uhn234ujn
+something like /endpoints/:accountId/:intentId/?authToken=23b23k5iuhi2u5b2kjb2k34uhn234ujn
 
-Then the API will extract the accountID, the areaIdentifier and use it with the endpoint to call a DB controller
+Then the API will extract the accountID, the intentId and use it with the endpoint to call a DB controller
 which will can nevermore (which maps the json in the db column to a class) to retrieve ONLY the data for the area
 we are currently working on. This keeps the state object a little bit smaller.
 
@@ -59,7 +59,7 @@ export type GroupRow = {
 export type GroupTable = Array<GroupRow>;
 
 export type AreaMeta = {
-    areaIdentifier: string;
+    intentId: string;
     groupId: string;
     areaName: string;
 };
@@ -110,7 +110,7 @@ export type ConvoTableRow = {
     nodeChildrenString: string;
     isCritical: boolean;
     isRoot: boolean;
-    areaIdentifier: string;
+    intentId: string;
     optionPath: ConvoBuilderResponse;
 };
 
@@ -122,7 +122,7 @@ export const ValueOptionDelimiter = "|peg|";
 export type ConvoNode = {
     // these properties are written to the database
     id?: number | undefined;
-    areaIdentifier: string;
+    intentId: string;
 
     isRoot: boolean;
     nodeId: string;
@@ -156,7 +156,7 @@ export type Areas = Array<AreaTable>;
 
 export type AreaTable = {
     // all of the data
-    areaIdentifier: string;
+    intentId: string;
     areaName: string;
     areaDisplayTitle: string;
     prologue: string;
@@ -183,7 +183,7 @@ export type StaticTableRows = Array<StaticTableRow>;
 export type StaticTableMetaTemplate = {
     id: number | null;
     description: string;
-    areaIdentifier: string;
+    intentId: string;
     staticTableRows: StaticTableRows;
     perPersonInputRequired: boolean;
     includeTotals: boolean;
@@ -201,7 +201,7 @@ export type StaticTableRow = {
     range: boolean;
     perPerson: boolean;
     tableOrder: number;
-    areaIdentifier: string;
+    intentId: string;
     includeTotals: boolean;
 };
 
@@ -244,7 +244,7 @@ export type EnquiryRow = {
     email: string;
     phoneNumber: string;
     hasResponse: boolean;
-    areaIdentifier: string;
+    intentId: string;
 };
 
 export type SelectionMap = {
@@ -274,7 +274,7 @@ export type DynamicTableMeta = {
     tableType: string;
     tableId: string;
     accountId: string;
-    areaIdentifier: string;
+    intentId: string;
     valuesAsPaths: boolean;
     prettyName: string;
     unitPrettyName: UnitPrettyNames;
@@ -726,7 +726,7 @@ export type SelectOneFlatData = {
 export type PercentOfThresholdData = {
     id: number;
     accountId: string;
-    areaIdentifier: string;
+    intentId: string;
     tableId: string;
     itemId: string;
     itemName: string;
@@ -746,7 +746,7 @@ export type BasicThresholdData = {
     id: number;
     rowId: number;
     accountId: string;
-    areaIdentifier: string;
+    intentId: string;
     tableId: string;
     itemName: string;
     threshold: number;
@@ -762,7 +762,7 @@ export type BasicThresholdData = {
 export type TwoNestedCategoryData = {
     id: number;
     accountId: string;
-    areaIdentifier: string;
+    intentId: string;
     tableId: string;
     valueMin: number;
     valueMax: number;
@@ -778,7 +778,7 @@ export type TwoNestedCategoryData = {
 export type CategoryNestedThresholdData = {
     id: number;
     accountId: string;
-    areaIdentifier: string;
+    intentId: string;
     tableId: string;
     valueMin: number;
     valueMax: number;
@@ -824,7 +824,7 @@ export type DynamicTableProps = {
     tableNameMap: TableNameMap;
     unitTypes: QuantUnitDefinition[];
     inUse: boolean;
-    areaIdentifier: string;
+    intentId: string;
     tableId: string;
     deleteAction(): Promise<void>;
     showDebug: boolean;
@@ -852,7 +852,7 @@ export type TreeErrors = {
 
 export type AreaNameDetail = {
     areaName: string;
-    areaIdentifier: string;
+    intentId: string;
 };
 
 export type AreaNameDetails = AreaNameDetail[];
@@ -877,7 +877,7 @@ export type AnabranchContext = {
 };
 
 export interface IDashboardContext {
-    areaIdentifier: string;
+    intentId: string;
     checkAreaCount(): void;
     areaName: string;
     setViewName: SetState<string>;
@@ -1001,12 +1001,12 @@ export type BlogPostRouteMeta = BlogPostRecord & {
 export type SecretKey = string | null;
 
 export type WidgetAreaTable = {
-    areaIdentifier: string;
+    intentId: string;
     areaDisplayTitle: string;
 };
 
 export type WidgetNodeResource = {
-    areaIdentifier: string;
+    intentId: string;
     nodeId: string;
     text: string;
     nodeType: string;

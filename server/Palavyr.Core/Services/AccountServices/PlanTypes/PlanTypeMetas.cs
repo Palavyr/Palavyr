@@ -9,7 +9,7 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
             AllowedAttachments = 0;
             AllowedStaticTables = 1;
             AllowedDynamicTables = 1;
-            AllowedAreas = 2;
+            AllowedIntents = 2;
 
             AllowedFileUpload = false;
             AllowedEmailNotifications = false;
@@ -28,7 +28,7 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
             AllowedAttachments = 0;
             AllowedStaticTables = 2;
             AllowedDynamicTables = 2;
-            AllowedAreas = 6;
+            AllowedIntents = 6;
 
             AllowedFileUpload = false;
             AllowedEmailNotifications = false;
@@ -47,7 +47,7 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
             AllowedAttachments = 2;
             AllowedStaticTables = 2;
             AllowedDynamicTables = 2;
-            AllowedAreas = 10;
+            AllowedIntents = 10;
 
             AllowedFileUpload = true;
             AllowedEmailNotifications = true;
@@ -66,7 +66,7 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
             AllowedAttachments = 999999;
             AllowedStaticTables = 999999;
             AllowedDynamicTables = 999999;
-            AllowedAreas = 999999;
+            AllowedIntents = 999999;
 
             AllowedFileUpload = true;
             AllowedEmailNotifications = true;

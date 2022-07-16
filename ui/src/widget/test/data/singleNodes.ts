@@ -7,7 +7,7 @@ export const ConvoNode: WidgetNodeResource = {
     text: "This is a test",
     nodeChildrenString: "",
     isRoot: true,
-    areaIdentifier: "abc123",
+    intentId: "abc123",
     optionPath: "",
     valueOptions: "", // needs to be split by ",",
     isDynamicTableNode: false,

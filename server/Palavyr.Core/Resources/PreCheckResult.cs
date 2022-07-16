@@ -4,7 +4,7 @@ namespace Palavyr.Core.Resources
 {
     public class PreCheckError
     {
-        public string AreaName { get; set; }
+        public string IntentName { get; set; }
         public List<string> Reasons { get; } = new List<string>();
     }
 

@@ -5,7 +5,7 @@
         public int AllowedAttachments { get; set; }
         public int AllowedStaticTables { get; set; }
         public int AllowedDynamicTables { get; set; }
-        public int AllowedAreas { get; set; }
+        public int AllowedIntents { get; set; }
 
         public bool AllowedFileUpload { get; set; }
         public bool AllowedEmailNotifications { get; set; }
@@ -15,6 +15,6 @@
         public string PlanType { get; set; }
         public bool IsFreePlan { get; set; }
 
-        public int GetDefaultNumAreas() => (new LytePlanTypeMeta()).AllowedAreas;
+        public int GetDefaultNumIntents() => (new LytePlanTypeMeta()).AllowedIntents;
     }
 }

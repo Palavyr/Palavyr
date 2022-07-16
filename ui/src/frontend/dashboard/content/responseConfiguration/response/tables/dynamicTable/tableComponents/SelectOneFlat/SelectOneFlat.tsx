@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SelectOneFlat = ({ showDebug, tableId, setTables, areaIdentifier, deleteAction, tables, tableIndex, availableDynamicTableOptions, tableNameMap, unitTypes, inUse, table }: DynamicTableProps) => {
+export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteAction, tables, tableIndex, availableDynamicTableOptions, tableNameMap, unitTypes, inUse, table }: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
@@ -57,17 +57,17 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, areaIdentifier, d
         setLocalTable(table);
         const useOptionsAsPaths = table.tableMeta.valuesAsPaths;
         setUseOptionsAsPaths(useOptionsAsPaths);
-    }, [areaIdentifier, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {
             if (localTable) {
-                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.areaIdentifier, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                 localTable.tableRows = tableRows;
                 setLocalTable(cloneDeep(localTable));
             }
         })();
-    }, [areaIdentifier, localTable?.tableMeta.tableType]);
+    }, [intentId, localTable?.tableMeta.tableType]);
 
     const modifier = new SelectOneFlatModifier(updatedRows => {
         if (localTable) {
@@ -82,7 +82,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, areaIdentifier, d
     };
 
     const addOptionOnClick = async () => {
-        if (localTable) await modifier.addOption(localTable.tableRows, repository, areaIdentifier, tableId);
+        if (localTable) await modifier.addOption(localTable.tableRows, repository, intentId, tableId);
     };
 
     const onSave = async () => {
@@ -94,7 +94,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, areaIdentifier, d
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
                 const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<SelectOneFlatData[]>(
-                    areaIdentifier,
+                    intentId,
                     DynamicTableTypes.SelectOneFlat,
                     tableRows,
                     localTable.tableMeta.tableId,

@@ -18,7 +18,7 @@ interface CategoryNestedThresholdItemTableProps {
     categoryName: string;
     categoryId: string;
     modifier: CategoryNestedThresholdModifier;
-    areaIdentifier: string;
+    intentId: string;
     unitGroup?: UnitGroups;
     unitPrettyName?: UnitPrettyNames;
 }
@@ -52,14 +52,14 @@ export const CategoryNestedThresholdItemTable = ({
     categoryName,
     categoryId,
     modifier,
-    areaIdentifier,
+    intentId,
     unitPrettyName,
     unitGroup,
 }: CategoryNestedThresholdItemTableProps) => {
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
 
-    const addThresholdOnClick = () => modifier.addThreshold(tableData, categoryId, repository, areaIdentifier, tableId);
+    const addThresholdOnClick = () => modifier.addThreshold(tableData, categoryId, repository, intentId, tableId);
     return (
         <>
             <Table className={cls.tableStyles}>

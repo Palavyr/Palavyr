@@ -31,7 +31,7 @@ export const PercentOfThreshold = ({
     showDebug,
     tableId,
     setTables,
-    areaIdentifier,
+    intentId,
     deleteAction,
     tables,
     tableIndex,
@@ -50,17 +50,17 @@ export const PercentOfThreshold = ({
     useEffect(() => {
         setLocalTable(table);
         setLoaded(true);
-    }, [areaIdentifier, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {
             if (localTable && loaded) {
-                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.areaIdentifier, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                 localTable.tableRows = tableRows;
                 setLocalTable(cloneDeep(localTable));
             }
         })();
-    }, [areaIdentifier, localTable?.tableMeta.tableType]);
+    }, [intentId, localTable?.tableMeta.tableType]);
 
     const modifier = new PercentOfThresholdModifier(updatedRows => {
         if (localTable) {
@@ -70,11 +70,11 @@ export const PercentOfThreshold = ({
     });
 
     const addItemOnClick = async () => {
-        if (localTable) await modifier.addItem(localTable.tableRows, repository, areaIdentifier, tableId);
+        if (localTable) await modifier.addItem(localTable.tableRows, repository, intentId, tableId);
     };
 
     const addRowOnClickFactory = (itemId: string) => async () => {
-        if (localTable) await modifier.addRow(localTable.tableRows, repository, areaIdentifier, tableId, itemId);
+        if (localTable) await modifier.addRow(localTable.tableRows, repository, intentId, tableId, itemId);
     };
 
     const onSave = async () => {
@@ -86,7 +86,7 @@ export const PercentOfThreshold = ({
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
                 const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<PercentOfThresholdData[]>(
-                    areaIdentifier,
+                    intentId,
                     DynamicTableTypes.PercentOfThreshold,
                     tableRows,
                     localTable.tableMeta.tableId,

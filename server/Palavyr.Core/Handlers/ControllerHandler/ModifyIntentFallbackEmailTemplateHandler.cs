@@ -17,9 +17,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<ModifyIntentFallbackEmailTemplateResponse> Handle(ModifyIntentFallbackEmailTemplateRequest request, CancellationToken cancellationToken)
         {
-            var currentArea = await intentStore.Get(request.IntentId, s => s.IntentId);
-            currentArea.FallbackEmailTemplate = request.EmailTemplate;
-            return new ModifyIntentFallbackEmailTemplateResponse(currentArea.FallbackEmailTemplate);
+            var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
+            intent.FallbackEmailTemplate = request.EmailTemplate;
+            return new ModifyIntentFallbackEmailTemplateResponse(intent.FallbackEmailTemplate);
         }
     }
 

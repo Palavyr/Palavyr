@@ -14,9 +14,9 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers
             {
                 Id = @from.Id,
                 AccountId = @from.AccountId,
-                AreaIdentifier = @from.IntentId,
+                IntentId = @from.IntentId,
                 TableId = @from.TableId,
-                Option = @from.Category,
+                Category = @from.Category,
                 ValueMin = @from.ValueMin,
                 ValueMax = @from.ValueMax,
                 Range = @from.Range,

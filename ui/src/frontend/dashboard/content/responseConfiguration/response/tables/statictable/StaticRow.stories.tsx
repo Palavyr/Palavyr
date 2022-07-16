@@ -26,13 +26,13 @@ const MockStaticTableRow: StaticTableRow = {
     range: false,
     perPerson: false,
     tableOrder: 0,
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
     includeTotals: true,
 };
 
 const MockStaticTablesMeta: StaticTableMeta = {
     id: 0,
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
     description: "This is a good first table.",
     tableOrder: 0,
     staticTableRows: [MockStaticTableRow, MockStaticTableRow],

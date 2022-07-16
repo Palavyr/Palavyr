@@ -37,12 +37,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetMissingNodesResponse> Handle(GetMissingNodesRequest request, CancellationToken cancellationToken)
         {
-            var area = await intentStore.GetIntentComplete(request.IntentId);
+            var intent = await intentStore.GetIntentComplete(request.IntentId);
 
-            var dynamicTableMetas = area.DynamicTableMetas;
-            var staticTableMetas = area.StaticTablesMetas;
+            var dynamicTableMetas = intent.DynamicTableMetas;
+            var staticTableMetas = intent.StaticTablesMetas;
 
-            var requiredDynamicNodeTypes = await requiredNodeCalculator.FindRequiredNodes(area);
+            var requiredDynamicNodeTypes = await requiredNodeCalculator.FindRequiredNodes(intent);
             var allMissingNodeTypeNames = missingNodeCalculator.CalculateMissingNodes(requiredDynamicNodeTypes.ToArray(), request.Transactions, dynamicTableMetas, staticTableMetas);
             var nodeOrderCheckResult = nodeOrderChecker.AllDynamicTypesAreOrderedCorrectlyByResolveOrder(request.Transactions.ToArray());
             var errorResponse = new TreeErrorsResource(allMissingNodeTypeNames, nodeOrderCheckResult.ConcatenatedNodeTypes.ToArray());

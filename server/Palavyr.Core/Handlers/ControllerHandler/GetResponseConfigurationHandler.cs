@@ -22,8 +22,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetResponseConfigurationResponse> Handle(GetResponseConfigurationRequest request, CancellationToken cancellationToken)
         {
-            var areaWithAllData = await intentStore.GetIntentComplete(request.IntentId);
-            var resource = await mapper.Map(areaWithAllData);
+            var intentDeep = await intentStore.GetIntentComplete(request.IntentId);
+            var resource = await mapper.Map(intentDeep);
             return new GetResponseConfigurationResponse(resource);
         }
     }

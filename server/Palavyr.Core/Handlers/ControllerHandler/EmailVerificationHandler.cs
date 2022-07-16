@@ -27,15 +27,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<EmailAddressVerificationResponse> Handle(EmailAddressVerificationRequest request, CancellationToken cancellationToken)
         {
-            var area = await intentStore.Get(request.IntentId, s => s.IntentId);
+            var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(request.EmailAddress);
 
-            area.EmailIsVerified = verificationResponse.IsVerified();
-            area.AwaitingVerification = verificationResponse.IsPending();
+            intent.EmailIsVerified = verificationResponse.IsVerified();
+            intent.AwaitingVerification = verificationResponse.IsPending();
 
             if (!verificationResponse.IsFailed())
             {
-                area.IntentSpecificEmail = request.EmailAddress;
+                intent.IntentSpecificEmail = request.EmailAddress;
             }
 
             return new EmailAddressVerificationResponse(verificationResponse);

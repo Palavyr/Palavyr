@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 export const IntentSettings = () => {
     const { repository } = useContext(DashboardContext);
-    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
+    const { intentId } = useParams<{ intentId: string }>();
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [alertState, setAlertState] = useState<boolean>(false);
@@ -59,7 +59,7 @@ export const IntentSettings = () => {
 
     const loadSettings = useCallback(async () => {
         const areas = await repository.Intent.GetAllIntents();
-        const areaData = areas.filter(x => x.areaIdentifier === areaIdentifier)[0];
+        const areaData = areas.filter(x => x.intentId === intentId)[0];
 
         setSettings({
             emailAddress: areaData.areaSpecificEmail,
@@ -71,7 +71,7 @@ export const IntentSettings = () => {
             isEnabled: areaData.isEnabled,
         });
         setIsEnabledState(areaData.isEnabled);
-    }, [areaIdentifier]);
+    }, [intentId]);
 
     useEffect(() => {
         if (!loaded) {
@@ -86,7 +86,7 @@ export const IntentSettings = () => {
 
     const handleIntentNameChange = async (newAreaName: string) => {
         if (newAreaName === settings.areaName) return;
-        const updatedAreaName = await repository.Intent.UpdateIntentName(areaIdentifier, newAreaName);
+        const updatedAreaName = await repository.Intent.UpdateIntentName(intentId, newAreaName);
         const updatedSettings = { ...settings, areaName: updatedAreaName };
         setSettings(updatedSettings);
         window.location.reload(); // reloads the sidebar...
@@ -94,20 +94,20 @@ export const IntentSettings = () => {
 
     const handleIntentDisplayTitleChange = async (newAreaDisplayTitle: any) => {
         if (newAreaDisplayTitle === settings.areaTitle) return;
-        const updatedDisplayTitle = await repository.Intent.updateDisplayTitle(areaIdentifier, newAreaDisplayTitle);
+        const updatedDisplayTitle = await repository.Intent.updateDisplayTitle(intentId, newAreaDisplayTitle);
         window.location.reload();
         const updatedSettings = { ...settings, areaTitle: updatedDisplayTitle };
         setSettings(updatedSettings);
     };
 
     const handleIntentDelete = async () => {
-        await repository.Intent.deleteArea(areaIdentifier);
+        await repository.Intent.deleteArea(intentId);
         history.push("/dashboard");
         window.location.reload();
     };
 
     const verifyEmailAddress = async (newEmailAddress: string) => {
-        const emailVerification = await repository.Settings.EmailVerification.RequestEmailVerification(newEmailAddress, areaIdentifier);
+        const emailVerification = await repository.Settings.EmailVerification.RequestEmailVerification(newEmailAddress, intentId);
         setAlertDetails({ title: emailVerification.title, message: emailVerification.message });
         setAlertState(true);
         if (!(emailVerification.status === "Failed")) {
@@ -132,7 +132,7 @@ export const IntentSettings = () => {
     };
 
     const onIntentEnabledToggleChange = async () => {
-        const updatedisEnabled = await repository.Intent.ToggleIsEnabled(!isEnabledState, areaIdentifier);
+        const updatedisEnabled = await repository.Intent.ToggleIsEnabled(!isEnabledState, intentId);
         setIsEnabledState(updatedisEnabled);
     };
 

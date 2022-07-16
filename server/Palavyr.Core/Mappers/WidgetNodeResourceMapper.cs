@@ -43,7 +43,7 @@ namespace Palavyr.Core.Mappers
             
             return new WidgetNodeResource
             {
-                AreaIdentifier = @from.IntentId,
+                IntentId = @from.IntentId,
                 Text = @from.Text,
                 NodeType = @from.NodeType,
                 NodeComponentType = @from.NodeComponentType,

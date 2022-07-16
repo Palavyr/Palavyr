@@ -23,7 +23,7 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                     {
                         r.RuleFor(x => x.Range).NotNull();
                         r.RuleFor(x => x.AccountId).NotEmpty();
-                        r.RuleFor(x => x.AreaIdentifier).NotEmpty();
+                        r.RuleFor(x => x.IntentId).NotEmpty();
                         r.RuleFor(x => x.ItemId).NotEmpty();
                         r.RuleFor(x => x.ItemName).NotEmpty();
                         r.RuleFor(x => x.ItemOrder).NotNull().GreaterThanOrEqualTo(0);

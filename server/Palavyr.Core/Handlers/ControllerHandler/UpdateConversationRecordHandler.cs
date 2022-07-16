@@ -25,7 +25,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task Handle(UpdateConversationRecordRequest request, CancellationToken cancellationToken)
         {
-            var areaId = request.IntentId;
+            var intentId = request.IntentId;
             var email = request.Email;
             var name = request.Name;
             var phone = request.PhoneNumber;
@@ -34,10 +34,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             var record = await convoRecordStore.Get(request.ConversationId, s => s.ConversationId);
 
-            if (!string.IsNullOrEmpty(areaId)) // we set this already when we create the convo, but here we use it to indicate if we've sent an email.
+            if (!string.IsNullOrEmpty(intentId)) // we set this already when we create the convo, but here we use it to indicate if we've sent an email.
             {
-                var area = await intentStore.Get(request.IntentId, s => s.IntentId);
-                record.EmailTemplateUsed = area.EmailTemplate;
+                var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
+                record.EmailTemplateUsed = intent.EmailTemplate;
             }
 
             if (!string.IsNullOrEmpty(email))

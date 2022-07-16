@@ -92,8 +92,8 @@ export class PalavyrRepository {
     };
 
     public Intent = {
-        ToggleIsEnabled: async (areaToggleStateUpdate: boolean, intentId: string) => {
-            const update = this.client.put<boolean, {}>(`areas/area-toggle`, { IsEnabled: areaToggleStateUpdate, IntentId: intentId });
+        ToggleIsEnabled: async (intentToggleStateUpdate: boolean, intentId: string) => {
+            const update = this.client.put<boolean, {}>(`intents/intent-toggle`, { IsEnabled: intentToggleStateUpdate, IntentId: intentId });
             SessionStorage.clearCacheValue(CacheIds.Areas);
             return update;
         },
@@ -107,19 +107,19 @@ export class PalavyrRepository {
             SessionStorage.setCacheValue(CacheIds.Areas, areas);
             return newArea;
         },
-        UpdateIntentName: (areaIdentifier: string, areaName: string) => {
-            const result = this.client.put<string, {}>(`areas/update/name/${areaIdentifier}`, { AreaName: areaName });
+        UpdateIntentName: (intentId: string, areaName: string) => {
+            const result = this.client.put<string, {}>(`areas/update/name/${intentId}`, { AreaName: areaName });
             SessionStorage.clearCacheValue(CacheIds.Areas);
             return result;
         },
-        // updateDisplayTitle: (areaIdentifier: string, displayTitle: string) => {
-        //     const result = this.client.put<string, {}>(`areas/update/display-title/${areaIdentifier}`, { AreaDisplayTitle: displayTitle });
+        // updateDisplayTitle: (intentId: string, displayTitle: string) => {
+        //     const result = this.client.put<string, {}>(`areas/update/display-title/${intentId}`, { AreaDisplayTitle: displayTitle });
         //     SessionStorage.clearCacheValue(CacheIds.Areas);
         //     return result;
         // },
 
         deleteArea: (intentId: string) => this.client.delete<void>(`intents/delete/${intentId}`, CacheIds.Areas),
-        toggleSendPdfResponse: (areaIdentifier: string) => this.client.post<boolean, {}>(`area/send-pdf/${areaIdentifier}`),
+        toggleSendPdfResponse: (intentId: string) => this.client.post<boolean, {}>(`intent/${intentId}/send-pdf`),
         getShowDynamicTotals: (intentId: string) => this.client.get<boolean>(`area/dynamic-totals/${intentId}`),
         setShowDynamicTotals: (intentId: string, shouldShow: boolean) => this.client.put<boolean, {}>(`area/dynamic-totals`, { ShowDynamicTotals: shouldShow, IntentId: intentId }),
     };
@@ -139,14 +139,14 @@ export class PalavyrRepository {
         },
         Tables: {
             Dynamic: {
-                getDynamicTableMetas: async (areaIdentifier: string) => this.client.get<DynamicTableMetas>(`tables/dynamic/metas/${areaIdentifier}`), // todo - cache
+                getDynamicTableMetas: async (intentId: string) => this.client.get<DynamicTableMetas>(`tables/dynamic/metas/${intentId}`), // todo - cache
 
                 getDynamicTableTypes: async () => this.client.get<TableNameMap>(`tables/dynamic/table-name-map`),
 
                 modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta) => {
                     console.log(dynamicTableMeta);
                     return this.client.put<DynamicTableMeta, {}>(`tables/dynamic/modify`, dynamicTableMeta);
-                    // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, dynamicTableMeta.areaIdentifier].join("-"));
+                    // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, dynamicTableMeta.intentId].join("-"));
                     // return response;
                 },
 
@@ -178,8 +178,8 @@ export class PalavyrRepository {
                 updateStaticTablesMetas: async (intentId: string, staticTablesMetas: StaticTableMetas) =>
                     this.client.put<StaticTableMetas, {}>(`response/configuration/static/tables/save`, { StaticTableMetaUpdate: staticTablesMetas, IntentId: intentId }),
                 getStaticTablesMetaTemplate: async (intentId: string) => this.client.get<StaticTableMetaTemplate>(`response/configuration/${intentId}/static/tables/template`),
-                getStaticTableRowTemplate: async (areaIdentifier: string, tableOrder: number) =>
-                    this.client.get<StaticTableRow>(`response/configuration/${areaIdentifier}/static/tables/${tableOrder}/row/template`),
+                getStaticTableRowTemplate: async (intentId: string, tableOrder: number) =>
+                    this.client.get<StaticTableRow>(`response/configuration/${intentId}/static/tables/${tableOrder}/row/template`),
             },
         },
 
@@ -190,8 +190,8 @@ export class PalavyrRepository {
         Email: {
             GetVariableDetails: async () => this.client.get<VariableDetail[]>(`email/variables`),
 
-            GetAreaEmailTemplate: async (areaIdentifier: string) => this.client.get<string>(`email/${areaIdentifier}/email-template`),
-            GetAreaFallbackEmailTemplate: async (areaIdentifier: string) => this.client.get<string>(`email/fallback/${areaIdentifier}/email-template`),
+            GetAreaEmailTemplate: async (intentId: string) => this.client.get<string>(`email/${intentId}/email-template`),
+            GetAreaFallbackEmailTemplate: async (intentId: string) => this.client.get<string>(`email/fallback/${intentId}/email-template`),
             GetDefaultFallbackEmailTemplate: async () => this.client.get<string>(`email/fallback/default-email-template`),
 
             SaveAreaEmailTemplate: async (intentId: string, EmailTemplate: string) => this.client.put<string, {}>(`email/email-template`, { EmailTemplate, IntentId: intentId }),
@@ -199,7 +199,7 @@ export class PalavyrRepository {
             SaveDefaultFallbackEmailTemplate: async (EmailTemplate: string) => this.client.put<string, {}>(`email/fallback/default-email-template`, { EmailTemplate }),
 
             GetAreaSubject: (intentId: string) => this.client.get<string>(`email/subject/${intentId}`),
-            GetAreaFallbackSubject: (areaIdentifier: string) => this.client.get<string>(`email/fallback/subject/${areaIdentifier}`),
+            GetAreaFallbackSubject: (intentId: string) => this.client.get<string>(`email/fallback/subject/${intentId}`),
             GetDefaultFallbackSubject: async () => this.client.get<string>(`email/default-fallback-subject`),
 
             SaveAreaSubject: (intentId: string, subject: string) => this.client.put<string, {}>(`email/subject`, { Subject: subject, IntentId: intentId }),
@@ -255,19 +255,19 @@ export class PalavyrRepository {
     };
 
     public Conversations = {
-        GetConversation: async (areaIdentifier: string) => this.client.get<ConvoNode[]>(`configure-conversations/${areaIdentifier}`, [CacheIds.PalavyrConfiguration, areaIdentifier].join("-") as CacheIds),
+        GetConversation: async (intentId: string) => this.client.get<ConvoNode[]>(`configure-conversations/${intentId}`, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
         GetConversationNode: async (nodeId: string) => this.client.get<ConvoNode>(`configure-conversations/nodes/${nodeId}`),
-        GetNodeOptionsList: async (areaIdentifier: string, planTypeMeta: PlanTypeMeta) =>
-            filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptions>(`configure-conversations/${areaIdentifier}/node-type-options`), planTypeMeta),
-        GetIntroNodeOptionsList: async () => this.client.get<NodeTypeOptions>(`configure-intro/{introId}/node-type-options`),
+        GetNodeOptionsList: async (intentId: string, planTypeMeta: PlanTypeMeta) =>
+            filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptions>(`configure-conversations/${intentId}/node-type-options`), planTypeMeta),
+        GetIntroNodeOptionsList: async (introId: string) => this.client.get<NodeTypeOptions>(`configure-intro/${introId}/node-type-options`),
 
         GetErrors: async (intentId: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(`configure-conversations/tree-errors`, { Transactions: nodeList, IntentId: intentId }),
         GetIntroErrors: async (introId: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(`configure-conversations/intro/tree-errors`, { Transactions: nodeList, IntroId: introId }),
 
         ModifyConversation: async (nodelist: ConvoNode[], intentId: string) =>
             this.client.put<ConvoNode[], {}>(`configure-conversations`, { Transactions: nodelist, IntentId: intentId }, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
-        ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoNode) =>
-            this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode, [CacheIds.PalavyrConfiguration, areaIdentifier].join("-") as CacheIds),
+        ModifyConversationNode: async (nodeId: string, intentId: string, updatedNode: ConvoNode) =>
+            this.client.put<ConvoNode[], {}>(`configure-conversations/${intentId}/nodes/${nodeId}`, updatedNode, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
         ModifyConversationNodeText: async (nodeId: string, intentId: string, updatedNodeText: string) => {
             const result = await this.client.put<ConvoNode | null, {}>(`configure-conversations/nodes/text`, { UpdatedNodeText: updatedNodeText, IntentId: intentId, NodeId: nodeId });
             SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));

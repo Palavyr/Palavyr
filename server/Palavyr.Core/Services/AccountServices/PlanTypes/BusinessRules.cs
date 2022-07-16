@@ -11,7 +11,7 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         Task<int> GetAllowedAttachments();
         Task<int> GetAllowedStaticTables();
         Task<int> GetAllowedDynamicTables();
-        Task<int> GetAllowedAreas();
+        Task<int> GetAllowedIntents();
         Task<bool> GetAllowedImageUpload();
         Task<bool> GetAllowedEmailNotifications();
         Task<bool> GetAllowedInlineEmailEditor();
@@ -73,10 +73,10 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
             return currentPlan.AllowedDynamicTables;
         }
 
-        public async Task<int> GetAllowedAreas()
+        public async Task<int> GetAllowedIntents()
         {
             var currentPlan = await GetPlanTypeMeta();
-            return currentPlan.AllowedAreas;
+            return currentPlan.AllowedIntents;
         }
 
         public async Task<bool> GetAllowedImageUpload()

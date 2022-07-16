@@ -91,9 +91,9 @@ namespace IntegrationTests.DataCreators
             var resource = new SelectOneFlatResource()
             {
                 AccountId = this.accountId ?? test.AccountId,
-                AreaIdentifier = intentid ?? A.RandomId(),
+                IntentId = intentid ?? A.RandomId(),
                 TableId = this.tableId ?? A.RandomId(),
-                Option = this.option ?? A.RandomString(),
+                Category = this.option ?? A.RandomString(),
                 ValueMin = this.valueMin ?? A.RandomInt(0, 10),
                 ValueMax = this.valueMax ?? A.RandomInt(11, 20), // no overlap with min
                 Range = this.range ?? false,
@@ -110,7 +110,7 @@ namespace IntegrationTests.DataCreators
                 .Client
                 .Post<CreatePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>, List<SelectOneFlatResource>>(
                     test.CancellationToken,
-                    s => CreatePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(resource.AreaIdentifier));
+                    s => CreatePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(resource.IntentId));
 
 
             newTable.Add(resource);
@@ -118,7 +118,7 @@ namespace IntegrationTests.DataCreators
                 .Post<SavePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>, SavePricingStrategyTableResponse<SelectOneFlatResource>>(
                     newTable,
                     test.CancellationToken,
-                    s => SavePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(intentId ?? newTable.First().AreaIdentifier, newTable.First().TableId));
+                    s => SavePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(intentId ?? newTable.First().IntentId, newTable.First().TableId));
             newTable = response.Resource.TableRows;
             return newTable;
         }

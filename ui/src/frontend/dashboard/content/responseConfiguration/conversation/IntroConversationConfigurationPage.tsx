@@ -11,7 +11,7 @@ import { IPalavyrLinkedList } from "@Palavyr-Types";
 
 export const IntroConversationConfigurationPage = () => {
     const { planTypeMeta, repository } = useContext(DashboardContext);
-    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
+    const { intentId } = useParams<{ intentId: string }>();
     const [nodeTypeOptions, setNodeTypeOptions] = useState<NodeTypeOptions>([]);
     const [linkedNodeList, setLinkedNodes] = useState<IPalavyrLinkedList>();
     const [historyTracker, setHistoryTracker] = useState<ConversationHistoryTracker | null>(null);
@@ -19,37 +19,37 @@ export const IntroConversationConfigurationPage = () => {
     const [useNewEditor, setUseNewEditor] = useState<boolean>(true);
 
     const loadNodes = useCallback(async () => {
-        const nodes = await repository.Conversations.GetConversation(areaIdentifier);
+        const nodes = await repository.Conversations.GetConversation(intentId);
 
         const nodeTypeOptions = await repository.Conversations.GetIntroNodeOptionsList();
 
         const tracker = new ConversationHistoryTracker(setLinkedNodes, linkedNodeList, nodeTypeOptions);
-        const initialList = new PalavyrLinkedList(nodes, areaIdentifier, (treeUpdate: IPalavyrLinkedList) => tracker.addConversationHistoryToQueue(treeUpdate), nodeTypeOptions, repository, []);
+        const initialList = new PalavyrLinkedList(nodes, intentId, (treeUpdate: IPalavyrLinkedList) => tracker.addConversationHistoryToQueue(treeUpdate), nodeTypeOptions, repository, []);
         tracker.initializeConversation(initialList);
 
         setNodeTypeOptions(nodeTypeOptions);
         setHistoryTracker(tracker);
-    }, [areaIdentifier, planTypeMeta]);
+    }, [intentId, planTypeMeta]);
 
     useEffect(() => {
         loadNodes();
     }, [loadNodes, planTypeMeta]);
 
-    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, areaIdentifier: string, nodeList: ConvoNode[]) => {
-        const treeErrors = await repository.Conversations.GetIntroErrors(areaIdentifier, nodeList);
+    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, intentId: string, nodeList: ConvoNode[]) => {
+        const treeErrors = await repository.Conversations.GetIntroErrors(intentId, nodeList);
         setTreeErrors(treeErrors);
     };
 
     const onSave = async () => {
         if (historyTracker && historyTracker.linkedNodeList && planTypeMeta) {
             const compiledNodes = historyTracker.linkedNodeList.compileToConvoNodes();
-            const updatedConvoNodes = await repository.Settings.Account.updateIntroduction(areaIdentifier, compiledNodes);
-            let nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
+            const updatedConvoNodes = await repository.Settings.Account.updateIntroduction(intentId, compiledNodes);
+            let nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(intentId, planTypeMeta);
             nodeTypeOptions = nodeTypeOptions.filter(x => x.value === "ProvideInfo");
 
             const updatedLinkedList = new PalavyrLinkedList(
                 updatedConvoNodes,
-                areaIdentifier,
+                intentId,
                 (updatedTree: IPalavyrLinkedList) => historyTracker.addConversationHistoryToQueue(updatedTree),
                 nodeTypeOptions,
                 repository,

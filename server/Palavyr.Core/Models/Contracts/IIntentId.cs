@@ -1,6 +1,6 @@
 ﻿namespace Palavyr.Core.Models.Contracts
 {
-    public interface IArea
+    public interface IIntentId
     {
         public string IntentId { get; set; }
     }

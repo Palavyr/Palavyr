@@ -50,7 +50,7 @@ export class NodeCreator {
             nodeChildrenString: "",
             isRoot: false,
             isCritical: false,
-            areaIdentifier: "",
+            intentId: "",
             optionPath: optionPath,
             valueOptions: "",
             isMultiOptionType: false,

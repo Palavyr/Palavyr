@@ -89,7 +89,7 @@ export class StandardComponents {
             const loadAreas = useCallback(async () => {
                 var intents = await client.Widget.Get.Intents();
                 var options = intents.map((intent: AreaTable) => {
-                    return { areaDisplay: intent.areaDisplayTitle, areaId: intent.areaIdentifier };
+                    return { areaDisplay: intent.areaDisplayTitle, areaId: intent.intentId };
                 });
 
                 setOptions(options);
@@ -535,7 +535,7 @@ export class StandardComponents {
     }
 
     makeSendEmail({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
-        const areaId = nodeList[0].areaIdentifier;
+        const areaId = nodeList[0].intentId;
 
         return () => {
             const { context, isDemo } = useContext(WidgetContext);
@@ -643,7 +643,7 @@ export class StandardComponents {
     };
 
     makeSendFallbackEmail({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
-        const areaId = nodeList[0].areaIdentifier;
+        const areaId = nodeList[0].intentId;
 
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);

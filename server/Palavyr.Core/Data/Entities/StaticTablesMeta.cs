@@ -37,14 +37,14 @@ namespace Palavyr.Core.Data.Entities
             };
         }
 
-        public static StaticTablesMeta CreateNewMetaTemplate(string areaId, string accountId)
+        public static StaticTablesMeta CreateNewMetaTemplate(string intentId, string accountId)
         {
             return new StaticTablesMeta()
             {
                 TableOrder = 0,
                 Description = DefaultDescription,
-                IntentId = areaId,
-                StaticTableRows = StaticTableRow.CreateDefaultStaticTable(0, areaId, accountId),
+                IntentId = intentId,
+                StaticTableRows = StaticTableRow.CreateDefaultStaticTable(0, intentId, accountId),
                 PerPersonInputRequired = false,
                 IncludeTotals = true
             };

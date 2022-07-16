@@ -7,7 +7,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
 {
     public static class AddAnabranchExtensionMethod
     {
-        public static MultiNodeReturnObject AddAnabranch(this ConversationNode previousNode, string[] options, string areaId = DefaultConstants.AreaIdentifier, string accountId = DefaultConstants.AccountId)
+        public static MultiNodeReturnObject AddAnabranch(this ConversationNode previousNode, string[] options, string itentId = DefaultConstants.IntentId, string accountId = DefaultConstants.AccountId)
         {
             var newId = StaticGuidUtils.CreateNewId();
             previousNode.AttachNewChildId(newId);
@@ -16,7 +16,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
                 StaticGuidUtils.CreateNewId(),
                 DefaultNodeTypeOptions.Anabranch.StringName,
                 "",
-                areaId,
+                itentId,
                 "",
                 "",
                 "",

@@ -23,7 +23,7 @@ namespace Palavyr.Core.Mappers
                 @from.NodeId,
                 @from.NodeType,
                 @from.Text,
-                @from.AreaIdentifier,
+                @from.IntentId,
                 @from.NodeChildrenString,
                 @from.OptionPath,
                 @from.ValueOptions,

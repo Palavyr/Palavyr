@@ -29,7 +29,7 @@ export const ToursPage = () => {
             Cookies.remove(EDITOR_TOUR_COOKIE_NAME);
         }
 
-        const navUrl = createNavLink(areaNameDetails[0].areaIdentifier);
+        const navUrl = createNavLink(areaNameDetails[0].intentId);
         history.push(navUrl);
     };
 

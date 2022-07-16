@@ -36,21 +36,21 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetWidgetPreCheckResponse> Handle(GetWidgetPreCheckRequest request, CancellationToken cancellationToken)
         {
-            logger.LogDebug($"Was the demo query param found? {request.Demo}");
+            logger.LogDebug("Was the demo query param found? {Demo}", request.Demo);
             logger.LogDebug("Running live widget pre-check...");
             logger.LogDebug("Checking if account ID exists...");
-            if (accountIdTransport.AccountId == null)
+            if (accountIdTransport?.AccountId == null)
             {
                 return new GetWidgetPreCheckResponse(PreCheckResult.CreateApiKeyResult(false));
             }
 
             var widgetPrefs = await widgetStore.Get(widgetStore.AccountId, s => s.AccountId);
-            var areas = await intentStore.GetActiveIntentsWithConvoAndDynamicAndStaticTables();
+            var intents = await intentStore.GetActiveIntentsWithConvoAndDynamicAndStaticTables();
 
-            var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(areas, widgetPrefs, request.Demo, logger);
-            logger.LogDebug($"Pre-check run successful.");
-            logger.LogDebug($"Ready result:{result.IsReady}");
-            logger.LogDebug($"Incomplete areas: {result.PreCheckErrors.Select(x => x.AreaName).ToList()} ");
+            var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(intents, widgetPrefs, request.Demo, logger);
+            logger.LogDebug("Pre-check run successful");
+            logger.LogDebug("Ready result:{IsReady}", result.IsReady);
+            logger.LogDebug("Incomplete intents: {Intents}", result.PreCheckErrors.Select(x => x.IntentName).ToList());
             return new GetWidgetPreCheckResponse(result);
         }
     }

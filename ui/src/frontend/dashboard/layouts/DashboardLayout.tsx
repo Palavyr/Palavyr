@@ -36,7 +36,7 @@ import $ from "jquery";
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
         return {
-            areaIdentifier: x.areaIdentifier,
+            intentId: x.intentId,
             areaName: x.areaName,
         };
     });
@@ -145,7 +145,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const theme = useTheme();
 
     const history = useHistory();
-    const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
+    const { intentId } = useParams<{ contentType: string; intentId: string }>();
 
     const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
     const [, setLoaded] = useState<boolean>(false);
@@ -211,15 +211,15 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         const numUnseen = await repository.Enquiries.getEnquiryCount();
         setUnseenNotifications(numUnseen);
 
-        if (areaIdentifier) {
-            const currentView = areas.filter((x: AreaTable) => x.areaIdentifier === areaIdentifier).pop();
+        if (intentId) {
+            const currentView = areas.filter((x: AreaTable) => x.intentId === intentId).pop();
 
             if (currentView) {
                 setViewName(currentView.areaName);
             }
         }
         setDashboardAreasLoading(false);
-    }, [areaIdentifier]);
+    }, [intentId]);
 
     useEffect(() => {
         const menuStateString = Cookies.get(MENU_DRAWER_STATE_COOKIE_NAME);
@@ -237,14 +237,14 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         return () => {
             setLoaded(false);
         };
-    }, [areaIdentifier, loadAreas]);
+    }, [intentId, loadAreas]);
 
     const setNewArea = (newArea: AreaTable) => {
         const newNames = cloneDeep(areaNameDetails);
 
-        newNames.push({ areaName: newArea.areaName, areaIdentifier: newArea.areaIdentifier });
+        newNames.push({ areaName: newArea.areaName, intentId: newArea.intentId });
         setAreaNameDetails(newNames);
-        history.push(defaultUrlForNewArea(newArea.areaIdentifier));
+        history.push(defaultUrlForNewArea(newArea.intentId));
     };
 
     const handleDrawerClose: () => void = () => {
@@ -309,7 +309,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
             {planTypeMeta && (
                 <DashboardContext.Provider
                     value={{
-                        areaIdentifier,
+                        intentId,
                         reRenderDashboard,
                         successOpen,
                         setSuccessOpen,

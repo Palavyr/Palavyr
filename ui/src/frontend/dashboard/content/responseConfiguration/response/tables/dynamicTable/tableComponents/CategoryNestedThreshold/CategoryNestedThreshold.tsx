@@ -35,7 +35,7 @@ export const CategoryNestedThreshold = ({
     showDebug,
     tableId,
     setTables,
-    areaIdentifier,
+    intentId,
     deleteAction,
     tables,
     tableIndex,
@@ -52,17 +52,17 @@ export const CategoryNestedThreshold = ({
     const [localTable, setLocalTable] = useState<DynamicTable>();
     useEffect(() => {
         if (isMounted) setLocalTable(table);
-    }, [areaIdentifier, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {
             if (localTable && isMounted) {
-                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.areaIdentifier, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                 localTable.tableRows = tableRows;
                 setLocalTable(cloneDeep(localTable));
             }
         })();
-    }, [areaIdentifier, localTable?.tableMeta.tableType]);
+    }, [intentId, localTable?.tableMeta.tableType]);
 
     const modifier = new CategoryNestedThresholdModifier(updatedRows => {
         if (localTable) {
@@ -72,7 +72,7 @@ export const CategoryNestedThreshold = ({
     });
 
     const addCategory = async () => {
-        if (localTable) await modifier.addCategory(localTable.tableRows, repository, areaIdentifier, tableId);
+        if (localTable) await modifier.addCategory(localTable.tableRows, repository, intentId, tableId);
     };
 
     const onSave = async () => {
@@ -84,7 +84,7 @@ export const CategoryNestedThreshold = ({
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
                 const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<CategoryNestedThresholdData[]>(
-                    areaIdentifier,
+                    intentId,
                     DynamicTableTypes.CategoryNestedThreshold,
                     tableRows,
                     localTable.tableMeta.tableId,
@@ -118,7 +118,7 @@ export const CategoryNestedThreshold = ({
                 tableData={localTable.tableRows}
                 modifier={modifier}
                 tableId={tableId}
-                areaIdentifier={areaIdentifier}
+                intentId={intentId}
                 unitPrettyName={localTable.tableMeta.unitPrettyName}
                 unitGroup={localTable.tableMeta.unitGroup}
             />

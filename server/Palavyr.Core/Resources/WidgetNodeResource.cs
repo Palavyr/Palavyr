@@ -4,7 +4,7 @@ namespace Palavyr.Core.Resources
 {
     public class WidgetNodeResource
     {
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public string NodeId { get; set; }
         public string Text { get; set; }
         public string NodeType { get; set; }

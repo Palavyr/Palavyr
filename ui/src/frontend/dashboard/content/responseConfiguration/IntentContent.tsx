@@ -56,7 +56,7 @@ export const IntentContentInner = ({ setLoaded, children }: IntentContentInnerPr
     const history = useHistory();
     const location = useLocation();
 
-    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
+    const { intentId } = useParams<{ intentId: string }>();
 
     const searchParams = new URLSearchParams(location.search);
     const rawTab = searchParams.get("tab");
@@ -66,7 +66,7 @@ export const IntentContentInner = ({ setLoaded, children }: IntentContentInnerPr
     const { isActive } = React.useContext(AuthContext);
 
     const sendTo = (loc: string, dest: number) => {
-        history.push(`/dashboard/editor/${loc}/${areaIdentifier}?tab=${dest}`);
+        history.push(`/dashboard/editor/${loc}/${intentId}?tab=${dest}`);
     };
 
     useEffect(() => {

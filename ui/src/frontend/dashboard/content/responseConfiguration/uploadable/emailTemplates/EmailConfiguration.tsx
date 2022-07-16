@@ -10,7 +10,7 @@ import { EmailConfigurationComponent } from "./EmailConfigurationComponent";
 export const EmailConfiguration = () => {
     const { repository } = useContext(DashboardContext);
 
-    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
+    const { intentId } = useParams<{ intentId: string }>();
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [settings, setSettings] = useState<Partial<Settings>>({ useAreaFallbackEmail: false });
@@ -20,7 +20,7 @@ export const EmailConfiguration = () => {
     const [useAreaFallbackEmail, setUseAreaFallbackEmail] = useState<boolean>(false);
 
     const onUseAreaFallbackEmailToggle = async () => {
-        const updatedUsAreaFallback = await repository.Intent.ToggleUseAreaFallbackEmail(!useAreaEmail, areaIdentifier);
+        const updatedUsAreaFallback = await repository.Intent.ToggleUseAreaFallbackEmail(!useAreaEmail, intentId);
         setUseAreaEmail(updatedUsAreaFallback);
         setUseAreaFallbackEmail(!useAreaFallbackEmail);
     };
@@ -35,7 +35,7 @@ export const EmailConfiguration = () => {
 
     const loadSettings = useCallback(async () => {
         const areas = await repository.Intent.GetAllIntents();
-        const areaData = areas.filter((x) => x.areaIdentifier === areaIdentifier)[0];
+        const areaData = areas.filter((x) => x.intentId === intentId)[0];
         setSettings({
             ...settings,
             useAreaFallbackEmail: areaData.useAreaFallbackEmail,
@@ -60,10 +60,10 @@ export const EmailConfiguration = () => {
             {variableDetails && (
                 <EmailConfigurationComponent
                     variableDetails={variableDetails}
-                    saveEmailTemplate={async (emailTemplate: string) => await repository.Configuration.Email.SaveAreaEmailTemplate(areaIdentifier, emailTemplate)}
-                    saveEmailSubject={async (subject: string) => await repository.Configuration.Email.SaveAreaSubject(areaIdentifier, subject)}
-                    getCurrentEmailSubject={async () => await repository.Configuration.Email.GetAreaSubject(areaIdentifier)}
-                    getCurrentEmailTemplate={async () => await repository.Configuration.Email.GetAreaEmailTemplate(areaIdentifier)}
+                    saveEmailTemplate={async (emailTemplate: string) => await repository.Configuration.Email.SaveAreaEmailTemplate(intentId, emailTemplate)}
+                    saveEmailSubject={async (subject: string) => await repository.Configuration.Email.SaveAreaSubject(intentId, subject)}
+                    getCurrentEmailSubject={async () => await repository.Configuration.Email.GetAreaSubject(intentId)}
+                    getCurrentEmailTemplate={async () => await repository.Configuration.Email.GetAreaEmailTemplate(intentId)}
                 />
             )}
             <Divider />
@@ -76,10 +76,10 @@ export const EmailConfiguration = () => {
                     {variableDetails && (
                         <EmailConfigurationComponent
                             variableDetails={variableDetails}
-                            saveEmailTemplate={async (emailTemplate: string) => await repository.Configuration.Email.SaveAreaFallbackEmailTemplate(areaIdentifier, emailTemplate)}
-                            saveEmailSubject={async (emailSubject: string) => await repository.Configuration.Email.SaveAreaFallbackSubject(areaIdentifier, emailSubject)}
-                            getCurrentEmailSubject={async () => await repository.Configuration.Email.GetAreaFallbackSubject(areaIdentifier)}
-                            getCurrentEmailTemplate={async () => await repository.Configuration.Email.GetAreaFallbackEmailTemplate(areaIdentifier)}
+                            saveEmailTemplate={async (emailTemplate: string) => await repository.Configuration.Email.SaveAreaFallbackEmailTemplate(intentId, emailTemplate)}
+                            saveEmailSubject={async (emailSubject: string) => await repository.Configuration.Email.SaveAreaFallbackSubject(intentId, emailSubject)}
+                            getCurrentEmailSubject={async () => await repository.Configuration.Email.GetAreaFallbackSubject(intentId)}
+                            getCurrentEmailTemplate={async () => await repository.Configuration.Email.GetAreaFallbackEmailTemplate(intentId)}
                         />
                     )}
                 </>

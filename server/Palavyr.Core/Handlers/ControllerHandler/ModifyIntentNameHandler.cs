@@ -38,7 +38,7 @@ namespace Palavyr.API.Controllers.Intents
 
     public class ModifyIntentNameRequest : IRequest<ModifyIntentNameResponse>
     {
-        public const string Route = "areas/update/name/{intentId}";
+        public const string Route = "intents/update/name/{intentId}";
 
         public static string FormatRoute(string intentId)
         {

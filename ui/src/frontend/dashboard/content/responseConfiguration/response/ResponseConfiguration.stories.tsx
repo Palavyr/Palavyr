@@ -14,5 +14,5 @@ const Template = (args: any) => <ResponseConfiguration {...args} />;
 // TODO: Mock api call to get data
 export const Primary = Template.bind({});
 Primary.args = {
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
 }

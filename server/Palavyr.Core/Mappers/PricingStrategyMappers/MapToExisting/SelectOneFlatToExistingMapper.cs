@@ -11,10 +11,10 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
         {
             await Task.CompletedTask;
             to.Id = from.Id;
-            to.Category = from.Option;
+            to.Category = from.Category;
             to.Range = from.Range;
             to.AccountId = from.AccountId;
-            to.IntentId = from.AreaIdentifier;
+            to.IntentId = from.IntentId;
             to.RowOrder = from.RowOrder;
             to.TableId = from.TableId;
             to.ValueMax = from.ValueMax;
@@ -32,7 +32,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
             to.Range = from.Range;
             to.Threshold = from.Threshold;
             to.AccountId = from.AccountId;
-            to.IntentId = from.AreaIdentifier;
+            to.IntentId = from.IntentId;
             to.ItemName = from.ItemName;
             to.RowId = from.RowId;
             to.RowOrder = from.RowOrder;
@@ -53,7 +53,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
             to.Range = from.Range;
             to.Threshold = from.Threshold;
             to.AccountId = from.AccountId;
-            to.IntentId = from.AreaIdentifier;
+            to.IntentId = from.IntentId;
             to.ItemId = from.ItemId;
             to.Category = from.ItemName;
             to.ItemOrder = from.ItemOrder;
@@ -77,7 +77,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
             to.Range = from.Range;
             to.Threshold = from.Threshold;
             to.AccountId = from.AccountId;
-            to.IntentId = from.AreaIdentifier;
+            to.IntentId = from.IntentId;
             to.ItemId = from.ItemId;
             to.Category = from.ItemName;
             to.ItemOrder = from.ItemOrder;
@@ -100,7 +100,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
             to.Id = from.Id;
             to.Range = from.Range;
             to.AccountId = from.AccountId;
-            to.IntentId = from.AreaIdentifier;
+            to.IntentId = from.IntentId;
             to.ItemId = from.ItemId;
             to.Category = from.ItemId;
             to.ItemOrder = from.ItemOrder;

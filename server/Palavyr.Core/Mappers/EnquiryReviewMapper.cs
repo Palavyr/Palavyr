@@ -33,7 +33,7 @@ namespace Palavyr.Core.Mappers
                 FileAssetResource = fileAssetResource,
                 TimeStamp = @from.TimeStamp.ToString(),
                 AccountId = @from.AccountId,
-                AreaName = @from.IntentName,
+                IntentName = @from.IntentName,
                 EmailTemplateUsed = @from.EmailTemplateUsed,
                 Seen = @from.Seen,
                 Name = @from.Name,

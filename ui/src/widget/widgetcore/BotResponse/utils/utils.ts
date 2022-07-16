@@ -24,7 +24,7 @@ export const getOrderedChildNodes = (childrenIDs: string, nodeList: WidgetNodes)
 
 export const assembleEmailRecordData = (
     conversationId: string,
-    areaIdentifier: string,
+    intentId: string,
     name: string,
     email: string,
     PhoneNumber: string,
@@ -33,7 +33,7 @@ export const assembleEmailRecordData = (
 ): Partial<ConversationRecordUpdate> => {
     return {
         ConversationId: conversationId,
-        IntentId: areaIdentifier,
+        IntentId: intentId,
         Name: name,
         Email: email,
         PhoneNumber: PhoneNumber,

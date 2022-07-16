@@ -28,8 +28,8 @@ export class BasicThresholdModifier implements Modifier {
         }
     }
 
-    async addThreshold(tableData: BasicThresholdData[], areaIdentifier: string, tableId: string, repository: PalavyrRepository) {
-        const newRowTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<BasicThresholdData>(areaIdentifier, this.tableType, tableId);
+    async addThreshold(tableData: BasicThresholdData[], intentId: string, tableId: string, repository: PalavyrRepository) {
+        const newRowTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<BasicThresholdData>(intentId, this.tableType, tableId);
         tableData.push(newRowTemplate);
         this.setTables(tableData);
     }

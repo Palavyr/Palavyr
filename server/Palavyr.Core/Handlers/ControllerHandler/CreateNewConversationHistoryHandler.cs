@@ -90,13 +90,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public string ResponsePdfId { get; set; }
         public DateTime TimeStamp { get; set; }
         public string AccountId { get; set; }
-        public string AreaName { get; set; }
+        public string IntentName { get; set; }
         public string EmailTemplateUsed { get; set; }
         public bool Seen { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsFallback { get; set; }
         public string Locale { get; set; } // TODO: Correct This
@@ -114,13 +114,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 ResponsePdfId = from.ResponsePdfId,
                 TimeStamp = from.TimeStamp,
                 AccountId = from.AccountId,
-                AreaName = from.IntentName,
+                IntentName = from.IntentName,
                 EmailTemplateUsed = from.EmailTemplateUsed,
                 Seen = from.Seen,
                 Name = from.Name,
                 Email = from.Email,
                 PhoneNumber = from.PhoneNumber,
-                AreaIdentifier = from.IntentId,
+                IntentId = from.IntentId,
                 IsDeleted = from.IsDeleted,
                 IsFallback = from.IsFallback,
                 Locale = from.Locale, // TODO: Correct This

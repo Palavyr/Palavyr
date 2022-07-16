@@ -32,7 +32,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 newNode.NodeId,
                 newNode.NodeType,
                 newNode.Text,
-                newNode.AreaIdentifier,
+                newNode.IntentId,
                 newNode.NodeChildrenString,
                 newNode.OptionPath,
                 newNode.ValueOptions,

@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, deleteAction, tables, tableIndex, availableDynamicTableOptions, tableNameMap, unitTypes, inUse, table }: DynamicTableProps) => {
+export const BasicThreshold = ({ showDebug, tableId, setTables, intentId, deleteAction, tables, tableIndex, availableDynamicTableOptions, tableNameMap, unitTypes, inUse, table }: DynamicTableProps) => {
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
     const [localTable, setLocalTable] = useState<DynamicTable>();
@@ -55,19 +55,19 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, 
         if (isMounted) {
             setLocalTable(table);
         }
-    }, [areaIdentifier, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         if (isMounted) {
             (async () => {
                 if (localTable) {
-                    const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.areaIdentifier, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                    const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                     localTable.tableRows = tableRows;
                     setLocalTable(cloneDeep(localTable));
                 }
             })();
         }
-    }, [areaIdentifier, localTable?.tableMeta.tableType]);
+    }, [intentId, localTable?.tableMeta.tableType]);
 
     const modifier = new BasicThresholdModifier(updatedRows => {
         if (localTable) {
@@ -77,7 +77,7 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, 
     });
 
     const addThresholdOnClick = async () => {
-        if (localTable) await modifier.addThreshold(localTable.tableRows, areaIdentifier, tableId, repository);
+        if (localTable) await modifier.addThreshold(localTable.tableRows, intentId, tableId, repository);
     };
 
     const onSave = async () => {
@@ -89,7 +89,7 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, areaIdentifier, 
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
                 const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<BasicThresholdData[]>(
-                    areaIdentifier,
+                    intentId,
                     DynamicTableTypes.BasicThreshold,
                     tableRows,
                     localTable.tableMeta.tableId,

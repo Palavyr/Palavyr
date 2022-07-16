@@ -20,7 +20,7 @@ interface IFeeConfiguration {
     modifier: StaticTablesModifier;
     tableSaver(staticTables: StaticTableMetas): Promise<boolean>;
     tableCanceler(): Promise<any>;
-    areaIdentifier: string;
+    intentId: string;
     children: React.ReactNode;
     initialState?: boolean;
 }
@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tableCanceler, modifier, areaIdentifier, children, initialState }: IFeeConfiguration) => {
+export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tableCanceler, modifier, intentId, children, initialState }: IFeeConfiguration) => {
     const { repository, planTypeMeta } = useContext(DashboardContext);
     const cls = useStyles();
 
@@ -79,13 +79,13 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
                     size="large"
                     color="primary"
                     className={cls.tablebutton}
-                    onClick={() => modifier.addTable(staticTables, repository, areaIdentifier)}
+                    onClick={() => modifier.addTable(staticTables, repository, intentId)}
                 >
                     <Typography>Add Table</Typography>
                 </Button>
             </div>
         ) : (
-            <Button startIcon={<AddBoxIcon />} variant="contained" size="large" color="primary" className={cls.tablebutton} onClick={() => modifier.addTable(staticTables, repository, areaIdentifier)}>
+            <Button startIcon={<AddBoxIcon />} variant="contained" size="large" color="primary" className={cls.tablebutton} onClick={() => modifier.addTable(staticTables, repository, intentId)}>
                 <Typography>Add Table</Typography>
             </Button>
         );

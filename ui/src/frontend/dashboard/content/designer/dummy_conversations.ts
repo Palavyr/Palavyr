@@ -1,6 +1,6 @@
 export const convoA = (areaId: string) => [
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
         nodeId: "ba765849-ef8c-4e5e-9d64-9203d7cdb541",
         text: "Hello, this is a test. A really good test because it has a  long text. A realllllllly long text. To check stylings!",
         nodeType: "ProvideInfo",
@@ -16,7 +16,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
         nodeId: "4ff32fc7-ecac-4b29-aa38-46b33f29b9a5",
         nodeType: "ProvideInfo",
         dynamicType: null,
@@ -34,7 +34,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "d1cf63d8-f182-4989-bb67-4f1fedfa9c10",
         nodeType: "MultipleChoiceAsPath",
@@ -54,7 +54,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "fc237abf-fdc5-45d4-a145-beff96c6bcf2",
         nodeType: "SendResponse",
@@ -76,7 +76,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "bee2c623-98d5-4831-bb6d-4a94a1fc7205",
         nodeType: "SendResponse",
@@ -98,7 +98,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "cd16584a-6b06-412a-881b-7402c2b9986e",
         nodeType: "YesNo",
@@ -118,7 +118,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "5e95a84a-de6b-4453-8ed9-2c7ebb2e8b1c",
         nodeType: "SendEmail",
@@ -138,7 +138,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "4523a9ec-1acb-4e7d-bbaf-d2ef0cfaa3e2",
         nodeType: "Restart",
@@ -160,7 +160,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "EmailSuccessfulNodeId",
         nodeType: "ProvideInfo",
@@ -180,7 +180,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "Restart",
         nodeType: "Restart",
@@ -202,7 +202,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "EmailFailedNodeId",
         nodeType: "EmailSendFailedFirstAttempt",
@@ -222,7 +222,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "11640f68-7551-41cb-b4f3-f414c94c8c47",
         nodeType: "SendEmail",
@@ -242,7 +242,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "FallbackEmailFailedNodeId",
         nodeType: "EmailSendFailedFirstAttempt",
@@ -262,7 +262,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "e8d6d29c-62e3-46d2-aa8b-75aed7125500",
         nodeType: "SendEmail",
@@ -282,7 +282,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "4c452b9e-d471-425a-80fc-15f5bb9ad04a",
         nodeType: "YesNo",
@@ -302,7 +302,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: areaId,
 
         nodeId: "bf068b90-f087-48cd-951a-415f733ef42f",
         nodeType: "SendTooComplicatedEmail",
@@ -326,7 +326,7 @@ export const convoA = (areaId: string) => [
 export const shortStaticConvoSequence = (areaId: string) => {
     return [
         {
-            areaIdentifier: areaId,
+            intentId: areaId,
 
             nodeId: "ba765849-ef8c-4e5e-9d64-9203d7cdb541",
             nodeType: "ProvideInfo",
@@ -346,7 +346,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             fileAssetResource: null,
         },
         {
-            areaIdentifier: areaId,
+            intentId: areaId,
 
             nodeId: "4ff32fc7-ecac-4b29-aa38-46b33f29b9a5",
             nodeType: "ProvideInfo",
@@ -366,7 +366,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             fileAssetResource: null,
         },
         {
-            areaIdentifier: areaId,
+            intentId: areaId,
 
             nodeId: "d1cf63d8-f182-4989-bb67-4f1fedfa9c10",
             nodeType: "MultipleChoiceAsPath",
@@ -390,7 +390,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             fileAssetResource: null,
         },
         {
-            areaIdentifier: areaId,
+            intentId: areaId,
 
             nodeId: "bee2c623-98d5-4831-bb6d-4a94a1fc7205",
             nodeType: "SendResponse",

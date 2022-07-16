@@ -13,12 +13,12 @@ import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 export interface IDynamicTable {
     title: string;
-    areaIdentifier: string;
+    intentId: string;
     children: React.ReactNode;
     initialState?: boolean;
 }
 
-export const DynamicTableConfiguration = ({ title, areaIdentifier, children, initialState }: IDynamicTable) => {
+export const DynamicTableConfiguration = ({ title, intentId, children, initialState }: IDynamicTable) => {
     const { repository, planTypeMeta, setSuccessOpen } = useContext(DashboardContext);
 
     const [showDebug, setShowDebug] = useState<boolean>(false);
@@ -31,8 +31,8 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
     const [tables, setTables] = useState<DynamicTable[]>([]);
 
     const loadTableData = useCallback(async () => {
-        const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
-        const showTotals = await repository.Intent.getShowDynamicTotals(areaIdentifier);
+        const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.getDynamicTableMetas(intentId);
+        const showTotals = await repository.Intent.getShowDynamicTotals(intentId);
 
         // show fee totals totals row
         setShowTotals(showTotals);
@@ -41,7 +41,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
         let tables: DynamicTable[] = [];
         let counter: number = 0;
         dynamicTableMetas.forEach(async tableMeta => {
-            const { tableRows, isInUse } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
+            const { tableRows, isInUse } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(intentId, tableMeta.tableType, tableMeta.tableId);
             tables.push({ tableMeta, tableRows: tableRows as TableData });
             counter++;
             if (counter === dynamicTableMetas.length) {
@@ -53,7 +53,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
         });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier]);
+    }, [intentId]);
 
     useEffect(() => {
         (async () => {
@@ -71,8 +71,8 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
 
     const addDynamicTable = async () => {
         // We always add the default dynamic table - the Select One Flat table
-        const newMeta = await repository.Configuration.Tables.Dynamic.createDynamicTable(areaIdentifier);
-        const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, newMeta.tableType, newMeta.tableId);
+        const newMeta = await repository.Configuration.Tables.Dynamic.createDynamicTable(intentId);
+        const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(intentId, newMeta.tableType, newMeta.tableId);
 
         const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
         const availableTables = tableNameMap;
@@ -94,11 +94,11 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
             setTables([]);
             setInUse(false);
         };
-    }, [areaIdentifier, loadTableData]);
+    }, [intentId, loadTableData]);
 
     const changeShowTotals = async (e: { target: { checked: any } }) => {
         const newShowTotals = e.target.checked;
-        const shouldShow = await repository.Intent.setShowDynamicTotals(areaIdentifier, newShowTotals);
+        const shouldShow = await repository.Intent.setShowDynamicTotals(intentId, newShowTotals);
         setShowTotals(shouldShow);
         setSuccessOpen(true);
     };
@@ -148,7 +148,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
                     tables.map((table: DynamicTable, tableIndex: number) => {
                         const onDelete = async () => {
                             // delete table from DB
-                            await repository.Configuration.Tables.Dynamic.deleteDynamicTable(areaIdentifier, table.tableMeta.tableType, table.tableMeta.tableId);
+                            await repository.Configuration.Tables.Dynamic.deleteDynamicTable(intentId, table.tableMeta.tableType, table.tableMeta.tableId);
 
                             // delete table from UI
                             const newTables = cloneDeep(tables);
@@ -167,7 +167,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children, ini
                                     tableIndex={tableIndex}
                                     availableDynamicTableOptions={availableTables}
                                     tableNameMap={tableNameMap}
-                                    areaIdentifier={areaIdentifier}
+                                    intentId={intentId}
                                     showDebug={showDebug}
                                     inUse={inUse}
                                     deleteAction={onDelete}

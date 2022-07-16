@@ -8,7 +8,7 @@ namespace Palavyr.Core.Resources
         {
         }
 
-        public string? AreaIdentifier { get; set; }
+        public string? IntentId { get; set; }
         public string? AccountId { get; set; }
         public string? NodeId { get; set; }
         public string? Text { get; set; }

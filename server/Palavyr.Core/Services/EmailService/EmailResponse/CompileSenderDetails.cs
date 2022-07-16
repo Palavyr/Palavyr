@@ -9,7 +9,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
     public interface ICompileSenderDetails
     {
-        Task<CompileSenderDetails.CompiledSenderDetails> Compile(string areaId, EmailRequest emailRequest);
+        Task<CompileSenderDetails.CompiledSenderDetails> Compile(string intentId, EmailRequest emailRequest);
     }
 
     public class CompileSenderDetails : ICompileSenderDetails
@@ -33,11 +33,11 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         public async Task<CompiledSenderDetails> Compile(string intentId, EmailRequest emailRequest)
         {
             var account = await accountStore.GetAccount();
-            var area = await intentStore.Get(intentId, s => s.IntentId);
-            var fromAddress = string.IsNullOrWhiteSpace(area.IntentSpecificEmail) ? account.EmailAddress : area.IntentSpecificEmail;
+            var intent = await intentStore.Get(intentId, s => s.IntentId);
+            var fromAddress = string.IsNullOrWhiteSpace(intent.IntentSpecificEmail) ? account.EmailAddress : intent.IntentSpecificEmail;
 
-            var subject = area.UseIntentFallbackEmail ? account.GeneralFallbackSubject : area.Subject;
-            var htmlBody = area.UseIntentFallbackEmail ? account.GeneralFallbackEmailTemplate : area.EmailTemplate;
+            var subject = intent.UseIntentFallbackEmail ? account.GeneralFallbackSubject : intent.Subject;
+            var htmlBody = intent.UseIntentFallbackEmail ? account.GeneralFallbackEmailTemplate : intent.EmailTemplate;
 
             var textBody = htmlBody; // This can be another upload. People can decide one or both. Html is prioritized.
             if (string.IsNullOrWhiteSpace(htmlBody))

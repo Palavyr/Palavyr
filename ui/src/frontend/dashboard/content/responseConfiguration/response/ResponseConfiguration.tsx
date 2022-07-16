@@ -52,20 +52,20 @@ export const ResponseConfiguration = () => {
     const [staticTables, setStaticTables] = useState<StaticTableMetas>([]);
     const [epilogue, setEpilogue] = useState<string>("");
     const cls = useStyles();
-    const { repository, areaIdentifier } = useContext(DashboardContext);
+    const { repository, intentId } = useContext(DashboardContext);
 
     const staticTablesModifier = new StaticTablesModifier(setStaticTables, repository);
     const prologueModifier = new LogueModifier(setPrologue);
     const epilogueModifier = new LogueModifier(setEpilogue);
 
     const savePrologue = async () => {
-        const _prologue_ = await repository.Configuration.updatePrologue(areaIdentifier, prologue);
+        const _prologue_ = await repository.Configuration.updatePrologue(intentId, prologue);
         setPrologue(_prologue_);
         return true;
     };
 
     const saveEpilogue = async () => {
-        const _epilogue_ = await repository.Configuration.updateEpilogue(areaIdentifier, epilogue);
+        const _epilogue_ = await repository.Configuration.updateEpilogue(intentId, epilogue);
         setEpilogue(_epilogue_);
         return true;
     };
@@ -95,7 +95,7 @@ export const ResponseConfiguration = () => {
             return false;
         } // TODO: the table saver needs to return the validation result and the SaveOrCancel component needs to require this standard type for the error message.
 
-        const updatedStaticTables = await repository.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
+        const updatedStaticTables = await repository.Configuration.Tables.Static.updateStaticTablesMetas(intentId, staticTables);
         setStaticTables([]); // This is a hack to get the darn tables to save and rerender correctly.
         setStaticTables(cloneDeep(updatedStaticTables));
         return true;
@@ -106,25 +106,25 @@ export const ResponseConfiguration = () => {
     };
 
     const loadEstimateConfiguration = useCallback(async () => {
-        const { prologue, epilogue, staticTablesMetas, sendPdfResponse } = await repository.Configuration.getEstimateConfiguration(areaIdentifier);
+        const { prologue, epilogue, staticTablesMetas, sendPdfResponse } = await repository.Configuration.getEstimateConfiguration(intentId);
         setPrologue(cloneDeep(prologue));
         setEpilogue(cloneDeep(epilogue));
         setStaticTables(staticTablesMetas);
         setSendPdfWithResponse(sendPdfResponse);
         setLoaded(true);
-    }, [areaIdentifier]);
+    }, [intentId]);
 
     useEffect(() => {
         loadEstimateConfiguration();
         return () => {
             setLoaded(false);
         };
-    }, [areaIdentifier, loadEstimateConfiguration]);
+    }, [intentId, loadEstimateConfiguration]);
 
     const [sendPdfWithResponse, setSendPdfWithResponse] = useState<boolean | null>(null);
 
     const onToggleSendPdfWithResponse = async () => {
-        const toSend = await repository.Intent.toggleSendPdfResponse(areaIdentifier);
+        const toSend = await repository.Intent.toggleSendPdfResponse(intentId);
         setSendPdfWithResponse(toSend);
     };
 
@@ -147,7 +147,7 @@ export const ResponseConfiguration = () => {
                     />
                 </ExpandableTextBox>
 
-                <DynamicTableConfiguration title="Pricing Strategies" areaIdentifier={areaIdentifier}>
+                <DynamicTableConfiguration title="Pricing Strategies" intentId={intentId}>
                     <HeaderStrip
                         divider
                         light
@@ -156,7 +156,7 @@ export const ResponseConfiguration = () => {
                     />
                 </DynamicTableConfiguration>
 
-                <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} tableCanceler={tableCanceler} modifier={staticTablesModifier}>
+                <StaticTableConfiguration intentId={intentId} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} tableCanceler={tableCanceler} modifier={staticTablesModifier}>
                     <HeaderStrip
                         divider
                         light

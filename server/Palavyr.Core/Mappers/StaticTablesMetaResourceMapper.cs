@@ -20,7 +20,7 @@ namespace Palavyr.Core.Mappers
             {
                 TableOrder = @from.TableOrder,
                 Description = @from.Description,
-                AreaIdentifier = @from.IntentId,
+                IntentId = @from.IntentId,
                 StaticTableRows = tableRows,
                 AccountId = @from.AccountId,
                 PerPersonInputRequired = @from.PerPersonInputRequired,

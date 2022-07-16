@@ -10,7 +10,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
     {
         public static MultiNodeReturnObject AddYesNo(
             this ConversationNode previousNode,
-            string areaId = DefaultConstants.AreaIdentifier,
+            string intentId = DefaultConstants.IntentId,
             string accountId = DefaultConstants.AccountId
         )
         {
@@ -20,7 +20,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
                 newId,
                 DefaultNodeTypeOptions.YesNo.StringName,
                 "",
-                areaId,
+                intentId,
                 "",
                 "",
                 TreeUtils.JoinValueOptionsOnDelimiter(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),

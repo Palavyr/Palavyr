@@ -177,14 +177,14 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         //     var tableTag = pricingStrategyTable.TableTag;
         //     return ValidationLogic(table, tableTag);
         // }
-
+        //
         // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
         // {
         //     var tableId = dynamicTableMeta.TableId;
-        //     // var areaId = dynamicTableMeta.AreaIdentifier;
+        //     // var intentId = dynamicTableMeta.IntentId;
         //
         //     var table = await psStore.GetMany(tableId, s => s.TableId);
-        //     // var table = await repository.GetAllRows(areaId, tableId);
+        //     // var table = await repository.GetAllRows(intentId, tableId);
         //     return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
         // }
 

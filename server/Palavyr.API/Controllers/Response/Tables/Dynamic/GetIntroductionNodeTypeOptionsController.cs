@@ -17,9 +17,8 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             this.mediator = mediator;
         }
 
-        public const string Route = "configure-intro/{introId}/node-type-options";
 
-        [HttpGet(Route)]
+        [HttpGet(GetIntroductionNodeTypeOptionsRequest.Route)]
         public async Task<IEnumerable<NodeTypeOptionResource>> GetIntro([FromRoute] string introId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetIntroductionNodeTypeOptionsRequest(introId), cancellationToken);

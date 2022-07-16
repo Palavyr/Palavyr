@@ -26,8 +26,8 @@ export class TwoNestedCategoriesModifier implements Modifier {
         return tableData[index];
     }
 
-    async addOuterCategory(tableData: TwoNestedCategoryData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
-        const template = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<TwoNestedCategoryData>(areaIdentifier, this.tableType, tableId);
+    async addOuterCategory(tableData: TwoNestedCategoryData[], repository: PalavyrRepository, intentId: string, tableId: string) {
+        const template = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<TwoNestedCategoryData>(intentId, this.tableType, tableId);
 
         // get all current inner categories from the first category and assign them to the new one
         const outerCategoryGroups = this.groupByOuterCategory(tableData); // use this groupby method in the modifier.
@@ -48,8 +48,8 @@ export class TwoNestedCategoriesModifier implements Modifier {
         this.setTables(newTableData);
     }
 
-    async addInnerCategory(tableData: TwoNestedCategoryData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
-        const template = (await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId)) as TwoNestedCategoryData;
+    async addInnerCategory(tableData: TwoNestedCategoryData[], repository: PalavyrRepository, intentId: string, tableId: string) {
+        const template = (await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(intentId, this.tableType, tableId)) as TwoNestedCategoryData;
 
         // need to copy across all outer categories...
         const outerCategoryGroups = this.groupByOuterCategory(tableData); // use this groupby method in the modifier.

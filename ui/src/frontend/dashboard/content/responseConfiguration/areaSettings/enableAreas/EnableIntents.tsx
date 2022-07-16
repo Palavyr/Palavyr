@@ -43,14 +43,14 @@ export const EnableIntents = () => {
 
     const loadIntents = useCallback(async () => {
         const intentData = await repository.Intent.GetAllIntents();
-        const areaIdentifiers = intentData.map((x: AreaTable) => {
+        const intentIds = intentData.map((x: AreaTable) => {
             return {
-                areaId: x.areaIdentifier,
+                areaId: x.intentId,
                 isEnabled: x.isEnabled,
                 areaName: x.areaName,
             };
         });
-        setIntentIds(areaIdentifiers);
+        setIntentIds(intentIds);
     }, []);
 
     useEffect(() => {

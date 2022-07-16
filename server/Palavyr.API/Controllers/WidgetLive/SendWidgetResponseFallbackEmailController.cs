@@ -14,7 +14,6 @@ namespace Palavyr.API.Controllers.WidgetLive
     {
         private readonly IMediator mediator;
 
-        public const string Route = "widget/area/{areaId}/email/fallback/send";
 
         public SendWidgetResponseFallbackEmailController(IMediator mediator)
         {
@@ -22,18 +21,18 @@ namespace Palavyr.API.Controllers.WidgetLive
         }
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-        [HttpPost(Route)]
+        [HttpPost(SendWidgetResponseFallbackEmailRequest.Route)]
         public async Task<SendLiveEmailResultResource> SendEmail(
             [FromQuery]
             bool demo,
             [FromRoute]
-            string areaId,
+            string intentId,
             [FromBody]
             EmailRequest emailRequest,
             CancellationToken cancellationToken
         )
         {
-            var response = await mediator.Send(new SendWidgetResponseFallbackEmailRequest(emailRequest, areaId, demo), cancellationToken);
+            var response = await mediator.Send(new SendWidgetResponseFallbackEmailRequest(emailRequest, intentId, demo), cancellationToken);
             return response.Resource;
         }
     }

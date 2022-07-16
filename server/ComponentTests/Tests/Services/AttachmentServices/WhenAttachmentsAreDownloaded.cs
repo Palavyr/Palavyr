@@ -46,7 +46,7 @@
 //                         });
 //                 }
 //
-//                 var result = await retriever.DownloadForAttachmentToEmail(IntegrationConstants.DefaultArea, downloadRequests, default);
+//                 var result = await retriever.DownloadForAttachmentToEmail(IntegrationConstants.DefaultIntent, downloadRequests, default);
 //
 //                 // assert
 //                 result.Length.ShouldBe(5);
@@ -62,7 +62,7 @@
 //                 foreach (var s3Meta in s3Metas)
 //                 {
 //                     await this.CreateFileNameMapBuilder()
-//                         .WithAreaIdentifier(IntegrationConstants.DefaultArea)
+//                         .WithIntentId(IntegrationConstants.DefaultIntent)
 //                         .WithSafeName(s3Meta.SafeName)
 //                         .WithS3Key(s3Meta.Key)
 //                         .WithRiskyName(RiskyName)
@@ -104,7 +104,7 @@
 //             public async Task NoAttachmentsAreReturned()
 //             {
 //                 var retriever = Container.GetService<IAttachmentRetriever>();
-//                 var result = await retriever.DownloadForAttachmentToEmail(IntegrationConstants.DefaultArea, new List<CloudFileDownloadRequest>(), default);
+//                 var result = await retriever.DownloadForAttachmentToEmail(IntegrationConstants.DefaultIntent, new List<CloudFileDownloadRequest>(), default);
 //
 //                 result.Length.ShouldBe(0);
 //             }
@@ -118,7 +118,7 @@
 //                 foreach (var s3Meta in s3Metas)
 //                 {
 //                     await this.CreateFileNameMapBuilder()
-//                         .WithAreaIdentifier(IntegrationConstants.DefaultArea)
+//                         .WithIntentId(IntegrationConstants.DefaultIntent)
 //                         .WithSafeName(s3Meta.SafeName)
 //                         .WithS3Key(s3Meta.Key)
 //                         .WithRiskyName(RiskyName)

@@ -62,7 +62,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             return new List<Table>() { table };
         }
 
-        public async Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<PricingStrategyTableMeta> dynamicTableMetas, string areaId)
+        public async Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<PricingStrategyTableMeta> dynamicTableMetas, string intentId)
         {
             var nodes = new List<NodeTypeOptionResource>() { };
             foreach (var dynamicTableMeta in dynamicTableMetas)

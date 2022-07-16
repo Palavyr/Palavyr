@@ -4,8 +4,8 @@ import { NavLink } from "react-router-dom";
 import ChatIcon from "@material-ui/icons/Chat";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
-export const createNavLink = (areaIdentifier: string) => {
-    return `/dashboard/editor/pricing/${areaIdentifier}?tab=${0}`;
+export const createNavLink = (intentId: string) => {
+    return `/dashboard/editor/pricing/${intentId}?tab=${0}`;
 };
 
 const useStyles = makeStyles(theme => ({
@@ -25,19 +25,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface AreaLinkItemProps {
-    areaIdentifier: string;
+    intentId: string;
     isActive: boolean;
     disabled: boolean;
     currentPage: string;
     areaName: string;
     menuOpen: boolean;
 }
-export const AreaLinkItem = memo(({ areaIdentifier, isActive, disabled, currentPage, areaName, menuOpen }: AreaLinkItemProps) => {
+export const AreaLinkItem = memo(({ intentId, isActive, disabled, currentPage, areaName, menuOpen }: AreaLinkItemProps) => {
     const cls = useStyles();
 
     return (
-        <NavLink key={areaIdentifier} to={!isActive || disabled ? currentPage : createNavLink(areaIdentifier)} className={cls.areaNameText}>
-            <ListItem className={cls.areaListItem} disabled={!isActive || disabled} button key={areaIdentifier}>
+        <NavLink key={intentId} to={!isActive || disabled ? currentPage : createNavLink(intentId)} className={cls.areaNameText}>
+            <ListItem className={cls.areaListItem} disabled={!isActive || disabled} button key={intentId}>
                 {menuOpen ? (
                     <ListItemIcon className={cls.icon}>
                         <ChatIcon />

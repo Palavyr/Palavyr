@@ -16,7 +16,7 @@ export const MockStaticTableRow: StaticTableRow = {
     range: true,
     perPerson: true,
     tableOrder: 0,
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
     includeTotals: true
 
 }
@@ -35,7 +35,7 @@ row3.rowOrder = 2;
 export const MockStaticTablesMeta: StaticTableMeta = {
     id: 0,
     perPersonInputRequired: false,
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
     description: "This is a good first table.",
     tableOrder: 0,
     includeTotals: true,

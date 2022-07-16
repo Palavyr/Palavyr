@@ -15,11 +15,11 @@ const useStyles = makeStyles(theme => ({
 
 export interface CategoryNestedThresholdProps extends IDynamicTableBody {
     tableId: string;
-    areaIdentifier: string;
+    intentId: string;
     modifier: CategoryNestedThresholdModifier;
 }
 
-export const CategoryNestedThresholdContainer = ({ tableData, modifier, tableId, areaIdentifier, unitGroup, unitPrettyName }: CategoryNestedThresholdProps) => {
+export const CategoryNestedThresholdContainer = ({ tableData, modifier, tableId, intentId, unitGroup, unitPrettyName }: CategoryNestedThresholdProps) => {
     const cls = useStyles();
     const sortedByCategory = sortByPropertyNumeric(modifier.itemOrderGetter, tableData);
 
@@ -34,7 +34,7 @@ export const CategoryNestedThresholdContainer = ({ tableData, modifier, tableId,
                     <CategoryNestedThresholdItemTable
                         key={categoryIndex}
                         tableId={tableId}
-                        areaIdentifier={areaIdentifier}
+                        intentId={intentId}
                         categoryIndex={categoryIndex}
                         tableData={tableData}
                         categoryData={sortedRows}

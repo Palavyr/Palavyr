@@ -9,7 +9,7 @@ namespace Palavyr.API.Controllers.Intents
     public class ModifyIntentIsCompleteController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "areas/area-toggle";
+        public const string Route = "intents/intent-toggle";
 
         public ModifyIntentIsCompleteController(IMediator mediator)
         {

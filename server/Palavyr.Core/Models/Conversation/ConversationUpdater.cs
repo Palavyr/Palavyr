@@ -34,15 +34,15 @@ namespace Palavyr.Core.Models.Conversation
         {
             // var mappedUpdates = MapUpdate(updatedConvo);
             // var mappedUpdates = await mapper.MapMany(updatedConvo);
-            var deOrphanedAreaConvo = orphanRemover.RemoveOrphanedNodes(mappedUpdates);
+            var deOrphanedIntentConvo = orphanRemover.RemoveOrphanedNodes(mappedUpdates);
 
             var intent = await intentStore.GetIntentComplete(intentId);
             var currentNodes = intent.ConversationNodes;
             await convoNodeStore.Delete(currentNodes);
 
-            intent.ConversationNodes.AddRange(deOrphanedAreaConvo);
+            intent.ConversationNodes.AddRange(deOrphanedIntentConvo);
 
-            return deOrphanedAreaConvo;
+            return deOrphanedIntentConvo;
         }
     }
 }

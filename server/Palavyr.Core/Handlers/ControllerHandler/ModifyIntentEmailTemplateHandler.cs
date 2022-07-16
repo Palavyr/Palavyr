@@ -17,10 +17,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<ModifyIntentEmailTemplateResponse> Handle(ModifyIntentEmailTemplateRequest request, CancellationToken cancellationToken)
         {
-            var currentArea = await intentStore.Get(request.IntentId, s => s.IntentId);
-            currentArea.EmailTemplate = request.EmailTemplate;
+            var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
+            intent.EmailTemplate = request.EmailTemplate;
 
-            return new ModifyIntentEmailTemplateResponse(currentArea.EmailTemplate);
+            return new ModifyIntentEmailTemplateResponse(intent.EmailTemplate);
         }
     }
 

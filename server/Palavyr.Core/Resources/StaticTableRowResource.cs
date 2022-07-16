@@ -8,7 +8,7 @@
         public bool Range { get; set; }
         public bool PerPerson { get; set; }
         public int TableOrder { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public string AccountId { get; set; }
     }
 }

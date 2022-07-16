@@ -202,7 +202,7 @@ export class PalavyrNode implements IPalavyrNode {
     public compileConvoNode(areaId: string): ConvoNode {
         // returns an object resource that matches the database schema
         return {
-            areaIdentifier: areaId,
+            intentId: areaId,
             isRoot: this.isRoot,
             nodeId: this.nodeId,
             text: this.userText,

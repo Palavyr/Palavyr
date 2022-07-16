@@ -78,7 +78,7 @@ export const IntentsSection = memo(({ isActive, currentPage, areaNameDetails, me
                             <AreaLinkItem
                                 key={index}
                                 menuOpen={menuOpen}
-                                areaIdentifier={x.areaIdentifier}
+                                intentId={x.intentId}
                                 isActive={isActive}
                                 disabled={index >= planTypeMeta.allowedAreas}
                                 currentPage={currentPage}

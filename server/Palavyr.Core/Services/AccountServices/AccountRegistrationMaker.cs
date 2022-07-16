@@ -72,9 +72,9 @@ namespace Palavyr.Core.Services.AccountServices
         {
             var freePlanType = new LytePlanTypeMeta();
 
-            // Add the default subscription (free with 2 areas)
+            // Add the default subscription (free with 2 intents)
             logger.LogDebug($"Add default subscription for {accountId}");
-            var newSubscription = Subscription.CreateNew(accountId, apiKey, freePlanType.GetDefaultNumAreas());
+            var newSubscription = Subscription.CreateNew(accountId, apiKey, freePlanType.GetDefaultNumIntents());
             await subscriptionStore.Create(newSubscription);
         }
     }

@@ -89,11 +89,11 @@ export class StaticTablesModifier {
         }
     }
 
-    async addTable(staticTableMetas: StaticTableMetas, repository: PalavyrRepository, areaIdentifier: string) {
+    async addTable(staticTableMetas: StaticTableMetas, repository: PalavyrRepository, intentId: string) {
         const tableOrders = this._getIDs_(staticTableMetas);
         const newtableOrder = this._generateNextId_(tableOrders);
 
-        const newTableTemplate = await repository.Configuration.Tables.Static.getStaticTablesMetaTemplate(areaIdentifier);
+        const newTableTemplate = await repository.Configuration.Tables.Static.getStaticTablesMetaTemplate(intentId);
         const newTable = ((): StaticTableMeta => ({
             ...newTableTemplate,
             tableOrder: newtableOrder,
@@ -113,9 +113,9 @@ export class StaticTablesModifier {
         const rowOrders = this._getrowOrders_(staticTableMetas[tableOrder].staticTableRows);
         const nextrowOrder = this._generateNextId_(rowOrders);
         const curTableOrder = staticTableMetas[0].tableOrder;
-        const curAreaIdentifier = staticTableMetas[0].areaIdentifier;
+        const curintentId = staticTableMetas[0].intentId;
 
-        const newRow = await this.repository.Configuration.Tables.Static.getStaticTableRowTemplate(curAreaIdentifier, curTableOrder);
+        const newRow = await this.repository.Configuration.Tables.Static.getStaticTableRowTemplate(curintentId, curTableOrder);
 
         newRow.rowOrder = nextrowOrder;
 

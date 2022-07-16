@@ -8,7 +8,7 @@ namespace Palavyr.API.Controllers.Intents
 {
     public class ModifyShowDynamicTableTotalsController : PalavyrBaseController
     {
-        public const string Route = "area/dynamic-totals";
+        public const string Route = "intent/dynamic-totals";
         private readonly IMediator mediator;
 
         public ModifyShowDynamicTableTotalsController(IMediator mediator)

@@ -13,10 +13,10 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
             return new CategorySelectTableRow
             {
                 Id = from.Id,
-                Category = from.Option,
+                Category = from.Category,
                 Range = from.Range,
                 AccountId = from.AccountId,
-                IntentId = from.AreaIdentifier,
+                IntentId = from.IntentId,
                 RowOrder = from.RowOrder,
                 TableId = from.TableId,
                 ValueMax = from.ValueMax,

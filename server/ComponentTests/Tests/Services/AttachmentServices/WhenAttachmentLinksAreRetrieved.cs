@@ -27,14 +27,14 @@
 //         {
 //             // arrange
 //             await this.CreateFileNameMapBuilder()
-//                 .WithAreaIdentifier(IntegrationConstants.DefaultArea)
+//                 .WithIntentId(IntegrationConstants.DefaultIntent)
 //                 .WithSafeName("safe-name.pdf")
 //                 .WithS3Key("thisis/the/key.pdf")
 //                 .WithRiskyName("ThisRiskyName.pdf")
 //                 .Build();
 //
 //             var retriever = Container.GetService<IAttachmentRetriever>();
-//             var result = await retriever.GetAttachmentLinksForIntent(IntegrationConstants.DefaultArea);
+//             var result = await retriever.GetAttachmentLinksForIntent(IntegrationConstants.DefaultIntent);
 //
 //             // assert
 //             result.Length.ShouldBe(1);

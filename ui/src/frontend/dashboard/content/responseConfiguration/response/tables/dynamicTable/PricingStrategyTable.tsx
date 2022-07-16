@@ -45,7 +45,7 @@ export const includesUnit = (localTable: DynamicTable) => {
 export interface PricingStrategyTableProps {
     availableDynamicTableOptions: PricingStrategyTableTypeResource[];
     tableNameMap: TableNameMap;
-    areaIdentifier: string;
+    intentId: string;
     showDebug: boolean;
     unitTypes: QuantUnitDefinition[];
     table: DynamicTable;
@@ -65,7 +65,7 @@ export const PricingStrategyTable = ({
     tableIndex,
     availableDynamicTableOptions,
     tableNameMap,
-    areaIdentifier,
+    intentId,
     unitTypes,
     deleteAction,
 }: PricingStrategyTableProps) => {
@@ -81,7 +81,7 @@ export const PricingStrategyTable = ({
         unitTypes,
         inUse,
         tableId: table.tableMeta.tableId,
-        areaIdentifier,
+        intentId,
         showDebug,
         deleteAction,
     };

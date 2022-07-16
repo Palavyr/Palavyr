@@ -25,7 +25,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetAllIntentsResponse> Handle(GetAllIntentsRequest request, CancellationToken cancellationToken)
         {
-            logger.LogDebug("Return all areas");
+            logger.LogDebug("Return all intents");
             var intents = await intentStore.GetMany(intentStore.AccountId, s => s.AccountId);
             var resource = await mapper.MapMany(intents, cancellationToken);
             return new GetAllIntentsResponse(resource);
@@ -34,7 +34,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetAllIntentsRequest : IRequest<GetAllIntentsResponse>
     {
-        public const string Route = "areas";
+        public const string Route = "intents";
     }
 
     public class GetAllIntentsResponse

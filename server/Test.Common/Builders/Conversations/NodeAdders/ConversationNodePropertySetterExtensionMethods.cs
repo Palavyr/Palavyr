@@ -20,9 +20,9 @@ namespace Test.Common.Builders.Conversations.NodeAdders
         }
 
 
-        public static void SetAreaId(this ConversationNode node, string areaId)
+        public static void SetIntentId(this ConversationNode node, string intentId)
         {
-            node.IntentId = areaId;
+            node.IntentId = intentId;
         }
 
         public static void SetNodeChildrenString(this ConversationNode node, string childrenString)

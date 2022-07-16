@@ -16,10 +16,10 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                 .ChildRules(
                     r =>
                     {
-                        r.RuleFor(x => x.Option).NotEmpty();
+                        r.RuleFor(x => x.Category).NotEmpty();
                         r.RuleFor(x => x.Range).NotNull();
                         r.RuleFor(x => x.AccountId).NotEmpty();
-                        r.RuleFor(x => x.AreaIdentifier).NotEmpty();
+                        r.RuleFor(x => x.IntentId).NotEmpty();
                         r.RuleFor(x => x.RowOrder).NotNull().GreaterThanOrEqualTo(0);
                         r.RuleFor(x => x.TableId).NotEmpty();
                         r.RuleFor(x => x.ValueMin).NotNull().GreaterThanOrEqualTo(0);
@@ -40,7 +40,7 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 
         private bool CategoriesMustBeUnique(List<SelectOneFlatResource> arg)
         {
-            return arg.Count == arg.Select(x => x.Option).Distinct().Count();
+            return arg.Count == arg.Select(x => x.Category).Distinct().Count();
         }
     }
 }

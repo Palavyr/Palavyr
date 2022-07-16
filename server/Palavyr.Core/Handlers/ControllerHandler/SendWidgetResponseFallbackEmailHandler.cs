@@ -31,6 +31,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class SendWidgetResponseFallbackEmailRequest : IRequest<SendWidgetResponseFallbackEmailResponse>
     {
+
+        public const string Route = "widget/intent/{intentId}/email/fallback/send";
+        
         public SendWidgetResponseFallbackEmailRequest(EmailRequest emailRequest, string intentId, bool isDemo)
         {
             EmailRequest = emailRequest;

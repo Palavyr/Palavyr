@@ -3,7 +3,7 @@
     public class TwoNestedCategoryResource : PricingStrategyTableRowResource
     {
         public string AccountId { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public double ValueMin { get; set; }
         public double ValueMax { get; set; }
         public bool Range { get; set; }

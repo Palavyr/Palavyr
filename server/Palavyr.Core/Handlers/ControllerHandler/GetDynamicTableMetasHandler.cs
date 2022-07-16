@@ -43,7 +43,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                             TableTag = x.TableTag,
                             TableType = x.TableType,
                             TableId = x.TableId,
-                            AreaIdentifier = x.IntentId,
+                            IntentId = x.IntentId,
                             ValuesAsPaths = x.ValuesAsPaths,
                             PrettyName = x.PrettyName,
                             UnitPrettyName = unitDefinition.UnitPrettyName,

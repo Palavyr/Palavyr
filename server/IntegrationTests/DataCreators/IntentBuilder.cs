@@ -56,7 +56,7 @@ namespace IntegrationTests.DataCreators
         public async Task<IntentResource> Build()
         {
             var nm = name ?? A.RandomName();
-            var newIntent = await test.Client.Post<CreateIntentRequest, IntentResource>(new CreateIntentRequest { AreaName = nm }, test.CancellationToken);
+            var newIntent = await test.Client.Post<CreateIntentRequest, IntentResource>(new CreateIntentRequest { IntentName = nm }, test.CancellationToken);
 
             if (sendPdfResponse != null)
             {

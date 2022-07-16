@@ -15,7 +15,7 @@ namespace Palavyr.Core.Models
     public interface IWidgetStatusChecker
     {
         Task<PreCheckResult> ExecuteWidgetStatusCheck(
-            List<Intent> areas,
+            List<Intent> intents,
             WidgetPreference widgetPreferences,
             bool demo,
             ILogger logger);
@@ -50,7 +50,7 @@ namespace Palavyr.Core.Models
         }
 
         public async Task<PreCheckResult> ExecuteWidgetStatusCheck(
-            List<Intent> areas,
+            List<Intent> intents,
             WidgetPreference widgetPreferences,
             bool demo,
             ILogger logger)
@@ -60,8 +60,8 @@ namespace Palavyr.Core.Models
             // static tables might have a 'num individuals' requirement
             // user may simply wish to collect 'num individuals'
 
-            logger.LogDebug("Collected areas.... running pre-check");
-            var result = await StatusCheck(areas, widgetState, demo, logger);
+            logger.LogDebug("Collected intents.... running pre-check");
+            var result = await StatusCheck(intents, widgetState, demo, logger);
             return result;
         }
 
@@ -75,12 +75,12 @@ namespace Palavyr.Core.Models
 
             var introError = new PreCheckError()
             {
-                AreaName = introSequenceName
+                IntentName = introSequenceName
             };
 
             var generalError = new PreCheckError
             {
-                AreaName = generalName
+                IntentName = generalName
             };
 
             var allRequiredIntroNodesArePresent = await AllIntroRequiredIntroNodesArePresent(introError);
@@ -96,7 +96,7 @@ namespace Palavyr.Core.Models
             {
                 var error = new PreCheckError()
                 {
-                    AreaName = intent.IntentName
+                    IntentName = intent.IntentName
                 };
 
                 var nodeList = intent.ConversationNodes.ToArray();
@@ -113,12 +113,12 @@ namespace Palavyr.Core.Models
 
                 var checks = new List<bool>() { nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered, allImageNodesHaveImagesSet};//, allCategoricalPricingStrategiesAreUnique };
 
-                var areaChecksPassed = checks.TrueForAll(x => x);
-                if (!areaChecksPassed)
+                var intentChecksPassed = checks.TrueForAll(x => x);
+                if (!intentChecksPassed)
                 {
                     isReady = false;
                     errors.Add(error);
-                    logger.LogDebug($"Area not currently ready: {intent.IntentName}");
+                    logger.LogDebug("Intent not currently ready: {Name}", intent.IntentName);
                 }
 
                 if (intent.IsEnabled)
@@ -193,9 +193,9 @@ namespace Palavyr.Core.Models
             return isReady;
         }
 
-        // private async Task<bool> AllCategoricalPricingStrategiesAreUnique(Area area, PreCheckError error)
+        // private async Task<bool> AllCategoricalPricingStrategiesAreUnique(Intent intent, PreCheckError error)
         // {
-        //     var pricingStrategies = area.DynamicTableMetas;
+        //     var pricingStrategies = intent.DynamicTableMetas;
         //     var results = await orchestrator.ValidatePricingStrategies(pricingStrategies);
         //     var ready = true;
         //     if (results.Count > 0)

@@ -12,7 +12,7 @@ namespace Palavyr.API.Controllers.Conversation
     public class ModifyConversationNodeController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "configure-conversations/{areaId}/nodes/{nodeId}";
+        public const string Route = "configure-conversations/{intentId}/nodes/{nodeId}";
 
 
         public ModifyConversationNodeController(
@@ -27,12 +27,12 @@ namespace Palavyr.API.Controllers.Conversation
             [FromRoute]
             string nodeId,
             [FromRoute]
-            string areaId,
+            string intentId,
             [FromBody]
             ConversationDesignerNodeResource newNode,
             CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new ModifyConversationNodeRequest(nodeId, areaId, newNode), cancellationToken);
+            var response = await mediator.Send(new ModifyConversationNodeRequest(nodeId, intentId, newNode), cancellationToken);
             return response.Response;
         }
     }

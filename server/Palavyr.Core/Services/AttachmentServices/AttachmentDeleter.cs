@@ -11,7 +11,7 @@ namespace Palavyr.Core.Services.AttachmentServices
     public interface IAttachmentDeleter
     {
         Task DeleteAttachment(string fileId, string intentId);
-        Task DeleteAllAreaAttachments(string areaId);
+        Task DeleteAllAttachmentsForIntent(string intentId);
     }
 
     public class AttachmentDeleter : IAttachmentDeleter
@@ -36,7 +36,7 @@ namespace Palavyr.Core.Services.AttachmentServices
             await linker.Unlink(fileId, intentId);
         }
 
-        public async Task DeleteAllAreaAttachments(string intentId)
+        public async Task DeleteAllAttachmentsForIntent(string intentId)
         {
             var intent = await intentStore.GetIntentComplete(intentId);
             var fileIds = intent.AttachmentRecords.Select(att => att.FileId).ToArray();
