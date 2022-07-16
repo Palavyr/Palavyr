@@ -108,17 +108,17 @@ namespace IntegrationTests.DataCreators
 
             var newTable = await test
                 .Client
-                .Post<CreatePricingStrategyTableRequest<SimpleSelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>, List<SelectOneFlatResource>>(
+                .Post<CreatePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>, List<SelectOneFlatResource>>(
                     test.CancellationToken,
-                    s => CreatePricingStrategyTableRequest<SimpleSelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(resource.AreaIdentifier));
+                    s => CreatePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(resource.AreaIdentifier));
 
 
             newTable.Add(resource);
             var response = await test.Client
-                .Post<SavePricingStrategyTableRequest<SimpleSelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>, SavePricingStrategyTableResponse<SelectOneFlatResource>>(
+                .Post<SavePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>, SavePricingStrategyTableResponse<SelectOneFlatResource>>(
                     newTable,
                     test.CancellationToken,
-                    s => SavePricingStrategyTableRequest<SimpleSelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(intentId ?? newTable.First().AreaIdentifier, newTable.First().TableId));
+                    s => SavePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(intentId ?? newTable.First().AreaIdentifier, newTable.First().TableId));
             newTable = response.Resource.TableRows;
             return newTable;
         }

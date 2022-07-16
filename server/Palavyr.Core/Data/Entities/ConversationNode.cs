@@ -11,7 +11,7 @@ namespace Palavyr.Core.Data.Entities
 {
     public class ConversationNode : Entity, IRecord, IHaveAccountId
     {
-        public string? AreaIdentifier { get; set; }
+        public string? IntentId { get; set; }
         public string? AccountId { get; set; }
         public string? NodeId { get; set; }
         public string? Text { get; set; }
@@ -59,17 +59,17 @@ namespace Palavyr.Core.Data.Entities
             NodeChildrenString = splitter.JoinNodeChildrenArray(childrenArray.ToList());
         }
 
-        public static List<ConversationNode> CreateDefaultNode(string areaIdentifier, string accountId, bool isRoot = false)
+        public static List<ConversationNode> CreateDefaultNode(string intentId, string accountId, bool isRoot = false)
         {
             return new List<ConversationNode>()
             {
-                new ConversationNode()
+                new ConversationNode
                 {
                     NodeId = Guid.NewGuid().ToString(),
                     NodeType = "",
                     Text = "Click to add some meaningful text. Don't forget to add some personality!",
                     IsRoot = isRoot,
-                    AreaIdentifier = areaIdentifier,
+                    IntentId = intentId,
                     OptionPath = "", // Previous had this set to null...
                     NodeChildrenString = "",
                     ValueOptions = "",
@@ -92,16 +92,16 @@ namespace Palavyr.Core.Data.Entities
             };
         }
 
-        public static List<ConversationNode> CreateDefaultRootNode(string areaIdentifier, string accountId)
+        public static List<ConversationNode> CreateDefaultRootNode(string intentId, string accountId)
         {
-            return CreateDefaultNode(areaIdentifier, accountId, isRoot: true);
+            return CreateDefaultNode(intentId, accountId, isRoot: true);
         }
 
         public static ConversationNode CreateNew(
             string? nodeId,
             string? nodeType,
             string? text,
-            string? areaIdentifier,
+            string? intentId,
             string? nodeChildrenString,
             string? optionPath,
             string? valueOptions,
@@ -132,7 +132,7 @@ namespace Palavyr.Core.Data.Entities
                 NodeType = nodeType,
                 Text = text,
                 IsRoot = isRoot,
-                AreaIdentifier = areaIdentifier,
+                IntentId = intentId,
                 NodeChildrenString = nodeChildrenString,
                 OptionPath = optionPath,
                 ValueOptions = valueOptions,

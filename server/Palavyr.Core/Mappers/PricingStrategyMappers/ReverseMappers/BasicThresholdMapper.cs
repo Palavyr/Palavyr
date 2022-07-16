@@ -16,7 +16,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
                 Range = from.Range,
                 Threshold = from.Threshold,
                 AccountId = from.AccountId,
-                AreaIdentifier = from.AreaIdentifier,
+                IntentId = from.AreaIdentifier,
                 ItemName = from.ItemName,
                 RowId = from.RowId,
                 RowOrder = from.RowOrder,

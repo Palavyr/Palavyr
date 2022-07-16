@@ -190,7 +190,7 @@ export const IntentSettings = () => {
             </Grid>
             <br></br>
 
-            <Grid container spacing={3} justify="center">
+            {/* <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
                     <SettingsBanner title="Dashboard Options" subtitle="These options only affect what you see in the dashboard" />
                 </Grid>
@@ -214,7 +214,7 @@ export const IntentSettings = () => {
                     />
                 </Grid>
             </Grid>
-            <br></br>
+            <br></br> */}
             <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
                     <SettingsBanner bgColor={theme.palette.error.main} title="DANGER ZONE" subtitle="CAUTION! These options cause permanent, irreversable changes." />

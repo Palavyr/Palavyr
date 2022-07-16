@@ -10,7 +10,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
     {
         public static List<ConversationNode> CreateDefault(
             string accountId,
-            string areaIdentifier,
+            string intentId,
             string dynamicTableId
         )
         {
@@ -30,7 +30,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     TreeUtils.CreateNodeChildrenString(node3Id, node2Id),
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId,
-                    areaIdentifier,
+                    intentId,
                     null,
                     false
                 ),
@@ -41,7 +41,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     "",
                     DefaultNodeTypeOptions.TooComplicated.StringName,
                     accountId,
-                    areaIdentifier,
+                    intentId,
                     DefaultNodeTypeOptions.YesNo.No,
                     false
                 ),
@@ -52,7 +52,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     TreeUtils.CreateNodeChildrenString(node5Id, node4Id),
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId,
-                    areaIdentifier,
+                    intentId,
                     DefaultNodeTypeOptions.YesNo.Yes,
                     false
                 ),
@@ -64,7 +64,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     "",
                     DefaultNodeTypeOptions.TooComplicated.StringName,
                     accountId,
-                    areaIdentifier,
+                    intentId,
                     DefaultNodeTypeOptions.YesNo.No,
                     false
                 ),
@@ -72,7 +72,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                 new ConversationNode
                 {
                     NodeId = node5Id,
-                    AreaIdentifier = areaIdentifier,
+                    IntentId = intentId,
                     Text = "Which kind of dog do you prefer!",
                     IsRoot = false,
                     NodeChildrenString = node6Id,
@@ -95,7 +95,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     "",
                     DefaultNodeTypeOptions.SendResponse.StringName,
                     accountId,
-                    areaIdentifier,
+                    intentId,
                     "Continue",
                     false
                 )

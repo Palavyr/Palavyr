@@ -6,14 +6,14 @@ using Palavyr.Core.Handlers.ControllerHandler;
 
 namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
-    public class GetAreaFallbackEmailTemplateController : PalavyrBaseController
+    public class GetIntentFallbackEmailTemplateController : PalavyrBaseController
     {
         private readonly IMediator mediator;
 
         public const string Route = "email/fallback/{intentId}/email-template";
 
 
-        public GetAreaFallbackEmailTemplateController(IMediator mediator)
+        public GetIntentFallbackEmailTemplateController(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
         [HttpGet(Route)]
         public async Task<string> Get(string intentId, CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetAreaFallbackEmailTemplateRequest(intentId), cancellationToken);
+            var response = await mediator.Send(new GetIntentFallbackEmailTemplateRequest(intentId), cancellationToken);
             return response.Response;
         }
     }

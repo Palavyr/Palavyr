@@ -6,22 +6,21 @@ using Palavyr.Core.Handlers.ControllerHandler;
 
 namespace Palavyr.API.Controllers.Intents
 {
-
-    public class PutUseAreaFallbackEmailController : PalavyrBaseController
+    public class ModifyIntentIsCompleteController : PalavyrBaseController
     {
         private readonly IMediator mediator;
+        public const string Route = "areas/area-toggle";
 
-        public PutUseAreaFallbackEmailController(IMediator mediator)
+        public ModifyIntentIsCompleteController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpPut("intents/use-fallback-email-toggle")]
-        public async Task<bool> Put(ModifyUseAreaFallbackEmailRequest request, CancellationToken cancellationToken)
+        [HttpPut(Route)]
+        public async Task<bool> Put(ModifyIntentIsCompleteRequest request, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;
-
         }
     }
 }

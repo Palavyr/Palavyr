@@ -17,7 +17,7 @@ namespace Palavyr.Core.Data.Entities
         public string TableType { get; set; }
         public string TableId { get; set; }
         public string AccountId { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public bool ValuesAsPaths { get; set; } = false; // for tables that specify various options, whether or not to use each option to create a new tree path.
         public bool UseTableTagAsResponseDescription { get; set; } = false;
         public UnitIds UnitId { get; set; }
@@ -27,7 +27,7 @@ namespace Palavyr.Core.Data.Entities
             string prettyName,
             string tableType,
             string tableId,
-            string areaId,
+            string intentId,
             string accountId,
             UnitIds unitId
         )
@@ -37,7 +37,7 @@ namespace Palavyr.Core.Data.Entities
                 TableId = tableId,
                 TableType = tableType,
                 TableTag = tableTag,
-                AreaIdentifier = areaId,
+                IntentId = intentId,
                 AccountId = accountId,
                 PrettyName = prettyName,
                 UnitId = unitId,
@@ -45,24 +45,24 @@ namespace Palavyr.Core.Data.Entities
             };
         }
 
-        public static List<PricingStrategyTableMeta> CreateDefaultMetas(string areaId, string accountId)
+        public static List<PricingStrategyTableMeta> CreateDefaultMetas(string intentId, string accountId)
         {
             return new List<PricingStrategyTableMeta>
             {
                 CreateNew(
                     "default",
-                    new SimpleSelectTableRow().GetPrettyName(), // TODO: Do this better
-                    new SimpleSelectTableRow().GetTableType(),
+                    new CategorySelectTableRow().GetPrettyName(), // TODO: Do this better
+                    new CategorySelectTableRow().GetTableType(),
                     Guid.NewGuid().ToString(),
-                    areaId,
+                    intentId,
                     accountId,
                     UnitIds.Currency)
             };
         }
 
-        public void Deconstruct(out string areaId, out string tableId)
+        public void Deconstruct(out string intentId, out string tableId)
         {
-            areaId = AreaIdentifier;
+            intentId = IntentId;
             tableId = TableId;
         }
 

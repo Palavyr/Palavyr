@@ -13,7 +13,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
     public interface ISelectOneFlatNodeUpdater
     {
         Task UpdateConversationNode(
-            List<SimpleSelectTableRow> currentSelectOneFlatUpdate,
+            List<CategorySelectTableRow> currentSelectOneFlatUpdate,
             PricingStrategyTableMeta tableTableMeta,
             ConversationNode node,
             List<ConversationNode> conversationNodes,
@@ -39,7 +39,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
         }
 
         public async Task UpdateConversationNode(
-            List<SimpleSelectTableRow> currentSelectOneFlatUpdate,
+            List<CategorySelectTableRow> currentSelectOneFlatUpdate,
             PricingStrategyTableMeta tableTableMeta,
             ConversationNode node,
             List<ConversationNode> conversationNodes,
@@ -59,7 +59,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
             await nodeUpdater.UpdateConversation(areaIdentifier, updatedNodes, CancellationToken.None);
         }
 
-        private async Task<List<ConversationNode>> ConvertToAsPaths(List<SimpleSelectTableRow> currentSelectOneFlatUpdate, ConversationNode node, string areaIdentifier, string accountId, List<ConversationNode> conversationNodes)
+        private async Task<List<ConversationNode>> ConvertToAsPaths(List<CategorySelectTableRow> currentSelectOneFlatUpdate, ConversationNode node, string areaIdentifier, string accountId, List<ConversationNode> conversationNodes)
         {
             // 1. from not as paths
             // 2. add 1 or more siblings
@@ -69,7 +69,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
             var currentNumberOfOptions = currentOptions.Count;
             var currentNodeChildrenStrings = splitter.SplitNodeChildrenString(node.NodeChildrenString);
 
-            var incomingOptions = currentSelectOneFlatUpdate.Select(x => x.Option).ToList();
+            var incomingOptions = currentSelectOneFlatUpdate.Select(x => x.Category).ToList();
             var numberOfIncomingOptions = incomingOptions.Count;
             var newValueOptionsString = string.Join(Delimiters.ValueOptionDelimiter, incomingOptions);
 

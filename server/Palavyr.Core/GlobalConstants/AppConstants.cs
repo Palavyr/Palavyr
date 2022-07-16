@@ -10,32 +10,27 @@
             public const string AccountId = "accountId";
             public const string SessionId = "sessionId";
             public const string ApiKeyAccess = "apiKeyAccess";
-            public const string DevAccess = "secretDevAccess";
-            public const string DevAccount = "dashboardDev";
             public const string Authorization = "Authorization";
         }
 
         public class ConfigSections
         {
             public const string LoggingSection = "Logging";
-            public const string UserDataSection = "Userdata";
+            public const string UserDataSection = "AWS:UserDataBucket";
 
-            public const string ConnectionStringPostgres = "ConnectionString";
+            public const string ConnectionString = "ConnectionString";
 
-            public const string StripeKeySection = "Stripe:SecretKey";
-            public const string JwtSecretKey = "JWTSecretKey";
+            public const string StripeKeySection = "STRIPE:SecretKey";
+            public const string JwtSecretKey = "JWT:SecretKey";
 
             public const string AccessKeySection = "AWS:AccessKey";
             public const string SecretKeySection = "AWS:SecretKey";
             public const string RegionSection = "AWS:Region";
 
-            public const string PdfServerHost = "Pdf.Server.Host";
-            public const string PdfServerPort = "Pdf.Server.Port";
+            public const string PdfServerUrl = "PDFSERVER:Url";
 
-            public const string SmtpUsername = "AWS:SmtpUsername";
-            public const string SmtpPassword = "AWS:SmtpPassword";
             public const string RandomString = "aT5jX*Y7fJEK";
-            public const string CurrentEnvironment = "Palavyr.Server.Environment";
+            public const string CurrentEnvironment = "Environment";
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetNodeTypeOptionsResponse> Handle(GetNodeTypeOptionsRequest request, CancellationToken cancellationToken)
         {
-            var dynamicTableMetas = await dynamicTableMetaStore.GetMany(request.IntentId, s => s.AreaIdentifier);
+            var dynamicTableMetas = await dynamicTableMetaStore.GetMany(request.IntentId, s => s.IntentId);
             var dynamicTableData = await pricingStrategyTableCompilerOrchestrator.CompileTablesToConfigurationNodes(dynamicTableMetas, request.IntentId);
             var defaultNodeTypeOptions = DefaultNodeTypeOptions.DefaultNodeTypeOptionsList;
 

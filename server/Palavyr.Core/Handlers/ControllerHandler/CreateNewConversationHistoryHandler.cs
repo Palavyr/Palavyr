@@ -53,15 +53,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var standardNodesNoTracking = await convoNodeStore
                 .RawReadonlyQuery()
                 .Where(x => x.AccountId == convoNodeStore.AccountId)
-                .Where(x => x.AreaIdentifier == intentId)
+                .Where(x => x.IntentId == intentId)
                 .ToListAsync(convoNodeStore.CancellationToken);
             var completeConversation = endingSequenceAttacher.AttachEndingSequenceToNodeList(standardNodesNoTracking, intentId, accountIdTransport.AccountId);
             var widgetNodes = await mapper.MapMany(completeConversation, cancellationToken);
 
             var newConvoResource = NewConversationResource.CreateNew(widgetNodes.ToList());
 
-            var intent = await intentStore.Get(intentId, s => s.AreaIdentifier);
-            var newConversationRecord = ConversationHistoryMeta.CreateDefault(newConvoResource.ConversationId, accountIdTransport.AccountId, intent.AreaName, intentId);
+            var intent = await intentStore.Get(intentId, s => s.IntentId);
+            var newConversationRecord = ConversationHistoryMeta.CreateDefault(newConvoResource.ConversationId, accountIdTransport.AccountId, intent.IntentName, intentId);
 
             if (!string.IsNullOrEmpty(recordUpdate.Email))
             {

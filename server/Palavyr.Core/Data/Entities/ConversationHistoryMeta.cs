@@ -28,14 +28,14 @@ namespace Palavyr.Core.Data.Entities
         {
         }
 
-        public static ConversationHistoryMeta CreateDefault(string conversationId, string accountId, string intentName, string areaIdentifier)
+        public static ConversationHistoryMeta CreateDefault(string conversationId, string accountId, string intentName, string intentId)
         {
             return new ConversationHistoryMeta
             {
                 ConversationId = conversationId,
                 AccountId = accountId,
                 IntentName = intentName,
-                IntentId = areaIdentifier,
+                IntentId = intentId,
                 TimeStamp = TimeUtils.CreateNewTimeStamp()
             };
         }
@@ -51,7 +51,7 @@ namespace Palavyr.Core.Data.Entities
             string name,
             string email,
             string phoneNumber,
-            string areaIdentifier)
+            string intentId)
         {
             return new ConversationHistoryMeta
             {
@@ -65,7 +65,7 @@ namespace Palavyr.Core.Data.Entities
                 Name = name,
                 Email = email,
                 PhoneNumber = phoneNumber,
-                IntentId = areaIdentifier
+                IntentId = intentId
             };
         }
     }

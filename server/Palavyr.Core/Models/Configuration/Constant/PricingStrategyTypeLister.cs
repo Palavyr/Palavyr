@@ -9,7 +9,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
     {
         public IEnumerable<IHaveAPrettyNameAndTableType> ListPricingStrategies()
         {
-            var types = typeof(SimpleSelectTableRow)
+            var types = typeof(CategorySelectTableRow)
                 .Assembly
                 .GetTypes()
                 .Where(

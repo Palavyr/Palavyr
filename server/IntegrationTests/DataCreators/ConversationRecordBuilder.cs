@@ -64,11 +64,11 @@ namespace IntegrationTests.DataCreators
             var isDemo = this.isDemo;
 
             var intents = await test.Client.GetResource<GetAllIntentsRequest, IEnumerable<IntentResource>>(test.CancellationToken);
-            var intent = intents.SingleOrDefault(x => x.AreaIdentifier == id);
+            var intent = intents.SingleOrDefault(x => x.IntentId == id);
             if (intent is null)
             {
                 intent = await test.CreateIntentBuilder().Build();
-                id = intent.AreaIdentifier;
+                id = intent.IntentId;
             }
 
             var newConversationRecordRequest = new CreateNewConversationHistoryRequest

@@ -185,7 +185,7 @@ namespace Component.Tests.Stores
                 var intentB = A.RandomId();
                 await store.CreateMany(CreateData(5, intentB));
 
-                var results = await store.GetMany(intentA, s => s.AreaIdentifier);
+                var results = await store.GetMany(intentA, s => s.IntentId);
 
                 results.Count.ShouldBe(5);
             }
@@ -205,9 +205,9 @@ namespace Component.Tests.Stores
                 await store.CreateMany(CreateData(5, intentC));
 
                 var ids = new[] { intentA, intentC };
-                var results = await store.GetMany(ids, s => s.AreaIdentifier);
+                var results = await store.GetMany(ids, s => s.IntentId);
                 results.Count.ShouldBe(10);
-                results.Select(x => x.AreaIdentifier).Distinct().ShouldBe(ids);
+                results.Select(x => x.IntentId).Distinct().ShouldBe(ids);
             }
 
             [Fact]
@@ -225,7 +225,7 @@ namespace Component.Tests.Stores
                 await store.CreateMany(CreateData(5, intentC));
 
                 var ids = new[] { intentA, intentB, intentC };
-                var results = await store.GetMany(ids, s => s.AreaIdentifier);
+                var results = await store.GetMany(ids, s => s.IntentId);
                 results.Count.ShouldBe(15);
             }
 
@@ -244,7 +244,7 @@ namespace Component.Tests.Stores
                 await contextProvider.DangerousCommitAllContexts();
 
                 var ids = new[] { intentId };
-                var result = await store.GetMany(ids, s => s.AreaIdentifier);
+                var result = await store.GetMany(ids, s => s.IntentId);
                 result.Count.ShouldBe(0);
             }
         }
@@ -325,7 +325,7 @@ namespace Component.Tests.Stores
 
                 await store.Delete(entity);
 
-                var result = await store.GetOrNull(entity.AreaIdentifier, x => x.AreaIdentifier);
+                var result = await store.GetOrNull(entity.IntentId, x => x.IntentId);
                 result.ShouldBeNull();
             }
 
@@ -402,10 +402,10 @@ namespace Component.Tests.Stores
                 await store.Delete(new[] { newA, newB });
 
                 // Assert
-                var result = await store.GetOrNull(newA.AreaIdentifier, x => x.AreaIdentifier);
+                var result = await store.GetOrNull(newA.IntentId, x => x.IntentId);
                 result.ShouldBeNull();
 
-                var exists = await store.GetOrNull(newB.AreaIdentifier, x => x.AreaIdentifier);
+                var exists = await store.GetOrNull(newB.IntentId, x => x.IntentId);
                 exists.ShouldBeNull();
             }
         }

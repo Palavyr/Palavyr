@@ -6,15 +6,13 @@ using Palavyr.Core.Handlers.ControllerHandler;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
-    public class GetAreaEmailSubjectController : PalavyrBaseController
+    public class GetIntentEmailSubjectController : PalavyrBaseController
     {
         private readonly IMediator mediator;
 
         public const string Route = "email/subject/{intentId}";
 
-        public GetAreaEmailSubjectController(
-            IMediator mediator
-        )
+        public GetIntentEmailSubjectController(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -22,7 +20,7 @@ namespace Palavyr.API.Controllers.Response.SubjectControllers
         [HttpGet(Route)]
         public async Task<string> Get([FromRoute] string intentId, CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetAreaEmailSubjectRequest(intentId), cancellationToken);
+            var response = await mediator.Send(new GetIntentEmailSubjectRequest(intentId), cancellationToken);
             return response.Response;
         }
     }

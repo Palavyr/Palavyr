@@ -76,19 +76,19 @@ namespace IntegrationTests.DataCreators
             if (intentId is null)
             {
                 var intent = await test.CreateIntentBuilder().Build();
-                intentId = intent.AreaIdentifier;
+                intentId = intent.IntentId;
             }
             else
             {
-                var intent = await intentStore.GetOrNull(intentId, s => s.AreaIdentifier);
+                var intent = await intentStore.GetOrNull(intentId, s => s.IntentId);
                 if (intent is null)
                 {
                     var newIntent = await test.CreateIntentBuilder().Build();
-                    intentId = newIntent.AreaIdentifier;
+                    intentId = newIntent.IntentId;
                 }
                 else
                 {
-                    intentId = intent.AreaIdentifier;
+                    intentId = intent.IntentId;
                 }
             }
 

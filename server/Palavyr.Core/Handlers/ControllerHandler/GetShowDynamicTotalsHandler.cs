@@ -17,7 +17,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetShowDynamicTotalsHandlerResponse> Handle(GetShowDynamicTotalsHandlerRequest request, CancellationToken cancellationToken)
         {
-            var intent = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
+            var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
             return new GetShowDynamicTotalsHandlerResponse(intent.IncludeDynamicTableTotals);
         }
     }

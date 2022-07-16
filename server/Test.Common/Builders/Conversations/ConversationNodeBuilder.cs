@@ -21,7 +21,7 @@ namespace Test.Common.Builders.Conversations
                 IsRoot = true,
                 NodeId = StaticGuidUtils.CreateNewId(),
                 Text = "Root Node",
-                AreaIdentifier = areaIdentifier,
+                IntentId = areaIdentifier,
                 AccountId = accountId,
             };
         }

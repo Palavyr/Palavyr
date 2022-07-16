@@ -22,7 +22,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<GetConversationResponse> Handle(GetConversationRequest request, CancellationToken cancellationToken)
         {
-            var conversation = await convoNodeStore.GetMany(request.IntentId, s => s.AreaIdentifier);
+            var conversation = await convoNodeStore.GetMany(request.IntentId, s => s.IntentId);
 
             var resource = await mapper.MapMany(conversation, cancellationToken);
             return new GetConversationResponse(resource);

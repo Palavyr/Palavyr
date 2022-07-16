@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Palavyr.API.CustomMiddleware;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Services.AuthenticationServices;
 
@@ -33,7 +34,8 @@ namespace Palavyr.API.Registration.Configuration
             //         cfg.User.RequireUniqueEmail = true;
             //     });
 
-            var key = configuration[ApplicationConstants.ConfigSections.JwtSecretKey] ?? throw new ArgumentNullException("Configuration[\"JWTSecretKey\"]");
+            var key = configuration.GetJwtKey();
+            
             services
                 .AddAuthentication(
                     o =>

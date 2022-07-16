@@ -6,7 +6,6 @@ using Amazon.S3;
 using Amazon.SimpleEmail;
 using Autofac;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.EmailService.SmtpEmail;
 

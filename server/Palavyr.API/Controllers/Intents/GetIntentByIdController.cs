@@ -14,18 +14,18 @@ namespace Palavyr.API.Controllers.Intents
     // I Don't think this is even being used any more by the client.
 
     [Obsolete]
-    public class GetAreaByIdController : PalavyrBaseController
+    public class GetIntentByIdController : PalavyrBaseController
     {
         private readonly IEntityStore<Intent> intentStore;
         private readonly IEntityStore<Account> accountStore;
         private readonly IEmailVerificationStatus emailVerificationStatus;
-        private ILogger<GetAreaByIdController> logger;
+        private ILogger<GetIntentByIdController> logger;
 
-        public GetAreaByIdController(
+        public GetIntentByIdController(
             IEntityStore<Intent> intentStore,
             IEntityStore<Account> accountStore,
             IEmailVerificationStatus emailVerificationStatus,
-            ILogger<GetAreaByIdController> logger
+            ILogger<GetIntentByIdController> logger
         )
         {
             this.intentStore = intentStore;
@@ -42,28 +42,28 @@ namespace Palavyr.API.Controllers.Intents
             string intentId,
             CancellationToken cancellationToken)
         {
-            var intent = await intentStore.Get(intentId, s => s.AreaIdentifier);
+            var intent = await intentStore.Get(intentId, s => s.IntentId);
 
-            if (string.IsNullOrWhiteSpace(intent.AreaSpecificEmail))
+            if (string.IsNullOrWhiteSpace(intent.IntentSpecificEmail))
             {
                 var account = await accountStore.Get(accountStore.AccountId, s => s.AccountId);
-                intent.AreaSpecificEmail = account.EmailAddress;
+                intent.IntentSpecificEmail = account.EmailAddress;
             }
 
-            var (found, status) = await emailVerificationStatus.RequestEmailVerificationStatus(intent.AreaSpecificEmail);
+            var (found, status) = await emailVerificationStatus.RequestEmailVerificationStatus(intent.IntentSpecificEmail);
             if (!found)
             {
                 throw new Exception("Default email not found. Account is corrupted.");
             }
 
-            var statusResponse = emailVerificationStatus.HandleFoundEmail(status, intent.AreaSpecificEmail);
+            var statusResponse = emailVerificationStatus.HandleFoundEmail(status, intent.IntentSpecificEmail);
 
             intent.EmailIsVerified = statusResponse.IsVerified();
             intent.AwaitingVerification = statusResponse.IsPending();
 
-            if (intent.UseAreaFallbackEmail == null) // code smell
+            if (intent.UseIntentFallbackEmail == null) // code smell
             {
-                intent.UseAreaFallbackEmail = false;
+                intent.UseIntentFallbackEmail = false;
             }
 
             return intent;

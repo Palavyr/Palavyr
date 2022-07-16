@@ -5,16 +5,16 @@ using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
 {
-    public class SelectOneFlatToExistingMapper : IMapToPreExisting<SelectOneFlatResource, SimpleSelectTableRow>
+    public class SelectOneFlatToExistingMapper : IMapToPreExisting<SelectOneFlatResource, CategorySelectTableRow>
     {
-        public async Task Map(SelectOneFlatResource from, SimpleSelectTableRow to, CancellationToken cancellationToken)
+        public async Task Map(SelectOneFlatResource from, CategorySelectTableRow to, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
             to.Id = from.Id;
-            to.Option = from.Option;
+            to.Category = from.Option;
             to.Range = from.Range;
             to.AccountId = from.AccountId;
-            to.AreaIdentifier = from.AreaIdentifier;
+            to.IntentId = from.AreaIdentifier;
             to.RowOrder = from.RowOrder;
             to.TableId = from.TableId;
             to.ValueMax = from.ValueMax;
@@ -32,7 +32,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
             to.Range = from.Range;
             to.Threshold = from.Threshold;
             to.AccountId = from.AccountId;
-            to.AreaIdentifier = from.AreaIdentifier;
+            to.IntentId = from.AreaIdentifier;
             to.ItemName = from.ItemName;
             to.RowId = from.RowId;
             to.RowOrder = from.RowOrder;
@@ -53,9 +53,9 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
             to.Range = from.Range;
             to.Threshold = from.Threshold;
             to.AccountId = from.AccountId;
-            to.AreaIdentifier = from.AreaIdentifier;
+            to.IntentId = from.AreaIdentifier;
             to.ItemId = from.ItemId;
-            to.ItemName = from.ItemName;
+            to.Category = from.ItemName;
             to.ItemOrder = from.ItemOrder;
             to.RowId = from.RowId;
             to.RowOrder = from.RowOrder;
@@ -77,9 +77,9 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
             to.Range = from.Range;
             to.Threshold = from.Threshold;
             to.AccountId = from.AccountId;
-            to.AreaIdentifier = from.AreaIdentifier;
+            to.IntentId = from.AreaIdentifier;
             to.ItemId = from.ItemId;
-            to.ItemName = from.ItemName;
+            to.Category = from.ItemName;
             to.ItemOrder = from.ItemOrder;
             to.PosNeg = from.PosNeg;
             to.RowId = from.RowId;
@@ -100,9 +100,9 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
             to.Id = from.Id;
             to.Range = from.Range;
             to.AccountId = from.AccountId;
-            to.AreaIdentifier = from.AreaIdentifier;
+            to.IntentId = from.AreaIdentifier;
             to.ItemId = from.ItemId;
-            to.ItemName = from.ItemId;
+            to.Category = from.ItemId;
             to.ItemOrder = from.ItemOrder;
             to.RowId = from.RowId;
             to.RowOrder = from.RowOrder;

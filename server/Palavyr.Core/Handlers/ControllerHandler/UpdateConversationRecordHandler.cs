@@ -36,7 +36,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             if (!string.IsNullOrEmpty(areaId)) // we set this already when we create the convo, but here we use it to indicate if we've sent an email.
             {
-                var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
+                var area = await intentStore.Get(request.IntentId, s => s.IntentId);
                 record.EmailTemplateUsed = area.EmailTemplate;
             }
 

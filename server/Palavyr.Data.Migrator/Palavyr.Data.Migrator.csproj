@@ -60,17 +60,12 @@
         <PackageReference Include="TestStack.ConventionTests.Autofac" Version="4.0.2" />
     </ItemGroup>
     <ItemGroup>
-        <None Update="appsettings.migrator.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="appsettings.migrator.development.json">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-    <ItemGroup>
         <EmbeddedResource Include="Scripts\*\*.sql" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Scripts" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Palavyr.Core\Palavyr.Core.csproj" />
     </ItemGroup>
 </Project>

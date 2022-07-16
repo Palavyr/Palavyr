@@ -16,7 +16,7 @@ namespace Palavyr.Core.Mappers
                 NodeType = @from.NodeType,
                 Text = @from.Text,
                 IsRoot = @from.IsRoot,
-                AreaIdentifier = @from.AreaIdentifier,
+                AreaIdentifier = @from.IntentId,
                 NodeChildrenString = @from.NodeChildrenString,
                 OptionPath = @from.OptionPath,
                 ValueOptions = @from.ValueOptions,

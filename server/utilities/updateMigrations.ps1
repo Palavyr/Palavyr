@@ -10,7 +10,6 @@ if ($name -eq "") {
 }
 
 
-
 Write-Host "Run this script from the server directory (next to the project)"
 Write-Host "ONLY RUN THIS IN DEV TO PRODUCE MIGRATION SCRIPTS!!"
 ## This script is used to produce a unified migration script for each of contexts used with Palavyr ##
@@ -91,7 +90,7 @@ function GetNextMigrationScriptVersion() {
     }
     $sortedVersions = $allVersions | Sort-Object -descending;
 
-    if ($sortedVersions.Length -eq 0){
+    if ($sortedVersions.Length -eq 0) {
         return "0001"
     }
     $latestVersion = $sortedVersions[0];
@@ -107,9 +106,11 @@ function GetNextMigrationScriptVersion() {
     return $nextVersionAsString;
 }
 
+# At a minimum, the following environment variables must be set:
+# Set-Variable Palavyr_ConnectionString="Server=localhost<SplitMe>Port=5432<SplitMe>Database=AppDatabase<SplitMe>User Id=postgres<SplitMe>Password=Password01!"
+# Set-Variable Palavyr_AWS__Region=$region
+# Set-Variable Palavyr_JWT__SecretKey=SomeWOwowow
 $nextMigrationScriptVersion = GetNextMigrationScriptVersion;
-
-
 $scriptDir = ".\\Palavyr.Data.Migrator\\Scripts\\"
 
 CheckDirForExistingVersions $scriptDir $nextMigrationScriptVersion
@@ -149,16 +150,16 @@ catch {
     $result = $?;
 }
 
-
 Write-Host "`r`nExporting migrations as SQL Scripts for use in production..."
 
 if ($result) {
     Write-Host "`r`nExporting Migrations as SQL Scripts..."
-    Write-Host "`r`nExporting To: $scriptDir\\$nextMigrationScriptVersion-$name.sql"
+    Write-Host "`r`nExporting To: ${scriptDir}$nextMigrationScriptVersion-$name.sql"
     dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context AppDataContexts --output "${scriptDir}Script$nextMigrationScriptVersion-$name.sql" --idempotent
 }
 else {
     Write-Host "`r`nNot creating sql script for  DB - no new migrations found in the CodeFirstMigrations directory.";
+    return;
 }
 
 

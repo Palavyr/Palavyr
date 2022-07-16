@@ -17,7 +17,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IPalavyrAccessChecker accessChecker;
         private readonly IEntityStore<Intent> intentStore;
         private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
-        private readonly IEntityStore<SimpleSelectTableRow> defaultPricingStrategyStore;
+        private readonly IEntityStore<CategorySelectTableRow> defaultPricingStrategyStore;
         private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
 
@@ -28,7 +28,7 @@ namespace Palavyr.Core.Services.AccountServices
             IEntityStore<Intent> intentStore,
             IEntityStore<Subscription> subscriptionStore,
             IEntityStore<WidgetPreference> widgetPreferenceStore,
-            IEntityStore<SimpleSelectTableRow> defaultPricingStrategyStore,
+            IEntityStore<CategorySelectTableRow> defaultPricingStrategyStore,
             IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore,
             IEntityStore<ConversationNode> convoNodeStore
         )
@@ -48,7 +48,7 @@ namespace Palavyr.Core.Services.AccountServices
         {
             logger.LogDebug("Install new account seed data.");
             var seedData = new SeedData(accountId, emailAddress, introId);
-            await intentStore.CreateMany(seedData.Areas);
+            await intentStore.CreateMany(seedData.Intents);
             await widgetPreferenceStore.Create(seedData.WidgetPreference);
             await defaultPricingStrategyStore.CreateMany(seedData.DefaultDynamicTables);
             await convoNodeStore.CreateMany(seedData.IntroductionConversationNodes);

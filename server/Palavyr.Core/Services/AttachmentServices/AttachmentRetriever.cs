@@ -53,7 +53,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task<FileAsset[]> GetAttachmentLinksForIntent(string intentId)
         {
-            var intent = await intentStore.Query().Include(x => x.AttachmentRecords).SingleAsync(x => x.AreaIdentifier == intentId, intentStore.CancellationToken);
+            var intent = await intentStore.Query().Include(x => x.AttachmentRecords).SingleAsync(x => x.IntentId == intentId, intentStore.CancellationToken);
             var attachmentFileIds = intent.AttachmentRecords.Select(x => x.FileId).ToArray();
             var fileAssets = await fileAssetStore.Query().Where(x => attachmentFileIds.Contains(x.FileId)).ToListAsync(fileAssetStore.CancellationToken);
 
@@ -63,7 +63,7 @@ namespace Palavyr.Core.Services.AttachmentServices
         private async Task<List<CloudFileDownloadRequest>> RetrievePdfUris(string intentId)
         {
             var intent = await intentStore.Query()
-                .Where(x => x.AreaIdentifier == intentId)
+                .Where(x => x.IntentId == intentId)
                 .Include(x => x.AttachmentRecords)
                 .SingleAsync(intentStore.CancellationToken);
             var attachmentFileIds = intent.AttachmentRecords.Select(x => x.FileId).ToArray();

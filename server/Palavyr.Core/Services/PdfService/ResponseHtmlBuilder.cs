@@ -61,7 +61,7 @@ namespace Palavyr.Core.Services.PdfService
                 LogoLink = logoLink ?? "",
                 CompanyName = account.CompanyName,
                 PhoneNumber = account.PhoneNumber,
-                EmailAddress = string.IsNullOrEmpty(intent.AreaSpecificEmail) ? account.EmailAddress : intent.AreaSpecificEmail
+                EmailAddress = string.IsNullOrEmpty(intent.IntentSpecificEmail) ? account.EmailAddress : intent.IntentSpecificEmail
             };
 
 

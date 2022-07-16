@@ -18,14 +18,14 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
                 .Include(row => row.StaticTablesMetas)
                 .ThenInclude(meta => meta.StaticTableRows)
                 .ThenInclude(row => row.Fee)
-                .SingleAsync(row => row.AreaIdentifier == intentId, intentStore.CancellationToken);
+                .SingleAsync(row => row.IntentId == intentId, intentStore.CancellationToken);
             return intentComplete;
         }
 
         public static async Task<Intent> GetIntentOnly(this IEntityStore<Intent> intentStore, string intentId)
         {
             var intentComplete = await intentStore
-                .Get(intentId, s => s.AreaIdentifier);
+                .Get(intentId, s => s.IntentId);
             // var intentComplete = await intentStore
                 // .Query()
                 // .SingleAsync(row => row.AreaIdentifier == intentId, intentStore.CancellationToken);

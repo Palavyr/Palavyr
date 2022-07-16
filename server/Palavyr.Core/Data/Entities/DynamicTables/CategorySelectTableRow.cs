@@ -6,36 +6,36 @@ using Palavyr.Core.Requests;
 
 namespace Palavyr.Core.Data.Entities.DynamicTables
 {
-    public class SimpleSelectTableRow : Entity, IOrderedTable, IPricingStrategyTable<SimpleSelectTableRow>, IHaveAccountId
+    public class CategorySelectTableRow : Entity, IOrderedTable, IPricingStrategyTable<CategorySelectTableRow>, IHaveAccountId
     {
         private const string PrettyName = "Simple Select One Option";
 
 
         public string AccountId { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public string TableId { get; set; }
-        public string Option { get; set; }
+        public string Category { get; set; }
         public double ValueMin { get; set; }
         public double ValueMax { get; set; }
         public bool Range { get; set; }
         public int RowOrder { get; set; }
 
-        public static SimpleSelectTableRow CreateNew(
+        public static CategorySelectTableRow CreateNew(
             string accountId,
-            string areaIdentifier,
-            string option,
+            string intentId,
+            string category,
             double valueMin,
             double valueMax,
             bool range,
             string tableId,
             int rowOrder)
         {
-            return new SimpleSelectTableRow
+            return new CategorySelectTableRow
             {
                 AccountId = accountId,
-                AreaIdentifier = areaIdentifier,
+                IntentId = intentId,
                 TableId = tableId,
-                Option = option,
+                Category = category,
                 ValueMin = valueMin,
                 ValueMax = valueMax,
                 Range = range,
@@ -43,13 +43,13 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
             };
         }
 
-        public SimpleSelectTableRow CreateTemplate(string accountId, string areaIdentifier, string tableId)
+        public CategorySelectTableRow CreateTemplate(string accountId, string intentId, string tableId)
         {
-            return new SimpleSelectTableRow()
+            return new CategorySelectTableRow()
             {
                 AccountId = accountId,
-                AreaIdentifier = areaIdentifier,
-                Option = "Option Placeholder",
+                IntentId = intentId,
+                Category = "Option Placeholder",
                 ValueMin = 0.00,
                 ValueMax = 0.00,
                 Range = false,
@@ -57,15 +57,15 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
             };
         }
 
-        public List<SimpleSelectTableRow> UpdateTable(PricingStrategyTable<SimpleSelectTableRow> table)
+        public List<CategorySelectTableRow> UpdateTable(PricingStrategyTable<CategorySelectTableRow> table)
         {
-            var mappedTableRows = new List<SimpleSelectTableRow>();
+            var mappedTableRows = new List<CategorySelectTableRow>();
             foreach (var row in table.TableData)
             {
                 var mappedRow = CreateNew(
                     row.AccountId,
-                    row.AreaIdentifier,
-                    row.Option,
+                    row.IntentId,
+                    row.Category,
                     row.ValueMin,
                     row.ValueMax,
                     row.Range,

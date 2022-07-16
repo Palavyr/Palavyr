@@ -30,7 +30,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 node.AccountId = account.AccountId;
             }
             
-            await convoNodeStore.Delete(account.IntroductionId, s => s.AreaIdentifier);
+            await convoNodeStore.Delete(account.IntroductionId, s => s.IntentId);
             await convoNodeStore.CreateMany(request.Transactions.ToArray());
 
             return new ModifyIntroductionSequenceResponse(request.Transactions.ToArray());

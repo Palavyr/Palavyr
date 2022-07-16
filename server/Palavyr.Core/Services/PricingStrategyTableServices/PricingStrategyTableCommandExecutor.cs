@@ -82,7 +82,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
                 };
             }
 
-            var convoNodes = await convoNodeStore.GetMany(intentId, s => s.AreaIdentifier);
+            var convoNodes = await convoNodeStore.GetMany(intentId, s => s.IntentId);
 
             var currentDynamic = convoNodes.Where(
                 x =>

@@ -14,7 +14,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers
             {
                 Id = @from.Id,
                 AccountId = @from.AccountId,
-                AreaIdentifier = @from.AreaIdentifier,
+                AreaIdentifier = @from.IntentId,
                 TableId = @from.TableId,
                 RowId = @from.RowId,
                 Threshold = @from.Threshold,
@@ -27,7 +27,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers
                 TriggerFallback = @from.TriggerFallback,
                 ItemOrder = @from.ItemOrder,
                 ItemId = @from.ItemId,
-                ItemName = @from.ItemName
+                ItemName = @from.Category
             };
         }
     }

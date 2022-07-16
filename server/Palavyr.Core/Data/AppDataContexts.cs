@@ -6,7 +6,7 @@ namespace Palavyr.Core.Data
 {
     public class AppDataContexts : DbContext
     {
-        public AppDataContexts(DbContextOptions<AppDataContexts> options) : base(options)
+        public AppDataContexts(DbContextOptions options) : base(options)
         {
         }
 
@@ -27,7 +27,7 @@ namespace Palavyr.Core.Data
         public DbSet<AttachmentLinkRecord> AttachmentRecords { get; set; }
         public DbSet<WidgetPreference> WidgetPreferences { get; set; }
 
-        public DbSet<SimpleSelectTableRow> SimpleSelectTableRows { get; set; }
+        public DbSet<CategorySelectTableRow> SimpleSelectTableRows { get; set; }
         public DbSet<PercentOfThresholdTableRow> PercentOfThresholds { get; set; }
         public DbSet<SimpleThresholdTableRow> SimpleThresholdTableRows { get; set; }
         public DbSet<TwoNestedSelectTableRow> TwoNestedSelectTableRows { get; set; }

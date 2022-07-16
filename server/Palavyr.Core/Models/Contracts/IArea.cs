@@ -2,6 +2,6 @@
 {
     public interface IArea
     {
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
     }
 }

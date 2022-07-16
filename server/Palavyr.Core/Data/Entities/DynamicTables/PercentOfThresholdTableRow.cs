@@ -21,7 +21,7 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
 
 
         public string AccountId { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public string TableId { get; set; }
         public string RowId { get; set; }
         public double Threshold { get; set; }
@@ -35,11 +35,11 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
 
         public int ItemOrder { get; set; }
         public string ItemId { get; set; }
-        public string ItemName { get; set; } // unfortunate - doesn't fit in meta, and here it will be duplicated - we don't keep a table for the subtables held by this
+        public string Category { get; set; } // unfortunate - doesn't fit in meta, and here it will be duplicated - we don't keep a table for the subtables held by this
 
         public static PercentOfThresholdTableRow CreateNew(
             string accountId,
-            string areaIdentifier,
+            string intentId,
             string tableId,
             string rowId,
             double threshold,
@@ -56,12 +56,12 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
             return new PercentOfThresholdTableRow()
             {
                 AccountId = accountId,
-                AreaIdentifier = areaIdentifier,
+                IntentId = intentId,
                 TableId = tableId,
                 RowId = rowId,
                 Threshold = threshold,
                 Modifier = modifier,
-                ItemName = itemName,
+                Category = itemName,
                 ItemId = itemId,
                 ValueMin = valueMin,
                 ValueMax = valueMax,
@@ -71,17 +71,17 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
             };
         }
 
-        public PercentOfThresholdTableRow CreateTemplate(string accountId, string areaIdentifier, string tableId)
+        public PercentOfThresholdTableRow CreateTemplate(string accountId, string intentId, string tableId)
         {
             return new PercentOfThresholdTableRow()
             {
                 AccountId = accountId,
-                AreaIdentifier = areaIdentifier,
+                IntentId = intentId,
                 TableId = tableId,
                 RowId = StaticGuidUtils.CreateNewId(),
                 Threshold = 0.00,
                 Modifier = 0.00,
-                ItemName = "Default Item",
+                Category = "Default Item",
                 ItemId = StaticGuidUtils.CreateNewId(),
                 ValueMin = 0.00,
                 ValueMax = 0.00,
@@ -97,12 +97,12 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
             {
                 var mappedRow = CreateNew(
                     row.AccountId,
-                    row.AreaIdentifier,
+                    row.IntentId,
                     row.TableId,
                     row.RowId,
                     row.Threshold,
                     row.Modifier,
-                    row.ItemName,
+                    row.Category,
                     row.ItemId,
                     row.ValueMin,
                     row.ValueMax,

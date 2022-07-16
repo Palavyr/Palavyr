@@ -22,7 +22,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
 
         public static void SetAreaId(this ConversationNode node, string areaId)
         {
-            node.AreaIdentifier = areaId;
+            node.IntentId = areaId;
         }
 
         public static void SetNodeChildrenString(this ConversationNode node, string childrenString)

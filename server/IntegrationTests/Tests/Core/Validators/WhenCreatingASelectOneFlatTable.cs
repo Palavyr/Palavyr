@@ -22,19 +22,19 @@ namespace IntegrationTests.Tests.Core.Validators
         {
             var selectOneFlatTableMeta = await this.CreatePricingStrategyTableBuilder<SelectOneFlatResource>()
                 .WithRow(this.CreateSelectOneFlatResourceBuilder().Build())
-                .BuildAndMake<SimpleSelectTableRow, SelectOneFlatCompiler>();
+                .BuildAndMake<CategorySelectTableRow, SelectOneFlatCompiler>();
 
-            var getRoute = PricingStrategyControllerBase<SimpleSelectTableRow,
+            var getRoute = PricingStrategyControllerBase<CategorySelectTableRow,
                 SelectOneFlatResource,
-                SelectOneFlatCompiler>.AssembleRoute<SimpleSelectTableRow>(
+                SelectOneFlatCompiler>.AssembleRoute<CategorySelectTableRow>(
                 GetPricingStrategyTableRowsRequest<
-                        SimpleSelectTableRow,
+                        CategorySelectTableRow,
                         SelectOneFlatResource,
                         SelectOneFlatCompiler>
                     .FormatRoute(selectOneFlatTableMeta.AreaIdentifier, selectOneFlatTableMeta.TableId));
 
             var currentTable = await Client.GetResource<GetPricingStrategyTableRowsRequest<
-                SimpleSelectTableRow,
+                CategorySelectTableRow,
                 SelectOneFlatResource,
                 SelectOneFlatCompiler>, PricingStrategyTableDataResource<SelectOneFlatResource>>(CancellationToken, _ => getRoute);
 

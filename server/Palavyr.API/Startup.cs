@@ -1,3 +1,4 @@
+using System;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,19 +9,19 @@ using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Registration.Configuration;
 using Palavyr.API.Registration.Container;
 using Palavyr.API.Registration.Container.MediatorModule;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API
 {
     public class Startup
     {
-        private readonly IConfiguration configuration;
+        private IConfiguration configuration;
         private readonly IWebHostEnvironment env;
 
-        public Startup(IWebHostEnvironment env, IConfiguration configuration)
+        public Startup(IWebHostEnvironment env)
         {
             this.env = env;
-            this.configuration = configuration;
         }
 
         public ILifetimeScope AutofacContainer { get; private set; } = null!;
@@ -35,6 +36,7 @@ namespace Palavyr.API
             builder.RegisterModule(new AmazonModule(configuration));
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
+            builder.RegisterInstance(configuration).As<IConfiguration>();
         }
 
         public static void RegisterStores(IServiceCollection services, IConfiguration configuration)
@@ -44,17 +46,15 @@ namespace Palavyr.API
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            var config = new ConfigurationBuilder()
+                .AddEnvironmentVariables(prefix: "Palavyr_")
+                .Build();
+
+            configuration = config;
             AuthenticationConfiguration.AddAuthenticationSchemes(services, configuration);
             SetServices(services, configuration, env);
         }
 
-        public static void NonWebHostConfiguration(IServiceCollection services, IConfiguration config)
-        {
-            Configurations.ConfigureStripe(config);
-            RegisterStores(services, config);
-            ServiceRegistry.RegisterHealthChecks(services);
-            MediatorRegistry.RegisterMediator(services);
-        }
 
         public static void SetServices(IServiceCollection services, IConfiguration config, IWebHostEnvironment environ)
         {
@@ -67,10 +67,14 @@ namespace Palavyr.API
             NonWebHostConfiguration(services, config);
         }
 
-        public void Configure(
-            IApplicationBuilder app,
-            ILoggerFactory loggerFactory
-        )
+        public static void NonWebHostConfiguration(IServiceCollection services, IConfiguration config)
+        {
+            RegisterStores(services, config);
+            ServiceRegistry.RegisterHealthChecks(services);
+            MediatorRegistry.RegisterMediator(services);
+        }
+
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             PalavyrAccessChecker.AssertEnvironmentsDoNoOverlap();
 

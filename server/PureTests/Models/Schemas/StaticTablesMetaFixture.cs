@@ -12,14 +12,14 @@ namespace Pure.Models.Schemas
         public void BindTemplateList_BindsAllProperties()
         {
             var testAccountId = "test-account";
-            var testAreaId = "test-areaId";
+            var testIntentId = "test-intentId";
 
-            var testStaticTablesMetas = StaticTablesMeta.CreateDefaultMetas(testAreaId, testAccountId);
+            var testStaticTablesMetas = StaticTablesMeta.CreateDefaultMetas(testIntentId, testAccountId);
             
             var result = StaticTablesMeta.BindTemplateList(testStaticTablesMetas, testAccountId).First();
             
             result.AccountId.ShouldBe(testAccountId);
-            result.AreaIdentifier.ShouldBe(testAreaId);
+            result.IntentId.ShouldBe(testIntentId);
             result.Description.ShouldBe("Default Description");
             result.TableOrder.ShouldBe(0);
         }

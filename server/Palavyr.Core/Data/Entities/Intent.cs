@@ -10,9 +10,8 @@ namespace Palavyr.Core.Data.Entities
 {
     public class Intent : Entity, IHaveAccountId
     {
-        public string AreaIdentifier { get; set; }
-        public string AreaName { get; set; }
-        public string? AreaDisplayTitle { get; set; }
+        public string IntentId { get; set; }
+        public string IntentName { get; set; }
         public string Prologue { get; set; }
         public string Epilogue { get; set; }
         public string EmailTemplate { get; set; }
@@ -21,11 +20,11 @@ namespace Palavyr.Core.Data.Entities
         public List<ConversationNode> ConversationNodes { get; set; } = new List<ConversationNode>();
         public string AccountId { get; set; }
         public List<PricingStrategyTableMeta> DynamicTableMetas { get; set; } = new List<PricingStrategyTableMeta>();
-        public string AreaSpecificEmail { get; set; }
+        public string IntentSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
         public List<AttachmentLinkRecord> AttachmentRecords { get; set; }
 
-        public bool UseAreaFallbackEmail { get; set; }
+        public bool UseIntentFallbackEmail { get; set; }
         public string FallbackSubject { get; set; } = null!;
         public string FallbackEmailTemplate { get; set; } = null!;
         public bool SendAttachmentsOnFallback { get; set; }
@@ -42,13 +41,13 @@ namespace Palavyr.Core.Data.Entities
         {
         }
 
-        public static Intent CreateNewIntent(string areaName, string accountId, string emailAddress, bool emailIsVerified)
+        public static Intent CreateNewIntent(string intentName, string accountId, string emailAddress, bool emailIsVerified)
         {
             var intentId = Guid.NewGuid().ToString();
             return new Intent
             {
-                AreaIdentifier = intentId,
-                AreaName = areaName,
+                IntentId = intentId,
+                IntentName = intentName,
                 Prologue = "",
                 Epilogue = "",
                 EmailTemplate = "<h2>Upload your custom email template</h2><p>This is a starter paragraph to get you started</p>",
@@ -58,10 +57,9 @@ namespace Palavyr.Core.Data.Entities
                 ConversationNodes = ConversationNode.CreateDefaultRootNode(intentId, accountId),
                 StaticTablesMetas = new List<StaticTablesMeta>(),
                 IsEnabled = false,
-                AreaDisplayTitle = areaName,
                 AccountId = accountId,
                 DynamicTableMetas = null,
-                AreaSpecificEmail = emailAddress,
+                IntentSpecificEmail = emailAddress,
                 EmailIsVerified = emailIsVerified,
                 SendPdfResponse = true,
                 IncludeDynamicTableTotals = true

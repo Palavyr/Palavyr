@@ -50,13 +50,13 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             var outerCategory = GetResponseByResponseId(orderedResponseIds[0], dynamicResponseParts);
             var innerCategory = GetResponseByResponseId(orderedResponseIds[1], dynamicResponseParts);
 
-            var result = records.Single(rec => rec.ItemName == outerCategory && rec.InnerItemName == innerCategory);
+            var result = records.Single(rec => rec.Category == outerCategory && rec.InnerItemName == innerCategory);
             var dynamicTableMeta = await dynamicTableMetaStore.Get(result.TableId, s => s.TableId);
 
             return new List<TableRow>()
             {
                 new TableRow(
-                    dynamicTableMeta.UseTableTagAsResponseDescription ? dynamicTableMeta.TableTag : string.Join(" & ", new[] { result.ItemName, result.InnerItemName }),
+                    dynamicTableMeta.UseTableTagAsResponseDescription ? dynamicTableMeta.TableTag : string.Join(" & ", new[] { result.Category, result.InnerItemName }),
                     result.ValueMin,
                     result.ValueMax,
                     false,
@@ -132,7 +132,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             var currentRows = new List<TableRow>()
             {
                 new TableRow(
-                    tableTableMeta.UseTableTagAsResponseDescription ? tableTableMeta.TableTag : string.Join(" & ", new[] { availableTwoNested.First().ItemName, availableTwoNested.First().InnerItemName }),
+                    tableTableMeta.UseTableTagAsResponseDescription ? tableTableMeta.TableTag : string.Join(" & ", new[] { availableTwoNested.First().Category, availableTwoNested.First().InnerItemName }),
                     availableTwoNested.First().ValueMin,
                     availableTwoNested.First().ValueMax,
                     false,
@@ -153,7 +153,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             // This table type does not facilitate multiple branches. I.e. the inner categories are all the same for all of the outer categories.
             var rows = rawRows.OrderBy(row => row.RowOrder).ToList();
 
-            var outerCategories = rows.Select(row => row.ItemName).Distinct().ToList();
+            var outerCategories = rows.Select(row => row.Category).Distinct().ToList();
 
             var itemId = rows.Select(row => row.ItemId).Distinct().First();
             var innerCategories = rows.Where(row => row.ItemId == itemId).Select(row => row.InnerItemName).ToList();

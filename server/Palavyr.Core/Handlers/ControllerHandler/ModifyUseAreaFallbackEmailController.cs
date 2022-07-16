@@ -6,30 +6,30 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class ModifyUseAreaFallbackEmailHandler : IRequestHandler<ModifyUseAreaFallbackEmailRequest, ModifyUseAreaFallbackEmailResponse>
+    public class ModifyUseIntentFallbackEmailHandler : IRequestHandler<ModifyUseIntentFallbackEmailRequest, ModifyUseIntentFallbackEmailResponse>
     {
         private readonly IEntityStore<Intent> intentStore;
 
-        public ModifyUseAreaFallbackEmailHandler(IEntityStore<Intent> intentStore)
+        public ModifyUseIntentFallbackEmailHandler(IEntityStore<Intent> intentStore)
         {
             this.intentStore = intentStore;
         }
 
-        public async Task<ModifyUseAreaFallbackEmailResponse> Handle(ModifyUseAreaFallbackEmailRequest request, CancellationToken cancellationToken)
+        public async Task<ModifyUseIntentFallbackEmailResponse> Handle(ModifyUseIntentFallbackEmailRequest request, CancellationToken cancellationToken)
         {
-            var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
-            area.UseAreaFallbackEmail = request.UseFallback;
-            return new ModifyUseAreaFallbackEmailResponse(area.UseAreaFallbackEmail);
+            var area = await intentStore.Get(request.IntentId, s => s.IntentId);
+            area.UseIntentFallbackEmail = request.UseFallback;
+            return new ModifyUseIntentFallbackEmailResponse(area.UseIntentFallbackEmail);
         }
     }
 
-    public class ModifyUseAreaFallbackEmailResponse
+    public class ModifyUseIntentFallbackEmailResponse
     {
-        public ModifyUseAreaFallbackEmailResponse(bool response) => Response = response;
+        public ModifyUseIntentFallbackEmailResponse(bool response) => Response = response;
         public bool Response { get; set; }
     }
 
-    public class ModifyUseAreaFallbackEmailRequest : IRequest<ModifyUseAreaFallbackEmailResponse>
+    public class ModifyUseIntentFallbackEmailRequest : IRequest<ModifyUseIntentFallbackEmailResponse>
     {
         public string IntentId { get; set; }
         public bool UseFallback { get; set; }

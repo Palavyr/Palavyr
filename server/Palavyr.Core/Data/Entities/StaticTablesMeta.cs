@@ -11,7 +11,7 @@ namespace Palavyr.Core.Data.Entities
     {
         public int TableOrder { get; set; }
         public string Description { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public List<StaticTableRow> StaticTableRows { get; set; } = new List<StaticTableRow>();
         public string AccountId { get; set; }
         public bool PerPersonInputRequired { get; set; }
@@ -20,7 +20,7 @@ namespace Palavyr.Core.Data.Entities
         [NotMapped]
         private static string DefaultDescription { get; } = "Default Description";
 
-        public static List<StaticTablesMeta> CreateDefaultMetas(string areaId, string accountId)
+        public static List<StaticTablesMeta> CreateDefaultMetas(string intentId, string accountId)
         {
             return new List<StaticTablesMeta>()
             {
@@ -28,8 +28,8 @@ namespace Palavyr.Core.Data.Entities
                 {
                     TableOrder = 0,
                     Description = DefaultDescription,
-                    AreaIdentifier = areaId,
-                    StaticTableRows = StaticTableRow.CreateDefaultStaticTable(0, areaId, accountId),
+                    IntentId = intentId,
+                    StaticTableRows = StaticTableRow.CreateDefaultStaticTable(0, intentId, accountId),
                     AccountId = accountId,
                     PerPersonInputRequired = false,
                     IncludeTotals = true
@@ -43,7 +43,7 @@ namespace Palavyr.Core.Data.Entities
             {
                 TableOrder = 0,
                 Description = DefaultDescription,
-                AreaIdentifier = areaId,
+                IntentId = areaId,
                 StaticTableRows = StaticTableRow.CreateDefaultStaticTable(0, areaId, accountId),
                 PerPersonInputRequired = false,
                 IncludeTotals = true
@@ -59,7 +59,7 @@ namespace Palavyr.Core.Data.Entities
                     {
                         TableOrder = meta.TableOrder,
                         Description = meta.Description,
-                        AreaIdentifier = meta.AreaIdentifier,
+                        IntentId = meta.IntentId,
                         AccountId = accountId,
                         StaticTableRows = StaticTableRow.BindTemplateList(meta.StaticTableRows, accountId),
                         PerPersonInputRequired = meta.PerPersonInputRequired,

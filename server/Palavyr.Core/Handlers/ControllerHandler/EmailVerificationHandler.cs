@@ -27,7 +27,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<EmailAddressVerificationResponse> Handle(EmailAddressVerificationRequest request, CancellationToken cancellationToken)
         {
-            var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
+            var area = await intentStore.Get(request.IntentId, s => s.IntentId);
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(request.EmailAddress);
 
             area.EmailIsVerified = verificationResponse.IsVerified();
@@ -35,7 +35,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             if (!verificationResponse.IsFailed())
             {
-                area.AreaSpecificEmail = request.EmailAddress;
+                area.IntentSpecificEmail = request.EmailAddress;
             }
 
             return new EmailAddressVerificationResponse(verificationResponse);

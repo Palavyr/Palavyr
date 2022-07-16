@@ -60,9 +60,7 @@
         <PackageReference Include="MimeKit" Version="2.11.0" />
         <PackageReference Include="TestStack.ConventionTests.Autofac" Version="4.0.2" />
     </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\Palavyr.Data\Palavyr.Data.csproj" />
-    </ItemGroup>
+
     <ItemGroup>
       <Folder Include="Data\CodeFirstMigrations" />
       <Folder Include="Models\Accounts" />

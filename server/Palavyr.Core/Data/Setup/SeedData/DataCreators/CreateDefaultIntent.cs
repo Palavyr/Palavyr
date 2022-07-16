@@ -4,15 +4,15 @@ using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
 {
-    public static class CreateDefaultArea
+    public static class CreateDefaultIntent
     {
-        private static List<StaticTablesMeta> CreateDefaultStaticTableMetas(string areaIdentifier, string accountId)
+        private static List<StaticTablesMeta> CreateDefaultStaticTableMetas(string intentId, string accountId)
         {
             var staticTableMetas = new List<StaticTablesMeta>()
             {
-                new StaticTablesMeta()
+                new StaticTablesMeta
                 {
-                    AreaIdentifier = areaIdentifier,
+                    IntentId = intentId,
                     AccountId = accountId,
                     Description = "We typically provide service packages. Our basic package for dogs includes several other services, such as 6 months of dog walks and grooming.",
                     TableOrder = 0,
@@ -22,33 +22,33 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                         {
                             RowOrder = 0,
                             Description = "Dog Baths",
-                            Fee = StaticFee.CreateNew(feeId: Guid.NewGuid().ToString(), min: 50.00, max: 200.00, accountId: accountId, areaIdentifier: areaIdentifier),
+                            Fee = StaticFee.CreateNew(feeId: Guid.NewGuid().ToString(), min: 50.00, max: 200.00, accountId: accountId, intentId: intentId),
                             Range = true,
                             PerPerson = true,
                             TableOrder = 0,
-                            AreaIdentifier = areaIdentifier,
+                            IntentId = intentId,
                             AccountId = accountId
                         },
                         new StaticTableRow()
                         {
                             RowOrder = 1,
                             Description = "Nail Clipping",
-                            Fee = StaticFee.CreateNew(feeId: Guid.NewGuid().ToString(), min: 175.00, max: 175.00, accountId: accountId, areaIdentifier: areaIdentifier),
+                            Fee = StaticFee.CreateNew(feeId: Guid.NewGuid().ToString(), min: 175.00, max: 175.00, accountId: accountId, intentId: intentId),
                             Range = false,
                             PerPerson = true,
                             TableOrder = 0,
-                            AreaIdentifier = areaIdentifier,
+                            IntentId = intentId,
                             AccountId = accountId
                         },
                         new StaticTableRow()
                         {
                             RowOrder = 2,
                             Description = "Doggy Training",
-                            Fee = StaticFee.CreateNew(feeId: Guid.NewGuid().ToString(), min: 350.00, max: 0.00, accountId: accountId, areaIdentifier: areaIdentifier),
+                            Fee = StaticFee.CreateNew(feeId: Guid.NewGuid().ToString(), min: 350.00, max: 0.00, accountId: accountId, intentId: intentId),
                             Range = false,
                             PerPerson = true,
                             TableOrder = 0,
-                            AreaIdentifier = areaIdentifier,
+                            IntentId = intentId,
                             AccountId = accountId
                         }
                     }
@@ -58,36 +58,35 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
         }
 
         public static Intent CreateDefault(
-            string areaIdentifier,
+            string intentId,
             string accountId,
-            string areaName,
+            string intentName,
             List<ConversationNode> conversationNodes,
             List<PricingStrategyTableMeta> dynamicTableMetas,
             string emailTemplate,
             string defaultEmail
         )
         {
-            var areaMetas = CreateDefaultStaticTableMetas(areaIdentifier, accountId);
-            var area = new Intent()
+            var staticTableMetas = CreateDefaultStaticTableMetas(intentId, accountId);
+            var intent = new Intent()
             {
-                AreaIdentifier = areaIdentifier,
+                IntentId = intentId,
                 AccountId = accountId,
-                AreaName = areaName,
-                AreaDisplayTitle = "Purchase a Dog",
+                IntentName = intentName,
                 Epilogue = "The following is a ballpark itemized estimate of what you can expect to pay when purchasing a dog from us. These tables are adjustable given the specific details of your request and you are free to remove items from this estimate when making your purchase.",
                 Prologue = "Note: These values are a rough estimate only! The final cost of your purchase may vary depending on your final purchase decision.",
                 EmailTemplate = emailTemplate,
                 ConversationNodes = conversationNodes,
-                StaticTablesMetas = areaMetas,
+                StaticTablesMetas = staticTableMetas,
                 DynamicTableMetas = dynamicTableMetas,
-                AreaSpecificEmail = defaultEmail,
+                IntentSpecificEmail = defaultEmail,
                 EmailIsVerified = false,
                 Subject = "Thanks for contacting us!",
                 FallbackSubject = "",
                 FallbackEmailTemplate = "",
                 SendPdfResponse = true
             };
-            return area;
+            return intent;
         }
     }
 }

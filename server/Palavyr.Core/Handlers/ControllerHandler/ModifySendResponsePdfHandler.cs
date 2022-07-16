@@ -17,7 +17,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<ModifySendResponseResponse> Handle(ModifySendResponseRequest request, CancellationToken cancellationToken)
         {
-            var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
+            var area = await intentStore.Get(request.IntentId, s => s.IntentId);
             var newState = !area.SendPdfResponse;
             area.SendPdfResponse = newState;
             return new ModifySendResponseResponse(newState);

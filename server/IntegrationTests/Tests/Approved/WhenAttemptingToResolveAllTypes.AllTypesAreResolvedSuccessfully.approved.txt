@@ -13,7 +13,6 @@ IFileAssetLinker`1
 IResolveCloudKeys
 IPricingStrategyTableRowResource
 IAccount
-IArea
 IEntity
 IHaveAccountId
 IHaveRange

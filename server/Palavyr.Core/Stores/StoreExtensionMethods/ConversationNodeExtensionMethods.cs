@@ -12,7 +12,7 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
         {
             var intent = await intentStore
                 .Query()
-                .Where(row => row.AreaIdentifier == intentId)
+                .Where(row => row.IntentId == intentId)
                 .Include(p => p.ConversationNodes)
                 .SingleOrDefaultAsync();
 

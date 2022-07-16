@@ -13,9 +13,9 @@ namespace Pure.Core.GlobalConstants
             ApplicationConstants.ConfigSections.LoggingSection.ShouldBe("Logging");
             ApplicationConstants.ConfigSections.UserDataSection.ShouldBe("Userdata");
 
-            ApplicationConstants.ConfigSections.ConnectionStringPostgres.ShouldBe("ConnectionString");
+            ApplicationConstants.ConfigSections.ConnectionString.ShouldBe("ConnectionString");
             ApplicationConstants.ConfigSections.StripeKeySection.ShouldBe("Stripe:SecretKey");
-            ApplicationConstants.ConfigSections.JwtSecretKey.ShouldBe("JWTSecretKey");
+            ApplicationConstants.ConfigSections.JwtSecretKey.ShouldBe("JWT:SecretKey");
 
             ApplicationConstants.ConfigSections.AccessKeySection.ShouldBe("AWS:AccessKey");
             ApplicationConstants.ConfigSections.SecretKeySection.ShouldBe("AWS:SecretKey");

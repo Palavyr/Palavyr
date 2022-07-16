@@ -31,7 +31,7 @@ namespace IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
                 .WithoutResponsePdf()
                 .Build(); //SendPdfResponse needs to be false for this test
 
-            var record = await this.CreateConversationRecordBuilder().WithIntentId(intent.AreaIdentifier).Build();
+            var record = await this.CreateConversationRecordBuilder().WithIntentId(intent.IntentId).Build();
             
             var emailRequest = new EmailRequest
             {
@@ -43,7 +43,7 @@ namespace IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             };
 
             // act
-            var response = await ApikeyClient.Post<SendWidgetResponseEmailRequest, SendLiveEmailResultResource>(emailRequest, CancellationToken, s => s.Replace("{intentId}", intent.AreaIdentifier));
+            var response = await ApikeyClient.Post<SendWidgetResponseEmailRequest, SendLiveEmailResultResource>(emailRequest, CancellationToken, s => s.Replace("{intentId}", intent.IntentId));
 
             // assert
             response.NextNodeId.ShouldBe(EndingSequenceAttacher.EmailSuccessfulNodeId);

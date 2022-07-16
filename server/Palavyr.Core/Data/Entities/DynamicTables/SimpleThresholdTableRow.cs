@@ -16,7 +16,7 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
         }
 
         public string AccountId { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public string TableId { get; set; }
         public string RowId { get; set; }
         public double Threshold { get; set; }
@@ -29,7 +29,7 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
 
         public SimpleThresholdTableRow CreateNew(
             string accountId,
-            string areaId,
+            string intentId,
             string tableId,
             string itemName,
             string rowId,
@@ -42,7 +42,7 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
             return new SimpleThresholdTableRow()
             {
                 AccountId = accountId,
-                AreaIdentifier = areaId,
+                IntentId = intentId,
                 TableId = tableId,
                 ItemName = itemName,
                 RowId = rowId,
@@ -54,12 +54,12 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
             };
         }
 
-        public SimpleThresholdTableRow CreateTemplate(string accountId, string areaId, string tableId)
+        public SimpleThresholdTableRow CreateTemplate(string accountId, string intentId, string tableId)
         {
             return new SimpleThresholdTableRow()
             {
                 AccountId = accountId,
-                AreaIdentifier = areaId,
+                IntentId = intentId,
                 TableId = tableId,
                 RowId = StaticGuidUtils.CreateNewId()
             };
@@ -72,7 +72,7 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
             {
                 var mappedRow = CreateNew(
                     row.AccountId,
-                    row.AreaIdentifier,
+                    row.IntentId,
                     row.TableId,
                     row.ItemName,
                     row.RowId,

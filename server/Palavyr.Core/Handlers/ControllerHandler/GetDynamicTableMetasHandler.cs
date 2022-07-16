@@ -29,7 +29,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetDynamicTableMetasResponse> Handle(GetDynamicTableMetasRequest request, CancellationToken cancellationToken)
         {
             logger.LogDebug("Retrieve Dynamic Table Metas");
-            var tableTypes = await dynamicTableMetaStore.GetMany(request.IntentId, s => s.AreaIdentifier);
+            var tableTypes = await dynamicTableMetaStore.GetMany(request.IntentId, s => s.IntentId);
 
             
             // TODO: Write a mapper for this
@@ -43,7 +43,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                             TableTag = x.TableTag,
                             TableType = x.TableType,
                             TableId = x.TableId,
-                            AreaIdentifier = x.AreaIdentifier,
+                            AreaIdentifier = x.IntentId,
                             ValuesAsPaths = x.ValuesAsPaths,
                             PrettyName = x.PrettyName,
                             UnitPrettyName = unitDefinition.UnitPrettyName,

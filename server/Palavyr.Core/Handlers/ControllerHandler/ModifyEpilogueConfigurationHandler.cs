@@ -18,7 +18,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<ModifyEpilogueConfigurationResponse> Handle(ModifyEpilogueConfigurationRequest request, CancellationToken cancellationToken)
         {
             var updatedEpilogue = request.Epilogue;
-            var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
+            var area = await intentStore.Get(request.IntentId, s => s.IntentId);
             area.Epilogue = updatedEpilogue;
             return new ModifyEpilogueConfigurationResponse(updatedEpilogue);
         }

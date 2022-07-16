@@ -3,7 +3,7 @@ using Palavyr.Core.Handlers.ControllerHandler;
 
 namespace Palavyr.Core.Handlers.Validators.ControllerHandlerValidators
 {
-    public class ModifyIntentValidator : AbstractValidator<ModifyAreaEmailTemplateRequest>
+    public class ModifyIntentValidator : AbstractValidator<ModifyIntentEmailTemplateRequest>
     {
         public ModifyIntentValidator()
         {

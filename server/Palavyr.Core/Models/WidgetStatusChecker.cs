@@ -96,7 +96,7 @@ namespace Palavyr.Core.Models
             {
                 var error = new PreCheckError()
                 {
-                    AreaName = intent.AreaName
+                    AreaName = intent.IntentName
                 };
 
                 var nodeList = intent.ConversationNodes.ToArray();
@@ -118,7 +118,7 @@ namespace Palavyr.Core.Models
                 {
                     isReady = false;
                     errors.Add(error);
-                    logger.LogDebug($"Area not currently ready: {intent.AreaName}");
+                    logger.LogDebug($"Area not currently ready: {intent.IntentName}");
                 }
 
                 if (intent.IsEnabled)
@@ -177,7 +177,7 @@ namespace Palavyr.Core.Models
             var account = await accountStore.GetAccount();
             var introId = account.IntroductionId;
 
-            var introSequence = await convoNodeStore.GetMany(introId, s => s.AreaIdentifier);
+            var introSequence = await convoNodeStore.GetMany(introId, s => s.IntentId);
             if (!introSequence.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.Selection.StringName))
             {
                 isReady = false;

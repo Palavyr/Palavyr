@@ -14,37 +14,37 @@ namespace Palavyr.Core.Data.Entities
         public bool Range { get; set; }
         public bool PerPerson { get; set; }
         public int TableOrder { get; set; }
-        public string AreaIdentifier { get; set; } = null!;
+        public string IntentId { get; set; } = null!;
         public string AccountId { get; set; } = null!;
 
         public StaticTableRow()
         {
         }
 
-        public static StaticTableRow CreateStaticTableRowTemplate(int tableOrder, string areaId, string accountId)
+        public static StaticTableRow CreateStaticTableRowTemplate(int tableOrder, string intentId, string accountId)
         {
-            return CreateDefaultRow(tableOrder, areaId, accountId);
+            return CreateDefaultRow(tableOrder, intentId, accountId);
         }
 
-        public static List<StaticTableRow> CreateDefaultStaticTable(int tableOrder, string areaId, string accountId)
+        public static List<StaticTableRow> CreateDefaultStaticTable(int tableOrder, string intentId, string accountId)
         {
             return new List<StaticTableRow>()
             {
-                CreateDefaultRow(tableOrder, areaId, accountId)
+                CreateDefaultRow(tableOrder, intentId, accountId)
             };
         }
 
-        private static StaticTableRow CreateDefaultRow(int tableOrder, string areaId, string accountId)
+        private static StaticTableRow CreateDefaultRow(int tableOrder, string intentId, string accountId)
         {
             return new StaticTableRow
             {
                 RowOrder = 0,
                 Description = "Default fee description",
-                Fee = StaticFee.DefaultFee(accountId, areaId),
+                Fee = StaticFee.DefaultFee(accountId, intentId),
                 Range = false,
                 PerPerson = false,
                 TableOrder = tableOrder,
-                AreaIdentifier = areaId,
+                IntentId = intentId,
                 AccountId = accountId
             };
         }
@@ -58,11 +58,11 @@ namespace Palavyr.Core.Data.Entities
                     {
                         RowOrder = row.RowOrder,
                         Description = row.Description,
-                        Fee = StaticFee.BindTemplate(row.Fee, accountId, row.AreaIdentifier),
+                        Fee = StaticFee.BindTemplate(row.Fee, accountId, row.IntentId),
                         Range = row.Range,
                         PerPerson = row.PerPerson,
                         TableOrder = row.TableOrder,
-                        AreaIdentifier = row.AreaIdentifier,
+                        IntentId = row.IntentId,
                         AccountId = accountId,
                     }));
             return boundRows;

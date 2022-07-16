@@ -12,8 +12,8 @@ namespace Palavyr.Core.Mappers
             await Task.CompletedTask;
             return new IntentResource
             {
-                AreaIdentifier = @from.AreaIdentifier,
-                AreaName = @from.AreaName,
+                IntentId = @from.IntentId,
+                IntentName = @from.IntentName,
                 Prologue = @from.Prologue,
                 Epilogue = @from.Epilogue,
                 EmailTemplate = @from.EmailTemplate,
@@ -23,10 +23,8 @@ namespace Palavyr.Core.Mappers
                 ConversationNodes = @from.ConversationNodes,
                 StaticTablesMetas = @from.StaticTablesMetas,
                 IsEnabled = @from.IsEnabled,
-                AreaDisplayTitle = @from.AreaDisplayTitle,
-                AccountId = @from.AccountId,
                 DynamicTableMetas = @from.DynamicTableMetas,
-                AreaSpecificEmail = @from.AreaSpecificEmail,
+                IntentSpecificEmail = @from.IntentSpecificEmail,
                 EmailIsVerified = @from.EmailIsVerified,
                 SendPdfResponse = @from.SendPdfResponse,
                 IncludeDynamicTableTotals = @from.IncludeDynamicTableTotals

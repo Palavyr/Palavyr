@@ -100,7 +100,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 
                 tableRows.Add(
                     new TableRow(
-                        dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : thresholdResult.ItemName,
+                        dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : thresholdResult.Category,
                         minBaseAmount,
                         maxBaseAmount,
                         false,

@@ -6,12 +6,11 @@ namespace Palavyr.Core.Services.PdfService
 {
     public static class PdfServerConstants
     {
-        public static string PdfServiceUrl(string host, string? port = null)
-        {
-            var result = string.IsNullOrEmpty(port) ? $"{host}/api/v1/create-pdf-on-s3" : $"{host}:{port}/api/v1/create-pdf-on-s3";
-            Console.WriteLine(result);
-            return result;
-        }
+        // public static string PdfServiceUrl(string host, string? port = null)
+        // {
+        //     var result = string.IsNullOrEmpty(port) ? $"{host}/api/v1/create-pdf-on-s3" : $"{host}:{port}/api/v1/create-pdf-on-s3";
+        //     return result;
+        // }
         
         
         public const string Bucket = "bucket";

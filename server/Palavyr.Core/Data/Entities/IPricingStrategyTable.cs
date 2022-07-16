@@ -20,6 +20,6 @@ namespace Palavyr.Core.Data.Entities
 
     public interface ICreatePricingStrategyTemplate<TEntity> where TEntity : class, IEntity
     {
-        public TEntity CreateTemplate(string accountId, string areaIdentifier, string tableId);
+        public TEntity CreateTemplate(string accountId, string intentId, string tableId);
     }
 }

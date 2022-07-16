@@ -43,7 +43,7 @@ namespace Palavyr.Core.Services.EnquiryServices
 
             foreach (var intent in allIntents)
             {
-                var intentRecords = allRecords.Where(x => x.IntentId == intent.AreaIdentifier).ToArray();
+                var intentRecords = allRecords.Where(x => x.IntentId == intent.IntentId).ToArray();
 
                 var completed = intentRecords.Where(x => x.IsComplete).ToArray().Length;
                 var numRecords = intentRecords.Length;
@@ -53,9 +53,9 @@ namespace Palavyr.Core.Services.EnquiryServices
                 resources.Add(
                     new EnquiryInsightsResource
                     {
-                        IntentName = intent.AreaName,
+                        IntentName = intent.IntentName,
                         NumRecords = numRecords,
-                        IntentIdentifier = intent.AreaIdentifier,
+                        IntentIdentifier = intent.IntentId,
                         Completed = completed,
                         SentEmailCount = sentEmailCount,
                         IntentCompletePerIntent = completePerIntent,
@@ -75,7 +75,7 @@ namespace Palavyr.Core.Services.EnquiryServices
                 var convo = await convoHistoryStore.GetMany(intentRecord.ConversationId, s => s.ConversationId);
                 if (convo.Count == 0) continue;
 
-                var totalConvo = await convoNodeStore.GetMany(intentRecord.IntentId, s => s.AreaIdentifier);
+                var totalConvo = await convoNodeStore.GetMany(intentRecord.IntentId, s => s.IntentId);
 
                 var terminalNodes = totalConvo.Where(x => x.IsTerminalType).ToList();
                 var lengthOfLongestBranch = nodeBranchLengthCalculator.GetLengthOfLongestTerminatingPath(totalConvo.ToArray(), terminalNodes.ToArray());

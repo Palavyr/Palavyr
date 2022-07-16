@@ -17,7 +17,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<ModifyIntentIsCompleteResponse> Handle(ModifyIntentIsCompleteRequest request, CancellationToken cancellationToken)
         {
-            var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
+            var area = await intentStore.Get(request.IntentId, s => s.IntentId);
             area.IsEnabled = request.IsEnabled;
             return new ModifyIntentIsCompleteResponse(area.IsEnabled);
         }

@@ -57,14 +57,14 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         public List<string> GetCategories<TEntity>(List<TEntity> rawRows)
         {
             var rows = rawRows.OrderBy(row => ((IOrderedRow)row).RowOrder).ToList();
-            var categories = rows.Select(row => ((IMultiItem)row).ItemName).Distinct().ToList();
+            var categories = rows.Select(row => ((IMultiItem)row).Category).Distinct().ToList();
             return categories;
         }
 
         public async Task UpdateConversationNode<TEntity>(List<TEntity> table, string tableId, string intentId)
         {
             var category = GetCategories(table);
-            var allNodes = await convoNodeStore.GetMany(intentId, s => s.AreaIdentifier);
+            var allNodes = await convoNodeStore.GetMany(intentId, s => s.IntentId);
             var nodes = allNodes
                 .Where(n => n.IsDynamicTableNode)
                 .Where(n => splitter.GetTableIdFromDynamicNodeType(n.NodeType) == tableId)
@@ -140,7 +140,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             var category = GetResponseByResponseId(orderedResponseIds[0], dynamicResponseParts);
             var amount = GetResponseByResponseId(orderedResponseIds[1], dynamicResponseParts);
 
-            var itemRows = records.Where(rec => rec.ItemName == category);
+            var itemRows = records.Where(rec => rec.Category == category);
 
             var responseAmountAsDouble = double.Parse(amount);
             if (responseAmountAsDouble < 0) throw new Exception("Negative values are not allowed");
@@ -179,7 +179,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             var records = await GetAllRowsMatchingDynamicResponseId(node.DynamicType);
 
             var categoryThresholds = records
-                .Where(rec => rec.ItemName == categoryResponse);
+                .Where(rec => rec.Category == categoryResponse);
             var currentResponseAsDouble = double.Parse(response);
             var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, categoryThresholds);
             return isTooComplicated;
@@ -253,7 +253,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             var currentRows = new List<TableRow>
             {
                 new TableRow(
-                    tableTableMeta.UseTableTagAsResponseDescription ? tableTableMeta.TableTag : availableNestedThreshold.First().ItemName,
+                    tableTableMeta.UseTableTagAsResponseDescription ? tableTableMeta.TableTag : availableNestedThreshold.First().Category,
                     availableNestedThreshold.First().ValueMin,
                     availableNestedThreshold.First().ValueMax,
                     false,

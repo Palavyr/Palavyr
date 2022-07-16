@@ -8,10 +8,10 @@ using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Intents
 {
-    public class GetAllAreasShallowController : PalavyrBaseController
+    public class GetAllIntentsShallowController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public GetAllAreasShallowController(IMediator mediator)
+        public GetAllIntentsShallowController(IMediator mediator)
         {
             this.mediator = mediator;
         }

@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
-using Palavyr.Core.GlobalConstants;
 
 namespace Palavyr.API.Registration.Container
 {
@@ -30,12 +30,12 @@ namespace Palavyr.API.Registration.Container
 
         public static void RegisterDatabaseContexts(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContextPool<AppDataContexts>(
+            services.AddDbContext<AppDataContexts>(
                 opt =>
                 {
-                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.ConnectionStringPostgres));
+                    // var conString = "Server=localhost;Port=5432;Database=AppDatabase;User Id=postgres;Password=Password01!";
+                    opt.UseNpgsql(configuration.CorrectConnectionString());
                 });
-
         }
     }
 }

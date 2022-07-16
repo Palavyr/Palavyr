@@ -18,7 +18,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<ModifyPrologueConfigurationResponse> Handle(ModifyPrologueConfigurationRequest request, CancellationToken cancellationToken)
         {
             var updatedPrologue = request.Prologue;
-            var intent = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
+            var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
             intent.Prologue = updatedPrologue;
             return new ModifyPrologueConfigurationResponse(updatedPrologue);
         }

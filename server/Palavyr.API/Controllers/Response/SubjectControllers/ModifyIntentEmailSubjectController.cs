@@ -6,20 +6,19 @@ using Palavyr.Core.Handlers.ControllerHandler;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
-    public class ModifyAreaEmailSubjectController : PalavyrBaseController
+    public class ModifyIntentEmailSubjectController : PalavyrBaseController
     {
         private readonly IMediator mediator;
 
-        public ModifyAreaEmailSubjectController(
-            IMediator mediator)
+        public ModifyIntentEmailSubjectController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpPut(ModifyAreaEmailSubjectRequest.Route)]
+        [HttpPut(ModifyIntentEmailSubjectRequest.Route)]
         public async Task<string> Modify(
             [FromBody]
-            ModifyAreaEmailSubjectRequest request,
+            ModifyIntentEmailSubjectRequest request,
             CancellationToken cancellationToken
         )
         {

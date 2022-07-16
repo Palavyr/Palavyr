@@ -112,11 +112,11 @@ export class PalavyrRepository {
             SessionStorage.clearCacheValue(CacheIds.Areas);
             return result;
         },
-        updateDisplayTitle: (areaIdentifier: string, displayTitle: string) => {
-            const result = this.client.put<string, {}>(`areas/update/display-title/${areaIdentifier}`, { AreaDisplayTitle: displayTitle });
-            SessionStorage.clearCacheValue(CacheIds.Areas);
-            return result;
-        },
+        // updateDisplayTitle: (areaIdentifier: string, displayTitle: string) => {
+        //     const result = this.client.put<string, {}>(`areas/update/display-title/${areaIdentifier}`, { AreaDisplayTitle: displayTitle });
+        //     SessionStorage.clearCacheValue(CacheIds.Areas);
+        //     return result;
+        // },
 
         deleteArea: (intentId: string) => this.client.delete<void>(`intents/delete/${intentId}`, CacheIds.Areas),
         toggleSendPdfResponse: (areaIdentifier: string) => this.client.post<boolean, {}>(`area/send-pdf/${areaIdentifier}`),

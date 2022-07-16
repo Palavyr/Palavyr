@@ -3,26 +3,22 @@ using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Resources
 {
-    
-    
     public class IntentResource
     {
-        public string AreaIdentifier { get; set; }
-        public string AreaName { get; set; }
-        public string AreaDisplayTitle { get; set; }
+        public string IntentId { get; set; }
+        public string IntentName { get; set; }
         public string Prologue { get; set; }
         public string Epilogue { get; set; }
         public string EmailTemplate { get; set; }
         public bool IsEnabled { get; set; }
         public List<StaticTablesMeta> StaticTablesMetas { get; set; } = new List<StaticTablesMeta>();
         public List<ConversationNode> ConversationNodes { get; set; } = new List<ConversationNode>();
-        public string AccountId { get; set; }
         public List<PricingStrategyTableMeta> DynamicTableMetas { get; set; } = new List<PricingStrategyTableMeta>();
-        public string AreaSpecificEmail { get; set; }
+        public string IntentSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
         public List<AttachmentLinkRecord> AttachmentRecords { get; set; }
 
-        public bool UseAreaFallbackEmail { get; set; }
+        public bool UseIntentFallbackEmail { get; set; }
         public string FallbackSubject { get; set; } = null!;
         public string FallbackEmailTemplate { get; set; } = null!;
         public bool SendAttachmentsOnFallback { get; set; }

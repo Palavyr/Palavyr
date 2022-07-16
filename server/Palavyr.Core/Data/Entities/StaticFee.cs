@@ -11,9 +11,9 @@ namespace Palavyr.Core.Data.Entities
         public double Max { get; set; }
         public string FeeId { get; set; }
         public string AccountId { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
 
-        public static StaticFee DefaultFee(string accountId, string areaIdentifier)
+        public static StaticFee DefaultFee(string accountId, string intentId)
         {
             return new StaticFee()
             {
@@ -21,11 +21,11 @@ namespace Palavyr.Core.Data.Entities
                 Max = 0,
                 FeeId = Guid.NewGuid().ToString(),
                 AccountId = accountId,
-                AreaIdentifier = areaIdentifier
+                IntentId = intentId
             };
         }
 
-        public static StaticFee BindTemplate(StaticFee oldFee, string accountId, string areaIdentifier)
+        public static StaticFee BindTemplate(StaticFee oldFee, string accountId, string intentId)
         {
             return new StaticFee()
             {
@@ -33,11 +33,11 @@ namespace Palavyr.Core.Data.Entities
                 Max = oldFee.Max,
                 FeeId = oldFee.FeeId,
                 AccountId = accountId,
-                AreaIdentifier = areaIdentifier
+                IntentId = intentId
             };
         }
 
-        public static StaticFee CreateNew(double min, double max, string feeId, string accountId, string areaIdentifier)
+        public static StaticFee CreateNew(double min, double max, string feeId, string accountId, string intentId)
         {
             return new StaticFee()
             {
@@ -45,7 +45,7 @@ namespace Palavyr.Core.Data.Entities
                 Max = max,
                 FeeId = feeId,
                 AccountId = accountId,
-                AreaIdentifier = areaIdentifier
+                IntentId = intentId
             };
         }
     }

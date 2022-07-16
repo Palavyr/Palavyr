@@ -14,7 +14,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers
             {
                 Id = @from.Id,
                 AccountId = @from.AccountId,
-                AreaIdentifier = @from.AreaIdentifier,
+                AreaIdentifier = @from.IntentId,
                 TableId = @from.TableId,
                 RowId = @from.RowId,
                 Threshold = @from.Threshold,

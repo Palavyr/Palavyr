@@ -6,8 +6,8 @@ using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
 {
-    [Route(BaseRoute + nameof(SimpleSelectTableRow))]
-    public class SelectOneFlatController : PricingStrategyControllerBase<SimpleSelectTableRow, SelectOneFlatResource, ISelectOneFlatCompiler>
+    [Route(BaseRoute + nameof(CategorySelectTableRow))]
+    public class SelectOneFlatController : PricingStrategyControllerBase<CategorySelectTableRow, SelectOneFlatResource, ISelectOneFlatCompiler>
     {
         public SelectOneFlatController(IMediator mediator) : base(mediator)
         {

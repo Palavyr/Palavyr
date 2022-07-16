@@ -11,9 +11,8 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
     {
         private const string PrettyName = "Category with Nested Threshold";
 
-        
         public string AccountId { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public string TableId { get; set; }
         public double ValueMin { get; set; }
         public double ValueMax { get; set; }
@@ -22,13 +21,13 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
         public int RowOrder { get; set; }
         public string ItemId { get; set; }
         public int ItemOrder { get; set; }
-        public string ItemName { get; set; }
+        public string Category { get; set; }
         public double Threshold { get; set; }
         public bool TriggerFallback { get; set; }
 
         public CategoryNestedThresholdTableRow CreateNew(
             string accountId,
-            string areaIdentifier,
+            string intentId,
             string tableId,
             double valueMin,
             double valueMax,
@@ -45,14 +44,14 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
             return new CategoryNestedThresholdTableRow
             {
                 AccountId = accountId,
-                AreaIdentifier = areaIdentifier,
+                IntentId = intentId,
                 TableId = tableId,
                 ValueMin = valueMin,
                 ValueMax = valueMax,
                 Range = range,
                 RowId = rowId,
                 RowOrder = rowOrder,
-                ItemName = category,
+                Category = category,
                 Threshold = threshold,
                 ItemId = itemId,
                 ItemOrder = itemOrder,
@@ -60,15 +59,15 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
             };
         }
 
-        public CategoryNestedThresholdTableRow CreateTemplate(string accountId, string areaIdentifier, string tableId)
+        public CategoryNestedThresholdTableRow CreateTemplate(string accountId, string intentId, string tableId)
         {
             return new CategoryNestedThresholdTableRow
             {
                 AccountId = accountId,
-                AreaIdentifier = areaIdentifier,
+                IntentId = intentId,
                 TableId = tableId,
                 ItemId = StaticGuidUtils.CreateNewId(),
-                ItemName = "Default Category Text",
+                Category = "Default Category Text",
                 Threshold = 0.0,
                 ValueMax = 0.0,
                 ValueMin = 0.0,
@@ -87,14 +86,14 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
                 mappedTableRows.Add(
                     CreateNew(
                         row.AccountId,
-                        row.AreaIdentifier,
+                        row.IntentId,
                         row.TableId,
                         row.ValueMin,
                         row.ValueMax,
                         row.Range,
                         row.RowId,
                         row.RowOrder,
-                        row.ItemName,
+                        row.Category,
                         row.Threshold,
                         row.ItemId,
                         row.ItemOrder,
@@ -108,7 +107,7 @@ namespace Palavyr.Core.Data.Entities.DynamicTables
         {
             return true;
         }
-        
+
         public string GetPrettyName()
         {
             return PrettyName;

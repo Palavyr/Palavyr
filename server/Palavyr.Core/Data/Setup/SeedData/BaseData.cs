@@ -8,16 +8,16 @@ namespace Palavyr.Core.Data.Setup.SeedData
 {
     public abstract class BaseSeedData
     {
-        public List<Intent> Areas { get; set; }
+        public List<Intent> Intents { get; set; }
         public WidgetPreference WidgetPreference { get; set; }
         public List<ConversationNode> DefaultConversationNodes { get; set; }
         public List<ConversationNode> IntroductionConversationNodes { get; set; }
 
-        public List<PricingStrategyTableMeta> DefaultDynamicTableMetas { get; set; } = new List<PricingStrategyTableMeta>();
-        public readonly List<SimpleSelectTableRow> DefaultDynamicTables = new List<SimpleSelectTableRow>();
+        public List<PricingStrategyTableMeta> DefaultDynamicTableMetas { get; set; }
+        public readonly List<CategorySelectTableRow> DefaultDynamicTables;
 
 
-        public const string AreaName = "Buying a Dog";
+        public const string IntentName = "Buying a Dog";
         private const string TableTag = "Dog Color Types";
         public string EmailTemplate => CreateEmailTemplate.Create();
 
@@ -34,12 +34,12 @@ namespace Palavyr.Core.Data.Setup.SeedData
             DefaultDynamicTables = CreateDefaultDynamicTable.CreateDefaultTable(TableTag, accountId, intentId, pricingStrategyTableId);
             DefaultDynamicTableMetas = CreateDefaultDynamicTable.CreateDefaultMeta(TableTag, accountId, pricingStrategyTableId, intentId);
             WidgetPreference = WidgetPreference.CreateDefault(accountId);
-            Areas = new List<Intent>
+            Intents = new List<Intent>
             {
-                CreateDefaultArea.CreateDefault(
+                CreateDefaultIntent.CreateDefault(
                     intentId,
                     accountId,
-                    AreaName,
+                    IntentName,
                     DefaultConversationNodes,
                     DefaultDynamicTableMetas,
                     EmailTemplate,

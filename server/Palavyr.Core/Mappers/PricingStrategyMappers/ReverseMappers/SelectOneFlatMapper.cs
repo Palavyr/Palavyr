@@ -5,18 +5,18 @@ using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
 {
-    public class SelectOneFlatMapper : IMapToNew<SelectOneFlatResource, SimpleSelectTableRow>
+    public class SelectOneFlatMapper : IMapToNew<SelectOneFlatResource, CategorySelectTableRow>
     {
-        public async Task<SimpleSelectTableRow> Map(SelectOneFlatResource from, CancellationToken cancellationToken = default)
+        public async Task<CategorySelectTableRow> Map(SelectOneFlatResource from, CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
-            return new SimpleSelectTableRow
+            return new CategorySelectTableRow
             {
                 Id = from.Id,
-                Option = from.Option,
+                Category = from.Option,
                 Range = from.Range,
                 AccountId = from.AccountId,
-                AreaIdentifier = from.AreaIdentifier,
+                IntentId = from.AreaIdentifier,
                 RowOrder = from.RowOrder,
                 TableId = from.TableId,
                 ValueMax = from.ValueMax,

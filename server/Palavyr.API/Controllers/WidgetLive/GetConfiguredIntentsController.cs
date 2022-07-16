@@ -11,13 +11,13 @@ using Palavyr.Core.Services.AuthenticationServices;
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-    public class GetConfiguredAreasController : PalavyrBaseController
+    public class GetConfiguredIntentsController : PalavyrBaseController
     {
         private readonly IMediator mediator;
         public const string Route = "widget/intents";
 
 
-        public GetConfiguredAreasController(IMediator mediator)
+        public GetConfiguredIntentsController(IMediator mediator)
         {
             this.mediator = mediator;
         }
