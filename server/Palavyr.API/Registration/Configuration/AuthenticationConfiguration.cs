@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -6,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Services.AuthenticationServices;
 
 //https://adamstorr.azurewebsites.net/blog/integration-testing-with-aspnetcore-3-1-remove-the-boiler-plate

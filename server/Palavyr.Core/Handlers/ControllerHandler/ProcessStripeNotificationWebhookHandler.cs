@@ -1,12 +1,10 @@
-﻿using System.Linq;
-using System.Security.Authentication;
+﻿using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.StripeServices;
 using Stripe;
 

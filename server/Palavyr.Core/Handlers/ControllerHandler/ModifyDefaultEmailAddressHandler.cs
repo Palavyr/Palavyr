@@ -8,7 +8,6 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Stores;

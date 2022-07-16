@@ -152,7 +152,7 @@ export type ConvoNode = {
 
 export type Conversation = Array<ConvoNode>;
 
-export type Areas = Array<AreaTable>;
+export type Intents = Array<AreaTable>;
 
 export type AreaTable = {
     // all of the data

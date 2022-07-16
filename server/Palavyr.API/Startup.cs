@@ -1,4 +1,3 @@
-using System;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +8,6 @@ using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Registration.Configuration;
 using Palavyr.API.Registration.Container;
 using Palavyr.API.Registration.Container.MediatorModule;
-using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API

@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Data.Setup.WelcomeEmail;
-using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;

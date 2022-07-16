@@ -13,7 +13,7 @@ interface IAxiosClient {
 }
 
 export enum CacheIds {
-    Areas = "Areas",
+    Intents = "Intents",
     CurrentPlanMeta = "CurrentPlanMeta",
     Enquiries = "Enquiries",
     Conversation = "Conversation",

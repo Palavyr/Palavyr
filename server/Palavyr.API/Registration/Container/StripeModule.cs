@@ -3,7 +3,6 @@ using Autofac;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.StripeServices.Products;

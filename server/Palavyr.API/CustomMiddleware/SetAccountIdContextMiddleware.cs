@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware.MiddlewareHandlers;
-using Palavyr.Core.Data;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Stores;

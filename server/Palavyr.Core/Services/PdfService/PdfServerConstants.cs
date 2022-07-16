@@ -1,8 +1,4 @@
-﻿using System;
-
-
-
-namespace Palavyr.Core.Services.PdfService
+﻿namespace Palavyr.Core.Services.PdfService
 {
     public static class PdfServerConstants
     {

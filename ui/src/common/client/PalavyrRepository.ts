@@ -4,7 +4,7 @@ import {
     DynamicTableMeta,
     StaticTableMetas,
     StaticTableMetaTemplate,
-    Areas,
+    Intents,
     Prices,
     EmailVerificationResponse,
     AreaTable,
@@ -94,22 +94,22 @@ export class PalavyrRepository {
     public Intent = {
         ToggleIsEnabled: async (intentToggleStateUpdate: boolean, intentId: string) => {
             const update = this.client.put<boolean, {}>(`intents/intent-toggle`, { IsEnabled: intentToggleStateUpdate, IntentId: intentId });
-            SessionStorage.clearCacheValue(CacheIds.Areas);
+            SessionStorage.clearCacheValue(CacheIds.Intents);
             return update;
         },
         ToggleUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, intentId: string) =>
             this.client.put<boolean, {}>(`intents/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate, IntentId: intentId }),
-        GetAllIntents: async () => this.client.get<Areas>("areas", CacheIds.Areas),
+        GetAllIntents: async () => this.client.get<Intents>(`intents`, CacheIds.Intents),
         CreateIntent: async (areaName: string) => {
             const newArea = await this.client.post<AreaTable, {}>(`intents/create`, { AreaName: areaName });
-            const areas = SessionStorage.getCacheValue(CacheIds.Areas) as Areas;
+            const areas = SessionStorage.getCacheValue(CacheIds.Intents) as Intents;
             areas.push(newArea);
-            SessionStorage.setCacheValue(CacheIds.Areas, areas);
+            SessionStorage.setCacheValue(CacheIds.Intents, areas);
             return newArea;
         },
         UpdateIntentName: (intentId: string, areaName: string) => {
             const result = this.client.put<string, {}>(`areas/update/name/${intentId}`, { AreaName: areaName });
-            SessionStorage.clearCacheValue(CacheIds.Areas);
+            SessionStorage.clearCacheValue(CacheIds.Intents);
             return result;
         },
         // updateDisplayTitle: (intentId: string, displayTitle: string) => {
@@ -118,7 +118,7 @@ export class PalavyrRepository {
         //     return result;
         // },
 
-        deleteArea: (intentId: string) => this.client.delete<void>(`intents/delete/${intentId}`, CacheIds.Areas),
+        deleteArea: (intentId: string) => this.client.delete<void>(`intents/delete/${intentId}`, CacheIds.Intents),
         toggleSendPdfResponse: (intentId: string) => this.client.post<boolean, {}>(`intent/${intentId}/send-pdf`),
         getShowDynamicTotals: (intentId: string) => this.client.get<boolean>(`area/dynamic-totals/${intentId}`),
         setShowDynamicTotals: (intentId: string, shouldShow: boolean) => this.client.put<boolean, {}>(`area/dynamic-totals`, { ShowDynamicTotals: shouldShow, IntentId: intentId }),

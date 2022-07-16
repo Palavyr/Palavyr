@@ -13,7 +13,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewIntentModal } from "./sidebar/AddNewIntentModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
+import { AlertType, AreaNameDetail, AreaNameDetails, Intents, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { defaultUrlForNewArea, DRAWER_WIDTH, MAIN_CONTENT_DIV_ID, MENU_DRAWER_STATE_COOKIE_NAME, WELCOME_TOUR_COOKIE_NAME } from "@constants";
 
@@ -33,7 +33,7 @@ import { Typography } from "@material-ui/core";
 import { enableBodyScroll } from "body-scroll-lock";
 import $ from "jquery";
 
-const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
+const fetchSidebarInfo = (areaData: Intents): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
         return {
             intentId: x.intentId,
