@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Services.FileAssetServices;

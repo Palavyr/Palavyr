@@ -1,4 +1,4 @@
-﻿using Palavyr.Core.Models.Accounts.Schemas;
+﻿using Palavyr.Core.Data.Entities;
 using Shouldly;
 using Xunit;
 

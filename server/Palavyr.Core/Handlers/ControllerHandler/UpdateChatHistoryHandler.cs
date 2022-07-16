@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
@@ -11,11 +11,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class UpdateChatHistoryHandler : INotificationHandler<UpdateChatHistoryRequest>
     {
-        private readonly IEntityStore<ConversationHistory> convoHistoryStore;
+        private readonly IEntityStore<ConversationHistoryRow> convoHistoryStore;
         private readonly ILogger<UpdateChatHistoryHandler> logger;
         private readonly IAccountIdTransport accountIdTransport;
 
-        public UpdateChatHistoryHandler(IEntityStore<ConversationHistory> convoHistoryStore, ILogger<UpdateChatHistoryHandler> logger, IAccountIdTransport accountIdTransport)
+        public UpdateChatHistoryHandler(IEntityStore<ConversationHistoryRow> convoHistoryStore, ILogger<UpdateChatHistoryHandler> logger, IAccountIdTransport accountIdTransport)
         {
             this.convoHistoryStore = convoHistoryStore;
             this.logger = logger;
@@ -38,11 +38,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public bool NodeCritical { get; set; }
         public string NodeType { get; set; }
 
-        public ConversationHistory MapToConversationHistory(string accountId)
+        public ConversationHistoryRow MapToConversationHistory(string accountId)
         {
             var timeStamp = DateTime.UtcNow;
 
-            return new ConversationHistory
+            return new ConversationHistoryRow
             {
                 ConversationId = ConversationId,
                 Prompt = Prompt,

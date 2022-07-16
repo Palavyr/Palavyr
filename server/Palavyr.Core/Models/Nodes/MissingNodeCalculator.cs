@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models.Nodes
 {
@@ -10,7 +10,7 @@ namespace Palavyr.Core.Models.Nodes
         string[] CalculateMissingNodes(
             NodeTypeOptionResource[] requiredDynamicNodeTypes,
             List<ConversationNode> conversationNodes,
-            List<DynamicTableMeta> dynamicTableMetas,
+            List<PricingStrategyTableMeta> dynamicTableMetas,
             List<StaticTablesMeta> staticTablesMetas);
 
         NodeTypeOptionResource[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOptionResource[] requiredNodes);
@@ -34,7 +34,7 @@ namespace Palavyr.Core.Models.Nodes
         public string[] CalculateMissingNodes(
             NodeTypeOptionResource[] requiredDynamicNodeTypes,
             List<ConversationNode> conversationNodes,
-            List<DynamicTableMeta> dynamicTableMetas,
+            List<PricingStrategyTableMeta> dynamicTableMetas,
             List<StaticTablesMeta> staticTablesMetas)
         {
             var allMissingNodeTypes = new List<string>();

@@ -9,7 +9,7 @@ using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 using Stripe;
-using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
+using Account = Palavyr.Core.Data.Entities.Account;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {

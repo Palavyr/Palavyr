@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Component.AppFactory.ComponentTestBase.BaseFixture;
+using Component.ComponentTestBase;
 using NSubstitute;
 using Palavyr.Core.Data;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
@@ -9,7 +9,7 @@ using Palavyr.Core.Sessions;
 using Stripe;
 using Test.Common.Builders.Accounts;
 using Xunit;
-using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
+using Account = Palavyr.Core.Data.Entities.Account;
 
 namespace Component.Tests.StripeWebhookHandlers
 {
@@ -26,7 +26,7 @@ namespace Component.Tests.StripeWebhookHandlers
             await new AccountObjectBuilder()
                 .WithAccountId(AccountId)
                 .WithStripeCustomerId(StripeCustomerId)
-                .BuildAndMakeRaw(ResolveType<AccountsContext>(), CancellationToken);
+                .BuildAndMakeRaw(ResolveType<AppDataContexts>(), CancellationToken);
 
             var paymentMethod = new PaymentMethod()
             {

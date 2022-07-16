@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.ConversationServices;
 using Palavyr.Core.Services.EnquiryServices;
@@ -14,12 +14,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class DeleteEnquiryHandler : IRequestHandler<DeleteEnquiryRequest, DeleteEnquiryResponse>
     {
         private readonly IEnquiryDeleter enquiryDeleter;
-        private readonly IMapToNew<ConversationRecord, EnquiryResource> mapper;
+        private readonly IMapToNew<ConversationHistoryMeta, EnquiryResource> mapper;
         private readonly IConversationRecordRetriever conversationRecordRetriever;
 
         public DeleteEnquiryHandler(
             IEnquiryDeleter enquiryDeleter,
-            IMapToNew<ConversationRecord, EnquiryResource> mapper,
+            IMapToNew<ConversationHistoryMeta, EnquiryResource> mapper,
             IConversationRecordRetriever conversationRecordRetriever)
         {
             this.enquiryDeleter = enquiryDeleter;
@@ -32,7 +32,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             await enquiryDeleter.DeleteEnquiries(request.ConversationIds);
             var records = await conversationRecordRetriever.RetrieveConversationRecords();
 
-            bool FilterRecentlyDeleted(ConversationRecord r)
+            bool FilterRecentlyDeleted(ConversationHistoryMeta r)
             {
                 return !request.ConversationIds.Contains(r.ConversationId);
             }

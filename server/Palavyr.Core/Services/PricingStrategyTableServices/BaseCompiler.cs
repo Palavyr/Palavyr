@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Aliases;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Stores;
 
@@ -22,9 +22,9 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             this.convoNodeStore = convoNodeStore;
         }
 
-        protected async Task<List<TEntity>> GetTableRows(DynamicTableMeta dynamicTableMeta)
+        protected async Task<List<TEntity>> GetTableRows(PricingStrategyTableMeta pricingStrategyTableMeta)
         {
-            var (areaId, tableId) = dynamicTableMeta;
+            var (areaId, tableId) = pricingStrategyTableMeta;
             var rows = await entityStore.GetMany(tableId, s => s.TableId);
             var indexArray = new List<int> { };
             var orderedEntities = new List<TEntity>() { };

@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.ConversationServices;
 
@@ -12,9 +12,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetEnquiriesHandler : IRequestHandler<GetEnquiriesRequest, GetEnquiriesResponse>
     {
         private readonly IConversationRecordRetriever conversationRecordRetriever;
-        private readonly IMapToNew<ConversationRecord, EnquiryResource> mapper;
+        private readonly IMapToNew<ConversationHistoryMeta, EnquiryResource> mapper;
 
-        public GetEnquiriesHandler(IConversationRecordRetriever conversationRecordRetriever, IMapToNew<ConversationRecord, EnquiryResource> mapper)
+        public GetEnquiriesHandler(IConversationRecordRetriever conversationRecordRetriever, IMapToNew<ConversationHistoryMeta, EnquiryResource> mapper)
         {
             this.conversationRecordRetriever = conversationRecordRetriever;
             this.mapper = mapper;

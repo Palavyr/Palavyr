@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Data;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Stores;
 using Test.Common.Random;
@@ -151,11 +151,11 @@ namespace Test.Common.Builders.Accounts
             return account;
         }
 
-        public async Task<Account> BuildAndMakeRaw(AccountsContext accountsContext, CancellationToken cancellationToken)
+        public async Task<Account> BuildAndMakeRaw(AppDataContexts rawDataContext, CancellationToken cancellationToken)
         {
             var account = Build();
-            accountsContext.Add(account);
-            await accountsContext.SaveChangesAsync(cancellationToken);
+            rawDataContext.Accounts.Add(account);
+            await rawDataContext.SaveChangesAsync(cancellationToken);
             return account;
         }
     }

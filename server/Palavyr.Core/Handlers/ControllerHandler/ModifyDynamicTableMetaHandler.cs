@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.Units;
 using Palavyr.Core.Stores;
 
@@ -9,11 +9,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyDynamicTableMetaHandler : IRequestHandler<ModifyDynamicTableMetaRequest, ModifyDynamicTableMetaResponse>
     {
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
         private readonly IUnitRetriever unitRetriever;
 
         public ModifyDynamicTableMetaHandler(
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore,
             IUnitRetriever unitRetriever)
         {
             this.dynamicTableMetaStore = dynamicTableMetaStore;
@@ -40,8 +40,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyDynamicTableMetaResponse
     {
-        public ModifyDynamicTableMetaResponse(DynamicTableMeta response) => Response = response;
-        public DynamicTableMeta Response { get; set; }
+        public ModifyDynamicTableMetaResponse(PricingStrategyTableMeta response) => Response = response;
+        public PricingStrategyTableMeta Response { get; set; }
     }
 
     public class ModifyDynamicTableMetaRequest : IRequest<ModifyDynamicTableMetaResponse>

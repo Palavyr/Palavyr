@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Sessions;
 
@@ -13,8 +13,8 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
     public interface ISelectOneFlatNodeUpdater
     {
         Task UpdateConversationNode(
-            List<SelectOneFlat> currentSelectOneFlatUpdate,
-            DynamicTableMeta tableMeta,
+            List<SimpleSelectTableRow> currentSelectOneFlatUpdate,
+            PricingStrategyTableMeta tableTableMeta,
             ConversationNode node,
             List<ConversationNode> conversationNodes,
             string areaIdentifier
@@ -39,15 +39,15 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
         }
 
         public async Task UpdateConversationNode(
-            List<SelectOneFlat> currentSelectOneFlatUpdate,
-            DynamicTableMeta tableMeta,
+            List<SimpleSelectTableRow> currentSelectOneFlatUpdate,
+            PricingStrategyTableMeta tableTableMeta,
             ConversationNode node,
             List<ConversationNode> conversationNodes,
             string areaIdentifier
         )
         {
             List<ConversationNode> updatedNodes;
-            if (tableMeta.ValuesAsPaths)
+            if (tableTableMeta.ValuesAsPaths)
             {
                 updatedNodes = await ConvertToAsPaths(currentSelectOneFlatUpdate, node, areaIdentifier, accountIdTransport.AccountId, conversationNodes);
             }
@@ -59,7 +59,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
             await nodeUpdater.UpdateConversation(areaIdentifier, updatedNodes, CancellationToken.None);
         }
 
-        private async Task<List<ConversationNode>> ConvertToAsPaths(List<SelectOneFlat> currentSelectOneFlatUpdate, ConversationNode node, string areaIdentifier, string accountId, List<ConversationNode> conversationNodes)
+        private async Task<List<ConversationNode>> ConvertToAsPaths(List<SimpleSelectTableRow> currentSelectOneFlatUpdate, ConversationNode node, string areaIdentifier, string accountId, List<ConversationNode> conversationNodes)
         {
             // 1. from not as paths
             // 2. add 1 or more siblings

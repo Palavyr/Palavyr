@@ -251,3 +251,4 @@ ui/dist*
 
 localdev.env
 appsettings.development.json
+appsettings.migrator.development.json

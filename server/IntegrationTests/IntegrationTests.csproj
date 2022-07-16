@@ -43,14 +43,16 @@
       </EmbeddedResource>
       <EmbeddedResource Remove="Tests\Core\Services\AccountServices\**" />
       <None Remove="Tests\Core\Services\AccountServices\**" />
+      <EmbeddedResource Remove="AppFactory\ExtensionMethods\ClientExtensionMethods\**" />
+      <None Remove="AppFactory\ExtensionMethods\ClientExtensionMethods\**" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="Tests\Core\Services\AccountServices\**" />
+      <Compile Remove="AppFactory\ExtensionMethods\ClientExtensionMethods\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="AppFactory\ExtensionMethods\ClientExtensionMethods" />
       <Folder Include="DataCreators\PricingStrategyBuilders" />
     </ItemGroup>
 </Project>

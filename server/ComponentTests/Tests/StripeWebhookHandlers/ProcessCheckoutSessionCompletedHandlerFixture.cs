@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
-using Component.AppFactory.ComponentTestBase.BaseFixture;
+using Component.ComponentTestBase;
 using MediatR;
 using NSubstitute;
 using Palavyr.Core.Data;
@@ -11,7 +11,7 @@ using Test.Common.Builders.Accounts;
 using Test.Common.Builders.StripeBuilders;
 using Test.Common.Random;
 using Xunit;
-using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
+using Account = Palavyr.Core.Data.Entities.Account;
 
 namespace Component.Tests.StripeWebhookHandlers
 {
@@ -27,7 +27,7 @@ namespace Component.Tests.StripeWebhookHandlers
             await new AccountObjectBuilder()
                 .WithAccountId(AccountId)
                 .WithStripeCustomerId(customerId)
-                .BuildAndMakeRaw(ResolveType<AccountsContext>(), CancellationToken);
+                .BuildAndMakeRaw(ResolveType<AppDataContexts>(), CancellationToken);
 
             var session = new StripeCheckoutSessionBuilder(this)
                 .WithSubscriptionId(subscriptionId)

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.PricingStrategyTableServices
@@ -62,7 +62,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             return new List<Table>() { table };
         }
 
-        public async Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<DynamicTableMeta> dynamicTableMetas, string areaId)
+        public async Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<PricingStrategyTableMeta> dynamicTableMetas, string areaId)
         {
             var nodes = new List<NodeTypeOptionResource>() { };
             foreach (var dynamicTableMeta in dynamicTableMetas)

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.ConversationServices
@@ -14,9 +14,9 @@ namespace Palavyr.Core.Services.ConversationServices
 
     public class CompletedConversationModifier : ICompletedConversationModifier
     {
-        private readonly IEntityStore<ConversationRecord> recordStore;
+        private readonly IEntityStore<ConversationHistoryMeta> recordStore;
 
-        public CompletedConversationModifier(IEntityStore<ConversationRecord> recordStore, IConversationRecordRetriever conversationRecordRetriever)
+        public CompletedConversationModifier(IEntityStore<ConversationHistoryMeta> recordStore, IConversationRecordRetriever conversationRecordRetriever)
         {
             this.recordStore = recordStore;
         }

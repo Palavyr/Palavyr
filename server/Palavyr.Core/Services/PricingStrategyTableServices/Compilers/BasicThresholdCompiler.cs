@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.PricingStrategyTableServices.Thresholds;
@@ -19,19 +19,19 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
     {
     }
 
-    public class BasicThresholdCompiler : BaseCompiler<BasicThreshold>, IBasicThresholdCompiler
+    public class BasicThresholdCompiler : BaseCompiler<SimpleThresholdTableRow>, IBasicThresholdCompiler
     {
-        private readonly IEntityStore<DynamicTableMeta> pricingStrategyMetaStore;
-        private readonly IEntityStore<BasicThreshold> basicThresholdStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyMetaStore;
+        private readonly IEntityStore<SimpleThresholdTableRow> basicThresholdStore;
         private readonly IThresholdEvaluator thresholdEvaluator;
-        private readonly IResponseRetriever<BasicThreshold> responseRetriever;
+        private readonly IResponseRetriever<SimpleThresholdTableRow> responseRetriever;
 
         public BasicThresholdCompiler(
-            IEntityStore<DynamicTableMeta> pricingStrategyMetaStore,
-            IEntityStore<BasicThreshold> basicThresholdStore,
+            IEntityStore<PricingStrategyTableMeta> pricingStrategyMetaStore,
+            IEntityStore<SimpleThresholdTableRow> basicThresholdStore,
             IEntityStore<ConversationNode> convoNodeStore,
             IThresholdEvaluator thresholdEvaluator,
-            IResponseRetriever<BasicThreshold> responseRetriever
+            IResponseRetriever<SimpleThresholdTableRow> responseRetriever
         ) : base(basicThresholdStore, convoNodeStore)
         {
             this.pricingStrategyMetaStore = pricingStrategyMetaStore;
@@ -45,11 +45,11 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             await Task.CompletedTask;
         }
 
-        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOptionResource> nodes)
+        public async Task CompileToConfigurationNodes(PricingStrategyTableMeta pricingStrategyTableMeta, List<NodeTypeOptionResource> nodes)
         {
             var nodeTypeOption = NodeTypeOptionResource.Create(
-                dynamicTableMeta.MakeUniqueIdentifier(),
-                dynamicTableMeta.ConvertToPrettyName(),
+                pricingStrategyTableMeta.MakeUniqueIdentifier(),
+                pricingStrategyTableMeta.ConvertToPrettyName(),
                 new List<string>() { "Continue" },
                 new List<string>() { "Continue" },
                 true,
@@ -59,7 +59,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                 DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
                 NodeTypeCode.II,
                 resolveOrder: 0,
-                dynamicType: dynamicTableMeta.MakeUniqueIdentifier()
+                dynamicType: pricingStrategyTableMeta.MakeUniqueIdentifier()
             );
             nodes.AddAdditionalNode(nodeTypeOption);
             await Task.CompletedTask;
@@ -150,15 +150,15 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         //     return ValidationLogic(thresholds.ToList(), dynamicTableMeta.TableTag);
         // }
 
-        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area intent, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(PricingStrategyTableMeta tableTableMeta, Intent intent, CultureInfo culture)
         {
-            var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
+            var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses(tableTableMeta.TableId);
             var responseParts = PricingStrategyResponsePartJoiner.CreateDynamicResponseParts(availableBasicThreshold.First().TableId, availableBasicThreshold.First().Threshold.ToString());
-            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
+            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableTableMeta.TableId }, culture);
             return currentRows;
         }
 
-        public async Task<List<BasicThreshold>> RetrieveAllAvailableResponses(string dynamicResponseId)
+        public async Task<List<SimpleThresholdTableRow>> RetrieveAllAvailableResponses(string dynamicResponseId)
         {
             return await GetAllRowsMatchingResponseId(dynamicResponseId);
         }

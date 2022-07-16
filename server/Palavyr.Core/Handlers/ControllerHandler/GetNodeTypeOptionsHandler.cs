@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PricingStrategyTableServices;
 using Palavyr.Core.Stores;
 
@@ -15,12 +15,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly ILogger<GetNodeTypeOptionsHandler> logger;
         private readonly IPricingStrategyTableCompilerOrchestrator pricingStrategyTableCompilerOrchestrator;
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
 
         public GetNodeTypeOptionsHandler(
             ILogger<GetNodeTypeOptionsHandler> logger,
             IPricingStrategyTableCompilerOrchestrator pricingStrategyTableCompilerOrchestrator,
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore)
+            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore)
         {
             this.logger = logger;
             this.pricingStrategyTableCompilerOrchestrator = pricingStrategyTableCompilerOrchestrator;

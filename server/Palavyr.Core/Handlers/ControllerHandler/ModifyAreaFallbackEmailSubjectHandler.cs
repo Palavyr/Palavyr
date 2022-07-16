@@ -1,16 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyAreaFallbackEmailSubjectHandler : IRequestHandler<ModifyAreaFallbackEmailSubjectRequest, ModifyAreaFallbackEmailSubjectResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
 
-        public ModifyAreaFallbackEmailSubjectHandler(IEntityStore<Area> intentStore)
+        public ModifyAreaFallbackEmailSubjectHandler(IEntityStore<Intent> intentStore)
         {
             this.intentStore = intentStore;
         }

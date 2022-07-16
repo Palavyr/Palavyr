@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Component.AppFactory.ComponentTestBase.BaseFixture;
+using Component.ComponentTestBase;
 using Component.Mocks;
 using MediatR;
 using Palavyr.Core.Data;
@@ -23,7 +23,7 @@ namespace Component.Tests.StripeWebhookHandlers
             await new AccountObjectBuilder()
                 .WithAccountId(AccountId)
                 .WithStripeCustomerId(customerId)
-                .BuildAndMakeRaw(ResolveType<AccountsContext>(), CancellationToken);
+                .BuildAndMakeRaw(ResolveType<AppDataContexts>(), CancellationToken);
 
             var invoice = new StripeInvoiceBuilder(this).WithCustomerId(customerId).Build();
             var @event = new InvoicePaymentFailedEvent(invoice);

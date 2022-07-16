@@ -4,8 +4,8 @@ using IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using IntegrationTests.AppFactory.IntegrationTestFixtures;
 using IntegrationTests.DataCreators;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices;
 using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
@@ -22,19 +22,19 @@ namespace IntegrationTests.Tests.Core.Validators
         {
             var selectOneFlatTableMeta = await this.CreatePricingStrategyTableBuilder<SelectOneFlatResource>()
                 .WithRow(this.CreateSelectOneFlatResourceBuilder().Build())
-                .BuildAndMake<SelectOneFlat, SelectOneFlatCompiler>();
+                .BuildAndMake<SimpleSelectTableRow, SelectOneFlatCompiler>();
 
-            var getRoute = PricingStrategyControllerBase<SelectOneFlat,
+            var getRoute = PricingStrategyControllerBase<SimpleSelectTableRow,
                 SelectOneFlatResource,
-                SelectOneFlatCompiler>.AssembleRoute<SelectOneFlat>(
+                SelectOneFlatCompiler>.AssembleRoute<SimpleSelectTableRow>(
                 GetPricingStrategyTableRowsRequest<
-                        SelectOneFlat,
+                        SimpleSelectTableRow,
                         SelectOneFlatResource,
                         SelectOneFlatCompiler>
                     .FormatRoute(selectOneFlatTableMeta.AreaIdentifier, selectOneFlatTableMeta.TableId));
 
             var currentTable = await Client.GetResource<GetPricingStrategyTableRowsRequest<
-                SelectOneFlat,
+                SimpleSelectTableRow,
                 SelectOneFlatResource,
                 SelectOneFlatCompiler>, PricingStrategyTableDataResource<SelectOneFlatResource>>(CancellationToken, _ => getRoute);
 

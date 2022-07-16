@@ -1,4 +1,4 @@
-﻿using Palavyr.Core.Models.Configuration.Schemas;
+﻿using Palavyr.Core.Data.Entities;
 
 namespace Test.Common.Builders.Conversations
 {

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.Core.Common.ExtensionMethods.PathExtensions;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Resources.PricingStrategyResources;
@@ -72,7 +72,7 @@ namespace IntegrationTests.DataCreators
             where TEntity : class, IPricingStrategyTable<TEntity>, IEntity, new()
             where TCompiler : class, IPricingStrategyTableCompiler
         {
-            var intentStore = test.ResolveStore<Area>();
+            var intentStore = test.ResolveStore<Intent>();
             if (intentId is null)
             {
                 var intent = await test.CreateIntentBuilder().Build();

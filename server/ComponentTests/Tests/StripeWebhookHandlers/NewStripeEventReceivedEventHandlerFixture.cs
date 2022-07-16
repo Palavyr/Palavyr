@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Component.AppFactory.ComponentTestBase.BaseFixture;
+using Component.ComponentTestBase;
 using MediatR;
 using Palavyr.Core.Data;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 using Shouldly;
 using Test.Common.Builders.Accounts;
@@ -23,10 +23,10 @@ namespace Component.Tests.StripeWebhookHandlers
         {
             var customerId = A.RandomId();
 
-            var account = await new AccountObjectBuilder()
+            await new AccountObjectBuilder()
                 .WithAccountId(AccountId)
                 .WithStripeCustomerId(customerId)
-                .BuildAndMakeRaw(ResolveType<AccountsContext>(), CancellationToken);
+                .BuildAndMakeRaw(ResolveType<AppDataContexts>(), CancellationToken);
 
             
             var signature = A.RandomId();

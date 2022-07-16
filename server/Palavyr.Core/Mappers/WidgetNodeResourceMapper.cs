@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Stores;
@@ -11,14 +11,14 @@ namespace Palavyr.Core.Mappers
 {
     public class WidgetNodeResourceMapper : IMapToNew<ConversationNode, WidgetNodeResource>
     {
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
         private readonly ILinkCreator linkCreator;
         private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly IMapToNew<FileAsset, FileAssetResource> fileAssetMapper;
         private readonly IGuidFinder guidFinder;
 
         public WidgetNodeResourceMapper(
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore,
             ILinkCreator linkCreator,
             IEntityStore<FileAsset> fileAssetStore,
             IMapToNew<FileAsset, FileAssetResource> fileAssetMapper,

@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -11,10 +11,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetResponseConfigurationHandler : IRequestHandler<GetResponseConfigurationRequest, GetResponseConfigurationResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
-        private readonly IMapToNew<Area, IntentResource> mapper;
+        private readonly IEntityStore<Intent> intentStore;
+        private readonly IMapToNew<Intent, IntentResource> mapper;
 
-        public GetResponseConfigurationHandler(IEntityStore<Area> intentStore, IMapToNew<Area, IntentResource> mapper)
+        public GetResponseConfigurationHandler(IEntityStore<Intent> intentStore, IMapToNew<Intent, IntentResource> mapper)
         {
             this.intentStore = intentStore;
             this.mapper = mapper;

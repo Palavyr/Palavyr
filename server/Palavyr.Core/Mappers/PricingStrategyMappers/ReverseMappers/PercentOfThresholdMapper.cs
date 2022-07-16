@@ -1,16 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
 {
-    public class PercentOfThresholdMapper : IMapToNew<PercentOfThresholdResource, PercentOfThreshold>
+    public class PercentOfThresholdMapper : IMapToNew<PercentOfThresholdResource, PercentOfThresholdTableRow>
     {
-        public async Task<PercentOfThreshold> Map(PercentOfThresholdResource from, CancellationToken cancellationToken = default)
+        public async Task<PercentOfThresholdTableRow> Map(PercentOfThresholdResource from, CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
-            return new PercentOfThreshold
+            return new PercentOfThresholdTableRow
             {
                 Id = from.Id,
                 Modifier = from.Modifier,

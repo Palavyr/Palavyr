@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.AccountServices.PlanTypes

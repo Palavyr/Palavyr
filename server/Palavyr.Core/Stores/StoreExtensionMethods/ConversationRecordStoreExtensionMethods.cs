@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Stores.StoreExtensionMethods
 {
     public static class ConversationRecordStoreExtensionMethods
     {
-        public static async Task<ConversationRecord> GetSingleRecord(this IEntityStore<ConversationRecord> convoRecordStore, string conversationRecordId)
+        public static async Task<ConversationHistoryMeta> GetSingleRecord(this IEntityStore<ConversationHistoryMeta> convoRecordStore, string conversationRecordId)
         {
             var record = await convoRecordStore
                 .Query()

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.PricingStrategyTableServices
@@ -16,7 +16,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             bool includeTotals
         );
 
-        Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<DynamicTableMeta> dynamicTableMetas, string areaId);
+        Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<PricingStrategyTableMeta> dynamicTableMetas, string areaId);
 
         Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents pricingStrategyResponseComponents);
         // Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<DynamicTableMeta> pricingStrategyMetas);

@@ -63,8 +63,14 @@
         <None Update="appsettings.migrator.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="appsettings.migrator.development.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Scripts\*\*.sql" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Scripts" />
     </ItemGroup>
 </Project>

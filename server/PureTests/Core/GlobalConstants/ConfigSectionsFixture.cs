@@ -13,9 +13,7 @@ namespace Pure.Core.GlobalConstants
             ApplicationConstants.ConfigSections.LoggingSection.ShouldBe("Logging");
             ApplicationConstants.ConfigSections.UserDataSection.ShouldBe("Userdata");
 
-            ApplicationConstants.ConfigSections.ConfigurationDbStringKey.ShouldBe("DashContextPostgres");
-            ApplicationConstants.ConfigSections.AccountDbStringKey.ShouldBe("AccountsContextPostgres");
-            ApplicationConstants.ConfigSections.ConvoDbStringKey.ShouldBe("ConvoContextPostgres");
+            ApplicationConstants.ConfigSections.ConnectionStringPostgres.ShouldBe("ConnectionString");
             ApplicationConstants.ConfigSections.StripeKeySection.ShouldBe("Stripe:SecretKey");
             ApplicationConstants.ConfigSections.JwtSecretKey.ShouldBe("JWTSecretKey");
 

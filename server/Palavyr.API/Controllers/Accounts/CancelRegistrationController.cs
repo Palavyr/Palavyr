@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 

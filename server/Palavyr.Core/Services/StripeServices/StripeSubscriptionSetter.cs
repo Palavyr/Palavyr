@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Stores;
 using Session = Stripe.Checkout.Session;

@@ -2,8 +2,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
 {
@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
         }
 
         [HttpPut(Route)]
-        public async Task<DynamicTableMeta> Modify([FromBody] ModifyDynamicTableMetaRequest request, CancellationToken cancellationToken)
+        public async Task<PricingStrategyTableMeta> Modify([FromBody] ModifyDynamicTableMetaRequest request, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;

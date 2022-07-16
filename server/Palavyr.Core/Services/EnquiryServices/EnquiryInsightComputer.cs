@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Stores;
 
@@ -15,16 +14,16 @@ namespace Palavyr.Core.Services.EnquiryServices
 
     public class EnquiryInsightComputer : IEnquiryInsightComputer
     {
-        private readonly IEntityStore<ConversationRecord> convoRecordStore;
-        private readonly IEntityStore<ConversationHistory> convoHistoryStore;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<ConversationHistoryMeta> convoRecordStore;
+        private readonly IEntityStore<ConversationHistoryRow> convoHistoryStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly INodeBranchLengthCalculator nodeBranchLengthCalculator;
 
         public EnquiryInsightComputer(
-            IEntityStore<ConversationRecord> convoRecordStore,
-            IEntityStore<ConversationHistory> convoHistoryStore,
-            IEntityStore<Area> intentStore,
+            IEntityStore<ConversationHistoryMeta> convoRecordStore,
+            IEntityStore<ConversationHistoryRow> convoHistoryStore,
+            IEntityStore<Intent> intentStore,
             IEntityStore<ConversationNode> convoNodeStore,
             INodeBranchLengthCalculator nodeBranchLengthCalculator
         )
@@ -44,7 +43,7 @@ namespace Palavyr.Core.Services.EnquiryServices
 
             foreach (var intent in allIntents)
             {
-                var intentRecords = allRecords.Where(x => x.AreaIdentifier == intent.AreaIdentifier).ToArray();
+                var intentRecords = allRecords.Where(x => x.IntentId == intent.AreaIdentifier).ToArray();
 
                 var completed = intentRecords.Where(x => x.IsComplete).ToArray().Length;
                 var numRecords = intentRecords.Length;
@@ -67,7 +66,7 @@ namespace Palavyr.Core.Services.EnquiryServices
             return resources.ToArray();
         }
 
-        private async Task<(List<double> completePerIntent, double)> ComputeAverageIntentCompletion(ConversationRecord[] intentRecords)
+        private async Task<(List<double> completePerIntent, double)> ComputeAverageIntentCompletion(ConversationHistoryMeta[] intentRecords)
         {
             var completePerIntent = new List<double>();
 
@@ -76,7 +75,7 @@ namespace Palavyr.Core.Services.EnquiryServices
                 var convo = await convoHistoryStore.GetMany(intentRecord.ConversationId, s => s.ConversationId);
                 if (convo.Count == 0) continue;
 
-                var totalConvo = await convoNodeStore.GetMany(intentRecord.AreaIdentifier, s => s.AreaIdentifier);
+                var totalConvo = await convoNodeStore.GetMany(intentRecord.IntentId, s => s.AreaIdentifier);
 
                 var terminalNodes = totalConvo.Where(x => x.IsTerminalType).ToList();
                 var lengthOfLongestBranch = nodeBranchLengthCalculator.GetLengthOfLongestTerminatingPath(totalConvo.ToArray(), terminalNodes.ToArray());

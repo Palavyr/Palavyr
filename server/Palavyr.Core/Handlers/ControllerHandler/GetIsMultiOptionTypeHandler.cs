@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetIsMultiOptionTypeHandler : IRequestHandler<GetIsMultiOptionTypeRequest, GetIsMultiOptionTypeResponse>
     {
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
         private readonly ILogger<GetIsMultiOptionTypeHandler> logger;
         private readonly IPricingStrategyTypeLister pricingStrategyTypeLister;
         private readonly IGuidFinder guidFinder;
@@ -21,7 +21,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             ILogger<GetIsMultiOptionTypeHandler> logger,
             IPricingStrategyTypeLister pricingStrategyTypeLister,
             IGuidFinder guidFinder,
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore)
+            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore)
         {
             this.dynamicTableMetaStore = dynamicTableMetaStore;
             this.logger = logger;

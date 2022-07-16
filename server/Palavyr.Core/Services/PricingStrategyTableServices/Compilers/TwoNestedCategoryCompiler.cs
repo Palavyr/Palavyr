@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Stores;
@@ -18,20 +18,20 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
     {
     }
 
-    public class TwoNestedCategoryCompiler : BaseCompiler<TwoNestedCategory>, ITwoNestedCategoryCompiler
+    public class TwoNestedCategoryCompiler : BaseCompiler<TwoNestedSelectTableRow>, ITwoNestedCategoryCompiler
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IEntityStore<TwoNestedCategory> psStore;
+        private readonly IEntityStore<TwoNestedSelectTableRow> psStore;
         private readonly IConversationOptionSplitter splitter;
-        private readonly IResponseRetriever<TwoNestedCategory> responseRetriever;
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IResponseRetriever<TwoNestedSelectTableRow> responseRetriever;
+        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
 
         public TwoNestedCategoryCompiler(
             IEntityStore<ConversationNode> convoNodeStore,
-            IEntityStore<TwoNestedCategory> psStore,
+            IEntityStore<TwoNestedSelectTableRow> psStore,
             IConversationOptionSplitter splitter,
-            IResponseRetriever<TwoNestedCategory> responseRetriever,
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore) : base(psStore, convoNodeStore)
+            IResponseRetriever<TwoNestedSelectTableRow> responseRetriever,
+            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore) : base(psStore, convoNodeStore)
         {
             this.convoNodeStore = convoNodeStore;
             this.psStore = psStore;
@@ -126,13 +126,13 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         //     return ValidationLogic(table, dynamicTableMeta.TableTag);
         // }
 
-        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area intent, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(PricingStrategyTableMeta tableTableMeta, Intent intent, CultureInfo culture)
         {
-            var availableTwoNested = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
+            var availableTwoNested = await responseRetriever.RetrieveAllAvailableResponses(tableTableMeta.TableId);
             var currentRows = new List<TableRow>()
             {
                 new TableRow(
-                    tableMeta.UseTableTagAsResponseDescription ? tableMeta.TableTag : string.Join(" & ", new[] { availableTwoNested.First().ItemName, availableTwoNested.First().InnerItemName }),
+                    tableTableMeta.UseTableTagAsResponseDescription ? tableTableMeta.TableTag : string.Join(" & ", new[] { availableTwoNested.First().ItemName, availableTwoNested.First().InnerItemName }),
                     availableTwoNested.First().ValueMin,
                     availableTwoNested.First().ValueMax,
                     false,
@@ -143,12 +143,12 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             return currentRows;
         }
 
-        public async Task<List<TwoNestedCategory>> RetrieveAllAvailableResponses(string dynamicResponseId)
+        public async Task<List<TwoNestedSelectTableRow>> RetrieveAllAvailableResponses(string dynamicResponseId)
         {
             return await GetAllRowsMatchingResponseId(dynamicResponseId);
         }
 
-        private CategoryRetriever GetInnerAndOuterCategories(List<TwoNestedCategory> rawRows)
+        private CategoryRetriever GetInnerAndOuterCategories(List<TwoNestedSelectTableRow> rawRows)
         {
             // This table type does not facilitate multiple branches. I.e. the inner categories are all the same for all of the outer categories.
             var rows = rawRows.OrderBy(row => row.RowOrder).ToList();
@@ -167,7 +167,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 
         public async Task UpdateConversationNode<T>(List<T> table, string tableId, string intentId)
         {
-            var update = table as List<TwoNestedCategory>;
+            var update = table as List<TwoNestedSelectTableRow>;
 
             var (innerCategories, outerCategories) = GetInnerAndOuterCategories(update);
 
@@ -182,17 +182,17 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             }
         }
 
-        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOptionResource> nodes)
+        public async Task CompileToConfigurationNodes(PricingStrategyTableMeta pricingStrategyTableMeta, List<NodeTypeOptionResource> nodes)
         {
-            var rawRows = await GetTableRows(dynamicTableMeta);
+            var rawRows = await GetTableRows(pricingStrategyTableMeta);
             var (innerCategories, outerCategories) = GetInnerAndOuterCategories(rawRows);
-            var widgetResponseKey = dynamicTableMeta.MakeUniqueIdentifier();
+            var widgetResponseKey = pricingStrategyTableMeta.MakeUniqueIdentifier();
 
             // Outer-category
             nodes.AddAdditionalNode(
                 NodeTypeOptionResource.Create(
-                    dynamicTableMeta.MakeUniqueIdentifier("Outer-Categories"),
-                    dynamicTableMeta.ConvertToPrettyName("Outer"),
+                    pricingStrategyTableMeta.MakeUniqueIdentifier("Outer-Categories"),
+                    pricingStrategyTableMeta.ConvertToPrettyName("Outer"),
                     new List<string>() { "Continue" },
                     outerCategories,
                     true,
@@ -210,8 +210,8 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             // inner-categories
             nodes.AddAdditionalNode(
                 NodeTypeOptionResource.Create(
-                    dynamicTableMeta.MakeUniqueIdentifier("Inner-Categories"),
-                    dynamicTableMeta.ConvertToPrettyName("Inner"),
+                    pricingStrategyTableMeta.MakeUniqueIdentifier("Inner-Categories"),
+                    pricingStrategyTableMeta.ConvertToPrettyName("Inner"),
                     new List<string>() { "Continue" },
                     innerCategories,
                     true,

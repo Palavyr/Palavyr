@@ -3,8 +3,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.API.Controllers.Conversation
@@ -12,14 +12,14 @@ namespace Palavyr.API.Controllers.Conversation
     [Obsolete]
     public class GetIsSplitMergeTypeController : PalavyrBaseController
     {
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
         private readonly IPricingStrategyTypeLister pricingStrategyTypeLister;
         public const string Route = "configure-conversations/check-is-split-merge/{nodeType}";
 
         string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";
 
         public GetIsSplitMergeTypeController(
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore,
             ILogger<GetIsSplitMergeTypeController> logger,
             IPricingStrategyTypeLister pricingStrategyTypeLister
         )

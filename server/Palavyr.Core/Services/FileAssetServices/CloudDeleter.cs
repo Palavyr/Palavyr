@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.GlobalConstants;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.Core.Services.FileAssetServices

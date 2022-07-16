@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
-using Palavyr.Core.Models.Accounts.Schemas;
 
 
 namespace Palavyr.Core.Sessions

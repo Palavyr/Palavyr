@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
@@ -16,11 +15,11 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
     public class CompileSenderDetails : ICompileSenderDetails
     {
         private readonly IEntityStore<Account> accountStore;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IResponseCustomizer responseCustomizer;
 
         public CompileSenderDetails(
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IEntityStore<Account> accountStore,
             IResponseCustomizer responseCustomizer
         )

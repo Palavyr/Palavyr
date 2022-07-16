@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Component.AppFactory.ComponentTestBase.BaseFixture;
+using Component.ComponentTestBase;
 using MediatR;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
 using Stripe;

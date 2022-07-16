@@ -1,16 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetAreaEmailSubjectHandler : IRequestHandler<GetAreaEmailSubjectRequest, GetAreaEmailSubjectResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
 
-        public GetAreaEmailSubjectHandler(IEntityStore<Area> intentStore)
+        public GetAreaEmailSubjectHandler(IEntityStore<Intent> intentStore)
         {
             this.intentStore = intentStore;
         }

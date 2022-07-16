@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Component.AppFactory.ComponentTestBase.BaseFixture;
+using Component.ComponentTestBase;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Stores;
 

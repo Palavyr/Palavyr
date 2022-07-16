@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.EmailService.EmailResponse;
@@ -13,13 +13,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class SendWidgetResponseEmailHandler : IRequestHandler<SendWidgetResponseEmailRequest, SendWidgetResponseEmailResponse>
     {
-        private readonly IEntityStore<ConversationRecord> convoRecordStore;
-        private readonly IMapToPreExisting<EmailRequest, ConversationRecord> mapper;
+        private readonly IEntityStore<ConversationHistoryMeta> convoRecordStore;
+        private readonly IMapToPreExisting<EmailRequest, ConversationHistoryMeta> mapper;
         private readonly IResponseEmailSender responseEmailSender;
 
         public SendWidgetResponseEmailHandler(
-            IEntityStore<ConversationRecord> convoRecordStore,
-            IMapToPreExisting<EmailRequest, ConversationRecord> mapper,
+            IEntityStore<ConversationHistoryMeta> convoRecordStore,
+            IMapToPreExisting<EmailRequest, ConversationHistoryMeta> mapper,
             IResponseEmailSender responseEmailSender)
         {
             this.convoRecordStore = convoRecordStore;

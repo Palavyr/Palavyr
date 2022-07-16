@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Stores;
 using Stripe;
-using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
+using Account = Palavyr.Core.Data.Entities.Account;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {

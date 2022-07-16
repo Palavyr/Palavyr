@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler

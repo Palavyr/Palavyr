@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
@@ -12,14 +12,14 @@ namespace Palavyr.Core.Models.Conversation
 {
     public class ConversationUpdater : IConversationNodeUpdater
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IOrphanRemover orphanRemover;
         private readonly IMapToNew<ConversationDesignerNodeResource, ConversationNode> mapper;
 
         public ConversationUpdater(
             IAccountIdTransport accountIdTransport,
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IEntityStore<ConversationNode> convoNodeStore,
             IOrphanRemover orphanRemover,
             IMapToNew<ConversationDesignerNodeResource, ConversationNode> mapper) // TODO: This is not idea. We shouldn't be deleting the entire conversation - instead refactor to identify the same nodes and just update instead of delete and add.

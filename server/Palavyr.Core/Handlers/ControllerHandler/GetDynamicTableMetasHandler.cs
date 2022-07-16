@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.Units;
 using Palavyr.Core.Stores;
@@ -12,12 +12,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetDynamicTableMetasHandler : IRequestHandler<GetDynamicTableMetasRequest, GetDynamicTableMetasResponse>
     {
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
         private readonly ILogger<GetDynamicTableMetasHandler> logger;
         private readonly IUnitRetriever unitRetriever;
 
         public GetDynamicTableMetasHandler(
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore,
             ILogger<GetDynamicTableMetasHandler> logger,
             IUnitRetriever unitRetriever)
         {

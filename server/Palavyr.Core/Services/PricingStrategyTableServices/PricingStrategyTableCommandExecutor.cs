@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Sessions;
@@ -37,7 +37,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
     {
         private ILogger<TEntity> logger;
         private readonly IEntityStore<TEntity> pricingStrategyStore;
-        private readonly IEntityStore<DynamicTableMeta> psMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> psMetaStore;
         private readonly IPricingStrategyTableCompilerRetriever retriever;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IAccountIdTransport accountIdTransport;
@@ -53,7 +53,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
 
         public PricingStrategyTableCommandExecutor(
             IEntityStore<TEntity> pricingStrategyStore,
-            IEntityStore<DynamicTableMeta> psMetaStore,
+            IEntityStore<PricingStrategyTableMeta> psMetaStore,
             IPricingStrategyTableCompilerRetriever retriever,
             IEntityStore<ConversationNode> convoNodeStore,
             IAccountIdTransport accountIdTransport,

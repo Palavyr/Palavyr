@@ -1,13 +1,15 @@
-param([string]$name, [switch]$supressmigration)
+param([string]$dirtyName, [switch]$supressmigration)
 
 $env:ASPNETCORE_ENVIRONMENT = "Development"
 
+$name = $dirtyName.Trim().Replace(" ", "_");
 
-if ($name.Trim() -eq "")
-{
-    Write-Host "Please provide a name for the new project"
+if ($name -eq "") {
+    Write-Host "Please provide a name for the new migration. You don't need to provide a number, and spaces are auto replaced with underscores."
     exit 1
 }
+
+
 
 Write-Host "Run this script from the server directory (next to the project)"
 Write-Host "ONLY RUN THIS IN DEV TO PRODUCE MIGRATION SCRIPTS!!"
@@ -77,7 +79,7 @@ function CheckDirForExistingVersions([string]$directory_path, [string]$currentVe
 }
 
 function GetNextMigrationScriptVersion() {
-    $dataMigratorDirectory = "./Palavyr.Data.Migrator/Scripts/Account"; # use account because no particular reason
+    $dataMigratorDirectory = "./Palavyr.Data.Migrator/Scripts";
 
     [int[]]$allVersions = @();
 
@@ -88,6 +90,10 @@ function GetNextMigrationScriptVersion() {
         $allVersions += $version;
     }
     $sortedVersions = $allVersions | Sort-Object -descending;
+
+    if ($sortedVersions.Length -eq 0){
+        return "0001"
+    }
     $latestVersion = $sortedVersions[0];
 
     $nextVersion = $latestVersion + 1;
@@ -103,15 +109,11 @@ function GetNextMigrationScriptVersion() {
 
 $nextMigrationScriptVersion = GetNextMigrationScriptVersion;
 
-##
-$Dir = ".\\Palavyr.Data.Migrator\\Scripts"
-$accountsOutput = "$Dir\\Account"
-$configOutput = "$Dir\\Config"
-$convoOutput = "$Dir\\Convo"
 
-CheckDirForExistingVersions $accountsOutput $nextMigrationScriptVersion
-CheckDirForExistingVersions $configOutput $nextMigrationScriptVersion
-CheckDirForExistingVersions $convoOutput $nextMigrationScriptVersion
+$scriptDir = ".\\Palavyr.Data.Migrator\\Scripts\\"
+
+CheckDirForExistingVersions $scriptDir $nextMigrationScriptVersion
+
 
 if ($name -eq "") {
     Write-Host "Name arg is required. Choose a sensible descriptive name. Long names are okay."
@@ -127,76 +129,38 @@ try {
     dotnet tool install --global dotnet-ef --version=3.1.0
 }
 catch {
-    Write-Host "dotnet ef tool already installed" -ForegroundColor RED
+    Write-Host "dotnet ef tool already installed" -ForegroundColor Green
 }
 
 ## CLEAN AND BUILD
 dotnet clean
 dotnet build
 
-$Migrations = "Data\\Migrations"
+$Migrations = "Data\\CodeFirstMigrations"
 
 # Execute the migrations on the local space
 try {
-    Write-Host "`r`nAdding migration for Accounts"
-    dotnet ef migrations add $name --project .\\Palavyr.Core --startup-project .\\Palavyr.API --output-dir "$Migrations\\AccountsMigrations" --context AccountsContext
-    $AccountsResult = $?;
+    Write-Host "`r`nAdding new migration..."
+    dotnet ef migrations add $name --project .\\Palavyr.Core --startup-project .\\Palavyr.API --output-dir "$Migrations" --context AppDataContexts
+    $result = $?;
 }
 catch {
-    write-host "Accounts Migration for $name not applied"
-    $AccountsResult = $?;
-}
-
-try {
-    Write-Host "`r`nAdding migration for Configuration at: "
-    dotnet ef migrations add $name --project .\\Palavyr.Core --startup-project .\\Palavyr.API --output-dir "$Migrations\\ConfigurationMigrations" --context DashContext
-    $ConfigResult = $?;
-}
-catch {
-    write-host "Configuraton migration for $name not applied"
-    $ConfigResult = $?;
-}
-
-try {
-    Write-Host "`r`nAdding migration for Convos"
-    dotnet ef migrations add $name --project .\\Palavyr.Core --startup-project .\\Palavyr.API --output-dir "$Migrations\\ConvoMigrations" --context ConvoContext
-    $ConvoResult = $?;
-}
-catch {
-    write-host "Configuration migration for $name not applied"
-    $ConvoResult = $?;
+    write-host "Migration for $name not applied"
+    $result = $?;
 }
 
 
-Write-Host "`r`nExporting migrations as SQL Scripts..."
+Write-Host "`r`nExporting migrations as SQL Scripts for use in production..."
 
-
-if ($AccountsResult) {
-    Write-Host "`r`nExporting Accounts Migrations as SQL Scripts..."
-    Write-Host "`r`nExporting To: $accountsOutput\\$nextMigrationScriptVersion-accounts_migration-$name.sql"
-    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context AccountsContext --output "$accountsOutput\\Script$nextMigrationScriptVersion-accounts_migration-$name.sql" --idempotent
+if ($result) {
+    Write-Host "`r`nExporting Migrations as SQL Scripts..."
+    Write-Host "`r`nExporting To: $scriptDir\\$nextMigrationScriptVersion-$name.sql"
+    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context AppDataContexts --output "${scriptDir}Script$nextMigrationScriptVersion-$name.sql" --idempotent
 }
 else {
-    Write-Host "`r`nNot creating sql script for Accounts DB - no new migrations.";
+    Write-Host "`r`nNot creating sql script for  DB - no new migrations found in the CodeFirstMigrations directory.";
 }
 
-if ($ConfigResult) {
-    Write-Host "`r`nExporting Configuration Migrations as SQL Scripts..."
-    Write-Host "`r`nExporting To: $configOutput\\$nextMigrationScriptVersion-configuration_migration-$name.sql"
-    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context DashContext --output "$configOutput\\Script$nextMigrationScriptVersion-configuration_migration-$name.sql" --idempotent
-}
-else {
-    Write-Host "`r`nNotCreating sql script for Config DB - no new migrations."
-}
-
-if ($ConvoResult) {
-    Write-Host "`r`nExporting Conversation Migrations as SQL Scripts..."
-    Write-Host "`r`nExporting To: $convoOutput\\$nextMigrationScriptVersion-convo_migration-$name.sql"
-    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context ConvoContext --output "$convoOutput\\Script$nextMigrationScriptVersion-convo_migration-$name.sql" --idempotent
-}
-else {
-    Write-Host "`r`nNotCreating sql script for Config DB - no new migrations."
-}
 
 if ($supressmigration) {
     Write-Host "`r`nSkipping applying the migrations. You will need to run ./startMigrator.ps1 manually to apply these migrations. Finished."

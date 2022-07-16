@@ -28,7 +28,7 @@ services:
     env_file:
       - localdev.env
 
-  db:
+  postgres-server:
     image: postgres:14.1-alpine
     restart: always
     environment:

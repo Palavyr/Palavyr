@@ -30,15 +30,12 @@ namespace Palavyr.API.Registration.Container
 
         public static void RegisterDatabaseContexts(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AccountsContext>(
+            services.AddDbContextPool<AppDataContexts>(
                 opt =>
-                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.AccountDbStringKey)));
-            services.AddDbContext<ConvoContext>(
-                opt =>
-                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.ConvoDbStringKey)));
-            services.AddDbContext<DashContext>(
-                opt =>
-                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.ConfigurationDbStringKey)));
+                {
+                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.ConnectionStringPostgres));
+                });
+
         }
     }
 }

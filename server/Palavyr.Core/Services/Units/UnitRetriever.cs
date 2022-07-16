@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Services.Units
 {
@@ -19,9 +19,9 @@ namespace Palavyr.Core.Services.Units
 
     public class UnitRetriever : IUnitRetriever
     {
-        private readonly Models.Configuration.Schemas.Units units;
+        private readonly Data.Entities.Units units;
 
-        public UnitRetriever(Models.Configuration.Schemas.Units units)
+        public UnitRetriever(Data.Entities.Units units)
         {
             this.units = units;
         }

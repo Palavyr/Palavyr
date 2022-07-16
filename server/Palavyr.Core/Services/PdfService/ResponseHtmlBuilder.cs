@@ -3,8 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AmazonServices;
@@ -21,14 +20,14 @@ namespace Palavyr.Core.Services.PdfService
         private readonly ILinkCreator linkCreator;
         private readonly IConfiguration configuration;
         private readonly IEntityStore<Account> accountStore;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
 
         public ResponseHtmlBuilder(
             ILinkCreator linkCreator,
             IConfiguration configuration,
             IEntityStore<Logo> logoStore,
             IEntityStore<Account> accountStore,
-            IEntityStore<Area> intentStore)
+            IEntityStore<Intent> intentStore)
         {
             this.logoStore = logoStore;
             this.linkCreator = linkCreator;

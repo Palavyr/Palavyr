@@ -4,6 +4,7 @@ using MediatR;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Stripe;
+using Account = Palavyr.Core.Data.Entities.Account;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
@@ -31,7 +32,7 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
             {
                 account.CurrentPeriodEnd = subscription.CurrentPeriodEnd;
                 // if we are canceling at period end, then we've cancelled the subscription
-                account.PlanType = Models.Accounts.Schemas.Account.PlanTypeEnum.Free;
+                account.PlanType = Account.PlanTypeEnum.Free;
             }
             else
             {

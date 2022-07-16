@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
@@ -18,23 +17,23 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class CreateNewConversationHistoryHandler : IRequestHandler<CreateNewConversationHistoryRequest, CreateNewConversationHistoryResponse>
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<ConversationHistoryMeta> convoRecordStore;
         private readonly IAccountIdTransport accountIdTransport;
         private readonly IMapToNew<ConversationNode, WidgetNodeResource> mapper;
-        private readonly IMapToNew<ConversationRecord, ConversationRecordResource> recordResourceMapper;
+        private readonly IMapToNew<ConversationHistoryMeta, ConversationRecordResource> recordResourceMapper;
         private readonly IEndingSequenceAttacher endingSequenceAttacher;
         private readonly ILogger<CreateNewConversationHistoryHandler> logger;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
 
         public CreateNewConversationHistoryHandler(
             IEntityStore<ConversationNode> convoNodeStore,
-            IEntityStore<ConversationRecord> convoRecordStore,
+            IEntityStore<ConversationHistoryMeta> convoRecordStore,
             IAccountIdTransport accountIdTransport,
             IMapToNew<ConversationNode, WidgetNodeResource> mapper,
-            IMapToNew<ConversationRecord, ConversationRecordResource> recordResourceMapper,
+            IMapToNew<ConversationHistoryMeta, ConversationRecordResource> recordResourceMapper,
             IEndingSequenceAttacher endingSequenceAttacher,
             ILogger<CreateNewConversationHistoryHandler> logger,
-            IEntityStore<Area> intentStore)
+            IEntityStore<Intent> intentStore)
         {
             this.convoNodeStore = convoNodeStore;
             this.convoRecordStore = convoRecordStore;
@@ -62,7 +61,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var newConvoResource = NewConversationResource.CreateNew(widgetNodes.ToList());
 
             var intent = await intentStore.Get(intentId, s => s.AreaIdentifier);
-            var newConversationRecord = ConversationRecord.CreateDefault(newConvoResource.ConversationId, accountIdTransport.AccountId, intent.AreaName, intentId);
+            var newConversationRecord = ConversationHistoryMeta.CreateDefault(newConvoResource.ConversationId, accountIdTransport.AccountId, intent.AreaName, intentId);
 
             if (!string.IsNullOrEmpty(recordUpdate.Email))
             {
@@ -104,9 +103,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public bool IsComplete { get; set; }
     }
 
-    public class ConversationRecordResourceMapper : IMapToNew<ConversationRecord, ConversationRecordResource>
+    public class ConversationRecordResourceMapper : IMapToNew<ConversationHistoryMeta, ConversationRecordResource>
     {
-        public async Task<ConversationRecordResource> Map(ConversationRecord from, CancellationToken cancellationToken = default)
+        public async Task<ConversationRecordResource> Map(ConversationHistoryMeta from, CancellationToken cancellationToken = default)
         {
             await Task.Yield();
             return new ConversationRecordResource
@@ -115,13 +114,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 ResponsePdfId = from.ResponsePdfId,
                 TimeStamp = from.TimeStamp,
                 AccountId = from.AccountId,
-                AreaName = from.AreaName,
+                AreaName = from.IntentName,
                 EmailTemplateUsed = from.EmailTemplateUsed,
                 Seen = from.Seen,
                 Name = from.Name,
                 Email = from.Email,
                 PhoneNumber = from.PhoneNumber,
-                AreaIdentifier = from.AreaIdentifier,
+                AreaIdentifier = from.IntentId,
                 IsDeleted = from.IsDeleted,
                 IsFallback = from.IsFallback,
                 Locale = from.Locale, // TODO: Correct This

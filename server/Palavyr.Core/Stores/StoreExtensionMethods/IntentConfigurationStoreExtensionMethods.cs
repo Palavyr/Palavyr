@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Stores.StoreExtensionMethods
 {
     public static class IntentStoreExtensionMethods
     {
-        public static async Task<Area> GetIntentComplete(this IEntityStore<Area> intentStore, string intentId)
+        public static async Task<Intent> GetIntentComplete(this IEntityStore<Intent> intentStore, string intentId)
         {
             var intentComplete = await intentStore
                 .Query()
@@ -22,7 +22,7 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
             return intentComplete;
         }
 
-        public static async Task<Area> GetIntentOnly(this IEntityStore<Area> intentStore, string intentId)
+        public static async Task<Intent> GetIntentOnly(this IEntityStore<Intent> intentStore, string intentId)
         {
             var intentComplete = await intentStore
                 .Get(intentId, s => s.AreaIdentifier);
@@ -32,7 +32,7 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
             return intentComplete;
         }
 
-        public static async Task<List<Area>> GetActiveIntentsWithConvoAndDynamicAndStaticTables(this IEntityStore<Area> intentStore)
+        public static async Task<List<Intent>> GetActiveIntentsWithConvoAndDynamicAndStaticTables(this IEntityStore<Intent> intentStore)
         {
             return await intentStore
                 .Query()

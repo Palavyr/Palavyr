@@ -1,12 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.Core.Mappers
 {
-    public class EnquiryReviewMapper : IMapToNew<ConversationRecord, EnquiryResource>
+    public class EnquiryReviewMapper : IMapToNew<ConversationHistoryMeta, EnquiryResource>
     {
         private readonly ILinkCreator linkCreator;
 
@@ -15,7 +15,7 @@ namespace Palavyr.Core.Mappers
             this.linkCreator = linkCreator;
         }
 
-        public async Task<EnquiryResource> Map(ConversationRecord @from, CancellationToken cancellationToken)
+        public async Task<EnquiryResource> Map(ConversationHistoryMeta @from, CancellationToken cancellationToken)
         {
             var fileAssetResource = new FileAssetResource();
 
@@ -33,7 +33,7 @@ namespace Palavyr.Core.Mappers
                 FileAssetResource = fileAssetResource,
                 TimeStamp = @from.TimeStamp.ToString(),
                 AccountId = @from.AccountId,
-                AreaName = @from.AreaName,
+                AreaName = @from.IntentName,
                 EmailTemplateUsed = @from.EmailTemplateUsed,
                 Seen = @from.Seen,
                 Name = @from.Name,

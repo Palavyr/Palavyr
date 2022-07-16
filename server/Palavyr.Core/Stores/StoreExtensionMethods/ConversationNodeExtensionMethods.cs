@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Stores.StoreExtensionMethods
 {
     public static class ConversationNodeExtensionMethods
     {
-        public static async Task<List<ConversationNode>> UpdateConversation(this IEntityStore<Area> intentStore, string intentId, List<ConversationNode> convoUpdate)
+        public static async Task<List<ConversationNode>> UpdateConversation(this IEntityStore<Intent> intentStore, string intentId, List<ConversationNode> convoUpdate)
         {
             var intent = await intentStore
                 .Query()

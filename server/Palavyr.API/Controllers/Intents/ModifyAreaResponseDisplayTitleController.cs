@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Stores;
 
@@ -11,11 +11,11 @@ namespace Palavyr.API.Controllers.Intents
     [Authorize]
     public class ModifyAreaResponseDisplayTitleController : PalavyrBaseController
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private ILogger<ModifyAreaResponseDisplayTitleController> logger;
 
         public ModifyAreaResponseDisplayTitleController(
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             ILogger<ModifyAreaResponseDisplayTitleController> logger
         )
         {

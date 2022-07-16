@@ -1,10 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Data.Setup.SeedData;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Stores;
 
@@ -16,21 +15,21 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly ILogger<AccountRegistrationMaker> logger;
         private readonly IEmailVerificationService emailVerificationService;
         private readonly IPalavyrAccessChecker accessChecker;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
-        private readonly IEntityStore<SelectOneFlat> defaultPricingStrategyStore;
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<SimpleSelectTableRow> defaultPricingStrategyStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
 
         public AccountRegistrationMaker(
             ILogger<AccountRegistrationMaker> logger,
             IEmailVerificationService emailVerificationService,
             IPalavyrAccessChecker accessChecker,
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IEntityStore<Subscription> subscriptionStore,
             IEntityStore<WidgetPreference> widgetPreferenceStore,
-            IEntityStore<SelectOneFlat> defaultPricingStrategyStore,
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
+            IEntityStore<SimpleSelectTableRow> defaultPricingStrategyStore,
+            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore,
             IEntityStore<ConversationNode> convoNodeStore
         )
         {

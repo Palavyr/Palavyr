@@ -1,16 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
 {
-    public class SelectOneFlatMapper : IMapToNew<SelectOneFlatResource, SelectOneFlat>
+    public class SelectOneFlatMapper : IMapToNew<SelectOneFlatResource, SimpleSelectTableRow>
     {
-        public async Task<SelectOneFlat> Map(SelectOneFlatResource from, CancellationToken cancellationToken = default)
+        public async Task<SimpleSelectTableRow> Map(SelectOneFlatResource from, CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
-            return new SelectOneFlat
+            return new SimpleSelectTableRow
             {
                 Id = from.Id,
                 Option = from.Option,

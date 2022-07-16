@@ -1,7 +1,7 @@
 ﻿
 using System.Linq;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Accounts.Schemas;
 
 namespace Palavyr.Core.Services.StripeServices.Products
 {

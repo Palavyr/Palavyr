@@ -28,9 +28,9 @@ namespace Palavyr.API.Registration.Container
             var accessKey = configuration.GetAccessKey();
             var secretKey = configuration.GetSecretKey();
 
-            var loggerFactory = new LoggerFactory().AddLambdaLogger();
-            var logger = loggerFactory.CreateLogger<AmazonModule>();
-            logger.LogDebug("LOGGING!");
+            // var loggerFactory = new LoggerFactory().AddLambdaLogger();
+            // var logger = loggerFactory.CreateLogger<AmazonModule>();
+            // logger.LogDebug("LOGGING!");
 
             // logger.LogDebug("====================================");
             // Console.WriteLine("====================================");

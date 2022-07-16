@@ -1,13 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
 {
-    public class SelectOneFlatToExistingMapper : IMapToPreExisting<SelectOneFlatResource, SelectOneFlat>
+    public class SelectOneFlatToExistingMapper : IMapToPreExisting<SelectOneFlatResource, SimpleSelectTableRow>
     {
-        public async Task Map(SelectOneFlatResource from, SelectOneFlat to, CancellationToken cancellationToken)
+        public async Task Map(SelectOneFlatResource from, SimpleSelectTableRow to, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
             to.Id = from.Id;
@@ -22,9 +22,9 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
         }
     }
 
-    public class BasicThresholdToExistingMapper : IMapToPreExisting<BasicThresholdResource, BasicThreshold>
+    public class BasicThresholdToExistingMapper : IMapToPreExisting<BasicThresholdResource, SimpleThresholdTableRow>
     {
-        public async Task Map(BasicThresholdResource from, BasicThreshold to, CancellationToken cancellationToken)
+        public async Task Map(BasicThresholdResource from, SimpleThresholdTableRow to, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 
@@ -43,9 +43,9 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
         }
     }
 
-    public class CategoryNestedThresholdToExistingMapper : IMapToPreExisting<CategoryNestedThresholdResource, CategoryNestedThreshold>
+    public class CategoryNestedThresholdToExistingMapper : IMapToPreExisting<CategoryNestedThresholdResource, CategoryNestedThresholdTableRow>
     {
-        public async Task Map(CategoryNestedThresholdResource from, CategoryNestedThreshold to, CancellationToken cancellationToken)
+        public async Task Map(CategoryNestedThresholdResource from, CategoryNestedThresholdTableRow to, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 
@@ -66,9 +66,9 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
         }
     }
 
-    public class PercentOfThresholdToExistingMapper : IMapToPreExisting<PercentOfThresholdResource, PercentOfThreshold>
+    public class PercentOfThresholdToExistingMapper : IMapToPreExisting<PercentOfThresholdResource, PercentOfThresholdTableRow>
     {
-        public async Task Map(PercentOfThresholdResource from, PercentOfThreshold to, CancellationToken cancellationToken)
+        public async Task Map(PercentOfThresholdResource from, PercentOfThresholdTableRow to, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 
@@ -91,9 +91,9 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
         }
     }
 
-    public class TwoNestedCategoryToExistingMapper : IMapToPreExisting<TwoNestedCategoryResource, TwoNestedCategory>
+    public class TwoNestedCategoryToExistingMapper : IMapToPreExisting<TwoNestedCategoryResource, TwoNestedSelectTableRow>
     {
-        public async Task Map(TwoNestedCategoryResource from, TwoNestedCategory to, CancellationToken cancellationToken)
+        public async Task Map(TwoNestedCategoryResource from, TwoNestedSelectTableRow to, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 

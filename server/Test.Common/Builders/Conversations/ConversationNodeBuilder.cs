@@ -1,5 +1,5 @@
 ﻿using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Test.Common.Constants;
 
 namespace Test.Common.Builders.Conversations

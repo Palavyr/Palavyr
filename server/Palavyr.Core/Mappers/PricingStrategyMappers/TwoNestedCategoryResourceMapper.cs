@@ -1,13 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers
 {
-    public class TwoNestedCategoryResourceMapper : IMapToNew<TwoNestedCategory, TwoNestedCategoryResource>
+    public class TwoNestedCategoryResourceMapper : IMapToNew<TwoNestedSelectTableRow, TwoNestedCategoryResource>
     {
-        public async Task<TwoNestedCategoryResource> Map(TwoNestedCategory @from, CancellationToken cancellationToken)
+        public async Task<TwoNestedCategoryResource> Map(TwoNestedSelectTableRow @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
             return new TwoNestedCategoryResource

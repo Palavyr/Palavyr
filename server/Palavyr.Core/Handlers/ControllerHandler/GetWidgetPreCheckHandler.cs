@@ -3,8 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
@@ -17,14 +17,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private readonly IEntityStore<WidgetPreference> widgetStore;
         private readonly IWidgetStatusChecker widgetStatusChecker;
         private readonly ILogger<GetWidgetPreCheckHandler> logger;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IAccountIdTransport accountIdTransport;
 
         public GetWidgetPreCheckHandler(
             IEntityStore<WidgetPreference> widgetStore,
             IWidgetStatusChecker widgetStatusChecker,
             ILogger<GetWidgetPreCheckHandler> logger,
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IAccountIdTransport accountIdTransport)
         {
             this.widgetStore = widgetStore;

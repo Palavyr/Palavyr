@@ -3,8 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 
@@ -12,11 +12,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetAllIntentsShallowRequestHandler : IRequestHandler<GetAllIntentsRequest, GetAllIntentsResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly ILogger<GetAllIntentsShallowRequestHandler> logger;
-        private readonly IMapToNew<Area, IntentResource> mapper;
+        private readonly IMapToNew<Intent, IntentResource> mapper;
 
-        public GetAllIntentsShallowRequestHandler(IEntityStore<Area> intentStore, ILogger<GetAllIntentsShallowRequestHandler> logger, IMapToNew<Area, IntentResource> mapper)
+        public GetAllIntentsShallowRequestHandler(IEntityStore<Intent> intentStore, ILogger<GetAllIntentsShallowRequestHandler> logger, IMapToNew<Intent, IntentResource> mapper)
         {
             this.intentStore = intentStore;
             this.logger = logger;

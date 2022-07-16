@@ -2,8 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
@@ -15,14 +14,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class PasswordRequestHandler : IRequestHandler<PasswordRequestRequest, PasswordRequestResponse>
     {
         private readonly IEntityStore<Session> sessionStore;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IEntityStore<Account> accountStore;
         private readonly IRemoveStaleSessions removeStaleSessions;
         private readonly ISesEmail client;
 
         public PasswordRequestHandler(
             IEntityStore<Session> sessionStore,
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IEntityStore<Account> accountStore,
             IRemoveStaleSessions removeStaleSessions,
             ISesEmail client)

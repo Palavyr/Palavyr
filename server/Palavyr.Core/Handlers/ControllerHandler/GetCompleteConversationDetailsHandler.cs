@@ -6,27 +6,26 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetCompleteConversationDetailsHandler : IRequestHandler<GetCompleteConversationDetailsRequest, GetCompleteConversationDetailsResponse>
     {
-        private readonly ConvoContext convoContext;
+        private readonly IEntityStore<ConversationHistoryRow> convoHistoryRowStore;
         private readonly ILogger<GetCompleteConversationDetailsHandler> logger;
 
-        public GetCompleteConversationDetailsHandler(ConvoContext convoContext, ILogger<GetCompleteConversationDetailsHandler> logger)
+        public GetCompleteConversationDetailsHandler(IEntityStore<ConversationHistoryRow> convoHistoryRowStore, ILogger<GetCompleteConversationDetailsHandler> logger)
         {
-            this.convoContext = convoContext;
+            this.convoHistoryRowStore = convoHistoryRowStore;
             this.logger = logger;
         }
 
         public async Task<GetCompleteConversationDetailsResponse> Handle(GetCompleteConversationDetailsRequest request, CancellationToken cancellationToken)
         {
             logger.LogDebug("Collecting Conversation for viewing...");
-            var convoRows = await convoContext
-                .ConversationHistories
-                .Where(row => row.ConversationId == request.ConversationId)
-                .ToListAsync(cancellationToken);
+            var convoRows = await convoHistoryRowStore.GetMany(request.ConversationId, s => s.ConversationId);
             convoRows.Sort((x, y) => x.Id > y.Id ? 1 : -1);
 
             var resources = new List<ConversationRowsResource>();

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Data.Entities.DynamicTables;
 
 namespace Palavyr.Core.Models.Configuration.Constant
 {
@@ -9,7 +9,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
     {
         public IEnumerable<IHaveAPrettyNameAndTableType> ListPricingStrategies()
         {
-            var types = typeof(SelectOneFlat)
+            var types = typeof(SimpleSelectTableRow)
                 .Assembly
                 .GetTypes()
                 .Where(

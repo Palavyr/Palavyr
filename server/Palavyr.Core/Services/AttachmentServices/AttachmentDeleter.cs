@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
 using Palavyr.Core.Stores;
@@ -16,13 +16,13 @@ namespace Palavyr.Core.Services.AttachmentServices
 
     public class AttachmentDeleter : IAttachmentDeleter
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IFileAssetDeleter fileAssetDeleter;
         private readonly IFileAssetLinker<AttachmentLinker> linker;
 
 
         public AttachmentDeleter(
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IFileAssetDeleter fileAssetDeleter,
             IFileAssetLinker<AttachmentLinker> linker)
         {

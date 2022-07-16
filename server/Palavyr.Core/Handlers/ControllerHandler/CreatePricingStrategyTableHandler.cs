@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Resources.PricingStrategyResources;
@@ -22,17 +22,17 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         where TR : class, IPricingStrategyTableRowResource
         where TCompiler : class, IPricingStrategyTableCompiler
     {
-        private readonly IMapToNew<DynamicTableMeta, PricingStrategyTableMetaResource> mapper;
+        private readonly IMapToNew<PricingStrategyTableMeta, PricingStrategyTableMetaResource> mapper;
         private readonly IEntityStore<T> pricingStrategyStore;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly ILogger<CreatePricingStrategyTableHandler<T, TR, TCompiler>> logger;
         private readonly IPricingStrategyTemplateCreator<T> templateCreator;
         private readonly IAccountIdTransport accountIdTransport;
 
         public CreatePricingStrategyTableHandler(
-            IMapToNew<DynamicTableMeta, PricingStrategyTableMetaResource> mapper,
+            IMapToNew<PricingStrategyTableMeta, PricingStrategyTableMetaResource> mapper,
             IEntityStore<T> pricingStrategyStore,
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             ILogger<CreatePricingStrategyTableHandler<T, TR, TCompiler>> logger,
             IPricingStrategyTemplateCreator<T> templateCreator,
             IAccountIdTransport accountIdTransport)
@@ -54,7 +54,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var tableId = Guid.NewGuid().ToString();
             var tableTag = "Default-" + StaticGuidUtils.CreatePseudoRandomString(5);
 
-            var newTableMeta = DynamicTableMeta.CreateNew(
+            var newTableMeta = PricingStrategyTableMeta.CreateNew(
                 tableTag,
                 templateCreator.GetPrettyName(),
                 templateCreator.GetTableType(),

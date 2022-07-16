@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
@@ -16,15 +15,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<CreateIntentHandler> logger;
         private readonly IAccountIdTransport accountIdTransport;
-        private readonly IEntityStore<Area> intentStore;
-        private readonly IMapToNew<Area, IntentResource> mapper;
+        private readonly IEntityStore<Intent> intentStore;
+        private readonly IMapToNew<Intent, IntentResource> mapper;
 
         public CreateIntentHandler(
             IEntityStore<Account> accountStore,
             ILogger<CreateIntentHandler> logger,
             IAccountIdTransport accountIdTransport,
-            IEntityStore<Area> intentStore,
-            IMapToNew<Area, IntentResource> mapper)
+            IEntityStore<Intent> intentStore,
+            IMapToNew<Intent, IntentResource> mapper)
         {
             this.accountStore = accountStore;
             this.logger = logger;
@@ -41,7 +40,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var isVerified = account.DefaultEmailIsVerified;
 
             logger.LogInformation($"Creating new area for account: {accountIdTransport.AccountId} called {request.AreaName}");
-            var newIntent = Area.CreateNewIntent(request.AreaName, accountIdTransport.AccountId, defaultEmail, isVerified);
+            var newIntent = Intent.CreateNewIntent(request.AreaName, accountIdTransport.AccountId, defaultEmail, isVerified);
             var intent = await intentStore.Create(newIntent);
 
             var resource = await mapper.Map(intent);

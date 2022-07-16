@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,10 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Stores
@@ -26,27 +24,11 @@ namespace Palavyr.Core.Stores
         public CancellationToken CancellationToken => CancellationTokenTransport.CancellationToken;
         public string AccountId => AccountIdTransport.AccountId;
 
-        private Type[] accountContextTypes = new[] // separated out because of a poor decision I made early on. All new tables will go into the configuration context
-        {
-            typeof(Account),
-            typeof(EmailVerification),
-            typeof(Session),
-            typeof(StripeWebhookReceivedRecord),
-            typeof(Subscription)
-        };
-
-        private Type[] convoTypes = new[]
-        {
-            typeof(ConversationHistory),
-            typeof(ConversationRecord)
-        };
-
         public EntityStore(IUnitOfWorkContextProvider contextProvider, IAccountIdTransport accountIdTransport, ICancellationTokenTransport cancellationTokenTransport)
         {
             this.AccountIdTransport = accountIdTransport;
             this.CancellationTokenTransport = cancellationTokenTransport;
-            ChooseContext(contextProvider);
-            this.QueryExecutor = ChooseContext(contextProvider).Set<TEntity>();
+            this.QueryExecutor = contextProvider.AppDataContexts().Set<TEntity>();
         }
 
         private IQueryable<TEntity> RestrictToCurrentAccount(DbSet<TEntity> queryExecutor)
@@ -67,23 +49,6 @@ namespace Palavyr.Core.Stores
             }
 
             return localEntities;
-        }
-
-
-        private DbContext ChooseContext(IUnitOfWorkContextProvider contextProvider)
-        {
-            if (accountContextTypes.Contains(typeof(TEntity)))
-            {
-                return contextProvider.AccountsContext();
-            }
-            else if (convoTypes.Contains(typeof(TEntity)))
-            {
-                return contextProvider.ConvoContext();
-            }
-            else
-            {
-                return contextProvider.ConfigurationContext();
-            }
         }
 
         private void AssertAccountIsCorrect(TEntity entity)
@@ -258,7 +223,6 @@ namespace Palavyr.Core.Stores
             var toReturn = new List<TEntity>();
             foreach (var entity in entities)
             {
-                
                 if (entity.Id is null)
                 {
                     var entityEntry = await QueryExecutor.AddAsync(entity, CancellationToken);

@@ -2,9 +2,8 @@
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Services.FileAssetServices;
@@ -19,14 +18,14 @@ namespace Palavyr.Core.Services.PdfService
 {
     public class ResponsePdfGenerator : IResponsePdfGenerator
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IPdfResponseKeyResolver pdfResponseKeyResolver;
         private readonly IHtmlToPdfClient htmlToPdfClient;
         private readonly IResponseHtmlBuilder responseHtmlBuilder;
         private readonly IResponsePdfTableCompiler responsePdfTableCompiler;
 
         public ResponsePdfGenerator(
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IPdfResponseKeyResolver pdfResponseKeyResolver,
             IHtmlToPdfClient htmlToPdfClient,
             IResponseHtmlBuilder responseHtmlBuilder,
@@ -73,7 +72,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IResponsePdfGenerator inner;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
         private readonly IUnitOfWorkContextProvider contextProvider;
-        private readonly IEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<ConversationHistoryMeta> convoRecordStore;
         private readonly IEntityStore<FileAsset> fileAssetStore;
         private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
 
@@ -81,7 +80,7 @@ namespace Palavyr.Core.Services.PdfService
             IResponsePdfGenerator inner,
             ICancellationTokenTransport cancellationTokenTransport,
             IUnitOfWorkContextProvider contextProvider,
-            IEntityStore<ConversationRecord> convoRecordStore,
+            IEntityStore<ConversationHistoryMeta> convoRecordStore,
             IEntityStore<FileAsset> fileAssetStore)
         {
             this.inner = inner;
@@ -96,7 +95,7 @@ namespace Palavyr.Core.Services.PdfService
             var fileAsset = await inner.GeneratePdfResponse(criticalResponses, emailRequest, culture, intentId, isDemo);
 
             await fileAssetStore.Create(fileAsset);
-            await contextProvider.ConfigurationContext().SaveChangesAsync(CancellationToken);
+            await contextProvider.AppDataContexts().SaveChangesAsync(CancellationToken); // TODO: need to break the unit of work?
 
             if (!isDemo)
             {

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Test.Common.Builders.Conversations.NodeAdders

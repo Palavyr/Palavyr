@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Resources
 {
@@ -17,7 +17,7 @@ namespace Palavyr.Core.Resources
         public List<StaticTablesMeta> StaticTablesMetas { get; set; } = new List<StaticTablesMeta>();
         public List<ConversationNode> ConversationNodes { get; set; } = new List<ConversationNode>();
         public string AccountId { get; set; }
-        public List<DynamicTableMeta> DynamicTableMetas { get; set; } = new List<DynamicTableMeta>();
+        public List<PricingStrategyTableMeta> DynamicTableMetas { get; set; } = new List<PricingStrategyTableMeta>();
         public string AreaSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
         public List<AttachmentLinkRecord> AttachmentRecords { get; set; }

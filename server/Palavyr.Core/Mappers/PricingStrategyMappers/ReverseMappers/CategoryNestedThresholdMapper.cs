@@ -1,16 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
 {
-    public class CategoryNestedThresholdMapper : IMapToNew<CategoryNestedThresholdResource, CategoryNestedThreshold>
+    public class CategoryNestedThresholdMapper : IMapToNew<CategoryNestedThresholdResource, CategoryNestedThresholdTableRow>
     {
-        public async Task<CategoryNestedThreshold> Map(CategoryNestedThresholdResource from, CancellationToken cancellationToken = default)
+        public async Task<CategoryNestedThresholdTableRow> Map(CategoryNestedThresholdResource from, CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
-            return new CategoryNestedThreshold
+            return new CategoryNestedThresholdTableRow
             {
                 Id = from.Id,
                 Range = from.Range,

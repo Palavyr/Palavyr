@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Component.AppFactory.ComponentTestBase.BaseFixture;
+using Component.ComponentTestBase;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Stores;
 using Shouldly;
 using Test.Common.Random;
@@ -64,14 +62,14 @@ namespace Component.Tests.Stores
                 var newEntities = Enumerable
                     .Range(0, 10)
                     .Select(
-                        x => ConversationHistory.CreateNew(
+                        x => ConversationHistoryRow.CreateNew(
                             convoId,
                             A.RandomString(),
                             A.RandomString(),
                             A.RandomId(),
                             false,
                             NodeTypeOptionResource.InfoProvide, AccountId));
-                var store = ResolveStore<ConversationHistory>();
+                var store = ResolveStore<ConversationHistoryRow>();
 
                 // act
                 await store.CreateMany(newEntities);
@@ -88,7 +86,7 @@ namespace Component.Tests.Stores
                 var newEntities = Enumerable
                     .Range(0, 10)
                     .Select(
-                        x => ConversationHistory.CreateNew(
+                        x => ConversationHistoryRow.CreateNew(
                             convoId,
                             A.RandomString(),
                             A.RandomString(),
@@ -96,7 +94,7 @@ namespace Component.Tests.Stores
                             false,
                             NodeTypeOptionResource.InfoProvide,
                             MisMatchedAccount));
-                var store = ResolveStore<ConversationHistory>();
+                var store = ResolveStore<ConversationHistoryRow>();
 
 
                 await Should.ThrowAsync<AccountMisMatchException>(async () => await store.CreateMany(newEntities));
@@ -260,11 +258,11 @@ namespace Component.Tests.Stores
             [Fact]
             public async Task AllAreGotten()
             {
-                var store = ResolveStore<ConversationHistory>();
+                var store = ResolveStore<ConversationHistoryRow>();
                 var newEntities = Enumerable
                     .Range(0, 5)
                     .Select(
-                        x => ConversationHistory.CreateNew(
+                        x => ConversationHistoryRow.CreateNew(
                             A.RandomId(),
                             A.RandomString(),
                             A.RandomString(),
@@ -322,8 +320,8 @@ namespace Component.Tests.Stores
             public async Task SingleEntityIsDeleted()
             {
                 // arrange
-                var store = ResolveStore<Area>();
-                var entity = await store.Create(Area.CreateNewIntent(A.RandomName(), AccountId, EmailAddress, true));
+                var store = ResolveStore<Intent>();
+                var entity = await store.Create(Intent.CreateNewIntent(A.RandomName(), AccountId, EmailAddress, true));
 
                 await store.Delete(entity);
 
@@ -335,11 +333,11 @@ namespace Component.Tests.Stores
             public async Task AMisMatchErrorIsThrown()
             {
                 // arrange
-                var store = ResolveStore<Area>();
+                var store = ResolveStore<Intent>();
                 var context = ResolveType<IUnitOfWorkContextProvider>();
 
                 var accountA = A.RandomId();
-                var newA = Area.CreateNewIntent(A.RandomName(), accountA, EmailAddress, true);
+                var newA = Intent.CreateNewIntent(A.RandomName(), accountA, EmailAddress, true);
                 await store.DangerousRawQuery().AddAsync(newA);
                 await context.DangerousCommitAllContexts();
 
@@ -365,13 +363,13 @@ namespace Component.Tests.Stores
             public async Task MultipleEntitiesAreDeletedByIds()
             {
                 // arrange
-                var store = ResolveStore<Area>();
+                var store = ResolveStore<Intent>();
                 var context = ResolveType<IUnitOfWorkContextProvider>();
 
                 var accountA = A.RandomId();
                 var accountB = A.RandomId();
-                var newA = Area.CreateNewIntent(A.RandomName(), accountA, EmailAddress, true);
-                var newB = Area.CreateNewIntent(A.RandomName(), accountB, EmailAddress, true);
+                var newA = Intent.CreateNewIntent(A.RandomName(), accountA, EmailAddress, true);
+                var newB = Intent.CreateNewIntent(A.RandomName(), accountB, EmailAddress, true);
 
                 await store.DangerousRawQuery().AddAsync(newA);
                 await store.DangerousRawQuery().AddAsync(newB);
@@ -393,10 +391,10 @@ namespace Component.Tests.Stores
             public async Task MultipleEntitiesAreDeleted()
             {
                 // arrange
-                var store = ResolveStore<Area>();
+                var store = ResolveStore<Intent>();
 
-                var newA = Area.CreateNewIntent(A.RandomName(), AccountId, EmailAddress, true);
-                var newB = Area.CreateNewIntent(A.RandomName(), AccountId, EmailAddress, true);
+                var newA = Intent.CreateNewIntent(A.RandomName(), AccountId, EmailAddress, true);
+                var newB = Intent.CreateNewIntent(A.RandomName(), AccountId, EmailAddress, true);
 
                 await store.CreateMany(new[] { newA, newB });
 

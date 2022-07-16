@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
 using Test.Common.Random;
@@ -108,17 +108,17 @@ namespace IntegrationTests.DataCreators
 
             var newTable = await test
                 .Client
-                .Post<CreatePricingStrategyTableRequest<SelectOneFlat, SelectOneFlatResource, SelectOneFlatCompiler>, List<SelectOneFlatResource>>(
+                .Post<CreatePricingStrategyTableRequest<SimpleSelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>, List<SelectOneFlatResource>>(
                     test.CancellationToken,
-                    s => CreatePricingStrategyTableRequest<SelectOneFlat, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(resource.AreaIdentifier));
+                    s => CreatePricingStrategyTableRequest<SimpleSelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(resource.AreaIdentifier));
 
 
             newTable.Add(resource);
             var response = await test.Client
-                .Post<SavePricingStrategyTableRequest<SelectOneFlat, SelectOneFlatResource, SelectOneFlatCompiler>, SavePricingStrategyTableResponse<SelectOneFlatResource>>(
+                .Post<SavePricingStrategyTableRequest<SimpleSelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>, SavePricingStrategyTableResponse<SelectOneFlatResource>>(
                     newTable,
                     test.CancellationToken,
-                    s => SavePricingStrategyTableRequest<SelectOneFlat, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(intentId ?? newTable.First().AreaIdentifier, newTable.First().TableId));
+                    s => SavePricingStrategyTableRequest<SimpleSelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(intentId ?? newTable.First().AreaIdentifier, newTable.First().TableId));
             newTable = response.Resource.TableRows;
             return newTable;
         }

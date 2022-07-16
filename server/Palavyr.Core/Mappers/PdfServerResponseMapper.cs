@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Sessions;
 

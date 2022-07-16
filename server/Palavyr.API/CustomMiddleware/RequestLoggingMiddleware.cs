@@ -86,11 +86,4 @@ namespace Palavyr.API.CustomMiddleware
             return textWriter.ToString();
         }
     }
-    public static class RequestResponseLoggingMiddlewareExtensions
-    {
-        public static IApplicationBuilder UseRequestResponseLogging(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<RequestResponseLoggingMiddleware>();
-        }
-    }
 }

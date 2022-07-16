@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Stores;
 

@@ -2,21 +2,20 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class UpdateConversationRecordHandler : INotificationHandler<UpdateConversationRecordRequest>
     {
-        private readonly IEntityStore<Area> intentStore;
-        private readonly IEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<Intent> intentStore;
+        private readonly IEntityStore<ConversationHistoryMeta> convoRecordStore;
         private readonly ILogger<UpdateConversationRecordHandler> logger;
 
         public UpdateConversationRecordHandler(
-            IEntityStore<Area> intentStore,
-            IEntityStore<ConversationRecord> convoRecordStore,
+            IEntityStore<Intent> intentStore,
+            IEntityStore<ConversationHistoryMeta> convoRecordStore,
             ILogger<UpdateConversationRecordHandler> logger)
         {
             this.intentStore = intentStore;

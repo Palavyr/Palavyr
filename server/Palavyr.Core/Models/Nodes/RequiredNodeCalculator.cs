@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Models.Nodes
 {
     public interface IRequiredNodeCalculator
     {
-        Task<IEnumerable<NodeTypeOptionResource>> FindRequiredNodes(Area area);
+        Task<IEnumerable<NodeTypeOptionResource>> FindRequiredNodes(Intent intent);
     }
 
     public class RequiredNodeCalculator : IRequiredNodeCalculator
@@ -21,24 +21,24 @@ namespace Palavyr.Core.Models.Nodes
             this.pricingStrategyTableCompilerRetriever = pricingStrategyTableCompilerRetriever;
         }
 
-        bool CheckForPerIndividual(Area area)
+        bool CheckForPerIndividual(Intent intent)
         {
-            return area
+            return intent
                 .StaticTablesMetas
                 .Select(x => x.PerPersonInputRequired)
                 .Any(p => p);
         }
 
-        public async Task<IEnumerable<NodeTypeOptionResource>> FindRequiredNodes(Area area)
+        public async Task<IEnumerable<NodeTypeOptionResource>> FindRequiredNodes(Intent intent)
         {
             var allRequiredNodes = new List<NodeTypeOptionResource>();
 
-            if (CheckForPerIndividual(area))
+            if (CheckForPerIndividual(intent))
             {
                 allRequiredNodes.Add(DefaultNodeTypeOptions.CreateTakeNumberIndividuals());
             }
 
-            foreach (var dynamicTableMeta in area.DynamicTableMetas)
+            foreach (var dynamicTableMeta in intent.DynamicTableMetas)
             {
                 var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(dynamicTableMeta.TableType);
                 await compiler.CompileToConfigurationNodes(dynamicTableMeta, allRequiredNodes);

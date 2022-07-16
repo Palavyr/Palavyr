@@ -1,16 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class SelectAllHandler : INotificationHandler<SelectAllRequest>
     {
-        private readonly IEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<ConversationHistoryMeta> convoRecordStore;
 
-        public SelectAllHandler(IEntityStore<ConversationRecord> convoRecordStore)
+        public SelectAllHandler(IEntityStore<ConversationHistoryMeta> convoRecordStore)
         {
             this.convoRecordStore = convoRecordStore;
         }

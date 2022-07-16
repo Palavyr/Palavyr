@@ -3,10 +3,10 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters;
@@ -18,22 +18,22 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
     {
     }
 
-    public class SelectOneFlatCompiler : BaseCompiler<SelectOneFlat>, ISelectOneFlatCompiler
+    public class SelectOneFlatCompiler : BaseCompiler<SimpleSelectTableRow>, ISelectOneFlatCompiler
     {
-        private readonly IEntityStore<SelectOneFlat> psStore;
+        private readonly IEntityStore<SimpleSelectTableRow> psStore;
         private readonly IConversationOptionSplitter splitter;
         private readonly ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater;
-        private readonly IResponseRetriever<SelectOneFlat> responseRetriever;
+        private readonly IResponseRetriever<SimpleSelectTableRow> responseRetriever;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IEntityStore<DynamicTableMeta> pricingStrategyTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
 
         public SelectOneFlatCompiler(
-            IEntityStore<SelectOneFlat> psStore,
+            IEntityStore<SimpleSelectTableRow> psStore,
             IConversationOptionSplitter splitter,
             ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater,
-            IResponseRetriever<SelectOneFlat> responseRetriever,
+            IResponseRetriever<SimpleSelectTableRow> responseRetriever,
             IEntityStore<ConversationNode> convoNodeStore,
-            IEntityStore<DynamicTableMeta> pricingStrategyTableMetaStore) : base(psStore, convoNodeStore)
+            IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore) : base(psStore, convoNodeStore)
         {
             this.psStore = psStore;
             this.splitter = splitter;
@@ -45,7 +45,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 
         public async Task UpdateConversationNode<T>(List<T> table, string tableId, string intentId)
         {
-            var currentSelectOneFlatUpdate = table as List<SelectOneFlat>;
+            var currentSelectOneFlatUpdate = table as List<SimpleSelectTableRow>;
 
             var tableMeta = await pricingStrategyTableMetaStore.Get(tableId, s => s.TableId);
 
@@ -61,25 +61,25 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         }
 
         public async Task CompileToConfigurationNodes(
-            DynamicTableMeta dynamicTableMeta,
+            PricingStrategyTableMeta pricingStrategyTableMeta,
             List<NodeTypeOptionResource> nodes)
         {
-            var rows = await GetTableRows(dynamicTableMeta);
+            var rows = await GetTableRows(pricingStrategyTableMeta);
             var valueOptions = rows.Select(x => x.Option).ToList();
 
             var nodeTypeOption = NodeTypeOptionResource.Create(
-                dynamicTableMeta.MakeUniqueIdentifier(),
-                dynamicTableMeta.ConvertToPrettyName(),
-                dynamicTableMeta.ValuesAsPaths ? valueOptions : new List<string>() { "Continue" },
+                pricingStrategyTableMeta.MakeUniqueIdentifier(),
+                pricingStrategyTableMeta.ConvertToPrettyName(),
+                pricingStrategyTableMeta.ValuesAsPaths ? valueOptions : new List<string>() { "Continue" },
                 valueOptions,
                 true,
-                dynamicTableMeta.ValuesAsPaths,
+                pricingStrategyTableMeta.ValuesAsPaths,
                 false,
                 NodeTypeOptionResource.CustomTables,
-                dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
-                dynamicTableMeta.ValuesAsPaths ? NodeTypeCode.XI : NodeTypeCode.X,
+                pricingStrategyTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
+                pricingStrategyTableMeta.ValuesAsPaths ? NodeTypeCode.XI : NodeTypeCode.X,
                 shouldRenderChildren: true,
-                dynamicType: dynamicTableMeta.MakeUniqueIdentifier()
+                dynamicType: pricingStrategyTableMeta.MakeUniqueIdentifier()
             );
             nodes.AddAdditionalNode(nodeTypeOption);
         }
@@ -148,15 +148,15 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         //     return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
         // }
 
-        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area intent, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(PricingStrategyTableMeta tableTableMeta, Intent intent, CultureInfo culture)
         {
-            var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
+            var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses(tableTableMeta.TableId);
             var responseParts = PricingStrategyResponsePartJoiner.CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Option);
-            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableMeta.TableId }, culture);
+            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableTableMeta.TableId }, culture);
             return currentRows;
         }
 
-        public async Task<List<SelectOneFlat>> RetrieveAllAvailableResponses(string dynamicResponseId)
+        public async Task<List<SimpleSelectTableRow>> RetrieveAllAvailableResponses(string dynamicResponseId)
         {
             return await GetAllRowsMatchingResponseId(dynamicResponseId);
         }

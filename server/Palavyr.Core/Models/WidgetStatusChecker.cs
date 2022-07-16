@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.PricingStrategyTableServices;
@@ -16,7 +15,7 @@ namespace Palavyr.Core.Models
     public interface IWidgetStatusChecker
     {
         Task<PreCheckResult> ExecuteWidgetStatusCheck(
-            List<Area> areas,
+            List<Intent> areas,
             WidgetPreference widgetPreferences,
             bool demo,
             ILogger logger);
@@ -51,7 +50,7 @@ namespace Palavyr.Core.Models
         }
 
         public async Task<PreCheckResult> ExecuteWidgetStatusCheck(
-            List<Area> areas,
+            List<Intent> areas,
             WidgetPreference widgetPreferences,
             bool demo,
             ILogger logger)
@@ -66,7 +65,7 @@ namespace Palavyr.Core.Models
             return result;
         }
 
-        private async Task<PreCheckResult> StatusCheck(List<Area> intents, bool widgetState, bool demo, ILogger logger)
+        private async Task<PreCheckResult> StatusCheck(List<Intent> intents, bool widgetState, bool demo, ILogger logger)
         {
             logger.LogDebug("Attempting RunConversationsPreCheck...");
 

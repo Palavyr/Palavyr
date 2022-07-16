@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -13,10 +13,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyConversationNodeHandler : IRequestHandler<ModifyConversationNodeRequest, ModifyConversationNodeResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper;
 
-        public ModifyConversationNodeHandler(IEntityStore<Area> intentStore, IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper)
+        public ModifyConversationNodeHandler(IEntityStore<Intent> intentStore, IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper)
         {
             this.intentStore = intentStore;
             this.mapper = mapper;

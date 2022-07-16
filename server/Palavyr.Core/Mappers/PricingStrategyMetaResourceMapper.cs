@@ -1,13 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Resources;
 
 namespace Palavyr.Core.Mappers
 {
-    public class PricingStrategyMetaResourceMapper : IMapToNew<DynamicTableMeta, PricingStrategyTableMetaResource>
+    public class PricingStrategyMetaResourceMapper : IMapToNew<PricingStrategyTableMeta, PricingStrategyTableMetaResource>
     {
-        public async Task<PricingStrategyTableMetaResource> Map(DynamicTableMeta @from, CancellationToken cancellationToken)
+        public async Task<PricingStrategyTableMetaResource> Map(PricingStrategyTableMeta @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
             return new PricingStrategyTableMetaResource()

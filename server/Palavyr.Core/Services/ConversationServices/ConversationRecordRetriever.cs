@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.ConversationServices
 {
     public interface IConversationRecordRetriever
     {
-        Task<IEnumerable<ConversationRecord>> RetrieveConversationRecords();
+        Task<IEnumerable<ConversationHistoryMeta>> RetrieveConversationRecords();
         Task<int> GetActiveEnquiryCount();
     }
 
     public class ConversationRecordRetriever : IConversationRecordRetriever
     {
-        private readonly IEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<ConversationHistoryMeta> convoRecordStore;
 
         public ConversationRecordRetriever(
-            IEntityStore<ConversationRecord> convoRecordStore
+            IEntityStore<ConversationHistoryMeta> convoRecordStore
         )
         {
             this.convoRecordStore = convoRecordStore;
@@ -26,7 +26,7 @@ namespace Palavyr.Core.Services.ConversationServices
 
         // Completed means that we've reached the end - the user let all of the messages play out
         // A subset of these will have emails
-        public async Task<IEnumerable<ConversationRecord>> RetrieveConversationRecords()
+        public async Task<IEnumerable<ConversationHistoryMeta>> RetrieveConversationRecords()
         {
             var conversationRecords = await convoRecordStore.GetAll();
             return conversationRecords;

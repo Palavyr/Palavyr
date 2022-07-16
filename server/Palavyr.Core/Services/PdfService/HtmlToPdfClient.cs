@@ -1,8 +1,8 @@
 ﻿
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService.PdfServer;
 using Palavyr.Core.Stores;
 

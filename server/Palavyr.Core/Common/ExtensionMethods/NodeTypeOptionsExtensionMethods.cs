@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Common.ExtensionMethods
 {
@@ -23,24 +23,24 @@ namespace Palavyr.Core.Common.ExtensionMethods
             return nodeTypeOptions;
         }
 
-        public static string MakeUniqueIdentifier(this DynamicTableMeta dynamicTableMeta)
+        public static string MakeUniqueIdentifier(this PricingStrategyTableMeta pricingStrategyTableMeta)
         {
-            return TreeUtils.TransformRequiredNodeType(dynamicTableMeta);
+            return TreeUtils.TransformRequiredNodeType(pricingStrategyTableMeta);
         }
 
-        public static string MakeUniqueIdentifier(this DynamicTableMeta dynamicTableMeta, string prefix)
+        public static string MakeUniqueIdentifier(this PricingStrategyTableMeta pricingStrategyTableMeta, string prefix)
         {
-            return TreeUtils.TransformRequiredNodeType(dynamicTableMeta, prefix);
+            return TreeUtils.TransformRequiredNodeType(pricingStrategyTableMeta, prefix);
         }
 
-        public static string ConvertToPrettyName(this DynamicTableMeta dynamicTableMeta)
+        public static string ConvertToPrettyName(this PricingStrategyTableMeta pricingStrategyTableMeta)
         {
-            return TreeUtils.TransformRequiredNodeTypeToPrettyName(dynamicTableMeta);
+            return TreeUtils.TransformRequiredNodeTypeToPrettyName(pricingStrategyTableMeta);
         }
 
-        public static string ConvertToPrettyName(this DynamicTableMeta dynamicTableMeta, string extraName)
+        public static string ConvertToPrettyName(this PricingStrategyTableMeta pricingStrategyTableMeta, string extraName)
         {
-            return TreeUtils.TransformRequiredNodeTypeToPrettyName(dynamicTableMeta, extraName);
+            return TreeUtils.TransformRequiredNodeTypeToPrettyName(pricingStrategyTableMeta, extraName);
         }
 
         public static string JoinValueOptionsOnDelimiter(this List<string> valueOptions)

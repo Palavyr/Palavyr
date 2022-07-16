@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.TemporaryPaths;
@@ -20,13 +20,13 @@ namespace Palavyr.Core.Services.AttachmentServices
 
     public class AttachmentRetriever : IAttachmentRetriever
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly ICloudFileDownloader cloudFileDownloader;
         private readonly IBusinessRules businessRules;
 
         public AttachmentRetriever(
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IEntityStore<FileAsset> fileAssetStore,
             ICloudFileDownloader cloudFileDownloader,
             IBusinessRules businessRules

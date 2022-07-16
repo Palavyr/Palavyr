@@ -1,4 +1,5 @@
 ﻿using Stripe;
+using Account = Palavyr.Core.Data.Entities.Account;
 
 namespace Test.Common.Builders.StripeBuilders
 {
@@ -13,19 +14,19 @@ namespace Test.Common.Builders.StripeBuilders
 
         public StripePriceRecurringBuilder WithMonthInterval()
         {
-            this.interval = Palavyr.Core.Models.Accounts.Schemas.Account.PaymentIntervals.Month;
+            this.interval = Account.PaymentIntervals.Month;
             return this;
         }
 
         public StripePriceRecurringBuilder WithYearInterval()
         {
-            this.interval = Palavyr.Core.Models.Accounts.Schemas.Account.PaymentIntervals.Month;
+            this.interval = Account.PaymentIntervals.Month;
             return this;
         }
 
         public PriceRecurring Build()
         {
-            var interval = this.interval ?? Palavyr.Core.Models.Accounts.Schemas.Account.PaymentIntervals.Month;
+            var interval = this.interval ?? Account.PaymentIntervals.Month;
             return new PriceRecurring
             {
                 Interval = interval

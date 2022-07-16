@@ -6,10 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Data.Entities.DynamicTables;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
@@ -23,25 +23,25 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
     {
     }
 
-    public class CategoryNestedThresholdCompiler : BaseCompiler<CategoryNestedThreshold>, ICategoryNestedThresholdCompiler
+    public class CategoryNestedThresholdCompiler : BaseCompiler<CategoryNestedThresholdTableRow>, ICategoryNestedThresholdCompiler
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
-        private readonly IEntityStore<CategoryNestedThreshold> psStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<CategoryNestedThresholdTableRow> psStore;
         private readonly IConversationOptionSplitter splitter;
         private readonly IThresholdEvaluator thresholdEvaluator;
-        private readonly IResponseRetriever<CategoryNestedThreshold> responseRetriever;
+        private readonly IResponseRetriever<CategoryNestedThresholdTableRow> responseRetriever;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
 
         private CancellationToken CancellationToken => cancellationTokenTransport.CancellationToken;
 
         public CategoryNestedThresholdCompiler(
             IEntityStore<ConversationNode> convoNodeStore,
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
-            IEntityStore<CategoryNestedThreshold> psStore,
+            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore,
+            IEntityStore<CategoryNestedThresholdTableRow> psStore,
             IConversationOptionSplitter splitter,
             IThresholdEvaluator thresholdEvaluator,
-            IResponseRetriever<CategoryNestedThreshold> responseRetriever,
+            IResponseRetriever<CategoryNestedThresholdTableRow> responseRetriever,
             ICancellationTokenTransport cancellationTokenTransport
         ) : base(psStore, convoNodeStore)
         {
@@ -77,17 +77,17 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             }
         }
 
-        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOptionResource> nodes)
+        public async Task CompileToConfigurationNodes(PricingStrategyTableMeta pricingStrategyTableMeta, List<NodeTypeOptionResource> nodes)
         {
-            var rawRows = await GetTableRows(dynamicTableMeta);
+            var rawRows = await GetTableRows(pricingStrategyTableMeta);
             var categories = GetCategories(rawRows);
 
-            var widgetResponseKey = dynamicTableMeta.MakeUniqueIdentifier();
+            var widgetResponseKey = pricingStrategyTableMeta.MakeUniqueIdentifier();
 
             nodes.AddAdditionalNode(
                 NodeTypeOptionResource.Create(
-                    dynamicTableMeta.MakeUniqueIdentifier("Category"),
-                    dynamicTableMeta.ConvertToPrettyName("Category (1)"),
+                    pricingStrategyTableMeta.MakeUniqueIdentifier("Category"),
+                    pricingStrategyTableMeta.ConvertToPrettyName("Category (1)"),
                     new List<string> { "Continue" },
                     categories,
                     true,
@@ -106,8 +106,8 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             // compile time to set nodes for min and max. Hmmmm
             nodes.AddAdditionalNode(
                 NodeTypeOptionResource.Create(
-                    dynamicTableMeta.MakeUniqueIdentifier("Threshold"),
-                    dynamicTableMeta.ConvertToPrettyName("Threshold (2)"),
+                    pricingStrategyTableMeta.MakeUniqueIdentifier("Threshold"),
+                    pricingStrategyTableMeta.ConvertToPrettyName("Threshold (2)"),
                     new List<string> { "Continue" },
                     new List<string> { "Continue" },
                     true,
@@ -123,7 +123,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             );
         }
 
-        private async Task<List<CategoryNestedThreshold>> GetAllRowsMatchingDynamicResponseId(string id)
+        private async Task<List<CategoryNestedThresholdTableRow>> GetAllRowsMatchingDynamicResponseId(string id)
         {
             return await psStore.RawReadonlyQuery()
                 .Where(tableRow => id.EndsWith(tableRow.TableId))
@@ -247,13 +247,13 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         //     return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
         // }
 
-        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area intent, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(PricingStrategyTableMeta tableTableMeta, Intent intent, CultureInfo culture)
         {
-            var availableNestedThreshold = await responseRetriever.RetrieveAllAvailableResponses(tableMeta.TableId);
+            var availableNestedThreshold = await responseRetriever.RetrieveAllAvailableResponses(tableTableMeta.TableId);
             var currentRows = new List<TableRow>
             {
                 new TableRow(
-                    tableMeta.UseTableTagAsResponseDescription ? tableMeta.TableTag : availableNestedThreshold.First().ItemName,
+                    tableTableMeta.UseTableTagAsResponseDescription ? tableTableMeta.TableTag : availableNestedThreshold.First().ItemName,
                     availableNestedThreshold.First().ValueMin,
                     availableNestedThreshold.First().ValueMax,
                     false,
@@ -264,7 +264,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             return currentRows;
         }
 
-        public async Task<List<CategoryNestedThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId, CancellationToken cancellationToken)
+        public async Task<List<CategoryNestedThresholdTableRow>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId, CancellationToken cancellationToken)
         {
             return await GetAllRowsMatchingResponseId(dynamicResponseId);
         }

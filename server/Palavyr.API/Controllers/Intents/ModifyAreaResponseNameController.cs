@@ -4,8 +4,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.API.Controllers.Intents
@@ -41,11 +41,11 @@ namespace Palavyr.API.Controllers.Intents
 
     public class ModifyIntentNameHandler : IRequestHandler<ModifyIntentNameRequest, ModifyIntentNameResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly ILogger<ModifyIntentNameHandler> logger;
 
         public ModifyIntentNameHandler(
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             ILogger<ModifyIntentNameHandler> logger)
         {
             this.intentStore = intentStore;

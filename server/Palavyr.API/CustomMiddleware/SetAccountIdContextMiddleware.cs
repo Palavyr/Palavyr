@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware.MiddlewareHandlers;
 using Palavyr.Core.Data;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.GlobalConstants;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.API.CustomMiddleware
@@ -34,7 +34,6 @@ namespace Palavyr.API.CustomMiddleware
             IWebHostEnvironment env,
             IMediator mediator,
             IEntityStore<Session> sessionStore,
-            AccountsContext accountContext,
             IUnitOfWorkContextProvider unitOfWorkContextProvider)
         {
             logger.LogDebug("Settings magic string headers...");

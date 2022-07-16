@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
@@ -15,14 +15,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetMissingNodesHandler : IRequestHandler<GetMissingNodesRequest, GetMissingNodesResponse>
     {
         private readonly ILogger<GetMissingNodesHandler> logger;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IRequiredNodeCalculator requiredNodeCalculator;
         private readonly IMissingNodeCalculator missingNodeCalculator;
         private readonly INodeOrderChecker nodeOrderChecker;
 
         public GetMissingNodesHandler(
             ILogger<GetMissingNodesHandler> logger,
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IRequiredNodeCalculator requiredNodeCalculator,
             IMissingNodeCalculator missingNodeCalculator,
             INodeOrderChecker nodeOrderChecker

@@ -3,19 +3,19 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetIsTerminalTypeHandler : IRequestHandler<GetIsTerminalTypeRequest, GetIsTerminalTypeResponse>
     {
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
         private readonly IPricingStrategyTypeLister pricingStrategyTypeLister;
         string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";
 
-        public GetIsTerminalTypeHandler(IEntityStore<DynamicTableMeta> dynamicTableMetaStore, IPricingStrategyTypeLister pricingStrategyTypeLister)
+        public GetIsTerminalTypeHandler(IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore, IPricingStrategyTypeLister pricingStrategyTypeLister)
         {
             this.dynamicTableMetaStore = dynamicTableMetaStore;
             this.pricingStrategyTypeLister = pricingStrategyTypeLister;

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.StripeServices.Products;
 using Shouldly;
 using Xunit;

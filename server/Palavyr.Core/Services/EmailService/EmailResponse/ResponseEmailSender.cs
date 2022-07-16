@@ -4,10 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AttachmentServices;
@@ -29,7 +28,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
     public class ResponseEmailSender : IResponseEmailSender
     {
         private readonly IMapToNew<FileAsset, FileAssetResource> mapper;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly ILogger<ResponseEmailSender> logger;
         private readonly ICriticalResponses criticalResponses;
         private readonly IAttachmentRetriever attachmentRetriever;
@@ -41,7 +40,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
         public ResponseEmailSender(
             IMapToNew<FileAsset, FileAssetResource> mapper,
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             ILogger<ResponseEmailSender> logger,
             ICriticalResponses criticalResponses,
             IAttachmentRetriever attachmentRetriever,

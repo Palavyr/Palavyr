@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
 {
@@ -57,18 +57,18 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
             return staticTableMetas;
         }
 
-        public static Area CreateDefault(
+        public static Intent CreateDefault(
             string areaIdentifier,
             string accountId,
             string areaName,
             List<ConversationNode> conversationNodes,
-            List<DynamicTableMeta> dynamicTableMetas,
+            List<PricingStrategyTableMeta> dynamicTableMetas,
             string emailTemplate,
             string defaultEmail
         )
         {
             var areaMetas = CreateDefaultStaticTableMetas(areaIdentifier, accountId);
-            var area = new Area()
+            var area = new Intent()
             {
                 AreaIdentifier = areaIdentifier,
                 AccountId = accountId,

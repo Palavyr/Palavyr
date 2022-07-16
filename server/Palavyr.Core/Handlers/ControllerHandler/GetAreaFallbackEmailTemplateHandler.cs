@@ -1,16 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetAreaFallbackEmailTemplateHandler : IRequestHandler<GetAreaFallbackEmailTemplateRequest, GetAreaFallbackEmailTemplateResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
 
-        public GetAreaFallbackEmailTemplateHandler(IEntityStore<Area> intentStore)
+        public GetAreaFallbackEmailTemplateHandler(IEntityStore<Intent> intentStore)
         {
             this.intentStore = intentStore;
         }
