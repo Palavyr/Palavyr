@@ -252,3 +252,5 @@ ui/dist*
 localdev.env
 appsettings.development.json
 appsettings.migrator.development.json
+the--all-route.txt
+*terraform*

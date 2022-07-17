@@ -38,48 +38,23 @@ import { AxiosClient, CacheIds } from "./FrontendAxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
 import { Loaders } from "./Loaders";
 
-export class PalavyrRepository {
-    private client: AxiosClient;
+class ApiRoutes {}
 
-    private formDataHeaders: { [key: string]: string } = {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-    };
-
-    constructor(apiErrors?: ApiErrors, loaders?: Loaders) {
-        this.client = new AxiosClient(apiErrors, loaders, undefined, getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
-    }
-
-    public AuthenticationCheck = {
-        check: async () => {
-            let result: boolean;
-            try {
-                await this.client.get<boolean>("");
-                result = true;
-            } catch {
-                result = false;
-            }
-            return result;
-        },
-    };
-
+export class PalavyrRepository extends ApiRoutes {
     public Purchase = {
         Customer: {
-            GetCustomerId: async () => this.client.get<string>(`payments/customer-id`, CacheIds.CustomerId),
+            GetCustomerId: async () => this.client.get<string>(this.Routes.GetCustomerIdRoute(), CacheIds.CustomerId),
             GetCustomerPortal: async (customerId: string, returnUrl: string) => {
                 SessionStorage.clearCacheValue(CacheIds.CurrentPlanMeta);
-                return this.client.post<string, {}>(`payments/customer-portal`, { CustomerId: customerId, ReturnUrl: returnUrl });
+                return this.client.post<string, {}>(this.Routes.GetCustomerPortalRoute(), { CustomerId: customerId, ReturnUrl: returnUrl });
             },
         },
-        Subscription: {
-            CancelSubscription: async () => this.client.post<string, {}>(`products/cancel-subscription`),
-        },
         Prices: {
-            GetPrices: async (productId: string) => this.client.get<Prices>(`products/prices/get-prices/${productId}`),
+            GetPrices: async (productId: string) => this.client.get<Prices>(this.Routes.GetPrices(productId)),
         },
         Checkout: {
             CreateCheckoutSession: async (priceId: string, cancelUrl: string, successUrl: string) =>
-                this.client.post<string, {}>(`checkout/create-checkout-session`, {
+                this.client.post<string, {}>(this.Routes.CreateCheckoutSession(), {
                     PriceId: priceId,
                     CancelUrl: cancelUrl,
                     SuccessUrl: successUrl,
@@ -88,85 +63,113 @@ export class PalavyrRepository {
     };
 
     public Products = {
-        getProducts: async () => this.client.get<ProductIds>(`products/all`),
+        getProducts: async () => this.client.get<ProductIds>(this.Routes.GetProducts()),
     };
 
     public Intent = {
+        GetAllIntents: async () => this.client.get<Intents>(this.Routes.GetAllIntents(), CacheIds.Intents),
+        GetShowDynamicTotals: (intentId: string) => this.client.get<boolean>(this.Routes.GetShowDynamicTotals(intentId)),
+
         ToggleIsEnabled: async (intentToggleStateUpdate: boolean, intentId: string) => {
-            const update = this.client.put<boolean, {}>(`intents/intent-toggle`, { IsEnabled: intentToggleStateUpdate, IntentId: intentId });
+            const update = this.client.put<boolean, {}>(this.Routes.ToggleIsEnabled(), { IsEnabled: intentToggleStateUpdate, IntentId: intentId });
             SessionStorage.clearCacheValue(CacheIds.Intents);
             return update;
         },
+        SetShowDynamicTotals: (intentId: string, shouldShow: boolean) => this.client.put<boolean, {}>(this.Routes.SetShowDynamicTotals(), { ShowDynamicTotals: shouldShow, IntentId: intentId }),
         ToggleUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, intentId: string) =>
-            this.client.put<boolean, {}>(`intents/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate, IntentId: intentId }),
-        GetAllIntents: async () => this.client.get<Intents>(`intents`, CacheIds.Intents),
-        CreateIntent: async (areaName: string) => {
-            const newArea = await this.client.post<AreaTable, {}>(`intents/create`, { AreaName: areaName });
+            this.client.put<boolean, {}>(this.Routes.ToggleUseAreaFallbackEmail(), { UseFallback: useAreaFallbackEmailUpdate, IntentId: intentId }),
+        CreateIntent: async (intentName: string) => {
+            const newArea = await this.client.post<AreaTable, {}>(this.Routes.CreateIntent(), { intentName });
             const areas = SessionStorage.getCacheValue(CacheIds.Intents) as Intents;
             areas.push(newArea);
             SessionStorage.setCacheValue(CacheIds.Intents, areas);
             return newArea;
         },
-        UpdateIntentName: (intentId: string, areaName: string) => {
-            const result = this.client.put<string, {}>(`areas/update/name/${intentId}`, { AreaName: areaName });
+        UpdateIntentName: (intentId: string, intentName: string) => {
+            const result = this.client.put<string, {}>(this.Routes.UpdateIntentName(intentId), { intentName });
             SessionStorage.clearCacheValue(CacheIds.Intents);
             return result;
         },
-        // updateDisplayTitle: (intentId: string, displayTitle: string) => {
-        //     const result = this.client.put<string, {}>(`areas/update/display-title/${intentId}`, { AreaDisplayTitle: displayTitle });
-        //     SessionStorage.clearCacheValue(CacheIds.Areas);
-        //     return result;
-        // },
 
-        deleteArea: (intentId: string) => this.client.delete<void>(`intents/delete/${intentId}`, CacheIds.Intents),
-        toggleSendPdfResponse: (intentId: string) => this.client.post<boolean, {}>(`intent/${intentId}/send-pdf`),
-        getShowDynamicTotals: (intentId: string) => this.client.get<boolean>(`area/dynamic-totals/${intentId}`),
-        setShowDynamicTotals: (intentId: string, shouldShow: boolean) => this.client.put<boolean, {}>(`area/dynamic-totals`, { ShowDynamicTotals: shouldShow, IntentId: intentId }),
+        DeleteIntent: (intentId: string) => this.client.delete<void>(this.Routes.DeleteIntent(intentId), CacheIds.Intents),
+        ToggleSendPdfResponse: (intentId: string) => this.client.post<boolean, {}>(this.Routes.ToggleSendPdfResponse(intentId)),
+    };
+
+    public Routes = {
+        GetCustomerIdRoute: () => `payments/customer-id`,
+        GetCustomerPortalRoute: () => `payments/customer-portal`,
+        GetPrices: (prodId: string) => `products/prices/get-prices/${prodId}`,
+        CreateCheckoutSession: () => `checkout/create-checkout-session`,
+        GetProducts: () => `products/all`,
+        ToggleIsEnabled: () => `intents/intent-toggle`,
+        ToggleUseAreaFallbackEmail: () => `intents/use-fallback-email-toggle`,
+        GetAllIntents: () => `intents`,
+        CreateIntent: () => `intents/create`,
+        UpdateIntentName: (intentId: string) => `intents/update/name/${intentId}`,
+        DeleteIntent: (intentId: string) => `intents/delete/${intentId}`,
+        ToggleSendPdfResponse: (intentId: string) => `intent/send-pdf/${intentId}`,
+        GetShowDynamicTotals: (intentId: string) => `intent/dynamic-totals/${intentId}`,
+        SetShowDynamicTotals: () => `area/dynamic-totals`,
+        GetEstimateConfiguration: (intentId: string) => `response/configuration/${intentId}`,
+        UpdatePrologue: () => `response/configuration/prologue`,
+        UpdateEpilogue: () => `response/configuration/epilogue`,
+        GetSupportedUnitIds: () => `configuration/unit-types`,
+        GetWidgetState: () => `widget-config/widget-active-state`,
+        SetWidgetState: (updatedWidgetState: boolean) => `widget-config/widget-active-state?state=${updatedWidgetState}`,
+        GetDynamicTableMetas: (intentId: string) => `tables/dynamic/metas/${intentId}`,
+        GetDynamicTableTypes: () => `tables/dynamic/table-name-map`,
+        ModifyDynamicTableMeta: () => `tables/dynamic/modify`,
+        CreateDynamicTable: (intentId: string) => `tables/dynamic/SimpleThresholdTableRow/create/${intentId}`,
+        DeleteDynamicTable: (intentId: string, tableType: string, tableId: string) => `tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`,
+        GetDynamicTableDataTemplate: (intentId: string, tableType: string, tableId: string) => `tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}/template`,
+        GetDynamicTableRows: (intentId: string, tableType: string, tableId: string) => `tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`,
+        UpdateStaticTableMetas: () => `response/configuration/static/tables/save`,
+        GetStaticTablesMetaTemplate: (intentId: string) => `response/configuration/${intentId}/static/tables/template`,
+        GetStaticTableRowTemplate: (intentId: string, tableOrder: number) => `response/configuration/${intentId}/static/tables/${tableOrder}/row/template`,
+        FetchPreview: (intentId: string) => `preview/estimate/${intentId}`
+
+
+
     };
 
     public Configuration = {
-        getEstimateConfiguration: async (intentId: string) => this.client.get<ResponseConfigurationType>(`response/configuration/${intentId}`),
-        updatePrologue: async (intentId: string, prologue: string) => this.client.put<string, {}>(`response/configuration/prologue`, { prologue: prologue, IntentId: intentId }),
-        updateEpilogue: async (intentId: string, epilogue: string) => this.client.put<string, {}>(`response/configuration/epilogue`, { epilogue: epilogue, IntentId: intentId }),
-
+        getEstimateConfiguration: async (intentId: string) => this.client.get<ResponseConfigurationType>(this.Routes.GetEstimateConfiguration(intentId)),
+        UpdatePrologue: async (intentId: string, prologue: string) => this.client.put<string, {}>(this.Routes.UpdatePrologue(), { prologue: prologue, IntentId: intentId }),
+        UpdateEpilogue: async (intentId: string, epilogue: string) => this.client.put<string, {}>(this.Routes.UpdateEpilogue(), { epilogue: epilogue, IntentId: intentId }),
         Units: {
-            GetSupportedUnitIds: async () => this.client.get<QuantUnitDefinition[]>(`configuration/unit-types`), //, CacheIds.SupportedUnitIds),
+            GetSupportedUnitIds: async () => this.client.get<QuantUnitDefinition[]>(this.Routes.GetSupportedUnitIds()), //, CacheIds.SupportedUnitIds),
         },
 
         WidgetState: {
-            GetWidgetState: async () => this.client.get<boolean>(`widget-config/widget-active-state`),
-            SetWidgetState: async (updatedWidgetState: boolean) => this.client.post<boolean, {}>(`widget-config/widget-active-state?state=${updatedWidgetState}`),
+            GetWidgetState: async () => this.client.get<boolean>(this.Routes.GetWidgetState()),
+            SetWidgetState: async (updatedWidgetState: boolean) => this.client.post<boolean, {}>(this.Routes.SetWidgetState(updatedWidgetState)),
         },
         Tables: {
             Dynamic: {
-                getDynamicTableMetas: async (intentId: string) => this.client.get<DynamicTableMetas>(`tables/dynamic/metas/${intentId}`), // todo - cache
+                GetDynamicTableMetas: async (intentId: string) => this.client.get<DynamicTableMetas>(this.Routes.GetDynamicTableMetas(intentId)), // todo - cache
 
-                getDynamicTableTypes: async () => this.client.get<TableNameMap>(`tables/dynamic/table-name-map`),
+                GetDynamicTableTypes: async () => this.client.get<TableNameMap>(this.Routes.GetDynamicTableTypes()),
 
-                modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta) => {
+                ModifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta) => {
                     console.log(dynamicTableMeta);
-                    return this.client.put<DynamicTableMeta, {}>(`tables/dynamic/modify`, dynamicTableMeta);
+                    return this.client.put<DynamicTableMeta, {}>(this.Routes.ModifyDynamicTableMeta(), dynamicTableMeta);
                     // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, dynamicTableMeta.intentId].join("-"));
                     // return response;
                 },
 
-                createDynamicTable: async (intentId: string) => {
-                    const response = this.client.post<DynamicTableMeta, {}>(`tables/dynamic/create/${intentId}`);
+                CreateDynamicTable: async (intentId: string) => {
+                    const response = this.client.post<DynamicTableMeta, {}>(this.Routes.CreateDynamicTable(intentId));
                     // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
                     return response;
                 },
 
-                deleteDynamicTable: async (intent: string, tableType: string, tableId: string) => {
-                    const response = this.client.delete(`tables/dynamic/${tableType}/intent/${intent}/table/${tableId}`);
-                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intent].join("-"));
+                DeleteDynamicTable: async (intentId: string, tableType: string, tableId: string) => {
+                    const response = this.client.delete(this.Routes.DeleteDynamicTable(intentId, tableType, tableId));
+                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
                     return response;
                 },
-
-                getDynamicTableDataTemplate: async <T>(intentId: string, tableType: string, tableId: string) =>
-                    this.client.get<T>(`tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}/template`),
-
-                getDynamicTableRows: async (intentId: string, tableType: string, tableId: string) =>
-                    this.client.get<DynamicTableData>(`tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`),
+                GetDynamicTableDataTemplate: async <T>(intentId: string, tableType: string, tableId: string) => this.client.get<T>(this.Routes.GetDynamicTableDataTemplate(intentId, tableType, tableId)),
+                GetDynamicTableRows: async (intentId: string, tableType: string, tableId: string) => this.client.get<DynamicTableData>(this.Routes.GetDynamicTableRows(intentId, tableType, tableId)),
 
                 saveDynamicTable: async <T>(intentId: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) => {
                     const response = this.client.put<T, {}>(`tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`, { TableTag: tableTag, TableData: tableData });
@@ -175,16 +178,15 @@ export class PalavyrRepository {
                 },
             },
             Static: {
-                updateStaticTablesMetas: async (intentId: string, staticTablesMetas: StaticTableMetas) =>
-                    this.client.put<StaticTableMetas, {}>(`response/configuration/static/tables/save`, { StaticTableMetaUpdate: staticTablesMetas, IntentId: intentId }),
-                getStaticTablesMetaTemplate: async (intentId: string) => this.client.get<StaticTableMetaTemplate>(`response/configuration/${intentId}/static/tables/template`),
-                getStaticTableRowTemplate: async (intentId: string, tableOrder: number) =>
-                    this.client.get<StaticTableRow>(`response/configuration/${intentId}/static/tables/${tableOrder}/row/template`),
+                UpdateStaticTablesMetas: async (intentId: string, staticTablesMetas: StaticTableMetas) =>
+                    this.client.put<StaticTableMetas, {}>(this.Routes.UpdateStaticTableMetas(), { StaticTableMetaUpdate: staticTablesMetas, IntentId: intentId }),
+                GetStaticTablesMetaTemplate: async (intentId: string) => this.client.get<StaticTableMetaTemplate>(this.Routes.GetStaticTablesMetaTemplate(intentId)),
+                GetStaticTableRowTemplate: async (intentId: string, tableOrder: number) => this.client.get<StaticTableRow>(this.Routes.GetStaticTableRowTemplate(intentId, tableOrder)),
             },
         },
 
         Preview: {
-            FetchPreview: async (intentId: string) => this.client.get<FileAssetResource>(`preview/estimate/${intentId}`),
+            FetchPreview: async (intentId: string) => this.client.get<FileAssetResource>(this.Routes.FetchPreview(intentId)),
         },
 
         Email: {
@@ -349,5 +351,29 @@ export class PalavyrRepository {
 
         UnselectAll: async () => this.client.post(`enquiries/selectall`),
         SelectAll: async () => this.client.post(`enquiries/unselectall`),
+    };
+
+    private client: AxiosClient;
+
+    private formDataHeaders: { [key: string]: string } = {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+    };
+
+    constructor(apiErrors?: ApiErrors, loaders?: Loaders) {
+        this.client = new AxiosClient(apiErrors, loaders, undefined, getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
+    }
+
+    public AuthenticationCheck = {
+        check: async () => {
+            let result: boolean;
+            try {
+                await this.client.get<boolean>("");
+                result = true;
+            } catch {
+                result = false;
+            }
+            return result;
+        },
     };
 }

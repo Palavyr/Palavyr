@@ -61,7 +61,7 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, intentId, delete
         if (isMounted) {
             (async () => {
                 if (localTable) {
-                    const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                    const { tableRows } = await repository.Configuration.Tables.Dynamic.GetDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                     localTable.tableRows = tableRows;
                     setLocalTable(cloneDeep(localTable));
                 }
@@ -87,7 +87,7 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, intentId, delete
             if (isValid) {
                 const currentMeta = localTable.tableMeta;
 
-                const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(currentMeta);
                 const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<BasicThresholdData[]>(
                     intentId,
                     DynamicTableTypes.BasicThreshold,

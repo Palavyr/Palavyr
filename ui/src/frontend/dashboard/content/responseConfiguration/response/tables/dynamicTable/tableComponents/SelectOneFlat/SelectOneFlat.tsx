@@ -62,7 +62,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteA
     useEffect(() => {
         (async () => {
             if (localTable) {
-                const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.GetDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                 localTable.tableRows = tableRows;
                 setLocalTable(cloneDeep(localTable));
             }
@@ -92,7 +92,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteA
             if (isValid) {
                 const currentMeta = localTable.tableMeta;
 
-                const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(currentMeta);
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(currentMeta);
                 const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<SelectOneFlatData[]>(
                     intentId,
                     DynamicTableTypes.SelectOneFlat,

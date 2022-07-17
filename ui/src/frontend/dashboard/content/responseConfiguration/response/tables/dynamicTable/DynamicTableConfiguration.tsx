@@ -31,8 +31,8 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
     const [tables, setTables] = useState<DynamicTable[]>([]);
 
     const loadTableData = useCallback(async () => {
-        const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.getDynamicTableMetas(intentId);
-        const showTotals = await repository.Intent.getShowDynamicTotals(intentId);
+        const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.GetDynamicTableMetas(intentId);
+        const showTotals = await repository.Intent.GetShowDynamicTotals(intentId);
 
         // show fee totals totals row
         setShowTotals(showTotals);
@@ -41,7 +41,7 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
         let tables: DynamicTable[] = [];
         let counter: number = 0;
         dynamicTableMetas.forEach(async tableMeta => {
-            const { tableRows, isInUse } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(intentId, tableMeta.tableType, tableMeta.tableId);
+            const { tableRows, isInUse } = await repository.Configuration.Tables.Dynamic.GetDynamicTableRows(intentId, tableMeta.tableType, tableMeta.tableId);
             tables.push({ tableMeta, tableRows: tableRows as TableData });
             counter++;
             if (counter === dynamicTableMetas.length) {
@@ -57,7 +57,7 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
 
     useEffect(() => {
         (async () => {
-            const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
+            const tableNameMap = await repository.Configuration.Tables.Dynamic.GetDynamicTableTypes();
             const quantTypes = await repository.Configuration.Units.GetSupportedUnitIds();
 
             // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
@@ -71,10 +71,10 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
 
     const addDynamicTable = async () => {
         // We always add the default dynamic table - the Select One Flat table
-        const newMeta = await repository.Configuration.Tables.Dynamic.createDynamicTable(intentId);
-        const { tableRows } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(intentId, newMeta.tableType, newMeta.tableId);
+        const newMeta = await repository.Configuration.Tables.Dynamic.CreateDynamicTable(intentId);
+        const { tableRows } = await repository.Configuration.Tables.Dynamic.GetDynamicTableRows(intentId, newMeta.tableType, newMeta.tableId);
 
-        const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
+        const tableNameMap = await repository.Configuration.Tables.Dynamic.GetDynamicTableTypes();
         const availableTables = tableNameMap;
         setAvailableTables(availableTables);
         // map of pricing trategy pretty names
@@ -98,7 +98,7 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
 
     const changeShowTotals = async (e: { target: { checked: any } }) => {
         const newShowTotals = e.target.checked;
-        const shouldShow = await repository.Intent.setShowDynamicTotals(intentId, newShowTotals);
+        const shouldShow = await repository.Intent.SetShowDynamicTotals(intentId, newShowTotals);
         setShowTotals(shouldShow);
         setSuccessOpen(true);
     };
@@ -148,7 +148,7 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
                     tables.map((table: DynamicTable, tableIndex: number) => {
                         const onDelete = async () => {
                             // delete table from DB
-                            await repository.Configuration.Tables.Dynamic.deleteDynamicTable(intentId, table.tableMeta.tableType, table.tableMeta.tableId);
+                            await repository.Configuration.Tables.Dynamic.DeleteDynamicTable(intentId, table.tableMeta.tableType, table.tableMeta.tableId);
 
                             // delete table from UI
                             const newTables = cloneDeep(tables);

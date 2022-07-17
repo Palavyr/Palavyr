@@ -101,7 +101,7 @@ export const IntentSettings = () => {
     };
 
     const handleIntentDelete = async () => {
-        await repository.Intent.deleteArea(intentId);
+        await repository.Intent.DeleteIntent(intentId);
         history.push("/dashboard");
         window.location.reload();
     };

@@ -42,7 +42,7 @@ export const DynamicTableHeader = ({ availableDynamicTableOptions, unitTypes, in
         localTable.tableMeta.tableType = value.tableType;
         localTable.tableMeta.prettyName = value.prettyName;
 
-        const updatedTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(localTable.tableMeta);
+        const updatedTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(localTable.tableMeta);
 
         localTable.tableMeta = updatedTableMeta;
         const quantDef = unpackUnitMeta(updatedTableMeta.unitId, unitTypes);

@@ -59,13 +59,13 @@ export const ResponseConfiguration = () => {
     const epilogueModifier = new LogueModifier(setEpilogue);
 
     const savePrologue = async () => {
-        const _prologue_ = await repository.Configuration.updatePrologue(intentId, prologue);
+        const _prologue_ = await repository.Configuration.UpdatePrologue(intentId, prologue);
         setPrologue(_prologue_);
         return true;
     };
 
     const saveEpilogue = async () => {
-        const _epilogue_ = await repository.Configuration.updateEpilogue(intentId, epilogue);
+        const _epilogue_ = await repository.Configuration.UpdateEpilogue(intentId, epilogue);
         setEpilogue(_epilogue_);
         return true;
     };
@@ -95,7 +95,7 @@ export const ResponseConfiguration = () => {
             return false;
         } // TODO: the table saver needs to return the validation result and the SaveOrCancel component needs to require this standard type for the error message.
 
-        const updatedStaticTables = await repository.Configuration.Tables.Static.updateStaticTablesMetas(intentId, staticTables);
+        const updatedStaticTables = await repository.Configuration.Tables.Static.UpdateStaticTablesMetas(intentId, staticTables);
         setStaticTables([]); // This is a hack to get the darn tables to save and rerender correctly.
         setStaticTables(cloneDeep(updatedStaticTables));
         return true;
@@ -124,7 +124,7 @@ export const ResponseConfiguration = () => {
     const [sendPdfWithResponse, setSendPdfWithResponse] = useState<boolean | null>(null);
 
     const onToggleSendPdfWithResponse = async () => {
-        const toSend = await repository.Intent.toggleSendPdfResponse(intentId);
+        const toSend = await repository.Intent.ToggleSendPdfResponse(intentId);
         setSendPdfWithResponse(toSend);
     };
 

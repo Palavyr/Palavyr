@@ -24,14 +24,14 @@ export class PercentOfThresholdModifier implements Modifier {
     }
 
     async addItem(tableData: PercentOfThresholdData[], repository: PalavyrRepository, intentId: string, tableId: string) {
-        const newItemInitialrow = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<PercentOfThresholdData>(intentId, this.tableType, tableId);
+        const newItemInitialrow = await repository.Configuration.Tables.Dynamic.GetDynamicTableDataTemplate<PercentOfThresholdData>(intentId, this.tableType, tableId);
         newItemInitialrow.itemOrder = this._getOrderedUniqItemIds(tableData).length;
         tableData.push(newItemInitialrow);
         this.setTables(tableData);
     }
 
     async addRow(tableData: PercentOfThresholdData[], repository: PalavyrRepository, intentId: string, tableId: string, itemId: string) {
-        const newRowTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<PercentOfThresholdData>(intentId, this.tableType, tableId);
+        const newRowTemplate = await repository.Configuration.Tables.Dynamic.GetDynamicTableDataTemplate<PercentOfThresholdData>(intentId, this.tableType, tableId);
         newRowTemplate.itemId = itemId;
         tableData.push(newRowTemplate);
         this.setTables(tableData);

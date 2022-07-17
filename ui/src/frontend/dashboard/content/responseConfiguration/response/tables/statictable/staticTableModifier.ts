@@ -93,7 +93,7 @@ export class StaticTablesModifier {
         const tableOrders = this._getIDs_(staticTableMetas);
         const newtableOrder = this._generateNextId_(tableOrders);
 
-        const newTableTemplate = await repository.Configuration.Tables.Static.getStaticTablesMetaTemplate(intentId);
+        const newTableTemplate = await repository.Configuration.Tables.Static.GetStaticTablesMetaTemplate(intentId);
         const newTable = ((): StaticTableMeta => ({
             ...newTableTemplate,
             tableOrder: newtableOrder,
@@ -115,7 +115,7 @@ export class StaticTablesModifier {
         const curTableOrder = staticTableMetas[0].tableOrder;
         const curintentId = staticTableMetas[0].intentId;
 
-        const newRow = await this.repository.Configuration.Tables.Static.getStaticTableRowTemplate(curintentId, curTableOrder);
+        const newRow = await this.repository.Configuration.Tables.Static.GetStaticTableRowTemplate(curintentId, curTableOrder);
 
         newRow.rowOrder = nextrowOrder;
 
