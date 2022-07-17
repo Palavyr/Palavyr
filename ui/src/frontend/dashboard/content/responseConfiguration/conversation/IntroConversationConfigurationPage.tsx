@@ -43,7 +43,7 @@ export const IntroConversationConfigurationPage = () => {
     const onSave = async () => {
         if (historyTracker && historyTracker.linkedNodeList && planTypeMeta) {
             const compiledNodes = historyTracker.linkedNodeList.compileToConvoNodes();
-            const updatedConvoNodes = await repository.Settings.Account.updateIntroduction(intentId, compiledNodes);
+            const updatedConvoNodes = await repository.Settings.Account.UpdateIntroduction(intentId, compiledNodes);
             let nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(intentId, planTypeMeta);
             nodeTypeOptions = nodeTypeOptions.filter(x => x.value === "ProvideInfo");
 

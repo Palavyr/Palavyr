@@ -35,7 +35,7 @@ export const ChangeEmail = () => {
     const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" });
 
     const loadEmail = useCallback(async () => {
-        const { emailAddress, isVerified, awaitingVerification } = await repository.Settings.Account.getEmail();
+        const { emailAddress, isVerified, awaitingVerification } = await repository.Settings.Account.GetEmail();
         setSettings({
             emailAddress: emailAddress,
             isVerified: isVerified,
@@ -69,7 +69,7 @@ export const ChangeEmail = () => {
     };
 
     const verifyEmailAddress = async (newEmailAddress: string) => {
-        const res = await repository.Settings.Account.updateEmail(newEmailAddress);
+        const res = await repository.Settings.Account.UpdateEmail(newEmailAddress);
         setAlertDetails({ title: res.title, message: res.message });
         setAlertState(true);
         if (!(res.status === "Failed")) setSettings({ ...settings, emailAddress: newEmailAddress });

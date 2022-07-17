@@ -85,7 +85,7 @@ export const PercentOfThreshold = ({
                 const currentMeta = localTable.tableMeta;
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<PercentOfThresholdData[]>(
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SaveDynamicTable<PercentOfThresholdData[]>(
                     intentId,
                     DynamicTableTypes.PercentOfThreshold,
                     tableRows,

@@ -77,7 +77,7 @@ export const ChangeLogoImage = () => {
     const [companyLogo, setcompanyLogo] = useState<FileAssetResource>({ fileId: "", fileName: "", link: "" });
 
     const loadCompanyLogo = useCallback(async () => {
-        const logoFileAssetResource = await repository.Settings.Account.getCompanyLogo();
+        const logoFileAssetResource = await repository.Settings.Account.GetCompanyLogo();
         setcompanyLogo(logoFileAssetResource);
     }, []);
 
@@ -96,7 +96,7 @@ export const ChangeLogoImage = () => {
     };
 
     const handleDeleteLogo = async () => {
-        await repository.Settings.Account.deleteCompanyLogo();
+        await repository.Settings.Account.DeleteCompanyLogo();
         setcompanyLogo({ fileId: "", fileName: "", link: "" });
     };
 

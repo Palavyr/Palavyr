@@ -37,10 +37,34 @@ import { SessionStorage } from "@localStorage/sessionStorage";
 import { AxiosClient, CacheIds } from "./FrontendAxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
 import { Loaders } from "./Loaders";
-
-class ApiRoutes {}
+import { ApiRoutes } from "./ApiRoutes";
 
 export class PalavyrRepository extends ApiRoutes {
+    private client: AxiosClient;
+
+    private formDataHeaders: { [key: string]: string } = {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+    };
+
+    constructor(apiErrors?: ApiErrors, loaders?: Loaders) {
+        super();
+        this.client = new AxiosClient(apiErrors, loaders, undefined, getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
+    }
+
+    public AuthenticationCheck = {
+        check: async () => {
+            let result: boolean;
+            try {
+                await this.client.get<boolean>("");
+                result = true;
+            } catch {
+                result = false;
+            }
+            return result;
+        },
+    };
+
     public Purchase = {
         Customer: {
             GetCustomerId: async () => this.client.get<string>(this.Routes.GetCustomerIdRoute(), CacheIds.CustomerId),
@@ -63,7 +87,7 @@ export class PalavyrRepository extends ApiRoutes {
     };
 
     public Products = {
-        getProducts: async () => this.client.get<ProductIds>(this.Routes.GetProducts()),
+        GetProducts: async () => this.client.get<ProductIds>(this.Routes.GetProducts()),
     };
 
     public Intent = {
@@ -77,7 +101,7 @@ export class PalavyrRepository extends ApiRoutes {
         },
         SetShowDynamicTotals: (intentId: string, shouldShow: boolean) => this.client.put<boolean, {}>(this.Routes.SetShowDynamicTotals(), { ShowDynamicTotals: shouldShow, IntentId: intentId }),
         ToggleUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, intentId: string) =>
-            this.client.put<boolean, {}>(this.Routes.ToggleUseAreaFallbackEmail(), { UseFallback: useAreaFallbackEmailUpdate, IntentId: intentId }),
+            this.client.put<boolean, {}>(this.Routes.ToggleUseIntentFallbackEmail(), { UseFallback: useAreaFallbackEmailUpdate, IntentId: intentId }),
         CreateIntent: async (intentName: string) => {
             const newArea = await this.client.post<AreaTable, {}>(this.Routes.CreateIntent(), { intentName });
             const areas = SessionStorage.getCacheValue(CacheIds.Intents) as Intents;
@@ -93,43 +117,6 @@ export class PalavyrRepository extends ApiRoutes {
 
         DeleteIntent: (intentId: string) => this.client.delete<void>(this.Routes.DeleteIntent(intentId), CacheIds.Intents),
         ToggleSendPdfResponse: (intentId: string) => this.client.post<boolean, {}>(this.Routes.ToggleSendPdfResponse(intentId)),
-    };
-
-    public Routes = {
-        GetCustomerIdRoute: () => `payments/customer-id`,
-        GetCustomerPortalRoute: () => `payments/customer-portal`,
-        GetPrices: (prodId: string) => `products/prices/get-prices/${prodId}`,
-        CreateCheckoutSession: () => `checkout/create-checkout-session`,
-        GetProducts: () => `products/all`,
-        ToggleIsEnabled: () => `intents/intent-toggle`,
-        ToggleUseAreaFallbackEmail: () => `intents/use-fallback-email-toggle`,
-        GetAllIntents: () => `intents`,
-        CreateIntent: () => `intents/create`,
-        UpdateIntentName: (intentId: string) => `intents/update/name/${intentId}`,
-        DeleteIntent: (intentId: string) => `intents/delete/${intentId}`,
-        ToggleSendPdfResponse: (intentId: string) => `intent/send-pdf/${intentId}`,
-        GetShowDynamicTotals: (intentId: string) => `intent/dynamic-totals/${intentId}`,
-        SetShowDynamicTotals: () => `area/dynamic-totals`,
-        GetEstimateConfiguration: (intentId: string) => `response/configuration/${intentId}`,
-        UpdatePrologue: () => `response/configuration/prologue`,
-        UpdateEpilogue: () => `response/configuration/epilogue`,
-        GetSupportedUnitIds: () => `configuration/unit-types`,
-        GetWidgetState: () => `widget-config/widget-active-state`,
-        SetWidgetState: (updatedWidgetState: boolean) => `widget-config/widget-active-state?state=${updatedWidgetState}`,
-        GetDynamicTableMetas: (intentId: string) => `tables/dynamic/metas/${intentId}`,
-        GetDynamicTableTypes: () => `tables/dynamic/table-name-map`,
-        ModifyDynamicTableMeta: () => `tables/dynamic/modify`,
-        CreateDynamicTable: (intentId: string) => `tables/dynamic/SimpleThresholdTableRow/create/${intentId}`,
-        DeleteDynamicTable: (intentId: string, tableType: string, tableId: string) => `tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`,
-        GetDynamicTableDataTemplate: (intentId: string, tableType: string, tableId: string) => `tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}/template`,
-        GetDynamicTableRows: (intentId: string, tableType: string, tableId: string) => `tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`,
-        UpdateStaticTableMetas: () => `response/configuration/static/tables/save`,
-        GetStaticTablesMetaTemplate: (intentId: string) => `response/configuration/${intentId}/static/tables/template`,
-        GetStaticTableRowTemplate: (intentId: string, tableOrder: number) => `response/configuration/${intentId}/static/tables/${tableOrder}/row/template`,
-        FetchPreview: (intentId: string) => `preview/estimate/${intentId}`
-
-
-
     };
 
     public Configuration = {
@@ -151,7 +138,6 @@ export class PalavyrRepository extends ApiRoutes {
                 GetDynamicTableTypes: async () => this.client.get<TableNameMap>(this.Routes.GetDynamicTableTypes()),
 
                 ModifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta) => {
-                    console.log(dynamicTableMeta);
                     return this.client.put<DynamicTableMeta, {}>(this.Routes.ModifyDynamicTableMeta(), dynamicTableMeta);
                     // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, dynamicTableMeta.intentId].join("-"));
                     // return response;
@@ -171,8 +157,8 @@ export class PalavyrRepository extends ApiRoutes {
                 GetDynamicTableDataTemplate: async <T>(intentId: string, tableType: string, tableId: string) => this.client.get<T>(this.Routes.GetDynamicTableDataTemplate(intentId, tableType, tableId)),
                 GetDynamicTableRows: async (intentId: string, tableType: string, tableId: string) => this.client.get<DynamicTableData>(this.Routes.GetDynamicTableRows(intentId, tableType, tableId)),
 
-                saveDynamicTable: async <T>(intentId: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) => {
-                    const response = this.client.put<T, {}>(`tables/dynamic/${tableType}/intent/${intentId}/table/${tableId}`, { TableTag: tableTag, TableData: tableData });
+                SaveDynamicTable: async <T>(intentId: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) => {
+                    const response = this.client.put<T, {}>(this.Routes.SaveDynamicTable(intentId, tableType, tableId), { TableTag: tableTag, TableData: tableData });
                     SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
                     return response;
                 },
@@ -190,30 +176,30 @@ export class PalavyrRepository extends ApiRoutes {
         },
 
         Email: {
-            GetVariableDetails: async () => this.client.get<VariableDetail[]>(`email/variables`),
+            GetVariableDetails: async () => this.client.get<VariableDetail[]>(this.Routes.GetVariableDetails()),
 
-            GetAreaEmailTemplate: async (intentId: string) => this.client.get<string>(`email/${intentId}/email-template`),
-            GetAreaFallbackEmailTemplate: async (intentId: string) => this.client.get<string>(`email/fallback/${intentId}/email-template`),
-            GetDefaultFallbackEmailTemplate: async () => this.client.get<string>(`email/fallback/default-email-template`),
+            GetAreaEmailTemplate: async (intentId: string) => this.client.get<string>(this.Routes.GetIntentEmailTemplate(intentId)),
+            GetAreaFallbackEmailTemplate: async (intentId: string) => this.client.get<string>(this.Routes.GetIntentFallbackEmailTemplate(intentId)),
+            GetDefaultFallbackEmailTemplate: async () => this.client.get<string>(this.Routes.GetDefaultFallbackEmailTemplate()),
 
-            SaveAreaEmailTemplate: async (intentId: string, EmailTemplate: string) => this.client.put<string, {}>(`email/email-template`, { EmailTemplate, IntentId: intentId }),
-            SaveAreaFallbackEmailTemplate: async (intentId: string, EmailTemplate: string) => this.client.put<string, {}>(`email/fallback/email-template`, { EmailTemplate, IntentId: intentId }),
-            SaveDefaultFallbackEmailTemplate: async (EmailTemplate: string) => this.client.put<string, {}>(`email/fallback/default-email-template`, { EmailTemplate }),
+            SaveAreaEmailTemplate: async (intentId: string, EmailTemplate: string) => this.client.put<string, {}>(this.Routes.SaveIntentEmailTemplate(), { EmailTemplate, IntentId: intentId }),
+            SaveAreaFallbackEmailTemplate: async (intentId: string, EmailTemplate: string) => this.client.put<string, {}>(this.Routes.SaveIntentFallbackEmailTemplate(), { EmailTemplate, IntentId: intentId }),
+            SaveDefaultFallbackEmailTemplate: async (EmailTemplate: string) => this.client.put<string, {}>(this.Routes.SaveDefaultFallbackEmailTemplate(), { EmailTemplate }),
 
-            GetAreaSubject: (intentId: string) => this.client.get<string>(`email/subject/${intentId}`),
-            GetAreaFallbackSubject: (intentId: string) => this.client.get<string>(`email/fallback/subject/${intentId}`),
-            GetDefaultFallbackSubject: async () => this.client.get<string>(`email/default-fallback-subject`),
+            GetAreaSubject: (intentId: string) => this.client.get<string>(this.Routes.GetIntentSubject(intentId)),
+            GetAreaFallbackSubject: (intentId: string) => this.client.get<string>(this.Routes.GetIntentFallbackSubject(intentId)),
+            GetDefaultFallbackSubject: async () => this.client.get<string>(this.Routes.GetDefaultFallbackSubject()),
 
-            SaveAreaSubject: (intentId: string, subject: string) => this.client.put<string, {}>(`email/subject`, { Subject: subject, IntentId: intentId }),
-            SaveAreaFallbackSubject: (intentId: string, subject: string) => this.client.put<string, {}>(`email/fallback/subject`, { Subject: subject, IntentId: intentId }),
-            SaveDefaultFallbackSubject: async (subject: string) => this.client.put<string, {}>(`email/fallback/default-subject`, { Subject: subject }),
+            SaveAreaSubject: async (intentId: string, subject: string) => this.client.put<string, {}>(this.Routes.SaveIntentSubject(), { Subject: subject, IntentId: intentId }),
+            SaveAreaFallbackSubject: async (intentId: string, subject: string) => this.client.put<string, {}>(this.Routes.SaveIntentFallbackSubject(), { Subject: subject, IntentId: intentId }),
+            SaveDefaultFallbackSubject: async (subject: string) => this.client.put<string, {}>(this.Routes.SaveDefaultFallbackSubject(), { Subject: subject }),
         },
 
         Attachments: {
-            GetAttachments: async (intentId: string) => this.client.get<FileAssetResource[]>(`attachments/${intentId}`, undefined),
-            DeleteAttachment: async (intentId: string, fileId: string) => this.client.delete<FileAssetResource[]>(`attachments`, undefined, { data: { fileId: fileId, IntentId: intentId } }),
+            GetAttachments: async (intentId: string) => this.client.get<FileAssetResource[]>(this.Routes.GetAttachments(intentId), undefined),
+            DeleteAttachment: async (intentId: string, fileId: string) => this.client.delete<FileAssetResource[]>(this.Routes.DeleteAttachment(), undefined, { data: { fileId: fileId, IntentId: intentId } }),
             UploadAttachments: async (intentId: string, formData: FormData) =>
-                this.client.post<FileAssetResource[], {}>(`attachments/${intentId}/upload`, formData, undefined, {
+                this.client.post<FileAssetResource[], {}>(this.Routes.UploadAttachments(intentId), formData, undefined, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",
@@ -222,56 +208,39 @@ export class PalavyrRepository extends ApiRoutes {
         },
 
         FileAssets: {
-            GetFileAssets: async (fileIds: string[] = []) => {
-                if (fileIds !== undefined && fileIds.length > 0) {
-                    // if specifying 1 image
-                    // const currentCache = SessionStorage.getCacheValue(CacheIds.FileAssets);
-                    // if (currentCache === null) {
-                    //     return this.client.get<FileAssetResource[]>(`file-assets`, CacheIds.FileAssets);
-                    // }
-                    // const availableImages = currentCache.filter((x: FileAssetResource) => fileIds.includes(x.fileId)) as FileAssetResource[];
-                    // if (availableImages.length === fileIds.length) {
-                    //     return Promise.resolve(availableImages);
-                    // } else {
-                    return await this.client.get<FileAssetResource[]>(`file-assets?fileIds=${fileIds.join(",")}`);
-                    // }
-                } else {
-                    return await this.client.get<FileAssetResource[]>(`file-assets`); //, CacheIds.FileAssets);
-                }
-            }, // takes a querystring comma delimieted of fileIds
-
+            GetFileAssets: async (fileIds: string[] = []) => this.client.get<FileAssetResource[]>(this.Routes.GetFileAssets(fileIds)),
             // DO NOT USE WITH NODE
             UploadFileAssets: async (formData: FormData) => {
-                const result = await this.client.post<FileAssetResource[], {}>(`file-assets/upload`, formData, undefined, { headers: this.formDataHeaders });
+                const result = await this.client.post<FileAssetResource[], {}>(this.Routes.UploadFileAssets(), formData, undefined, { headers: this.formDataHeaders });
                 // const currentCache = SessionStorage.getCacheValue(CacheIds.FileAssets) as FileAssetResource[];
                 // currentCache.push(...result);
                 // SessionStorage.setCacheValue(CacheIds.FileAssets, currentCache);
                 return result;
             },
 
-            LinkFileAssetToNode: async (fileId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`file-assets/link/${fileId}/node/${nodeId}`),
-            LinkFileAssetToIntent: async (fileId: string, intentId: string) => this.client.post<FileAssetResource, {}>(`file-assets/link/${fileId}/intent/${intentId}`),
-            LinkFileAssetToLogo: async (fileId: string) => this.client.post<FileAssetResource, {}>(`file-assets/link/${fileId}/logo`),
-            DeleteFileAsset: async (fileIds: string[]) => this.client.delete<FileAssetResource[]>(`file-assets?fileIds=${fileIds.join(",")}`), // CacheIds.FileAssets), // takes a querystring command delimited of fileIds
+            LinkFileAssetToNode: async (fileId: string, nodeId: string) => this.client.post<ConvoNode, {}>(this.Routes.LinkFileAssetToNode(fileId, nodeId)),
+            LinkFileAssetToIntent: async (fileId: string, intentId: string) => this.client.post<FileAssetResource, {}>(this.Routes.LinkFileAssetToIntent(fileId, intentId)),
+            LinkFileAssetToLogo: async (fileId: string) => this.client.post<FileAssetResource, {}>(this.Routes.LinkFileAssetToLogo(fileId)),
+            DeleteFileAsset: async (fileIds: string[]) => this.client.delete<FileAssetResource[]>(this.Routes.DeleteFileAsset(fileIds)), // CacheIds.FileAssets), // takes a querystring command delimited of fileIds
         },
     };
 
     public Conversations = {
-        GetConversation: async (intentId: string) => this.client.get<ConvoNode[]>(`configure-conversations/${intentId}`, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
-        GetConversationNode: async (nodeId: string) => this.client.get<ConvoNode>(`configure-conversations/nodes/${nodeId}`),
+        GetConversation: async (intentId: string) => this.client.get<ConvoNode[]>(this.Routes.GetConversation(intentId), [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
+        GetConversationNode: async (nodeId: string) => this.client.get<ConvoNode>(this.Routes.GetConversationNode(nodeId)),
         GetNodeOptionsList: async (intentId: string, planTypeMeta: PlanTypeMeta) =>
-            filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptions>(`configure-conversations/${intentId}/node-type-options`), planTypeMeta),
-        GetIntroNodeOptionsList: async (introId: string) => this.client.get<NodeTypeOptions>(`configure-intro/${introId}/node-type-options`),
+            filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptions>(this.Routes.GetNodeOptionsList(intentId)), planTypeMeta),
+        GetIntroNodeOptionsList: async (introId: string) => this.client.get<NodeTypeOptions>(this.Routes.GetIntroNodeOptionsList(introId)),
 
-        GetErrors: async (intentId: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(`configure-conversations/tree-errors`, { Transactions: nodeList, IntentId: intentId }),
-        GetIntroErrors: async (introId: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(`configure-conversations/intro/tree-errors`, { Transactions: nodeList, IntroId: introId }),
+        GetErrors: async (intentId: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(this.Routes.GetErrors(), { Transactions: nodeList, IntentId: intentId }),
+        GetIntroErrors: async (introId: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(this.Routes.GetIntroErrors(), { Transactions: nodeList, IntroId: introId }),
 
         ModifyConversation: async (nodelist: ConvoNode[], intentId: string) =>
-            this.client.put<ConvoNode[], {}>(`configure-conversations`, { Transactions: nodelist, IntentId: intentId }, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
+            this.client.put<ConvoNode[], {}>(this.Routes.ModifyConversation(), { Transactions: nodelist, IntentId: intentId }, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
         ModifyConversationNode: async (nodeId: string, intentId: string, updatedNode: ConvoNode) =>
-            this.client.put<ConvoNode[], {}>(`configure-conversations/${intentId}/nodes/${nodeId}`, updatedNode, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
+            this.client.put<ConvoNode[], {}>(this.Routes.ModifyConversationNode(nodeId, intentId), updatedNode, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
         ModifyConversationNodeText: async (nodeId: string, intentId: string, updatedNodeText: string) => {
-            const result = await this.client.put<ConvoNode | null, {}>(`configure-conversations/nodes/text`, { UpdatedNodeText: updatedNodeText, IntentId: intentId, NodeId: nodeId });
+            const result = await this.client.put<ConvoNode | null, {}>(this.Routes.ModifyConversationNodeText(), { UpdatedNodeText: updatedNodeText, IntentId: intentId, NodeId: nodeId });
             SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
             if (isNullOrUndefinedOrWhitespace(result)) {
                 return Promise.resolve(null);
@@ -279,101 +248,77 @@ export class PalavyrRepository extends ApiRoutes {
             return Promise.resolve(result);
         },
     };
-
     public WidgetDemo = {
-        RunConversationPrecheck: async () => this.client.get<PreCheckResult>(`widget-config/demo/pre-check`),
-        GetWidetPreferences: async () => this.client.get<WidgetPreferences>(`widget-config/preferences`, CacheIds.WidgetPrefs),
-        SaveWidgetPreferences: async (prefs: WidgetPreferences) => this.client.put<WidgetPreferences, WidgetPreferences>(`widget-config/preferences`, prefs, CacheIds.WidgetPrefs),
+        RunConversationPrecheck: async () => this.client.get<PreCheckResult>(this.Routes.RunConversationPrecheck()),
+        GetWidetPreferences: async () => this.client.get<WidgetPreferences>(this.Routes.GetWidetPreferences(), CacheIds.WidgetPrefs),
+        SaveWidgetPreferences: async (prefs: WidgetPreferences) => this.client.put<WidgetPreferences, WidgetPreferences>(this.Routes.SaveWidgetPreferences(), prefs, CacheIds.WidgetPrefs),
     };
 
     public Settings = {
         Subscriptions: {
-            getCurrentPlanMeta: async () => this.client.get<PlanTypeMeta>(`account/settings/current-plan-meta`, CacheIds.CurrentPlanMeta),
+            GetCurrentPlanMeta: async () => this.client.get<PlanTypeMeta>(this.Routes.GetCurrentPlanMeta(), CacheIds.CurrentPlanMeta),
         },
 
         Account: {
-            CancelRegistration: async (emailAddress: string) => this.client.post<{}, {}>("account/cancel-registration", { EmailAddress: emailAddress }),
+            CancelRegistration: async (emailAddress: string) => this.client.post<{}, {}>(this.Routes.CancelRegistration(), { EmailAddress: emailAddress }),
 
-            getApiKey: async () => this.client.get<string>(`account/settings/api-key`),
-            confirmEmailAddress: async (authToken: string) => this.client.post<boolean, {}>(`account/confirmation/${authToken}/action/setup`),
-            resendConfirmationToken: async (emailAddress: string) => this.client.post<boolean, {}>(`account/confirmation/token/resend`, { EmailAddress: emailAddress }),
-            checkIsActive: async () => await this.client.get<boolean>(`account/is-active`),
+            GetApiKey: async () => this.client.get<string>(this.Routes.GetApiKey()),
+            ConfirmEmailAddress: async (authToken: string) => this.client.post<boolean, {}>(this.Routes.ConfirmEmailAddress(authToken)),
+            ResendConfirmationToken: async (emailAddress: string) => this.client.post<boolean, {}>(this.Routes.ResendConfirmationToken(), { EmailAddress: emailAddress }),
+            CheckIsActive: async () => await this.client.get<boolean>(this.Routes.CheckIsActive()),
 
-            UpdatePassword: async (oldPassword: string, newPassword: string) => this.client.put<boolean, {}>(`account/settings/password`, { OldPassword: oldPassword, Password: newPassword }),
-            updateCompanyName: async (companyName: string) => this.client.put<string, {}>(`account/settings/company-name`, { CompanyName: companyName }),
-            updateEmail: async (newEmail: string) => this.client.put<EmailVerificationResponse, {}>(`account/settings/email`, { EmailAddress: newEmail }),
-            updatePhoneNumber: async (newPhoneNumber: string) => this.client.put<string, {}>(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }),
-            updateLocale: async (newLocaleId: string) => this.client.put<LocaleResponse, {}>(`account/settings/locale`, { LocaleId: newLocaleId }),
-            updateCompanyLogo: async (formData: FormData) =>
-                this.client.put<FileAssetResource, {}>(`account/settings/logo`, formData, undefined, {
+            UpdatePassword: async (oldPassword: string, newPassword: string) => this.client.put<boolean, {}>(this.Routes.UpdatePassword(), { OldPassword: oldPassword, Password: newPassword }),
+            UpdateCompanyName: async (companyName: string) => this.client.put<string, {}>(this.Routes.UpdateCompanyName(), { CompanyName: companyName }),
+            UpdateEmail: async (newEmail: string) => this.client.put<EmailVerificationResponse, {}>(this.Routes.UpdateEmail(), { EmailAddress: newEmail }),
+            UpdatePhoneNumber: async (newPhoneNumber: string) => this.client.put<string, {}>(this.Routes.UpdatePhoneNumber(), { PhoneNumber: newPhoneNumber }),
+            UpdateLocale: async (newLocaleId: string) => this.client.put<LocaleResponse, {}>(this.Routes.UpdateLocale(), { LocaleId: newLocaleId }),
+            UpdateCompanyLogo: async (formData: FormData) =>
+                this.client.put<FileAssetResource, {}>(this.Routes.UpdateCompanyLogo(), formData, undefined, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",
                     },
                 }),
 
-            getCompanyName: async () => this.client.get<string>(`account/settings/company-name`),
-            getEmail: async () => this.client.get<AccountEmailSettingsResponse>(`account/settings/email`),
-            getPhoneNumber: async () => this.client.get<PhoneSettingsResponse>(`account/settings/phone-number`),
+            GetCompanyName: async () => this.client.get<string>(this.Routes.GetCompanyName()),
+            GetEmail: async () => this.client.get<AccountEmailSettingsResponse>(this.Routes.GetEmail()),
+            GetPhoneNumber: async () => this.client.get<PhoneSettingsResponse>(this.Routes.GetPhoneNumber()),
 
-            GetLocale: async (readonly: boolean = false) => this.client.get<LocaleResponse>(`account/settings/locale?read=${readonly}`),
-            getCompanyLogo: async () => this.client.get<FileAssetResource>(`account/settings/logo`),
+            GetLocale: async (readonly: boolean = false) => this.client.get<LocaleResponse>(this.Routes.GetLocale()),
+            GetCompanyLogo: async () => this.client.get<FileAssetResource>(this.Routes.GetCompanyLogo()),
 
-            getIntroductionId: async () => this.client.get<string>(`account/settings/intro-id`),
-            updateIntroduction: async (introId: string, update: ConvoNode[]) =>
-                this.client.post<ConvoNode[], {}>(`account/settings/intro-id`, { Transactions: update }, [CacheIds.PalavyrConfiguration, introId].join("-") as CacheIds),
+            GetIntroductionId: async () => this.client.get<string>(this.Routes.GetIntroductionId()),
+            UpdateIntroduction: async (introId: string, update: ConvoNode[]) =>
+                this.client.post<ConvoNode[], {}>(this.Routes.UpdateIntroduction(), { Transactions: update }, [CacheIds.PalavyrConfiguration, introId].join("-") as CacheIds),
 
-            deleteCompanyLogo: async () => this.client.delete(`file-assets/unlink/logo`),
+            DeleteCompanyLogo: async () => this.client.delete(this.Routes.DeleteCompanyLogo()),
             DeleteAccount: async () => {
-                const result = this.client.delete(`account/delete-account`);
+                const result = this.client.delete(this.Routes.DeleteAccount());
                 SessionStorage.ClearAllCacheValues();
                 return result;
             },
         },
         EmailVerification: {
-            RequestEmailVerification: async (emailAddress: string, intentId: string) => this.client.post<EmailVerificationResponse, {}>(`verification/email`, { EmailAddress: emailAddress, IntentId: intentId }),
-            CheckEmailVerificationStatus: async (emailAddress: string) => this.client.post<boolean, {}>(`verification/email/status`, { EmailAddress: emailAddress }),
+            RequestEmailVerification: async (emailAddress: string, intentId: string) =>
+                this.client.post<EmailVerificationResponse, {}>(this.Routes.RequestEmailVerification(), { EmailAddress: emailAddress, IntentId: intentId }),
+            CheckEmailVerificationStatus: async (emailAddress: string) => this.client.post<boolean, {}>(this.Routes.CheckEmailVerificationStatus(), { EmailAddress: emailAddress }),
         },
     };
 
     public Enquiries = {
-        getEnquiries: async () => this.client.get<Enquiries>(`enquiries`),
-        getEnquiryCount: async () => this.client.get<number>(`enquiries/count`),
-        getShowSeenEnquiries: async () => this.client.get<boolean>(`enquiries/show`),
-        toggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(`enquiries/toggle-show`),
+        GetEnquiries: async () => this.client.get<Enquiries>(this.Routes.GetEnquiries()),
+        GetEnquiryCount: async () => this.client.get<number>(this.Routes.GetEnquiryCount()),
+        GetShowSeenEnquiries: async () => this.client.get<boolean>(this.Routes.GetShowSeenEnquiries()),
+        ToggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(this.Routes.ToggleShowSeenEnquiries()),
 
-        UpdateSeen: async (updates: MarkAsSeenUpdate[]) => this.client.put<{}, {}>(`enquiries/seen`, { Updates: updates }),
-        DeleteSelected: async (conversationIds: string[]) => this.client.put<Enquiries, {}>(`enquiries/delete`, { ConversationIds: conversationIds }),
+        UpdateSeen: async (updates: MarkAsSeenUpdate[]) => this.client.put<{}, {}>(this.Routes.UpdateSeen(), { Updates: updates }),
+        DeleteSelected: async (conversationIds: string[]) => this.client.put<Enquiries, {}>(this.Routes.DeleteSelected(), { ConversationIds: conversationIds }),
 
-        getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`, [CacheIds.Conversation, conversationId].join("-") as CacheIds),
+        GetConversation: async (conversationId: string) => this.client.get<CompletedConversation>(this.Routes.GetConversation(conversationId), [CacheIds.Conversation, conversationId].join("-") as CacheIds),
 
-        getEnquiryInsights: async () => this.client.get<EnquiryActivtyResource[]>("enquiry-insights"),
+        GetEnquiryInsights: async () => this.client.get<EnquiryActivtyResource[]>(this.Routes.GetEnquiryInsights()),
 
-        UnselectAll: async () => this.client.post(`enquiries/selectall`),
-        SelectAll: async () => this.client.post(`enquiries/unselectall`),
-    };
-
-    private client: AxiosClient;
-
-    private formDataHeaders: { [key: string]: string } = {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-    };
-
-    constructor(apiErrors?: ApiErrors, loaders?: Loaders) {
-        this.client = new AxiosClient(apiErrors, loaders, undefined, getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
-    }
-
-    public AuthenticationCheck = {
-        check: async () => {
-            let result: boolean;
-            try {
-                await this.client.get<boolean>("");
-                result = true;
-            } catch {
-                result = false;
-            }
-            return result;
-        },
+        UnselectAll: async () => this.client.post(this.Routes.UnselectAll()),
+        SelectAll: async () => this.client.post(this.Routes.SelectAll()),
     };
 }

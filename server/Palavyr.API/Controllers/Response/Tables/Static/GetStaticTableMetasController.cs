@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Response.Tables.Static
 {
+    [Obsolete("It seems this is no longer used by the frontend")]
     public class GetStaticTableMetasController : PalavyrBaseController
     {
         private readonly IMediator mediator;

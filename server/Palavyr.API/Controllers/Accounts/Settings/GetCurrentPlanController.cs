@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -7,6 +8,7 @@ using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
+    [Obsolete("It seems this is no longer used by the frontend")]
     public class GetCurrentPlanController : PalavyrBaseController
     {
         private readonly IMediator mediator;

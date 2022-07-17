@@ -28,7 +28,7 @@ export const IntentActivityCards = () => {
     const history = useHistory();
 
     const loadEnquiries = useCallback(async () => {
-        const enquiryActivy = await repository.Enquiries.getEnquiryInsights();
+        const enquiryActivy = await repository.Enquiries.GetEnquiryInsights();
         setActivity(enquiryActivy);
     }, []);
 

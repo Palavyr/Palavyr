@@ -68,7 +68,7 @@ const render = (componentType: string, text: string, nodeId: string, nodeChildre
     context.addNewBotMessage(message);
 };
 const initializer = async (context: IAppContext, repository: PalavyrRepository) => {
-    const apiKey = await repository.Settings.Account.getApiKey();
+    const apiKey = await repository.Settings.Account.GetApiKey();
     const client = new PalavyrWidgetRepository(apiKey);
 
     render("ProvideInfo", "You can use this display to customize your widget.", "1", "2", context, client);

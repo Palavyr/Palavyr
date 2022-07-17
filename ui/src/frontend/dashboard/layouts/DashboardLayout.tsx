@@ -199,7 +199,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const loadAreas = useCallback(async () => {
         setDashboardAreasLoading(true);
 
-        const planTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();
+        const planTypeMeta = await repository.Settings.Subscriptions.GetCurrentPlanMeta();
         setPlanTypeMeta(planTypeMeta);
 
         const areas = await repository.Intent.GetAllIntents();
@@ -208,7 +208,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         const locale = await repository.Settings.Account.GetLocale(true); // readonly == true
         setCurrencySymbol(locale.currentLocale.currencySymbol);
 
-        const numUnseen = await repository.Enquiries.getEnquiryCount();
+        const numUnseen = await repository.Enquiries.GetEnquiryCount();
         setUnseenNotifications(numUnseen);
 
         if (intentId) {

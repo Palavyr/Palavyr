@@ -23,7 +23,7 @@ class Auth {
 
     async register(email: string, password: string, callback: () => any, errorCallback: (response) => any) {
         try {
-            const authenticationResponse = await this.loginClient.Account.registerNewAccount(email, password);
+            const authenticationResponse = await this.loginClient.Account.RegisterNewAccount(email, password);
             return await this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
         } catch {
             console.log("Error trying to reach the server.");
@@ -39,7 +39,7 @@ class Auth {
 
             const _client = new PalavyrRepository(); // needs to be authenticated
 
-            const accountIsActive = await _client.Settings.Account.checkIsActive();
+            const accountIsActive = await _client.Settings.Account.CheckIsActive();
             this.isActive = accountIsActive;
             SessionStorage.setIsActive(accountIsActive);
 

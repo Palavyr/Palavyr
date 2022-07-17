@@ -44,7 +44,7 @@ export const ConversationReview = () => {
     const [completeConversation, setCompleteConversation] = useState<CompletedConversation>([]);
 
     const loadConversation = useCallback(async () => {
-        const completeConversation = await repository.Enquiries.getConversation(conversationId);
+        const completeConversation = await repository.Enquiries.GetConversation(conversationId);
         setCompleteConversation(completeConversation);
     }, []);
 

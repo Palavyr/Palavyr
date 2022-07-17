@@ -89,7 +89,7 @@ export const TwoNestedCategories = ({
 
             if (isValid) {
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(localTable.tableMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<TwoNestedCategoryData[]>(
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SaveDynamicTable<TwoNestedCategoryData[]>(
                     intentId,
                     DynamicTableTypes.TwoNestedCategory,
                     tableRows,

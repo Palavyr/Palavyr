@@ -32,7 +32,7 @@ export const ChangePasswordDialog = ({ setLoginStatus, onClose }: IChangePasswor
         const client = new LoginRepository();
         setIsLoading(true);
 
-        const resetEmailResponse = await client.Reset.resetPasswordRequest(emailAddress);
+        const resetEmailResponse = await client.Reset.ResetPasswordRequest(emailAddress);
         setTimeout(() => {
             if (resetEmailResponse.status) {
                 setLoginStatus(VERIFICATION_EMAIL_SEND);

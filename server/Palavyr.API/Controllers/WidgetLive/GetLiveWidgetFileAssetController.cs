@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Palavyr.Core.Mappers;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
+    [Obsolete("It seems this is no longer used by the frontend")]
     public class GetLiveWidgetFileAssetController : PalavyrBaseController
     {
         private readonly IMediator mediator;

@@ -88,7 +88,7 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, intentId, delete
                 const currentMeta = localTable.tableMeta;
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<BasicThresholdData[]>(
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SaveDynamicTable<BasicThresholdData[]>(
                     intentId,
                     DynamicTableTypes.BasicThreshold,
                     tableRows,

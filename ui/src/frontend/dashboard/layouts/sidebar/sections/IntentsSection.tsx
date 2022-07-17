@@ -36,7 +36,7 @@ export const IntentsSection = memo(({ isActive, currentPage, areaNameDetails, me
     };
 
     const pushToIntro = async () => {
-        const introductionId = await repository.Settings.Account.getIntroductionId();
+        const introductionId = await repository.Settings.Account.GetIntroductionId();
         history.push(`/dashboard/editor/conversation/intro/${introductionId}`);
     };
 

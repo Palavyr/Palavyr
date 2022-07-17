@@ -83,7 +83,7 @@ export const CategoryNestedThreshold = ({
                 const currentMeta = localTable.tableMeta;
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<CategoryNestedThresholdData[]>(
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SaveDynamicTable<CategoryNestedThresholdData[]>(
                     intentId,
                     DynamicTableTypes.CategoryNestedThreshold,
                     tableRows,

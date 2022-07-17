@@ -93,7 +93,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteA
                 const currentMeta = localTable.tableMeta;
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.saveDynamicTable<SelectOneFlatData[]>(
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SaveDynamicTable<SelectOneFlatData[]>(
                     intentId,
                     DynamicTableTypes.SelectOneFlat,
                     tableRows,

@@ -71,7 +71,7 @@ export const PleaseConfirmYourEmail = () => {
             return false;
         }
         try {
-            const emailConfirmed = await repository.Settings.Account.confirmEmailAddress(authToken);
+            const emailConfirmed = await repository.Settings.Account.ConfirmEmailAddress(authToken);
             setTimeout(() => {
                 if (emailConfirmed === true) {
                     setSuccessOpen(true);
@@ -91,7 +91,7 @@ export const PleaseConfirmYourEmail = () => {
     const resendAuthToken = async () => {
         setResendIsLoading(true);
         if (emailAddress) {
-            const resendResult = await repository.Settings.Account.resendConfirmationToken(emailAddress);
+            const resendResult = await repository.Settings.Account.ResendConfirmationToken(emailAddress);
             if (resendResult) {
                 setResentOpen(true);
             } else {

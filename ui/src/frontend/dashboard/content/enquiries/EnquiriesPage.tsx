@@ -78,10 +78,10 @@ export const EnquiresPage = () => {
     const filterEnqsByShowSeen = (enqs: Enquiries, s: boolean) => (s ? enqs : enqs.filter(e => !e.seen));
 
     const loadEnquiries = useCallback(async () => {
-        const show = await repository.Enquiries.getShowSeenEnquiries();
+        const show = await repository.Enquiries.GetShowSeenEnquiries();
         setShowSeen(show);
 
-        const enqs = await repository.Enquiries.getEnquiries();
+        const enqs = await repository.Enquiries.GetEnquiries();
         setFullEnquiryList(enqs);
 
         const map = {} as SelectionMap;
@@ -121,7 +121,7 @@ export const EnquiresPage = () => {
     };
 
     const toggleShowSeen = async () => {
-        const result = await repository.Enquiries.toggleShowSeenEnquiries();
+        const result = await repository.Enquiries.ToggleShowSeenEnquiries();
         setShowSeen(result);
     };
 

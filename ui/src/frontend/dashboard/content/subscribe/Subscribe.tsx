@@ -57,7 +57,7 @@ export const Subscribe = () => {
     };
 
     const getProducts = useCallback(async () => {
-        const products = await repository.Products.getProducts();
+        const products = await repository.Products.GetProducts();
         setProductList(products);
     }, []);
 

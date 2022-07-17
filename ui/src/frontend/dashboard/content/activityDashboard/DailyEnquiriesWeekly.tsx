@@ -131,7 +131,7 @@ export const DailyEnquiriesWeekly = () => {
     const [loadingspinner, setLoadingSpinner] = useState<boolean>(true);
 
     const loadEnquiries = useCallback(async () => {
-        const enquiries = await repository.Enquiries.getEnquiries();
+        const enquiries = await repository.Enquiries.GetEnquiries();
         const { enquiryData, enquiryOptions, lastSevenDays } = calcualateDailEnquiryByDay(areaNameDetails, enquiries);
 
         const plotdata: PlotData = {

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -6,6 +7,7 @@ using Palavyr.Core.Handlers.ControllerHandler;
 
 namespace Palavyr.API.Controllers.Conversation
 {
+    [Obsolete("It seems this is no longer used by the frontend")]
     public class GetIsMultiOptionTypeController : PalavyrBaseController
     {
         private readonly IMediator mediator;

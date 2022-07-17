@@ -62,10 +62,10 @@ export const QuickStartGuide = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     const loadTodos = React.useCallback(async () => {
-        const name = await repository.Settings.Account.getCompanyName();
-        const logoUri = await repository.Settings.Account.getCompanyLogo();
-        const { phoneNumber, locale } = await repository.Settings.Account.getPhoneNumber();
-        const { emailAddress, isVerified, awaitingVerification } = await repository.Settings.Account.getEmail();
+        const name = await repository.Settings.Account.GetCompanyName();
+        const logoUri = await repository.Settings.Account.GetCompanyLogo();
+        const { phoneNumber, locale } = await repository.Settings.Account.GetPhoneNumber();
+        const { emailAddress, isVerified, awaitingVerification } = await repository.Settings.Account.GetEmail();
 
         const todos = {
             name,

@@ -8,6 +8,7 @@ using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
+    // for the checking of active state when loading the widget in the user's website
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
     public class GetLiveWidgetActiveStateController : PalavyrBaseController
     {

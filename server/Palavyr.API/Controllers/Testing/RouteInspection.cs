@@ -19,11 +19,7 @@ namespace Palavyr.API.Controllers.Testing
         [HttpGet("palavyr-routes")]
         public void GetRoutes()
         {
-            var path = @"C:\Users\paule\code\temp\the-all-route.txt";
-            if (!System.IO.File.Exists(path))
-            {
-                System.IO.File.Create(path);
-            }
+            var path = @"C:\Users\paule\code\palavyr\RouteCheck\ApiRoutes.txt";
 
             var endpoints = endpointSources
                 .SelectMany(es => es.Endpoints)
