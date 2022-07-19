@@ -7,10 +7,10 @@ using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Stores;
 
-namespace Palavyr.API.Controllers.Conversation
+namespace Palavyr.API.Controllers.Obsolete
 {
     [Obsolete]
-    public class GetIsSplitMergeTypeController : PalavyrBaseController
+    public class GetIsSplitMergeTypeController // : PalavyrBaseController
     {
         private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
         private readonly IPricingStrategyTypeLister pricingStrategyTypeLister;
@@ -28,7 +28,7 @@ namespace Palavyr.API.Controllers.Conversation
             this.pricingStrategyTypeLister = pricingStrategyTypeLister;
         }
 
-        [HttpGet(Route)]
+        // [HttpGet(Route)]
         public async Task<bool> Get(string nodeType)
         {
             foreach (var defaultNodeType in DefaultNodeTypeOptions.DefaultNodeTypeOptionsList)

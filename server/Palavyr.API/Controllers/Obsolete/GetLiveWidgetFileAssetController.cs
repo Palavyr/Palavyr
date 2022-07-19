@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Mappers;
 
-namespace Palavyr.API.Controllers.WidgetLive
+namespace Palavyr.API.Controllers.Obsolete
 {
     [Obsolete("It seems this is no longer used by the frontend")]
-    public class GetLiveWidgetFileAssetController : PalavyrBaseController
+    public class GetLiveWidgetFileAssetController // : PalavyrBaseController
     {
         private readonly IMediator mediator;
         private const string Route = "widget/node-file-asset/{nodeId}";
@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             this.mediator = mediator;
         }
 
-        [HttpGet(Route)]
+        // [HttpGet(Route)]
         public async Task<FileAssetResource> GetFileAsset(
             [FromRoute]
             string nodeId,

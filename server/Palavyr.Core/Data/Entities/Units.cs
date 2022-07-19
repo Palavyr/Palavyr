@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Palavyr.Core.Services.Units;
 
 namespace Palavyr.Core.Data.Entities

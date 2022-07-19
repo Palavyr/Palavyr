@@ -5,10 +5,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
 
-namespace Palavyr.API.Controllers.Enquiries
+namespace Palavyr.API.Controllers.Obsolete
 {
     [Obsolete("It seems this is no longer used by the frontend")]
-    public class GetEnquiryFileLinkController : PalavyrBaseController
+    public class GetEnquiryFileLinkController // : PalavyrBaseController
     {
         private readonly IMediator mediator;
         public const string Route = "enquiries/link/{fileId}";
@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Enquiries
             this.mediator = mediator;
         }
 
-        [HttpGet(Route)]
+        // [HttpGet(Route)]
         public async Task<string> Get(
             [FromRoute]
             string fileId,

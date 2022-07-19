@@ -5,10 +5,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
 
-namespace Palavyr.API.Controllers.Intents
+namespace Palavyr.API.Controllers.Obsolete
 {
     [Obsolete]
-    public class ModifyShowPricingStrategyTableTotalsController : PalavyrBaseController
+    public class ModifyShowPricingStrategyTableTotalsController // : PalavyrBaseController
     {
         public const string Route = "intent/pricing-strategy-totals";
         private readonly IMediator mediator;
@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.Intents
             this.mediator = mediator;
         }
 
-        [HttpPut(Route)]
+        // [HttpPut(Route)]
         public async Task<bool> Post(
             ModifyShowPricingStrategyTableTotalsRequest request,
             CancellationToken cancellationToken)
