@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { PricingStrategy, PricingStrategyProps, PercentOfThresholdData } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyProps, PercentOfThresholdResource } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
 import { DisplayTableData } from "../DisplayTableData";
@@ -85,7 +85,7 @@ export const PercentOfThreshold = ({
                 const currentMeta = localTable.tableMeta;
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<PercentOfThresholdData[]>(
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<PercentOfThresholdResource[]>(
                     intentId,
                     PricingStrategyTypes.PercentOfThreshold,
                     tableRows,

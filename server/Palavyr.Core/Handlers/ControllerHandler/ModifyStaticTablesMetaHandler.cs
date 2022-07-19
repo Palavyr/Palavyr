@@ -16,13 +16,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private readonly IEntityStore<Intent> intentStore;
         private readonly IEntityStore<StaticTablesMeta> staticTableMetaStore;
         private readonly IAccountIdTransport accountIdTransport;
-        private readonly IMapToNew<StaticTablesMeta, StaticTablesMetaResource> mapper;
+        private readonly IMapToNew<StaticTablesMeta, StaticTableMetaResource> mapper;
 
         public ModifyStaticTablesMetaHandler(
             IEntityStore<Intent> intentStore,
             IEntityStore<StaticTablesMeta> staticTableMetaStore,
             IAccountIdTransport accountIdTransport,
-            IMapToNew<StaticTablesMeta, StaticTablesMetaResource> mapper )
+            IMapToNew<StaticTablesMeta, StaticTableMetaResource> mapper )
         {
             this.intentStore = intentStore;
             this.staticTableMetaStore = staticTableMetaStore;
@@ -46,8 +46,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyStaticTablesMetaResponse
     {
-        public ModifyStaticTablesMetaResponse(IEnumerable<StaticTablesMetaResource> response) => Response = response;
-        public IEnumerable<StaticTablesMetaResource> Response { get; set; }
+        public ModifyStaticTablesMetaResponse(IEnumerable<StaticTableMetaResource> response) => Response = response;
+        public IEnumerable<StaticTableMetaResource> Response { get; set; }
     }
 
     public class ModifyStaticTablesMetaRequest : IRequest<ModifyStaticTablesMetaResponse>

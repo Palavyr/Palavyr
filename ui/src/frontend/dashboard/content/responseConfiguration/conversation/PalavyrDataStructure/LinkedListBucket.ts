@@ -1,4 +1,4 @@
-import { ConvoNode } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource } from "@Palavyr-Types";
 import { ILinkedListBucket, IPalavyrNode } from "@Palavyr-Types";
 
 export class LinkedListBucket implements ILinkedListBucket {
@@ -21,7 +21,7 @@ export class LinkedListBucket implements ILinkedListBucket {
     }
 
     public convertToConvoNodes(areaId: string) {
-        const convoBucket: ConvoNode[] = [];
+        const convoBucket: ConversationDesignerNodeResource[] = [];
         this.linkedListBucket.forEach((x: IPalavyrNode) => {
             convoBucket.push(x.compileConvoNode(areaId));
         });

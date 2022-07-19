@@ -1,11 +1,11 @@
 import React from "react";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
-import { WidgetPreferences, SetState } from "@Palavyr-Types";
+import { WidgetPreferencesResource, SetState } from "@Palavyr-Types";
 import { HeaderEditor } from "frontend/dashboard/content/demo/HeaderEditor";
 
 export interface DesignLandingHeaderProps {
-    widgetPreferences: WidgetPreferences;
-    setWidgetPreferences: SetState<WidgetPreferences>;
+    widgetPreferences: WidgetPreferencesResource;
+    setWidgetPreferences: SetState<WidgetPreferencesResource>;
 }
 
 export const DesignLandingHeader = ({ widgetPreferences, setWidgetPreferences }: DesignLandingHeaderProps) => {

@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Static
         }
         
         [HttpGet(Route)]
-        public async Task<StaticTablesMetaResource> CreateNewStaticTablesMeta(string intentId, CancellationToken cancellationToken)
+        public async Task<StaticTableMetaResource> CreateNewStaticTablesMeta(string intentId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetStaticTablesMetasTemplateRequest(intentId), cancellationToken);
             return response.Response;

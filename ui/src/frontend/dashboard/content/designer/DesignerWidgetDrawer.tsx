@@ -1,5 +1,5 @@
 import { Drawer, makeStyles, useTheme } from "@material-ui/core";
-import { WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
+import { WidgetNodeResource, WidgetPreferencesResource } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { WidgetLayout } from "@widgetcore/widget/WidgetLayout";
 import React, { useEffect } from "react";
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface DesignerWidgetDrawerProps {
-    widgetPreferences: WidgetPreferences;
+    widgetPreferences: WidgetPreferencesResource;
 }
 
 const render = (componentType: string, text: string, nodeId: string, nodeChildrenString: string, context: IAppContext, client: PalavyrWidgetRepository) => {

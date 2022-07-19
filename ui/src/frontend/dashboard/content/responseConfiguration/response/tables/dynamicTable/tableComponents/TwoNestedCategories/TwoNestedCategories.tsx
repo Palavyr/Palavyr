@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { PricingStrategy, PricingStrategyProps, TwoNestedCategoryData } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesContainer } from "./TwoNestedCategoriesContainer";
 import { DisplayTableData } from "../DisplayTableData";
-import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { cloneDeep } from "lodash";
-import { PricingStrategyHeader } from "../../PricingStrategyHeader";
+import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
+import { PricingStrategyHeader } from "../../DynamicTableHeader";
+import { TwoNestedCategoryResource } from "@common/types/api/EntityResources";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -49,7 +50,7 @@ export const TwoNestedCategories = ({
 
     useEffect(() => {
         setLocalTable(table);
-    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitIdEnum, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {
@@ -89,7 +90,7 @@ export const TwoNestedCategories = ({
 
             if (isValid) {
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(localTable.tableMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<TwoNestedCategoryData[]>(
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<TwoNestedCategoryResource[]>(
                     intentId,
                     PricingStrategyTypes.TwoNestedCategory,
                     tableRows,

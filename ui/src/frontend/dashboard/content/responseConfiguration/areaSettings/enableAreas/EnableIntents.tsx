@@ -2,7 +2,7 @@ import { HeaderStrip } from "@common/components/HeaderStrip";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
-import { AreasEnabled, AreaTable } from "@Palavyr-Types";
+import { IntentsEnabled, IntentResource } from "@Palavyr-Types";
 import classNames from "classnames";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
@@ -39,11 +39,11 @@ export const EnableIntents = () => {
     setViewName("Enable / Disable Intents");
 
     const cls = useStyles();
-    const [intentIds, setIntentIds] = useState<AreasEnabled[]>([]);
+    const [intentIds, setIntentIds] = useState<IntentsEnabled[]>([]);
 
     const loadIntents = useCallback(async () => {
         const intentData = await repository.Intent.GetAllIntents();
-        const intentIds = intentData.map((x: AreaTable) => {
+        const intentIds = intentData.map((x: IntentResource) => {
             return {
                 areaId: x.intentId,
                 isEnabled: x.isEnabled,
@@ -81,7 +81,7 @@ export const EnableIntents = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortByPropertyAlphabetical((x: AreasEnabled) => x.areaName, intentIds).map((x: AreasEnabled, index: number) => {
+                        {sortByPropertyAlphabetical((x: IntentsEnabled) => x.areaName, intentIds).map((x: IntentsEnabled, index: number) => {
                             return <EnableIntentRow key={index} rowNumber={index + 1} areasEnabled={x} />;
                         })}
                     </TableBody>

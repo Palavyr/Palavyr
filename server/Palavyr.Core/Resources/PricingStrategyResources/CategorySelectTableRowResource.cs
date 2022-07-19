@@ -1,6 +1,6 @@
 ﻿namespace Palavyr.Core.Resources.PricingStrategyResources
 {
-    public class SelectOneFlatResource : PricingStrategyTableRowResource
+    public class CategorySelectTableRowResource : PricingStrategyTableRowResource
     {
         public string AccountId { get; set; }
         public string IntentId { get; set; }

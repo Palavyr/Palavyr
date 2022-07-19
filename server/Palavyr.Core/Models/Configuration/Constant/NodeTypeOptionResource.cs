@@ -109,13 +109,13 @@ namespace Palavyr.Core.Models.Configuration.Constant
          * Used when the nodeTypeOption is for a pricing strategy type. The order in which the result should be used to filter the pricing strategy table configuration.
          * DO NOT SET on the default node types. Only used for pricing strategy node types.
          */
-        public int? ResolveOrder { get; set; }
+        public int ResolveOrder { get; set; }
 
         /*
          * Used when the nodetype option is a pricing strategy type and we need to specify a common type for the pricing strategy type compiler
          * The widget will use this to key the collection of pricing strategy type responses.
          */
-        public string? PricingStrategyType { get; set; }
+        public string PricingStrategyType { get; set; }
 
         /*
          * Used to indicate whether or not this node provides an image in the chat. In the dashboard, used to determine whether
@@ -148,8 +148,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool isSplitMergeType = false,
             bool shouldRenderChildren = true,
             bool shouldShowMultiOption = false,
-            int? resolveOrder = null,
-            string? pricingStrategyType = null,
+            int resolveOrder = 0,
+            string pricingStrategyType = "",
             bool loopbackAnchor = false
         )
         {

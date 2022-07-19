@@ -1,4 +1,4 @@
-import { ContextProperties, DynamicResponses, KeyValues, UserMessageData, BotMessageData, WidgetPreferences, FileAssetResource, KeyValue } from "@Palavyr-Types";
+import { ContextProperties, DynamicResponses, KeyValues, UserMessageData, BotMessageData, WidgetPreferencesResource, FileAssetResource, KeyValue } from "@Palavyr-Types";
 import { useState } from "react";
 
 export interface BehaviorState {
@@ -20,7 +20,7 @@ export interface ContextState {
     keyValues: KeyValues;
     dynamicResponses: DynamicResponses;
     numIndividuals: number | null;
-    widgetPreferences: WidgetPreferences | null;
+    widgetPreferences: WidgetPreferencesResource | null;
     responseFileAsset: FileAssetResource | null;
 }
 export interface MessagesState {
@@ -239,7 +239,7 @@ export const useAppContext = (): IAppContext => {
         }));
     };
 
-    const setWidgetPreferences = (widgetPreferences: WidgetPreferences) => {
+    const setWidgetPreferences = (widgetPreferences: WidgetPreferencesResource) => {
         setAppContext((appContext: AppContext) => ({
             ...appContext,
             widgetPreferences,
@@ -374,7 +374,7 @@ export interface IAppContext {
     name: string;
     region: string;
     numIndividuals: number | null;
-    widgetPreferences: WidgetPreferences | null;
+    widgetPreferences: WidgetPreferencesResource | null;
     responseFileAsset: FileAssetResource | null;
     dynamicResponses: DynamicResponses;
     keyValues: KeyValues;

@@ -1,4 +1,4 @@
-import { ConvoNode, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { IPalavyrNode, IPalavyrLinkedList, INodeReferences } from "@Palavyr-Types";
@@ -41,7 +41,7 @@ export class NodeCreator {
         return this.createDefaultNode("Continue", "ProvideInfo");
     }
 
-    private createDefaultNode(optionPath: string, nodeType: string = ""): ConvoNode {
+    private createDefaultNode(optionPath: string, nodeType: string = ""): ConversationDesignerNodeResource {
         return {
             isLoopbackAnchorType: false,
             nodeId: uuid(),

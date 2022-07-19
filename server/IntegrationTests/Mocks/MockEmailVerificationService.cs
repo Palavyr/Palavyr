@@ -13,9 +13,9 @@ namespace IntegrationTests.Mocks
     {
         private readonly IEntityStore<Account> accountStore;
         private readonly IGuidUtils guidUtils;
-        private readonly IEntityStore<EmailVerification> emailVerificationStore;
+        private readonly IEntityStore<AccountEmailVerification> emailVerificationStore;
 
-        public MockEmailVerificationService(IEntityStore<Account> accountStore, IGuidUtils guidUtils, IEntityStore<EmailVerification> emailVerificationStore)
+        public MockEmailVerificationService(IEntityStore<Account> accountStore, IGuidUtils guidUtils, IEntityStore<AccountEmailVerification> emailVerificationStore)
         {
             this.accountStore = accountStore;
             this.guidUtils = guidUtils;
@@ -36,7 +36,7 @@ namespace IntegrationTests.Mocks
         public async Task<bool> SendConfirmationTokenEmail(string emailAddress, CancellationToken cancellationToken)
         {
             var confirmationToken = IntegrationTest.ConfirmationToken;
-            await emailVerificationStore.Create(EmailVerification.CreateNew(confirmationToken, emailAddress, emailVerificationStore.AccountId));
+            await emailVerificationStore.Create(AccountEmailVerification.CreateNew(confirmationToken, emailAddress, emailVerificationStore.AccountId));
             return true;
         }
     }

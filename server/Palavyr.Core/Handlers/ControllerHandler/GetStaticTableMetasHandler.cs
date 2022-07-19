@@ -15,9 +15,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IEntityStore<StaticTablesMeta> staticTableMetaStore;
         private readonly ILogger<GetStaticTableMetasHandler> logger;
-        private readonly IMapToNew<StaticTablesMeta, StaticTablesMetaResource> mapper;
+        private readonly IMapToNew<StaticTablesMeta, StaticTableMetaResource> mapper;
 
-        public GetStaticTableMetasHandler(IEntityStore<StaticTablesMeta> staticTableMetaStore, ILogger<GetStaticTableMetasHandler> logger, IMapToNew<StaticTablesMeta, StaticTablesMetaResource> mapper)
+        public GetStaticTableMetasHandler(IEntityStore<StaticTablesMeta> staticTableMetaStore, ILogger<GetStaticTableMetasHandler> logger, IMapToNew<StaticTablesMeta, StaticTableMetaResource> mapper)
         {
             this.staticTableMetaStore = staticTableMetaStore;
             this.logger = logger;
@@ -35,8 +35,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetStaticTableMetasResponse
     {
-        public GetStaticTableMetasResponse(IEnumerable<StaticTablesMetaResource> response) => Response = response;
-        public IEnumerable<StaticTablesMetaResource> Response { get; set; }
+        public GetStaticTableMetasResponse(IEnumerable<StaticTableMetaResource> response) => Response = response;
+        public IEnumerable<StaticTableMetaResource> Response { get; set; }
     }
 
     public class GetStaticTableMetasRequest : IRequest<GetStaticTableMetasResponse>

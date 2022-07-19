@@ -1,7 +1,7 @@
 import React from "react";
 import { TableRow, Button, makeStyles, TextField } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { TwoNestedCategoryData } from "@Palavyr-Types";
+import { TwoNestedCategoryResource } from "@Palavyr-Types";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
@@ -14,8 +14,8 @@ export interface TwoNestedCategoriesRowProps {
     shouldDisableInnerCategory: boolean;
     outerCategoryId: string;
     outerCategoryName: string;
-    tableData: TwoNestedCategoryData[];
-    row: TwoNestedCategoryData;
+    tableData: TwoNestedCategoryResource[];
+    row: TwoNestedCategoryResource;
     modifier: TwoNestedCategoriesModifier;
 }
 

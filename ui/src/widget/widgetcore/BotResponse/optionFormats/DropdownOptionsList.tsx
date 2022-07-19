@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SelectedOption, WidgetPreferences } from "@Palavyr-Types";
+import { SelectedOption, WidgetPreferencesResource } from "@Palavyr-Types";
 
 import { useHistory, useLocation } from "react-router-dom";
 import { makeStyles, Card, Box } from "@material-ui/core";
@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
     innerShadow: {
         boxShadow: "inset 0px 0px 63px -30px rgba(77,13,77,1)",
     },
-    header: (prefs: WidgetPreferences) => ({
+    header: (prefs: WidgetPreferencesResource) => ({
         backgroundColor: prefs.headerColor,
         color: prefs.headerFontColor,
         textAlign: "center",
@@ -38,10 +38,10 @@ const useStyles = makeStyles(() => ({
         minHeight: "18%",
 
     },
-    selectListBgColor: (prefs: WidgetPreferences) => ({
+    selectListBgColor: (prefs: WidgetPreferencesResource) => ({
         backgroundColor: prefs.selectListColor,
     }),
-    selectListFontColor: (prefs: WidgetPreferences) => ({
+    selectListFontColor: (prefs: WidgetPreferencesResource) => ({
         color: prefs.listFontColor,
     }),
     selectbox: {
@@ -58,13 +58,13 @@ const useStyles = makeStyles(() => ({
     paper: {
         boxShadow: "none",
     },
-    inputLabel: (prefs: WidgetPreferences) => ({
+    inputLabel: (prefs: WidgetPreferencesResource) => ({
         "& .MuiFormLabel-root": {
             color: prefs.listFontColor,
             fontSize: "10pt",
         },
     }),
-    listbox: (prefs: WidgetPreferences) => ({
+    listbox: (prefs: WidgetPreferencesResource) => ({
         // the dropdown menu styles
         backgroundColor: prefs.selectListColor, // TODO: make customizable with new option
         padding: "0rem",
@@ -91,7 +91,7 @@ export const DropdownListOptions = ({ disabled, options, onChange }: DropdownLis
     const { preferences } = useContext(WidgetContext);
     const cls = useStyles(preferences);
 
-    const sortGetter = (opt: SelectedOption) => opt.areaDisplay;
+    const sortGetter = (opt: SelectedOption) => opt.IntentDisplay;
     const opts = sortByPropertyAlphabetical(sortGetter, options);
     return (
         <Box height="100%" className={cls.container}>

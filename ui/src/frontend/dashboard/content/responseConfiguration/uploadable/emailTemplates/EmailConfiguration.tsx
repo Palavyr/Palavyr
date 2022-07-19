@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import { Divider } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-import { Settings, VariableDetail } from "@Palavyr-Types";
+import { Settings, ResponseVariable } from "@Palavyr-Types";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { OsTypeToggle } from "../../areaSettings/enableAreas/OsTypeToggle";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
@@ -14,7 +14,7 @@ export const EmailConfiguration = () => {
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [settings, setSettings] = useState<Partial<Settings>>({ useAreaFallbackEmail: false });
-    const [variableDetails, setVariableDetails] = useState<VariableDetail[]>();
+    const [variableDetails, setVariableDetails] = useState<ResponseVariable[]>();
 
     const [useAreaEmail, setUseAreaEmail] = useState<boolean>(false);
     const [useAreaFallbackEmail, setUseAreaFallbackEmail] = useState<boolean>(false);

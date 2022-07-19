@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles, TextField, TableRow, TableCell } from "@material-ui/core";
-import { StaticTableMetas } from "@Palavyr-Types";
+import { StaticTableMetaResources } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface IStaticRow {
-    staticTableMetas: StaticTableMetas;
+    staticTableMetas: StaticTableMetaResources;
     tableOrder: number;
     modifier: StaticTablesModifier;
     index: number;

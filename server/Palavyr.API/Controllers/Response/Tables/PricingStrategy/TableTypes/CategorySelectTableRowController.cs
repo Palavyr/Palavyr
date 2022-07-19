@@ -7,9 +7,9 @@ using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
 namespace Palavyr.API.Controllers.Response.Tables.PricingStrategy.TableTypes
 {
     [Route(BaseRoute + nameof(CategorySelectTableRow))]
-    public class SelectOneFlatController : PricingStrategyControllerBase<CategorySelectTableRow, SelectOneFlatResource, ISelectOneFlatCompiler>
+    public class CategorySelectTableRowController : PricingStrategyControllerBase<CategorySelectTableRow, CategorySelectTableRowResource, ISelectOneFlatCompiler>
     {
-        public SelectOneFlatController(IMediator mediator) : base(mediator)
+        public CategorySelectTableRowController(IMediator mediator) : base(mediator)
         {
         }
     }

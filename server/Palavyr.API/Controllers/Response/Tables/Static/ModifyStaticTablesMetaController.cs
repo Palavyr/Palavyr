@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Static
         }
 
         [HttpPut(Route)]
-        public async Task<IEnumerable<StaticTablesMetaResource>> Modify(
+        public async Task<IEnumerable<StaticTableMetaResource>> Modify(
             ModifyStaticTablesMetaRequest request,
             CancellationToken cancellationToken
         )

@@ -1,43 +1,43 @@
 import { Dispatch, SetStateAction } from "react";
-import { Modifier, PercentOfThresholdData, SetState } from "@Palavyr-Types";
+import { Modifier, PercentOfThresholdResource, SetState } from "@Palavyr-Types";
 import { cloneDeep, findIndex, uniq, uniqBy } from "lodash";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 
 export class PercentOfThresholdModifier implements Modifier {
-    onClick: SetState<PercentOfThresholdData[]>;
+    onClick: SetState<PercentOfThresholdResource[]>;
     tableType: string;
 
-    constructor(onClick: SetState<PercentOfThresholdData[]>) {
+    constructor(onClick: SetState<PercentOfThresholdResource[]>) {
         this.onClick = onClick;
         this.tableType = PricingStrategyTypes.PercentOfThreshold;
     }
 
-    setTables(newState: PercentOfThresholdData[]) {
+    setTables(newState: PercentOfThresholdResource[]) {
         this.onClick(cloneDeep(newState));
     }
 
-    getItemRows(tableData: PercentOfThresholdData[], rowId: String) {
-        const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === rowId);
+    getItemRows(tableData: PercentOfThresholdResource[], rowId: String) {
+        const index = findIndex(tableData, (x: PercentOfThresholdResource) => x.rowId === rowId);
         return tableData[index];
     }
 
-    async addItem(tableData: PercentOfThresholdData[], repository: PalavyrRepository, intentId: string, tableId: string) {
-        const newItemInitialrow = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<PercentOfThresholdData>(intentId, this.tableType, tableId);
+    async addItem(tableData: PercentOfThresholdResource[], repository: PalavyrRepository, intentId: string, tableId: string) {
+        const newItemInitialrow = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<PercentOfThresholdResource>(intentId, this.tableType, tableId);
         newItemInitialrow.itemOrder = this._getOrderedUniqItemIds(tableData).length;
         tableData.push(newItemInitialrow);
         this.setTables(tableData);
     }
 
-    async addRow(tableData: PercentOfThresholdData[], repository: PalavyrRepository, intentId: string, tableId: string, itemId: string) {
-        const newRowTemplate = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<PercentOfThresholdData>(intentId, this.tableType, tableId);
+    async addRow(tableData: PercentOfThresholdResource[], repository: PalavyrRepository, intentId: string, tableId: string, itemId: string) {
+        const newRowTemplate = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<PercentOfThresholdResource>(intentId, this.tableType, tableId);
         newRowTemplate.itemId = itemId;
         tableData.push(newRowTemplate);
         this.setTables(tableData);
     }
 
-    removeRow(tableData: PercentOfThresholdData[], rowId: string) {
+    removeRow(tableData: PercentOfThresholdResource[], rowId: string) {
         const curRow = tableData.filter(x => x.rowId === rowId)[0];
         const itemId = curRow.itemId;
 
@@ -49,47 +49,47 @@ export class PercentOfThresholdModifier implements Modifier {
         }
     }
 
-    setThresholdValue(tableData: PercentOfThresholdData[], rowId: string, newValue: number) {
-        const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === rowId);
+    setThresholdValue(tableData: PercentOfThresholdResource[], rowId: string, newValue: number) {
+        const index = findIndex(tableData, (x: PercentOfThresholdResource) => x.rowId === rowId);
         tableData[index].threshold = newValue;
         this.setTables(tableData);
     }
 
-    setValueMin(tableData: PercentOfThresholdData[], rowId: string, newValue: number) {
-        const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === rowId);
+    setValueMin(tableData: PercentOfThresholdResource[], rowId: string, newValue: number) {
+        const index = findIndex(tableData, (x: PercentOfThresholdResource) => x.rowId === rowId);
         tableData[index].valueMin = newValue;
         this.setTables(tableData);
     }
 
-    setValueMax(tableData: PercentOfThresholdData[], rowId: string, newValue: number) {
-        const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === rowId);
+    setValueMax(tableData: PercentOfThresholdResource[], rowId: string, newValue: number) {
+        const index = findIndex(tableData, (x: PercentOfThresholdResource) => x.rowId === rowId);
         tableData[index].valueMax = newValue;
         this.setTables(tableData);
     }
 
-    setPercentToModify(tableData: PercentOfThresholdData[], rowId: string, newValue: number) {
-        const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === rowId);
+    setPercentToModify(tableData: PercentOfThresholdResource[], rowId: string, newValue: number) {
+        const index = findIndex(tableData, (x: PercentOfThresholdResource) => x.rowId === rowId);
         tableData[index].modifier = newValue;
         this.setTables(tableData);
     }
 
-    setAddOrSubtract(tableData: PercentOfThresholdData[], rowId: string) {
-        const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === rowId);
+    setAddOrSubtract(tableData: PercentOfThresholdResource[], rowId: string) {
+        const index = findIndex(tableData, (x: PercentOfThresholdResource) => x.rowId === rowId);
         tableData[index].posNeg = !tableData[index].posNeg;
         this.setTables(tableData);
     }
 
-    setRangeOrValue(tableData: PercentOfThresholdData[], rowId: string) {
-        const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === rowId);
+    setRangeOrValue(tableData: PercentOfThresholdResource[], rowId: string) {
+        const index = findIndex(tableData, (x: PercentOfThresholdResource) => x.rowId === rowId);
         tableData[index].range = !tableData[index].range;
         this.setTables(tableData);
     }
 
-    setItemName(tableData: PercentOfThresholdData[], itemId: string, newName: string) {
-        const itemData = tableData.filter((x: PercentOfThresholdData) => x.itemId === itemId);
+    setItemName(tableData: PercentOfThresholdResource[], itemId: string, newName: string) {
+        const itemData = tableData.filter((x: PercentOfThresholdResource) => x.itemId === itemId);
         let indices: number[] = [];
-        itemData.forEach((item: PercentOfThresholdData) => {
-            const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === item.rowId);
+        itemData.forEach((item: PercentOfThresholdResource) => {
+            const index = findIndex(tableData, (x: PercentOfThresholdResource) => x.rowId === item.rowId);
             indices.push(index);
         });
 
@@ -99,22 +99,22 @@ export class PercentOfThresholdModifier implements Modifier {
         this.setTables(tableData);
     }
 
-    removeItem(tableData: PercentOfThresholdData[], itemId: string) {
+    removeItem(tableData: PercentOfThresholdResource[], itemId: string) {
         const itemIds: string[] = [];
         tableData.forEach(x => itemIds.push(x.itemId));
 
         const unique = uniq(itemIds);
         if (unique.length > 1) {
-            const updatedTable = tableData.filter((x: PercentOfThresholdData) => x.itemId !== itemId);
+            const updatedTable = tableData.filter((x: PercentOfThresholdResource) => x.itemId !== itemId);
             this.setTables(updatedTable);
         } else {
             alert("Table must have at least one item.");
         }
     }
 
-    checkTriggerFallbackChange(tableData: PercentOfThresholdData[], itemData: PercentOfThresholdData[], row: PercentOfThresholdData, checked: boolean) {
-        itemData.forEach((x: PercentOfThresholdData) => {
-            const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === row.rowId);
+    checkTriggerFallbackChange(tableData: PercentOfThresholdResource[], itemData: PercentOfThresholdResource[], row: PercentOfThresholdResource, checked: boolean) {
+        itemData.forEach((x: PercentOfThresholdResource) => {
+            const index = findIndex(tableData, (x: PercentOfThresholdResource) => x.rowId === row.rowId);
             if (x.rowId == row.rowId) {
                 tableData[index].triggerFallback = checked;
             } else {
@@ -125,21 +125,21 @@ export class PercentOfThresholdModifier implements Modifier {
         this.setTables(tableData);
     }
 
-    public itemOrderGetter(x: PercentOfThresholdData) {
+    public itemOrderGetter(x: PercentOfThresholdResource) {
         return x.itemOrder;
     }
 
-    _getOrderedUniqItemIds(tableData: PercentOfThresholdData[]) {
-        return sortByPropertyNumeric(this.itemOrderGetter, uniq(tableData.map((x: PercentOfThresholdData) => x.itemId)));
+    _getOrderedUniqItemIds(tableData: PercentOfThresholdResource[]) {
+        return sortByPropertyNumeric(this.itemOrderGetter, uniq(tableData.map((x: PercentOfThresholdResource) => x.itemId)));
     }
 
-    _getRowsByItemId(tableData: PercentOfThresholdData[], itemId: string) {
-        return tableData.filter((x: PercentOfThresholdData) => x.itemId === itemId);
+    _getRowsByItemId(tableData: PercentOfThresholdResource[], itemId: string) {
+        return tableData.filter((x: PercentOfThresholdResource) => x.itemId === itemId);
     }
 
-    public reorderThresholdData(tableData: PercentOfThresholdData[]) {
+    public reorderThresholdData(tableData: PercentOfThresholdResource[]) {
         const itemIds: string[] = this._getOrderedUniqItemIds(tableData);
-        const reOrderedData: PercentOfThresholdData[] = [];
+        const reOrderedData: PercentOfThresholdResource[] = [];
 
         for (let index = 0; index < itemIds.length; index++) {
             const itemId = itemIds[index];
@@ -150,15 +150,15 @@ export class PercentOfThresholdModifier implements Modifier {
         return reOrderedData;
     }
 
-    _thresholdGetter(row: PercentOfThresholdData) {
+    _thresholdGetter(row: PercentOfThresholdResource) {
         return row.threshold;
     }
-    _reorderSingleItemThresholdData(itemRows: PercentOfThresholdData[]) {
-        const sortedByThreshold = sortByPropertyNumeric(this._thresholdGetter, itemRows) as PercentOfThresholdData[];
+    _reorderSingleItemThresholdData(itemRows: PercentOfThresholdResource[]) {
+        const sortedByThreshold = sortByPropertyNumeric(this._thresholdGetter, itemRows) as PercentOfThresholdResource[];
 
-        const reOrdered: PercentOfThresholdData[] = [];
+        const reOrdered: PercentOfThresholdResource[] = [];
         let shouldReassignTriggerFallback = false;
-        sortedByThreshold.forEach((row: PercentOfThresholdData, newRowNumber: number) => {
+        sortedByThreshold.forEach((row: PercentOfThresholdResource, newRowNumber: number) => {
             row.rowOrder = newRowNumber;
             if (newRowNumber + 1 !== sortedByThreshold.length && row.triggerFallback) {
                 row.triggerFallback = false;
@@ -173,7 +173,7 @@ export class PercentOfThresholdModifier implements Modifier {
         return reOrdered;
     }
 
-    validateTable(tableData: PercentOfThresholdData[]) {
+    validateTable(tableData: PercentOfThresholdResource[]) {
         const tableRows = this.reorderThresholdData(tableData);
         const isValid = true;
 

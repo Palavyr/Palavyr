@@ -1,10 +1,10 @@
-import { NodeOption, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
+import { NodeTypeOptionResource, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { INodeReferences, IPalavyrNode } from "@Palavyr-Types";
 import AnabranchConfigurer from "./AnabranchConfigurer";
 import { NodeCreator } from "./NodeCreator";
 
 export interface IPalavyrNodeChanger {
-    ExecuteNodeSelectorUpdate(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void;
+    ExecuteNodeSelectorUpdate(nodeOption: NodeTypeOptionResource, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void;
     createOrTruncateChildNodes(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions): void;
 }
 
@@ -12,7 +12,7 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
     private nodeCreator: NodeCreator = new NodeCreator();
     constructor() {}
 
-    public ExecuteNodeSelectorUpdate(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    public ExecuteNodeSelectorUpdate(nodeOption: NodeTypeOptionResource, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.nodeType === "Loopback" && currentNode.nodeTypeCode !== nodeOption.nodeTypeCode) {
             currentNode.childNodeReferences.Clear();
             this.nodeCreator.addDefaultChild([currentNode], "Continue", nodeTypeOptions);
@@ -206,7 +206,7 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
     //    On Update:
     //     - remove current child node references
 
-    private ConvertToType_V_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertToType_V_Node(nodeOption: NodeTypeOptionResource, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         // available choices
         currentNode.setValueOptions(nodeOption.valueOptions);
 
@@ -306,13 +306,13 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
     // Type X
     //
-    private ConvertToType_X_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertToType_X_Node(nodeOption: NodeTypeOptionResource, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         this.createOrTruncateChildNodes(currentNode, ["Continue"], nodeTypeOptions);
         currentNode.setValueOptions(nodeOption.valueOptions);
         currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
-    private ConvertToType_XI_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertToType_XI_Node(nodeOption: NodeTypeOptionResource, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         this.createOrTruncateChildNodes(currentNode, nodeOption.valueOptions, nodeTypeOptions);
         currentNode.setValueOptions(nodeOption.valueOptions);
         currentNode.childNodeReferences.applyOptionPaths(nodeOption.valueOptions);
@@ -393,7 +393,7 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
         }
     }
 
-    private resetNodeProperties(nodeOption: NodeOption, currentNode: IPalavyrNode) {
+    private resetNodeProperties(nodeOption: NodeTypeOptionResource, currentNode: IPalavyrNode) {
         currentNode.nodeTypeCode = nodeOption.nodeTypeCode;
         currentNode.nodeType = nodeOption.value;
         currentNode.isCurrency = nodeOption.isCurrency;

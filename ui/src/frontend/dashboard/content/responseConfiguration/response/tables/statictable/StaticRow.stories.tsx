@@ -2,7 +2,7 @@ import * as React from "react";
 import { Meta } from "@storybook/react/types-6-0";
 import { StaticRow, IStaticRow } from "./StaticRow";
 import { StaticTablesModifier } from "./staticTableModifier";
-import { StaticTableRow, StaticTableMeta } from "@Palavyr-Types";
+import { StaticTableRowResource, StaticTableMetaResource } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 
 export default {
@@ -18,7 +18,7 @@ const Template = (args: IStaticRow) => (
 
 const modifier = new StaticTablesModifier(() => {}, {} as PalavyrRepository);
 
-const MockStaticTableRow: StaticTableRow = {
+const MockStaticTableRow: StaticTableRowResource = {
     id: 0,
     rowOrder: 0,
     description: "Damn Fee 1!",
@@ -30,7 +30,7 @@ const MockStaticTableRow: StaticTableRow = {
     includeTotals: true,
 };
 
-const MockStaticTablesMeta: StaticTableMeta = {
+const MockStaticTablesMeta: StaticTableMetaResource = {
     id: 0,
     intentId: "abc-123",
     description: "This is a good first table.",

@@ -1,5 +1,5 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptions, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptions, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
 
 // export interface NodeOptionalProps {
 //     node: IPalavyrNode;

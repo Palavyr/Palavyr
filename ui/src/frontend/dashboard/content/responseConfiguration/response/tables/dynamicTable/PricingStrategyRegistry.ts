@@ -3,7 +3,6 @@ import { CategoryNestedThreshold } from "./tableComponents/CategoryNestedThresho
 import { PercentOfThreshold } from "./tableComponents/PercentOfThreshold/PercentOfThreshold";
 import { SelectOneFlat } from "./tableComponents/SelectOneFlat/SelectOneFlat";
 import { TwoNestedCategories } from "./tableComponents/TwoNestedCategories/TwoNestedCategories";
-import { PricingStrategyComponentMap } from "@Palavyr-Types";
 
 //These must be kept in sync
 export enum PricingStrategyTypes {
@@ -14,7 +13,7 @@ export enum PricingStrategyTypes {
     CategoryNestedThreshold = "CategoryNestedThreshold",
 }
 
-export const PricingStrategyComponentMap: PricingStrategyComponentMap = {
+export const PricingStrategyComponentMap = {
     [PricingStrategyTypes.SelectOneFlat]: SelectOneFlat,
     [PricingStrategyTypes.PercentOfThreshold]: PercentOfThreshold,
     [PricingStrategyTypes.BasicThreshold]: BasicThreshold,

@@ -1,6 +1,6 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, NodeTypeOptions } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { ILinkedListBucket, INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "@Palavyr-Types";
 import { LinkedListBucket } from "./LinkedListBucket";
@@ -13,7 +13,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     private linkedListBucket: ILinkedListBucket = new LinkedListBucket();
     public areaId: string;
     public rootNode: IPalavyrNode;
-    private head: ConvoNode;
+    private head: ConversationDesignerNodeResource;
     public updateTree: (updatedTree: IPalavyrLinkedList) => void;
     public repository: PalavyrRepository;
     private configurer: NodeConfigurer = new NodeConfigurer();
@@ -24,7 +24,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     /**
      * List object for interacting with the list. This will have methods for performing insertions, deletions, additions, subtractions, etc
      */
-    constructor(nodeList: ConvoNode[], areaId: string, updateTree: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions, repository: PalavyrRepository, sortableNodeTypes: string[]) {
+    constructor(nodeList: ConversationDesignerNodeResource[], areaId: string, updateTree: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions, repository: PalavyrRepository, sortableNodeTypes: string[]) {
         this.areaId = areaId;
         this.repository = repository;
         this.sortableNodeTypes = sortableNodeTypes;
@@ -40,12 +40,12 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         return headNode;
     }
 
-    private getRootNode(nodeList: ConvoNode[]) {
+    private getRootNode(nodeList: ConversationDesignerNodeResource[]) {
         return nodeList.filter(node => node.isRoot === true)[0];
     }
 
-    private _getNodeById = (nodeId: string, nodeList: ConvoNode[]) => {
-        return nodeList.filter((node: ConvoNode) => node.nodeId === nodeId)[0];
+    private _getNodeById = (nodeId: string, nodeList: ConversationDesignerNodeResource[]) => {
+        return nodeList.filter((node: ConversationDesignerNodeResource) => node.nodeId === nodeId)[0];
     };
 
     private _splitAndRemoveEmptyNodeChildrenString(nodeChildrenString: string) {
@@ -57,14 +57,14 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         return nodeChildrenString.split(",");
     }
 
-    private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions) {
+    private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConversationDesignerNodeResource[], nodeTypeOptions: NodeTypeOptions) {
         const headNode = this.convertToPalavyrNode(this.repository, this.head, this.updateTree, true);
         this.configurer.configure(headNode, null, nodeTypeOptions);
         this.rootNode = headNode;
         this.recursivelyAssembleLinkedList(headNode, this.head.nodeChildrenString, nodeList, nodeTypeOptions);
     }
 
-    private recursivelyAssembleLinkedList(parentNode: IPalavyrNode, nodeChildrenString: string, nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions) {
+    private recursivelyAssembleLinkedList(parentNode: IPalavyrNode, nodeChildrenString: string, nodeList: ConversationDesignerNodeResource[], nodeTypeOptions: NodeTypeOptions) {
         if (parentNode.parentNodeReferences.containsNodeType("Loopback")) return;
         const childIds = this._splitAndRemoveEmptyNodeChildrenString(nodeChildrenString);
         if (childIds.length === 0) return;
@@ -100,11 +100,11 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         }
     }
 
-    public convertToPalavyrNode(repository: PalavyrRepository, rawNode: ConvoNode, updateTree: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean) {
+    public convertToPalavyrNode(repository: PalavyrRepository, rawNode: ConversationDesignerNodeResource, updateTree: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean) {
         return new PalavyrNode(this, repository, rawNode, updateTree, leftMostBranch, this.sortableNodeTypes);
     }
 
-    compileToConvoNodes(): ConvoNode[] {
+    compileToConvoNodes(): ConversationDesignerNodeResource[] {
         this.linkedListBucket.clear();
 
         const compileCallback = (node: IPalavyrNode) => {

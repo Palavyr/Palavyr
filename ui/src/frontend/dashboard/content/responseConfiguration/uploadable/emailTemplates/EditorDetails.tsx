@@ -1,8 +1,8 @@
-import { VariableDetail } from "@Palavyr-Types";
+import { ResponseVariable } from "@Palavyr-Types";
 import React from "react";
 
 export interface UploadDetailProps {
-    variableDetails: VariableDetail[];
+    variableDetails: ResponseVariable[];
 }
 
 export const EditorDetails = ({ variableDetails }: UploadDetailProps) => {

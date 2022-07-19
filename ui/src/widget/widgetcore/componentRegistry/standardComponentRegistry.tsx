@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import { responseAction } from "@widgetcore/BotResponse/utils/responseAction";
 import { ConvoContextProperties } from "./registry";
-import { AreaTable, FileAssetResource, IProgressTheChat, SelectedOption, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
+import { IProgressTheChat, SelectedOption } from "@Palavyr-Types";
 import { ResponseButton } from "@widgetcore/BotResponse/ResponseButton";
 import { splitValueOptionsByDelimiter } from "@widgetcore/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "@widgetcore/UserDetailsDialog/ChatLoadingSpinner";
@@ -18,6 +18,7 @@ import { ChoiceList } from "@widgetcore/BotResponse/optionFormats/ChoiceList";
 import { MiniContactForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { CurrencyTextField } from "@widgetcore/BotResponse/numbers/CurrencyTextField";
 import { widgetSelection } from "@common/Analytics/gtag";
+import { WidgetPreferencesResource, IntentResource, WidgetNodeResource, FileAssetResource } from "@common/types/api/EntityResources";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -29,13 +30,13 @@ const useStyles = makeStyles(theme => ({
     root: {
         borderBottom: "none",
     },
-    textField: (prefs: WidgetPreferences) => ({
+    textField: (prefs: WidgetPreferencesResource) => ({
         textDecoration: "none",
         color: prefs.chatFontColor,
         borderColor: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
         fontFamily: prefs.fontFamily,
     }),
-    textLabel: (prefs: WidgetPreferences) => ({
+    textLabel: (prefs: WidgetPreferencesResource) => ({
         color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
         "&:focus": {
             color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
@@ -51,7 +52,7 @@ const useStyles = makeStyles(theme => ({
             cursor: "pointer",
         },
     },
-    inputLabel: (props: WidgetPreferences) => ({
+    inputLabel: (props: WidgetPreferencesResource) => ({
         // borderBottom: "1px solid " + props.chatFontColor,
         fontFamily: props.fontFamily,
         color: props.chatFontColor,
@@ -80,7 +81,7 @@ export class StandardComponents {
     public makeSelectOptions({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         return () => {
             const { context, isDemo, preferences } = useContext(WidgetContext);
-            const [options, setOptions] = useState<Array<SelectedOption>>();
+            const [options, setOptions] = useState<SelectedOption[]>();
             const [disabled, setDisabled] = useState<boolean>(false);
             const [open, setOpen] = useState<boolean>(false);
 
@@ -88,8 +89,8 @@ export class StandardComponents {
 
             const loadAreas = useCallback(async () => {
                 var intents = await client.Widget.Get.Intents();
-                var options = intents.map((intent: AreaTable) => {
-                    return { areaDisplay: intent.areaDisplayTitle, areaId: intent.intentId };
+                var options = intents.map((intent: IntentResource) => {
+                    return { intentDisplay: intent.intentName, intentId: intent.intentId } as SelectedOption;
                 });
 
                 setOptions(options);
@@ -105,7 +106,7 @@ export class StandardComponents {
             const onChange = async (_: any, newOption: SelectedOption) => {
                 if (designer) return;
 
-                const newConversation = await client.Widget.Get.NewConversationHistory({ IntentId: newOption.areaId, Name: context.name, Email: context.emailAddress }, isDemo);
+                const newConversation = await client.Widget.Get.NewConversationHistory({ IntentId: newOption.intentId, Name: context.name, Email: context.emailAddress }, isDemo);
                 const nodes = newConversation.conversationNodes;
                 const convoId = newConversation.conversationId;
                 const rootNode = getRootNode(nodes);
@@ -119,7 +120,7 @@ export class StandardComponents {
                 //
 
                 let secretKey = new URLSearchParams(location.search).get("key") as string;
-                widgetSelection(secretKey, newOption.areaDisplay, newOption.areaId);
+                widgetSelection(secretKey, newOption.intentDisplay, newOption.intentId);
                 context.enableReset();
                 context.setChatStarted();
                 renderNextBotMessage(context, rootNode, nodes, client, convoId);
@@ -398,6 +399,7 @@ export class StandardComponents {
             let fileAsset: FileAssetResource | null;
             if (designer) {
                 fileAsset = {
+                    id: 1,
                     fileName: "test.png",
                     link: "https://i.chzbgr.com/full/9591491840/h124EF692/cat-oizzyandthef",
                     fileId: "1234",

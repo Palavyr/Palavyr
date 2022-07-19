@@ -1,19 +1,6 @@
-import {
-    AreaTable,
-    ConversationRecordUpdate,
-    ConversationRecordUpdate as ConvoRecord,
-    WidgetConversationUpdate,
-    DynamicResponse,
-    KeyValues,
-    LocaleResponse,
-    NewConversation,
-    PreCheckResult,
-    SecretKey,
-    SendEmailResultResponse,
-    WidgetNodeResource,
-    WidgetNodes,
-    WidgetPreferences,
-} from "@Palavyr-Types";
+import { PreCheckResultResource, SendLiveEmailResultResource } from "@common/types/api/ApiContracts";
+import { IntentResource, NewConversationResource, WidgetNodeResource, WidgetNodeResources, WidgetPreferencesResource } from "@common/types/api/EntityResources";
+import { ConversationRecordUpdate, ConversationRecordUpdate as ConvoRecord, WidgetConversationUpdate, DynamicResponse, KeyValues, LocaleResponse, SecretKey } from "@Palavyr-Types";
 import { ApiRoutes } from "./ApiRoutes";
 import { AxiosClient } from "./WidgetAxiosClient";
 
@@ -30,13 +17,13 @@ export class PalavyrWidgetRepository extends ApiRoutes {
 
     public Widget = {
         Get: {
-            PreCheck: async (isDemo: boolean) => this.client.get<PreCheckResult>(this.Routes.precheck(this.secretKey, isDemo)),
-            WidgetPreferences: async () => this.client.get<WidgetPreferences>(this.Routes.widgetPreferences(this.secretKey)),
+            PreCheck: async (isDemo: boolean) => this.client.get<PreCheckResultResource>(this.Routes.precheck(this.secretKey, isDemo)),
+            WidgetPreferences: async () => this.client.get<WidgetPreferencesResource>(this.Routes.widgetPreferences(this.secretKey)),
             Locale: async () => this.client.get<LocaleResponse>(this.Routes.locale(this.secretKey)),
-            Intents: async () => this.client.get<Array<AreaTable>>(this.Routes.intents(this.secretKey)),
+            Intents: async () => this.client.get<Array<IntentResource>>(this.Routes.intents(this.secretKey)),
             NewConversationHistory: async (recordUpdateDto: Partial<ConversationRecordUpdate>, isDemo: boolean) =>
-                this.client.post<NewConversation, {}>(this.Routes.newConversationHistory(this.secretKey, isDemo), recordUpdateDto),
-            IntroSequence: async () => this.client.get<WidgetNodes>(this.Routes.GetIntroSequence(this.secretKey)),
+                this.client.post<NewConversationResource, {}>(this.Routes.newConversationHistory(this.secretKey, isDemo), recordUpdateDto),
+            IntroSequence: async () => this.client.get<WidgetNodeResources>(this.Routes.GetIntroSequence(this.secretKey)),
         },
 
         Post: {
@@ -62,7 +49,7 @@ export class PalavyrWidgetRepository extends ApiRoutes {
                 convoId: string,
                 isDemo: boolean
             ) =>
-                this.client.post<SendEmailResultResponse, {}>(this.Routes.confirmationEmail(this.secretKey, intentId, isDemo), {
+                this.client.post<SendLiveEmailResultResource, {}>(this.Routes.confirmationEmail(this.secretKey, intentId, isDemo), {
                     ConversationId: convoId,
                     EmailAddress: emailAddress,
                     DynamicResponses: dynamicResponses,
@@ -72,7 +59,7 @@ export class PalavyrWidgetRepository extends ApiRoutes {
                     NumIndividuals: numIndividuals,
                 }),
             FallbackEmail: async (intentId: string, emailAddress: string, name: string, phone: string, convoId: string, isDemo: boolean) =>
-                this.client.post<SendEmailResultResponse, {}>(this.Routes.FallbackEmail(this.secretKey, intentId, isDemo), {
+                this.client.post<SendLiveEmailResultResource, {}>(this.Routes.FallbackEmail(this.secretKey, intentId, isDemo), {
                     ConversationId: convoId,
                     EmailAddress: emailAddress,
                     Name: name,

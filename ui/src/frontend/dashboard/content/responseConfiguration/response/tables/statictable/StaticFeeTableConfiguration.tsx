@@ -2,7 +2,7 @@
 // can assign static tables one form id, and the variable table a different form id
 
 import React from "react";
-import { StaticTableMeta, StaticTableMetas } from "@Palavyr-Types";
+import { StaticTableMetaResource, StaticTableMetaResources } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { Button, makeStyles, Typography } from "@material-ui/core";
@@ -16,9 +16,9 @@ import { sortByPropertyNumeric } from "@common/utils/sorting";
 
 interface IFeeConfiguration {
     title: string;
-    staticTables: StaticTableMetas;
+    staticTables: StaticTableMetaResources;
     modifier: StaticTablesModifier;
-    tableSaver(staticTables: StaticTableMetas): Promise<boolean>;
+    tableSaver(staticTables: StaticTableMetaResources): Promise<boolean>;
     tableCanceler(): Promise<any>;
     intentId: string;
     children: React.ReactNode;
@@ -99,7 +99,7 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
                         No static fee tables configured for this area.
                     </Typography>
                 )}
-                {sortByPropertyNumeric((x: StaticTableMeta) => x.tableOrder, staticTables).map((table: StaticTableMeta, index: number) => (
+                {sortByPropertyNumeric((x: StaticTableMetaResource) => x.tableOrder, staticTables).map((table: StaticTableMetaResource, index: number) => (
                     <StaticFeeTable staticTableMetas={staticTables} staticTableMeta={table} tableModifier={modifier} key={index} />
                 ))}
                 <div className={cls.buttonContainer}>{addTableButton}</div>

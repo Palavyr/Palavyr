@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles, TextField, Button, TableRow, Table, TableHead, TableBody, TableCell, Checkbox, FormControlLabel } from "@material-ui/core";
-import { StaticTableMetas, StaticTableMeta, StaticTableRow } from "@Palavyr-Types";
+import { StaticTableMetaResources, StaticTableMetaResource, StaticTableRowResource } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { StaticRow } from "./StaticRow";
 import AddBoxIcon from "@material-ui/icons/AddBox";
@@ -42,8 +42,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface IStaticFeeTable {
-    staticTableMetas: StaticTableMetas;
-    staticTableMeta: StaticTableMeta;
+    staticTableMetas: StaticTableMetaResources;
+    staticTableMeta: StaticTableMetaResource;
     tableModifier: StaticTablesModifier;
 }
 
@@ -52,9 +52,9 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
     const cls = useStyles();
     const cellAlignment = "center";
 
-    const anyStaticTableRowsWithPerIndividualSet = (staticTableMeta: StaticTableMeta) => {
+    const anyStaticTableRowsWithPerIndividualSet = (staticTableMeta: StaticTableMetaResource) => {
         let result = false;
-        staticTableMeta.staticTableRows.forEach((row: StaticTableRow) => {
+        staticTableMeta.staticTableRows.forEach((row: StaticTableRowResource) => {
             if (row.perPerson === true) {
                 result = true;
             }
@@ -97,7 +97,7 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                         </TableRow>
                     </TableHead>
                     <TableBody style={{ borderTop: "2px solid black" }}>
-                        {staticTableMeta.staticTableRows.map((row: StaticTableRow, index: number) => (
+                        {staticTableMeta.staticTableRows.map((row: StaticTableRowResource, index: number) => (
                             <StaticRow
                                 key={row.id}
                                 index={index}

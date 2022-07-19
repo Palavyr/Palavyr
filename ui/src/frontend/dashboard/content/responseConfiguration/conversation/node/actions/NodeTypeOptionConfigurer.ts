@@ -1,4 +1,4 @@
-import { NodeOption, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
+import { NodeTypeOptionResource, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { INodeReferences, IPalavyrNode } from "@Palavyr-Types";
 
 class NodeTypeOptionConfigurer {
@@ -62,7 +62,7 @@ class NodeTypeOptionConfigurer {
     }
 
     public filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>, nodeTypeOptions: NodeTypeOptions) {
-        const filteredNodeTypeOptions = nodeTypeOptions.filter((option: NodeOption) => {
+        const filteredNodeTypeOptions = nodeTypeOptions.filter((option: NodeTypeOptionResource) => {
             return !forbiddenOptions.includes(option.nodeTypeCode);
         });
         return filteredNodeTypeOptions;

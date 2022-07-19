@@ -1,9 +1,9 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
+import { CategoryNestedThresholdResource, TableData } from "@common/types/api/EntityResources";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { Modifier, SetState, TableGroup } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, uniq } from "lodash";
 import { v4 as uuid } from "uuid";
-import { CategoryNestedThresholdData, TableData } from "@Palavyr-Types";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 
 export class CategoryNestedThresholdModifier implements Modifier {
@@ -14,18 +14,18 @@ export class CategoryNestedThresholdModifier implements Modifier {
         this.onClick = onClick;
     }
 
-    setTables(newState: CategoryNestedThresholdData[]) {
+    setTables(newState: CategoryNestedThresholdResource[]) {
         this.onClick(cloneDeep(newState));
     }
 
-    groupByOuterCategory(tableData: CategoryNestedThresholdData[]): TableGroup<CategoryNestedThresholdData[]> {
+    groupByOuterCategory(tableData: CategoryNestedThresholdResource[]): TableGroup<CategoryNestedThresholdResource[]> {
         return groupBy(tableData, x => x.itemId);
     }
 
-    async addCategory(tableData: CategoryNestedThresholdData[], repository: PalavyrRepository, intentId: string, tableId: string) {
-        const template = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<CategoryNestedThresholdData>(intentId, this.tableType, tableId);
+    async addCategory(tableData: CategoryNestedThresholdResource[], repository: PalavyrRepository, intentId: string, tableId: string) {
+        const template = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<CategoryNestedThresholdResource>(intentId, this.tableType, tableId);
 
-        const categoryIds = uniq(tableData.map((x: CategoryNestedThresholdData) => x.itemId));
+        const categoryIds = uniq(tableData.map((x: CategoryNestedThresholdResource) => x.itemId));
         template.itemOrder = categoryIds.length;
 
         template.itemId = uuid();
@@ -36,12 +36,12 @@ export class CategoryNestedThresholdModifier implements Modifier {
         this.setTables(tableData);
     }
 
-    async addThreshold(tableData: CategoryNestedThresholdData[], categoryId: string, repository: PalavyrRepository, intentId: string, tableId: string) {
-        const template = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<CategoryNestedThresholdData>(intentId, this.tableType, tableId);
+    async addThreshold(tableData: CategoryNestedThresholdResource[], categoryId: string, repository: PalavyrRepository, intentId: string, tableId: string) {
+        const template = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<CategoryNestedThresholdResource>(intentId, this.tableType, tableId);
 
         const categoryRows = this._getRowsByCategoryId(tableData, categoryId);
         template.rowOrder = 0;
-        template.itemOrder = uniq(categoryRows.map((x: CategoryNestedThresholdData) => x.itemOrder))[0];
+        template.itemOrder = uniq(categoryRows.map((x: CategoryNestedThresholdResource) => x.itemOrder))[0];
         template.itemId = categoryId;
         template.rowId = uuid();
         template.itemName = categoryRows[0].itemName;
@@ -50,8 +50,8 @@ export class CategoryNestedThresholdModifier implements Modifier {
         this.setTables(tableData);
     }
 
-    setCategoryName(tableData: CategoryNestedThresholdData[], categoryId: string, value: string) {
-        tableData.forEach((item: CategoryNestedThresholdData, index: number) => {
+    setCategoryName(tableData: CategoryNestedThresholdResource[], categoryId: string, value: string) {
+        tableData.forEach((item: CategoryNestedThresholdResource, index: number) => {
             if (item.itemId === categoryId) {
                 tableData[index].itemName = value;
             }
@@ -59,37 +59,37 @@ export class CategoryNestedThresholdModifier implements Modifier {
         this.setTables(tableData);
     }
 
-    setThreshold(tableData: CategoryNestedThresholdData[], rowId: string, value: number) {
-        const index = findIndex(tableData, (x: CategoryNestedThresholdData) => x.rowId === rowId);
+    setThreshold(tableData: CategoryNestedThresholdResource[], rowId: string, value: number) {
+        const index = findIndex(tableData, (x: CategoryNestedThresholdResource) => x.rowId === rowId);
         tableData[index].threshold = value;
         this.setTables(tableData);
     }
 
-    setValueMin(tableData: CategoryNestedThresholdData[], rowId: string, value: number) {
-        const index = findIndex(tableData, (x: CategoryNestedThresholdData) => x.rowId === rowId);
+    setValueMin(tableData: CategoryNestedThresholdResource[], rowId: string, value: number) {
+        const index = findIndex(tableData, (x: CategoryNestedThresholdResource) => x.rowId === rowId);
         tableData[index].valueMin = value;
         this.setTables(tableData);
     }
 
-    setValueMax(tableData: CategoryNestedThresholdData[], rowId: string, value: number) {
-        const index = findIndex(tableData, (x: CategoryNestedThresholdData) => x.rowId === rowId);
+    setValueMax(tableData: CategoryNestedThresholdResource[], rowId: string, value: number) {
+        const index = findIndex(tableData, (x: CategoryNestedThresholdResource) => x.rowId === rowId);
         tableData[index].valueMax = value;
         this.setTables(tableData);
     }
 
-    setRangeOrValue(tableData: CategoryNestedThresholdData[], rowId: string) {
-        const index = findIndex(tableData, (x: CategoryNestedThresholdData) => x.rowId === rowId);
+    setRangeOrValue(tableData: CategoryNestedThresholdResource[], rowId: string) {
+        const index = findIndex(tableData, (x: CategoryNestedThresholdResource) => x.rowId === rowId);
         tableData[index].range = !tableData[index].range;
         this.setTables(tableData);
     }
 
-    removeThreshold(tableData: CategoryNestedThresholdData[], rowId: string) {
+    removeThreshold(tableData: CategoryNestedThresholdResource[], rowId: string) {
         if (this._categoryHasMorethanOneRow(tableData, rowId)) {
-            const updatedTable = tableData.filter((x: CategoryNestedThresholdData) => x.rowId !== rowId);
+            const updatedTable = tableData.filter((x: CategoryNestedThresholdResource) => x.rowId !== rowId);
             const categoryId = this._getCategoryIdFromRowId(tableData, rowId);
             const updatedCategoryRows = sortByPropertyNumeric(this.rowOrderGetter, this._getRowsByCategoryId(updatedTable, categoryId));
 
-            updatedCategoryRows.forEach((x: CategoryNestedThresholdData, order: number) => {
+            updatedCategoryRows.forEach((x: CategoryNestedThresholdResource, order: number) => {
                 const rowIndex = this._getRowIndexById(updatedTable, x.rowId);
                 updatedTable[rowIndex].rowOrder = order;
                 if (updatedCategoryRows.length === 1) {
@@ -103,9 +103,9 @@ export class CategoryNestedThresholdModifier implements Modifier {
     }
 
     // onchange has to set this rowId to true, and all other category row Ids to false.
-    checkTriggerFallbackChange(tableData: CategoryNestedThresholdData[], row: CategoryNestedThresholdData, categoryId: string, checked: boolean) {
+    checkTriggerFallbackChange(tableData: CategoryNestedThresholdResource[], row: CategoryNestedThresholdResource, categoryId: string, checked: boolean) {
         const categoryRows = this._getRowsByCategoryId(tableData, categoryId);
-        categoryRows.forEach((x: CategoryNestedThresholdData) => {
+        categoryRows.forEach((x: CategoryNestedThresholdResource) => {
             const rowIndex = this._getRowIndexById(tableData, x.rowId);
             if (x.rowId === row.rowId) {
                 tableData[rowIndex].triggerFallback = checked;
@@ -116,26 +116,26 @@ export class CategoryNestedThresholdModifier implements Modifier {
         this.setTables(tableData);
     }
 
-    _categoryHasMorethanOneRow(tableData: CategoryNestedThresholdData[], rowId: string): boolean {
+    _categoryHasMorethanOneRow(tableData: CategoryNestedThresholdResource[], rowId: string): boolean {
         const categoryId = this._getCategoryIdFromRowId(tableData, rowId);
         const categoryRows = this._getRowsByCategoryId(tableData, categoryId);
         return categoryRows.length > 1;
     }
 
-    _getCategoryIdFromRowId(tableData: CategoryNestedThresholdData[], rowId: string) {
+    _getCategoryIdFromRowId(tableData: CategoryNestedThresholdResource[], rowId: string) {
         const row = this._getRowById(tableData, rowId);
         return row.itemId;
     }
 
-    removeCategory(tableData: CategoryNestedThresholdData[], categoryId: string) {
+    removeCategory(tableData: CategoryNestedThresholdResource[], categoryId: string) {
         const itemIds: string[] = this._getOrderedUniqItemIds(tableData);
         if (itemIds.length > 1) {
-            const updatedTable = tableData.filter((x: CategoryNestedThresholdData) => x.itemId !== categoryId);
+            const updatedTable = tableData.filter((x: CategoryNestedThresholdResource) => x.itemId !== categoryId);
 
             const sortedItemIds: string[] = this._getOrderedUniqItemIds(tableData);
             sortedItemIds.forEach((categoryId: string, newItemOrder: number) => {
                 const rows = this._getRowsByCategoryId(updatedTable, categoryId);
-                rows.forEach((x: CategoryNestedThresholdData) => {
+                rows.forEach((x: CategoryNestedThresholdResource) => {
                     const index = this._getRowIndexById(updatedTable, x.rowId);
                     updatedTable[index].itemOrder = newItemOrder;
                 });
@@ -147,25 +147,25 @@ export class CategoryNestedThresholdModifier implements Modifier {
         }
     }
 
-    public rowOrderGetter(x: CategoryNestedThresholdData) {
+    public rowOrderGetter(x: CategoryNestedThresholdResource) {
         return x.rowOrder;
     }
 
-    public itemOrderGetter(x: CategoryNestedThresholdData) {
+    public itemOrderGetter(x: CategoryNestedThresholdResource) {
         return x.itemOrder;
     }
 
-    public validateTable(tableData: CategoryNestedThresholdData[]) {
+    public validateTable(tableData: CategoryNestedThresholdResource[]) {
         const tableRows = this.reorderThresholdData(tableData);
         const isValid = true;
 
         return { isValid, tableRows };
     }
 
-    public reorderThresholdData(tableData: CategoryNestedThresholdData[]) {
+    public reorderThresholdData(tableData: CategoryNestedThresholdResource[]) {
         // reorders all threshold data for all items (categories)
         const itemIds: string[] = this._getOrderedUniqItemIds(tableData);
-        const reorderedData: CategoryNestedThresholdData[] = [];
+        const reorderedData: CategoryNestedThresholdResource[] = [];
         for (let index = 0; index < itemIds.length; index++) {
             const itemId = itemIds[index];
 
@@ -177,14 +177,14 @@ export class CategoryNestedThresholdModifier implements Modifier {
         return reorderedData;
     }
 
-    _reorderSingleItemThresholdData(itemRows: CategoryNestedThresholdData[]) {
+    _reorderSingleItemThresholdData(itemRows: CategoryNestedThresholdResource[]) {
         // reorders the threshold data for a single item (category)
-        const getter = (x: CategoryNestedThresholdData) => x.threshold;
-        const sortedByThreshold = sortByPropertyNumeric(getter, itemRows) as CategoryNestedThresholdData[];
+        const getter = (x: CategoryNestedThresholdResource) => x.threshold;
+        const sortedByThreshold = sortByPropertyNumeric(getter, itemRows) as CategoryNestedThresholdResource[];
 
-        const reOrdered: CategoryNestedThresholdData[] = [];
+        const reOrdered: CategoryNestedThresholdResource[] = [];
         let shouldReassignTriggerFallback = false;
-        sortedByThreshold.forEach((row: CategoryNestedThresholdData, newRowNumber: number) => {
+        sortedByThreshold.forEach((row: CategoryNestedThresholdResource, newRowNumber: number) => {
             row.rowOrder = newRowNumber;
             if (newRowNumber + 1 !== sortedByThreshold.length && row.triggerFallback) {
                 row.triggerFallback = false;
@@ -199,18 +199,18 @@ export class CategoryNestedThresholdModifier implements Modifier {
         return reOrdered;
     }
 
-    _getOrderedUniqItemIds(tableData: CategoryNestedThresholdData[]) {
-        return sortByPropertyNumeric(this.itemOrderGetter, uniq(tableData.map((x: CategoryNestedThresholdData) => x.itemId)));
+    _getOrderedUniqItemIds(tableData: CategoryNestedThresholdResource[]) {
+        return sortByPropertyNumeric(this.itemOrderGetter, uniq(tableData.map((x: CategoryNestedThresholdResource) => x.itemId)));
     }
 
-    _getRowsByCategoryId(tableData: CategoryNestedThresholdData[], categoryId: string) {
-        return tableData.filter((x: CategoryNestedThresholdData) => x.itemId === categoryId);
+    _getRowsByCategoryId(tableData: CategoryNestedThresholdResource[], categoryId: string) {
+        return tableData.filter((x: CategoryNestedThresholdResource) => x.itemId === categoryId);
     }
 
-    _getRowIndexById(tableData: CategoryNestedThresholdData[], rowId: string): number {
-        return findIndex(tableData, (x: CategoryNestedThresholdData) => x.rowId === rowId);
+    _getRowIndexById(tableData: CategoryNestedThresholdResource[], rowId: string): number {
+        return findIndex(tableData, (x: CategoryNestedThresholdResource) => x.rowId === rowId);
     }
-    _getRowById(tableData: CategoryNestedThresholdData[], rowId: string): CategoryNestedThresholdData {
+    _getRowById(tableData: CategoryNestedThresholdResource[], rowId: string): CategoryNestedThresholdResource {
         const index = this._getRowIndexById(tableData, rowId);
         const row = tableData[index];
         return row;

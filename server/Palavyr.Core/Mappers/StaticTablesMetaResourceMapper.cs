@@ -5,7 +5,7 @@ using Palavyr.Core.Resources;
 
 namespace Palavyr.Core.Mappers
 {
-    public class StaticTablesMetaResourceMapper : IMapToNew<StaticTablesMeta, StaticTablesMetaResource>
+    public class StaticTablesMetaResourceMapper : IMapToNew<StaticTablesMeta, StaticTableMetaResource>
     {
         private readonly IMapToNew<StaticTableRow, StaticTableRowResource> staticTableRowMapper;
 
@@ -13,10 +13,10 @@ namespace Palavyr.Core.Mappers
         {
             this.staticTableRowMapper = staticTableRowMapper;
         }
-        public async Task<StaticTablesMetaResource> Map(StaticTablesMeta @from, CancellationToken cancellationToken)
+        public async Task<StaticTableMetaResource> Map(StaticTablesMeta @from, CancellationToken cancellationToken)
         {
             var tableRows = await staticTableRowMapper.MapMany(@from.StaticTableRows, cancellationToken);
-            return new StaticTablesMetaResource
+            return new StaticTableMetaResource
             {
                 TableOrder = @from.TableOrder,
                 Description = @from.Description,

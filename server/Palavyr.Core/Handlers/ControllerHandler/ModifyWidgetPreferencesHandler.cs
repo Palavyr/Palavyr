@@ -13,12 +13,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
         private readonly ILogger<ModifyWidgetPreferencesHandler> logger;
-        private readonly IMapToNew<WidgetPreference, WidgetPreferenceResource> mapper;
+        private readonly IMapToNew<WidgetPreference, WidgetPreferencesResource> mapper;
 
         public ModifyWidgetPreferencesHandler(
             IEntityStore<WidgetPreference> widgetPreferenceStore,
             ILogger<ModifyWidgetPreferencesHandler> logger,
-            IMapToNew<WidgetPreference, WidgetPreferenceResource> mapper)
+            IMapToNew<WidgetPreference, WidgetPreferencesResource> mapper)
         {
             this.widgetPreferenceStore = widgetPreferenceStore;
             this.logger = logger;
@@ -106,8 +106,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyWidgetPreferencesResponse
     {
-        public ModifyWidgetPreferencesResponse(WidgetPreferenceResource response) => Response = response;
-        public WidgetPreferenceResource Response { get; set; }
+        public ModifyWidgetPreferencesResponse(WidgetPreferencesResource response) => Response = response;
+        public WidgetPreferencesResource Response { get; set; }
     }
 
     public class ModifyWidgetPreferencesRequest : WidgetPreference, IRequest<ModifyWidgetPreferencesResponse>

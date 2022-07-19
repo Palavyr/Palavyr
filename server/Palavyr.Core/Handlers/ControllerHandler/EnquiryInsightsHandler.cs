@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Services.EnquiryServices;
@@ -23,8 +24,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class EnquiryInsightsResponse
     {
-        public EnquiryInsightsResponse(EnquiryInsightsResource[] response) => Response = response;
-        public EnquiryInsightsResource[] Response { get; set; }
+        public EnquiryInsightsResponse(IEnumerable<EnquiryInsightsResource> response) => Response = response;
+        public IEnumerable<EnquiryInsightsResource> Response { get; set; }
     }
 
     public class EnquiryInsightsRequest : IRequest<EnquiryInsightsResponse>

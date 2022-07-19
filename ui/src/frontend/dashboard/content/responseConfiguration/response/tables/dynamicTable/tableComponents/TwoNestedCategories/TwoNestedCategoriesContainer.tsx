@@ -1,7 +1,7 @@
 import { TableGroup } from "@Palavyr-Types";
 import { groupBy } from "lodash";
 import React from "react";
-import { IPricingStrategyBody, TwoNestedCategoryData } from "@Palavyr-Types";
+import { IPricingStrategyBody, TwoNestedCategoryResource } from "@Palavyr-Types";
 import { TwoNestedCategoriesItemTable } from "./TwoNestedCategoriesItemTable";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
@@ -23,12 +23,12 @@ export interface ITwoNestedCategoriesContainer extends IPricingStrategyBody {
 export const TwoNestedCategoriesContainer = ({ addInnerCategory, tableData, modifier }: ITwoNestedCategoriesContainer) => {
     const cls = useStyles();
     const sortedByOuterCategory = sortByPropertyNumeric(modifier.outerCategoryOrderGetter, tableData);
-    const orderedOuterCategoryGroups: TableGroup<TwoNestedCategoryData[]> = groupBy(sortedByOuterCategory, x => x.itemId); // use this groupby method in the modifier.
+    const orderedOuterCategoryGroups: TableGroup<TwoNestedCategoryResource[]> = groupBy(sortedByOuterCategory, x => x.itemId); // use this groupby method in the modifier.
 
     return (
         <div className={cls.container}>
             {Object.keys(orderedOuterCategoryGroups).map((outerCategoryId: string, outerCategoryIndex: number) => {
-                const sortedRows: TwoNestedCategoryData[] = sortByPropertyNumeric(modifier.innerCategoryOrderGetter, orderedOuterCategoryGroups[outerCategoryId]);
+                const sortedRows: TwoNestedCategoryResource[] = sortByPropertyNumeric(modifier.innerCategoryOrderGetter, orderedOuterCategoryGroups[outerCategoryId]);
                 const categoryName = sortedRows[0].itemName;
                 return (
                     <TwoNestedCategoriesItemTable

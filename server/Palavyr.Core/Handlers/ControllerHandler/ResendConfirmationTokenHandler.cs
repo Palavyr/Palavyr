@@ -10,12 +10,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ResendConfirmationTokenHandler : IRequestHandler<ResendConfirmationTokenRequest, ResendConfirmationTokenResponse>
     {
-        private readonly IEntityStore<EmailVerification> emailVerificationStore;
+        private readonly IEntityStore<AccountEmailVerification> emailVerificationStore;
         private readonly IEmailVerificationService emailVerificationService;
         private readonly IAccountIdTransport accountIdTransport;
 
         public ResendConfirmationTokenHandler(
-            IEntityStore<EmailVerification> emailVerificationStore,
+            IEntityStore<AccountEmailVerification> emailVerificationStore,
             IEmailVerificationService emailVerificationService,
             IAccountIdTransport accountIdTransport)
         {

@@ -1,6 +1,6 @@
 import React from "react";
 import { TableRow, makeStyles, TextField, FormControlLabel, Checkbox } from "@material-ui/core";
-import { CategoryNestedThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
+import { CategoryNestedThresholdResource, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
@@ -15,8 +15,8 @@ export interface CategoryNestedThresholdProps {
     categoryId: string;
     categoryName: string;
     categorySize: number;
-    tableData: CategoryNestedThresholdData[];
-    row: CategoryNestedThresholdData;
+    tableData: CategoryNestedThresholdResource[];
+    row: CategoryNestedThresholdResource;
     modifier: CategoryNestedThresholdModifier;
     unitGroup: UnitGroups;
     unitPrettyName: UnitPrettyNames;

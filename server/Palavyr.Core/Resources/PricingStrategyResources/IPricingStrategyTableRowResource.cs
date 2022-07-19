@@ -1,8 +1,6 @@
-﻿using Palavyr.Core.Models.Contracts;
-
-namespace Palavyr.Core.Resources.PricingStrategyResources
+﻿namespace Palavyr.Core.Resources.PricingStrategyResources
 {
-    public interface IPricingStrategyTableRowResource : IId
+    public interface IPricingStrategyTableRowResource : IEntityResource
     {
         public string TableId { get; set; }
     }

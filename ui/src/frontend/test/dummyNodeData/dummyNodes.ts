@@ -1,6 +1,6 @@
-import { ConvoNode, NodeTypeCode } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, NodeTypeCode } from "@Palavyr-Types";
 
-export const ParentNode: ConvoNode = {
+export const ParentNode: ConversationDesignerNodeResource = {
     nodeId: "xyz-1",
     nodeType: "YesNo",
     text: "Test Text",
@@ -28,7 +28,7 @@ export const ParentNode: ConvoNode = {
     nodeTypeCode: NodeTypeCode.I,
 };
 
-export const ChildNode1: ConvoNode = {
+export const ChildNode1: ConversationDesignerNodeResource = {
     nodeId: "xyz-2",
     nodeType: "",
     text: "Test Text",
@@ -55,7 +55,7 @@ export const ChildNode1: ConvoNode = {
     nodeTypeCode: NodeTypeCode.I,
 };
 
-export const ChildNode2: ConvoNode = {
+export const ChildNode2: ConversationDesignerNodeResource = {
     nodeId: "xyz-3",
     nodeType: "",
     text: "Test Text",

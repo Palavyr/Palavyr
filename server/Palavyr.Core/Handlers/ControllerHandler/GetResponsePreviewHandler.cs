@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Mappers;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;

@@ -22,6 +22,7 @@ namespace Palavyr.Core.Mappers
 
             return new ConversationNode
             {
+                Id = from.Id,
                 NodeId = from.NodeId,
                 NodeType = from.NodeType,
                 Text = from.Text,

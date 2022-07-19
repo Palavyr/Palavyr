@@ -1,6 +1,6 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { Button, makeStyles, TableBody, TableContainer, Paper, Table } from "@material-ui/core";
-import { CategoryNestedThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
+import { CategoryNestedThresholdResource, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
 import { useState } from "react";
@@ -11,10 +11,10 @@ import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifi
 import { CategoryNestedThresholdRow } from "./CategoryNestedThresholdRow";
 
 interface CategoryNestedThresholdItemTableProps {
-    tableData: CategoryNestedThresholdData[];
+    tableData: CategoryNestedThresholdResource[];
     tableId: string;
     categoryIndex: number;
-    categoryData: CategoryNestedThresholdData[];
+    categoryData: CategoryNestedThresholdResource[];
     categoryName: string;
     categoryId: string;
     modifier: CategoryNestedThresholdModifier;
@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const getter = (x: CategoryNestedThresholdData) => x.rowOrder;
+const getter = (x: CategoryNestedThresholdResource) => x.rowOrder;
 
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
@@ -65,7 +65,7 @@ export const CategoryNestedThresholdItemTable = ({
             <Table className={cls.tableStyles}>
                 {categoryIndex === 0 && <CategoryNestedThresholdHeader />}
                 <TableBody className={cls.body}>
-                    {sortByPropertyNumeric(getter, categoryData).map((row: CategoryNestedThresholdData, rowIndex: number) => {
+                    {sortByPropertyNumeric(getter, categoryData).map((row: CategoryNestedThresholdResource, rowIndex: number) => {
                         row.rowOrder = rowIndex;
                         return (
                             <React.Fragment key={rowIndex}>

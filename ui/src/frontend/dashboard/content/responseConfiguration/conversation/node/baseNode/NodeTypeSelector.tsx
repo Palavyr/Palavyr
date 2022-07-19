@@ -1,5 +1,5 @@
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
-import { AlertType, NodeOption, NodeTypeOptions, ConvoNode } from "@Palavyr-Types";
+import { AlertType, NodeTypeOptionResource, NodeTypeOptions, ConversationDesignerNodeResource } from "@Palavyr-Types";
 import { ConversationTreeContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { IPalavyrNode } from "@Palavyr-Types";
@@ -20,25 +20,25 @@ export const NodeTypeSelector = ({ currentNode, shouldDisableNodeTypeSelector }:
     const { nodeTypeOptions } = useContext(ConversationTreeContext);
 
     useEffect(() => {
-        const currentNodeOption = nodeTypeOptions.filter((option: NodeOption) => option.value === currentNode.nodeType)[0];
+        const currentNodeOption = nodeTypeOptions.filter((option: NodeTypeOptionResource) => option.value === currentNode.nodeType)[0];
         if (currentNodeOption) {
             setLabel(currentNodeOption.text);
         }
     }, [currentNode.nodeType]);
 
     const duplicateDynamicFeeNodeFound = (option: string, nodeTypeOptions: NodeTypeOptions) => {
-        const dynamicNodeTypeOptions = nodeTypeOptions.filter((x: NodeOption) => x.isDynamicType);
+        const dynamicNodeTypeOptions = nodeTypeOptions.filter((x: NodeTypeOptionResource) => x.isDynamicType);
         if (dynamicNodeTypeOptions.length > 0) {
-            const dynamicNodeTypes = dynamicNodeTypeOptions.map((x: NodeOption) => x.value);
+            const dynamicNodeTypes = dynamicNodeTypeOptions.map((x: NodeTypeOptionResource) => x.value);
             const nodeList = currentNode.palavyrLinkedList.compileToConvoNodes(); // Write methods to handle this natively - this is a bit of a cheat atm.
-            const dynamicNodesPresentInTheCurrentNodeList = nodeList.filter((x: ConvoNode) => dynamicNodeTypes.includes(x.nodeType));
-            const dynamicNodes = dynamicNodesPresentInTheCurrentNodeList.map((x: ConvoNode) => x.nodeType);
+            const dynamicNodesPresentInTheCurrentNodeList = nodeList.filter((x: ConversationDesignerNodeResource) => dynamicNodeTypes.includes(x.nodeType));
+            const dynamicNodes = dynamicNodesPresentInTheCurrentNodeList.map((x: ConversationDesignerNodeResource) => x.nodeType);
             return dynamicNodes.includes(option);
         }
         return false;
     };
 
-    const autocompleteOnChange = async (_: any, nodeOption: NodeOption) => {
+    const autocompleteOnChange = async (_: any, nodeOption: NodeTypeOptionResource) => {
         if (nodeOption === null) {
             return;
         }

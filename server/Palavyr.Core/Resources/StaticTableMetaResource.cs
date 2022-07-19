@@ -2,7 +2,7 @@
 
 namespace Palavyr.Core.Resources
 {
-    public class StaticTablesMetaResource
+    public class StaticTableMetaResource : IEntityResource
     {
         public int TableOrder { get; set; }
         public string Description { get; set; }
@@ -11,5 +11,6 @@ namespace Palavyr.Core.Resources
         public string AccountId { get; set; }
         public bool PerPersonInputRequired { get; set; }
         public bool IncludeTotals { get; set; }
+        public int Id { get; set; }
     }
 }

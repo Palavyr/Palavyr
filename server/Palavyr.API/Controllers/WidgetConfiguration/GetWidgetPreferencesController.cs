@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         }
 
         [HttpGet(Route)]
-        public async Task<WidgetPreferenceResource> GetWidgetPreferences(CancellationToken cancellationToken)
+        public async Task<WidgetPreferencesResource> GetWidgetPreferences(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetWidgetPreferencesRequest(), cancellationToken);
             return response.Response;

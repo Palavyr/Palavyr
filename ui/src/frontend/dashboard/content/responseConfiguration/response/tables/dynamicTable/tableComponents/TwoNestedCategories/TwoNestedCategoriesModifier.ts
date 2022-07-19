@@ -1,9 +1,9 @@
-import { Modifier, SetState, TableData, TwoNestedCategoryData } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, max, uniq } from "lodash";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { TableGroup } from "@Palavyr-Types";
+import { Modifier, SetState, TableGroup } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
+import { TableData, TwoNestedCategoryResource } from "@common/types/api/EntityResources";
 
 export class TwoNestedCategoriesModifier implements Modifier {
     onClick: SetState<TableData>;
@@ -13,21 +13,21 @@ export class TwoNestedCategoriesModifier implements Modifier {
         this.onClick = onClick;
         this.tableType = PricingStrategyTypes.TwoNestedCategory;
     }
-    setTables(newState: TwoNestedCategoryData[]) {
+    setTables(newState: TwoNestedCategoryResource[]) {
         this.onClick(cloneDeep(newState));
     }
 
-    groupByOuterCategory(tableData: TwoNestedCategoryData[]): TableGroup<TwoNestedCategoryData[]> {
+    groupByOuterCategory(tableData: TwoNestedCategoryResource[]): TableGroup<TwoNestedCategoryResource[]> {
         return groupBy(tableData, x => x.itemId);
     }
 
-    getItemRows(tableData: TwoNestedCategoryData[], rowId: String) {
-        const index = findIndex(tableData, (x: TwoNestedCategoryData) => x.rowId === rowId);
+    getItemRows(tableData: TwoNestedCategoryResource[], rowId: String) {
+        const index = findIndex(tableData, (x: TwoNestedCategoryResource) => x.rowId === rowId);
         return tableData[index];
     }
 
-    async addOuterCategory(tableData: TwoNestedCategoryData[], repository: PalavyrRepository, intentId: string, tableId: string) {
-        const template = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<TwoNestedCategoryData>(intentId, this.tableType, tableId);
+    async addOuterCategory(tableData: TwoNestedCategoryResource[], repository: PalavyrRepository, intentId: string, tableId: string) {
+        const template = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<TwoNestedCategoryResource>(intentId, this.tableType, tableId);
 
         // get all current inner categories from the first category and assign them to the new one
         const outerCategoryGroups = this.groupByOuterCategory(tableData); // use this groupby method in the modifier.
@@ -37,7 +37,7 @@ export class TwoNestedCategoriesModifier implements Modifier {
         const maxOrder = Object.keys(outerCategoryGroups).length - 1;
 
         const newOuterCategory = cloneDeep(firstCategoryRows);
-        newOuterCategory.forEach((newRow: TwoNestedCategoryData) => {
+        newOuterCategory.forEach((newRow: TwoNestedCategoryResource) => {
             newRow.itemName = "";
             newRow.itemId = template.itemId;
             newRow.itemOrder = maxOrder;
@@ -48,14 +48,14 @@ export class TwoNestedCategoriesModifier implements Modifier {
         this.setTables(newTableData);
     }
 
-    async addInnerCategory(tableData: TwoNestedCategoryData[], repository: PalavyrRepository, intentId: string, tableId: string) {
-        const template = (await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate(intentId, this.tableType, tableId)) as TwoNestedCategoryData;
+    async addInnerCategory(tableData: TwoNestedCategoryResource[], repository: PalavyrRepository, intentId: string, tableId: string) {
+        const template = (await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate(intentId, this.tableType, tableId)) as TwoNestedCategoryResource;
 
         // need to copy across all outer categories...
         const outerCategoryGroups = this.groupByOuterCategory(tableData); // use this groupby method in the modifier.
         const itemIds = Object.keys(outerCategoryGroups);
 
-        const newTableData: TwoNestedCategoryData[] = [...tableData];
+        const newTableData: TwoNestedCategoryResource[] = [...tableData];
         const nextRowOrder = Object.values(outerCategoryGroups)[0].length;
         itemIds.forEach((itemId: string) => {
             const outerCategoryName = outerCategoryGroups[itemId][0].itemName;
@@ -71,20 +71,20 @@ export class TwoNestedCategoriesModifier implements Modifier {
         this.setTables(newTableData);
     }
 
-    removeInnerCategory(tableData: TwoNestedCategoryData[], rowOrder: number) {
+    removeInnerCategory(tableData: TwoNestedCategoryResource[], rowOrder: number) {
         // get row order, delete from all groups, then rewrite rowOrder for each group.
         const outerCategoryGroups = this.groupByOuterCategory(tableData); // use this groupby method in the modifier.
         const itemIds = Object.keys(outerCategoryGroups);
 
-        let updated: TwoNestedCategoryData[] = [];
+        let updated: TwoNestedCategoryResource[] = [];
 
         const firstGroup = outerCategoryGroups[Object.keys(outerCategoryGroups)[0]]; // TODO: Get legit first group by filtering on itemOrder === 0
         if (firstGroup.length > 1) {
             itemIds.forEach((itemId: string) => {
                 let group = outerCategoryGroups[itemId];
                 delete group[rowOrder];
-                group = group.filter((x: TwoNestedCategoryData) => x);
-                group.forEach((x: TwoNestedCategoryData, newRowOrder: number) => {
+                group = group.filter((x: TwoNestedCategoryResource) => x);
+                group.forEach((x: TwoNestedCategoryResource, newRowOrder: number) => {
                     x.rowOrder = newRowOrder;
                 });
 
@@ -96,9 +96,9 @@ export class TwoNestedCategoriesModifier implements Modifier {
         }
     }
 
-    findIndices(tableData: TwoNestedCategoryData[], value: string) {
+    findIndices(tableData: TwoNestedCategoryResource[], value: string) {
         const indices: number[] = [];
-        tableData.forEach((x: TwoNestedCategoryData, index: number) => {
+        tableData.forEach((x: TwoNestedCategoryResource, index: number) => {
             if (x.rowId === value) {
                 indices.push(index);
             }
@@ -106,11 +106,11 @@ export class TwoNestedCategoriesModifier implements Modifier {
         return indices;
     }
 
-    setInnerCategoryName(tableData: TwoNestedCategoryData[], rowOrder: number, newValue: string) {
+    setInnerCategoryName(tableData: TwoNestedCategoryResource[], rowOrder: number, newValue: string) {
         const outerCategoryGroups = this.groupByOuterCategory(tableData); // use this groupby method in the modifier.
         const itemIds = Object.keys(outerCategoryGroups);
 
-        let updated: TwoNestedCategoryData[] = [];
+        let updated: TwoNestedCategoryResource[] = [];
         itemIds.forEach((itemId: string) => {
             const group = outerCategoryGroups[itemId];
             group[rowOrder].innerItemName = newValue;
@@ -119,7 +119,7 @@ export class TwoNestedCategoriesModifier implements Modifier {
         this.setTables(updated);
     }
 
-    setValueMin(tableData: TwoNestedCategoryData[], rowId: string, newValue: number) {
+    setValueMin(tableData: TwoNestedCategoryResource[], rowId: string, newValue: number) {
         const indices = this.findIndices(tableData, rowId);
         indices.forEach((index: number) => {
             tableData[index].valueMin = newValue;
@@ -127,7 +127,7 @@ export class TwoNestedCategoriesModifier implements Modifier {
         this.setTables(tableData);
     }
 
-    setValueMax(tableData: TwoNestedCategoryData[], rowId: string, newValue: number) {
+    setValueMax(tableData: TwoNestedCategoryResource[], rowId: string, newValue: number) {
         const indices = this.findIndices(tableData, rowId);
         indices.forEach((index: number) => {
             tableData[index].valueMax = newValue;
@@ -135,11 +135,11 @@ export class TwoNestedCategoriesModifier implements Modifier {
         this.setTables(tableData);
     }
 
-    setRangeOrValue(tableData: TwoNestedCategoryData[], rowOrder: number) {
+    setRangeOrValue(tableData: TwoNestedCategoryResource[], rowOrder: number) {
         const outerCategoryGroups = this.groupByOuterCategory(tableData); // use this groupby method in the modifier.
         const itemIds = Object.keys(outerCategoryGroups);
 
-        let updated: TwoNestedCategoryData[] = [];
+        let updated: TwoNestedCategoryResource[] = [];
         itemIds.forEach((itemId: string) => {
             const group = outerCategoryGroups[itemId];
             group[rowOrder].range = !group[rowOrder].range;
@@ -148,11 +148,11 @@ export class TwoNestedCategoriesModifier implements Modifier {
         this.setTables(updated);
     }
 
-    setOuterCategoryName(tableData: TwoNestedCategoryData[], itemId: string, newName: string) {
-        const itemData = tableData.filter((x: TwoNestedCategoryData) => x.itemId === itemId);
+    setOuterCategoryName(tableData: TwoNestedCategoryResource[], itemId: string, newName: string) {
+        const itemData = tableData.filter((x: TwoNestedCategoryResource) => x.itemId === itemId);
         let indices: number[] = [];
-        itemData.forEach((item: TwoNestedCategoryData) => {
-            const index = findIndex(tableData, (x: TwoNestedCategoryData) => x.rowId === item.rowId);
+        itemData.forEach((item: TwoNestedCategoryResource) => {
+            const index = findIndex(tableData, (x: TwoNestedCategoryResource) => x.rowId === item.rowId);
             indices.push(index);
         });
 
@@ -162,28 +162,28 @@ export class TwoNestedCategoriesModifier implements Modifier {
         this.setTables(tableData);
     }
 
-    removeOuterCategory(tableData: TwoNestedCategoryData[], itemId: string) {
+    removeOuterCategory(tableData: TwoNestedCategoryResource[], itemId: string) {
         const itemIds: string[] = [];
         tableData.forEach(x => itemIds.push(x.itemId));
 
         const unique = uniq(itemIds);
         if (unique.length > 1) {
-            const updatedTable = tableData.filter((x: TwoNestedCategoryData) => x.itemId !== itemId);
+            const updatedTable = tableData.filter((x: TwoNestedCategoryResource) => x.itemId !== itemId);
             this.setTables(updatedTable);
         } else {
             alert("Table must have at least one outer category.");
         }
     }
 
-    public outerCategoryOrderGetter(x: TwoNestedCategoryData) {
+    public outerCategoryOrderGetter(x: TwoNestedCategoryResource) {
         return x.itemOrder;
     }
 
-    public innerCategoryOrderGetter(x: TwoNestedCategoryData) {
+    public innerCategoryOrderGetter(x: TwoNestedCategoryResource) {
         return x.rowOrder;
     }
 
-    validateTable(tableData: TwoNestedCategoryData[]) {
+    validateTable(tableData: TwoNestedCategoryResource[]) {
         const tableRows = tableData;
         const isValid = true;
 

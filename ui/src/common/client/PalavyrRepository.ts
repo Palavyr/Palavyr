@@ -1,35 +1,17 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import {
-    PricingStrategyMetas,
-    PricingStrategyMeta,
-    StaticTableMetas,
-    StaticTableMetaTemplate,
-    Intents,
-    PriceResources,
-    EmailVerificationResponse,
-    AreaTable,
-    ConvoNode,
     ResponseConfigurationType,
     AccountEmailSettingsResponse,
-    Enquiries,
-    PhoneSettingsResponse,
-    NodeTypeOptions,
-    CompletedConversation,
-    PreCheckResult,
-    WidgetPreferences,
-    VariableDetail,
-    ProductIds,
-    TableData,
-    TableNameMap,
-    TreeErrors,
-    StaticTableRow,
-    PlanTypeMeta,
-    PricingStrategyData,
     EnquiryActivtyResource,
     LocaleResponse,
-    QuantUnitDefinition,
-    FileAssetResource,
     MarkAsSeenUpdate,
+    PhoneSettingsResponse,
+    PlanTypeMeta,
+    PricingStrategyData,
+    ProductIds,
+    TableNameMap,
+    TreeErrors,
+
 } from "@Palavyr-Types";
 import { ApiErrors } from "frontend/dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "frontend/dashboard/subscriptionFilters/filterConvoNodeTypes";
@@ -38,6 +20,8 @@ import { AxiosClient, CacheIds } from "./FrontendAxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
 import { Loaders } from "./Loaders";
 import { ApiRoutes } from "./ApiRoutes";
+import { PriceResources, QuantUnitDefinition, ResponseVariable, PreCheckResultResource, NodeTypeOptionResources, EmailVerificationResource } from "@common/types/api/ApiContracts";
+import { IntentResources, IntentResource, PricingStrategyTableMetaResource, TableData, StaticTableMetaResources, StaticTableRowResource, FileAssetResource, ConversationDesignerNodeResource, PricingStrategyTableMetaResources, WidgetPreferencesResource, EnquiryResource, ConversationHistoryRowResources } from "@common/types/api/EntityResources";
 
 export class PalavyrRepository extends ApiRoutes {
     private client: AxiosClient;
@@ -91,7 +75,7 @@ export class PalavyrRepository extends ApiRoutes {
     };
 
     public Intent = {
-        GetAllIntents: async () => this.client.get<Intents>(this.Routes.GetAllIntents(), CacheIds.Intents),
+        GetAllIntents: async () => this.client.get<IntentResources>(this.Routes.GetAllIntents(), CacheIds.Intents),
         GetShowDynamicTotals: (intentId: string) => this.client.get<boolean>(this.Routes.GetShowPricingStrategyTotals(intentId)),
 
         ToggleIsEnabled: async (intentToggleStateUpdate: boolean, intentId: string) => {
@@ -103,8 +87,8 @@ export class PalavyrRepository extends ApiRoutes {
         ToggleUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, intentId: string) =>
             this.client.put<boolean, {}>(this.Routes.ToggleUseIntentFallbackEmail(), { UseFallback: useAreaFallbackEmailUpdate, IntentId: intentId }),
         CreateIntent: async (intentName: string) => {
-            const newArea = await this.client.post<AreaTable, {}>(this.Routes.CreateIntent(), { intentName });
-            const areas = SessionStorage.getCacheValue(CacheIds.Intents) as Intents;
+            const newArea = await this.client.post<IntentResource, {}>(this.Routes.CreateIntent(), { intentName });
+            const areas = SessionStorage.getCacheValue(CacheIds.Intents) as IntentResources;
             areas.push(newArea);
             SessionStorage.setCacheValue(CacheIds.Intents, areas);
             return newArea;
@@ -133,18 +117,18 @@ export class PalavyrRepository extends ApiRoutes {
         },
         Tables: {
             Dynamic: {
-                GetPricingStrategyMetas: async (intentId: string) => this.client.get<PricingStrategyMetas>(this.Routes.GetPricingStrategyMetas(intentId)), // todo - cache
+                GetPricingStrategyMetas: async (intentId: string) => this.client.get<PricingStrategyTableMetaResources>(this.Routes.GetPricingStrategyMetas(intentId)), // todo - cache
 
                 GetPricingStrategyTypes: async () => this.client.get<TableNameMap>(this.Routes.GetPricingStrategyTypes()),
 
-                ModifyPricingStrategyMeta: async (PricingStrategyMeta: PricingStrategyMeta) => {
-                    return this.client.put<PricingStrategyMeta, {}>(this.Routes.ModifyPricingStrategyMeta(), PricingStrategyMeta);
+                ModifyPricingStrategyMeta: async (PricingStrategyMeta: PricingStrategyTableMetaResource) => {
+                    return this.client.put<PricingStrategyTableMetaResource, {}>(this.Routes.ModifyPricingStrategyMeta(), PricingStrategyMeta);
                     // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, PricingStrategyMeta.intentId].join("-"));
                     // return response;
                 },
 
                 CreatePricingStrategy: async (intentId: string) => {
-                    const response = this.client.post<PricingStrategyMeta, {}>(this.Routes.CreatePricingStrategy(intentId));
+                    const response = this.client.post<PricingStrategyTableMetaResource, {}>(this.Routes.CreatePricingStrategy(intentId));
                     // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
                     return response;
                 },
@@ -164,10 +148,10 @@ export class PalavyrRepository extends ApiRoutes {
                 },
             },
             Static: {
-                UpdateStaticTablesMetas: async (intentId: string, staticTablesMetas: StaticTableMetas) =>
-                    this.client.put<StaticTableMetas, {}>(this.Routes.UpdateStaticTableMetas(), { StaticTableMetaUpdate: staticTablesMetas, IntentId: intentId }),
-                GetStaticTablesMetaTemplate: async (intentId: string) => this.client.get<StaticTableMetaTemplate>(this.Routes.GetStaticTablesMetaTemplate(intentId)),
-                GetStaticTableRowTemplate: async (intentId: string, tableOrder: number) => this.client.get<StaticTableRow>(this.Routes.GetStaticTableRowTemplate(intentId, tableOrder)),
+                UpdateStaticTablesMetas: async (intentId: string, staticTablesMetas: StaticTableMetaResources) =>
+                    this.client.put<StaticTableMetaResources, {}>(this.Routes.UpdateStaticTableMetas(), { StaticTableMetaUpdate: staticTablesMetas, IntentId: intentId }),
+                GetStaticTablesMetaTemplate: async (intentId: string) => this.client.get<StaticTableRowResource>(this.Routes.GetStaticTablesMetaTemplate(intentId)),
+                GetStaticTableRowTemplate: async (intentId: string, tableId: string) => this.client.get<StaticTableRowResource>(this.Routes.GetStaticTableRowTemplate(intentId, tableId)),
             },
         },
 
@@ -176,7 +160,7 @@ export class PalavyrRepository extends ApiRoutes {
         },
 
         Email: {
-            GetVariableDetails: async () => this.client.get<VariableDetail[]>(this.Routes.GetVariableDetails()),
+            GetVariableDetails: async () => this.client.get<ResponseVariable[]>(this.Routes.GetVariableDetails()),
 
             GetAreaEmailTemplate: async (intentId: string) => this.client.get<string>(this.Routes.GetIntentEmailTemplate(intentId)),
             GetAreaFallbackEmailTemplate: async (intentId: string) => this.client.get<string>(this.Routes.GetIntentFallbackEmailTemplate(intentId)),
@@ -218,7 +202,7 @@ export class PalavyrRepository extends ApiRoutes {
                 return result;
             },
 
-            LinkFileAssetToNode: async (fileId: string, nodeId: string) => this.client.post<ConvoNode, {}>(this.Routes.LinkFileAssetToNode(fileId, nodeId)),
+            LinkFileAssetToNode: async (fileId: string, nodeId: string) => this.client.post<ConversationDesignerNodeResource, {}>(this.Routes.LinkFileAssetToNode(fileId, nodeId)),
             LinkFileAssetToIntent: async (fileId: string, intentId: string) => this.client.post<FileAssetResource, {}>(this.Routes.LinkFileAssetToIntent(fileId, intentId)),
             LinkFileAssetToLogo: async (fileId: string) => this.client.post<FileAssetResource, {}>(this.Routes.LinkFileAssetToLogo(fileId)),
             DeleteFileAsset: async (fileIds: string[]) => this.client.delete<FileAssetResource[]>(this.Routes.DeleteFileAsset(fileIds)), // CacheIds.FileAssets), // takes a querystring command delimited of fileIds
@@ -226,21 +210,21 @@ export class PalavyrRepository extends ApiRoutes {
     };
 
     public Conversations = {
-        GetConversation: async (intentId: string) => this.client.get<ConvoNode[]>(this.Routes.GetConversation(intentId), [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
-        GetConversationNode: async (nodeId: string) => this.client.get<ConvoNode>(this.Routes.GetConversationNode(nodeId)),
+        GetConversation: async (intentId: string) => this.client.get<ConversationDesignerNodeResource[]>(this.Routes.GetConversation(intentId), [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
+        GetConversationNode: async (nodeId: string) => this.client.get<ConversationDesignerNodeResource>(this.Routes.GetConversationNode(nodeId)),
         GetNodeOptionsList: async (intentId: string, planTypeMeta: PlanTypeMeta) =>
-            filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptions>(this.Routes.GetNodeOptionsList(intentId)), planTypeMeta),
-        GetIntroNodeOptionsList: async (introId: string) => this.client.get<NodeTypeOptions>(this.Routes.GetIntroNodeOptionsList(introId)),
+            filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptionResources>(this.Routes.GetNodeOptionsList(intentId)), planTypeMeta),
+        GetIntroNodeOptionsList: async (introId: string) => this.client.get<NodeTypeOptionResources>(this.Routes.GetIntroNodeOptionsList(introId)),
 
-        GetErrors: async (intentId: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(this.Routes.GetErrors(), { Transactions: nodeList, IntentId: intentId }),
-        GetIntroErrors: async (introId: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(this.Routes.GetIntroErrors(), { Transactions: nodeList, IntroId: introId }),
+        GetErrors: async (intentId: string, nodeList: ConversationDesignerNodeResource[]) => this.client.post<TreeErrors, {}>(this.Routes.GetErrors(), { Transactions: nodeList, IntentId: intentId }),
+        GetIntroErrors: async (introId: string, nodeList: ConversationDesignerNodeResource[]) => this.client.post<TreeErrors, {}>(this.Routes.GetIntroErrors(), { Transactions: nodeList, IntroId: introId }),
 
-        ModifyConversation: async (nodelist: ConvoNode[], intentId: string) =>
-            this.client.put<ConvoNode[], {}>(this.Routes.ModifyConversation(), { Transactions: nodelist, IntentId: intentId }, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
-        ModifyConversationNode: async (nodeId: string, intentId: string, updatedNode: ConvoNode) =>
-            this.client.put<ConvoNode[], {}>(this.Routes.ModifyConversationNode(nodeId, intentId), updatedNode, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
+        ModifyConversation: async (nodelist: ConversationDesignerNodeResource[], intentId: string) =>
+            this.client.put<ConversationDesignerNodeResource[], {}>(this.Routes.ModifyConversation(), { Transactions: nodelist, IntentId: intentId }, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
+        ModifyConversationNode: async (nodeId: string, intentId: string, updatedNode: ConversationDesignerNodeResource) =>
+            this.client.put<ConversationDesignerNodeResource[], {}>(this.Routes.ModifyConversationNode(nodeId, intentId), updatedNode, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
         ModifyConversationNodeText: async (nodeId: string, intentId: string, updatedNodeText: string) => {
-            const result = await this.client.put<ConvoNode | null, {}>(this.Routes.ModifyConversationNodeText(), { UpdatedNodeText: updatedNodeText, IntentId: intentId, NodeId: nodeId });
+            const result = await this.client.put<ConversationDesignerNodeResource | null, {}>(this.Routes.ModifyConversationNodeText(), { UpdatedNodeText: updatedNodeText, IntentId: intentId, NodeId: nodeId });
             SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
             if (isNullOrUndefinedOrWhitespace(result)) {
                 return Promise.resolve(null);
@@ -249,9 +233,9 @@ export class PalavyrRepository extends ApiRoutes {
         },
     };
     public WidgetDemo = {
-        RunConversationPrecheck: async () => this.client.get<PreCheckResult>(this.Routes.RunConversationPrecheck()),
-        GetWidetPreferences: async () => this.client.get<WidgetPreferences>(this.Routes.GetWidetPreferences(), CacheIds.WidgetPrefs),
-        SaveWidgetPreferences: async (prefs: WidgetPreferences) => this.client.put<WidgetPreferences, WidgetPreferences>(this.Routes.SaveWidgetPreferences(), prefs, CacheIds.WidgetPrefs),
+        RunConversationPrecheck: async () => this.client.get<PreCheckResultResource>(this.Routes.RunConversationPrecheck()),
+        GetWidetPreferences: async () => this.client.get<WidgetPreferencesResource>(this.Routes.GetWidetPreferences(), CacheIds.WidgetPrefs),
+        SaveWidgetPreferences: async (prefs: WidgetPreferencesResource) => this.client.put<WidgetPreferencesResource, WidgetPreferencesResource>(this.Routes.SaveWidgetPreferences(), prefs, CacheIds.WidgetPrefs),
     };
 
     public Settings = {
@@ -269,7 +253,7 @@ export class PalavyrRepository extends ApiRoutes {
 
             UpdatePassword: async (oldPassword: string, newPassword: string) => this.client.put<boolean, {}>(this.Routes.UpdatePassword(), { OldPassword: oldPassword, Password: newPassword }),
             UpdateCompanyName: async (companyName: string) => this.client.put<string, {}>(this.Routes.UpdateCompanyName(), { CompanyName: companyName }),
-            UpdateEmail: async (newEmail: string) => this.client.put<EmailVerificationResponse, {}>(this.Routes.UpdateEmail(), { EmailAddress: newEmail }),
+            UpdateEmail: async (newEmail: string) => this.client.put<EmailVerificationResource, {}>(this.Routes.UpdateEmail(), { EmailAddress: newEmail }),
             UpdatePhoneNumber: async (newPhoneNumber: string) => this.client.put<string, {}>(this.Routes.UpdatePhoneNumber(), { PhoneNumber: newPhoneNumber }),
             UpdateLocale: async (newLocaleId: string) => this.client.put<LocaleResponse, {}>(this.Routes.UpdateLocale(), { LocaleId: newLocaleId }),
             UpdateCompanyLogo: async (formData: FormData) =>
@@ -288,8 +272,8 @@ export class PalavyrRepository extends ApiRoutes {
             GetCompanyLogo: async () => this.client.get<FileAssetResource>(this.Routes.GetCompanyLogo()),
 
             GetIntroductionId: async () => this.client.get<string>(this.Routes.GetIntroductionId()),
-            UpdateIntroduction: async (introId: string, update: ConvoNode[]) =>
-                this.client.post<ConvoNode[], {}>(this.Routes.UpdateIntroduction(), { Transactions: update }, [CacheIds.PalavyrConfiguration, introId].join("-") as CacheIds),
+            UpdateIntroduction: async (introId: string, update: ConversationDesignerNodeResource[]) =>
+                this.client.post<ConversationDesignerNodeResource[], {}>(this.Routes.UpdateIntroduction(), { Transactions: update }, [CacheIds.PalavyrConfiguration, introId].join("-") as CacheIds),
 
             DeleteCompanyLogo: async () => this.client.delete(this.Routes.DeleteCompanyLogo()),
             DeleteAccount: async () => {
@@ -300,21 +284,21 @@ export class PalavyrRepository extends ApiRoutes {
         },
         EmailVerification: {
             RequestEmailVerification: async (emailAddress: string, intentId: string) =>
-                this.client.post<EmailVerificationResponse, {}>(this.Routes.RequestEmailVerification(), { EmailAddress: emailAddress, IntentId: intentId }),
+                this.client.post<EmailVerificationResource, {}>(this.Routes.RequestEmailVerification(), { EmailAddress: emailAddress, IntentId: intentId }),
             CheckEmailVerificationStatus: async (emailAddress: string) => this.client.post<boolean, {}>(this.Routes.CheckEmailVerificationStatus(), { EmailAddress: emailAddress }),
         },
     };
 
     public Enquiries = {
-        GetEnquiries: async () => this.client.get<Enquiries>(this.Routes.GetEnquiries()),
+        GetEnquiries: async () => this.client.get<EnquiryResource>(this.Routes.GetEnquiries()),
         GetEnquiryCount: async () => this.client.get<number>(this.Routes.GetEnquiryCount()),
         GetShowSeenEnquiries: async () => this.client.get<boolean>(this.Routes.GetShowSeenEnquiries()),
         ToggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(this.Routes.ToggleShowSeenEnquiries()),
 
         UpdateSeen: async (updates: MarkAsSeenUpdate[]) => this.client.put<{}, {}>(this.Routes.UpdateSeen(), { Updates: updates }),
-        DeleteSelected: async (conversationIds: string[]) => this.client.put<Enquiries, {}>(this.Routes.DeleteSelected(), { ConversationIds: conversationIds }),
+        DeleteSelected: async (conversationIds: string[]) => this.client.put<EnquiryResource, {}>(this.Routes.DeleteSelected(), { ConversationIds: conversationIds }),
 
-        GetConversation: async (conversationId: string) => this.client.get<CompletedConversation>(this.Routes.GetConversation(conversationId), [CacheIds.Conversation, conversationId].join("-") as CacheIds),
+        GetConversation: async (conversationId: string) => this.client.get<ConversationHistoryRowResources>(this.Routes.GetConversation(conversationId), [CacheIds.Conversation, conversationId].join("-") as CacheIds),
 
         GetEnquiryInsights: async () => this.client.get<EnquiryActivtyResource[]>(this.Routes.GetEnquiryInsights()),
 

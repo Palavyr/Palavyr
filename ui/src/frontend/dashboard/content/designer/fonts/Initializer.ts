@@ -1,13 +1,13 @@
 import { googleFontApikey } from "@api-client/clientUtils";
 import { FontManager, OPTIONS_DEFAULTS } from "@common/fonts/fontManager";
-import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 
-export const InitializeFonts = (widgetPreferences: WidgetPreferences) => {
+export const InitializeFonts = (widgetPreferences: WidgetPreferencesResource) => {
     const fontManager = getFontManager(widgetPreferences);
     fontManager.setActiveFont(widgetPreferences.fontFamily);
 };
 
-export const getFontManager = (widgetPreferences: WidgetPreferences) => {
+export const getFontManager = (widgetPreferences: WidgetPreferencesResource) => {
     const fontManager = new FontManager(googleFontApikey, widgetPreferences.fontFamily, OPTIONS_DEFAULTS);
     fontManager.init();
     return fontManager;

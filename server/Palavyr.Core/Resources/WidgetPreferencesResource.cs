@@ -1,6 +1,6 @@
 ﻿namespace Palavyr.Core.Resources
 {
-    public class WidgetPreferenceResource
+    public class WidgetPreferencesResource
     {
         public string Placeholder { get; set; }
 

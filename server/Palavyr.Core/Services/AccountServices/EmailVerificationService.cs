@@ -28,12 +28,12 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IEmailVerificationStatus emailVerificationStatus;
         private readonly IAccountIdTransport accountIdTransport;
         private readonly IEntityStore<Account> accountStore;
-        private readonly IEntityStore<EmailVerification> emailVerificationsStore;
+        private readonly IEntityStore<AccountEmailVerification> emailVerificationsStore;
         private IStripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
             IEntityStore<Account> accountStore,
-            IEntityStore<EmailVerification> emailVerificationsStore,
+            IEntityStore<AccountEmailVerification> emailVerificationsStore,
             ILogger<EmailVerificationService> logger,
             IStripeCustomerService stripeCustomerService,
             IRequestEmailVerification requestEmailVerification,
@@ -106,7 +106,7 @@ namespace Palavyr.Core.Services.AccountServices
             // prepare the account confirmation email
             logger.LogDebug("Provide an account setup confirmation token");
             var confirmationToken = guidUtils.CreateShortenedGuid(1);
-            await emailVerificationsStore.Create(EmailVerification.CreateNew(confirmationToken, emailAddress, accountIdTransport.AccountId));
+            await emailVerificationsStore.Create(AccountEmailVerification.CreateNew(confirmationToken, emailAddress, accountIdTransport.AccountId));
 
             logger.LogDebug($"Sending emails from {EmailConstants.PalavyrMainEmailAddress}");
             var htmlBody = EmailConfirmationHtml.GetConfirmationEmailBody(emailAddress, confirmationToken);

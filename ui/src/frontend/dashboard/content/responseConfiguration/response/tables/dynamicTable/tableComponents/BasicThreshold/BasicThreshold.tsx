@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { BasicThresholdData, PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
+import { BasicThresholdResource, PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
@@ -88,7 +88,7 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, intentId, delete
                 const currentMeta = localTable.tableMeta;
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<BasicThresholdData[]>(
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<BasicThresholdResource[]>(
                     intentId,
                     PricingStrategyTypes.BasicThreshold,
                     tableRows,

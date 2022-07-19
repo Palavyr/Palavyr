@@ -2,7 +2,7 @@ import React from "react";
 import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
 import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { SelectOneFlatData } from "@Palavyr-Types";
+import { CategorySelectTableRowResource } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
@@ -10,8 +10,8 @@ import { TableButton } from "./TableButton";
 
 export interface ISelectOneFlatRow {
     dataIndex: number;
-    tableData: SelectOneFlatData[];
-    row: SelectOneFlatData;
+    tableData: CategorySelectTableRowResource[];
+    row: CategorySelectTableRowResource;
     modifier: SelectOneFlatModifier;
 }
 

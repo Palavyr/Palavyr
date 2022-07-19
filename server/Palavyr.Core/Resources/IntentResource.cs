@@ -2,7 +2,7 @@
 
 namespace Palavyr.Core.Resources
 {
-    public class IntentResource
+    public class IntentResource : IEntityResource
     {
         public string IntentId { get; set; }
         public string IntentName { get; set; }
@@ -10,7 +10,7 @@ namespace Palavyr.Core.Resources
         public string Epilogue { get; set; }
         public string EmailTemplate { get; set; }
         public bool IsEnabled { get; set; }
-        public List<StaticTablesMetaResource> StaticTablesMetaResources { get; set; } = new List<StaticTablesMetaResource>();
+        public List<StaticTableMetaResource> StaticTablesMetaResources { get; set; } = new List<StaticTableMetaResource>();
         public List<ConversationDesignerNodeResource> ConversationNodeResources { get; set; } = new List<ConversationDesignerNodeResource>();
         public List<PricingStrategyTableMetaResource> PricingStrategyTableMetaResources { get; set; } = new List<PricingStrategyTableMetaResource>();
         public string IntentSpecificEmail { get; set; }
@@ -25,5 +25,6 @@ namespace Palavyr.Core.Resources
         public bool IncludePricingStrategyTableTotals { get; set; }
 
         public string Subject { get; set; }
+        public int Id { get; set; }
     }
 }

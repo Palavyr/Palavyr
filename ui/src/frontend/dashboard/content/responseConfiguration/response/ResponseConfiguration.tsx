@@ -1,21 +1,22 @@
 import React, { useState, useCallback, useEffect, ChangeEvent } from "react";
-import { StaticTableMeta, StaticTableMetas, StaticTableRow, StaticTableValidationResult } from "@Palavyr-Types";
+import { StaticTableValidationResult } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./tables/statictable/staticTableModifier";
 import { LogueModifier } from "./logueModifier";
 import { cloneDeep } from "lodash";
 import { ExpandableTextBox } from "@common/components/ExpandableTextBox";
-import { PricingStrategyConfiguration } from "./tables/PricingStrategy/PricingStrategyConfiguration";
 import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { OsTypeToggle } from "../areaSettings/enableAreas/OsTypeToggle";
 import { useContext } from "react";
 import { makeStyles, Paper } from "@material-ui/core";
+import { StaticTableMetaResource, StaticTableMetaResources, StaticTableRowResource } from "@common/types/api/EntityResources";
+import { PricingStrategyConfiguration } from "./tables/dynamicTable/DynamicTableConfiguration";
 
-const getStaticTableValidationResult = (staticTables: StaticTableMetas): StaticTableValidationResult => {
+const getStaticTableValidationResult = (staticTables: StaticTableMetaResources): StaticTableValidationResult => {
     let validationResult = true;
-    staticTables.map((staticTable: StaticTableMeta) => {
-        staticTable.staticTableRows.map((staticTableRow: StaticTableRow) => {
+    staticTables.map((staticTable: StaticTableMetaResource) => {
+        staticTable.staticTableRowResources.map((staticTableRow: StaticTableRowResource) => {
             if (staticTableRow.range) {
                 if (staticTableRow.fee.max <= staticTableRow.fee.min) {
                     validationResult = false;
@@ -49,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 export const ResponseConfiguration = () => {
     const [, setLoaded] = useState(false);
     const [prologue, setPrologue] = useState<string>("");
-    const [staticTables, setStaticTables] = useState<StaticTableMetas>([]);
+    const [staticTables, setStaticTables] = useState<StaticTableMetaResources>([]);
     const [epilogue, setEpilogue] = useState<string>("");
     const cls = useStyles();
     const { repository, intentId } = useContext(DashboardContext);
@@ -82,11 +83,7 @@ export const ResponseConfiguration = () => {
 
     const tableSaver = async () => {
         staticTables.forEach(table => {
-            table.id = null;
-            table.staticTableRows.forEach(row => {
-                row.id = null;
-                row.fee.id = null;
-            });
+            table.staticTableRowResources.forEach(row => {});
         });
 
         const validationResult = getStaticTableValidationResult(staticTables);

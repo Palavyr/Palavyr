@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { CategoryNestedThresholdData, PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
+import { CategoryNestedThresholdResource, PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
 
 import { DisplayTableData } from "../DisplayTableData";
 import { CategoryNestedThresholdContainer } from "./CategoryNestedThresholdContainer";
@@ -83,7 +83,7 @@ export const CategoryNestedThreshold = ({
                 const currentMeta = localTable.tableMeta;
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<CategoryNestedThresholdData[]>(
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<CategoryNestedThresholdResource[]>(
                     intentId,
                     PricingStrategyTypes.CategoryNestedThreshold,
                     tableRows,

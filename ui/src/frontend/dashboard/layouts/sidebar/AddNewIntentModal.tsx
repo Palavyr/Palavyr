@@ -3,7 +3,7 @@ import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { AreaTable } from "@Palavyr-Types";
+import { IntentResource } from "@Palavyr-Types";
 import { DialogContent, makeStyles } from "@material-ui/core";
 import { AddOrCancel } from "@common/components/AddOrCancel";
 import { DashboardContext } from "../DashboardContext";
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 export interface AddNewIntentModalProps {
     open: boolean;
     handleClose(): void;
-    setNewArea(newAreaObject: AreaTable): void;
+    setNewArea(newAreaObject: IntentResource): void;
 }
 
 export const AddNewIntentModal = ({ open, handleClose, setNewArea }: AddNewIntentModalProps) => {

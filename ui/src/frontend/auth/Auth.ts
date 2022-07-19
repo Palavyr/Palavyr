@@ -1,7 +1,7 @@
 import { SessionStorage } from "@localStorage/sessionStorage";
 import { LoginRepository } from "@common/client/LoginRepository";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { Credentials } from "@Palavyr-Types";
+import { CredentialsResource } from "@Palavyr-Types";
 import { LogoutRepository } from "@common/client/LogoutRepository";
 
 class Auth {
@@ -31,7 +31,7 @@ class Auth {
         }
     }
 
-    private async processAuthenticationResponse(authenticationResponse: Credentials, successRedirectToDashboard: () => any, errorCallback: (response: Credentials) => any): Promise<boolean> {
+    private async processAuthenticationResponse(authenticationResponse: CredentialsResource, successRedirectToDashboard: () => any, errorCallback: (response: CredentialsResource) => any): Promise<boolean> {
         if (authenticationResponse.authenticated) {
             this.authenticated = true;
             SessionStorage.setAuthorization(authenticationResponse.sessionId, authenticationResponse.jwtToken);
@@ -53,7 +53,7 @@ class Auth {
         }
     }
 
-    async login(email: string | null, password: string | null, callback: () => any, errorCallback: (response: Credentials) => any) {
+    async login(email: string | null, password: string | null, callback: () => any, errorCallback: (response: CredentialsResource) => any) {
         if (email === null || password === null) return false;
         try {
             const authenticationResponse = await this.loginClient.Login.RequestLogin(email, password);

@@ -4,13 +4,14 @@ import { TableContainer, Paper, Table, Button, FormControlLabel, Checkbox, Accor
 import { SelectOneFlatHeader } from "./SelectOneFlatHeader";
 import { SelectOneFlatBody } from "./SelectOneFlatBody";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { PricingStrategy, PricingStrategyProps, SelectOneFlatData } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { DisplayTableData } from "../DisplayTableData";
-import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { PricingStrategyHeader } from "../../PricingStrategyHeader";
 import { cloneDeep } from "lodash";
+import { CategorySelectTableRowResource } from "@common/types/api/EntityResources";
+import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
+import { PricingStrategyHeader } from "../../DynamicTableHeader";
 
 const useStyles = makeStyles(theme => ({
     tableStyles: {
@@ -57,7 +58,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteA
         setLocalTable(table);
         const useOptionsAsPaths = table.tableMeta.valuesAsPaths;
         setUseOptionsAsPaths(useOptionsAsPaths);
-    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitIdEnum, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {
@@ -93,7 +94,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteA
                 const currentMeta = localTable.tableMeta;
 
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<SelectOneFlatData[]>(
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<CategorySelectTableRowResource[]>(
                     intentId,
                     PricingStrategyTypes.SelectOneFlat,
                     tableRows,

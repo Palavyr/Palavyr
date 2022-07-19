@@ -2,14 +2,13 @@
 
 namespace Palavyr.Core.Resources
 {
-    public class ConversationDesignerNodeResource
+    public class ConversationDesignerNodeResource : IEntityResource
     {
         public ConversationDesignerNodeResource()
         {
         }
 
         public string IntentId { get; set; }
-        public string AccountId { get; set; }
         public string NodeId { get; set; }
         public string Text { get; set; }
         public bool IsRoot { get; set; }
@@ -37,5 +36,6 @@ namespace Palavyr.Core.Resources
         public bool IsCurrency { get; set; }
         public string NodeChildrenString { get; set; } = ""; // stored as comma delimited list as string
         public NodeTypeCodeEnum NodeTypeCodeEnum { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -7,7 +7,7 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { useHistory } from "react-router-dom";
 import { AreaLinkItem } from "./sectionComponents/AreaLinkItem";
-import { AreaNameDetail, AreaNameDetails } from "@Palavyr-Types";
+import { IntentNameDetail, IntentNameDetails } from "@Palavyr-Types";
 import classNames from "classnames";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 export interface IntentsSectionProps {
     isActive: boolean;
     currentPage: string;
-    areaNameDetails: AreaNameDetails;
+    areaNameDetails: IntentNameDetails;
     menuOpen: boolean;
 }
 
@@ -73,7 +73,7 @@ export const IntentsSection = memo(({ isActive, currentPage, areaNameDetails, me
             <Collapse className={"configure-your-area-tour"} in={configureOpen} timeout="auto" unmountOnExit>
                 <Divider />
                 {areaNameDetails.map(
-                    (x: AreaNameDetail, index: number) =>
+                    (x: IntentNameDetail, index: number) =>
                         planTypeMeta && (
                             <AreaLinkItem
                                 key={index}

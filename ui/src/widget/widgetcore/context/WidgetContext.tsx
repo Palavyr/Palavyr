@@ -1,10 +1,11 @@
-import { SetState, WidgetPreferences } from "@Palavyr-Types";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
+import { SetState } from "@Palavyr-Types";
 import React from "react";
 import { IAppContext } from "widget/hook";
 
 export interface IWidgetContext {
     context: IAppContext;
-    preferences: WidgetPreferences;
+    preferences: WidgetPreferencesResource;
     convoId: string | null;
     setConvoId: SetState<string>;
     isDemo: boolean;

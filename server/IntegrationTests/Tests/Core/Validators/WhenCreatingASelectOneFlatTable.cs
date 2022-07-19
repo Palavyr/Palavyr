@@ -20,23 +20,23 @@ namespace IntegrationTests.Tests.Core.Validators
         [Fact]
         public async Task ARoundTripShouldSucceed()
         {
-            var selectOneFlatTableMeta = await this.CreatePricingStrategyTableBuilder<SelectOneFlatResource>()
+            var selectOneFlatTableMeta = await this.CreatePricingStrategyTableBuilder<CategorySelectTableRowResource>()
                 .WithRow(this.CreateSelectOneFlatResourceBuilder().Build())
                 .BuildAndMake<CategorySelectTableRow, SelectOneFlatCompiler>();
 
             var getRoute = PricingStrategyControllerBase<CategorySelectTableRow,
-                SelectOneFlatResource,
+                CategorySelectTableRowResource,
                 SelectOneFlatCompiler>.AssembleRoute<CategorySelectTableRow>(
                 GetPricingStrategyTableRowsRequest<
                         CategorySelectTableRow,
-                        SelectOneFlatResource,
+                        CategorySelectTableRowResource,
                         SelectOneFlatCompiler>
                     .FormatRoute(selectOneFlatTableMeta.IntentId, selectOneFlatTableMeta.TableId));
 
             var currentTable = await Client.GetResource<GetPricingStrategyTableRowsRequest<
                 CategorySelectTableRow,
-                SelectOneFlatResource,
-                SelectOneFlatCompiler>, PricingStrategyTableDataResource<SelectOneFlatResource>>(CancellationToken, _ => getRoute);
+                CategorySelectTableRowResource,
+                SelectOneFlatCompiler>, PricingStrategyTableDataResource<CategorySelectTableRowResource>>(CancellationToken, _ => getRoute);
 
             currentTable.TableRows.First().AccountId.ShouldBe(this.AccountId);
         }

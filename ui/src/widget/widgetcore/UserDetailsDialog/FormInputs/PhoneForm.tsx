@@ -1,6 +1,6 @@
 import { TextInput } from "@common/components/TextField/TextInput";
-import { makeStyles, TextField } from "@material-ui/core";
-import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
+import { makeStyles } from "@material-ui/core";
 import { TextInputProps } from "@widgetcore/BotResponse/number/TextInput";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import React, { useContext } from "react";
@@ -15,7 +15,7 @@ export interface PhoneFormProps extends BaseFormProps {
 }
 
 const useStyles = makeStyles(theme => ({
-    phone: (props: WidgetPreferences) => ({
+    phone: (props: WidgetPreferencesResource) => ({
         width: "100%",
         marginTop: "1.3rem",
         color: props.chatFontColor,
@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
             borderBottomColor: props.chatFontColor, // Solid underline on focus
         },
     }),
-    placeholder: (props: WidgetPreferences) => ({
+    placeholder: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,
 
         "&::placeholder": {

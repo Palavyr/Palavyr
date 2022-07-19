@@ -12,7 +12,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
 
         public static EmailVerificationResponse CreateNew(string status, string message, string title)
         {
-            return new EmailVerificationResponse()
+            return new EmailVerificationResponse
             {
                 Title = title,
                 Message = message,
@@ -22,7 +22,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
 
         public static EmailVerificationResponse CreatePending(string message, string title)
         {
-            return new EmailVerificationResponse()
+            return new EmailVerificationResponse
             {
                 Title = title,
                 Message = message,
@@ -32,7 +32,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
 
         public static EmailVerificationResponse CreateFailed(string message, string title)
         {
-            return new EmailVerificationResponse()
+            return new EmailVerificationResponse
             {
                 Title = title,
                 Message = message,
@@ -42,7 +42,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
 
         public static EmailVerificationResponse CreateIsVerified(string message, string title)
         {
-            return new EmailVerificationResponse()
+            return new EmailVerificationResponse
             {
                 Title = title,
                 Message = message,

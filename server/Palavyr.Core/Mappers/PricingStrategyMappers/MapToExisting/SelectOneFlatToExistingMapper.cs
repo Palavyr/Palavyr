@@ -5,9 +5,9 @@ using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
 {
-    public class SelectOneFlatToExistingMapper : IMapToPreExisting<SelectOneFlatResource, CategorySelectTableRow>
+    public class SelectOneFlatToExistingMapper : IMapToPreExisting<CategorySelectTableRowResource, CategorySelectTableRow>
     {
-        public async Task Map(SelectOneFlatResource from, CategorySelectTableRow to, CancellationToken cancellationToken)
+        public async Task Map(CategorySelectTableRowResource from, CategorySelectTableRow to, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
             to.Id = from.Id;

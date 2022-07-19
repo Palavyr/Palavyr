@@ -89,7 +89,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public string ConversationId { get; set; } // This will be used when collecting enquiries. Then used to get the 
         public string ResponsePdfId { get; set; }
         public DateTime TimeStamp { get; set; }
-        public string AccountId { get; set; }
         public string IntentName { get; set; }
         public string EmailTemplateUsed { get; set; }
         public bool Seen { get; set; }
@@ -113,7 +112,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 ConversationId = from.ConversationId, // This will be used when collecting enquiries. Then used to get the 
                 ResponsePdfId = from.ResponsePdfId,
                 TimeStamp = from.TimeStamp,
-                AccountId = from.AccountId,
                 IntentName = from.IntentName,
                 EmailTemplateUsed = from.EmailTemplateUsed,
                 Seen = from.Seen,

@@ -1,6 +1,6 @@
 import { groupBy } from "lodash";
 import React from "react";
-import { IPricingStrategyBody, PercentOfThresholdData } from "@Palavyr-Types";
+import { IPricingStrategyBody, PercentOfThresholdResource } from "@Palavyr-Types";
 import { PercentOfThresholdItemTable } from "./PercentOfThresholdItemTable";
 import { makeStyles } from "@material-ui/core";
 
@@ -15,7 +15,7 @@ interface PercentOfThresholdContainerProps extends IPricingStrategyBody {
 }
 
 type TableGroup = {
-    [itemGroup: string]: PercentOfThresholdData[];
+    [itemGroup: string]: PercentOfThresholdResource[];
 };
 
 export const PercentOfThresholdContainer = ({ tableData, modifier, addRowOnClickFactory, unitGroup, unitPrettyName }: PercentOfThresholdContainerProps) => {
@@ -24,7 +24,7 @@ export const PercentOfThresholdContainer = ({ tableData, modifier, addRowOnClick
     return (
         <div className={cls.container}>
             {Object.keys(tableGroups).map((itemId: string, index: number) => {
-                const itemData: PercentOfThresholdData[] = tableGroups[itemId];
+                const itemData: PercentOfThresholdResource[] = tableGroups[itemId];
                 return (
                     <PercentOfThresholdItemTable
                         key={index}

@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { makeStyles } from "@material-ui/core";
-import { VariableDetail } from "@Palavyr-Types";
+import { ResponseVariable } from "@Palavyr-Types";
 import { EmailConfigurationComponent } from "frontend/dashboard/content/responseConfiguration/uploadable/emailTemplates/EmailConfigurationComponent";
 import { Align } from "@common/positioning/Align";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
@@ -19,7 +19,7 @@ export const DefaultEmailTemplate = () => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
-    const [variableDetails, setVariableDetails] = useState<VariableDetail[]>();
+    const [variableDetails, setVariableDetails] = useState<ResponseVariable[]>();
 
     const loadVariableDetails = useCallback(async () => {
         const variableDetails = await repository.Configuration.Email.GetVariableDetails();

@@ -13,12 +13,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly ILogger<GetStaticTablesMetasTemplateHandler> logger;
         private readonly IAccountIdTransport accountIdTransport;
-        private readonly IMapToNew<StaticTablesMeta, StaticTablesMetaResource> mapper;
+        private readonly IMapToNew<StaticTablesMeta, StaticTableMetaResource> mapper;
 
         public GetStaticTablesMetasTemplateHandler(
             ILogger<GetStaticTablesMetasTemplateHandler> logger,
             IAccountIdTransport accountIdTransport,
-            IMapToNew<StaticTablesMeta, StaticTablesMetaResource> mapper)
+            IMapToNew<StaticTablesMeta, StaticTableMetaResource> mapper)
         {
             this.logger = logger;
             this.accountIdTransport = accountIdTransport;
@@ -35,8 +35,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetStaticTablesMetasTemplateResponse
     {
-        public GetStaticTablesMetasTemplateResponse(StaticTablesMetaResource response) => Response = response;
-        public StaticTablesMetaResource Response { get; set; }
+        public GetStaticTablesMetasTemplateResponse(StaticTableMetaResource response) => Response = response;
+        public StaticTableMetaResource Response { get; set; }
     }
 
     public class GetStaticTablesMetasTemplateRequest : IRequest<GetStaticTablesMetasTemplateResponse>

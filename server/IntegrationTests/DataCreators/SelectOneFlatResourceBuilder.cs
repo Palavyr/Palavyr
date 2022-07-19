@@ -84,11 +84,11 @@ namespace IntegrationTests.DataCreators
             return this;
         }
 
-        public SelectOneFlatResource Build()
+        public CategorySelectTableRowResource Build()
         {
             var intentid = this.intentId;
 
-            var resource = new SelectOneFlatResource()
+            var resource = new CategorySelectTableRowResource()
             {
                 AccountId = this.accountId ?? test.AccountId,
                 IntentId = intentid ?? A.RandomId(),
@@ -102,23 +102,23 @@ namespace IntegrationTests.DataCreators
             return resource;
         }
 
-        public async Task<List<SelectOneFlatResource>> BuildAndCreate()
+        public async Task<List<CategorySelectTableRowResource>> BuildAndCreate()
         {
             var resource = Build();
 
             var newTable = await test
                 .Client
-                .Post<CreatePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>, List<SelectOneFlatResource>>(
+                .Post<CreatePricingStrategyTableRequest<CategorySelectTableRow, CategorySelectTableRowResource, SelectOneFlatCompiler>, List<CategorySelectTableRowResource>>(
                     test.CancellationToken,
-                    s => CreatePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(resource.IntentId));
+                    s => CreatePricingStrategyTableRequest<CategorySelectTableRow, CategorySelectTableRowResource, SelectOneFlatCompiler>.FormatRoute(resource.IntentId));
 
 
             newTable.Add(resource);
             var response = await test.Client
-                .Post<SavePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>, SavePricingStrategyTableResponse<SelectOneFlatResource>>(
+                .Post<SavePricingStrategyTableRequest<CategorySelectTableRow, CategorySelectTableRowResource, SelectOneFlatCompiler>, SavePricingStrategyTableResponse<CategorySelectTableRowResource>>(
                     newTable,
                     test.CancellationToken,
-                    s => SavePricingStrategyTableRequest<CategorySelectTableRow, SelectOneFlatResource, SelectOneFlatCompiler>.FormatRoute(intentId ?? newTable.First().IntentId, newTable.First().TableId));
+                    s => SavePricingStrategyTableRequest<CategorySelectTableRow, CategorySelectTableRowResource, SelectOneFlatCompiler>.FormatRoute(intentId ?? newTable.First().IntentId, newTable.First().TableId));
             newTable = response.Resource.TableRows;
             return newTable;
         }

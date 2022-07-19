@@ -99,7 +99,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<BasicThresholdResourceValidator>().As<IValidator<PricingStrategyTableDataResource<BasicThresholdResource>>>();
             builder.RegisterType<CategoryNestedThresholdValidator>().As<IValidator<PricingStrategyTableDataResource<CategoryNestedThresholdResource>>>();
             builder.RegisterType<PercentOfThresholdResourceValidator>().As<IValidator<PricingStrategyTableDataResource<PercentOfThresholdResource>>>();
-            builder.RegisterType<SelectOneFlatResourceValidator>().As<IValidator<PricingStrategyTableDataResource<SelectOneFlatResource>>>();
+            builder.RegisterType<SelectOneFlatResourceValidator>().As<IValidator<PricingStrategyTableDataResource<CategorySelectTableRowResource>>>();
             builder.RegisterType<TwoNestedCategoryResourceValidator>().As<IValidator<PricingStrategyTableDataResource<TwoNestedCategoryResource>>>();
 
             builder.RegisterGeneric(typeof(PricingStrategyTableCommandExecutor<,,>)).As(typeof(IPricingStrategyTableCommandExecutor<,,>)).InstancePerLifetimeScope();

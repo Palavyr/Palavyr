@@ -11,9 +11,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetWidgetPreferencesHandler : IRequestHandler<GetWidgetPreferencesRequest, GetWidgetPreferencesResponse>
     {
         private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
-        private readonly IMapToNew<WidgetPreference, WidgetPreferenceResource> mapper;
+        private readonly IMapToNew<WidgetPreference, WidgetPreferencesResource> mapper;
 
-        public GetWidgetPreferencesHandler(IEntityStore<WidgetPreference> widgetPreferenceStore, IMapToNew<WidgetPreference, WidgetPreferenceResource> mapper)
+        public GetWidgetPreferencesHandler(IEntityStore<WidgetPreference> widgetPreferenceStore, IMapToNew<WidgetPreference, WidgetPreferencesResource> mapper)
         {
             this.widgetPreferenceStore = widgetPreferenceStore;
             this.mapper = mapper;
@@ -29,8 +29,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetWidgetPreferencesResponse
     {
-        public GetWidgetPreferencesResponse(WidgetPreferenceResource response) => Response = response;
-        public WidgetPreferenceResource Response { get; set; }
+        public GetWidgetPreferencesResponse(WidgetPreferencesResource response) => Response = response;
+        public WidgetPreferencesResource Response { get; set; }
     }
 
     public class GetWidgetPreferencesRequest : IRequest<GetWidgetPreferencesResponse>

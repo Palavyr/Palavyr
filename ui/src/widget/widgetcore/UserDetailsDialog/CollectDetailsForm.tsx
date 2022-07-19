@@ -10,11 +10,12 @@ import { NameForm } from "./FormInputs/NameForm";
 import { EmailForm } from "./FormInputs/EmailForm";
 import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
-import { LocaleMap, LocaleResource, SetState, WidgetPreferences } from "@Palavyr-Types";
+import { LocaleMap, LocaleResource, SetState } from "@Palavyr-Types";
 import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { useContext } from "react";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 
 export interface CollectDetailsFormProps {
     setKickoff: SetState<boolean>;
@@ -29,13 +30,13 @@ const useStyles = makeStyles(theme => ({
     baseDialogCollectionForm: {
         position: "absolute",
     },
-    dialogBackgroundCollectionForm: (props: WidgetPreferences) => ({
+    dialogBackgroundCollectionForm: (props: WidgetPreferencesResource) => ({
         border: "none",
         boxShadow: "none",
         shadow: "none",
         backgroundColor: props.chatBubbleColor,
     }),
-    dialogPaperCollectionForm: (props: WidgetPreferences) => ({
+    dialogPaperCollectionForm: (props: WidgetPreferencesResource) => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -59,7 +60,7 @@ const useStyles = makeStyles(theme => ({
         boxShadow: "none",
         shadow: "none",
     },
-    buttonCollectionForm: (props: WidgetPreferences) => ({
+    buttonCollectionForm: (props: WidgetPreferencesResource) => ({
         margin: "0.5rem",
 
         textAlign: "center",
@@ -70,7 +71,7 @@ const useStyles = makeStyles(theme => ({
         color: props.buttonFontColor,
         backgroundColor: props.buttonColor,
     }),
-    backgropPropsClassName: (props: WidgetPreferences) => ({
+    backgropPropsClassName: (props: WidgetPreferencesResource) => ({
         backgroundColor: props.chatBubbleColor,
     }),
 }));

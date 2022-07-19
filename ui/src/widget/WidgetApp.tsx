@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useCallback, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { CollectDetailsForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
@@ -13,7 +13,7 @@ import { InitializeFonts } from "@frontend/dashboard/content/designer/fonts/Init
 export const WidgetApp = () => {
     const [convoId, setConvoId] = useState<string | null>(null);
     const [isReady, setIsReady] = useState<boolean | null>(null);
-    const [preferences, setWidgetPrefs] = useState<WidgetPreferences>();
+    const [preferences, setWidgetPrefs] = useState<WidgetPreferencesResource>();
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const isDemo = new URLSearchParams(useLocation().search).get("demo") ?? false;
 

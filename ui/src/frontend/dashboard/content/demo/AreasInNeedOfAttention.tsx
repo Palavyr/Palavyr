@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Fade, Grid, makeStyles, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@material-ui/core";
-import { PreCheckError } from "@Palavyr-Types";
+import { PreCheckErrorResource } from "@Palavyr-Types";
 import { useEffect } from "react";
 
 const useStyles = makeStyles(theme => ({
@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface IntentsInNeedOfAttentionProps {
-    preCheckErrors: PreCheckError[];
+    preCheckErrors: PreCheckErrorResource[];
 }
 
 export const IntentsInNeedOfAttention = ({ preCheckErrors }: IntentsInNeedOfAttentionProps) => {
@@ -62,7 +62,7 @@ export const IntentsInNeedOfAttention = ({ preCheckErrors }: IntentsInNeedOfAtte
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {preCheckErrors.map((error: PreCheckError, index: number) => {
+                                    {preCheckErrors.map((error: PreCheckErrorResource, index: number) => {
                                         return (
                                             <TableRow>
                                                 <TableCell key={error.areaName} className={cls.cell} width="50%" align="center">

@@ -1,7 +1,7 @@
+import { TwoNestedCategoryResource } from "@common/types/api/EntityResources";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { takeNCharacters } from "@common/utils/textSlicing";
 import { Button, makeStyles, TableBody, Table } from "@material-ui/core";
-import { TwoNestedCategoryData } from "@Palavyr-Types";
 import React from "react";
 import { ButtonBar } from "../../components/SaveBar";
 import { TwoNestedCategoriesHeader } from "./TwoNestedCategoriesHeader";
@@ -9,9 +9,9 @@ import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesRow } from "./TwoNestedCategoriesRow";
 
 interface ITwoNestedCategoriesItemTable {
-    tableData: TwoNestedCategoryData[];
+    tableData: TwoNestedCategoryResource[];
     outerCategoryIndex: number;
-    outerCategoryData: TwoNestedCategoryData[];
+    outerCategoryData: TwoNestedCategoryResource[];
     outerCategoryName: string;
     outerCategoryId: string;
     modifier: TwoNestedCategoriesModifier;
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const getter = (x: TwoNestedCategoryData) => x.rowOrder;
+const getter = (x: TwoNestedCategoryResource) => x.rowOrder;
 
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
@@ -47,7 +47,7 @@ export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, ou
             <Table className={cls.tableStyles}>
                 <TwoNestedCategoriesHeader show={outerCategoryIndex === 0} />
                 <TableBody>
-                    {sortByPropertyNumeric(getter, outerCategoryData).map((row: TwoNestedCategoryData, index: number) => {
+                    {sortByPropertyNumeric(getter, outerCategoryData).map((row: TwoNestedCategoryResource, index: number) => {
                         return (
                             <React.Fragment key={index}>
                                 {row && (

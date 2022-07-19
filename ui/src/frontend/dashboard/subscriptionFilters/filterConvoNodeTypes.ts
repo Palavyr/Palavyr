@@ -1,4 +1,4 @@
-import { NodeTypeOptions, PlanTypeMeta, PurchaseTypes, NodeOption } from "@Palavyr-Types";
+import { NodeTypeOptions, PlanTypeMeta, PurchaseTypes, NodeTypeOptionResource } from "@Palavyr-Types";
 
 export const filterNodeTypeOptionsOnSubscription = (nodeTypeOptions: NodeTypeOptions, planTypeMeta: PlanTypeMeta) => {
     const excludeFromFree: string[] = ["ShowImage", "ShowFileAsset"];
@@ -7,14 +7,14 @@ export const filterNodeTypeOptionsOnSubscription = (nodeTypeOptions: NodeTypeOpt
 
     let filteredNodes = [...nodeTypeOptions];
     if (planTypeMeta.planType === PurchaseTypes.Premium) {
-        filteredNodes = filteredNodes.filter((x: NodeOption) => !excludeFromPremium.includes(x.value));
+        filteredNodes = filteredNodes.filter((x: NodeTypeOptionResource) => !excludeFromPremium.includes(x.value));
     }
     if (planTypeMeta.planType === PurchaseTypes.Lyte) {
-        filteredNodes = filteredNodes.filter((x: NodeOption) => !excludeFromLyte.includes(x.value));
+        filteredNodes = filteredNodes.filter((x: NodeTypeOptionResource) => !excludeFromLyte.includes(x.value));
     }
 
     if (planTypeMeta.planType === PurchaseTypes.Free) {
-        filteredNodes = nodeTypeOptions.filter((x: NodeOption) => !excludeFromFree.includes(x.value));
+        filteredNodes = nodeTypeOptions.filter((x: NodeTypeOptionResource) => !excludeFromFree.includes(x.value));
     }
     return filteredNodes;
 };

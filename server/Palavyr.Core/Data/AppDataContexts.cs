@@ -12,7 +12,7 @@ namespace Palavyr.Core.Data
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<UserSession> Sessions { get; set; }
-        public DbSet<EmailVerification> EmailVerifications { get; set; }
+        public DbSet<AccountEmailVerification> EmailVerifications { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<StripeWebhookReceivedRecord> StripeWebhookReceivedRecords { get; set; }
         public DbSet<Intent> Intents { get; set; }

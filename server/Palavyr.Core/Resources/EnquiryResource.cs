@@ -4,7 +4,7 @@ namespace Palavyr.Core.Resources
 {
     public class EnquiryResource
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string ConversationId { get; set; }
         public FileAssetResource FileAssetResource { get; set; }
         public string TimeStamp { get; set; }

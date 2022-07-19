@@ -10,8 +10,9 @@ namespace Palavyr.Core.Mappers
         public async Task<ConversationDesignerNodeResource> Map(ConversationNode @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
-            return new ConversationDesignerNodeResource()
+            return new ConversationDesignerNodeResource
             {
+                Id = @from.Id,
                 NodeId = @from.NodeId,
                 NodeType = @from.NodeType,
                 Text = @from.Text,
@@ -21,7 +22,6 @@ namespace Palavyr.Core.Mappers
                 OptionPath = @from.OptionPath,
                 ValueOptions = @from.ValueOptions,
                 IsCritical = @from.IsCritical,
-                AccountId = @from.AccountId,
                 IsMultiOptionType = @from.IsMultiOptionType,
                 IsTerminalType = @from.IsTerminalType,
                 ShouldRenderChildren = @from.ShouldRenderChildren,

@@ -19,6 +19,7 @@ namespace Palavyr.Core.Mappers
             await Task.CompletedTask;
             return new StaticTableRowResource
             {
+                Id = @from.Id,
                 RowOrder = @from.RowOrder,
                 Description = @from.Description,
                 Fee = await feeMapper.Map(@from.Fee),
@@ -26,7 +27,6 @@ namespace Palavyr.Core.Mappers
                 PerPerson = @from.PerPerson,
                 TableOrder = @from.TableOrder,
                 IntentId = @from.IntentId,
-                AccountId = @from.AccountId
             };
         }
     }

@@ -1,7 +1,7 @@
 // ts-ignore
 
 import React, { useContext, useState, useEffect, useCallback } from "react";
-import { AreaNameDetails, Enquiries } from "@Palavyr-Types";
+import { IntentNameDetails, EnquiryRowResources } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { Radar } from "react-chartjs-2";
 import { DataPlot } from "./components/DataPlot";
@@ -43,7 +43,7 @@ export const transparentize = (value, opacity) => {
         .rgbString();
 };
 
-const calculateRadarData = (areaDetails: AreaNameDetails, enquiries: Enquiries) => {
+const calculateRadarData = (areaDetails: IntentNameDetails, enquiries: EnquiryRowResources) => {
     const areas = areaDetails.map(x => x.areaName);
     const enquiryAreas = enquiries.map(x => x.areaName);
 

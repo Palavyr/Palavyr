@@ -3,8 +3,9 @@ import { COULD_NOT_FIND_SERVER, INVALID_EMAIL, INVALID_PASSWORD, NOT_A_DEFAULT_A
 import { PalavyrLinkedList } from "frontend/dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
 import React, { Dispatch, ElementType, SetStateAction } from "react";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
-import { PricingStrategyTypes } from "@frontend/dashboard/content/responseConfiguration/response/tables/PricingStrategy/PricingStrategyRegistry";
-import { IAppContext } from "widget/hook";
+import { ConversationDesignerNodeResource, ConversationDesignerNodeResources, FileAssetResource, IntentResource, PricingStrategyTableMetaResource, StaticTableMetaResources, TableData, WidgetNodeResource, WidgetNodeResources, WidgetPreferencesResource } from "./api/EntityResources";
+import { NodeTypeOptionResource, NodeTypeOptionResources, QuantUnitDefinition } from "./api/ApiContracts";
+import { NodeTypeCode, PurchaseTypes, UnitGroups, UnitPrettyNames } from "./api/Enums";
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />
@@ -64,199 +65,21 @@ export type AreaMeta = {
     areaName: string;
 };
 
-export enum UnitGroups {
-    Length = "length",
-    Area = "area",
-    Weight = "weight",
-    Currency = "currency",
-}
-export enum UnitPrettyNames {
-    Meter = "m",
-    Foot = "ft",
-    SquareMeters = "m^2",
-    SquareFeet = "f^2",
-    Grams = "g",
-    KiloGrams = "kg",
-    Pounds = "lbs",
-    Tons = "tons",
-}
-
-export type QuantUnitDefinition = {
-    unitGroup: UnitGroups;
-    unitPrettyName: UnitPrettyNames;
-    unitId: number;
-};
-
-// Client
-export type GroupNodeType = {
-    text: string;
-    optionPath: string;
-    nodeId: string;
-    parentId: string;
-    nodeChildrenString: string;
-    isRoot: boolean;
-    id?: number;
-    areaMeta: Array<AreaMeta>;
-    groupId: string;
-};
-
-export type Groups = Array<GroupNodeType>;
-
-export type ConvoTableRow = {
-    nodeId: string;
-    nodeType: string;
-    fallback: boolean;
-    text: string;
-    nodeChildrenString: string;
-    isCritical: boolean;
-    isRoot: boolean;
-    intentId: string;
-    optionPath: ConvoBuilderResponse;
-};
-
-export type ConvoBuilderResponse = "Yes" | "No" | "Not Sure" | "Ok" | "Backstop" | "Yes / Not Sure" | "No / Not Sure" | "Continue" | null | any;
-export type Responses = Array<ConvoBuilderResponse>;
-
 export const ValueOptionDelimiter = "|peg|";
-
-export type ConvoNode = {
-    // these properties are written to the database
-    id?: number | undefined;
-    intentId: string;
-
-    isRoot: boolean;
-    nodeId: string;
-    isTerminalType: boolean;
-    isMultiOptionType: boolean;
-    text: string;
-    nodeChildrenString: string;
-    isCritical: boolean;
-    isAnabranchType: boolean;
-    isAnabranchMergePoint: boolean;
-
-    isLoopbackAnchorType: boolean;
-
-    nodeType: string;
-    optionPath: ConvoBuilderResponse;
-    valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
-    shouldRenderChildren: boolean;
-    shouldShowMultiOption: boolean;
-    nodeComponentType: string;
-    isPricingStrategyNode: boolean;
-    isImageNode: boolean;
-    imageId: string | null;
-    resolveOrder: number;
-    dynamicType: string | null;
-    nodeTypeCode: NodeTypeCode;
-};
-
-export type Conversation = Array<ConvoNode>;
-
-export type Intents = Array<AreaTable>;
-
-export type AreaTable = {
-    // all of the data
-    intentId: string;
-    areaName: string;
-    areaDisplayTitle: string;
-    prologue: string;
-    epilogue: string;
-    emailTemplate: string; // an email template
-    convo: Array<ConvoNode>;
-    staticTables: StaticTableMetas;
-    PricingStrategyType: string;
-    groupId: string;
-    areaSpecificEmail: string;
-    emailIsVerified: boolean;
-    awaitingVerification: boolean;
-    subject: string;
-    isEnabled: boolean;
-    useAreaFallbackEmail: boolean;
-    fallbackSubject: string;
-    fallbackEmailTemplate: string;
-    includePricingStrategyTotals: boolean;
-};
-
-export type StaticTableMetas = Array<StaticTableMeta>;
-export type StaticTableRows = Array<StaticTableRow>;
-
-export type StaticTableMetaTemplate = {
-    id: number | null;
-    description: string;
-    intentId: string;
-    staticTableRows: StaticTableRows;
-    perPersonInputRequired: boolean;
-    includeTotals: boolean;
-};
-
-export type StaticTableMeta = StaticTableMetaTemplate & {
-    tableOrder: number;
-};
-
-export type StaticTableRow = {
-    id: number | null;
-    rowOrder: number;
-    description: string;
-    fee: StaticFee;
-    range: boolean;
-    perPerson: boolean;
-    tableOrder: number;
-    intentId: string;
-    includeTotals: boolean;
-};
-
-export type StaticFee = {
-    id: number | null;
-    feeId: string;
-    min: number;
-    max: number;
-};
 
 export type StaticTableValidationResult = {
     result: boolean;
     message: string;
 };
 
-type HTML = string;
-
-export type FileAssetResource = {
-    fileName: string; // the risky Name with extension
-    fileId: string; // the file id
-    link: string; // a link to the file (local or cloud)
-};
-
-export type FileLinkReference = {
-    fileReference: string;
-    fileId: string;
-    fileName: string;
-};
-
-export type EnquiryRow = {
-    id: number;
-    conversationId: string;
-    fileAssetResource: FileAssetResource;
-    timeStamp: string;
-    accountId: string;
-    areaName: string;
-    emailTemplateUsed: string;
-    seen: boolean;
-    name: string;
-    email: string;
-    phoneNumber: string;
-    hasResponse: boolean;
-    intentId: string;
-};
-
 export type SelectionMap = {
     [conversationId: string]: boolean;
-}
-
-export type MarkAsSeenUpdate = {
-    ConversationId: string;
-    Seen: boolean;
 };
 
-export type Enquiries = EnquiryRow[];
+export type MarkAsSeenUpdate = {
+    sonversationId: string;
+    seen: boolean;
+};
 
 export type EnquiryActivtyResource = {
     intentName: string;
@@ -268,33 +91,11 @@ export type EnquiryActivtyResource = {
     intentCompletePerIntent: number[];
 };
 
-export type PricingStrategyMeta = {
-    id: number;
-    tableTag: string;
-    tableType: string;
-    tableId: string;
-    accountId: string;
-    intentId: string;
-    valuesAsPaths: boolean;
-    prettyName: string;
-    unitPrettyName: UnitPrettyNames;
-    unitGroup: UnitGroups;
-    unitId: number;
-};
-
-export type PricingStrategyMetas = Array<PricingStrategyMeta>;
-
 export type AlertType = {
     title: string;
     message: string;
     link?: string;
     linktext?: string;
-};
-
-export type EmailVerificationResponse = {
-    status: "Success" | "Pending" | "Failed";
-    title: string;
-    message: string;
 };
 
 export type AlertDetails = {
@@ -354,56 +155,7 @@ export type StripeProduct = {
     type: string;
 };
 
-export type Product = StripeProduct & {
-    attributes: Array<string>;
-    caption: string | null;
-    deactivateOn: Date | null;
-    description: string;
-    images: Images;
-    name: string;
-    packageDimensions: string | null;
-    shippable: boolean | null;
-    statementDescriptor: string | null;
-    unitLabel: string | null;
-    updated: Date;
-    url: string | null;
-};
 
-export type Products = Array<Product>;
-export type PriceResources = PriceResource[];
-export type PriceResource = StripeProduct & {
-    billingScheme: string;
-    currency: "usd" | "aud" | "can" | "eur";
-    lookupKey: string | null;
-    nickname: string | null;
-    productId: string; // equals Product type id
-    product: string | null;
-    recurring: {
-        aggregateUsage: string | null;
-        interval: "month" | "year";
-        intervalCount: number;
-        trialPeriodDays: number | null;
-        usageType: string;
-        rawJObject: object;
-        stripeResponse: null;
-    };
-    tiers: null; // TODO
-    tiersMode: null; // TODO
-    transformQuantity: null; // TODO
-    unitAmount: number; // cents
-    unitAmountDecimal: number; // in cents
-};
-
-export enum GeneralSettingsLoc {
-    email,
-    companyName,
-    phoneNumber,
-    companyLogo,
-    locale,
-    default_email_template,
-    password,
-    deleteaccount,
-}
 
 export type Action = {
     icon: React.ReactNode;
@@ -411,19 +163,10 @@ export type Action = {
     onClick(): void;
 };
 
-export type Credentials = {
-    jwtToken: string;
-    apiKey: string;
-    sessionId: string;
-    emailAddress: string;
-    authenticated: boolean;
-    message: string;
-};
-
 export type ResponseConfigurationType = {
     prologue: string;
     epilogue: string;
-    staticTablesMetas: StaticTableMetas;
+    staticTablesMetas: StaticTableMetaResources;
     sendPdfResponse: boolean;
 };
 
@@ -438,48 +181,6 @@ export type PhoneSettingsResponse = {
     locale: string;
 };
 
-export enum NodeTypeCode {
-    I,
-    II,
-    III,
-    IV,
-    V,
-    VI, // anabranch
-    VII, // loopback anchor
-    VIII, // loopback terminal,
-    IX, // image node type
-    X, // multioption non editable, one path
-    XI, // multioption non editable, multiple paths
-}
-
-export type NodeOption = {
-    groupName: string;
-    isAnabranchMergePoint: boolean;
-    isAnabranchType: boolean;
-    isCurrency: boolean; // TODO: For the future -- may wish to specify currency or number in the dynamic table
-    isDynamicType: boolean;
-    isMultiOptionEditable: boolean; // TODO- is this used? No...
-    isMultiOptionType: boolean;
-    isSplitMergeType: boolean;
-    isTerminalType: boolean;
-    nodeComponentType: string;
-    pathOptions: Array<Response>;
-    resolveOrder: number;
-    shouldRenderChildren: boolean;
-    shouldShowMultiOption: boolean;
-    stringName: string | null; // TODO: this is always null - used?
-    text: string;
-    value: string;
-    valueOptions: Array<string>;
-    dynamicType: string | null;
-    isImageNode: boolean;
-    imageId: string | null;
-    nodeTypeCode: NodeTypeCode; // passed to the node changer via the nodeOptions
-    isLoopbackAnchor: boolean;
-};
-
-export type NodeTypeOptions = NodeOption[];
-
 export type RequiredDetails = {
     type: string;
     prettyName: string;
@@ -493,13 +194,6 @@ export type PlanStatus = {
     status: PlanType;
     hasUpgraded: boolean;
 };
-
-export enum PurchaseTypes {
-    Free = "Free",
-    Lyte = "Lyte",
-    Premium = "Premium",
-    Pro = "Pro",
-}
 
 export type PlanTypeMeta = {
     allowedAttachments: number;
@@ -525,55 +219,17 @@ export type ProductOption = {
 
 export type ProductOptions = ProductOption[];
 
-export enum Interval {
-    free = "free",
-    monthly = "month",
-    yearly = "year",
-}
-
 export type PriceMap = {
     [key: string]: string | number;
 };
 
-export type ConversationUpdate = {
-    id: number;
-    conversationId: string;
-    prompt: string;
-    userResponse: string;
-    nodeId: string;
-    nodeCritical: number;
-    nodeType: string;
-    timeStamp: string;
-    isEnabled: number;
-    account: string;
-};
-
-export type CompletedConversation = ConversationUpdate[];
-
-export type PreCheckError = {
-    areaName: string;
-    reasons: string[];
-};
-
-export type PreCheckResult = {
-    isReady: boolean;
-    preCheckErrors: PreCheckError[];
-    apiKeyExists: boolean;
-};
-
-export type IncompleteArea = {
+export type IncompleteIntent = {
     areaDisplayTitle: string;
     areaName: string;
     reason: string[];
 };
 
-export type IncompleteAreas = IncompleteArea[];
-
-export type VariableDetail = {
-    name: string;
-    pattern: string;
-    details: string;
-};
+export type IncompleteIntents = IncompleteIntent[];
 
 export type RememberMe = {
     emailAddress: string;
@@ -608,7 +264,7 @@ export type Settings = {
     useAreaFallbackEmail: boolean;
 };
 
-export type AreasEnabled = {
+export type IntentsEnabled = {
     areaId: string;
     isEnabled: boolean;
     areaName: string;
@@ -710,90 +366,6 @@ export type NodeIdentity = {
     shouldShowUnsetNodeTypeOption: boolean;
 };
 
-// Dynamic Table types
-export type SelectOneFlatData = {
-    id: number;
-    accountId: string;
-    areaId: string;
-    tableId: string;
-    option: string;
-    valueMin: number;
-    valueMax: number;
-    range: boolean;
-    rowOrder: number;
-};
-
-export type PercentOfThresholdData = {
-    id: number;
-    accountId: string;
-    intentId: string;
-    tableId: string;
-    itemId: string;
-    itemName: string;
-    itemOrder: number;
-    rowId: string;
-    threshold: number;
-    valueMin: number;
-    valueMax: number;
-    range: boolean;
-    modifier: number;
-    posNeg: boolean;
-    rowOrder: number;
-    triggerFallback: boolean;
-};
-
-export type BasicThresholdData = {
-    id: number;
-    rowId: number;
-    accountId: string;
-    intentId: string;
-    tableId: string;
-    itemName: string;
-    threshold: number;
-    valueMin: number;
-    valueMax: number;
-    range: boolean;
-    rowOrder: number;
-    minThreshold: number;
-    maxThreshold: number;
-    triggerFallback: boolean;
-};
-
-export type TwoNestedCategoryData = {
-    id: number;
-    accountId: string;
-    intentId: string;
-    tableId: string;
-    valueMin: number;
-    valueMax: number;
-    range: boolean;
-    rowId: string;
-    rowOrder: number;
-    itemId: string;
-    itemOrder: number;
-    itemName: string;
-    innerItemName: string;
-};
-
-export type CategoryNestedThresholdData = {
-    id: number;
-    accountId: string;
-    intentId: string;
-    tableId: string;
-    valueMin: number;
-    valueMax: number;
-    range: boolean;
-    rowId: string;
-    rowOrder: number;
-    itemId: string;
-    itemOrder: number;
-    itemName: string;
-    threshold: number;
-    triggerFallback: boolean;
-};
-
-export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | BasicThresholdData[] | TwoNestedCategoryData[] | CategoryNestedThresholdData[] | any; // | SelectOneThresholdData etc
-
 export type PricingStrategyData = {
     tableRows: TableData;
     isInUse: boolean;
@@ -807,7 +379,7 @@ export interface IPricingStrategyBody {
 }
 
 export type PricingStrategy = {
-    tableMeta: PricingStrategyMeta;
+    tableMeta: PricingStrategyTableMetaResource;
     tableRows: TableData;
 };
 
@@ -841,7 +413,7 @@ export type PricingStrategyComponentMap = {
 export type PricingStrategyTableTypeResource = {
     prettyName: string;
     tableType: string;
-}
+};
 export type TableNameMap = PricingStrategyTableTypeResource[];
 
 export type TreeErrors = {
@@ -850,12 +422,12 @@ export type TreeErrors = {
     anyErrors: boolean;
 };
 
-export type AreaNameDetail = {
+export type IntentNameDetail = {
     areaName: string;
     intentId: string;
 };
 
-export type AreaNameDetails = AreaNameDetail[];
+export type IntentNameDetails = IntentNameDetail[];
 
 export type SnackbarPositions = "tr" | "t" | "tl" | "bl" | "b" | "br";
 
@@ -903,7 +475,7 @@ export interface IDashboardContext {
     panelErrors: ErrorResponse | null;
     setPanelErrors: SetState<ErrorResponse | null>;
     repository: PalavyrRepository;
-    areaNameDetails: AreaNameDetails;
+    areaNameDetails: IntentNameDetails;
     reRenderDashboard(): void;
     handleDrawerOpen(): void;
     handleDrawerClose(): void;
@@ -929,72 +501,10 @@ export interface IConversationHistoryTracker {
 
 export interface IConversationTreeContext {
     historyTracker: IConversationHistoryTracker;
-    nodeTypeOptions: NodeTypeOptions;
+    nodeTypeOptions: NodeTypeOptionResource;
     showDebugData: boolean;
     useNewEditor: boolean;
 }
-
-export type YoutubeVideoResourcePlayer = {
-    embedHtml: string;
-    embedHeight: number;
-    embedWidth: number;
-};
-
-export type YoutubeVideoResourceSnippet = {
-    publishedAt: string;
-    channelId: string;
-    title: string;
-    description: string;
-    channelTitle: string;
-    tags: [string];
-    categoryId: string;
-    liveBroadcastContent: string;
-    defaultLanguage: string;
-    localized: {
-        title: string;
-        description: string;
-    };
-    defaultAudioLanguage: string;
-};
-
-export type YoutubePlaylistItemContentDetails = {
-    videoId: string;
-    videoPublishedAt: string;
-};
-
-export type PlaylistItemsResource = {
-    kind: string;
-    etag: string;
-    snippet: YoutubeVideoResourceSnippet;
-    contentDetails: YoutubePlaylistItemContentDetails;
-};
-
-export type YoutubePlaylistItemsResponse = {
-    kind: string;
-    etag: string;
-    items: PlaylistItemsResource[];
-};
-
-export type VideoMap = {
-    videoId: string;
-    title: string;
-    description: string;
-};
-
-export type BlogPostRecord = {
-    title: string;
-    id: number;
-    date: number;
-    src: string; // an image src uri
-    snippet: string; // short description
-    content: React.ReactNode;
-};
-export type BlogPosts = BlogPostRecord[];
-
-export type BlogPostRouteMeta = BlogPostRecord & {
-    url: string;
-    params: string;
-};
 
 ////////////////// Widget
 
@@ -1005,59 +515,13 @@ export type WidgetAreaTable = {
     areaDisplayTitle: string;
 };
 
-export type WidgetNodeResource = {
-    intentId: string;
-    nodeId: string;
-    text: string;
-    nodeType: string;
-    nodeChildrenString: string;
-    isRoot: boolean;
-    isCritical: boolean;
-    optionPath: string | null;
-    valueOptions: string; // needs to be split by ","
-    nodeComponentType: string;
-    isPricingStrategyNode: boolean;
-    dynamicType: string | null;
-    resolveOrder: number | null;
-    fileAssetResource: FileAssetResource | null;
-    // unitGroup: UnitGroups | null;
-    // unitPrettyName: UnitPrettyNames | null;
-    // currencySymbol: string | null;
-};
-
-export type WidgetNodes = WidgetNodeResource[];
-
 export type SelectedOption = {
-    areaDisplay: string;
-    areaId: string;
+    intentDisplay: string;
+    intentId: string;
 };
 
 export type Registry = {
     [key: string]: any;
-};
-
-export type NewConversation = {
-    conversationId: string;
-    widgetPreferences: WidgetPreferences;
-    conversationNodes: WidgetNodes;
-};
-
-export type WidgetPreferences = {
-    landingHeader: string;
-    chatHeader: string;
-    placeholder: string;
-    selectListColor: string;
-    headerColor: string;
-    fontFamily: string;
-    listFontColor: string;
-    headerFontColor: string;
-    optionsHeaderColor: string;
-    optionsHeaderFontColor: string;
-    chatFontColor: string;
-    chatBubbleColor: string;
-    buttonColor: string;
-    buttonFontColor: string;
-    selectionLabel: string;
 };
 
 export type WidgetConversationUpdate = {
@@ -1082,18 +546,12 @@ export type ConversationRecordUpdate = {
 
 export type WidgetPreCheckResult = {
     isReady: boolean;
-    incompleteAreas: Array<AreaTable>;
-};
-
-export type SendEmailResultResponse = {
-    nextNodeId: string;
-    result: boolean;
-    fileAsset?: FileAssetResource;
+    incompleteAreas: IntentResource[];
 };
 
 export interface IProgressTheChat {
     node: WidgetNodeResource;
-    nodeList: WidgetNodes;
+    nodeList: WidgetNodeResources;
     client: PalavyrWidgetRepository;
     convoId: string;
     designer?: boolean;
@@ -1142,7 +600,7 @@ export type ContextProperties = {
     keyValues: KeyValues;
     dynamicResponses: DynamicResponses;
     numIndividuals: number | null;
-    widgetPreferences: WidgetPreferences | null;
+    widgetPreferences: WidgetPreferencesResource | null;
     responseFileAsset: FileAssetResource;
 };
 
@@ -1159,7 +617,7 @@ export interface NodeOptionalProps {
 
 export interface ILinkedListBucket {
     addToBucket(node: IPalavyrNode): void;
-    convertToConvoNodes(areaId: string): ConvoNode[];
+    convertToConvoNodes(areaId: string): ConversationDesignerNodeResources;
     addToBucket(node: IPalavyrNode): void;
     clear(): void;
     findById(nodeId: string): IPalavyrNode | null;
@@ -1172,13 +630,13 @@ export interface IPalavyrLinkedList {
     traverse(): void;
     insert(): void;
     delete(): void;
-    compileToConvoNodes(): ConvoNode[];
-    reconfigureTree(nodeTypeOptions: NodeTypeOptions): void;
+    compileToConvoNodes(): ConversationDesignerNodeResources;
+    reconfigureTree(nodeTypeOptions: NodeTypeOptionResources): void;
     findNode(nodeId: string): IPalavyrNode | null;
     retrieveCleanHeadNode(): IPalavyrNode;
     updateTree: (updatedTree: IPalavyrLinkedList) => void;
     resetRootNode(): void;
-    convertToPalavyrNode(repository: PalavyrRepository, rawNode: ConvoNode, updateTree: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean): IPalavyrNode;
+    convertToPalavyrNode(repository: PalavyrRepository, rawNode: ConversationDesignerNodeResource, updateTree: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean): IPalavyrNode;
     compileToNodeFlow(): any;
 }
 
@@ -1221,12 +679,12 @@ export interface IPalavyrNode {
     nodeIsNotSet(): boolean;
     AddNewChildReference(newChildReference: IPalavyrNode): void;
     sortChildReferences(): void;
-    addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void;
-    compileConvoNode(areaId: string): ConvoNode;
+    addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources): void;
+    compileConvoNode(areaId: string): ConversationDesignerNodeResource;
     recursiveReferenceThisAnabranchOrigin(node: IPalavyrNode): void;
-    dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void;
+    dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources): void;
     UpdateTree(): void;
-    unsetSelf(nodeTypeOptions: NodeTypeOptions): void;
+    unsetSelf(nodeTypeOptions: NodeTypeOptionResources): void;
     nodeIsSet(): boolean;
     nodeIsNotSet(): boolean;
     setValueOptions(newValueOptions: string[]): void;
@@ -1235,11 +693,11 @@ export interface IPalavyrNode {
     addLine(parentId: string): void;
     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     removeLine(toNode: IPalavyrNode): void;
-    setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptions): void;
+    setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptionResources): void;
     Equals(otherNode: IPalavyrNode): boolean;
     LoopbackContextIsSet(): boolean;
-    InsertChildNodeLink(nodeTypeOptions: NodeTypeOptions): void;
-    DeleteCurrentNode(nodeTypeOptions: NodeTypeOptions): void;
+    InsertChildNodeLink(nodeTypeOptions: NodeTypeOptionResources): void;
+    DeleteCurrentNode(nodeTypeOptions: NodeTypeOptionResources): void;
     SetLoopbackContext(anchorId: string): void;
 
     isRoot: boolean;
@@ -1255,7 +713,7 @@ export interface IPalavyrNode {
     shouldShowMultiOption: boolean;
     dynamicType: string | null;
     imageId: string | null | undefined;
-    nodeTypeOptions: NodeTypeOptions;
+    nodeTypeOptions: NodeTypeOptionResources;
     shouldDisableNodeTypeSelector: boolean;
     isImageNode: boolean;
     nodeTypeCode: NodeTypeCode;

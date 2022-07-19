@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Obsolete
         }
 
         // [HttpGet(Route)]
-        public async Task<IEnumerable<StaticTablesMetaResource>> GetStaticTablesMetas(string intentId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<StaticTableMetaResource>> GetStaticTablesMetas(string intentId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetStaticTableMetasRequest(intentId), cancellationToken);
             return response.Response;

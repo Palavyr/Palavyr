@@ -3,7 +3,7 @@ import { Button, makeStyles, TableBody, TableContainer, Paper, Table } from "@ma
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { PercentOfThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
+import { PercentOfThresholdResource, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { PercentOfThresholdHeader } from "./PercentOfThresholdHeader";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdRow } from "./PercentOfThresholdRow";
@@ -13,8 +13,8 @@ import { ButtonBar } from "../../components/SaveBar";
 import { takeNCharacters } from "@common/utils/textSlicing";
 
 interface IPercentOfThreshold {
-    tableData: PercentOfThresholdData[];
-    itemData: PercentOfThresholdData[];
+    tableData: PercentOfThresholdResource[];
+    itemData: PercentOfThresholdResource[];
     itemName: string;
     itemId: string;
     modifier: PercentOfThresholdModifier;
@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const getter = (x: PercentOfThresholdData) => x.rowOrder;
+const getter = (x: PercentOfThresholdResource) => x.rowOrder;
 
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
@@ -76,7 +76,7 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
             <Table>
                 <PercentOfThresholdHeader  />
                 <TableBody className={cls.tableStyles}>
-                    {sortByPropertyNumeric(getter, itemData).map((row: PercentOfThresholdData, index: number) => {
+                    {sortByPropertyNumeric(getter, itemData).map((row: PercentOfThresholdResource, index: number) => {
                         row.rowOrder = index;
                         const itemLength = itemData.length;
                         return (

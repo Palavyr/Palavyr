@@ -41,8 +41,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyIntroductionSequenceResponse
     {
-        public ModifyIntroductionSequenceResponse(ConversationDesignerNodeResource[] response) => Response = response;
-        public ConversationDesignerNodeResource[] Response { get; set; }
+        public ModifyIntroductionSequenceResponse(IEnumerable<ConversationDesignerNodeResource> response) => Response = response;
+        public IEnumerable<ConversationDesignerNodeResource> Response { get; set; }
     }
 
     public class ModifyIntroductionSequenceRequest : IRequest<ModifyIntroductionSequenceResponse>

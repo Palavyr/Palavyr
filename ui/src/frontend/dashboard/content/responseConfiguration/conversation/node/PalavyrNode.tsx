@@ -1,6 +1,6 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, LineMap, AnabranchContext, LineLink, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, NodeTypeOptions, ValueOptionDelimiter, LineMap, AnabranchContext, LineLink, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
 import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "@Palavyr-Types";
 import { NodeReferences } from "./PalavyrNodeReferences";
 import { NodeConfigurer } from "./actions/NodeConfigurer";
@@ -71,7 +71,7 @@ export class PalavyrNode implements IPalavyrNode {
     constructor(
         containerList: IPalavyrLinkedList,
         repository: PalavyrRepository,
-        node: ConvoNode,
+        node: ConversationDesignerNodeResource,
         setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftmostBranch: boolean,
         sortableNodeTypes: string[]
@@ -199,7 +199,7 @@ export class PalavyrNode implements IPalavyrNode {
         }
     }
 
-    public compileConvoNode(areaId: string): ConvoNode {
+    public compileConvoNode(areaId: string): ConversationDesignerNodeResource {
         // returns an object resource that matches the database schema
         return {
             intentId: areaId,

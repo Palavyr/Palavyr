@@ -6,7 +6,7 @@ using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 {
-    public class SelectOneFlatResourceValidator : AbstractValidator<PricingStrategyTableDataResource<SelectOneFlatResource>>
+    public class SelectOneFlatResourceValidator : AbstractValidator<PricingStrategyTableDataResource<CategorySelectTableRowResource>>
     {
         public SelectOneFlatResourceValidator()
         {
@@ -32,13 +32,13 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
         }
 
         // Do we need this...
-        private bool HaveCorrectlyOrderedRows(List<SelectOneFlatResource> arg)
+        private bool HaveCorrectlyOrderedRows(List<CategorySelectTableRowResource> arg)
         {
             var orders = arg.Select(x => x.RowOrder).ToList();
             return Enumerable.SequenceEqual(orders, orders.OrderBy(x => x));
         }
 
-        private bool CategoriesMustBeUnique(List<SelectOneFlatResource> arg)
+        private bool CategoriesMustBeUnique(List<CategorySelectTableRowResource> arg)
         {
             return arg.Count == arg.Select(x => x.Category).Distinct().Count();
         }

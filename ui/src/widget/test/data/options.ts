@@ -9,7 +9,7 @@ export const getSelectedOption = (areaId: string) => {
 
 export const options: SelectedOption[] = [
     {
-        areaDisplay: "An Area Name",
-        areaId: "abc123",
+        IntentDisplay: "An Area Name",
+        IntentId: "abc123",
     },
 ];

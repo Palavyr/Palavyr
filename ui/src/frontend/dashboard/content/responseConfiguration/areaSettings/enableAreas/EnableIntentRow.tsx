@@ -1,5 +1,5 @@
 import { makeStyles, TableCell, TableRow, Typography } from "@material-ui/core";
-import { AreasEnabled } from "@Palavyr-Types";
+import { IntentsEnabled } from "@Palavyr-Types";
 import classNames from "classnames";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface EnableAreaRowProps {
-    areasEnabled: AreasEnabled;
+    areasEnabled: IntentsEnabled;
     rowNumber: number;
 }
 

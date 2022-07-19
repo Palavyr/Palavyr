@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Services.EmailService.Verification;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpPut(Route)]
-        public async Task<EmailVerificationResponse> Modify([FromBody] ModifyDefaultEmailAddressRequest request, CancellationToken cancellationToken)
+        public async Task<EmailVerificationResource> Modify([FromBody] ModifyDefaultEmailAddressRequest request, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;

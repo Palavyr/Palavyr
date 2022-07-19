@@ -1,4 +1,4 @@
-import { WidgetNodeResource, WidgetConversationUpdate, WidgetNodes, KeyValue, UserMessageData } from "@Palavyr-Types";
+import { WidgetNodeResource, WidgetConversationUpdate, WidgetNodeResources, KeyValue, UserMessageData } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 
 import { floor, max, min } from "lodash";
@@ -43,7 +43,7 @@ export const responseAction = async (
     context: IAppContext,
     node: WidgetNodeResource,
     child: WidgetNodeResource,
-    nodeList: WidgetNodes,
+    nodeList: WidgetNodeResources,
     client: PalavyrWidgetRepository,
     convoId: string,
     isDemo: boolean,

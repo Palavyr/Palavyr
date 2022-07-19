@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler

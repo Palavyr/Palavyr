@@ -15,20 +15,20 @@ export const Primary: Story<DropdownListProps> = Template.bind({});
 Primary.args = {
     options: [
         {
-            areaDisplay: "Area 1",
-            areaId: "abc-1",
+            IntentDisplay: "Area 1",
+            IntentId: "abc-1",
         },
         {
-            areaDisplay: "Area 2",
-            areaId: "abc-2",
+            IntentDisplay: "Area 2",
+            IntentId: "abc-2",
         },
         {
-            areaDisplay: "Area 3",
-            areaId: "abc-123",
+            IntentDisplay: "Area 3",
+            IntentId: "abc-123",
         },
         {
-            areaDisplay: "Area 4",
-            areaId: "abc-123",
+            IntentDisplay: "Area 4",
+            IntentId: "abc-123",
         },
     ],
 };

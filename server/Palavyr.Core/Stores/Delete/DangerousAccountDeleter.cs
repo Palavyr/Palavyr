@@ -162,7 +162,7 @@ namespace Palavyr.Core.Stores.Delete
 
             await DeleteAccountAt<AppDataContexts, Account>();
             await DeleteAccountAt<AppDataContexts, UserSession>();
-            await DeleteAccountAt<AppDataContexts, EmailVerification>();
+            await DeleteAccountAt<AppDataContexts, AccountEmailVerification>();
             await DeleteAccountAt<AppDataContexts, Subscription>();
             await DeleteAccountAt<AppDataContexts, StripeWebhookReceivedRecord>();
 

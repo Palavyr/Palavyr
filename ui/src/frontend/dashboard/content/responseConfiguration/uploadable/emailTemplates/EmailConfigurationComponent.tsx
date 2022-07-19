@@ -1,7 +1,7 @@
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { UploadOrSelectFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
 import { makeStyles, Typography } from "@material-ui/core";
-import { VariableDetail } from "@Palavyr-Types";
+import { ResponseVariable } from "@Palavyr-Types";
 import { EmailSubject } from "frontend/dashboard/content/settings/subject/EmailSubject";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
@@ -18,7 +18,7 @@ const useEmailStyles = makeStyles(() => ({
 }));
 
 export interface EmailConfigurationComponentProps {
-    variableDetails: VariableDetail[];
+    variableDetails: ResponseVariable[];
     saveEmailTemplate: (emailTemplate: string) => Promise<string>;
     saveEmailSubject: (emailSubject: string) => Promise<string>;
     getCurrentEmailTemplate: () => Promise<string>;

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -21,7 +22,7 @@ namespace Palavyr.API.Controllers.Response.Tables.PricingStrategy.Meta
         }
 
         [HttpGet(Route)]
-        public async Task<PricingStrategyTableMetaResource[]> Get(string intentId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PricingStrategyTableMetaResource>> Get(string intentId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetPricingStrategyTableMetasRequest(intentId), cancellationToken);
             return response.Response;

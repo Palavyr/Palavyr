@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
-import { Enquiries, EnquiryRow, SelectionMap, SetState } from "@Palavyr-Types";
+import { EnquiryRowResources, EnquiryRow, SelectionMap, SetState } from "@Palavyr-Types";
 import { TableContainer, Paper, TableHead, TableBody, Table, makeStyles, CircularProgress } from "@material-ui/core";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
@@ -42,13 +42,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const paginateEnquiries = (enq: Enquiries, currentPage: number, pageSize: number) => {
+const paginateEnquiries = (enq: EnquiryRowResources, currentPage: number, pageSize: number) => {
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;
     return enq.slice(start, end);
 };
 
-const updateTotalPages = (setTotalPages: SetState<number>, fullEnquiryList: Enquiries, pageSize: number, showSeen: boolean) => {
+const updateTotalPages = (setTotalPages: SetState<number>, fullEnquiryList: EnquiryRowResources, pageSize: number, showSeen: boolean) => {
     let totalPages = 0;
     if (showSeen) {
         totalPages = Math.ceil(fullEnquiryList.length / pageSize);
@@ -63,8 +63,8 @@ export const EnquiresPage = () => {
     setViewName("Enquiries");
     const cls = useStyles();
 
-    const [fullEnquiryList, setFullEnquiryList] = useState<Enquiries>([]);
-    const [currentPageList, setCurrentPageList] = useState<Enquiries>([]);
+    const [fullEnquiryList, setFullEnquiryList] = useState<EnquiryRowResources>([]);
+    const [currentPageList, setCurrentPageList] = useState<EnquiryRowResources>([]);
     const [selectionMap, setSelectionMap] = useState<SelectionMap>({});
 
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -75,7 +75,7 @@ export const EnquiresPage = () => {
     const [showSeen, setShowSeen] = useState<boolean | null>(null);
     const [allSelected, setAllSelected] = useState<boolean>(false);
 
-    const filterEnqsByShowSeen = (enqs: Enquiries, s: boolean) => (s ? enqs : enqs.filter(e => !e.seen));
+    const filterEnqsByShowSeen = (enqs: EnquiryRowResources, s: boolean) => (s ? enqs : enqs.filter(e => !e.seen));
 
     const loadEnquiries = useCallback(async () => {
         const show = await repository.Enquiries.GetShowSeenEnquiries();

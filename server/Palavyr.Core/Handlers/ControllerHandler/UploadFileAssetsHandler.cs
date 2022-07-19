@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler

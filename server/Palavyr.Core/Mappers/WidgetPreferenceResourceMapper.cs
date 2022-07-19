@@ -5,12 +5,12 @@ using Palavyr.Core.Resources;
 
 namespace Palavyr.Core.Mappers
 {
-    public class WidgetPreferenceResourceMapper : IMapToNew<WidgetPreference, WidgetPreferenceResource>
+    public class WidgetPreferenceResourceMapper : IMapToNew<WidgetPreference, WidgetPreferencesResource>
     {
-        public async Task<WidgetPreferenceResource> Map(WidgetPreference @from, CancellationToken cancellationToken)
+        public async Task<WidgetPreferencesResource> Map(WidgetPreference @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
-            return new WidgetPreferenceResource
+            return new WidgetPreferencesResource
             {
                 HeaderFontColor = @from.HeaderFontColor,
                 ListFontColor = @from.ListFontColor,

@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Resources;
+using ConversationHistoryRowResource = Palavyr.Core.Resources.ConversationHistoryRowResource;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
@@ -18,7 +21,7 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
         [HttpGet(Route)]
-        public async Task<ConversationRowsResource[]> Get([FromRoute] string conversationId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ConversationHistoryRowResource>> Get([FromRoute] string conversationId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetCompleteConversationDetailsRequest(conversationId), cancellationToken);
             return response.Response;

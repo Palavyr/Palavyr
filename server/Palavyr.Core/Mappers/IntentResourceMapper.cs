@@ -9,13 +9,13 @@ namespace Palavyr.Core.Mappers
     public class IntentResourceMapper : IMapToNew<Intent, IntentResource>
     {
         private readonly IMapToNew<ConversationNode, ConversationDesignerNodeResource> conversationDesignerNodeResourceMapper;
-        private readonly IMapToNew<StaticTablesMeta, StaticTablesMetaResource> staticTablesMetaResourceMapper;
+        private readonly IMapToNew<StaticTablesMeta, StaticTableMetaResource> staticTablesMetaResourceMapper;
         private readonly IMapToNew<PricingStrategyTableMeta, PricingStrategyTableMetaResource> pricingStrategyTableMetaResourceMapper;
         private readonly IMapToNew<AttachmentLinkRecord, AttachmentLinkRecordResource> attachmentRecordResourceMapper;
 
         public IntentResourceMapper(
             IMapToNew<ConversationNode, ConversationDesignerNodeResource> conversationDesignerNodeResourceMapper,
-            IMapToNew<StaticTablesMeta, StaticTablesMetaResource> staticTablesMetaResourceMapper,
+            IMapToNew<StaticTablesMeta, StaticTableMetaResource> staticTablesMetaResourceMapper,
             IMapToNew<PricingStrategyTableMeta, PricingStrategyTableMetaResource> pricingStrategyTableMetaResourceMapper,
             IMapToNew<AttachmentLinkRecord, AttachmentLinkRecordResource> attachmentRecordResourceMapper)
         {
@@ -35,6 +35,7 @@ namespace Palavyr.Core.Mappers
 
             return new IntentResource
             {
+                Id = @from.Id,
                 IntentId = @from.IntentId,
                 IntentName = @from.IntentName,
                 Prologue = @from.Prologue,

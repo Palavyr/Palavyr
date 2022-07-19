@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         }
 
         [HttpPut(Route)]
-        public async Task<WidgetPreferenceResource> SaveWidgetPreferences(
+        public async Task<WidgetPreferencesResource> SaveWidgetPreferences(
             [FromBody]
             ModifyWidgetPreferencesRequest request,
             CancellationToken cancellationToken

@@ -1,17 +1,17 @@
 import { PopperProps, Popper, TextField, CircularProgress, makeStyles, Paper, PaperProps } from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
-import { SelectedOption, SetState, WidgetPreferences } from "@Palavyr-Types";
+import { SelectedOption, SetState, WidgetPreferencesResource } from "@Palavyr-Types";
 import classNames from "classnames";
 import React, { useContext, useEffect, useState } from "react";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 const useStyles = makeStyles(() => ({
-    selectListBgColor: (prefs: WidgetPreferences) => ({
+    selectListBgColor: (prefs: WidgetPreferencesResource) => ({
         backgroundColor: prefs.selectListColor,
         fontFamily: prefs.fontFamily,
     }),
-    selectListFontColor: (prefs: WidgetPreferences) => ({
+    selectListFontColor: (prefs: WidgetPreferencesResource) => ({
         fontFamily: prefs.fontFamily,
         color: prefs.listFontColor,
     }),
@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
     paper: {
         boxShadow: "none",
     },
-    inputLabel: (props: WidgetPreferences) => ({
+    inputLabel: (props: WidgetPreferencesResource) => ({
         borderBottom: "1px solid " + props.chatFontColor,
         fontFamily: props.fontFamily,
         color: props.chatFontColor,
@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
             borderBottomColor: props.chatFontColor, // Solid underline on focus
         },
     }),
-    listbox: (prefs: WidgetPreferences) => ({
+    listbox: (prefs: WidgetPreferencesResource) => ({
         color: prefs.chatFontColor,
         // the dropdown menu styles
         fontFamily: prefs.fontFamily,
@@ -60,7 +60,7 @@ const useStyles = makeStyles(() => ({
         boxShadow: "none",
     }),
 
-    icon: (prefs: WidgetPreferences) => ({
+    icon: (prefs: WidgetPreferencesResource) => ({
         color: prefs.chatFontColor,
     }),
 }));
@@ -121,12 +121,12 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
                         if (setOpen) setOpen(false);
                         setLoading(false);
                     }}
-                    getOptionSelected={(option: SelectedOption, value: SelectedOption) => option.areaId === value.areaId}
+                    getOptionSelected={(option: SelectedOption, value: SelectedOption) => option.IntentId === value.IntentId}
                     onChange={onChange}
                     PopperComponent={PopperComponent}
                     PaperComponent={PaperComponent}
                     options={options}
-                    getOptionLabel={(option: SelectedOption) => option.areaDisplay}
+                    getOptionLabel={(option: SelectedOption) => option.IntentDisplay}
                     renderInput={(params: AutocompleteRenderInputParams) => (
                         <TextField
                             {...params}

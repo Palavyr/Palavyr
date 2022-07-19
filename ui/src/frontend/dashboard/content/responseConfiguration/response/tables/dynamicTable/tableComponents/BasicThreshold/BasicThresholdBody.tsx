@@ -1,14 +1,14 @@
 import React from "react";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { TableBody } from "@material-ui/core";
-import { BasicThresholdData, IPricingStrategyBody } from "@Palavyr-Types";
+import { BasicThresholdResource, IPricingStrategyBody } from "@Palavyr-Types";
 import { BasicThresholdRow } from "./BasicThresholdRow";
 
-const getter = (x: BasicThresholdData) => x.rowOrder;
+const getter = (x: BasicThresholdResource) => x.rowOrder;
 export const BasicThresholdBody = ({ tableData, modifier, unitGroup, unitPrettyName }: IPricingStrategyBody) => {
     return (
         <TableBody>
-            {sortByPropertyNumeric(getter, tableData).map((row: BasicThresholdData, rowIndex: number) => {
+            {sortByPropertyNumeric(getter, tableData).map((row: BasicThresholdResource, rowIndex: number) => {
                 row.rowOrder = rowIndex;
                 return (
                     <React.Fragment key={rowIndex}>

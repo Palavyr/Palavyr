@@ -1,4 +1,4 @@
-import { AreaNameDetail, AreaNameDetails, Enquiries, EnquiryRow } from "@Palavyr-Types";
+import { IntentNameDetail, IntentNameDetails, EnquiryRowResources, EnquiryRow } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { widgetStyles } from "../designer/WidgetColorOptions";
@@ -26,7 +26,7 @@ export const getRandomColor = (seed: number | string) => {
     return color;
 };
 
-const calcualateDailEnquiryByDay = (areaDetails: AreaNameDetails, enquiries: Enquiries) => {
+const calcualateDailEnquiryByDay = (areaDetails: IntentNameDetails, enquiries: EnquiryRowResources) => {
     // const dates = enquiries.map((x) => {
     //     const date = new Date(Date.parse(x.timeStamp));
     //     date.toLocaleDateString();
@@ -49,7 +49,7 @@ const calcualateDailEnquiryByDay = (areaDetails: AreaNameDetails, enquiries: Enq
     lastSevenDays.reverse();
 
     const enquiryData: EnqDataSet[] = [];
-    areaDetails.forEach((detail: AreaNameDetail) => {
+    areaDetails.forEach((detail: IntentNameDetail) => {
         const areaDataResult: number[] = [];
         const areaName = detail.areaName;
         const areaEnquiries = enquiries.filter((enq: EnquiryRow) => enq.areaName === areaName);

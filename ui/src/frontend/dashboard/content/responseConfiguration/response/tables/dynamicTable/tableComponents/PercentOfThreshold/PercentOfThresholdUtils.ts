@@ -1,23 +1,23 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { uniqBy } from "lodash";
-import { PercentOfThresholdData } from "@Palavyr-Types";
+import { PercentOfThresholdResource } from "@Palavyr-Types";
 
-export const reOrderPercentOfThresholdTableData = (tableData: PercentOfThresholdData[]) => {
+export const reOrderPercentOfThresholdTableData = (tableData: PercentOfThresholdResource[]) => {
 
-    let reOrdered: PercentOfThresholdData[] = [];
+    let reOrdered: PercentOfThresholdResource[] = [];
 
-    const itemIds = tableData.map((row: PercentOfThresholdData) => row.itemId)
+    const itemIds = tableData.map((row: PercentOfThresholdResource) => row.itemId)
     const uniqueItemIds = uniqBy(itemIds, (id: string) => id);
 
     uniqueItemIds.forEach((itemId: string) => {
-        const itemGroup = tableData.filter((row: PercentOfThresholdData) => row.itemId === itemId);
+        const itemGroup = tableData.filter((row: PercentOfThresholdResource) => row.itemId === itemId);
 
-        const getter = (x: PercentOfThresholdData) => x.threshold;
+        const getter = (x: PercentOfThresholdResource) => x.threshold;
         const sortedByThreshold = sortByPropertyNumeric(getter, itemGroup);
 
 
-        const itemGroupReordered: PercentOfThresholdData[] = [];
-        sortedByThreshold.forEach((row: PercentOfThresholdData, index: number) => {
+        const itemGroupReordered: PercentOfThresholdResource[] = [];
+        sortedByThreshold.forEach((row: PercentOfThresholdResource, index: number) => {
             row.rowOrder = index;
             itemGroupReordered.push(row);
         });

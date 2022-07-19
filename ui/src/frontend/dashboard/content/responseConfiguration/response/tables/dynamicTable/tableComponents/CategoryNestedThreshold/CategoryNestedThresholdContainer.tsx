@@ -1,7 +1,7 @@
 import { TableGroup } from "@Palavyr-Types";
 import { groupBy } from "lodash";
 import React from "react";
-import { CategoryNestedThresholdData, IPricingStrategyBody } from "@Palavyr-Types";
+import { CategoryNestedThresholdResource, IPricingStrategyBody } from "@Palavyr-Types";
 import { CategoryNestedThresholdItemTable } from "./CategoryNestedThresholdItemTable";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
@@ -23,12 +23,12 @@ export const CategoryNestedThresholdContainer = ({ tableData, modifier, tableId,
     const cls = useStyles();
     const sortedByCategory = sortByPropertyNumeric(modifier.itemOrderGetter, tableData);
 
-    const orderedCategoryGroups: TableGroup<CategoryNestedThresholdData[]> = groupBy(sortedByCategory, x => x.itemId); // use this groupby method in the modifier.
+    const orderedCategoryGroups: TableGroup<CategoryNestedThresholdResource[]> = groupBy(sortedByCategory, x => x.itemId); // use this groupby method in the modifier.
 
     return (
         <div className={cls.container}>
             {Object.keys(orderedCategoryGroups).map((categoryId: string, categoryIndex: number) => {
-                const sortedRows: CategoryNestedThresholdData[] = sortByPropertyNumeric(modifier.rowOrderGetter, orderedCategoryGroups[categoryId]);
+                const sortedRows: CategoryNestedThresholdResource[] = sortByPropertyNumeric(modifier.rowOrderGetter, orderedCategoryGroups[categoryId]);
                 const categoryName = sortedRows[0].itemName;
                 return (
                     <CategoryNestedThresholdItemTable

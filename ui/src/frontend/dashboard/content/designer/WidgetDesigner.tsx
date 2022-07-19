@@ -1,6 +1,6 @@
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { Box, makeStyles, Tab, Tabs } from "@material-ui/core";
-import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { Align } from "@common/positioning/Align";
 import React, { useCallback, useContext, useEffect, useState } from "react";
@@ -82,7 +82,7 @@ export const WidgetDesignerPage = () => {
     setViewName("Widget Designer");
 
     const cls = useStyles();
-    const [widgetPreferences, setWidgetPreferences] = useState<WidgetPreferences>();
+    const [widgetPreferences, setWidgetPreferences] = useState<WidgetPreferencesResource>();
 
     const saveWidgetPreferences = async () => {
         if (widgetPreferences) {

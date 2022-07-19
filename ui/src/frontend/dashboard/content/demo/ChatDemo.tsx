@@ -1,4 +1,4 @@
-import { PreCheckError } from "@Palavyr-Types";
+import { PreCheckErrorResource } from "@Palavyr-Types";
 import React, { useState, useCallback, useEffect } from "react";
 import { Paper, makeStyles } from "@material-ui/core";
 import { IntentsInNeedOfAttention } from "./AreasInNeedOfAttention";
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 export const ChatDemoPage = () => {
     const { repository, setViewName } = useContext(DashboardContext);
     setViewName("Widget Demo");
-    const [preCheckErrors, setPreCheckErrors] = useState<PreCheckError[]>([]);
+    const [preCheckErrors, setPreCheckErrors] = useState<PreCheckErrorResource[]>([]);
     const [apiKey, setApiKey] = useState<string>("");
     const [iframeRefreshed, reloadIframe] = useState<boolean>(false);
 

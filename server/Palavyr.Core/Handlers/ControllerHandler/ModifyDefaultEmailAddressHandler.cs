@@ -8,6 +8,8 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Stores;
@@ -24,6 +26,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private ILogger<ModifyDefaultEmailAddressHandler> logger;
         private readonly IRequestEmailVerification requestEmailVerification;
         private readonly IEntityStore<Account> accountStore;
+        private readonly IMapToNew<EmailVerificationResponse, EmailVerificationResource> emailVerificationResourceMapper;
         private IAmazonSimpleEmailService sesClient;
         private IStripeCustomerService stripeCustomerService;
 
@@ -32,7 +35,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             ILogger<ModifyDefaultEmailAddressHandler> logger,
             IAmazonSimpleEmailService sesClient,
             IRequestEmailVerification requestEmailVerification,
-            IEntityStore<Account> accountStore
+            IEntityStore<Account> accountStore,
+            IMapToNew<EmailVerificationResponse, EmailVerificationResource> emailVerificationResourceMapper
         )
         {
             this.stripeCustomerService = stripeCustomerService;
@@ -40,6 +44,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             this.sesClient = sesClient;
             this.requestEmailVerification = requestEmailVerification;
             this.accountStore = accountStore;
+            this.emailVerificationResourceMapper = emailVerificationResourceMapper;
         }
 
         public async Task<ModifyDefaultEmailAddressResponse> Handle(ModifyDefaultEmailAddressRequest request, CancellationToken cancellationToken)
@@ -115,7 +120,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                         throw new Exception($"Status code undetermined: {status.VerificationStatus.Value}");
                 }
 
-                return new ModifyDefaultEmailAddressResponse(verificationResponse);
+                var resource = await emailVerificationResourceMapper.Map(verificationResponse, cancellationToken);
+                return new ModifyDefaultEmailAddressResponse(resource);
             }
 
             // unseen email address - start fresh.
@@ -127,7 +133,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                     "Could not submit email verification request the email service provider.",
                     "Failed to create Email Verification Request. Please contact info.palavyr@gmail.com"
                 );
-                return new ModifyDefaultEmailAddressResponse(verificationResponse);
+
+                var failedResource = await emailVerificationResourceMapper.Map(verificationResponse, cancellationToken);
+                return new ModifyDefaultEmailAddressResponse(failedResource);
             }
 
             account.EmailAddress = request.EmailAddress;
@@ -137,14 +145,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 Pending,
                 "To complete email verification, go to your inbox and look for an email with the subject line 'Amazon Web Services – Email Address Verification Request' and click the verification link. This link will expire in 24 hours.",
                 "Email Verification Submitted");
-            return new ModifyDefaultEmailAddressResponse(verificationResponse);
+            
+            var pendingResource = await emailVerificationResourceMapper.Map(verificationResponse, cancellationToken);
+            return new ModifyDefaultEmailAddressResponse(pendingResource);
         }
     }
 
     public class ModifyDefaultEmailAddressResponse
     {
-        public ModifyDefaultEmailAddressResponse(EmailVerificationResponse response) => Response = response;
-        public EmailVerificationResponse Response { get; set; }
+        public ModifyDefaultEmailAddressResponse(EmailVerificationResource response) => Response = response;
+        public EmailVerificationResource Response { get; set; }
     }
 
     public class ModifyDefaultEmailAddressRequest : IRequest<ModifyDefaultEmailAddressResponse>

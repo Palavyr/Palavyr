@@ -16,8 +16,8 @@ namespace Palavyr.Core.Resources
         public string NodeComponentType { get; set; }
         public bool IsPricingStrategyTableNode { get; set; }
         public string PricingStrategyType { get; set; }
-        public int? ResolveOrder { get; set; }
-        public int? UnitId { get; set; }
+        public int ResolveOrder { get; set; }
+        public int UnitId { get; set; }
 
         public FileAssetResource? FileAssetResource { get; set; }
         // public string? UnitGroup { get; set; }

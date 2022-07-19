@@ -1,12 +1,12 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { ConvoNode, NodeIdentity } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, NodeIdentity } from "@Palavyr-Types";
 
 export const debugDataItems = (identity: NodeIdentity) => {
     if (isNullOrUndefinedOrWhitespace(identity)) return [];
     return compileObjectData(identity);
 };
 
-export const debugNodeProperties = (node: ConvoNode) => {
+export const debugNodeProperties = (node: ConversationDesignerNodeResource) => {
     if (isNullOrUndefinedOrWhitespace(node)) return [];
     return compileObjectData(node);
 };

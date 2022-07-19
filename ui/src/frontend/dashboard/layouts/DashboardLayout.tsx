@@ -13,7 +13,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewIntentModal } from "./sidebar/AddNewIntentModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetail, AreaNameDetails, Intents, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
+import { AlertType, IntentNameDetail, IntentNameDetails, IntentResources, IntentResource, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { defaultUrlForNewArea, DRAWER_WIDTH, MAIN_CONTENT_DIV_ID, MENU_DRAWER_STATE_COOKIE_NAME, WELCOME_TOUR_COOKIE_NAME } from "@constants";
 
@@ -33,8 +33,8 @@ import { Typography } from "@material-ui/core";
 import { enableBodyScroll } from "body-scroll-lock";
 import $ from "jquery";
 
-const fetchSidebarInfo = (areaData: Intents): AreaNameDetails => {
-    const areaNameDetails = areaData.map((x: AreaTable) => {
+const fetchSidebarInfo = (areaData: IntentResources): IntentNameDetails => {
+    const areaNameDetails = areaData.map((x: IntentResource) => {
         return {
             intentId: x.intentId,
             areaName: x.areaName,
@@ -147,7 +147,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const history = useHistory();
     const { intentId } = useParams<{ contentType: string; intentId: string }>();
 
-    const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
+    const [areaNameDetails, setAreaNameDetails] = useState<IntentNameDetails>([]);
     const [, setLoaded] = useState<boolean>(false);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -203,7 +203,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         setPlanTypeMeta(planTypeMeta);
 
         const areas = await repository.Intent.GetAllIntents();
-        setAreaNameDetails(sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, fetchSidebarInfo(areas)));
+        setAreaNameDetails(sortByPropertyAlphabetical((x: IntentNameDetail) => x.areaName, fetchSidebarInfo(areas)));
 
         const locale = await repository.Settings.Account.GetLocale(true); // readonly == true
         setCurrencySymbol(locale.currentLocale.currencySymbol);
@@ -212,7 +212,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         setUnseenNotifications(numUnseen);
 
         if (intentId) {
-            const currentView = areas.filter((x: AreaTable) => x.intentId === intentId).pop();
+            const currentView = areas.filter((x: IntentResource) => x.intentId === intentId).pop();
 
             if (currentView) {
                 setViewName(currentView.areaName);
@@ -239,7 +239,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         };
     }, [intentId, loadAreas]);
 
-    const setNewArea = (newArea: AreaTable) => {
+    const setNewArea = (newArea: IntentResource) => {
         const newNames = cloneDeep(areaNameDetails);
 
         newNames.push({ areaName: newArea.areaName, intentId: newArea.intentId });

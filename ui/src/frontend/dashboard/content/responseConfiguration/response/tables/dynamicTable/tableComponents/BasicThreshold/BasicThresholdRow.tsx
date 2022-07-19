@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button, Checkbox, FormControlLabel, makeStyles, TableCell, TableRow } from "@material-ui/core";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { BasicThresholdData, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
+import { BasicThresholdResource, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
@@ -45,8 +45,8 @@ const useStyles = makeStyles(theme => ({
 
 interface IBasicThresholdRow {
     rowIndex: number;
-    tableData: BasicThresholdData[];
-    row: BasicThresholdData;
+    tableData: BasicThresholdResource[];
+    row: BasicThresholdResource;
     modifier: BasicThresholdModifier;
     unitGroup: UnitGroups;
     unitPrettyName: UnitPrettyNames;

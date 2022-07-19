@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { ConvoNode, IPalavyrLinkedList, NodeTypeOptions, SetState, TreeErrors } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, IPalavyrLinkedList, NodeTypeOptions, SetState, TreeErrors } from "@Palavyr-Types";
 import { useParams } from "react-router-dom";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { ConversationHistoryTracker } from "./node/ConversationHistoryTracker";
@@ -36,7 +36,7 @@ export const ConversationConfigurationPage = () => {
         loadNodes();
     }, [loadNodes, planTypeMeta]);
 
-    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, intentId: string, nodeList: ConvoNode[]) => {
+    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, intentId: string, nodeList: ConversationDesignerNodeResource[]) => {
         const treeErrors = await repository.Conversations.GetErrors(intentId, nodeList);
         setTreeErrors(treeErrors);
     };

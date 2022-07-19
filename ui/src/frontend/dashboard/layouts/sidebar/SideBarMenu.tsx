@@ -7,11 +7,11 @@ import { ReviewSection } from "./sections/ReviewSection";
 import { AccountSection } from "./sections/AccountSection";
 import { WidgetStateSwitch } from "./WidgetStateSwitch";
 import { OtherSection } from "./sections/OtherSection";
-import { AreaNameDetails } from "@Palavyr-Types";
+import { IntentNameDetails } from "@Palavyr-Types";
 import classNames from "classnames";
 
 export interface ISideBarMenu {
-    areaNameDetails: AreaNameDetails;
+    areaNameDetails: IntentNameDetails;
     menuOpen: boolean;
 }
 
