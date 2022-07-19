@@ -51,7 +51,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class CreateIntentRequest : IRequest<CreateIntentResponse>
     {
         public const string Route = "intents/create";
-
         public string IntentName { get; set; }
     }
     

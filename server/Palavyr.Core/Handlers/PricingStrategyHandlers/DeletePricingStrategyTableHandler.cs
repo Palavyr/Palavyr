@@ -42,10 +42,4 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
         where TR : IPricingStrategyTableRowResource
     {
     }
-
-    public class EmptyResponse : IPricingStrategyTableRowResource
-    {
-        public int? Id { get; set; }
-        public string TableId { get; set; }
-    }
 }

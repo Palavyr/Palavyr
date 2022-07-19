@@ -15,8 +15,8 @@ namespace Palavyr.Core.Stores
         Task<TEntity> Get(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<TEntity> Get(int id);
         
-        Task<TEntity> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
-        Task<TEntity> GetOrNull(int id);
+        Task<TEntity?> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression);
+        Task<TEntity?> GetOrNull(int id);
 
         Task<List<TEntity>> GetMany(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression);
         Task<List<TEntity>> GetMany(string id, Expression<Func<TEntity, string>> propertySelectorExpression);

@@ -52,7 +52,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 
             var rows = await executor.SaveTable(request.IntentId, request.TableId, request.PricingStrategyTableResource.TableTag, tableUpdate);
 
-            var resource = await resourceMapper.MapMany(rows, cancellationToken); // TODO - this should give me a PricingStrategyTableResource<TR>
+            var resource = await resourceMapper.MapMany(rows, cancellationToken);
             return new SavePricingStrategyTableResponse<TR>(new PricingStrategyTableDataResource<TR>(resource.ToList(), request.PricingStrategyTableResource.TableTag, request.PricingStrategyTableResource.IsInUse));
         }
 
@@ -61,17 +61,9 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
             var update = new List<T>();
             foreach (var tableRowResource in tableRowResources.TableRows)
             {
-                if (tableRowResource.Id is null)
-                {
-                    var newEntry = await newEntityMapper.Map(tableRowResource, cancellationToken);
-                    update.Add(newEntry);
-                }
-                else
-                {
-                    var entity = await entityStore.Get((int)tableRowResource.Id);
-                    await mapToExisting.Map(tableRowResource, entity, cancellationToken);
-                    update.Add(entity);
-                }
+                var entity = await entityStore.Get(tableRowResource.Id);
+                await mapToExisting.Map(tableRowResource, entity, cancellationToken);
+                update.Add(entity);
             }
 
             return update;

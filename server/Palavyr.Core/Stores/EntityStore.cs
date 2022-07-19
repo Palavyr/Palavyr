@@ -90,12 +90,13 @@ namespace Palavyr.Core.Stores
 
         public async Task CreateMany(IEnumerable<TEntity> entities)
         {
-            foreach (var entity in entities)
+            var entityList = entities.ToList();
+            foreach (var entity in entityList)
             {
                 AssertAccountIsCorrect(entity);
             }
 
-            await QueryExecutor.AddRangeAsync(entities, CancellationToken);
+            await QueryExecutor.AddRangeAsync(entityList, CancellationToken);
         }
 
         public async Task<TEntity[]> Get(Expression<Func<TEntity, bool>> whereFilterPredicate)
@@ -184,7 +185,9 @@ namespace Palavyr.Core.Stores
 
         public async Task<TEntity> Update(TEntity entity)
         {
-            if (entity.Id is null)
+#pragma warning disable CS0464
+            if (entity.Id == null)
+#pragma warning restore CS0464
             {
                 throw new InvalidOperationException("Cannot update entities that are not referenced by their primary Id key");
             }
@@ -199,7 +202,9 @@ namespace Palavyr.Core.Stores
         {
             await Task.CompletedTask;
             AssertAccountIsCorrect(entity);
-            if (entity.Id is null)
+
+            var shouldCreate = (await QueryExecutor.SingleOrDefaultAsync(x => x.Id == entity.Id, CancellationToken)) is null;
+            if (shouldCreate)
             {
                 var entityEntry = await QueryExecutor.AddAsync(entity, CancellationToken);
                 return entityEntry.Entity;
@@ -214,24 +219,17 @@ namespace Palavyr.Core.Stores
         public async Task<List<TEntity>> CreateOrUpdateMany(IEnumerable<TEntity> entities)
         {
             await Task.CompletedTask;
-            foreach (var entity in entities)
+            var entityList = entities.ToList();
+            foreach (var entity in entityList)
             {
                 AssertAccountIsCorrect(entity);
             }
 
             var toReturn = new List<TEntity>();
-            foreach (var entity in entities)
+            foreach (var entity in entityList)
             {
-                if (entity.Id is null)
-                {
-                    var entityEntry = await QueryExecutor.AddAsync(entity, CancellationToken);
-                    toReturn.Add(entityEntry.Entity);
-                }
-                else
-                {
-                    var entityEntry = QueryExecutor.Update(entity);
-                    toReturn.Add(entityEntry.Entity);
-                }
+                await CreateOrUpdate(entity);
+                toReturn.Add(entity);
             }
 
             return toReturn;
@@ -270,8 +268,9 @@ namespace Palavyr.Core.Stores
         public async Task Delete(IEnumerable<TEntity> entities)
         {
             await Task.CompletedTask;
-            AssertAccountIsCorrect(entities);
-            QueryExecutor.RemoveRange(entities);
+            var entityList = entities.ToList();
+            AssertAccountIsCorrect(entityList);
+            QueryExecutor.RemoveRange(entityList);
         }
 
 
