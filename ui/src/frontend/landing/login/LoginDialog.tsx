@@ -4,7 +4,7 @@ import { FormCard } from "@common/components/borrowed/FormCard";
 import { LoginActions } from "@landing/login/LoginActions";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { CredentialsResource, FormStatusTypes } from "@Palavyr-Types";
+import { FormStatusTypes } from "@Palavyr-Types";
 import { SessionStorage } from "@localStorage/sessionStorage";
 import {
     COULD_NOT_FIND_ACCOUNT,
@@ -21,6 +21,7 @@ import {
 import { FormDialogContent } from "@common/components/borrowed/FormDialogContent";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import { CredentialsResource } from "@common/types/api/ApiContracts";
 
 interface ILoginDialog {
     status: FormStatusTypes;

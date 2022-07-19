@@ -3,11 +3,11 @@ import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { IntentResource } from "@Palavyr-Types";
 import { DialogContent, makeStyles } from "@material-ui/core";
 import { AddOrCancel } from "@common/components/AddOrCancel";
 import { DashboardContext } from "../DashboardContext";
 import { ADD_NEW_AREA_BACKDROP_zINDEX, ADD_NEW_AREA_DIALOG_BOX_zINDEX } from "@constants";
+import { IntentResource } from "@common/types/api/EntityResources";
 
 const useStyles = makeStyles(theme => ({
     dialog: {

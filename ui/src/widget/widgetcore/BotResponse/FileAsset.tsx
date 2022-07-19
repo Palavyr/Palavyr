@@ -2,7 +2,7 @@ import { CircularProgress, makeStyles } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { Align } from "@common/positioning/WidgetAlign";
 import { FileDetails } from "@frontend/dashboard/content/fileAssetReview/FileAssetReview";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 import { ZoomImage } from "@common/components/borrowed/ZoomImage";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";

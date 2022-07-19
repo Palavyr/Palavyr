@@ -1,4 +1,5 @@
-import { ConversationRecordUpdate, WidgetNodeResource, WidgetNodeResources } from "@Palavyr-Types";
+import { WidgetNodeResource, WidgetNodeResources } from "@common/types/api/EntityResources";
+import { ConversationRecordUpdate} from "@Palavyr-Types";
 
 export const MinNumeric: number = 0;
 

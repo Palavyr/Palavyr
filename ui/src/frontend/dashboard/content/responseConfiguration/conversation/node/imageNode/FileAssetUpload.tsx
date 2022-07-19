@@ -32,7 +32,7 @@ export const NodeFileAssetUpload = ({ setFileAsset, currentNode, closeEditor, re
         const result = await repository.Configuration.FileAssets.UploadFileAssets(formData);
         setSuccessText("File Uploaded");
 
-        currentNode.imageId = result[0].fileId;
+        currentNode.fileId = result[0].fileId;
         currentNode.UpdateTree();
         setSuccessOpen(true);
         closeEditor();
@@ -41,12 +41,12 @@ export const NodeFileAssetUpload = ({ setFileAsset, currentNode, closeEditor, re
     const onSelectChange = async (_: any, option: FileAssetResource) => {
         if (setFileAsset) {
             setFileAsset(option);
-            currentNode.imageId = option.fileId;
+            currentNode.fileId = option.fileId;
             currentNode.UpdateTree();
             setSuccessOpen(true);
             closeEditor();
         }
     };
 
-    return <>{currentNode && <UploadOrSelectFromExisting handleFileSave={handleFileSave} onSelectChange={onSelectChange} currentFileAssetId={currentNode.imageId} />}</>;
+    return <>{currentNode && <UploadOrSelectFromExisting handleFileSave={handleFileSave} onSelectChange={onSelectChange} currentFileAssetId={currentNode.fileId} />}</>;
 };

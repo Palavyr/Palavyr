@@ -1,7 +1,7 @@
 import { makeStyles, useTheme } from "@material-ui/core";
-import { PreCheckErrorResource } from "@Palavyr-Types";
 import React, { useEffect, useState } from "react";
 import PalavyrChatWidget from "palavyr-chat-widget";
+import { PreCheckErrorResource } from "@common/types/api/ApiContracts";
 
 const useStyles = makeStyles(theme => ({
     frame: {

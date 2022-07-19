@@ -7,7 +7,8 @@ import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
 import { DisplayTableData } from "../DisplayTableData";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { PricingStrategyHeader } from "../../PricingStrategyHeader";
+import { PricingStrategyHeader } from "../../DynamicTableHeader";
+
 import { cloneDeep } from "lodash";
 
 const useStyles = makeStyles(theme => ({

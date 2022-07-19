@@ -1,7 +1,8 @@
 import React from "react";
-import { PricingStrategy, PricingStrategyProps, PricingStrategyTableTypeResource, QuantUnitDefinition, TableNameMap } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyProps, PricingStrategyTableTypeResource, TableNameMap } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
 import { PricingStrategyComponentMap } from "./PricingStrategyRegistry";
+import { QuantUnitDefinition } from "@common/types/api/ApiContracts";
 
 export const useStyles = makeStyles(theme => ({
     headerCol: {

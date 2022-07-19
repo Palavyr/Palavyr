@@ -5,7 +5,7 @@ import React, { Dispatch, ElementType, SetStateAction } from "react";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { ConversationDesignerNodeResource, ConversationDesignerNodeResources, FileAssetResource, IntentResource, PricingStrategyTableMetaResource, StaticTableMetaResources, TableData, WidgetNodeResource, WidgetNodeResources, WidgetPreferencesResource } from "./api/EntityResources";
 import { NodeTypeOptionResource, NodeTypeOptionResources, QuantUnitDefinition } from "./api/ApiContracts";
-import { NodeTypeCode, PurchaseTypes, UnitGroups, UnitPrettyNames } from "./api/Enums";
+import { NodeTypeCode, NodeTypeCodeEnum, PurchaseTypes, UnitGroups, UnitPrettyNames } from "./api/Enums";
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />
@@ -423,7 +423,7 @@ export type TreeErrors = {
 };
 
 export type IntentNameDetail = {
-    areaName: string;
+    intentName: string;
     intentId: string;
 };
 
@@ -711,12 +711,12 @@ export interface IPalavyrNode {
     nodeComponentType: string;
     resolveOrder: number;
     shouldShowMultiOption: boolean;
-    dynamicType: string | null;
-    imageId: string | null | undefined;
+    pricingStrategyType: string | null;
+    fileId: string | null | undefined;
     nodeTypeOptions: NodeTypeOptionResources;
     shouldDisableNodeTypeSelector: boolean;
     isImageNode: boolean;
-    nodeTypeCode: NodeTypeCode;
+    nodeTypeCodeEnum: NodeTypeCodeEnum;
     repository: PalavyrRepository;
     isLocked: boolean;
 

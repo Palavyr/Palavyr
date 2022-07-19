@@ -2,7 +2,7 @@ import { HeaderStrip } from "@common/components/HeaderStrip";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Divider, makeStyles, Paper } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { Align } from "@common/positioning/Align";
 import { SpaceEvenly } from "@common/positioning/SpaceEvenly";

@@ -8,7 +8,8 @@ import { CategoryNestedThresholdContainer } from "./CategoryNestedThresholdConta
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { PricingStrategyHeader } from "../../PricingStrategyHeader";
+import { PricingStrategyHeader } from "../../DynamicTableHeader";
+
 import { cloneDeep } from "lodash";
 import { useIsMounted } from "@common/hooks/useIsMounted";
 

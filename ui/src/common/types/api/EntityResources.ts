@@ -21,7 +21,7 @@ export type WidgetNodeResource = EntityResource & {
     pricingStrategyType: string;
     resolveOrder: number;
     unitId: string;
-    fileAssetResource?: string;
+    fileAssetResource?: FileAssetResource;
 };
 
 export type IntentResources = IntentResource[];
@@ -74,7 +74,7 @@ export type AttachmentLinkRecordResource = EntityResource & {
 
 export type NewConversationResource = EntityResource & {
     conversationId: string;
-    conversationNodes: WidgetNodeResource;
+    conversationNodes: WidgetNodeResources;
 };
 
 export type FileAssetResource = EntityResource & {
@@ -265,6 +265,6 @@ export type ConversationDesignerNodeResource = EntityResource & {
     nodeComponentType: string;
     resolveOrder: number;
     isCurrency: boolean;
-    nodeChildrenstring: string;
+    nodeChildrenString: string;
     nodeTypeCodeEnum: NodeTypeCodeEnum;
 };

@@ -82,7 +82,7 @@ export const IntentsSection = memo(({ isActive, currentPage, areaNameDetails, me
                                 isActive={isActive}
                                 disabled={index >= planTypeMeta.allowedAreas}
                                 currentPage={currentPage}
-                                areaName={x.areaName}
+                                areaName={x.intentName}
                             />
                         )
                 )}

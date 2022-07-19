@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SelectedOption, WidgetPreferencesResource } from "@Palavyr-Types";
+import { SelectedOption } from "@Palavyr-Types";
 
 import { useHistory, useLocation } from "react-router-dom";
 import { makeStyles, Card, Box } from "@material-ui/core";
@@ -8,6 +8,7 @@ import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { useContext } from "react";
 import { ChoiceList } from "./ChoiceList";
 import classNames from "classnames";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 
 
 const useStyles = makeStyles(() => ({
@@ -91,7 +92,7 @@ export const DropdownListOptions = ({ disabled, options, onChange }: DropdownLis
     const { preferences } = useContext(WidgetContext);
     const cls = useStyles(preferences);
 
-    const sortGetter = (opt: SelectedOption) => opt.IntentDisplay;
+    const sortGetter = (opt: SelectedOption) => opt.intentDisplay;
     const opts = sortByPropertyAlphabetical(sortGetter, options);
     return (
         <Box height="100%" className={cls.container}>

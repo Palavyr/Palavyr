@@ -11,7 +11,6 @@ import {
     ProductIds,
     TableNameMap,
     TreeErrors,
-
 } from "@Palavyr-Types";
 import { ApiErrors } from "frontend/dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "frontend/dashboard/subscriptionFilters/filterConvoNodeTypes";
@@ -21,7 +20,21 @@ import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./cli
 import { Loaders } from "./Loaders";
 import { ApiRoutes } from "./ApiRoutes";
 import { PriceResources, QuantUnitDefinition, ResponseVariable, PreCheckResultResource, NodeTypeOptionResources, EmailVerificationResource } from "@common/types/api/ApiContracts";
-import { IntentResources, IntentResource, PricingStrategyTableMetaResource, TableData, StaticTableMetaResources, StaticTableRowResource, FileAssetResource, ConversationDesignerNodeResource, PricingStrategyTableMetaResources, WidgetPreferencesResource, EnquiryResource, ConversationHistoryRowResources } from "@common/types/api/EntityResources";
+import {
+    IntentResources,
+    IntentResource,
+    PricingStrategyTableMetaResource,
+    TableData,
+    StaticTableMetaResources,
+    StaticTableRowResource,
+    FileAssetResource,
+    ConversationDesignerNodeResource,
+    PricingStrategyTableMetaResources,
+    WidgetPreferencesResource,
+    EnquiryResource,
+    ConversationHistoryRowResources,
+    EnquiryResources,
+} from "@common/types/api/EntityResources";
 
 export class PalavyrRepository extends ApiRoutes {
     private client: AxiosClient;
@@ -214,13 +227,17 @@ export class PalavyrRepository extends ApiRoutes {
         GetConversationNode: async (nodeId: string) => this.client.get<ConversationDesignerNodeResource>(this.Routes.GetConversationNode(nodeId)),
         GetNodeOptionsList: async (intentId: string, planTypeMeta: PlanTypeMeta) =>
             filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptionResources>(this.Routes.GetNodeOptionsList(intentId)), planTypeMeta),
-        GetIntroNodeOptionsList: async (introId: string) => this.client.get<NodeTypeOptionResources>(this.Routes.GetIntroNodeOptionsList(introId)),
+        GetIntroNodeOptionsList: async () => this.client.get<NodeTypeOptionResources>(this.Routes.GetIntroNodeOptionsList()),
 
         GetErrors: async (intentId: string, nodeList: ConversationDesignerNodeResource[]) => this.client.post<TreeErrors, {}>(this.Routes.GetErrors(), { Transactions: nodeList, IntentId: intentId }),
         GetIntroErrors: async (introId: string, nodeList: ConversationDesignerNodeResource[]) => this.client.post<TreeErrors, {}>(this.Routes.GetIntroErrors(), { Transactions: nodeList, IntroId: introId }),
 
         ModifyConversation: async (nodelist: ConversationDesignerNodeResource[], intentId: string) =>
-            this.client.put<ConversationDesignerNodeResource[], {}>(this.Routes.ModifyConversation(), { Transactions: nodelist, IntentId: intentId }, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
+            this.client.put<ConversationDesignerNodeResource[], {}>(
+                this.Routes.ModifyConversation(),
+                { Transactions: nodelist, IntentId: intentId },
+                [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds
+            ),
         ModifyConversationNode: async (nodeId: string, intentId: string, updatedNode: ConversationDesignerNodeResource) =>
             this.client.put<ConversationDesignerNodeResource[], {}>(this.Routes.ModifyConversationNode(nodeId, intentId), updatedNode, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
         ModifyConversationNodeText: async (nodeId: string, intentId: string, updatedNodeText: string) => {
@@ -235,7 +252,8 @@ export class PalavyrRepository extends ApiRoutes {
     public WidgetDemo = {
         RunConversationPrecheck: async () => this.client.get<PreCheckResultResource>(this.Routes.RunConversationPrecheck()),
         GetWidetPreferences: async () => this.client.get<WidgetPreferencesResource>(this.Routes.GetWidetPreferences(), CacheIds.WidgetPrefs),
-        SaveWidgetPreferences: async (prefs: WidgetPreferencesResource) => this.client.put<WidgetPreferencesResource, WidgetPreferencesResource>(this.Routes.SaveWidgetPreferences(), prefs, CacheIds.WidgetPrefs),
+        SaveWidgetPreferences: async (prefs: WidgetPreferencesResource) =>
+            this.client.put<WidgetPreferencesResource, WidgetPreferencesResource>(this.Routes.SaveWidgetPreferences(), prefs, CacheIds.WidgetPrefs),
     };
 
     public Settings = {
@@ -290,7 +308,7 @@ export class PalavyrRepository extends ApiRoutes {
     };
 
     public Enquiries = {
-        GetEnquiries: async () => this.client.get<EnquiryResource>(this.Routes.GetEnquiries()),
+        GetEnquiries: async () => this.client.get<EnquiryResources>(this.Routes.GetEnquiries()),
         GetEnquiryCount: async () => this.client.get<number>(this.Routes.GetEnquiryCount()),
         GetShowSeenEnquiries: async () => this.client.get<boolean>(this.Routes.GetShowSeenEnquiries()),
         ToggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(this.Routes.ToggleShowSeenEnquiries()),
@@ -298,7 +316,8 @@ export class PalavyrRepository extends ApiRoutes {
         UpdateSeen: async (updates: MarkAsSeenUpdate[]) => this.client.put<{}, {}>(this.Routes.UpdateSeen(), { Updates: updates }),
         DeleteSelected: async (conversationIds: string[]) => this.client.put<EnquiryResource, {}>(this.Routes.DeleteSelected(), { ConversationIds: conversationIds }),
 
-        GetConversation: async (conversationId: string) => this.client.get<ConversationHistoryRowResources>(this.Routes.GetConversation(conversationId), [CacheIds.Conversation, conversationId].join("-") as CacheIds),
+        GetConversation: async (conversationId: string) =>
+            this.client.get<ConversationHistoryRowResources>(this.Routes.GetConversation(conversationId), [CacheIds.Conversation, conversationId].join("-") as CacheIds),
 
         GetEnquiryInsights: async () => this.client.get<EnquiryActivtyResource[]>(this.Routes.GetEnquiryInsights()),
 

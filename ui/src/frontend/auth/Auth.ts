@@ -1,8 +1,8 @@
 import { SessionStorage } from "@localStorage/sessionStorage";
 import { LoginRepository } from "@common/client/LoginRepository";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { CredentialsResource } from "@Palavyr-Types";
 import { LogoutRepository } from "@common/client/LogoutRepository";
+import { CredentialsResource } from "@common/types/api/ApiContracts";
 
 class Auth {
     private authenticated: boolean = false;

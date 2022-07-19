@@ -44,7 +44,7 @@ export const transparentize = (value, opacity) => {
 };
 
 const calculateRadarData = (areaDetails: IntentNameDetails, enquiries: EnquiryRowResources) => {
-    const areas = areaDetails.map(x => x.areaName);
+    const areas = areaDetails.map(x => x.intentName);
     const enquiryAreas = enquiries.map(x => x.areaName);
 
     const counts: number[] = [];

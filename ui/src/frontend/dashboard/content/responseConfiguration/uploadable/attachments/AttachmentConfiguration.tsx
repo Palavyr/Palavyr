@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useContext } from "react";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 import { UploadOrSelectFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
 import { cloneDeep } from "lodash";
 

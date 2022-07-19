@@ -17,16 +17,16 @@ export const FileAssetNodeEditor = ({ currentNode, repository, editorIsOpen, clo
     const [fileAsset, setFileAsset] = useState<FileAssetResource | null>(null);
 
     const loadImage = useCallback(async () => {
-        if (currentNode.imageId) {
-            const fileAssets = await repository.Configuration.FileAssets.GetFileAssets([currentNode.imageId]);
+        if (currentNode.fileId) {
+            const fileAssets = await repository.Configuration.FileAssets.GetFileAssets([currentNode.fileId]);
             const fileAsset = fileAssets[0];
             setFileAsset(fileAsset);
         }
-    }, [currentNode.imageId]);
+    }, [currentNode.fileId]);
 
     useEffect(() => {
         loadImage();
-    }, [currentNode.imageId, loadImage]);
+    }, [currentNode.fileId, loadImage]);
 
     return (
         <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>

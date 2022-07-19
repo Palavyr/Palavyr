@@ -1,10 +1,11 @@
 import { PopperProps, Popper, TextField, CircularProgress, makeStyles, Paper, PaperProps } from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
-import { SelectedOption, SetState, WidgetPreferencesResource } from "@Palavyr-Types";
+import { SelectedOption, SetState } from "@Palavyr-Types";
 import classNames from "classnames";
 import React, { useContext, useEffect, useState } from "react";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 
 const useStyles = makeStyles(() => ({
     selectListBgColor: (prefs: WidgetPreferencesResource) => ({
@@ -86,12 +87,12 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (preferences && preferences.selectionLabel) {
+        // if (preferences && preferences.sel) {
             // TODO: make this a preference in the server DBs
-            setLabel(preferences.selectionLabel);
-        } else {
-            setLabel("What can I help you with today?");
-        }
+            // setLabel(preferences.selectionLabel);
+        // } else {
+        //     setLabel("What can I help you with today?");
+        // }
     }, []);
 
     const PaperComponent = ({ children, ...rest }: { children: React.ReactNode } & PaperProps) => {
@@ -121,12 +122,12 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
                         if (setOpen) setOpen(false);
                         setLoading(false);
                     }}
-                    getOptionSelected={(option: SelectedOption, value: SelectedOption) => option.IntentId === value.IntentId}
+                    getOptionSelected={(option: SelectedOption, value: SelectedOption) => option.intentId === value.intentId}
                     onChange={onChange}
                     PopperComponent={PopperComponent}
                     PaperComponent={PaperComponent}
                     options={options}
-                    getOptionLabel={(option: SelectedOption) => option.IntentDisplay}
+                    getOptionLabel={(option: SelectedOption) => option.intentDisplay}
                     renderInput={(params: AutocompleteRenderInputParams) => (
                         <TextField
                             {...params}

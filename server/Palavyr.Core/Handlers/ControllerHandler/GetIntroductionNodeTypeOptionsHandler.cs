@@ -24,7 +24,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetIntroductionNodeTypeOptionsRequest : IRequest<GetIntroductionNodeTypeOptionsResponse>
     {
-        public const string Route = "configure-intro/{introId}/node-type-options";
+        public const string Route = "configure-intro/node-type-options";
 
         public GetIntroductionNodeTypeOptionsRequest(string introId)
         {

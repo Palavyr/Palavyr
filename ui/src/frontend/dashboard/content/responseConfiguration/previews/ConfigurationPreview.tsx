@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 import { CircularProgress, makeStyles, Paper } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { HeaderStrip } from "@common/components/HeaderStrip";

@@ -2,7 +2,7 @@ import { TableRow, TableCell } from "@material-ui/core";
 import React from "react";
 import { LinkButton } from "./LinkButton";
 import AttachmentIcon from "@material-ui/icons/Attachment";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 
 interface IAttachmentTableRow {
     fileName: string;

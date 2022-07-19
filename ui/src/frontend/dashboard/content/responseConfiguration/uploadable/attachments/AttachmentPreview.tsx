@@ -1,6 +1,6 @@
 import React from "react";
 import { Paper, Divider, makeStyles, Theme } from "@material-ui/core";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 
 interface IAttachmentPreview {
     preview: FileAssetResource;

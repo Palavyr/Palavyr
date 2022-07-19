@@ -4,7 +4,7 @@ import { HeaderStrip } from "@common/components/HeaderStrip";
 import { FileAssetUpload } from "./FileAssetUpload";
 import { Align } from "@common/positioning/Align";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 import { FileAssetTables } from "./FileAssetTables";
 import { ZoomImage } from "@common/components/borrowed/ZoomImage";
 

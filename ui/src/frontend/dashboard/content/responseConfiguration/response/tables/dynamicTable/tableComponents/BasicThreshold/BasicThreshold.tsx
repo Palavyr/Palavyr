@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { BasicThresholdResource, PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
@@ -10,9 +10,10 @@ import { Button, makeStyles, Table, AccordionActions } from "@material-ui/core";
 import { DisplayTableData } from "../DisplayTableData";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { PricingStrategyHeader } from "../../PricingStrategyHeader";
 import { cloneDeep } from "lodash";
 import { useIsMounted } from "@common/hooks/useIsMounted";
+import { PricingStrategyHeader } from "../../DynamicTableHeader";
+import { BasicThresholdResource } from "@common/types/api/EntityResources";
 
 const useStyles = makeStyles(theme => ({
     alignLeft: {
@@ -55,7 +56,7 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, intentId, delete
         if (isMounted) {
             setLocalTable(table);
         }
-    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitIdEnum, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         if (isMounted) {

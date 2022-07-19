@@ -38,7 +38,7 @@ export type ResponseVariableResource = {
 export type QuantUnitDefinition = {
     unitGroup: UnitGroups;
     unitPrettyName: UnitPrettyNames;
-    unitId: UnitIdEnum;
+    unitIdEnum: UnitIdEnum;
 };
 
 export type QuantityUnitResource = {

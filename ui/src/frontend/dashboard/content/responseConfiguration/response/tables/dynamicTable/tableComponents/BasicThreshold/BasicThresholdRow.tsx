@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Button, Checkbox, FormControlLabel, makeStyles, TableCell, TableRow } from "@material-ui/core";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { BasicThresholdResource, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
@@ -9,6 +8,8 @@ import { NumberFormatValues } from "react-number-format";
 import { UnitInput } from "../../components/UnitInput";
 import { TableButton } from "../SelectOneFlat/TableButton";
 import { TextInput } from "@common/components/TextField/TextInput";
+import { UnitGroups, UnitPrettyNames } from "@common/types/api/Enums";
+import { BasicThresholdResource } from "@common/types/api/EntityResources";
 
 type StyleProps = {
     isTrue: boolean;

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { ConversationDesignerNodeResource, NodeTypeOptions, SetState, TreeErrors } from "@Palavyr-Types";
+import { SetState, TreeErrors } from "@Palavyr-Types";
 import { useParams } from "react-router-dom";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { ConversationHistoryTracker } from "./node/ConversationHistoryTracker";
@@ -8,11 +8,13 @@ import { useContext } from "react";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { StructuredConvoTree } from "./PalavyrConfiguration";
 import { IPalavyrLinkedList } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource } from "@common/types/api/EntityResources";
+import { NodeTypeOptionResources } from "@common/types/api/ApiContracts";
 
 export const IntroConversationConfigurationPage = () => {
     const { planTypeMeta, repository } = useContext(DashboardContext);
     const { intentId } = useParams<{ intentId: string }>();
-    const [nodeTypeOptions, setNodeTypeOptions] = useState<NodeTypeOptions>([]);
+    const [nodeTypeOptions, setNodeTypeOptions] = useState<NodeTypeOptionResources>([]);
     const [linkedNodeList, setLinkedNodes] = useState<IPalavyrLinkedList>();
     const [historyTracker, setHistoryTracker] = useState<ConversationHistoryTracker | null>(null);
     const [treeErrors, setTreeErrors] = useState<TreeErrors>();

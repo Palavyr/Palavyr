@@ -1,9 +1,9 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
-import { Button, makeStyles, TableBody, TableContainer, Paper, Table } from "@material-ui/core";
+import { Button, makeStyles, TableBody, Table } from "@material-ui/core";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { PercentOfThresholdResource, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
+import { UnitGroups, UnitPrettyNames } from "@common/types/api/Enums";
 import { PercentOfThresholdHeader } from "./PercentOfThresholdHeader";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdRow } from "./PercentOfThresholdRow";
@@ -11,6 +11,7 @@ import { TextInput } from "@common/components/TextField/TextInput";
 import { Align } from "@common/positioning/Align";
 import { ButtonBar } from "../../components/SaveBar";
 import { takeNCharacters } from "@common/utils/textSlicing";
+import { PercentOfThresholdResource } from "@common/types/api/EntityResources";
 
 interface IPercentOfThreshold {
     tableData: PercentOfThresholdResource[];
@@ -74,7 +75,7 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                 />
             </Align>
             <Table>
-                <PercentOfThresholdHeader  />
+                <PercentOfThresholdHeader />
                 <TableBody className={cls.tableStyles}>
                     {sortByPropertyNumeric(getter, itemData).map((row: PercentOfThresholdResource, index: number) => {
                         row.rowOrder = index;

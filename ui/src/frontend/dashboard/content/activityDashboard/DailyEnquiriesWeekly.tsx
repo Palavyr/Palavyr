@@ -1,4 +1,4 @@
-import { IntentNameDetail, IntentNameDetails, EnquiryRowResources, EnquiryRow } from "@Palavyr-Types";
+import { IntentNameDetail, IntentNameDetails } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { widgetStyles } from "../designer/WidgetColorOptions";
@@ -6,6 +6,7 @@ import { Line } from "react-chartjs-2";
 import { DataPlot } from "./components/DataPlot";
 import seedrandom from "seedrandom";
 import { sum } from "lodash";
+import { EnquiryResource, EnquiryResources } from "@common/types/api/EntityResources";
 
 type EnqDataSet = {
     label: string;
@@ -26,7 +27,7 @@ export const getRandomColor = (seed: number | string) => {
     return color;
 };
 
-const calcualateDailEnquiryByDay = (areaDetails: IntentNameDetails, enquiries: EnquiryRowResources) => {
+const calcualateDailEnquiryByDay = (areaDetails: IntentNameDetails, enquiries: EnquiryResources) => {
     // const dates = enquiries.map((x) => {
     //     const date = new Date(Date.parse(x.timeStamp));
     //     date.toLocaleDateString();
@@ -51,8 +52,8 @@ const calcualateDailEnquiryByDay = (areaDetails: IntentNameDetails, enquiries: E
     const enquiryData: EnqDataSet[] = [];
     areaDetails.forEach((detail: IntentNameDetail) => {
         const areaDataResult: number[] = [];
-        const areaName = detail.areaName;
-        const areaEnquiries = enquiries.filter((enq: EnquiryRow) => enq.areaName === areaName);
+        const areaName = detail.intentName;
+        const areaEnquiries = enquiries.filter((enq: EnquiryResource) => enq.intentName === areaName);
         lastSevenDays.forEach(previousDate => {
             const enquiriesOnDateInArea = areaEnquiries.filter(enq => {
                 const timeStampDate = new Date(Date.parse(enq.timeStamp)).toDateString();
@@ -65,7 +66,7 @@ const calcualateDailEnquiryByDay = (areaDetails: IntentNameDetails, enquiries: E
         enquiryData.push({
             label: areaName,
             data: areaDataResult,
-            borderColor: getRandomColor(detail.areaName),
+            borderColor: getRandomColor(detail.intentName),
             fill: false,
             cubicInterpolationMode: "monotone",
             tension: 0.8,

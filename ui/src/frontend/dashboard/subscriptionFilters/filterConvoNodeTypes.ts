@@ -1,6 +1,8 @@
-import { NodeTypeOptions, PlanTypeMeta, PurchaseTypes, NodeTypeOptionResource } from "@Palavyr-Types";
+import { NodeTypeOptionResource, NodeTypeOptionResources } from "@common/types/api/ApiContracts";
+import { PurchaseTypes } from "@common/types/api/Enums";
+import { PlanTypeMeta } from "@Palavyr-Types";
 
-export const filterNodeTypeOptionsOnSubscription = (nodeTypeOptions: NodeTypeOptions, planTypeMeta: PlanTypeMeta) => {
+export const filterNodeTypeOptionsOnSubscription = (nodeTypeOptions: NodeTypeOptionResources, planTypeMeta: PlanTypeMeta) => {
     const excludeFromFree: string[] = ["ShowImage", "ShowFileAsset"];
     const excludeFromLyte: string[] = ["ShowImage", "ShowFileAsset"];
     const excludeFromPremium: string[] = [];

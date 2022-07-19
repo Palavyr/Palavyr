@@ -1,5 +1,5 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 import React, { useCallback, useEffect, useState } from "react";
 import { PalavyrNodeBody } from "../baseNode/PalavyrNodeBody";
 import { FileAssetDisplay } from "./FileAssetDisplay";

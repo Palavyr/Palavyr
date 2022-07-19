@@ -203,7 +203,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         setPlanTypeMeta(planTypeMeta);
 
         const areas = await repository.Intent.GetAllIntents();
-        setAreaNameDetails(sortByPropertyAlphabetical((x: IntentNameDetail) => x.areaName, fetchSidebarInfo(areas)));
+        setAreaNameDetails(sortByPropertyAlphabetical((x: IntentNameDetail) => x.intentName, fetchSidebarInfo(areas)));
 
         const locale = await repository.Settings.Account.GetLocale(true); // readonly == true
         setCurrencySymbol(locale.currentLocale.currencySymbol);
@@ -242,7 +242,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const setNewArea = (newArea: IntentResource) => {
         const newNames = cloneDeep(areaNameDetails);
 
-        newNames.push({ areaName: newArea.areaName, intentId: newArea.intentId });
+        newNames.push({ intentName: newArea.areaName, intentId: newArea.intentId });
         setAreaNameDetails(newNames);
         history.push(defaultUrlForNewArea(newArea.intentId));
     };

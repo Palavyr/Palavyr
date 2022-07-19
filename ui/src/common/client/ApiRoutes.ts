@@ -68,7 +68,7 @@ export class ApiRoutes {
         GetConversation: (intentId: string) => `configure-conversations/${intentId}`,
         GetConversationNode: (nodeId: string) => `configure-conversations/nodes/${nodeId}`,
         GetNodeOptionsList: (intentId: string) => `configure-conversations/${intentId}/node-type-options`,
-        GetIntroNodeOptionsList: (introId: string) => `configure-intro/${introId}/node-type-options`,
+        GetIntroNodeOptionsList: () => `configure-intro/node-type-options`,
         GetErrors: () => `configure-conversations/tree-errors`,
         GetIntroErrors: () => `configure-conversations/intro/tree-errors`,
 

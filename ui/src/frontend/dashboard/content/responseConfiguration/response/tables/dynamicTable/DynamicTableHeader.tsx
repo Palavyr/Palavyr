@@ -1,13 +1,14 @@
 import React, { useContext } from "react";
-import { PricingStrategy, PricingStrategyTableTypeResource, QuantUnitDefinition, SetState, TableNameMap } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyTableTypeResource, SetState } from "@Palavyr-Types";
 import { Box } from "@material-ui/core";
-import { UnitSelector, PricingStrategySelector } from "./PricingStrategySelector";
 import { cloneDeep } from "lodash";
 import { useState } from "react";
 import { useEffect } from "react";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { TextInput } from "@common/components/TextField/TextInput";
 import { useStyles, includesUnit } from "./PricingStrategyTable";
+import { QuantUnitDefinition } from "@common/types/api/ApiContracts";
+import { PricingStrategySelector, UnitSelector } from "./DynamicTableSelector";
 
 export interface PricingStrategyHeaderProps {
     availablePricingStrategyOptions: PricingStrategyTableTypeResource[];
@@ -19,7 +20,7 @@ export interface PricingStrategyHeaderProps {
 }
 
 const unpackUnitMeta = (unitId: number, unitTypes: QuantUnitDefinition[]) => {
-    const quantDef = unitTypes.find(unit => unit.unitId === unitId);
+    const quantDef = unitTypes.find(unit => unit.unitIdEnum === unitId);
     if (!quantDef) throw new Error("Quant Def not found - Something is out of alignment....");
     return quantDef;
 };
@@ -45,9 +46,9 @@ export const PricingStrategyHeader = ({ availablePricingStrategyOptions, unitTyp
         const updatedTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(localTable.tableMeta);
 
         localTable.tableMeta = updatedTableMeta;
-        const quantDef = unpackUnitMeta(updatedTableMeta.unitId, unitTypes);
+        const quantDef = unpackUnitMeta(updatedTableMeta.unitIdEnum, unitTypes);
 
-        localTable.tableMeta.unitId = updatedTableMeta.unitId;
+        localTable.tableMeta.unitIdEnum = updatedTableMeta.unitIdEnum;
         localTable.tableMeta.unitGroup = quantDef.unitGroup;
         localTable.tableMeta.unitPrettyName = quantDef.unitPrettyName;
 
@@ -55,7 +56,7 @@ export const PricingStrategyHeader = ({ availablePricingStrategyOptions, unitTyp
     };
 
     const onUnitSelect = (_: any, value: QuantUnitDefinition) => {
-        localTable.tableMeta.unitId = value.unitId;
+        localTable.tableMeta.unitIdEnum = value.unitIdEnum;
         localTable.tableMeta.unitGroup = value.unitGroup;
         localTable.tableMeta.unitPrettyName = value.unitPrettyName;
         setLocalTable(cloneDeep(localTable));

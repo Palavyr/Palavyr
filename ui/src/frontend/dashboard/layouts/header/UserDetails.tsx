@@ -1,9 +1,8 @@
 import * as React from "react";
-import { Button, IconButton, ListItem, ListItemIcon, makeStyles, Menu, MenuItem, Tooltip } from "@material-ui/core";
+import { IconButton, ListItem, ListItemIcon, makeStyles, Menu, MenuItem, Tooltip } from "@material-ui/core";
 import { SessionStorage } from "@localStorage/sessionStorage";
 import { DashboardContext } from "../DashboardContext";
 import Fade from "@material-ui/core/Fade";
-import { GeneralSettingsLoc, PurchaseTypes } from "@Palavyr-Types";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { TOPBAR_MAX_HEIGHT } from "@constants";
@@ -14,6 +13,7 @@ import FreeBreakfastIcon from "@material-ui/icons/FreeBreakfast";
 import CardMembershipIcon from "@material-ui/icons/CardMembership";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import { webUrl } from "@common/client/clientUtils";
+import { GeneralSettingsLoc, PurchaseTypes } from "@common/types/api/Enums";
 
 const DETAILS_MAX_HEIGHT = TOPBAR_MAX_HEIGHT - 10;
 
