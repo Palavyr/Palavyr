@@ -38,7 +38,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 newNode.ValueOptions,
                 intentStore.AccountId,
                 newNode.NodeComponentType,
-                newNode.NodeTypeCode,
+                newNode.NodeTypeCodeEnum,
                 newNode.IsRoot,
                 newNode.IsCritical,
                 newNode.IsMultiOptionType,

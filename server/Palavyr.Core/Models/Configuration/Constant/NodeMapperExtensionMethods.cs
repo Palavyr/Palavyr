@@ -53,7 +53,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = nodeTypeOptionResource.IsCurrency,
                 IsCritical = isCritical,
                 IsLoopbackAnchorType = loopbackAnchor,
-                NodeTypeCode = nodeTypeOptionResource.NodeTypeCode
+                NodeTypeCodeEnum = nodeTypeOptionResource.NodeTypeCodeEnum
             };
         }
     }

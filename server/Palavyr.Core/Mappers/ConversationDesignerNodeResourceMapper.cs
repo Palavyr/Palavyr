@@ -5,7 +5,7 @@ using Palavyr.Core.Resources;
 
 namespace Palavyr.Core.Mappers
 {
-    public class ConversationNodeResourceMapper : IMapToNew<ConversationNode, ConversationDesignerNodeResource>
+    public class ConversationDesignerNodeResourceMapper : IMapToNew<ConversationNode, ConversationDesignerNodeResource>
     {
         public async Task<ConversationDesignerNodeResource> Map(ConversationNode @from, CancellationToken cancellationToken)
         {
@@ -37,7 +37,7 @@ namespace Palavyr.Core.Mappers
                 IsImageNode = @from.IsImageNode,
                 FileId = @from.FileId,
                 IsLoopbackAnchorType = @from.IsLoopbackAnchorType,
-                NodeTypeCode = @from.NodeTypeCode
+                NodeTypeCodeEnum = @from.NodeTypeCodeEnum
             };
         }
     }

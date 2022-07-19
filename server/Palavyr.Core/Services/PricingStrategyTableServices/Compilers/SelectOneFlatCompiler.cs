@@ -77,7 +77,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                 false,
                 NodeTypeOptionResource.CustomTables,
                 pricingStrategyTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
-                pricingStrategyTableMeta.ValuesAsPaths ? NodeTypeCode.XI : NodeTypeCode.X,
+                pricingStrategyTableMeta.ValuesAsPaths ? NodeTypeCodeEnum.XI : NodeTypeCodeEnum.X,
                 shouldRenderChildren: true,
                 pricingStrategyType: pricingStrategyTableMeta.MakeUniqueIdentifier()
             );

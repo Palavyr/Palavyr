@@ -22,7 +22,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
                 "",
                 accountId,
                 DefaultNodeTypeOptions.ProvideInfo.StringName,
-                NodeTypeCode.II,
+                NodeTypeCodeEnum.II,
                 false,
                 false,
                 false,

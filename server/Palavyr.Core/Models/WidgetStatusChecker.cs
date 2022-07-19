@@ -68,15 +68,15 @@ namespace Palavyr.Core.Models
             logger.LogDebug("Attempting RunConversationsPreCheck...");
 
 
-            var errors = new List<PreCheckError>();
+            var errors = new List<PreCheckErrorResource>();
             var isReady = true;
 
-            var introError = new PreCheckError()
+            var introError = new PreCheckErrorResource()
             {
                 IntentName = introSequenceName
             };
 
-            var generalError = new PreCheckError
+            var generalError = new PreCheckErrorResource
             {
                 IntentName = generalName
             };
@@ -91,7 +91,7 @@ namespace Palavyr.Core.Models
             var numberOfEnabledIntents = 0;
             foreach (var intent in intents)
             {
-                var error = new PreCheckError()
+                var error = new PreCheckErrorResource()
                 {
                     IntentName = intent.IntentName
                 };
@@ -168,7 +168,7 @@ namespace Palavyr.Core.Models
         }
 
 
-        private async Task<bool> AllIntroRequiredIntroNodesArePresent(PreCheckError error)
+        private async Task<bool> AllIntroRequiredIntroNodesArePresent(PreCheckErrorResource errorResource)
         {
             var isReady = true;
             var account = await accountStore.GetAccount();
@@ -178,13 +178,13 @@ namespace Palavyr.Core.Models
             if (!introSequence.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.Selection.StringName))
             {
                 isReady = false;
-                error.Reasons.Add($"Missing {DefaultNodeTypeOptions.CreateSelection().Text}");
+                errorResource.Reasons.Add($"Missing {DefaultNodeTypeOptions.CreateSelection().Text}");
             }
 
             if (!introSequence.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.CollectDetails.StringName))
             {
                 isReady = false;
-                error.Reasons.Add($"Missing {DefaultNodeTypeOptions.CreateCollectDetails().Text}");
+                errorResource.Reasons.Add($"Missing {DefaultNodeTypeOptions.CreateCollectDetails().Text}");
             }
 
             return isReady;
@@ -210,7 +210,7 @@ namespace Palavyr.Core.Models
         //     return ready;
         // }
 
-        private bool AllImageNodesSet(ConversationNode[] nodeList, PreCheckError error)
+        private bool AllImageNodesSet(ConversationNode[] nodeList, PreCheckErrorResource errorResource)
         {
             var imageNodes = nodeList.Where(x => x.IsImageNode);
             var count = 0;
@@ -224,37 +224,37 @@ namespace Palavyr.Core.Models
 
             if (count > 0)
             {
-                error.Reasons.Add($"A total of {count} image nodes do not have images set.");
+                errorResource.Reasons.Add($"A total of {count} image nodes do not have images set.");
                 return false;
             }
 
             return true;
         }
 
-        private bool PricingStrategyNodesAreOrdered(ConversationNode[] nodeList, PreCheckError error)
+        private bool PricingStrategyNodesAreOrdered(ConversationNode[] nodeList, PreCheckErrorResource errorResource)
         {
             var nodeOrderCheckResult = nodeOrderChecker.AllPricingStrategyTypesAreOrderedCorrectlyByResolveOrder(nodeList);
             if (!nodeOrderCheckResult.IsOrdered)
             {
-                error.Reasons.Add("Pricing Strategy Table nodes are not present in the correct order.");
+                errorResource.Reasons.Add("Pricing Strategy Table nodes are not present in the correct order.");
             }
 
             return nodeOrderCheckResult.IsOrdered;
         }
 
-        private bool AllNodesAreSet(ConversationNode[] nodeList, PreCheckError error)
+        private bool AllNodesAreSet(ConversationNode[] nodeList, PreCheckErrorResource errorResource)
         {
             var emptyNodeTypes = nodeList.Select(x => string.IsNullOrEmpty(x.NodeType)).ToArray();
             var result = emptyNodeTypes.All(x => x == false);
             if (!result)
             {
-                error.Reasons.Add("All nodes are not set.");
+                errorResource.Reasons.Add("All nodes are not set.");
             }
 
             return result;
         }
 
-        private bool AllBranchesTerminate(ConversationNode[] nodeList, PreCheckError error)
+        private bool AllBranchesTerminate(ConversationNode[] nodeList, PreCheckErrorResource errorResource)
         {
             var terminalTypes = DefaultNodeTypeOptions
                 .DefaultNodeTypeOptionsList
@@ -274,13 +274,13 @@ namespace Palavyr.Core.Models
             return false;
         }
 
-        private bool AllRequiredNodesSatisfied(ConversationNode[] nodeList, NodeTypeOptionResource[] requiredNodes, PreCheckError error)
+        private bool AllRequiredNodesSatisfied(ConversationNode[] nodeList, NodeTypeOptionResource[] requiredNodes, PreCheckErrorResource errorResource)
         {
             var missingNodes = missingNodeCalculator.FindMissingNodes(nodeList, requiredNodes);
             var result = missingNodes.Length == 0;
             if (!result)
             {
-                error.Reasons.Add($"A total of {missingNodes.Length} Pricing strategy table nodes have not been added.");
+                errorResource.Reasons.Add($"A total of {missingNodes.Length} Pricing strategy table nodes have not been added.");
             }
 
             return result;

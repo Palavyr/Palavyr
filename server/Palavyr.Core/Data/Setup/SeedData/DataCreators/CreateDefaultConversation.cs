@@ -85,7 +85,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     IsPricingStrategyTableNode = true,
                     ShouldRenderChildren = true,
                     NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
-                    NodeTypeCode = NodeTypeCode.III,
+                    NodeTypeCodeEnum = NodeTypeCodeEnum.III,
                     PricingStrategyType = $"SelectOneFlat-{pricingStrategyTableId}"
                 },
                 DefaultNodeTypeOptions.CreateSendResponse().MapNodeTypeOptionToConversationNode(

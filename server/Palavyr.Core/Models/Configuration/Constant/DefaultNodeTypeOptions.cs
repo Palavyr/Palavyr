@@ -114,7 +114,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
-                NodeTypeCode = NodeTypeCode.VII;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.VII;
             }
         }
 
@@ -139,7 +139,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.VIII;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.VIII;
             }
         }
 
@@ -165,7 +165,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.EndWithoutEmail;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.I;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.I;
             }
         }
 
@@ -192,7 +192,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 IsImageNode = true;
-                NodeTypeCode = NodeTypeCode.IX;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.IX;
             }
         }
 
@@ -218,7 +218,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 IsImageNode = true;
-                NodeTypeCode = NodeTypeCode.IX;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.IX;
             }
         }
 
@@ -244,7 +244,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
-                NodeTypeCode = NodeTypeCode.VI;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.VI;
             }
         }
 
@@ -269,7 +269,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.TakeCurrency;
                 IsCurrency = true;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
@@ -294,7 +294,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.TakeNumber;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
@@ -319,7 +319,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.TakeNumber;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
@@ -347,7 +347,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.YesNo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.V;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.V;
             }
         }
 
@@ -373,7 +373,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.YesNoNotSure;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.V;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.V;
             }
         }
 
@@ -398,7 +398,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.YesNotSureCombined;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.V;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.V;
             }
         }
 
@@ -423,7 +423,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.NoNotSureCombined;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.V;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.V;
             }
         }
 
@@ -448,7 +448,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.TakeText;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
@@ -474,7 +474,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.CollectDetails;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
@@ -499,7 +499,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.Selection;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.I;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.I;
             }
         }
 
@@ -524,7 +524,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
@@ -549,7 +549,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
-                NodeTypeCode = NodeTypeCode.IV;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.IV;
             }
         }
 
@@ -574,7 +574,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.MultipleChoiceContinue;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
-                NodeTypeCode = NodeTypeCode.III;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.III;
             }
         }
 
@@ -600,7 +600,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.TooComplicated;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
-                NodeTypeCode = NodeTypeCode.I;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.I;
             }
         }
 
@@ -625,7 +625,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.SendResponse;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
-                NodeTypeCode = NodeTypeCode.I;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.I;
             }
         }
         
@@ -651,7 +651,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 

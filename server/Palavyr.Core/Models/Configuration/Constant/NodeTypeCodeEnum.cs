@@ -1,6 +1,6 @@
 ﻿namespace Palavyr.Core.Models.Configuration.Constant
 {
-    public enum NodeTypeCode
+    public enum NodeTypeCodeEnum
     {
         I = 0, 
         

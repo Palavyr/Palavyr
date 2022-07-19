@@ -141,7 +141,7 @@ namespace Palavyr.Core.Stores
             return await RestrictToCurrentAccount(QueryExecutor).CustomWhere(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
         }
 
-        public async Task<TEntity> GetOrNull(int id)
+        public async Task<TEntity?> GetOrNull(int id)
         {
             return await RestrictToCurrentAccount(QueryExecutor).Where(x => x.Id == id).SingleOrDefaultAsync(CancellationToken);
         }

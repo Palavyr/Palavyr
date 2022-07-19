@@ -18,7 +18,7 @@ namespace Palavyr.Core.Data.Entities
         public string IntentId { get; set; }
         public bool ValuesAsPaths { get; set; } = false; // for tables that specify various options, whether or not to use each option to create a new tree path.
         public bool UseTableTagAsResponseDescription { get; set; } = false;
-        public UnitIds UnitId { get; set; }
+        public UnitIdEnum UnitIdEnum { get; set; }
 
         public static PricingStrategyTableMeta CreateNew(
             string tableTag,
@@ -27,7 +27,7 @@ namespace Palavyr.Core.Data.Entities
             string tableId,
             string intentId,
             string accountId,
-            UnitIds unitId
+            UnitIdEnum unitIdEnum
         )
         {
             return new PricingStrategyTableMeta
@@ -38,7 +38,7 @@ namespace Palavyr.Core.Data.Entities
                 IntentId = intentId,
                 AccountId = accountId,
                 PrettyName = prettyName,
-                UnitId = unitId,
+                UnitIdEnum = unitIdEnum,
                 ValuesAsPaths = false, // for tables that specify various options, whether or not to use each option to create a new tree path.
                 UseTableTagAsResponseDescription = false,
             };
@@ -55,7 +55,7 @@ namespace Palavyr.Core.Data.Entities
                     Guid.NewGuid().ToString(),
                     intentId,
                     accountId,
-                    UnitIds.Currency)
+                    UnitIdEnum.Currency)
             };
         }
 
@@ -75,7 +75,7 @@ namespace Palavyr.Core.Data.Entities
             TableType = metaUpdate.TableType;
             ValuesAsPaths = metaUpdate.ValuesAsPaths;
             PrettyName = metaUpdate.PrettyName;
-            UnitId = unitRetriever.ConvertToUnitId(metaUpdate.UnitId.ToString());
+            UnitIdEnum = unitRetriever.ConvertToUnitId(metaUpdate.UnitIdEnum.ToString());
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var tableResources = tableTypes.Select(
                     x =>
                     {
-                        var unitDefinition = unitRetriever.GetUnitDefinitionById(x.UnitId);
+                        var unitDefinition = unitRetriever.GetUnitDefinitionById(x.UnitIdEnum);
                         return new PricingStrategyTableMetaResource
                         {
                             Id = x.Id,
@@ -48,7 +48,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                             PrettyName = x.PrettyName,
                             UnitPrettyName = unitDefinition.UnitPrettyName,
                             UnitGroup = unitDefinition.UnitGroup,
-                            UnitId = unitDefinition.UnitId
+                            UnitIdEnum = unitDefinition.UnitIdEnum
                         };
                     })
                 .ToArray();

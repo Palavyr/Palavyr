@@ -57,7 +57,7 @@ namespace Palavyr.Core.Mappers
             };
         }
 
-        private async Task<UnitIds?> AttachUnitIdOrNull(ConversationNode @from)
+        private async Task<UnitIdEnum?> AttachUnitIdOrNull(ConversationNode @from)
         {
             if (@from.IsPricingStrategyTableNode)
             {
@@ -65,7 +65,7 @@ namespace Palavyr.Core.Mappers
                 var tableId = guidFinder.FindFirstGuidSuffixOrNull(@from.PricingStrategyType);
 
                 var pricingStrategyMeta = await pricingStrategyTableMetaStore.Get(tableId, s => s.TableId);
-                var unitId = pricingStrategyMeta.UnitId;
+                var unitId = pricingStrategyMeta.UnitIdEnum;
                 return unitId;
             }
 

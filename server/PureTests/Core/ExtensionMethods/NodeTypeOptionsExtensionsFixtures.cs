@@ -18,7 +18,7 @@ namespace Pure.Core.ExtensionMethods
         {
             var newNode = NodeTypeOptionResource.Create(
                 "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOptionResource.MultipleChoice,
-                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.IV);
+                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCodeEnum.IV);
             NodeList.AddAdditionalNode(newNode);
             NodeList.ShouldContain(newNode);
             NodeList.Count.ShouldBe(3);
@@ -29,10 +29,10 @@ namespace Pure.Core.ExtensionMethods
         {
             var node1 = NodeTypeOptionResource.Create(
                 "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOptionResource.MultipleChoice,
-                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III);
+                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCodeEnum.III);
             var node2 = NodeTypeOptionResource.Create(
                 "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOptionResource.MultipleChoice,
-                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III);
+                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCodeEnum.III);
 
             var newNodes = new List<NodeTypeOptionResource>()
             {
@@ -52,10 +52,10 @@ namespace Pure.Core.ExtensionMethods
             {
                 NodeTypeOptionResource.Create(
                     "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOptionResource.MultipleChoice,
-                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III),
+                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCodeEnum.III),
                 NodeTypeOptionResource.Create(
                     "three", "four", new List<string>(), new List<string>(), true, true, true, NodeTypeOptionResource.MultipleChoice,
-                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III)
+                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCodeEnum.III)
             };
             return Task.CompletedTask;
         }

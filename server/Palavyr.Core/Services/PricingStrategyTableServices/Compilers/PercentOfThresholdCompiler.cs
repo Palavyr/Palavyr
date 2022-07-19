@@ -59,7 +59,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                     false,
                     NodeTypeOptionResource.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber, // this is for the tree, so okay, but it should be what the pricing strategy table item type is. We don't have access to that here, so we just say its a number.
-                    NodeTypeCode.II,
+                    NodeTypeCodeEnum.II,
                     pricingStrategyType: pricingStrategyTableMeta.MakeUniqueIdentifier(),
                     shouldRenderChildren: true
                 ));

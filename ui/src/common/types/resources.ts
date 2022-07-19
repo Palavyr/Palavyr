@@ -54,7 +54,7 @@ export type NewConversationResource = {
     }
 
 
-    export type PreCheckResult = {
+    export type PreCheckResultResource = {
     isReady: Boolean
     preCheckErrors: PreCheckError
     apiKeyExists: Boolean
@@ -159,7 +159,7 @@ export type NewConversationResource = {
     itemName: String
     rowOrder: Int32
     triggerFallback: Boolean
-    id: Int32[]
+    id: Int32
     tableId: String
     }
 
@@ -170,12 +170,12 @@ export type NewConversationResource = {
     tableType: String
     tableId: String
     intentId: String
-    valuesAsPaths: Boolean
     prettyName: String
     unitPrettyName: String
     unitGroup: String
     unitId: UnitIds
     accountId: String
+    valuesAsPaths: Boolean
     }
 
 
@@ -192,7 +192,7 @@ export type NewConversationResource = {
     itemName: String
     threshold: Double
     triggerFallback: Boolean
-    id: Int32[]
+    id: Int32
     tableId: String
     }
 
@@ -212,7 +212,7 @@ export type NewConversationResource = {
     itemOrder: Int32
     itemId: String
     itemName: String
-    id: Int32[]
+    id: Int32
     tableId: String
     }
 
@@ -225,7 +225,7 @@ export type NewConversationResource = {
     valueMax: Double
     range: Boolean
     rowOrder: Int32
-    id: Int32[]
+    id: Int32
     tableId: String
     }
 
@@ -242,7 +242,7 @@ export type NewConversationResource = {
     itemOrder: Int32
     itemName: String
     innerItemName: String
-    id: Int32[]
+    id: Int32
     tableId: String
     }
 
@@ -255,20 +255,6 @@ export type NewConversationResource = {
     isReadOnly: Boolean
     isFixedSize: Boolean
     isSynchronized: Boolean
-    }
-
-
-    export type PricingStrategyTableMeta = {
-    tableTag: String
-    prettyName: String
-    tableType: String
-    tableId: String
-    accountId: String
-    intentId: String
-    valuesAsPaths: Boolean
-    useTableTagAsResponseDescription: Boolean
-    unitId: UnitIds
-    id: Int32
     }
 
 
@@ -381,7 +367,7 @@ export type NewConversationResource = {
     }
 
 
-    export type Credentials = {
+    export type CredentialsResource = {
     apiKey: String
     sessionId: String
     authenticated: Boolean
@@ -391,26 +377,26 @@ export type NewConversationResource = {
     }
 
 
-    export type ResetResponse = {
+    export type PasswordResetRequestResource = {
     message: String
     status: Boolean
     }
 
 
-    export type ResetPasswordResponse = {
+    export type ResetPasswordResource = {
     message: String
     status: Boolean
     }
 
 
-    export type VerificationResponse = {
+    export type PasswordVerificationResource = {
     message: String
     status: Boolean
     apiKey: String
     }
 
 
-    export type Price = {
+    export type PriceResource = {
     id: String
     object: String
     active: Boolean
@@ -442,7 +428,7 @@ export type NewConversationResource = {
     }
 
 
-    export type PlanTypeMetaBase = {
+    export type PlanTypeMetaResource = {
     allowedAttachments: Int32
     allowedStaticTables: Int32
     allowedPricingStrategyTables: Int32
@@ -473,4 +459,22 @@ export type NewConversationResource = {
     phoneNumber: String
     locale: String
     }
+
+
+    export type ConversationDesignerNodeResource[] = {
+    length: Int32
+    longLength: Int64
+    rank: Int32
+    syncRoot: Object
+    isReadOnly: Boolean
+    isFixedSize: Boolean
+    isSynchronized: Boolean
+    }
+
+
+    export type LocaleResource = {
+    currentLocale: LocaleResource
+    localeMap: LocaleResource[]
+    }
+
 

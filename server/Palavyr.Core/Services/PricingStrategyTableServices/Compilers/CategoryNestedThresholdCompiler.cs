@@ -95,7 +95,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                     false,
                     NodeTypeOptionResource.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
-                    NodeTypeCode.X,
+                    NodeTypeCodeEnum.X,
                     resolveOrder: 0,
                     isMultiOptionEditable: false,
                     pricingStrategyType: widgetResponseKey
@@ -115,7 +115,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                     false,
                     NodeTypeOptionResource.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
-                    NodeTypeCode.III,
+                    NodeTypeCodeEnum.III,
                     resolveOrder: 1,
                     isMultiOptionEditable: false,
                     pricingStrategyType: widgetResponseKey // check in widget component perhaps if this is PricingStrategy, and threshold type... then we can do a check against the server... bleh this is so gross. But there is no other way right now.

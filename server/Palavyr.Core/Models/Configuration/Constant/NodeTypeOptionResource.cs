@@ -22,7 +22,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         /*
          * The string form name of the node type. Derived from either 'nameof(T)' or extension method: pricingStrategyTableMeta.MakeUniqueIdentifier()
          */
-        public NodeTypeCode NodeTypeCode { get; set; }
+        public NodeTypeCodeEnum NodeTypeCodeEnum { get; set; }
 
         /*
          * The string form name of the node type. Derived from either 'nameof(T)' or extension method: pricingStrategyTableMeta.MakeUniqueIdentifier()
@@ -140,7 +140,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool isTerminalType,
             string groupName,
             string nodeComponentType,
-            NodeTypeCode nodeTypeCode,
+            NodeTypeCodeEnum nodeTypeCodeEnum,
             bool isMultiOptionEditable = true,
             bool isCurrency = false,
             bool isAnabranchType = false,
@@ -174,7 +174,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ResolveOrder = resolveOrder,
                 PricingStrategyType = pricingStrategyType,
                 IsLoopbackAnchor = loopbackAnchor,
-                NodeTypeCode = nodeTypeCode
+                NodeTypeCodeEnum = nodeTypeCodeEnum
             };
         }
     }

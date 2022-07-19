@@ -9,12 +9,12 @@ namespace Palavyr.Core.Services.Units
     public interface IUnitRetriever
     {
         List<string> GetUnitTypes();
-        List<UnitIds> GetUnitIds();
+        List<UnitIdEnum> GetUnitIds();
         List<QuantityUnitResource> GetUnitDefinitions();
 
         List<QuantityUnitResource> GetUnitDefinitionsByType(string type);
-        QuantityUnitResource GetUnitDefinitionById(UnitIds id);
-        public UnitIds ConvertToUnitId(string id);
+        QuantityUnitResource GetUnitDefinitionById(UnitIdEnum idEnum);
+        public UnitIdEnum ConvertToUnitId(string id);
     }
 
     public class UnitRetriever : IUnitRetriever
@@ -32,9 +32,9 @@ namespace Palavyr.Core.Services.Units
             return unitTypes;
         }
 
-        public List<UnitIds> GetUnitIds()
+        public List<UnitIdEnum> GetUnitIds()
         {
-            var unitIds = units.UnitDefinitions.Select(x => x.UnitId).ToList();
+            var unitIds = units.UnitDefinitions.Select(x => x.UnitIdEnum).ToList();
             return unitIds;
         }
 
@@ -55,21 +55,21 @@ namespace Palavyr.Core.Services.Units
             return definitions;
         }
 
-        public QuantityUnitResource GetUnitDefinitionById(UnitIds id)
+        public QuantityUnitResource GetUnitDefinitionById(UnitIdEnum idEnum)
         {
-            if (!Enum.IsDefined(typeof(UnitIds), id))
+            if (!Enum.IsDefined(typeof(UnitIdEnum), idEnum))
             {
                 throw new DomainException("The unit Id provided is not supported");
             }
 
-            var definition = units.UnitDefinitions.Single(x => x.UnitId == id);
+            var definition = units.UnitDefinitions.Single(x => x.UnitIdEnum == idEnum);
             return definition;
         }
 
 
-        public UnitIds ConvertToUnitId(string id)
+        public UnitIdEnum ConvertToUnitId(string id)
         {
-            if (UnitIds.TryParse(id, out UnitIds unit))
+            if (UnitIdEnum.TryParse(id, out UnitIdEnum unit))
             {
                 return unit;
             }

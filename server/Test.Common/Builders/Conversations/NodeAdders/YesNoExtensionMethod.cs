@@ -26,7 +26,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
                 TreeUtils.JoinValueOptionsOnDelimiter(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
                 accountId,
                 DefaultNodeTypeOptions.YesNo.StringName,
-                NodeTypeCode.V,
+                NodeTypeCodeEnum.V,
                 false,
                 false,
                 true,

@@ -61,7 +61,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 tableId,
                 request.IntentId,
                 accountIdTransport.AccountId,
-                UnitIds.Currency);
+                UnitIdEnum.Currency);
 
             pricingStrategyTables.Add(newTableMeta);
             intent.PricingStrategyTableMetas = pricingStrategyTables;

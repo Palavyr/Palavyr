@@ -18,7 +18,7 @@ namespace Palavyr.Core.Mappers
                 IntentId = @from.IntentId,
                 AccountId = @from.AccountId,
                 PrettyName = @from.PrettyName,
-                UnitId = @from.UnitId
+                UnitIdEnum = @from.UnitIdEnum
             };
         }
     }

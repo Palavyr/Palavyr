@@ -21,7 +21,7 @@ namespace Palavyr.Core.Mappers
                 TableOrder = @from.TableOrder,
                 Description = @from.Description,
                 IntentId = @from.IntentId,
-                StaticTableRows = tableRows,
+                StaticTableRowResources = tableRows,
                 AccountId = @from.AccountId,
                 PerPersonInputRequired = @from.PerPersonInputRequired,
                 IncludeTotals = @from.IncludeTotals

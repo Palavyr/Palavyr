@@ -34,7 +34,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     tableId,
                     intentId,
                     accountId,
-                    UnitIds.Currency),
+                    UnitIdEnum.Currency),
             };
             return pricingStrategyTableMeta;
         }

@@ -57,7 +57,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                 false,
                 NodeTypeOptionResource.CustomTables,
                 DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
-                NodeTypeCode.II,
+                NodeTypeCodeEnum.II,
                 resolveOrder: 0,
                 pricingStrategyType: pricingStrategyTableMeta.MakeUniqueIdentifier()
             );

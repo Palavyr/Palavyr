@@ -13,7 +13,7 @@ namespace Palavyr.Core.Resources
         public string PrettyName { get; set; }
         public string UnitPrettyName { get; set; }
         public string UnitGroup { get; set; }
-        public UnitIds UnitId { get; set; }
+        public UnitIdEnum UnitIdEnum { get; set; }
         public string AccountId { get; set; }
         public bool ValuesAsPaths { get; set; }
     }

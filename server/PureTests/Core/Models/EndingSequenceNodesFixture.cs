@@ -22,7 +22,7 @@ namespace Pure.Core.Models
 
             // assert
             node.NodeChildrenString.ShouldBe(TreeUtils.CreateNodeChildrenString("id-1", "id-2", "id-3"));
-            node.NodeTypeCode.ShouldBe(NodeTypeCode.V);
+            node.NodeTypeCodeEnum.ShouldBe(NodeTypeCodeEnum.V);
             node.NodeType.ShouldBe(DefaultNodeTypeOptions.YesNo.StringName);
             node.IsRoot.ShouldBeFalse();
             node.IsCritical.ShouldBeFalse();

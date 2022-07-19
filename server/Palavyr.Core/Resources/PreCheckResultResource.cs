@@ -2,7 +2,7 @@
 
 namespace Palavyr.Core.Resources
 {
-    public class PreCheckError
+    public class PreCheckErrorResource
     {
         public string IntentName { get; set; }
         public List<string> Reasons { get; } = new List<string>();
@@ -11,10 +11,10 @@ namespace Palavyr.Core.Resources
     public class PreCheckResultResource
     {
         public bool IsReady { get; set; }
-        public List<PreCheckError> PreCheckErrors { get; set; }
+        public List<PreCheckErrorResource> PreCheckErrors { get; set; }
         public bool ApiKeyExists { get; set; }
 
-        private PreCheckResultResource(bool isReady, List<PreCheckError> errors)
+        private PreCheckResultResource(bool isReady, List<PreCheckErrorResource> errors)
         {
             IsReady = isReady;
             PreCheckErrors = errors;
@@ -25,7 +25,7 @@ namespace Palavyr.Core.Resources
             ApiKeyExists = apiKeyExists;
         }
 
-        public static PreCheckResultResource CreateConvoResult(bool isReady, List<PreCheckError> errors)
+        public static PreCheckResultResource CreateConvoResult(bool isReady, List<PreCheckErrorResource> errors)
         {
             return new PreCheckResultResource(isReady, errors);
         }

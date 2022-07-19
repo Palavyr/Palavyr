@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Resources
 {
@@ -11,20 +10,20 @@ namespace Palavyr.Core.Resources
         public string Epilogue { get; set; }
         public string EmailTemplate { get; set; }
         public bool IsEnabled { get; set; }
-        public List<StaticTablesMeta> StaticTablesMetas { get; set; } = new List<StaticTablesMeta>();
-        public List<ConversationNode> ConversationNodes { get; set; } = new List<ConversationNode>();
-        public List<PricingStrategyTableMeta> PricingStrategyTableMetas { get; set; } = new List<PricingStrategyTableMeta>();
+        public List<StaticTablesMetaResource> StaticTablesMetaResources { get; set; } = new List<StaticTablesMetaResource>();
+        public List<ConversationDesignerNodeResource> ConversationNodeResources { get; set; } = new List<ConversationDesignerNodeResource>();
+        public List<PricingStrategyTableMetaResource> PricingStrategyTableMetaResources { get; set; } = new List<PricingStrategyTableMetaResource>();
         public string IntentSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
-        public List<AttachmentLinkRecord> AttachmentRecords { get; set; }
+        public List<AttachmentLinkRecordResource> AttachmentRecordResources { get; set; }
 
         public bool UseIntentFallbackEmail { get; set; }
-        public string FallbackSubject { get; set; } = null!;
-        public string FallbackEmailTemplate { get; set; } = null!;
+        public string FallbackSubject { get; set; }
+        public string FallbackEmailTemplate { get; set; }
         public bool SendAttachmentsOnFallback { get; set; }
         public bool SendPdfResponse { get; set; } = true;
         public bool IncludePricingStrategyTableTotals { get; set; }
 
-        public string Subject { get; set; } = null!;
+        public string Subject { get; set; }
     }
 }

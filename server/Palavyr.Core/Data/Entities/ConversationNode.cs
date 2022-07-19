@@ -34,7 +34,7 @@ namespace Palavyr.Core.Data.Entities
         public int ResolveOrder { get; set; }
         public bool IsCurrency { get; set; }
         public string NodeChildrenString { get; set; } = ""; // stored as comma delimited list as string
-        public NodeTypeCode NodeTypeCode { get; set; }
+        public NodeTypeCodeEnum NodeTypeCodeEnum { get; set; }
 
         public ConversationNode()
         {
@@ -84,7 +84,7 @@ namespace Palavyr.Core.Data.Entities
                     IsLoopbackAnchorType = false,
                     NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.ProvideInfo,
                     ResolveOrder = 0,
-                    NodeTypeCode = NodeTypeCode.II
+                    NodeTypeCodeEnum = NodeTypeCodeEnum.II
                 }
             };
         }
@@ -104,7 +104,7 @@ namespace Palavyr.Core.Data.Entities
             string valueOptions,
             string accountId,
             string nodeComponentType,
-            NodeTypeCode nodeTypeCode,
+            NodeTypeCodeEnum nodeTypeCodeEnum,
             bool isRoot = false,
             bool isCritical = true,
             bool isMultiOptionType = false,
@@ -150,7 +150,7 @@ namespace Palavyr.Core.Data.Entities
                 IsImageNode = isImageNode,
                 FileId = imageId,
                 IsLoopbackAnchorType = isLoopbackAnchor,
-                NodeTypeCode = nodeTypeCode
+                NodeTypeCodeEnum = nodeTypeCodeEnum
             };
         }
     }
