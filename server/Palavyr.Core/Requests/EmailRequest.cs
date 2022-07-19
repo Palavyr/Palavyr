@@ -12,6 +12,6 @@ namespace Palavyr.Core.Requests
         public int NumIndividuals { get; set; }
 
         public List<Dictionary<string, string>> KeyValues { get; set; } = new List<Dictionary<string, string>>();
-        public DynamicResponses DynamicResponses { get; set; } = new DynamicResponses();
+        public PricingStrategyResponses PricingStrategyResponses { get; set; } = new PricingStrategyResponses();
     }
 }

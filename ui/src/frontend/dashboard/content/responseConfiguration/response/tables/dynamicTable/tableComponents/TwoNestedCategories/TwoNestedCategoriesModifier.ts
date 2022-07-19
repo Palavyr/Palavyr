@@ -3,7 +3,7 @@ import { cloneDeep, findIndex, groupBy, max, uniq } from "lodash";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { TableGroup } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
-import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 
 export class TwoNestedCategoriesModifier implements Modifier {
     onClick: SetState<TableData>;
@@ -11,7 +11,7 @@ export class TwoNestedCategoriesModifier implements Modifier {
 
     constructor(onClick: SetState<TableData>) {
         this.onClick = onClick;
-        this.tableType = DynamicTableTypes.TwoNestedCategory;
+        this.tableType = PricingStrategyTypes.TwoNestedCategory;
     }
     setTables(newState: TwoNestedCategoryData[]) {
         this.onClick(cloneDeep(newState));
@@ -27,7 +27,7 @@ export class TwoNestedCategoriesModifier implements Modifier {
     }
 
     async addOuterCategory(tableData: TwoNestedCategoryData[], repository: PalavyrRepository, intentId: string, tableId: string) {
-        const template = await repository.Configuration.Tables.Dynamic.GetDynamicTableDataTemplate<TwoNestedCategoryData>(intentId, this.tableType, tableId);
+        const template = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<TwoNestedCategoryData>(intentId, this.tableType, tableId);
 
         // get all current inner categories from the first category and assign them to the new one
         const outerCategoryGroups = this.groupByOuterCategory(tableData); // use this groupby method in the modifier.
@@ -49,7 +49,7 @@ export class TwoNestedCategoriesModifier implements Modifier {
     }
 
     async addInnerCategory(tableData: TwoNestedCategoryData[], repository: PalavyrRepository, intentId: string, tableId: string) {
-        const template = (await repository.Configuration.Tables.Dynamic.GetDynamicTableDataTemplate(intentId, this.tableType, tableId)) as TwoNestedCategoryData;
+        const template = (await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate(intentId, this.tableType, tableId)) as TwoNestedCategoryData;
 
         // need to copy across all outer categories...
         const outerCategoryGroups = this.groupByOuterCategory(tableData); // use this groupby method in the modifier.

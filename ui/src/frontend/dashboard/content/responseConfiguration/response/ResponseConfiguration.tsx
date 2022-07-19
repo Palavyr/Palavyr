@@ -4,7 +4,7 @@ import { StaticTablesModifier } from "./tables/statictable/staticTableModifier";
 import { LogueModifier } from "./logueModifier";
 import { cloneDeep } from "lodash";
 import { ExpandableTextBox } from "@common/components/ExpandableTextBox";
-import { DynamicTableConfiguration } from "./tables/dynamicTable/DynamicTableConfiguration";
+import { PricingStrategyConfiguration } from "./tables/PricingStrategy/PricingStrategyConfiguration";
 import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
@@ -147,14 +147,14 @@ export const ResponseConfiguration = () => {
                     />
                 </ExpandableTextBox>
 
-                <DynamicTableConfiguration title="Pricing Strategies" intentId={intentId}>
+                <PricingStrategyConfiguration title="Pricing Strategies" intentId={intentId}>
                     <HeaderStrip
                         divider
                         light
                         title="Configure a pricing strategy"
                         subtitle="Pricing strategies are fee tables that require input from the customer to determine the fee. By selecting one, you are telling Palavyr.com that you will be including a node in the conversation that will ask the customer for their input."
                     />
-                </DynamicTableConfiguration>
+                </PricingStrategyConfiguration>
 
                 <StaticTableConfiguration intentId={intentId} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} tableCanceler={tableCanceler} modifier={staticTablesModifier}>
                     <HeaderStrip

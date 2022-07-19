@@ -97,7 +97,7 @@ import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptio
 //     shouldPresentResponse: boolean; // isCritical
 //     nodeType: string; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
 //     isMultiOptionType: boolean;
-//     isDynamicTableNode: boolean;
+//     isPricingStrategyNode: boolean;
 //     nodeComponentType: string;
 //     resolveOrder: number;
 //     shouldShowMultiOption: boolean;

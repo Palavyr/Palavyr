@@ -4,11 +4,11 @@ namespace Palavyr.Core.Models.Configuration.Constant
 {
     public static class PricingStrategyResponsePartJoiner
     {
-        public static DynamicResponseParts CreateDynamicResponseParts(string nodeId, string responseValue)
+        public static PricingStrategyResponseParts CreatePricingStrategyResponseParts(string nodeId, string responseValue)
         {
-            return new DynamicResponseParts
+            return new PricingStrategyResponseParts
             {
-                new DynamicResponsePart() { { nodeId, responseValue } }
+                new PricingStrategyResponsePart() { { nodeId, responseValue } }
             };
         }
     }

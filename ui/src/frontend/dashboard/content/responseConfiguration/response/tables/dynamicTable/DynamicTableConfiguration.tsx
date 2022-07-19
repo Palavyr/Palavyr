@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, Suspense, useContext } from "react";
-import { DynamicTable, PricingStrategyTableTypeResource, QuantUnitDefinition, TableData, TableNameMap } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyTableTypeResource, QuantUnitDefinition, TableData, TableNameMap } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Button, FormControlLabel, Checkbox } from "@material-ui/core";
 import { PricingStrategyTable } from "./PricingStrategyTable";
@@ -11,14 +11,14 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import Fade from "react-reveal/Fade";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
-export interface IDynamicTable {
+export interface IPricingStrategy {
     title: string;
     intentId: string;
     children: React.ReactNode;
     initialState?: boolean;
 }
 
-export const DynamicTableConfiguration = ({ title, intentId, children, initialState }: IDynamicTable) => {
+export const PricingStrategyConfiguration = ({ title, intentId, children, initialState }: IPricingStrategy) => {
     const { repository, planTypeMeta, setSuccessOpen } = useContext(DashboardContext);
 
     const [showDebug, setShowDebug] = useState<boolean>(false);
@@ -28,23 +28,23 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
     const [unitTypes, setUnitTypes] = useState<QuantUnitDefinition[]>([]);
     const [inUse, setInUse] = useState<boolean>(false);
 
-    const [tables, setTables] = useState<DynamicTable[]>([]);
+    const [tables, setTables] = useState<PricingStrategy[]>([]);
 
     const loadTableData = useCallback(async () => {
-        const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.GetDynamicTableMetas(intentId);
+        const PricingStrategyMetas = await repository.Configuration.Tables.Dynamic.GetPricingStrategyMetas(intentId);
         const showTotals = await repository.Intent.GetShowDynamicTotals(intentId);
 
         // show fee totals totals row
         setShowTotals(showTotals);
 
         // TODO - seend array of all table metas and retrive in a single request.
-        let tables: DynamicTable[] = [];
+        let tables: PricingStrategy[] = [];
         let counter: number = 0;
-        dynamicTableMetas.forEach(async tableMeta => {
-            const { tableRows, isInUse } = await repository.Configuration.Tables.Dynamic.GetDynamicTableRows(intentId, tableMeta.tableType, tableMeta.tableId);
+        PricingStrategyMetas.forEach(async tableMeta => {
+            const { tableRows, isInUse } = await repository.Configuration.Tables.Dynamic.GetPricingStrategyRows(intentId, tableMeta.tableType, tableMeta.tableId);
             tables.push({ tableMeta, tableRows: tableRows as TableData });
             counter++;
-            if (counter === dynamicTableMetas.length) {
+            if (counter === PricingStrategyMetas.length) {
                 setTables(tables);
 
                 // enable / disable the selector depending on if the current pricing strategy has been included in the conversation nodes
@@ -57,7 +57,7 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
 
     useEffect(() => {
         (async () => {
-            const tableNameMap = await repository.Configuration.Tables.Dynamic.GetDynamicTableTypes();
+            const tableNameMap = await repository.Configuration.Tables.Dynamic.GetPricingStrategyTypes();
             const quantTypes = await repository.Configuration.Units.GetSupportedUnitIds();
 
             // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
@@ -69,18 +69,18 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
         })();
     }, []);
 
-    const addDynamicTable = async () => {
+    const addPricingStrategy = async () => {
         // We always add the default dynamic table - the Select One Flat table
-        const newMeta = await repository.Configuration.Tables.Dynamic.CreateDynamicTable(intentId);
-        const { tableRows } = await repository.Configuration.Tables.Dynamic.GetDynamicTableRows(intentId, newMeta.tableType, newMeta.tableId);
+        const newMeta = await repository.Configuration.Tables.Dynamic.CreatePricingStrategy(intentId);
+        const { tableRows } = await repository.Configuration.Tables.Dynamic.GetPricingStrategyRows(intentId, newMeta.tableType, newMeta.tableId);
 
-        const tableNameMap = await repository.Configuration.Tables.Dynamic.GetDynamicTableTypes();
+        const tableNameMap = await repository.Configuration.Tables.Dynamic.GetPricingStrategyTypes();
         const availableTables = tableNameMap;
         setAvailableTables(availableTables);
         // map of pricing trategy pretty names
         setTableNameMap(tableNameMap);
 
-        const newTable: DynamicTable = {
+        const newTable: PricingStrategy = {
             tableMeta: newMeta,
             tableRows: tableRows as TableData,
         };
@@ -106,17 +106,17 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
     const actions = (
         <>
             {showTotals !== null && tables.length > 0 && <FormControlLabel label="Show Totals" control={<Checkbox disabled={showTotals === null} checked={showTotals} onChange={changeShowTotals} />} />}
-            {planTypeMeta && tables.length >= planTypeMeta.allowedDynamicTables ? (
+            {planTypeMeta && tables.length >= planTypeMeta.allowedPricingStrategys ? (
                 <>
                     <PalavyrText display="inline">
                         <strong>Upgrade your subscription to add more dynamic tables</strong>
                     </PalavyrText>
-                    <Button disabled={true} startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
+                    <Button disabled={true} startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addPricingStrategy}>
                         <PalavyrText>Add Pricing Strategy</PalavyrText>
                     </Button>
                 </>
             ) : (
-                <Button startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
+                <Button startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addPricingStrategy}>
                     <PalavyrText>Add Pricing Strategy</PalavyrText>
                 </Button>
             )}
@@ -145,10 +145,10 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
                 )}
 
                 {unitTypes &&
-                    tables.map((table: DynamicTable, tableIndex: number) => {
+                    tables.map((table: PricingStrategy, tableIndex: number) => {
                         const onDelete = async () => {
                             // delete table from DB
-                            await repository.Configuration.Tables.Dynamic.DeleteDynamicTable(intentId, table.tableMeta.tableType, table.tableMeta.tableId);
+                            await repository.Configuration.Tables.Dynamic.DeletePricingStrategy(intentId, table.tableMeta.tableType, table.tableMeta.tableId);
 
                             // delete table from UI
                             const newTables = cloneDeep(tables);
@@ -165,7 +165,7 @@ export const DynamicTableConfiguration = ({ title, intentId, children, initialSt
                                     setTables={setTables}
                                     unitTypes={unitTypes}
                                     tableIndex={tableIndex}
-                                    availableDynamicTableOptions={availableTables}
+                                    availablePricingStrategyOptions={availableTables}
                                     tableNameMap={tableNameMap}
                                     intentId={intentId}
                                     showDebug={showDebug}

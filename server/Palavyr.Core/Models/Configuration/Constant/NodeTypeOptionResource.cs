@@ -20,12 +20,12 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static readonly string Other = "Other";
 
         /*
-         * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
+         * The string form name of the node type. Derived from either 'nameof(T)' or extension method: pricingStrategyTableMeta.MakeUniqueIdentifier()
          */
         public NodeTypeCode NodeTypeCode { get; set; }
 
         /*
-         * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
+         * The string form name of the node type. Derived from either 'nameof(T)' or extension method: pricingStrategyTableMeta.MakeUniqueIdentifier()
          */
         public string Value { get; set; }
 
@@ -81,9 +81,9 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public bool IsAnabranchMergePoint { get; set; }
 
         /*
-         * Whether or not the node type comes from a dynamic table type.
+         * Whether or not the node type comes from a pricing strategy table type.
          */
-        public bool IsDynamicType { get; set; }
+        public bool IsPricingStrategyType { get; set; }
 
         /*
          * The string identifier of the node component Type
@@ -106,16 +106,16 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public string GroupName { get; set; } = null!;
 
         /*
-         * Used when the nodeTypeOption is for a dynamic type. The order in which the result should be used to filter the dynamic table configuration.
-         * DO NOT SET on the default node types. Only used for dynamic node types.
+         * Used when the nodeTypeOption is for a pricing strategy type. The order in which the result should be used to filter the pricing strategy table configuration.
+         * DO NOT SET on the default node types. Only used for pricing strategy node types.
          */
         public int? ResolveOrder { get; set; }
 
         /*
-         * Used when the nodetype option is a dynamic type and we need to specify a common type for the dynamic type compiler
-         * The widget will use this to key the collection of dynamic type responses.
+         * Used when the nodetype option is a pricing strategy type and we need to specify a common type for the pricing strategy type compiler
+         * The widget will use this to key the collection of pricing strategy type responses.
          */
-        public string? DynamicType { get; set; }
+        public string? PricingStrategyType { get; set; }
 
         /*
          * Used to indicate whether or not this node provides an image in the chat. In the dashboard, used to determine whether
@@ -135,7 +135,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             string text,
             List<string> pathOptions,
             List<string> valueOptions,
-            bool isDynamicType,
+            bool isPricingStrategyType,
             bool isMultiOptionType,
             bool isTerminalType,
             string groupName,
@@ -149,7 +149,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool shouldRenderChildren = true,
             bool shouldShowMultiOption = false,
             int? resolveOrder = null,
-            string? dynamicType = null,
+            string? pricingStrategyType = null,
             bool loopbackAnchor = false
         )
         {
@@ -161,7 +161,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ValueOptions = valueOptions,
                 IsMultiOptionType = isMultiOptionType,
                 IsTerminalType = isTerminalType,
-                IsDynamicType = isDynamicType,
+                IsPricingStrategyType = isPricingStrategyType,
                 GroupName = groupName,
                 NodeComponentType = nodeComponentType,
                 IsCurrency = isCurrency,
@@ -172,7 +172,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldRenderChildren = shouldRenderChildren,
                 ShouldShowMultiOption = shouldShowMultiOption,
                 ResolveOrder = resolveOrder,
-                DynamicType = dynamicType,
+                PricingStrategyType = pricingStrategyType,
                 IsLoopbackAnchor = loopbackAnchor,
                 NodeTypeCode = nodeTypeCode
             };

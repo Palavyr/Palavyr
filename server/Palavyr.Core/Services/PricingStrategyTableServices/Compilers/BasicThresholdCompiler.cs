@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data.Entities;
-using Palavyr.Core.Data.Entities.DynamicTables;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Services.PdfService;
@@ -59,21 +59,21 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                 DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
                 NodeTypeCode.II,
                 resolveOrder: 0,
-                dynamicType: pricingStrategyTableMeta.MakeUniqueIdentifier()
+                pricingStrategyType: pricingStrategyTableMeta.MakeUniqueIdentifier()
             );
             nodes.AddAdditionalNode(nodeTypeOption);
             await Task.CompletedTask;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(PricingStrategyResponseParts pricingStrategyResponseParts, List<string> pricingStrategyResponseIds, CultureInfo culture)
         {
-            var dynamicResponseId = GetSingleResponseId(dynamicResponseIds);
-            var responseValue = GetSingleResponseValue(dynamicResponseParts, dynamicResponseIds);
+            var responseId = GetSingleResponseId(pricingStrategyResponseIds);
+            var responseValue = GetSingleResponseValue(pricingStrategyResponseParts, pricingStrategyResponseIds);
 
             var responseValueAsDouble = double.Parse(responseValue);
-            var allRows = await RetrieveAllAvailableResponses(dynamicResponseId);
+            var allRows = await RetrieveAllAvailableResponses(responseId);
 
-            var dynamicMeta = await pricingStrategyMetaStore.Get(allRows.First().TableId, s => s.TableId);
+            var pricingStrategyMeta = await pricingStrategyMetaStore.Get(allRows.First().TableId, s => s.TableId);
 
             var itemsToCreateRowsFor = allRows.Where(x => !string.IsNullOrWhiteSpace(x.ItemName)).Select(row => row.ItemName).Distinct();
 
@@ -87,7 +87,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                     var thresholdResult = thresholdEvaluator.Evaluate(responseValueAsDouble, itemRows);
                     tableRows.Add(
                         new TableRow(
-                            dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : itemName,
+                            pricingStrategyMeta.UseTableTagAsResponseDescription ? pricingStrategyMeta.TableTag : itemName,
                             thresholdResult.ValueMin,
                             thresholdResult.ValueMax,
                             false,
@@ -104,7 +104,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents _)
         {
             var thresholds = await basicThresholdStore.RawReadonlyQuery()
-                .Where(tableRow => node.DynamicType.EndsWith(tableRow.TableId))
+                .Where(tableRow => node.PricingStrategyType.EndsWith(tableRow.TableId))
                 .ToListAsync(basicThresholdStore.CancellationToken);
 
             var currentResponseAsDouble = double.Parse(response);
@@ -137,30 +137,30 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 
         // public PricingStrategyValidationResult ValidatePricingStrategyPreSave<TEntity>(PricingStrategyTable<TEntity> pricingStrategyTable)
         // {
-        //     // var table = dynamicTable.BasicThreshold;
+        //     // var table = pricingStrategyTable.BasicThreshold;
         //     var table = pricingStrategyTable.TableData;
         //     var tableTag = pricingStrategyTable.TableTag;
         //     return ValidationLogic(table as List<BasicThreshold>, tableTag);
         // }
 
-        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
+        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(PricingStrategyTableMeta pricingStrategyTableMeta)
         // {
-        //     var tableId = dynamicTableMeta.TableId;
+        //     var tableId = pricingStrategyTableMeta.TableId;
         //     var thresholds = await basicThresholdStore.GetMany(tableId, s => s.TableId);
-        //     return ValidationLogic(thresholds.ToList(), dynamicTableMeta.TableTag);
+        //     return ValidationLogic(thresholds.ToList(), pricingStrategyTableMeta.TableTag);
         // }
 
         public async Task<List<TableRow>> CreatePreviewData(PricingStrategyTableMeta tableTableMeta, Intent intent, CultureInfo culture)
         {
             var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses(tableTableMeta.TableId);
-            var responseParts = PricingStrategyResponsePartJoiner.CreateDynamicResponseParts(availableBasicThreshold.First().TableId, availableBasicThreshold.First().Threshold.ToString());
+            var responseParts = PricingStrategyResponsePartJoiner.CreatePricingStrategyResponseParts(availableBasicThreshold.First().TableId, availableBasicThreshold.First().Threshold.ToString());
             var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableTableMeta.TableId }, culture);
             return currentRows;
         }
 
-        public async Task<List<SimpleThresholdTableRow>> RetrieveAllAvailableResponses(string dynamicResponseId)
+        public async Task<List<SimpleThresholdTableRow>> RetrieveAllAvailableResponses(string responseId)
         {
-            return await GetAllRowsMatchingResponseId(dynamicResponseId);
+            return await GetAllRowsMatchingResponseId(responseId);
         }
     }
 }

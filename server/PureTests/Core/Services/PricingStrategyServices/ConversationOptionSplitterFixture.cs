@@ -47,7 +47,7 @@ namespace Pure.Core.Services.PricingStrategyServices
         {
             var guid = StaticGuidUtils.CreateNewId();
             var sut = "wow-" + guid;
-            var result = splitter.GetTableIdFromDynamicNodeType(sut);
+            var result = splitter.GetTableIdFromPricingStrategyNodeType(sut);
 
             result.ShouldBe(guid);
         }
@@ -56,7 +56,7 @@ namespace Pure.Core.Services.PricingStrategyServices
         public void WhenAGuidIsRequested_AndNoGuidIsPresent_AnExceptionIsThrown()
         {
             var sut = "WOw-Thisisa-Crazy-Thing";
-            var result = splitter.GetTableIdFromDynamicNodeType(sut);
+            var result = splitter.GetTableIdFromPricingStrategyNodeType(sut);
             result.ShouldBeNull();
         }
 

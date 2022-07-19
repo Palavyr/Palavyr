@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { DynamicTable, DynamicTableProps, TwoNestedCategoryData } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyProps, TwoNestedCategoryData } from "@Palavyr-Types";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesContainer } from "./TwoNestedCategoriesContainer";
 import { DisplayTableData } from "../DisplayTableData";
-import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { cloneDeep } from "lodash";
-import { DynamicTableHeader } from "../../DynamicTableHeader";
+import { PricingStrategyHeader } from "../../PricingStrategyHeader";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -37,15 +37,15 @@ export const TwoNestedCategories = ({
     deleteAction,
     tables,
     tableIndex,
-    availableDynamicTableOptions,
+    availablePricingStrategyOptions,
     tableNameMap,
     unitTypes,
     inUse,
     table,
-}: DynamicTableProps) => {
+}: PricingStrategyProps) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
-    const [localTable, setLocalTable] = useState<DynamicTable>();
+    const [localTable, setLocalTable] = useState<PricingStrategy>();
 
     useEffect(() => {
         setLocalTable(table);
@@ -54,7 +54,7 @@ export const TwoNestedCategories = ({
     useEffect(() => {
         (async () => {
             if (localTable) {
-                const { tableRows } = await repository.Configuration.Tables.Dynamic.GetDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.GetPricingStrategyRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                 localTable.tableRows = tableRows;
                 setLocalTable(cloneDeep(localTable));
             }
@@ -88,10 +88,10 @@ export const TwoNestedCategories = ({
             const { isValid, tableRows } = modifier.validateTable(localTable.tableRows);
 
             if (isValid) {
-                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(localTable.tableMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.SaveDynamicTable<TwoNestedCategoryData[]>(
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(localTable.tableMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<TwoNestedCategoryData[]>(
                     intentId,
-                    DynamicTableTypes.TwoNestedCategory,
+                    PricingStrategyTypes.TwoNestedCategory,
                     tableRows,
                     localTable.tableMeta.tableId,
                     localTable.tableMeta.tableTag
@@ -112,11 +112,11 @@ export const TwoNestedCategories = ({
 
     return localTable ? (
         <>
-            <DynamicTableHeader
+            <PricingStrategyHeader
                 localTable={localTable}
                 setLocalTable={setLocalTable}
                 setTables={setTables}
-                availableDynamicTableOptions={availableDynamicTableOptions}
+                availablePricingStrategyOptions={availablePricingStrategyOptions}
                 unitTypes={unitTypes}
                 inUse={inUse}
             />

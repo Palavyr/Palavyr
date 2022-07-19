@@ -20,7 +20,7 @@ namespace IntegrationTests.Tests.Api.ControllerFixtures.Accounts
         {
         }
 
-        private async Task<Credentials> Create(string email, string password)
+        private async Task<CredentialsResource> Create(string email, string password)
         {
             var request = new CreateNewAccountRequest
             {
@@ -28,7 +28,7 @@ namespace IntegrationTests.Tests.Api.ControllerFixtures.Accounts
                 Password = password
             };
 
-            var result = await Client.Post<CreateNewAccountRequest, Credentials>(request, CancellationToken);
+            var result = await Client.Post<CreateNewAccountRequest, CredentialsResource>(request, CancellationToken);
             return result;
         }
 
@@ -66,9 +66,9 @@ namespace IntegrationTests.Tests.Api.ControllerFixtures.Accounts
             result.ShouldBeNull();
         }
 
-        private async Task Delete(Credentials credentials)
+        private async Task Delete(CredentialsResource credentialsResource)
         {
-            var tempClient = ConfigurableClient(credentials.SessionId);
+            var tempClient = ConfigurableClient(credentialsResource.SessionId);
             await tempClient.Delete<DeleteAccountRequest>(CancellationToken);
         }
 

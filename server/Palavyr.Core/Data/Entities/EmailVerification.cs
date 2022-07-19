@@ -1,5 +1,4 @@
-﻿#nullable disable
-
+﻿
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Data.Entities

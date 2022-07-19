@@ -1,11 +1,9 @@
-﻿#nullable disable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Palavyr.Core.Data.Entities.DynamicTables;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Contracts;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.Units;
 
 namespace Palavyr.Core.Data.Entities
@@ -41,7 +39,8 @@ namespace Palavyr.Core.Data.Entities
                 AccountId = accountId,
                 PrettyName = prettyName,
                 UnitId = unitId,
-                
+                ValuesAsPaths = false, // for tables that specify various options, whether or not to use each option to create a new tree path.
+                UseTableTagAsResponseDescription = false,
             };
         }
 
@@ -66,7 +65,7 @@ namespace Palavyr.Core.Data.Entities
             tableId = TableId;
         }
 
-        public void UpdateProperties(ModifyDynamicTableMetaRequest metaUpdate, IUnitRetriever unitRetriever)
+        public void UpdateProperties(PricingStrategyTableMetaResource metaUpdate, IUnitRetriever unitRetriever)
         {
             if (string.IsNullOrEmpty(metaUpdate.TableType) || string.IsNullOrWhiteSpace(metaUpdate.TableType)) throw new DomainException("Table Type is a required field");
 
@@ -74,7 +73,7 @@ namespace Palavyr.Core.Data.Entities
 
             TableTag = metaUpdate.TableTag;
             TableType = metaUpdate.TableType;
-            ValuesAsPaths = metaUpdate.ValueAsPaths;
+            ValuesAsPaths = metaUpdate.ValuesAsPaths;
             PrettyName = metaUpdate.PrettyName;
             UnitId = unitRetriever.ConvertToUnitId(metaUpdate.UnitId.ToString());
         }

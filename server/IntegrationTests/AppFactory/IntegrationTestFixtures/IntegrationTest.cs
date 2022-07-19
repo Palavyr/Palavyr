@@ -25,7 +25,7 @@ namespace IntegrationTests.AppFactory.IntegrationTestFixtures
             ApiKey = credentials.ApiKey;
             
             
-            var sessionStore = ResolveStore<Session>();
+            var sessionStore = ResolveStore<UserSession>();
             var session = await sessionStore.DangerousRawQuery().SingleOrDefaultAsync(x => x.SessionId == SessionId);
             if (session is null) throw new PalavyrStartupException("Failed to set the session");
             AccountId = session.AccountId;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data.Entities;
-using Palavyr.Core.Data.Entities.DynamicTables;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Contracts;
@@ -26,7 +26,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
     public class CategoryNestedThresholdCompiler : BaseCompiler<CategoryNestedThresholdTableRow>, ICategoryNestedThresholdCompiler
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
         private readonly IEntityStore<CategoryNestedThresholdTableRow> psStore;
         private readonly IConversationOptionSplitter splitter;
         private readonly IThresholdEvaluator thresholdEvaluator;
@@ -37,7 +37,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 
         public CategoryNestedThresholdCompiler(
             IEntityStore<ConversationNode> convoNodeStore,
-            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore,
+            IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore,
             IEntityStore<CategoryNestedThresholdTableRow> psStore,
             IConversationOptionSplitter splitter,
             IThresholdEvaluator thresholdEvaluator,
@@ -46,7 +46,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         ) : base(psStore, convoNodeStore)
         {
             this.convoNodeStore = convoNodeStore;
-            this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
             this.psStore = psStore;
             this.splitter = splitter;
             this.thresholdEvaluator = thresholdEvaluator;
@@ -66,8 +66,8 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             var category = GetCategories(table);
             var allNodes = await convoNodeStore.GetMany(intentId, s => s.IntentId);
             var nodes = allNodes
-                .Where(n => n.IsDynamicTableNode)
-                .Where(n => splitter.GetTableIdFromDynamicNodeType(n.NodeType) == tableId)
+                .Where(n => n.IsPricingStrategyTableNode)
+                .Where(n => splitter.GetTableIdFromPricingStrategyNodeType(n.NodeType) == tableId)
                 .OrderBy(x => x.ResolveOrder)
                 .ToList();
 
@@ -98,7 +98,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                     NodeTypeCode.X,
                     resolveOrder: 0,
                     isMultiOptionEditable: false,
-                    dynamicType: widgetResponseKey
+                    pricingStrategyType: widgetResponseKey
                 )
             );
 
@@ -118,39 +118,39 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                     NodeTypeCode.III,
                     resolveOrder: 1,
                     isMultiOptionEditable: false,
-                    dynamicType: widgetResponseKey // check in widget component perhaps if this is dynamic, and threshold type... then we can do a check against the server... bleh this is so gross. But there is no other way right now.
+                    pricingStrategyType: widgetResponseKey // check in widget component perhaps if this is PricingStrategy, and threshold type... then we can do a check against the server... bleh this is so gross. But there is no other way right now.
                 )
             );
         }
 
-        private async Task<List<CategoryNestedThresholdTableRow>> GetAllRowsMatchingDynamicResponseId(string id)
+        private async Task<List<CategoryNestedThresholdTableRow>> GetAllRowsMatchingPricingStrategyResponseId(string id)
         {
             return await psStore.RawReadonlyQuery()
                 .Where(tableRow => id.EndsWith(tableRow.TableId))
                 .ToListAsync(psStore.CancellationToken);
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(PricingStrategyResponseParts pricingStrategyResponseParts, List<string> pricingStrategyResponseIds, CultureInfo culture)
         {
-            // dynamicResponseIds is dynamic table keys
-            var responseId = GetSingleResponseId(dynamicResponseIds);
-            var records = await GetAllRowsMatchingDynamicResponseId(responseId);
+            // pricingStrategyResponseIds is PricingStrategy table keys
+            var responseId = GetSingleResponseId(pricingStrategyResponseIds);
+            var records = await GetAllRowsMatchingPricingStrategyResponseId(responseId);
 
-            var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponseParts);
-            var category = GetResponseByResponseId(orderedResponseIds[0], dynamicResponseParts);
-            var amount = GetResponseByResponseId(orderedResponseIds[1], dynamicResponseParts);
+            var orderedResponseIds = await GetResponsesOrderedByResolveOrder(pricingStrategyResponseParts);
+            var category = GetResponseByResponseId(orderedResponseIds[0], pricingStrategyResponseParts);
+            var amount = GetResponseByResponseId(orderedResponseIds[1], pricingStrategyResponseParts);
 
             var itemRows = records.Where(rec => rec.Category == category);
 
             var responseAmountAsDouble = double.Parse(amount);
             if (responseAmountAsDouble < 0) throw new Exception("Negative values are not allowed");
 
-            var dynamicMeta = await dynamicTableMetaStore.Get(records.First().TableId, s => s.TableId);
+            var pricingStrategyMeta = await pricingStrategyTableMetaStore.Get(records.First().TableId, s => s.TableId);
             var thresholdResult = thresholdEvaluator.Evaluate(responseAmountAsDouble, itemRows);
             return new List<TableRow>
             {
                 new TableRow(
-                    dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : string.Join(" @ ", category, responseAmountAsDouble.ToString("C", culture)),
+                    pricingStrategyMeta.UseTableTagAsResponseDescription ? pricingStrategyMeta.TableTag : string.Join(" @ ", category, responseAmountAsDouble.ToString("C", culture)),
                     thresholdResult.ValueMin,
                     thresholdResult.ValueMax,
                     false,
@@ -176,7 +176,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                 .Single(x => x.ContainsKey(categoryNode.NodeId!))
                 .Values.Single();
 
-            var records = await GetAllRowsMatchingDynamicResponseId(node.DynamicType);
+            var records = await GetAllRowsMatchingPricingStrategyResponseId(node.PricingStrategyType);
 
             var categoryThresholds = records
                 .Where(rec => rec.Category == categoryResponse);
@@ -240,11 +240,11 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         //     return ValidationLogic(table as List<CategoryNestedThreshold>, tableTag);
         // }
 
-        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
+        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(PricingStrategyTableMeta pricingStrategyTableMeta)
         // {
-        //     var tableId = dynamicTableMeta.TableId;
+        //     var tableId = pricingStrategyTableMeta.TableId;
         //     var table = await psStore.GetMany(tableId, s => s.TableId);
-        //     return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
+        //     return ValidationLogic(table.ToList(), pricingStrategyTableMeta.TableTag);
         // }
 
         public async Task<List<TableRow>> CreatePreviewData(PricingStrategyTableMeta tableTableMeta, Intent intent, CultureInfo culture)
@@ -264,9 +264,9 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             return currentRows;
         }
 
-        public async Task<List<CategoryNestedThresholdTableRow>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId, CancellationToken cancellationToken)
+        public async Task<List<CategoryNestedThresholdTableRow>> RetrieveAllAvailableResponses(string accountId, string responseId, CancellationToken cancellationToken)
         {
-            return await GetAllRowsMatchingResponseId(dynamicResponseId);
+            return await GetAllRowsMatchingResponseId(responseId);
         }
 
         List<string> CollectNodeIds(PricingStrategyResponseComponents pricingStrategyResponseComponents)

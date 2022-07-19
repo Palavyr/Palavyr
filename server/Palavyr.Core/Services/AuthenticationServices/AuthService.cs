@@ -15,13 +15,13 @@ namespace Palavyr.Core.Services.AuthenticationServices
 {
     public interface IAuthService
     {
-        public Task<Credentials> PerformLoginAction(CreateLoginRequest loginCredentialsRequest);
+        public Task<CredentialsResource> PerformLoginAction(CreateLoginRequest loginCredentialsRequest);
     }
 
     public class AuthService : IAuthService
     {
         private readonly IRemoveStaleSessions removeStaleSessions;
-        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<UserSession> sessionStore;
         private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<AuthService> logger;
         private readonly IJwtAuthenticationService jwtAuthService;
@@ -35,7 +35,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
         public AuthService(
             IRemoveStaleSessions removeStaleSessions,
-            IEntityStore<Session> sessionStore,
+            IEntityStore<UserSession> sessionStore,
             IEntityStore<Account> accountStore,
             ILogger<AuthService> logger,
             IJwtAuthenticationService jwtService
@@ -83,14 +83,14 @@ namespace Palavyr.Core.Services.AuthenticationServices
             CouldNot
         }
 
-        public async Task<Credentials> PerformLoginAction(CreateLoginRequest loginCredentialsRequest)
+        public async Task<CredentialsResource> PerformLoginAction(CreateLoginRequest loginCredentialsRequest)
         {
             logger.LogDebug("Requesting account using login credentials...");
             var (account, message) = await RequestAccount(loginCredentialsRequest);
             if (account == null)
             {
                 logger.LogDebug("Login failed -- could not find account ");
-                return Credentials.CreateUnauthenticatedResponse(message);
+                return CredentialsResource.CreateUnauthenticatedResponse(message);
             }
 
             logger.LogDebug("Successfully authenticated using the login credentials...");
@@ -102,14 +102,14 @@ namespace Palavyr.Core.Services.AuthenticationServices
             logger.LogDebug("Creating and adding a new session...");
 
             await removeStaleSessions.CleanSessionDb(account.AccountId);
-            var newSession = Session.CreateNew(token, account.AccountId, account.ApiKey);
+            var newSession = UserSession.CreateNew(token, account.AccountId, account.ApiKey);
             var sessionEntity = await sessionStore.DangerousRawQuery().AddAsync(newSession);
             var session = sessionEntity.Entity;
 
             logger.LogDebug("Committing the new session to the DB");
 
             logger.LogDebug("Session saved to DB. Returning auth response");
-            return Credentials.CreateAuthenticatedResponse(
+            return CredentialsResource.CreateAuthenticatedResponse(
                 session.SessionId,
                 session.ApiKey,
                 token,

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Data.Entities;
-using Palavyr.Core.Data.Entities.DynamicTables;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Sessions;

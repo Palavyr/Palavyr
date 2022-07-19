@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Resources;
+using Palavyr.Core.Services.ResponseCustomization;
 
 namespace Palavyr.Core.Mappers
 {

@@ -11,14 +11,14 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
     public interface IPricingStrategyTableCompilerOrchestrator
     {
         Task<List<Table>> CompileTablesToPdfRows(
-            DynamicResponses dynamicResponses,
+            PricingStrategyResponses pricingStrategyResponses,
             CultureInfo culture,
             bool includeTotals
         );
 
-        Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<PricingStrategyTableMeta> dynamicTableMetas, string intentId);
+        Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<PricingStrategyTableMeta> pricingStrategyTableMetas, string intentId);
 
         Task<bool> PerformInternalCheck(ConversationNode node, string response, PricingStrategyResponseComponents pricingStrategyResponseComponents);
-        // Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<DynamicTableMeta> pricingStrategyMetas);
+        // Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<PricingStrategyTableMeta> pricingStrategyMetas);
     }
 }

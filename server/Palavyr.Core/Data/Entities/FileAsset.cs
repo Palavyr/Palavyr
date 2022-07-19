@@ -1,5 +1,4 @@
-﻿#nullable disable
-
+﻿
 using System.ComponentModel.DataAnnotations.Schema;
 using Palavyr.Core.Models.Contracts;
 

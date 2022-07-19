@@ -12,19 +12,19 @@ namespace Palavyr.API.Controllers.Conversation
     [Obsolete]
     public class GetIsSplitMergeTypeController : PalavyrBaseController
     {
-        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
         private readonly IPricingStrategyTypeLister pricingStrategyTypeLister;
         public const string Route = "configure-conversations/check-is-split-merge/{nodeType}";
 
         string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";
 
         public GetIsSplitMergeTypeController(
-            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore,
+            IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore,
             ILogger<GetIsSplitMergeTypeController> logger,
             IPricingStrategyTypeLister pricingStrategyTypeLister
         )
         {
-            this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
             this.pricingStrategyTypeLister = pricingStrategyTypeLister;
         }
 
@@ -39,14 +39,14 @@ namespace Palavyr.API.Controllers.Conversation
                 }
             }
 
-            // node is a dynamic table node type
+            // node is a pricing strategy table node type
             // Comes in as e.g. SelectOneFlat-234234-324-2342-324
-            foreach (var dynamicTableType in pricingStrategyTypeLister.ListPricingStrategies())
+            foreach (var pricingStrategyTableType in pricingStrategyTypeLister.ListPricingStrategies())
             {
-                if (nodeType.StartsWith(dynamicTableType.GetTableType()))
+                if (nodeType.StartsWith(pricingStrategyTableType.GetTableType()))
                 {
                     var tableId = Regex.Match(nodeType, GUIDPattern, RegexOptions.IgnoreCase).Value;
-                    var table = await dynamicTableMetaStore.Get(tableId, s => s.TableId);
+                    var table = await pricingStrategyTableMetaStore.Get(tableId, s => s.TableId);
                     if (table != null)
                     {
                         return false;

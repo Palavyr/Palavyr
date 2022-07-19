@@ -34,7 +34,7 @@
 //             var tableId = Guid.NewGuid().ToString();
 //             var tableTag = "Default-" + StaticGuidUtils.CreatePseudoRandomString(5);
 //
-//             var newTableMeta = DynamicTableMeta.CreateNew(
+//             var newTableMeta = PricingStrategyTableMeta.CreateNew(
 //                 tableTag,
 //                 templateCreator.GetPrettyName(),
 //                 templateCreator.GetTableType(),

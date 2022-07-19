@@ -31,7 +31,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var account = await accountStore.GetAccount();
 
             // don't save changes when making modifications to the 
-            var introConvo = await convoNodeStore.RawReadonlyQuery().Where(x => x.IntentId == account.IntroductionId).ToArrayAsync(cancellationToken);
+            var introConvo = await convoNodeStore.RawReadonlyQuery().Where(x => x.IntentId == account.IntroIntentId).ToArrayAsync(cancellationToken);
             var intro = EndingSequenceAttacher.CleanTheIntroConvoEnding(introConvo);
 
             var resource = await mapper.MapMany(intro, cancellationToken);

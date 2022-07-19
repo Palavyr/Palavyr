@@ -39,12 +39,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             var intent = await intentStore.GetIntentComplete(request.IntentId);
 
-            var dynamicTableMetas = intent.DynamicTableMetas;
+            var pricingStrategyTableMetas = intent.PricingStrategyTableMetas;
             var staticTableMetas = intent.StaticTablesMetas;
 
-            var requiredDynamicNodeTypes = await requiredNodeCalculator.FindRequiredNodes(intent);
-            var allMissingNodeTypeNames = missingNodeCalculator.CalculateMissingNodes(requiredDynamicNodeTypes.ToArray(), request.Transactions, dynamicTableMetas, staticTableMetas);
-            var nodeOrderCheckResult = nodeOrderChecker.AllDynamicTypesAreOrderedCorrectlyByResolveOrder(request.Transactions.ToArray());
+            var requiredPricingStrategyNodeTypes = await requiredNodeCalculator.FindRequiredNodes(intent);
+            var allMissingNodeTypeNames = missingNodeCalculator.CalculateMissingNodes(requiredPricingStrategyNodeTypes.ToArray(), request.Transactions, pricingStrategyTableMetas, staticTableMetas);
+            var nodeOrderCheckResult = nodeOrderChecker.AllPricingStrategyTypesAreOrderedCorrectlyByResolveOrder(request.Transactions.ToArray());
             var errorResponse = new TreeErrorsResource(allMissingNodeTypeNames, nodeOrderCheckResult.ConcatenatedNodeTypes.ToArray());
             return new GetMissingNodesResponse(errorResponse);
         }

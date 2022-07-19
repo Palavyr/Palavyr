@@ -4,11 +4,11 @@ import { Modifier, SetState, TableGroup } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, uniq } from "lodash";
 import { v4 as uuid } from "uuid";
 import { CategoryNestedThresholdData, TableData } from "@Palavyr-Types";
-import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 
 export class CategoryNestedThresholdModifier implements Modifier {
     onClick: SetState<TableData>;
-    tableType: string = DynamicTableTypes.CategoryNestedThreshold;
+    tableType: string = PricingStrategyTypes.CategoryNestedThreshold;
 
     constructor(onClick: SetState<TableData>) {
         this.onClick = onClick;
@@ -23,7 +23,7 @@ export class CategoryNestedThresholdModifier implements Modifier {
     }
 
     async addCategory(tableData: CategoryNestedThresholdData[], repository: PalavyrRepository, intentId: string, tableId: string) {
-        const template = await repository.Configuration.Tables.Dynamic.GetDynamicTableDataTemplate<CategoryNestedThresholdData>(intentId, this.tableType, tableId);
+        const template = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<CategoryNestedThresholdData>(intentId, this.tableType, tableId);
 
         const categoryIds = uniq(tableData.map((x: CategoryNestedThresholdData) => x.itemId));
         template.itemOrder = categoryIds.length;
@@ -37,7 +37,7 @@ export class CategoryNestedThresholdModifier implements Modifier {
     }
 
     async addThreshold(tableData: CategoryNestedThresholdData[], categoryId: string, repository: PalavyrRepository, intentId: string, tableId: string) {
-        const template = await repository.Configuration.Tables.Dynamic.GetDynamicTableDataTemplate<CategoryNestedThresholdData>(intentId, this.tableType, tableId);
+        const template = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<CategoryNestedThresholdData>(intentId, this.tableType, tableId);
 
         const categoryRows = this._getRowsByCategoryId(tableData, categoryId);
         template.rowOrder = 0;

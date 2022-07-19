@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data.Entities;
-using Palavyr.Core.Data.Entities.DynamicTables;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Data.Setup.SeedData.DataCreators;
 
 namespace Palavyr.Core.Data.Setup.SeedData
@@ -13,9 +13,8 @@ namespace Palavyr.Core.Data.Setup.SeedData
         public List<ConversationNode> DefaultConversationNodes { get; set; }
         public List<ConversationNode> IntroductionConversationNodes { get; set; }
 
-        public List<PricingStrategyTableMeta> DefaultDynamicTableMetas { get; set; }
-        public readonly List<CategorySelectTableRow> DefaultDynamicTables;
-
+        public List<PricingStrategyTableMeta> DefaultPricingStrategyTableMetas { get; set; }
+        public readonly List<CategorySelectTableRow> DefaultPricingStrategyTables;
 
         public const string IntentName = "Buying a Dog";
         private const string TableTag = "Dog Color Types";
@@ -31,8 +30,8 @@ namespace Palavyr.Core.Data.Setup.SeedData
 
             IntroductionConversationNodes = ConversationNode.CreateDefaultRootNode(introId, accountId);
 
-            DefaultDynamicTables = CreateDefaultDynamicTable.CreateDefaultTable(TableTag, accountId, intentId, pricingStrategyTableId);
-            DefaultDynamicTableMetas = CreateDefaultDynamicTable.CreateDefaultMeta(TableTag, accountId, pricingStrategyTableId, intentId);
+            DefaultPricingStrategyTables = CreateDefaultPricingStrategyTable.CreateDefaultTable(TableTag, accountId, intentId, pricingStrategyTableId);
+            DefaultPricingStrategyTableMetas = CreateDefaultPricingStrategyTable.CreateDefaultMeta(TableTag, accountId, pricingStrategyTableId, intentId);
             WidgetPreference = WidgetPreference.CreateDefault(accountId);
             Intents = new List<Intent>
             {
@@ -41,7 +40,7 @@ namespace Palavyr.Core.Data.Setup.SeedData
                     accountId,
                     IntentName,
                     DefaultConversationNodes,
-                    DefaultDynamicTableMetas,
+                    DefaultPricingStrategyTableMetas,
                     EmailTemplate,
                     defaultEmail
                 )

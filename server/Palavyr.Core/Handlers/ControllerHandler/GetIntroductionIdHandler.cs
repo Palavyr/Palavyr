@@ -28,10 +28,10 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetIntroductionIdResponse> Handle(GetIntroductionIdRequest request, CancellationToken cancellationToken)
         {
             var account = await accountStore.GetAccount();
-            if (account.IntroductionId == null || string.IsNullOrEmpty(account.IntroductionId))
+            if (account.IntroIntentId == null || string.IsNullOrEmpty(account.IntroIntentId))
             {
                 var newId = guidUtils.CreateNewId();
-                account.IntroductionId = newId;
+                account.IntroIntentId = newId;
 
                 var introSequence = ConversationNode.CreateDefaultRootNode(newId, account.AccountId);
 
@@ -39,7 +39,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 return new GetIntroductionIdResponse(newId);
             }
 
-            return new GetIntroductionIdResponse(account.IntroductionId);
+            return new GetIntroductionIdResponse(account.IntroIntentId);
         }
     }
 

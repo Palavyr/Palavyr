@@ -21,7 +21,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             if (string.IsNullOrWhiteSpace(request.Password))
             {
-                return new ResetMyPasswordResponse(new ResetPasswordResponse("Email address and password must both be set.", false));
+                return new ResetMyPasswordResponse(new ResetPasswordResource("Email address and password must both be set.", false));
             }
 
             var account = await accountStore.GetAccount();
@@ -29,16 +29,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             // TODO: Consider password validation?
             account.Password = PasswordHashing.CreateHashedPassword(request.Password);
             
-            return new ResetMyPasswordResponse(new ResetPasswordResponse("Successfully reset your password. Return to the homepage to login with your new password.", true));
+            return new ResetMyPasswordResponse(new ResetPasswordResource("Successfully reset your password. Return to the homepage to login with your new password.", true));
         }
     }
 
-    public class ResetPasswordResponse
+    public class ResetPasswordResource
     {
         public string Message { get; set; }
         public bool Status { get; set; }
 
-        public ResetPasswordResponse(string message, bool status)
+        public ResetPasswordResource(string message, bool status)
         {
             Message = message;
             Status = status;
@@ -47,8 +47,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ResetMyPasswordResponse
     {
-        public ResetMyPasswordResponse(ResetPasswordResponse response) => Response = response;
-        public ResetPasswordResponse Response { get; set; }
+        public ResetMyPasswordResponse(ResetPasswordResource resource) => Resource = resource;
+        public ResetPasswordResource Resource { get; set; }
     }
 
     public class ResetMyPasswordRequest : IRequest<ResetMyPasswordResponse>

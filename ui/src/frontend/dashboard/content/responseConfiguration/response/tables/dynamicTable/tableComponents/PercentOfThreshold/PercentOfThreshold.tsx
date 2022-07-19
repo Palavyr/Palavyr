@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { DynamicTable, DynamicTableProps, PercentOfThresholdData } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyProps, PercentOfThresholdData } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
 import { DisplayTableData } from "../DisplayTableData";
-import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { DynamicTableHeader } from "../../DynamicTableHeader";
+import { PricingStrategyHeader } from "../../PricingStrategyHeader";
 import { cloneDeep } from "lodash";
 
 const useStyles = makeStyles(theme => ({
@@ -35,16 +35,16 @@ export const PercentOfThreshold = ({
     deleteAction,
     tables,
     tableIndex,
-    availableDynamicTableOptions,
+    availablePricingStrategyOptions,
     tableNameMap,
     unitTypes,
     inUse,
     table,
-}: DynamicTableProps) => {
+}: PricingStrategyProps) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
-    const [localTable, setLocalTable] = useState<DynamicTable>();
+    const [localTable, setLocalTable] = useState<PricingStrategy>();
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
@@ -55,7 +55,7 @@ export const PercentOfThreshold = ({
     useEffect(() => {
         (async () => {
             if (localTable && loaded) {
-                const { tableRows } = await repository.Configuration.Tables.Dynamic.GetDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.GetPricingStrategyRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                 localTable.tableRows = tableRows;
                 setLocalTable(cloneDeep(localTable));
             }
@@ -84,10 +84,10 @@ export const PercentOfThreshold = ({
             if (isValid) {
                 const currentMeta = localTable.tableMeta;
 
-                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.SaveDynamicTable<PercentOfThresholdData[]>(
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(currentMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<PercentOfThresholdData[]>(
                     intentId,
-                    DynamicTableTypes.PercentOfThreshold,
+                    PricingStrategyTypes.PercentOfThreshold,
                     tableRows,
                     localTable.tableMeta.tableId,
                     localTable.tableMeta.tableTag
@@ -108,11 +108,11 @@ export const PercentOfThreshold = ({
 
     return localTable ? (
         <>
-            <DynamicTableHeader
+            <PricingStrategyHeader
                 localTable={localTable}
                 setLocalTable={setLocalTable}
                 setTables={setTables}
-                availableDynamicTableOptions={availableDynamicTableOptions}
+                availablePricingStrategyOptions={availablePricingStrategyOptions}
                 unitTypes={unitTypes}
                 inUse={inUse}
             />

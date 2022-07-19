@@ -32,7 +32,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetDemoWidgetPreCheckResponse> Handle(GetDemoWidgetPreCheckRequest request, CancellationToken cancellationToken)
         {
             var widgetPrefs = await widgetPreferenceStore.Get(widgetPreferenceStore.AccountId, s => s.AccountId);
-            var intent = await intentStore.GetActiveIntentsWithConvoAndDynamicAndStaticTables();
+            var intent = await intentStore.GetActiveIntentsWithConvoAndPricingStrategyAndStaticTables();
 
             var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(intent, widgetPrefs, true, logger);
             return new GetDemoWidgetPreCheckResponse(result);
@@ -41,8 +41,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetDemoWidgetPreCheckResponse
     {
-        public GetDemoWidgetPreCheckResponse(PreCheckResult response) => Response = response;
-        public PreCheckResult Response { get; set; }
+        public GetDemoWidgetPreCheckResponse(PreCheckResultResource response) => Response = response;
+        public PreCheckResultResource Response { get; set; }
     }
 
     public class GetDemoWidgetPreCheckRequest : IRequest<GetDemoWidgetPreCheckResponse>

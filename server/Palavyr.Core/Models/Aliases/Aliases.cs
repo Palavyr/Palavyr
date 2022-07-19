@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using DynamicType = System.String;
-using DynamicNodeId = System.String;
-using DynamicResponse = System.String;
+using PricingStrategyType = System.String;
+using PricingStrategyNodeId = System.String;
+using PricingStrategyResponse = System.String;
 
 // DESIGN for the DTO from the widget.
 //
@@ -9,17 +9,17 @@ using DynamicResponse = System.String;
 // this has a 'resolveOrder' property which is used to determine the order in which these responses
 // should be used to resolve the final result.
 //
-// Typically each element of the outer list will have only one key-value pair (responses for a single dynamic table)
-// The list may have multiple elements (if the user decides to include multiple dynamic tables)
+// Typically each element of the outer list will have only one key-value pair (responses for a single pricing strategy table)
+// The list may have multiple elements (if the user decides to include multiple pricing strategy tables)
 //
 // [
-//     { // DynamicResponses (list of dynamic response
+//     { // PricingStrategyResponses (list of pricing strategy response
 
-//         "DynamicType": [ // DynamicResponse
-//                      // -- DynamicResponseParts
-//             {[node.nodeId]: "Response Value"}, 1 -- DynamicResponsePart
-//             {[node.nodeId]: "Response Value"}, 2 -- DynamicResponsePart
-//             {[node.nodeId]: "Response Value"}  0 -- DynamicResponsePart
+//         "PricingStrategyType": [ // PricingStrategyResponse
+//                      // -- PricingStrategyResponseParts
+//             {[node.nodeId]: "Response Value"}, 1 -- PricingStrategyResponsePart
+//             {[node.nodeId]: "Response Value"}, 2 -- PricingStrategyResponsePart
+//             {[node.nodeId]: "Response Value"}  0 -- PricingStrategyResponsePart
 //         ]
 //     },
 //     {
@@ -31,20 +31,20 @@ using DynamicResponse = System.String;
 
 namespace Palavyr.Core.Models.Aliases
 {
-    public class DynamicResponses : List<DynamicResponse>
+    public class PricingStrategyResponses : List<PricingStrategyResponse>
     {
     }
 
-    // DynamicType is the ConvoNode Col name (DynamicType) and is like "SelectOneFlat-1231"
-    public class DynamicResponse : Dictionary<DynamicType, DynamicResponseParts>
+    // PricingStrategyType is the ConvoNode Col name (PricingStrategyType) and is like "SelectOneFlat-1231"
+    public class PricingStrategyResponse : Dictionary<PricingStrategyType, PricingStrategyResponseParts>
     {
     }
 
-    public class DynamicResponseParts : List<DynamicResponsePart>
+    public class PricingStrategyResponseParts : List<PricingStrategyResponsePart>
     {
     }
 
-    public class DynamicResponsePart : Dictionary<DynamicNodeId, string>
+    public class PricingStrategyResponsePart : Dictionary<PricingStrategyNodeId, string>
     {
     }
 }

@@ -16,6 +16,6 @@
 
         public int ItemOrder { get; set; }
         public string ItemId { get; set; }
-        public string ItemName { get; set; } // unfortunate - doesn't fit in meta, and here it will be duplicated - we don't keep a table for the subtables held by this
+        public string ItemName { get; set; }
     }
 }

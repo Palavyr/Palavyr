@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data.Entities;
-using Palavyr.Core.Data.Entities.DynamicTables;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Services.PdfService;
@@ -24,39 +24,39 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         private readonly IEntityStore<TwoNestedSelectTableRow> psStore;
         private readonly IConversationOptionSplitter splitter;
         private readonly IResponseRetriever<TwoNestedSelectTableRow> responseRetriever;
-        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
 
         public TwoNestedCategoryCompiler(
             IEntityStore<ConversationNode> convoNodeStore,
             IEntityStore<TwoNestedSelectTableRow> psStore,
             IConversationOptionSplitter splitter,
             IResponseRetriever<TwoNestedSelectTableRow> responseRetriever,
-            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore) : base(psStore, convoNodeStore)
+            IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore) : base(psStore, convoNodeStore)
         {
             this.convoNodeStore = convoNodeStore;
             this.psStore = psStore;
             this.splitter = splitter;
             this.responseRetriever = responseRetriever;
-            this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(PricingStrategyResponseParts pricingStrategyResponseParts, List<string> pricingStrategyResponseIds, CultureInfo culture)
         {
-            var responseId = GetSingleResponseId(dynamicResponseIds);
+            var responseId = GetSingleResponseId(pricingStrategyResponseIds);
             var records = await RetrieveAllAvailableResponses(responseId);
 
             // itemName
-            var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponseParts);
-            var outerCategory = GetResponseByResponseId(orderedResponseIds[0], dynamicResponseParts);
-            var innerCategory = GetResponseByResponseId(orderedResponseIds[1], dynamicResponseParts);
+            var orderedResponseIds = await GetResponsesOrderedByResolveOrder(pricingStrategyResponseParts);
+            var outerCategory = GetResponseByResponseId(orderedResponseIds[0], pricingStrategyResponseParts);
+            var innerCategory = GetResponseByResponseId(orderedResponseIds[1], pricingStrategyResponseParts);
 
             var result = records.Single(rec => rec.Category == outerCategory && rec.InnerItemName == innerCategory);
-            var dynamicTableMeta = await dynamicTableMetaStore.Get(result.TableId, s => s.TableId);
+            var pricingStrategyTableMeta = await pricingStrategyTableMetaStore.Get(result.TableId, s => s.TableId);
 
             return new List<TableRow>()
             {
                 new TableRow(
-                    dynamicTableMeta.UseTableTagAsResponseDescription ? dynamicTableMeta.TableTag : string.Join(" & ", new[] { result.Category, result.InnerItemName }),
+                    pricingStrategyTableMeta.UseTableTagAsResponseDescription ? pricingStrategyTableMeta.TableTag : string.Join(" & ", new[] { result.Category, result.InnerItemName }),
                     result.ValueMin,
                     result.ValueMax,
                     false,
@@ -118,12 +118,12 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         //     return ValidationLogic(table, tableTag);
         // }
 
-        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
+        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(PricingStrategyTableMeta pricingStrategyTableMeta)
         // {
-        //     var tableId = dynamicTableMeta.TableId;
+        //     var tableId = pricingStrategyTableMeta.TableId;
         //
         //     var table = await psStore.GetMany(tableId, s => s.TableId);
-        //     return ValidationLogic(table, dynamicTableMeta.TableTag);
+        //     return ValidationLogic(table, pricingStrategyTableMeta.TableTag);
         // }
 
         public async Task<List<TableRow>> CreatePreviewData(PricingStrategyTableMeta tableTableMeta, Intent intent, CultureInfo culture)
@@ -143,9 +143,9 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             return currentRows;
         }
 
-        public async Task<List<TwoNestedSelectTableRow>> RetrieveAllAvailableResponses(string dynamicResponseId)
+        public async Task<List<TwoNestedSelectTableRow>> RetrieveAllAvailableResponses(string responseId)
         {
-            return await GetAllRowsMatchingResponseId(dynamicResponseId);
+            return await GetAllRowsMatchingResponseId(responseId);
         }
 
         private CategoryRetriever GetInnerAndOuterCategories(List<TwoNestedSelectTableRow> rawRows)
@@ -172,7 +172,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             var (innerCategories, outerCategories) = GetInnerAndOuterCategories(update);
 
             var nodes = await convoNodeStore.Query()
-                .Where(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId)
+                .Where(x => x.IsPricingStrategyTableNode && splitter.GetTableIdFromPricingStrategyNodeType(x.NodeType) == tableId)
                 .OrderBy(x => x.ResolveOrder).ToListAsync(convoNodeStore.CancellationToken);
 
             if (nodes.Count > 0)
@@ -203,7 +203,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                     NodeTypeCode.X,
                     resolveOrder: 0,
                     isMultiOptionEditable: false,
-                    dynamicType: widgetResponseKey,
+                    pricingStrategyType: widgetResponseKey,
                     shouldRenderChildren: true
                 ));
 
@@ -222,7 +222,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                     NodeTypeCode.X,
                     resolveOrder: 1,
                     isMultiOptionEditable: false,
-                    dynamicType: widgetResponseKey,
+                    pricingStrategyType: widgetResponseKey,
                     shouldRenderChildren: true
                 ));
         }

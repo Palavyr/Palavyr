@@ -60,7 +60,7 @@ export class NodeCreator {
             isAnabranchMergePoint: false,
             isAnabranchType: false,
             nodeComponentType: "ProvideInfo",
-            isDynamicTableNode: false,
+            isPricingStrategyNode: false,
             resolveOrder: 0,
             dynamicType: "",
             isImageNode: false,

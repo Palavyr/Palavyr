@@ -10,9 +10,9 @@ namespace Palavyr.Core.Sessions
 {
     public class RemoveStaleSessions : IRemoveStaleSessions
     {
-        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<UserSession> sessionStore;
 
-        public RemoveStaleSessions(IEntityStore<Session> sessionStore)
+        public RemoveStaleSessions(IEntityStore<UserSession> sessionStore)
         {
             this.sessionStore = sessionStore;
         }

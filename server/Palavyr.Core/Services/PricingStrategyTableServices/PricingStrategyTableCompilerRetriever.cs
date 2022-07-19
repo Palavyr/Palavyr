@@ -22,7 +22,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
 
         public IPricingStrategyTableCompiler RetrieveCompiler(string pricingStrategyTableType)
         {
-            var compilerType = Assembly.GetExecutingAssembly().GetType($"Palavyr.Core.Services.DynamicTableService.Compilers.I{pricingStrategyTableType}Compiler");
+            var compilerType = Assembly.GetExecutingAssembly().GetType($"Palavyr.Core.Services.PricingStrategyTableService.Compilers.I{pricingStrategyTableType}Compiler");
             if (compilerType is null)
             {
                 throw new Exception($"Compiler type not found: {pricingStrategyTableType}");

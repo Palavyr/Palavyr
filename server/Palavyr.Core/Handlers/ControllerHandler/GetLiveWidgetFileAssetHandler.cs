@@ -27,14 +27,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetLiveWidgetFileAssetResponse> Handle(GetLiveWidgetFileAssetRequest request, CancellationToken cancellationToken)
         {
             var convoNode = await convoNodeStore.Get(request.NodeId, x => x.NodeId);
-            var fileAsset = await fileAssetStore.GetOrNull(convoNode.ImageId, x => x.FileId);
+            var fileAsset = await fileAssetStore.GetOrNull(convoNode.FileId, x => x.FileId);
 
             if (fileAsset is null)
             {
                 return new GetLiveWidgetFileAssetResponse(new FileAssetResource());
             }
 
-            if (fileAsset.LocationKey == null)
+            if (string.IsNullOrEmpty(fileAsset.LocationKey))
             {
                 throw new DomainException("Failed to set the file key for this image.");
             }

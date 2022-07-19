@@ -46,7 +46,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
 
         public async Task DeleteTable(string intentId, string tableId)
         {
-            logger.LogInformation("Deleting dynamic table: {TableId}", tableId);
+            logger.LogInformation("Deleting pricing strategy table: {TableId}", tableId);
             await psMetaStore.Delete(tableId, s => s.TableId);
             await pricingStrategyStore.Delete(tableId, s => s.TableId);
         }
@@ -70,7 +70,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
 
         public async Task<PricingStrategyTableData<TEntity>> GetTableRows(string intentId, string tableId)
         {
-            logger.LogInformation("Getting dynamic table rows: {TableId}", tableId);
+            logger.LogInformation("Getting pricing strategy table rows: {TableId}", tableId);
             var tableRows = await pricingStrategyStore.GetMany(tableId, s => s.TableId);
             if (tableRows.ToList().Count == 0)
             {
@@ -84,26 +84,26 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
 
             var convoNodes = await convoNodeStore.GetMany(intentId, s => s.IntentId);
 
-            var currentDynamic = convoNodes.Where(
+            var currentPricingStrategy = convoNodes.Where(
                 x =>
                 {
-                    if (!x.IsDynamicTableNode) return false;
-                    if (x.DynamicType == null) return false;
-                    return x.DynamicType.EndsWith(tableId);
+                    if (!x.IsPricingStrategyTableNode) return false;
+                    if (x.PricingStrategyType == null) return false;
+                    return x.PricingStrategyType.EndsWith(tableId);
                 });
             var meta = await psMetaStore.Get(tableId, s => s.TableId);
 
             return new PricingStrategyTableData<TEntity>
             {
                 TableRows = tableRows,
-                IsInUse = currentDynamic.Count() > 0,
+                IsInUse = currentPricingStrategy.Count() > 0,
                 TableTag = meta.TableTag
             };
         }
 
         public TEntity GetRowTemplate(string intentId, string tableId)
         {
-            logger.LogInformation("Getting dynamic table row template: {TableId}", tableId);
+            logger.LogInformation("Getting pricing strategy table row template: {TableId}", tableId);
             return (new TEntity()).CreateTemplate(AccountId, intentId, tableId);
         }
 

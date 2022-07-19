@@ -19,12 +19,12 @@ namespace Palavyr.Core.Services.PdfService
             this.accountIdTransport = accountIdTransport;
         }
 
-        public async Task<List<TEntity>> RetrieveAllAvailableResponses(string dynamicResponseId)
+        public async Task<List<TEntity>> RetrieveAllAvailableResponses(string pricingStrategyResponseId)
         {
             return await entityStore
                 .RawReadonlyQuery()
                 .Where(x => x.AccountId == accountIdTransport.AccountId)
-                .Where(x => dynamicResponseId.EndsWith(x.TableId))
+                .Where(x => pricingStrategyResponseId.EndsWith(x.TableId))
                 .ToListAsync(entityStore.CancellationToken);
         }
     }

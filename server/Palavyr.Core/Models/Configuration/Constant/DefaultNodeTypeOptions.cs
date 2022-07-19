@@ -55,7 +55,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new SendResponse(),
                 new TooComplicated(),
                 new Anabranch(),
-                // new ShowImage(),
                 new ShowFileAsset(),
                 new EndWithoutEmail(),
                 new LoopbackAnchor(),
@@ -111,7 +110,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsLoopbackAnchor = true;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
@@ -136,7 +135,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -162,7 +161,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.EndWithoutEmail;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -188,7 +187,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.ShowFileAsset;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -214,7 +213,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.ShowImage;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -241,7 +240,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = true;
                 IsAnabranchType = true;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
@@ -266,7 +265,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.TakeCurrency;
                 IsCurrency = true;
                 IsMultiOptionEditable = false;
@@ -291,7 +290,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.TakeNumber;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -316,7 +315,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.TakeNumber;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -344,7 +343,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.YesNo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -370,7 +369,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.YesNoNotSure;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -395,7 +394,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.YesNotSureCombined;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -420,7 +419,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.NoNotSureCombined;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -445,7 +444,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.TakeText;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -471,7 +470,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.CollectDetails;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -496,7 +495,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.Selection;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -521,7 +520,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
@@ -546,7 +545,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = true;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
@@ -571,7 +570,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = true;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.MultipleChoiceContinue;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
@@ -597,7 +596,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.TooComplicated;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
@@ -622,7 +621,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.SendResponse;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
@@ -648,7 +647,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;

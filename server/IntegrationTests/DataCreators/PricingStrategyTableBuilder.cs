@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IntegrationTests.AppFactory.IntegrationTestFixtures;
-using Palavyr.API.Controllers.Response.Tables.Dynamic;
+using Palavyr.API.Controllers.Response.Tables.PricingStrategy;
 using Palavyr.Core.Common.ExtensionMethods.PathExtensions;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Handlers.ControllerHandler;

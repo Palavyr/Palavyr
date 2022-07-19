@@ -36,7 +36,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             
             var culture = new CultureInfo(newLocale.Name);
 
-            var localeMeta = new LocaleDetails
+            var localeMeta = new LocaleResource
             {
                 CurrentLocale = culture.ConvertToResource(),
                 LocaleMap = culture.CreateLocaleMap()
@@ -48,14 +48,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyLocaleResponse
     {
-        public ModifyLocaleResponse(LocaleDetails response) => Response = response;
-        public LocaleDetails Response { get; set; }
+        public ModifyLocaleResponse(LocaleResource response) => Response = response;
+        public LocaleResource Response { get; set; }
     }
 
-    public class LocaleDetails
+    public class LocaleResource
     {
-        public LocaleResource CurrentLocale { get; set; }
-        public LocaleResource[] LocaleMap { get; set; }
+        public Resources.LocaleResource CurrentLocale { get; set; }
+        public Resources.LocaleResource[] LocaleMap { get; set; }
     }
 
     public class ModifyLocaleRequest : IRequest<ModifyLocaleResponse>

@@ -106,28 +106,27 @@ namespace Palavyr.Core.Services.PdfService
         {
             var tables = new List<Table>();
             var staticTables = await staticTableCompiler.CollectStaticTables(intentId, culture, 2); // ui always sends a number - 1 or greater.
-            var dynamicTables = await CollectPreviewDynamicTables(intentId, culture);
+            var pricingStrategyTables = await CollectPreviewPricingStrategyTables(intentId, culture);
 
             tables.AddRange(staticTables);
-            tables.AddRange(dynamicTables);
+            tables.AddRange(pricingStrategyTables);
             return tables;
         }
 
-        private async Task<List<Table>> CollectPreviewDynamicTables(string intentId, CultureInfo culture)
+        private async Task<List<Table>> CollectPreviewPricingStrategyTables(string intentId, CultureInfo culture)
         {
             var intent = await intentStore.GetIntentComplete(intentId);
-            var dynamicTableMetas = intent.DynamicTableMetas;
+            var pricingStrategyTableMetas = intent.PricingStrategyTableMetas;
 
             var rows = new List<TableRow>();
-            foreach (var tableMeta in dynamicTableMetas)
+            foreach (var tableMeta in pricingStrategyTableMetas)
             {
-                // TODO: These need to retrieve the INTERFACE Yo
-                var dynamicCompiler = compilerRetriever.RetrieveCompiler(tableMeta.TableType);
-                var newRows = await dynamicCompiler.CreatePreviewData(tableMeta, intent, culture);
+                var pricingStrategyCompiler = compilerRetriever.RetrieveCompiler(tableMeta.TableType);
+                var newRows = await pricingStrategyCompiler.CreatePreviewData(tableMeta, intent, culture);
                 rows.AddRange(newRows);
             }
 
-            var table = new Table("Variable estimates determined by your responses", rows, culture, intent.IncludeDynamicTableTotals);
+            var table = new Table("Variable estimates determined by your responses", rows, culture, intent.IncludePricingStrategyTableTotals);
             return new List<Table>() { table };
         }
     }

@@ -14,7 +14,7 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
                 .Query()
                 .Include(row => row.AttachmentRecords)
                 .Include(row => row.ConversationNodes)
-                .Include(row => row.DynamicTableMetas)
+                .Include(row => row.PricingStrategyTableMetas)
                 .Include(row => row.StaticTablesMetas)
                 .ThenInclude(meta => meta.StaticTableRows)
                 .ThenInclude(row => row.Fee)
@@ -28,13 +28,13 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
             return intentComplete;
         }
 
-        public static async Task<List<Intent>> GetActiveIntentsWithConvoAndDynamicAndStaticTables(this IEntityStore<Intent> intentStore)
+        public static async Task<List<Intent>> GetActiveIntentsWithConvoAndPricingStrategyAndStaticTables(this IEntityStore<Intent> intentStore)
         {
             return await intentStore
                 .Query()
                 .Where(row => row.IsEnabled)
                 .Include(row => row.ConversationNodes)
-                .Include(row => row.DynamicTableMetas)
+                .Include(row => row.PricingStrategyTableMetas)
                 .Include(row => row.StaticTablesMetas)
                 .ThenInclude(row => row.StaticTableRows)
                 .ToListAsync(intentStore.CancellationToken);

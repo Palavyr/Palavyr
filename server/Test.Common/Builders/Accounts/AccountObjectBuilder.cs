@@ -141,7 +141,7 @@ namespace Test.Common.Builders.Accounts
                 PlanType = planT,
                 Active = active,
                 CurrentPeriodEnd = periodEnd,
-                IntroductionId = A.RandomId()
+                IntroIntentId = A.RandomId()
             };
         }
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Data.Entities;
-using Palavyr.Core.Data.Entities.DynamicTables;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 
 namespace Palavyr.Core.Data
 {
@@ -11,7 +11,7 @@ namespace Palavyr.Core.Data
         }
 
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Session> Sessions { get; set; }
+        public DbSet<UserSession> Sessions { get; set; }
         public DbSet<EmailVerification> EmailVerifications { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<StripeWebhookReceivedRecord> StripeWebhookReceivedRecords { get; set; }

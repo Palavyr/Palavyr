@@ -2,13 +2,13 @@
 
 namespace Palavyr.Core.Services.AccountServices.PlanTypes
 {
-    public class FreePlanTypeMeta : PlanTypeMetaBase
+    public class FreePlanTypeMeta : PlanTypeMetaResource
     {
         public FreePlanTypeMeta()
         {
             AllowedAttachments = 0;
             AllowedStaticTables = 1;
-            AllowedDynamicTables = 1;
+            AllowedPricingStrategyTables = 1;
             AllowedIntents = 2;
 
             AllowedFileUpload = false;
@@ -21,13 +21,13 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class LytePlanTypeMeta : PlanTypeMetaBase
+    public class LytePlanTypeMeta : PlanTypeMetaResource
     {
         public LytePlanTypeMeta()
         {
             AllowedAttachments = 0;
             AllowedStaticTables = 2;
-            AllowedDynamicTables = 2;
+            AllowedPricingStrategyTables = 2;
             AllowedIntents = 6;
 
             AllowedFileUpload = false;
@@ -40,13 +40,13 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class PremiumPlanTypeMeta : PlanTypeMetaBase
+    public class PremiumPlanTypeMeta : PlanTypeMetaResource
     {
         public PremiumPlanTypeMeta()
         {
             AllowedAttachments = 2;
             AllowedStaticTables = 2;
-            AllowedDynamicTables = 2;
+            AllowedPricingStrategyTables = 2;
             AllowedIntents = 10;
 
             AllowedFileUpload = true;
@@ -59,13 +59,13 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class ProPlanTypeMeta : PlanTypeMetaBase
+    public class ProPlanTypeMeta : PlanTypeMetaResource
     {
         public ProPlanTypeMeta()
         {
             AllowedAttachments = 999999;
             AllowedStaticTables = 999999;
-            AllowedDynamicTables = 999999;
+            AllowedPricingStrategyTables = 999999;
             AllowedIntents = 999999;
 
             AllowedFileUpload = true;

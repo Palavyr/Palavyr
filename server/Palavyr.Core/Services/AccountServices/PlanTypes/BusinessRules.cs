@@ -7,10 +7,10 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
 {
     public interface IBusinessRules
     {
-        Task<PlanTypeMetaBase> GetPlanTypeMeta();
+        Task<PlanTypeMetaResource> GetPlanTypeMeta();
         Task<int> GetAllowedAttachments();
         Task<int> GetAllowedStaticTables();
-        Task<int> GetAllowedDynamicTables();
+        Task<int> GetAllowedPricingStrategyTables();
         Task<int> GetAllowedIntents();
         Task<bool> GetAllowedImageUpload();
         Task<bool> GetAllowedEmailNotifications();
@@ -29,7 +29,7 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
             this.accountIdTransport = accountIdTransport;
         }
 
-        public async Task<PlanTypeMetaBase> GetPlanTypeMeta()
+        public async Task<PlanTypeMetaResource> GetPlanTypeMeta()
         {
             var planType = await planTypeRetriever.GetCurrentPlanType();
             if (planType == Account.PlanTypeEnum.Free.ToString())
@@ -67,10 +67,10 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
             return currentPlan.AllowedStaticTables;
         }
 
-        public async Task<int> GetAllowedDynamicTables()
+        public async Task<int> GetAllowedPricingStrategyTables()
         {
             var currentPlan = await GetPlanTypeMeta();
-            return currentPlan.AllowedDynamicTables;
+            return currentPlan.AllowedPricingStrategyTables;
         }
 
         public async Task<int> GetAllowedIntents()

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { BasicThresholdData, DynamicTable, DynamicTableProps } from "@Palavyr-Types";
+import { BasicThresholdData, PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
@@ -8,9 +8,9 @@ import { BasicThresholdBody } from "./BasicThresholdBody";
 import { useState } from "react";
 import { Button, makeStyles, Table, AccordionActions } from "@material-ui/core";
 import { DisplayTableData } from "../DisplayTableData";
-import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { DynamicTableHeader } from "../../DynamicTableHeader";
+import { PricingStrategyHeader } from "../../PricingStrategyHeader";
 import { cloneDeep } from "lodash";
 import { useIsMounted } from "@common/hooks/useIsMounted";
 
@@ -45,10 +45,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const BasicThreshold = ({ showDebug, tableId, setTables, intentId, deleteAction, tables, tableIndex, availableDynamicTableOptions, tableNameMap, unitTypes, inUse, table }: DynamicTableProps) => {
+export const BasicThreshold = ({ showDebug, tableId, setTables, intentId, deleteAction, tables, tableIndex, availablePricingStrategyOptions, tableNameMap, unitTypes, inUse, table }: PricingStrategyProps) => {
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
-    const [localTable, setLocalTable] = useState<DynamicTable>();
+    const [localTable, setLocalTable] = useState<PricingStrategy>();
     const isMounted = useIsMounted();
 
     useEffect(() => {
@@ -61,7 +61,7 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, intentId, delete
         if (isMounted) {
             (async () => {
                 if (localTable) {
-                    const { tableRows } = await repository.Configuration.Tables.Dynamic.GetDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                    const { tableRows } = await repository.Configuration.Tables.Dynamic.GetPricingStrategyRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                     localTable.tableRows = tableRows;
                     setLocalTable(cloneDeep(localTable));
                 }
@@ -87,10 +87,10 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, intentId, delete
             if (isValid) {
                 const currentMeta = localTable.tableMeta;
 
-                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.SaveDynamicTable<BasicThresholdData[]>(
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(currentMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<BasicThresholdData[]>(
                     intentId,
-                    DynamicTableTypes.BasicThreshold,
+                    PricingStrategyTypes.BasicThreshold,
                     tableRows,
                     localTable.tableMeta.tableId,
                     localTable.tableMeta.tableTag
@@ -118,11 +118,11 @@ export const BasicThreshold = ({ showDebug, tableId, setTables, intentId, delete
 
     return localTable ? (
         <>
-            <DynamicTableHeader
+            <PricingStrategyHeader
                 localTable={localTable}
                 setLocalTable={setLocalTable}
                 setTables={setTables}
-                availableDynamicTableOptions={availableDynamicTableOptions}
+                availablePricingStrategyOptions={availablePricingStrategyOptions}
                 unitTypes={unitTypes}
                 inUse={inUse}
             />

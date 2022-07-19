@@ -1,7 +1,7 @@
 import { TableGroup } from "@Palavyr-Types";
 import { groupBy } from "lodash";
 import React from "react";
-import { IDynamicTableBody, TwoNestedCategoryData } from "@Palavyr-Types";
+import { IPricingStrategyBody, TwoNestedCategoryData } from "@Palavyr-Types";
 import { TwoNestedCategoriesItemTable } from "./TwoNestedCategoriesItemTable";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export interface ITwoNestedCategoriesContainer extends IDynamicTableBody {
+export interface ITwoNestedCategoriesContainer extends IPricingStrategyBody {
     addInnerCategory(): void;
     modifier: TwoNestedCategoriesModifier;
 }

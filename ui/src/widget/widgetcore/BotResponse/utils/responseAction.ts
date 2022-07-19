@@ -60,7 +60,7 @@ export const responseAction = async (
             context.addKeyValue(keyValue);
         }
 
-        if (node.isDynamicTableNode && node.dynamicType) {
+        if (node.isPricingStrategyNode && node.dynamicType) {
             const updatedDynamicResponses = setDynamicResponse(context.dynamicResponses, node.dynamicType, node.nodeId, response.toString());
 
             context.setDynamicResponses(updatedDynamicResponses);

@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles, TableBody } from "@material-ui/core";
 import { SelectOneFlatRow } from "./SelectOneFlatRow";
-import { IDynamicTableBody, SelectOneFlatData } from "@Palavyr-Types";
+import { IPricingStrategyBody, SelectOneFlatData } from "@Palavyr-Types";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 
 const useStyles = makeStyles(theme => ({
@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SelectOneFlatBody = ({ tableData, modifier }: IDynamicTableBody) => {
+export const SelectOneFlatBody = ({ tableData, modifier }: IPricingStrategyBody) => {
     const cls = useStyles();
     return (
         <TableBody className={cls.body}>

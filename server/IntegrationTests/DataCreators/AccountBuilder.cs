@@ -24,9 +24,9 @@ namespace IntegrationTests.DataCreators
             this.testBase = testBase;
         }
 
-        public async Task<Credentials> Build(string email, string password)
+        public async Task<CredentialsResource> Build(string email, string password)
         {
-            var credentials = await testBase.Client.Post<CreateNewAccountRequest, Credentials>(
+            var credentials = await testBase.Client.Post<CreateNewAccountRequest, CredentialsResource>(
                 new CreateNewAccountRequest
                 {
                     EmailAddress = email,

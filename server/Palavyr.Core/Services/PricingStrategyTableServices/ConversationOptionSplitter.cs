@@ -11,7 +11,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
         string JoinValueOptions(List<string> options);
         string JoinNodeChildrenArray(List<string> nodeChildrenParts);
         List<string> SplitValueOptions(string options);
-        string GetTableIdFromDynamicNodeType(string nodeName);
+        string GetTableIdFromPricingStrategyNodeType(string nodeName);
         string[] SplitNodeChildrenString(string nodeChildrenString);
     }
 
@@ -51,7 +51,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             return options.Split(Delimiters.ValueOptionDelimiter).ToList();
         }
 
-        public string GetTableIdFromDynamicNodeType(string nodeName) => finder.FindFirstGuidSuffixOrNull(nodeName);
+        public string GetTableIdFromPricingStrategyNodeType(string nodeName) => finder.FindFirstGuidSuffixOrNull(nodeName);
 
         public string[] SplitNodeChildrenString(string nodeChildrenString)
         {

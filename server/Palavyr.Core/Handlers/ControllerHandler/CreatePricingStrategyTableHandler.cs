@@ -49,7 +49,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             var intent = await intentStore.GetIntentComplete(request.IntentId);
 
-            var dynamicTables = intent.DynamicTableMetas;
+            var pricingStrategyTables = intent.PricingStrategyTableMetas;
 
             var tableId = Guid.NewGuid().ToString();
             var tableTag = "Default-" + StaticGuidUtils.CreatePseudoRandomString(5);
@@ -63,8 +63,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 accountIdTransport.AccountId,
                 UnitIds.Currency);
 
-            dynamicTables.Add(newTableMeta);
-            intent.DynamicTableMetas = dynamicTables;
+            pricingStrategyTables.Add(newTableMeta);
+            intent.PricingStrategyTableMetas = pricingStrategyTables;
 
             var template = templateCreator.CreateTemplate(request.IntentId, tableId);
             await pricingStrategyStore.Create(template);

@@ -36,7 +36,7 @@ namespace IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
             var emailRequest = new EmailRequest
             {
                 ConversationId = record.ConversationId,
-                DynamicResponses = new DynamicResponses(),
+                PricingStrategyResponses = new PricingStrategyResponses(),
                 EmailAddress = "test.palavyr@example.com",
                 Name = "Palavyr",
                 Phone = "123456"

@@ -3,10 +3,10 @@ import { CategoryNestedThreshold } from "./tableComponents/CategoryNestedThresho
 import { PercentOfThreshold } from "./tableComponents/PercentOfThreshold/PercentOfThreshold";
 import { SelectOneFlat } from "./tableComponents/SelectOneFlat/SelectOneFlat";
 import { TwoNestedCategories } from "./tableComponents/TwoNestedCategories/TwoNestedCategories";
-import { DynamicTableComponentMap } from "@Palavyr-Types";
+import { PricingStrategyComponentMap } from "@Palavyr-Types";
 
 //These must be kept in sync
-export enum DynamicTableTypes {
+export enum PricingStrategyTypes {
     SelectOneFlat = "SelectOneFlat",
     PercentOfThreshold = "PercentOfThreshold",
     BasicThreshold = "BasicThreshold",
@@ -14,10 +14,10 @@ export enum DynamicTableTypes {
     CategoryNestedThreshold = "CategoryNestedThreshold",
 }
 
-export const dynamicTableComponentMap: DynamicTableComponentMap = {
-    [DynamicTableTypes.SelectOneFlat]: SelectOneFlat,
-    [DynamicTableTypes.PercentOfThreshold]: PercentOfThreshold,
-    [DynamicTableTypes.BasicThreshold]: BasicThreshold,
-    [DynamicTableTypes.TwoNestedCategory]: TwoNestedCategories,
-    [DynamicTableTypes.CategoryNestedThreshold]: CategoryNestedThreshold,
+export const PricingStrategyComponentMap: PricingStrategyComponentMap = {
+    [PricingStrategyTypes.SelectOneFlat]: SelectOneFlat,
+    [PricingStrategyTypes.PercentOfThreshold]: PercentOfThreshold,
+    [PricingStrategyTypes.BasicThreshold]: BasicThreshold,
+    [PricingStrategyTypes.TwoNestedCategory]: TwoNestedCategories,
+    [PricingStrategyTypes.CategoryNestedThreshold]: CategoryNestedThreshold,
 };

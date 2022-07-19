@@ -22,16 +22,16 @@ namespace Palavyr.Core.Services.FileAssetServices.FileAssetLinkers
         {
             var node = await convoNodeStore.Get(nodeId, s => s.NodeId);
             var fileAsset = await fileAssetStore.Get(fileId, s => s.FileId);
-            node.ImageId = fileAsset.FileId;
+            node.FileId = fileAsset.FileId;
         }
 
         public async Task Unlink(string fileId, string _)
         {
             if (fileId == null) throw new ArgumentNullException(nameof(fileId));
-            var nodes = await convoNodeStore.GetMany(fileId, s => s.ImageId);
+            var nodes = await convoNodeStore.GetMany(fileId, s => s.FileId);
             foreach (var node in nodes)
             {
-                node.ImageId = string.Empty;
+                node.FileId = string.Empty;
             }
         }
     }

@@ -10,7 +10,7 @@ namespace Palavyr.Core.Services.PdfService
         public Task<string> BuildResponseHtml(
             string intentId,
             CriticalResponses criticalResponses,
-            List<Table> dynamicThenStaticTables,
+            List<Table> pricingStrategyThenStaticTables,
             EmailRequest emailRequest);
     }
 }

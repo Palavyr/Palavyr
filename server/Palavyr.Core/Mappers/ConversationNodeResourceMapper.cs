@@ -30,12 +30,12 @@ namespace Palavyr.Core.Mappers
                 IsAnabranchMergePoint = @from.IsAnabranchMergePoint,
                 IsCurrency = @from.IsCurrency,
                 IsMultiOptionEditable = @from.IsMultiOptionEditable,
-                IsDynamicTableNode = @from.IsDynamicTableNode,
+                IsPricingStrategyNode = @from.IsPricingStrategyTableNode,
                 ResolveOrder = @from.ResolveOrder,
                 NodeComponentType = @from.NodeComponentType,
-                DynamicType = @from.DynamicType,
+                PricingStrategyType = @from.PricingStrategyType,
                 IsImageNode = @from.IsImageNode,
-                ImageId = @from.ImageId,
+                FileId = @from.FileId,
                 IsLoopbackAnchorType = @from.IsLoopbackAnchorType,
                 NodeTypeCode = @from.NodeTypeCode
             };

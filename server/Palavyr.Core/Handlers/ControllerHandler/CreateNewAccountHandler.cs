@@ -24,8 +24,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class CreateNewAccountResponse
     {
-        public CreateNewAccountResponse(Credentials response) => Response = response;
-        public Credentials Response { get; set; }
+        public CreateNewAccountResponse(CredentialsResource response) => Response = response;
+        public CredentialsResource Response { get; set; }
     }
 
     public class CreateNewAccountRequest : IRequest<CreateNewAccountResponse>

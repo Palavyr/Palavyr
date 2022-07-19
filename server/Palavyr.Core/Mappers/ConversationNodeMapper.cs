@@ -38,13 +38,13 @@ namespace Palavyr.Core.Mappers
                 @from.ShouldShowMultiOption,
                 @from.IsAnabranchType,
                 @from.IsAnabranchMergePoint,
-                @from.IsDynamicTableNode,
+                @from.IsPricingStrategyNode,
                 @from.IsCurrency,
                 @from.IsMultiOptionEditable,
                 @from.ResolveOrder,
-                @from.DynamicType,
+                @from.PricingStrategyType,
                 @from.IsImageNode,
-                @from.ImageId,
+                @from.FileId,
                 @from.IsLoopbackAnchorType
             );
         }

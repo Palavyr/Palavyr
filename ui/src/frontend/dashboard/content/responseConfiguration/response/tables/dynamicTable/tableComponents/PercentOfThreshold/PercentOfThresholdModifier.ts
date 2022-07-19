@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Modifier, PercentOfThresholdData, SetState } from "@Palavyr-Types";
 import { cloneDeep, findIndex, uniq, uniqBy } from "lodash";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 
 export class PercentOfThresholdModifier implements Modifier {
@@ -11,7 +11,7 @@ export class PercentOfThresholdModifier implements Modifier {
 
     constructor(onClick: SetState<PercentOfThresholdData[]>) {
         this.onClick = onClick;
-        this.tableType = DynamicTableTypes.PercentOfThreshold;
+        this.tableType = PricingStrategyTypes.PercentOfThreshold;
     }
 
     setTables(newState: PercentOfThresholdData[]) {
@@ -24,14 +24,14 @@ export class PercentOfThresholdModifier implements Modifier {
     }
 
     async addItem(tableData: PercentOfThresholdData[], repository: PalavyrRepository, intentId: string, tableId: string) {
-        const newItemInitialrow = await repository.Configuration.Tables.Dynamic.GetDynamicTableDataTemplate<PercentOfThresholdData>(intentId, this.tableType, tableId);
+        const newItemInitialrow = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<PercentOfThresholdData>(intentId, this.tableType, tableId);
         newItemInitialrow.itemOrder = this._getOrderedUniqItemIds(tableData).length;
         tableData.push(newItemInitialrow);
         this.setTables(tableData);
     }
 
     async addRow(tableData: PercentOfThresholdData[], repository: PalavyrRepository, intentId: string, tableId: string, itemId: string) {
-        const newRowTemplate = await repository.Configuration.Tables.Dynamic.GetDynamicTableDataTemplate<PercentOfThresholdData>(intentId, this.tableType, tableId);
+        const newRowTemplate = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<PercentOfThresholdData>(intentId, this.tableType, tableId);
         newRowTemplate.itemId = itemId;
         tableData.push(newRowTemplate);
         this.setTables(tableData);

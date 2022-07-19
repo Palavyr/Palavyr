@@ -20,12 +20,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<PerformInternalCheckResponse> Handle(PerformInternalCheckRequest request, CancellationToken cancellationToken)
         {
-            var dynamicResponseComponents = pricingStrategyResponseComponentExtractor
-                .ExtractDynamicTableComponents(request.CurrentDynamicResponseState);
-            var result = await dynamicResponseComponents.Compiler.PerformInternalCheck(
+            var pricingStrategyResponseComponents = pricingStrategyResponseComponentExtractor
+                .ExtractPricingStrategyTableComponents(request.CurrentPricingStrategyResponseState);
+            var result = await pricingStrategyResponseComponents.Compiler.PerformInternalCheck(
                 request.Node,
                 request.Response,
-                dynamicResponseComponents
+                pricingStrategyResponseComponents
             );
             return new PerformInternalCheckResponse(result);
         }
@@ -41,6 +41,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         public ConversationNode Node { get; set; }
         public string Response { get; set; }
-        public DynamicResponse CurrentDynamicResponseState { get; set; }
+        public PricingStrategyResponse CurrentPricingStrategyResponseState { get; set; }
     }
 }

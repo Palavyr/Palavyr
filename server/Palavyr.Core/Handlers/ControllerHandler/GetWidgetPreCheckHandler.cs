@@ -41,11 +41,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             logger.LogDebug("Checking if account ID exists...");
             if (accountIdTransport?.AccountId == null)
             {
-                return new GetWidgetPreCheckResponse(PreCheckResult.CreateApiKeyResult(false));
+                return new GetWidgetPreCheckResponse(PreCheckResultResource.CreateApiKeyResult(false));
             }
 
             var widgetPrefs = await widgetStore.Get(widgetStore.AccountId, s => s.AccountId);
-            var intents = await intentStore.GetActiveIntentsWithConvoAndDynamicAndStaticTables();
+            var intents = await intentStore.GetActiveIntentsWithConvoAndPricingStrategyAndStaticTables();
 
             var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(intents, widgetPrefs, request.Demo, logger);
             logger.LogDebug("Pre-check run successful");
@@ -57,8 +57,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetWidgetPreCheckResponse
     {
-        public GetWidgetPreCheckResponse(PreCheckResult response) => Response = response;
-        public PreCheckResult Response { get; set; }
+        public GetWidgetPreCheckResponse(PreCheckResultResource response) => Response = response;
+        public PreCheckResultResource Response { get; set; }
     }
 
     public class GetWidgetPreCheckRequest : IRequest<GetWidgetPreCheckResponse>

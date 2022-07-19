@@ -1,5 +1,5 @@
 IGetEmailSent
-IDynamicTableController`2
+IPricingStrategyTableController`2
 IForbiddenEntityStore
 IEntityStore`1
 IHaveTempDirectory

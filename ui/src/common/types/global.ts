@@ -3,7 +3,7 @@ import { COULD_NOT_FIND_SERVER, INVALID_EMAIL, INVALID_PASSWORD, NOT_A_DEFAULT_A
 import { PalavyrLinkedList } from "frontend/dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
 import React, { Dispatch, ElementType, SetStateAction } from "react";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
-import { DynamicTableTypes } from "@frontend/dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableRegistry";
+import { PricingStrategyTypes } from "@frontend/dashboard/content/responseConfiguration/response/tables/PricingStrategy/PricingStrategyRegistry";
 import { IAppContext } from "widget/hook";
 // / <reference types="node" />
 // / <reference types="react" />
@@ -142,7 +142,7 @@ export type ConvoNode = {
     shouldRenderChildren: boolean;
     shouldShowMultiOption: boolean;
     nodeComponentType: string;
-    isDynamicTableNode: boolean;
+    isPricingStrategyNode: boolean;
     isImageNode: boolean;
     imageId: string | null;
     resolveOrder: number;
@@ -164,7 +164,7 @@ export type AreaTable = {
     emailTemplate: string; // an email template
     convo: Array<ConvoNode>;
     staticTables: StaticTableMetas;
-    dynamicTableType: string;
+    PricingStrategyType: string;
     groupId: string;
     areaSpecificEmail: string;
     emailIsVerified: boolean;
@@ -174,7 +174,7 @@ export type AreaTable = {
     useAreaFallbackEmail: boolean;
     fallbackSubject: string;
     fallbackEmailTemplate: string;
-    includeDynamicTableTotals: boolean;
+    includePricingStrategyTotals: boolean;
 };
 
 export type StaticTableMetas = Array<StaticTableMeta>;
@@ -268,7 +268,7 @@ export type EnquiryActivtyResource = {
     intentCompletePerIntent: number[];
 };
 
-export type DynamicTableMeta = {
+export type PricingStrategyMeta = {
     id: number;
     tableTag: string;
     tableType: string;
@@ -282,7 +282,7 @@ export type DynamicTableMeta = {
     unitId: number;
 };
 
-export type DynamicTableMetas = Array<DynamicTableMeta>;
+export type PricingStrategyMetas = Array<PricingStrategyMeta>;
 
 export type AlertType = {
     title: string;
@@ -370,8 +370,8 @@ export type Product = StripeProduct & {
 };
 
 export type Products = Array<Product>;
-export type Prices = Array<Price>;
-export type Price = StripeProduct & {
+export type PriceResources = PriceResource[];
+export type PriceResource = StripeProduct & {
     billingScheme: string;
     currency: "usd" | "aud" | "can" | "eur";
     lookupKey: string | null;
@@ -504,7 +504,7 @@ export enum PurchaseTypes {
 export type PlanTypeMeta = {
     allowedAttachments: number;
     allowedStaticTables: number;
-    allowedDynamicTables: number;
+    allowedPricingStrategys: number;
     allowedAreas: number;
 
     allowedFileUpload: boolean;
@@ -794,20 +794,20 @@ export type CategoryNestedThresholdData = {
 
 export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | BasicThresholdData[] | TwoNestedCategoryData[] | CategoryNestedThresholdData[] | any; // | SelectOneThresholdData etc
 
-export type DynamicTableData = {
+export type PricingStrategyData = {
     tableRows: TableData;
     isInUse: boolean;
 };
 
-export interface IDynamicTableBody {
+export interface IPricingStrategyBody {
     tableData: TableData;
     modifier: any;
     unitGroup?: UnitGroups;
     unitPrettyName?: UnitPrettyNames;
 }
 
-export type DynamicTable = {
-    tableMeta: DynamicTableMeta;
+export type PricingStrategy = {
+    tableMeta: PricingStrategyMeta;
     tableRows: TableData;
 };
 
@@ -819,8 +819,8 @@ export interface Modifier {
     validateTable: (tableRows: TableData) => PricingStrategyValidationResult;
 }
 
-export type DynamicTableProps = {
-    availableDynamicTableOptions: PricingStrategyTableTypeResource[];
+export type PricingStrategyProps = {
+    availablePricingStrategyOptions: PricingStrategyTableTypeResource[];
     tableNameMap: TableNameMap;
     unitTypes: QuantUnitDefinition[];
     inUse: boolean;
@@ -828,14 +828,14 @@ export type DynamicTableProps = {
     tableId: string;
     deleteAction(): Promise<void>;
     showDebug: boolean;
-    setTables: SetState<DynamicTable[]>;
-    table: DynamicTable;
-    tables: DynamicTable[];
+    setTables: SetState<PricingStrategy[]>;
+    table: PricingStrategy;
+    tables: PricingStrategy[];
     tableIndex: number;
 };
 
-export type DynamicTableComponentMap = {
-    [key: string]: (props: DynamicTableProps) => JSX.Element;
+export type PricingStrategyComponentMap = {
+    [key: string]: (props: PricingStrategyProps) => JSX.Element;
 };
 
 export type PricingStrategyTableTypeResource = {
@@ -1016,7 +1016,7 @@ export type WidgetNodeResource = {
     optionPath: string | null;
     valueOptions: string; // needs to be split by ","
     nodeComponentType: string;
-    isDynamicTableNode: boolean;
+    isPricingStrategyNode: boolean;
     dynamicType: string | null;
     resolveOrder: number | null;
     fileAssetResource: FileAssetResource | null;
@@ -1249,7 +1249,7 @@ export interface IPalavyrNode {
     shouldPresentResponse: boolean; // isCritical
     nodeType: string; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
     isMultiOptionType: boolean;
-    isDynamicTableNode: boolean;
+    isPricingStrategyNode: boolean;
     nodeComponentType: string;
     resolveOrder: number;
     shouldShowMultiOption: boolean;

@@ -38,10 +38,10 @@ namespace Palavyr.Core.Models.Nodes
                 allRequiredNodes.Add(DefaultNodeTypeOptions.CreateTakeNumberIndividuals());
             }
 
-            foreach (var dynamicTableMeta in intent.DynamicTableMetas)
+            foreach (var pricingStrategyTableMeta in intent.PricingStrategyTableMetas)
             {
-                var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(dynamicTableMeta.TableType);
-                await compiler.CompileToConfigurationNodes(dynamicTableMeta, allRequiredNodes);
+                var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(pricingStrategyTableMeta.TableType);
+                await compiler.CompileToConfigurationNodes(pricingStrategyTableMeta, allRequiredNodes);
             }
 
             return allRequiredNodes;

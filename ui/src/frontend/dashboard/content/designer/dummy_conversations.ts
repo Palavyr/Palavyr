@@ -10,7 +10,7 @@ export const convoA = (areaId: string) => [
         optionPath: "",
         valueOptions: "Placeholder",
         nodeComponentType: "ProvideInfo",
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         dynamicType: null,
         resolveOrder: 0,
         fileAssetResource: null,
@@ -26,7 +26,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "Placeholder",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "ProvideInfo",
 
         resolveOrder: 0,
@@ -46,7 +46,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "Good|peg|Bad",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "MultipleChoiceAsPath",
 
         resolveOrder: 0,
@@ -68,7 +68,7 @@ export const convoA = (areaId: string) => [
 
         isTerminalType: true,
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendResponse",
 
         resolveOrder: 0,
@@ -90,7 +90,7 @@ export const convoA = (areaId: string) => [
 
         isTerminalType: true,
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendResponse",
 
         resolveOrder: 0,
@@ -110,7 +110,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "No|peg|Yes",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "YesNo",
 
         resolveOrder: null,
@@ -130,7 +130,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendEmail",
 
         resolveOrder: null,
@@ -152,7 +152,7 @@ export const convoA = (areaId: string) => [
 
         isTerminalType: true,
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "Restart",
 
         resolveOrder: null,
@@ -172,7 +172,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "ProvideInfo",
 
         resolveOrder: null,
@@ -194,7 +194,7 @@ export const convoA = (areaId: string) => [
 
         isTerminalType: true,
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "Restart",
 
         resolveOrder: null,
@@ -214,7 +214,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "ProvideInfo",
 
         resolveOrder: null,
@@ -234,7 +234,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendEmail",
 
         resolveOrder: null,
@@ -254,7 +254,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "ProvideInfo",
 
         resolveOrder: null,
@@ -274,7 +274,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendEmail",
 
         resolveOrder: null,
@@ -294,7 +294,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "No|peg|Yes",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "YesNo",
 
         resolveOrder: null,
@@ -314,7 +314,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendTooComplicatedEmail",
 
         resolveOrder: null,
@@ -338,7 +338,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             isCritical: false,
             valueOptions: "Placeholder",
 
-            isDynamicTableNode: false,
+            isPricingStrategyNode: false,
             nodeComponentType: "ProvideInfo",
 
             resolveOrder: 0,
@@ -358,7 +358,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             isCritical: false,
             valueOptions: "Placeholder",
 
-            isDynamicTableNode: false,
+            isPricingStrategyNode: false,
             nodeComponentType: "ProvideInfo",
 
             resolveOrder: 0,
@@ -378,7 +378,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             isCritical: false,
             valueOptions: "Good|peg|Bad",
 
-            isDynamicTableNode: false,
+            isPricingStrategyNode: false,
             nodeComponentType: "MultipleChoiceAsPath",
 
             resolveOrder: 0,
@@ -404,7 +404,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
 
             isTerminalType: true,
 
-            isDynamicTableNode: false,
+            isPricingStrategyNode: false,
             nodeComponentType: "SendResponse",
 
             resolveOrder: 0,

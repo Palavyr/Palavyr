@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { DynamicTable, PricingStrategyTableTypeResource, QuantUnitDefinition, SetState, TableNameMap } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyTableTypeResource, QuantUnitDefinition, SetState, TableNameMap } from "@Palavyr-Types";
 import { Box } from "@material-ui/core";
-import { UnitSelector, PricingStrategySelector } from "./DynamicTableSelector";
+import { UnitSelector, PricingStrategySelector } from "./PricingStrategySelector";
 import { cloneDeep } from "lodash";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -9,13 +9,13 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { TextInput } from "@common/components/TextField/TextInput";
 import { useStyles, includesUnit } from "./PricingStrategyTable";
 
-export interface DynamicTableHeaderProps {
-    availableDynamicTableOptions: PricingStrategyTableTypeResource[];
+export interface PricingStrategyHeaderProps {
+    availablePricingStrategyOptions: PricingStrategyTableTypeResource[];
     unitTypes: QuantUnitDefinition[];
     inUse: boolean;
-    setLocalTable: SetState<DynamicTable>;
-    setTables: SetState<DynamicTable[]>;
-    localTable: DynamicTable;
+    setLocalTable: SetState<PricingStrategy>;
+    setTables: SetState<PricingStrategy[]>;
+    localTable: PricingStrategy;
 }
 
 const unpackUnitMeta = (unitId: number, unitTypes: QuantUnitDefinition[]) => {
@@ -24,7 +24,7 @@ const unpackUnitMeta = (unitId: number, unitTypes: QuantUnitDefinition[]) => {
     return quantDef;
 };
 
-export const DynamicTableHeader = ({ availableDynamicTableOptions, unitTypes, inUse, setLocalTable, localTable }: DynamicTableHeaderProps) => {
+export const PricingStrategyHeader = ({ availablePricingStrategyOptions, unitTypes, inUse, setLocalTable, localTable }: PricingStrategyHeaderProps) => {
     const cls = useStyles();
     const [disabledSelector, setDisabledSelector] = useState<boolean>(false);
     const { repository } = useContext(DashboardContext);
@@ -42,7 +42,7 @@ export const DynamicTableHeader = ({ availableDynamicTableOptions, unitTypes, in
         localTable.tableMeta.tableType = value.tableType;
         localTable.tableMeta.prettyName = value.prettyName;
 
-        const updatedTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(localTable.tableMeta);
+        const updatedTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(localTable.tableMeta);
 
         localTable.tableMeta = updatedTableMeta;
         const quantDef = unpackUnitMeta(updatedTableMeta.unitId, unitTypes);
@@ -67,10 +67,10 @@ export const DynamicTableHeader = ({ availableDynamicTableOptions, unitTypes, in
                 <PricingStrategySelector
                     toolTipTitle={disabledSelector ? "Disabled when pricing strategy is used in the Palavyr configuration." : ""}
                     disabled={disabledSelector}
-                    pricingStrategySelection={availableDynamicTableOptions.filter((x: PricingStrategyTableTypeResource) => x.tableType === localTable.tableMeta.tableType)[0]}
+                    pricingStrategySelection={availablePricingStrategyOptions.filter((x: PricingStrategyTableTypeResource) => x.tableType === localTable.tableMeta.tableType)[0]}
                     getOptionLabel={(option: PricingStrategyTableTypeResource) => option.prettyName}
                     handleChange={onPricingStrategyChange}
-                    tableOptions={availableDynamicTableOptions}
+                    tableOptions={availablePricingStrategyOptions}
                     helperText="Select Pricing Strategy"
                 />
                 {includesUnit(localTable) && (

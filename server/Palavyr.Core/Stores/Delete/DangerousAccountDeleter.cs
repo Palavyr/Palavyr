@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Data;
 using Palavyr.Core.Data.Entities;
-using Palavyr.Core.Data.Entities.DynamicTables;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.FileAssetServices;
@@ -161,7 +161,7 @@ namespace Palavyr.Core.Stores.Delete
             await DeleteAccountAt<AppDataContexts, AttachmentLinkRecord>();
 
             await DeleteAccountAt<AppDataContexts, Account>();
-            await DeleteAccountAt<AppDataContexts, Session>();
+            await DeleteAccountAt<AppDataContexts, UserSession>();
             await DeleteAccountAt<AppDataContexts, EmailVerification>();
             await DeleteAccountAt<AppDataContexts, Subscription>();
             await DeleteAccountAt<AppDataContexts, StripeWebhookReceivedRecord>();

@@ -18,13 +18,13 @@ namespace Palavyr.Core.Services.PdfService
             this.pricingStrategyTablesCompiler = pricingStrategyTablesCompiler;
         }
 
-        public async Task<List<Table>> CompileResponseTables(string intentId, EmailRequest emailRequest, CultureInfo culture, bool includeDynamicTableTotals)
+        public async Task<List<Table>> CompileResponseTables(string intentId, EmailRequest emailRequest, CultureInfo culture, bool includePricingStrategyTableTotals)
         {
             var tables = new List<Table>(); // order matters here
             var staticTables = await staticTableCompiler.CollectStaticTables(intentId, culture, emailRequest.NumIndividuals); // ui always sends a number - 1 or greater.
-            var dynamicTables = await pricingStrategyTablesCompiler.CompileTablesToPdfRows(emailRequest.DynamicResponses, culture, includeDynamicTableTotals);
+            var pricingStrategyTables = await pricingStrategyTablesCompiler.CompileTablesToPdfRows(emailRequest.PricingStrategyResponses, culture, includePricingStrategyTableTotals);
 
-            tables.AddRange(dynamicTables);
+            tables.AddRange(pricingStrategyTables);
             tables.AddRange(staticTables);
             return tables;
         }

@@ -8,7 +8,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
 {
     public interface IPricingStrategyResponseComponentExtractor
     {
-        PricingStrategyResponseComponents ExtractDynamicTableComponents(DynamicResponse dynamicResponse);
+        PricingStrategyResponseComponents ExtractPricingStrategyTableComponents(PricingStrategyResponse pricingStrategyResponse);
     }
 
     public class PricingStrategyResponseComponentExtractor : IPricingStrategyResponseComponentExtractor
@@ -20,28 +20,28 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             this.pricingStrategyTableCompilerRetriever = pricingStrategyTableCompilerRetriever;
         }
 
-        List<string> GetTableKeys(DynamicResponse dynamicResponse)
+        List<string> GetTableKeys(PricingStrategyResponse pricingStrategyResponse)
         {
-            var dynamicTableKeys = dynamicResponse.Keys.ToList(); // in the future, there could be multiple key values
+            var pricingStrategyTableKey = pricingStrategyResponse.Keys.ToList(); // in the future, there could be multiple key values
             // for now, we are only expecting one key. Not sure yet how we can combine multiple tables or if there is even a point to doing this.
-            if (dynamicTableKeys.Count > 1) throw new Exception("Multiple dynamic table keys specified. This is a configuration error");
-            return dynamicTableKeys;
+            if (pricingStrategyTableKey.Count > 1) throw new Exception("Multiple pricing strategy table keys specified. This is a configuration error");
+            return pricingStrategyTableKey;
         }
 
-        string GetDynamicTableName(string tableKey)
+        string GetPricingStrategyTableName(string tableKey)
         {
-            return tableKey.Split(Delimiters.DynamicTableKeyDelimiter).First();
+            return tableKey.Split(Delimiters.PricingStrategyTableKeyDelimiter).First();
         }
         
-        public PricingStrategyResponseComponents ExtractDynamicTableComponents(DynamicResponse dynamicResponse)
+        public PricingStrategyResponseComponents ExtractPricingStrategyTableComponents(PricingStrategyResponse pricingStrategyResponse)
         {
-            var dynamicTableKeys = GetTableKeys(dynamicResponse);
+            var pricingStrategyTableKeys = GetTableKeys(pricingStrategyResponse);
             
-            var responses = dynamicResponse[dynamicTableKeys.Single()];
-            var dynamicTableName = GetDynamicTableName(dynamicTableKeys.Single());
-            var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(dynamicTableName);
+            var responses = pricingStrategyResponse[pricingStrategyTableKeys.Single()];
+            var pricingStrategyTableName = GetPricingStrategyTableName(pricingStrategyTableKeys.Single());
+            var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(pricingStrategyTableName);
 
-            return new PricingStrategyResponseComponents(compiler, responses, dynamicTableName, dynamicTableKeys);
+            return new PricingStrategyResponseComponents(compiler, responses, pricingStrategyTableName, pricingStrategyTableKeys);
         }
     }
 }

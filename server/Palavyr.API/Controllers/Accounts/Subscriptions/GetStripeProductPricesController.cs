@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Stripe;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
@@ -21,7 +20,7 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         }
 
         [HttpGet(Route)]
-        public async Task<List<Price>> Get([FromRoute] GetStripeProductPricesRequest request, CancellationToken cancellationToken)
+        public async Task<List<PriceResource>> Get([FromRoute] GetStripeProductPricesRequest request, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;

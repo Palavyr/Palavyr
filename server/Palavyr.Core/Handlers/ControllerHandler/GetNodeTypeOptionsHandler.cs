@@ -15,25 +15,25 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly ILogger<GetNodeTypeOptionsHandler> logger;
         private readonly IPricingStrategyTableCompilerOrchestrator pricingStrategyTableCompilerOrchestrator;
-        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
 
         public GetNodeTypeOptionsHandler(
             ILogger<GetNodeTypeOptionsHandler> logger,
             IPricingStrategyTableCompilerOrchestrator pricingStrategyTableCompilerOrchestrator,
-            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore)
+            IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore)
         {
             this.logger = logger;
             this.pricingStrategyTableCompilerOrchestrator = pricingStrategyTableCompilerOrchestrator;
-            this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
         }
 
         public async Task<GetNodeTypeOptionsResponse> Handle(GetNodeTypeOptionsRequest request, CancellationToken cancellationToken)
         {
-            var dynamicTableMetas = await dynamicTableMetaStore.GetMany(request.IntentId, s => s.IntentId);
-            var dynamicTableData = await pricingStrategyTableCompilerOrchestrator.CompileTablesToConfigurationNodes(dynamicTableMetas, request.IntentId);
+            var pricingStrategyTableMetas = await pricingStrategyTableMetaStore.GetMany(request.IntentId, s => s.IntentId);
+            var pricingStrategyTableData = await pricingStrategyTableCompilerOrchestrator.CompileTablesToConfigurationNodes(pricingStrategyTableMetas, request.IntentId);
             var defaultNodeTypeOptions = DefaultNodeTypeOptions.DefaultNodeTypeOptionsList;
 
-            var fullNodeTypeOptionsList = defaultNodeTypeOptions.AddAdditionalNodes(dynamicTableData);
+            var fullNodeTypeOptionsList = defaultNodeTypeOptions.AddAdditionalNodes(pricingStrategyTableData);
 
             return new GetNodeTypeOptionsResponse(fullNodeTypeOptionsList);
         }

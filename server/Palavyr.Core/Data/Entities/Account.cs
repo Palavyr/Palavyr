@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
@@ -10,16 +8,16 @@ namespace Palavyr.Core.Data.Entities
 {
     public class Account : Entity, IHaveAccountId
     {
-        public string? Password { get; set; }
+        public string Password { get; set; }
         public string EmailAddress { get; set; }
         public bool DefaultEmailIsVerified { get; set; }
         public string AccountId { get; set; }
-        public string? CompanyName { get; set; }
-        public string? PhoneNumber { get; set; }
+        public string CompanyName { get; set; }
+        public string PhoneNumber { get; set; }
         public DateTime CreationDate { get; set; }
-        public string? AccountLogoUri { get; set; }
-        public string? GeneralFallbackSubject { get; set; }
-        public string? GeneralFallbackEmailTemplate { get; set; }
+        public string AccountLogoUri { get; set; }
+        public string GeneralFallbackSubject { get; set; }
+        public string GeneralFallbackEmailTemplate { get; set; }
 
         public string ApiKey { get; set; }
         public bool Active { get; set; }
@@ -28,9 +26,9 @@ namespace Palavyr.Core.Data.Entities
         public PlanTypeEnum PlanType { get; set; } = PlanTypeEnum.Free;
         public PaymentIntervalEnum? PaymentInterval { get; set; }
         public bool HasUpgraded { get; set; }
-        public string? StripeCustomerId { get; set; }
+        public string StripeCustomerId { get; set; }
         public DateTime CurrentPeriodEnd { get; set; }
-        public string IntroductionId { get; set; }
+        public string IntroIntentId { get; set; }
 
         public bool ShowSeenEnquiries { get; set; }
 
@@ -73,9 +71,9 @@ namespace Palavyr.Core.Data.Entities
             string emailAddress,
             string password,
             string accountId,
-            string? apiKey,
-            string? companyName,
-            string? phoneNumber,
+            string apiKey,
+            string companyName,
+            string phoneNumber,
             bool active,
             string locale,
             PlanTypeEnum planType,
@@ -97,8 +95,13 @@ namespace Palavyr.Core.Data.Entities
             PlanType = planType;
             PaymentInterval = paymentInterval;
             HasUpgraded = hasUpgraded;
-            StripeCustomerId = null;
-            IntroductionId = new GuidUtils().CreateNewId();
+            StripeCustomerId = string.Empty;
+            IntroIntentId = new GuidUtils().CreateNewId();
+            AccountLogoUri = string.Empty;
+            GeneralFallbackSubject = string.Empty;
+            GeneralFallbackEmailTemplate = string.Empty;
+            CurrentPeriodEnd = DateTime.Now;
+            ShowSeenEnquiries = false;
         }
 
         public static Account CreateAccount(
@@ -111,23 +114,29 @@ namespace Palavyr.Core.Data.Entities
                 emailAddress,
                 password,
                 accountId,
-                apiKey,
-                null
+                apiKey
             );
         }
-
 
         public static Account CreateAccount(
             string emailAddress,
             string password,
             string accountId,
             string apiKey,
-            string? stripeCustomerId
-        )
+            string stripeCustomerId)
         {
             return new Account(
-                emailAddress.ToLowerInvariant(), password, accountId, apiKey, null, null, false,
-                "en-AU", PlanTypeEnum.Free, PaymentIntervalEnum.Null, false)
+                emailAddress.ToLowerInvariant(),
+                password,
+                accountId,
+                apiKey,
+                string.Empty,
+                string.Empty,
+                false,
+                "en-AU",
+                PlanTypeEnum.Free,
+                PaymentIntervalEnum.Null,
+                false)
             {
                 StripeCustomerId = stripeCustomerId
             };

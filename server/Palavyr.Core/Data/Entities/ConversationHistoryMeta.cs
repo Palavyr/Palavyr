@@ -1,5 +1,4 @@
-﻿#nullable disable
-
+﻿
 using System;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
@@ -36,7 +35,17 @@ namespace Palavyr.Core.Data.Entities
                 AccountId = accountId,
                 IntentName = intentName,
                 IntentId = intentId,
-                TimeStamp = TimeUtils.CreateNewTimeStamp()
+                TimeStamp = TimeUtils.CreateNewTimeStamp(),
+                ResponsePdfId = string.Empty,
+                EmailTemplateUsed = string.Empty,
+                Seen = false,
+                Name = string.Empty,
+                Email = string.Empty,
+                PhoneNumber = string.Empty,
+                IsDeleted = false,
+                IsFallback = false,
+                Locale = string.Empty,
+                IsComplete = false
             };
         }
 
@@ -65,7 +74,11 @@ namespace Palavyr.Core.Data.Entities
                 Name = name,
                 Email = email,
                 PhoneNumber = phoneNumber,
-                IntentId = intentId
+                IntentId = intentId,
+                IsDeleted = false,
+                IsFallback = false,
+                Locale = string.Empty,
+                IsComplete = false,
             };
         }
     }

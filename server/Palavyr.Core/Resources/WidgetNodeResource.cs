@@ -14,8 +14,8 @@ namespace Palavyr.Core.Resources
         public string OptionPath { get; set; }
         public string ValueOptions { get; set; }
         public string NodeComponentType { get; set; }
-        public bool IsDynamicTableNode { get; set; }
-        public string DynamicType { get; set; }
+        public bool IsPricingStrategyTableNode { get; set; }
+        public string PricingStrategyType { get; set; }
         public int? ResolveOrder { get; set; }
         public int? UnitId { get; set; }
 

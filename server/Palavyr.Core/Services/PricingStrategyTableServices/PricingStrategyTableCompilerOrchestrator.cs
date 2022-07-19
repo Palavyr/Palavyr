@@ -29,29 +29,21 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
         }
 
         public async Task<List<Table>> CompileTablesToPdfRows(
-            DynamicResponses dynamicResponses,
+            PricingStrategyResponses pricingStrategyResponses,
             CultureInfo culture,
             bool includeTotals
         )
         {
             var tableRows = new List<TableRow>();
-            foreach (var dynamicResponse in dynamicResponses)
+            foreach (var pricingStrategyResponse in pricingStrategyResponses)
             {
-                // var dynamicTableKeys = dynamicResponse.Keys.ToList(); // in the future, there could be multiple key values
+                // var pricingStrategyTableKeys = pricingStrategyResponse.Keys.ToList(); // in the future, there could be multiple key values
                 // // for now, we are only expecting one key. Not sure yet how we can combine multiple tables or if there is even a point to doing this.
-                // if (dynamicTableKeys.Count > 1) throw new Exception("Multiple dynamic table keys specified. This is a configuration error");
-                // var dynamicTableKey = dynamicTableKeys[0];
-                // var responses = dynamicResponse[dynamicTableKey];
-                //
-                // var dynamicTableName = dynamicTableKey.Split("-").First();
-                // var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(dynamicTableName);
-                var dynamicResponseComponents = pricingStrategyResponseComponentExtractor.ExtractDynamicTableComponents(dynamicResponse);
+                var pricingStrategyResponseComponents = pricingStrategyResponseComponentExtractor.ExtractPricingStrategyTableComponents(pricingStrategyResponse);
 
-                // List<TableRow> rows;
-                // rows = await compiler.CompileToPdfTableRow(accountId, responses, dynamicTableKeys, culture);
-                var rows = await dynamicResponseComponents.Compiler.CompileToPdfTableRow(
-                    dynamicResponseComponents.Responses,
-                    dynamicResponseComponents.DynamicTableKeys,
+                var rows = await pricingStrategyResponseComponents.Compiler.CompileToPdfTableRow(
+                    pricingStrategyResponseComponents.Responses,
+                    pricingStrategyResponseComponents.PricingStrategyTableKeys,
                     culture
                 );
 
@@ -62,19 +54,19 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             return new List<Table>() { table };
         }
 
-        public async Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<PricingStrategyTableMeta> dynamicTableMetas, string intentId)
+        public async Task<List<NodeTypeOptionResource>> CompileTablesToConfigurationNodes(IEnumerable<PricingStrategyTableMeta> pricingStrategyTableMetas, string intentId)
         {
             var nodes = new List<NodeTypeOptionResource>() { };
-            foreach (var dynamicTableMeta in dynamicTableMetas)
+            foreach (var pricingStrategyTableMeta in pricingStrategyTableMetas)
             {
-                var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(dynamicTableMeta.TableType);
-                await compiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
+                var compiler = pricingStrategyTableCompilerRetriever.RetrieveCompiler(pricingStrategyTableMeta.TableType);
+                await compiler.CompileToConfigurationNodes(pricingStrategyTableMeta, nodes);
             }
 
             return nodes;
         }
 
-        // public async Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<DynamicTableMeta> pricingStrategyMetas)
+        // public async Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<PricingStrategyTableMeta> pricingStrategyMetas)
         // {
         //     var validationResults = new List<PricingStrategyValidationResult>();
         //     foreach (var pricingStrategy in pricingStrategyMetas)

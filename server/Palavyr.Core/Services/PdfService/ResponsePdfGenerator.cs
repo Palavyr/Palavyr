@@ -50,7 +50,7 @@ namespace Palavyr.Core.Services.PdfService
 
             var intent = await intentStore.GetIntentOnly(intentId);
 
-            var responseTables = await responsePdfTableCompiler.CompileResponseTables(intentId, emailRequest, culture, intent.IncludeDynamicTableTotals);
+            var responseTables = await responsePdfTableCompiler.CompileResponseTables(intentId, emailRequest, culture, intent.IncludePricingStrategyTableTotals);
             var html = await responseHtmlBuilder.BuildResponseHtml(intentId, criticalResponses, responseTables, emailRequest);
 
             var fileStem = $"{ResponsePrefix.Palavyr}{emailRequest.ConversationId}";

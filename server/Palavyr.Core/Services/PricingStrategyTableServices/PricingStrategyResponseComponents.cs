@@ -6,16 +6,16 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
     public class PricingStrategyResponseComponents
     {
         public IPricingStrategyTableCompiler Compiler { get; }
-        public DynamicResponseParts Responses { get; }
-        public string DynamicTableName { get; }
-        public List<string> DynamicTableKeys { get; }
+        public PricingStrategyResponseParts Responses { get; }
+        public string PricingStrategyTableName { get; }
+        public List<string> PricingStrategyTableKeys { get; }
 
-        public PricingStrategyResponseComponents(IPricingStrategyTableCompiler compiler, DynamicResponseParts responses, string dynamicTableName, List<string> dynamicTableKeys)
+        public PricingStrategyResponseComponents(IPricingStrategyTableCompiler compiler, PricingStrategyResponseParts responses, string pricingStrategyTableName, List<string> pricingStrategyTableKeys)
         {
             Compiler = compiler;
             Responses = responses;
-            DynamicTableName = dynamicTableName;
-            DynamicTableKeys = dynamicTableKeys;
+            PricingStrategyTableName = pricingStrategyTableName;
+            PricingStrategyTableKeys = pricingStrategyTableKeys;
         }
     }
 }

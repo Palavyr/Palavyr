@@ -4,12 +4,12 @@ import { TableContainer, Paper, Table, Button, FormControlLabel, Checkbox, Accor
 import { SelectOneFlatHeader } from "./SelectOneFlatHeader";
 import { SelectOneFlatBody } from "./SelectOneFlatBody";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { DynamicTable, DynamicTableProps, SelectOneFlatData } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyProps, SelectOneFlatData } from "@Palavyr-Types";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { DisplayTableData } from "../DisplayTableData";
-import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { DynamicTableHeader } from "../../DynamicTableHeader";
+import { PricingStrategyHeader } from "../../PricingStrategyHeader";
 import { cloneDeep } from "lodash";
 
 const useStyles = makeStyles(theme => ({
@@ -46,11 +46,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteAction, tables, tableIndex, availableDynamicTableOptions, tableNameMap, unitTypes, inUse, table }: DynamicTableProps) => {
+export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteAction, tables, tableIndex, availablePricingStrategyOptions, tableNameMap, unitTypes, inUse, table }: PricingStrategyProps) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
-    const [localTable, setLocalTable] = useState<DynamicTable>();
+    const [localTable, setLocalTable] = useState<PricingStrategy>();
     const [useOptionsAsPaths, setUseOptionsAsPaths] = useState<boolean>(false);
 
     useEffect(() => {
@@ -62,7 +62,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteA
     useEffect(() => {
         (async () => {
             if (localTable) {
-                const { tableRows } = await repository.Configuration.Tables.Dynamic.GetDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.GetPricingStrategyRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                 localTable.tableRows = tableRows;
                 setLocalTable(cloneDeep(localTable));
             }
@@ -92,10 +92,10 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteA
             if (isValid) {
                 const currentMeta = localTable.tableMeta;
 
-                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.SaveDynamicTable<SelectOneFlatData[]>(
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(currentMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<SelectOneFlatData[]>(
                     intentId,
-                    DynamicTableTypes.SelectOneFlat,
+                    PricingStrategyTypes.SelectOneFlat,
                     tableRows,
                     localTable.tableMeta.tableId,
                     localTable.tableMeta.tableTag
@@ -116,11 +116,11 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteA
 
     return localTable ? (
         <>
-            <DynamicTableHeader
+            <PricingStrategyHeader
                 localTable={localTable}
                 setLocalTable={setLocalTable}
                 setTables={setTables}
-                availableDynamicTableOptions={availableDynamicTableOptions}
+                availablePricingStrategyOptions={availablePricingStrategyOptions}
                 unitTypes={unitTypes}
                 inUse={inUse}
             />

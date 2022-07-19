@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data.Entities;
-using Palavyr.Core.Data.Entities.DynamicTables;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Services.PdfService;
@@ -50,7 +50,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             var tableMeta = await pricingStrategyTableMetaStore.Get(tableId, s => s.TableId);
 
             var conversationNodes = await convoNodeStore.GetMany(intentId, s => s.IntentId);
-            var node = conversationNodes.SingleOrDefault(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId);
+            var node = conversationNodes.SingleOrDefault(x => x.IsPricingStrategyTableNode && splitter.GetTableIdFromPricingStrategyNodeType(x.NodeType) == tableId);
 
             if (node != null && currentSelectOneFlatUpdate != null)
             {
@@ -79,23 +79,23 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
                 pricingStrategyTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                 pricingStrategyTableMeta.ValuesAsPaths ? NodeTypeCode.XI : NodeTypeCode.X,
                 shouldRenderChildren: true,
-                dynamicType: pricingStrategyTableMeta.MakeUniqueIdentifier()
+                pricingStrategyType: pricingStrategyTableMeta.MakeUniqueIdentifier()
             );
             nodes.AddAdditionalNode(nodeTypeOption);
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(PricingStrategyResponseParts pricingStrategyResponseParts, List<string> pricingStrategyResponseIds, CultureInfo culture)
         {
-            var dynamicResponseId = GetSingleResponseId(dynamicResponseIds);
-            var responseValue = GetSingleResponseValue(dynamicResponseParts, dynamicResponseIds);
+            var responseId = GetSingleResponseId(pricingStrategyResponseIds);
+            var responseValue = GetSingleResponseValue(pricingStrategyResponseParts, pricingStrategyResponseIds);
 
-            var record = await RetrieveAllAvailableResponses(dynamicResponseId);
+            var record = await RetrieveAllAvailableResponses(responseId);
 
             var option = record.Single(tableRow => tableRow.Category == responseValue);
-            var dynamicMeta = await pricingStrategyTableMetaStore.Get(option.TableId, s => s.TableId);
+            var pricingStrategyMeta = await pricingStrategyTableMetaStore.Get(option.TableId, s => s.TableId);
 
             var row = new TableRow(
-                dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : option.Category,
+                pricingStrategyMeta.UseTableTagAsResponseDescription ? pricingStrategyMeta.TableTag : option.Category,
                 option.ValueMin,
                 option.ValueMax,
                 false,
@@ -140,25 +140,25 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
         //     return ValidationLogic(table, tableTag);
         // }
 
-        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
+        // public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(PricingStrategyTableMeta pricingStrategyTableMeta)
         // {
-        //     var tableId = dynamicTableMeta.TableId;
+        //     var tableId = pricingStrategyTableMeta.TableId;
         //
         //     var table = await psStore.GetMany(tableId, s => s.TableId);
-        //     return ValidationLogic(table.ToList(), dynamicTableMeta.TableTag);
+        //     return ValidationLogic(table.ToList(), pricingStrategyTableMeta.TableTag);
         // }
 
         public async Task<List<TableRow>> CreatePreviewData(PricingStrategyTableMeta tableTableMeta, Intent intent, CultureInfo culture)
         {
             var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses(tableTableMeta.TableId);
-            var responseParts = PricingStrategyResponsePartJoiner.CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Category);
+            var responseParts = PricingStrategyResponsePartJoiner.CreatePricingStrategyResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Category);
             var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() { tableTableMeta.TableId }, culture);
             return currentRows;
         }
 
-        public async Task<List<CategorySelectTableRow>> RetrieveAllAvailableResponses(string dynamicResponseId)
+        public async Task<List<CategorySelectTableRow>> RetrieveAllAvailableResponses(string responseId)
         {
-            return await GetAllRowsMatchingResponseId(dynamicResponseId);
+            return await GetAllRowsMatchingResponseId(responseId);
         }
     }
 }

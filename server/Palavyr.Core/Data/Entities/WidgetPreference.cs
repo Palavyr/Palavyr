@@ -1,44 +1,25 @@
-﻿#nullable disable
-
-using Palavyr.Core.Models.Contracts;
+﻿using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Data.Entities
 {
     public class WidgetPreference : Entity, IHaveAccountId
     {
         public string Placeholder { get; set; }
-
         public string AccountId { get; set; }
-
         public string LandingHeader { get; set; }
-
         public string ChatHeader { get; set; }
-
         public string SelectListColor { get; set; }
-
         public string ListFontColor { get; set; }
-
         public string HeaderColor { get; set; }
-
         public string HeaderFontColor { get; set; }
-
         public string FontFamily { get; set; }
-
         public string OptionsHeaderColor { get; set; }
-
         public string OptionsHeaderFontColor { get; set; }
-
         public string ChatFontColor { get; set; }
-
         public string ChatBubbleColor { get; set; }
-
         public string ButtonColor { get; set; }
-
         public string ButtonFontColor { get; set; }
-
         public bool WidgetState { get; set; }
-
-        // public string SelectionLabel { get; set; }
 
         public WidgetPreference()
         {
@@ -144,9 +125,9 @@ namespace Palavyr.Core.Data.Entities
         public static WidgetPreference CreateEmpty(string accountId)
         {
             return new WidgetPreference(
-                null, null, null, null, null,
-                null, null, null, accountId, false, null, null, null,
-                null, null, null);
+                string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
+                string.Empty, string.Empty, string.Empty, accountId, false, string.Empty, string.Empty, string.Empty,
+                string.Empty, string.Empty, string.Empty);
         }
     }
 }

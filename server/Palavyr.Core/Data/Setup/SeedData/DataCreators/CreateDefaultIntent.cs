@@ -62,7 +62,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
             string accountId,
             string intentName,
             List<ConversationNode> conversationNodes,
-            List<PricingStrategyTableMeta> dynamicTableMetas,
+            List<PricingStrategyTableMeta> pricingStrategyTableMetas,
             string emailTemplate,
             string defaultEmail
         )
@@ -78,7 +78,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                 EmailTemplate = emailTemplate,
                 ConversationNodes = conversationNodes,
                 StaticTablesMetas = staticTableMetas,
-                DynamicTableMetas = dynamicTableMetas,
+                PricingStrategyTableMetas = pricingStrategyTableMetas,
                 IntentSpecificEmail = defaultEmail,
                 EmailIsVerified = false,
                 Subject = "Thanks for contacting us!",

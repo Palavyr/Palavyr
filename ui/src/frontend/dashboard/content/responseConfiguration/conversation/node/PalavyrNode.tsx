@@ -14,7 +14,7 @@ export class PalavyrNode implements IPalavyrNode {
     public shouldPresentResponse: boolean; // isCritical
     public nodeType: string; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
     public isMultiOptionType: boolean;
-    public isDynamicTableNode: boolean;
+    public isPricingStrategyNode: boolean;
     public userText: string; // text
     public resolveOrder: number;
     public nodeComponentType: string; // type of component to use in the widget - standardized list of types in the widget registry
@@ -91,7 +91,7 @@ export class PalavyrNode implements IPalavyrNode {
         this.isMultiOptionType = node.isMultiOptionType;
         this.userText = node.text; // text
         this.shouldPresentResponse = node.isCritical; // isCritical
-        this.isDynamicTableNode = node.isDynamicTableNode;
+        this.isPricingStrategyNode = node.isPricingStrategyNode;
         this.resolveOrder = node.resolveOrder;
         this.shouldRenderChildren = node.shouldRenderChildren;
         this.nodeType = node.nodeType; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
@@ -212,7 +212,7 @@ export class PalavyrNode implements IPalavyrNode {
             isCritical: this.shouldPresentResponse,
             optionPath: this.optionPath,
             valueOptions: this.valueOptions.join(ValueOptionDelimiter),
-            isDynamicTableNode: this.isDynamicTableNode,
+            isPricingStrategyNode: this.isPricingStrategyNode,
             dynamicType: this.dynamicType,
             resolveOrder: this.resolveOrder,
             isTerminalType: this.isTerminal,

@@ -20,7 +20,7 @@ namespace Palavyr.Core.Services.PdfService
     
     public interface IResponsePdfTableCompiler
     {
-        Task<List<Table>> CompileResponseTables(string intentId, EmailRequest emailRequest, CultureInfo culture, bool includeDynamicTableTotals);
+        Task<List<Table>> CompileResponseTables(string intentId, EmailRequest emailRequest, CultureInfo culture, bool includePricingStrategyTableTotals);
     }
 
 }

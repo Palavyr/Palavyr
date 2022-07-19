@@ -32,7 +32,7 @@ namespace Palavyr.API.CustomMiddleware
             HttpContext context,
             IWebHostEnvironment env,
             IMediator mediator,
-            IEntityStore<Session> sessionStore,
+            IEntityStore<UserSession> sessionStore,
             IUnitOfWorkContextProvider unitOfWorkContextProvider)
         {
             logger.LogDebug("Settings magic string headers...");

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data.Entities;
-using Palavyr.Core.Data.Entities.DynamicTables;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Data.Setup.SeedData;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Stores;
@@ -18,7 +18,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IEntityStore<Intent> intentStore;
         private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
         private readonly IEntityStore<CategorySelectTableRow> defaultPricingStrategyStore;
-        private readonly IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
 
         public AccountRegistrationMaker(
@@ -29,7 +29,7 @@ namespace Palavyr.Core.Services.AccountServices
             IEntityStore<Subscription> subscriptionStore,
             IEntityStore<WidgetPreference> widgetPreferenceStore,
             IEntityStore<CategorySelectTableRow> defaultPricingStrategyStore,
-            IEntityStore<PricingStrategyTableMeta> dynamicTableMetaStore,
+            IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore,
             IEntityStore<ConversationNode> convoNodeStore
         )
         {
@@ -40,7 +40,7 @@ namespace Palavyr.Core.Services.AccountServices
             this.intentStore = intentStore;
             this.widgetPreferenceStore = widgetPreferenceStore;
             this.defaultPricingStrategyStore = defaultPricingStrategyStore;
-            this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
             this.convoNodeStore = convoNodeStore;
         }
 
@@ -50,11 +50,11 @@ namespace Palavyr.Core.Services.AccountServices
             var seedData = new SeedData(accountId, emailAddress, introId);
             await intentStore.CreateMany(seedData.Intents);
             await widgetPreferenceStore.Create(seedData.WidgetPreference);
-            await defaultPricingStrategyStore.CreateMany(seedData.DefaultDynamicTables);
+            await defaultPricingStrategyStore.CreateMany(seedData.DefaultPricingStrategyTables);
             await convoNodeStore.CreateMany(seedData.IntroductionConversationNodes);
             
-            seedData.DefaultDynamicTableMetas[0].Id = null; // no idea why I have to do this.
-            await dynamicTableMetaStore.CreateMany(seedData.DefaultDynamicTableMetas);
+            seedData.DefaultPricingStrategyTableMetas[0].Id = null; // no idea why I have to do this.
+            await pricingStrategyTableMetaStore.CreateMany(seedData.DefaultPricingStrategyTableMetas);
         }
 
         public async Task<bool> TryRegisterAccountAndSendEmailVerificationToken(string accountId, string apiKey, string emailAddress, string introId, CancellationToken cancellationToken)

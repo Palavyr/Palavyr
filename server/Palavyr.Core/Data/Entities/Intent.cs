@@ -1,8 +1,5 @@
-﻿#nullable disable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using Palavyr.Core.Models.Contracts;
 
@@ -19,20 +16,17 @@ namespace Palavyr.Core.Data.Entities
         public List<StaticTablesMeta> StaticTablesMetas { get; set; } = new List<StaticTablesMeta>();
         public List<ConversationNode> ConversationNodes { get; set; } = new List<ConversationNode>();
         public string AccountId { get; set; }
-        public List<PricingStrategyTableMeta> DynamicTableMetas { get; set; } = new List<PricingStrategyTableMeta>();
+        public List<PricingStrategyTableMeta> PricingStrategyTableMetas { get; set; } = new List<PricingStrategyTableMeta>();
         public string IntentSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
         public List<AttachmentLinkRecord> AttachmentRecords { get; set; }
-
         public bool UseIntentFallbackEmail { get; set; }
-        public string FallbackSubject { get; set; } = null!;
-        public string FallbackEmailTemplate { get; set; } = null!;
+        public string FallbackSubject { get; set; }
+        public string FallbackEmailTemplate { get; set; }
         public bool SendAttachmentsOnFallback { get; set; }
         public bool SendPdfResponse { get; set; } = true;
-        public bool IncludeDynamicTableTotals { get; set; }
-
-        [DefaultValue("Thank you for reaching out!")]
-        public string Subject { get; set; } = null!;
+        public bool IncludePricingStrategyTableTotals { get; set; }
+        public string Subject { get; set; }
 
         [NotMapped]
         public bool AwaitingVerification { get; set; }
@@ -58,11 +52,14 @@ namespace Palavyr.Core.Data.Entities
                 StaticTablesMetas = new List<StaticTablesMeta>(),
                 IsEnabled = false,
                 AccountId = accountId,
-                DynamicTableMetas = null,
+                PricingStrategyTableMetas = new List<PricingStrategyTableMeta>(),
                 IntentSpecificEmail = emailAddress,
                 EmailIsVerified = emailIsVerified,
                 SendPdfResponse = true,
-                IncludeDynamicTableTotals = true
+                IncludePricingStrategyTableTotals = true,
+                AttachmentRecords = new List<AttachmentLinkRecord>(),
+                UseIntentFallbackEmail = false,
+                SendAttachmentsOnFallback = false
             };
         }
     }

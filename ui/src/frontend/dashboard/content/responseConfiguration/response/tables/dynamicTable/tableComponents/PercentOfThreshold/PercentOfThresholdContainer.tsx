@@ -1,6 +1,6 @@
 import { groupBy } from "lodash";
 import React from "react";
-import { IDynamicTableBody, PercentOfThresholdData } from "@Palavyr-Types";
+import { IPricingStrategyBody, PercentOfThresholdData } from "@Palavyr-Types";
 import { PercentOfThresholdItemTable } from "./PercentOfThresholdItemTable";
 import { makeStyles } from "@material-ui/core";
 
@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
         borderBottom: `4px solid ${theme.palette.primary.main}`,
     },
 }));
-interface PercentOfThresholdContainerProps extends IDynamicTableBody {
+interface PercentOfThresholdContainerProps extends IPricingStrategyBody {
     addRowOnClickFactory(itemId: string): () => void;
 }
 

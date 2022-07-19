@@ -39,8 +39,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class CreateLoginRequestResponse
     {
-        public CreateLoginRequestResponse(Credentials response) => Response = response;
-        public Credentials Response { get; set; }
+        public CreateLoginRequestResponse(CredentialsResource response) => Response = response;
+        public CredentialsResource Response { get; set; }
     }
 
     public class CreateLoginRequest : IRequest<CreateLoginRequestResponse>

@@ -9,6 +9,7 @@ using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.PdfService.PdfSections;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Services.ResponseCustomization;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -39,7 +40,7 @@ namespace Palavyr.Core.Services.PdfService
         public async Task<string> BuildResponseHtml(
             string intentId,
             CriticalResponses criticalResponses,
-            List<Table> responseTables,
+            List<Table> pricingStrategyThenStaticTables,
             EmailRequest emailRequest)
         {
             var account = await accountStore.Get(accountStore.AccountId, x => x.AccountId);
@@ -80,7 +81,7 @@ namespace Palavyr.Core.Services.PdfService
             previewBuilder.Append(HeaderSection.GetHeader(options, linkCreator, userDataBucket));
             previewBuilder.Append(IntentTitleSection.GetIntentDisplayTitle(intent.IntentName, emailRequest.ConversationId));
             previewBuilder.Append(PrologueSection.GetPrologue(intent.Prologue));
-            previewBuilder.Append(TablesSection.GetEstimateTables(responseTables));
+            previewBuilder.Append(TablesSection.GetEstimateTables(pricingStrategyThenStaticTables));
             previewBuilder.Append(EpilogueSection.GetEpilogue(intent.Epilogue));
             previewBuilder.Append(ConversationDetailsSection.GetConversationDetails(emailRequest, criticalResponses));
 
@@ -103,9 +104,9 @@ namespace Palavyr.Core.Services.PdfService
             this.responseCustomizer = responseCustomizer;
         }
 
-        public async Task<string> BuildResponseHtml(string intentId, CriticalResponses criticalResponses, List<Table> responseTables, EmailRequest emailRequest)
+        public async Task<string> BuildResponseHtml(string intentId, CriticalResponses criticalResponses, List<Table> pricingStrategyThenStaticTables, EmailRequest emailRequest)
         {
-            var html = await builder.BuildResponseHtml(intentId, criticalResponses, responseTables, emailRequest);
+            var html = await builder.BuildResponseHtml(intentId, criticalResponses, pricingStrategyThenStaticTables, emailRequest);
             var customizedHtml = await responseCustomizer.Customize(html, emailRequest);
             return customizedHtml;
         }

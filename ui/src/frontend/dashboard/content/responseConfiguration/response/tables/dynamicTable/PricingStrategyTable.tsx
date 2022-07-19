@@ -1,7 +1,7 @@
 import React from "react";
-import { DynamicTable, DynamicTableProps, PricingStrategyTableTypeResource, QuantUnitDefinition, TableNameMap } from "@Palavyr-Types";
+import { PricingStrategy, PricingStrategyProps, PricingStrategyTableTypeResource, QuantUnitDefinition, TableNameMap } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
-import { dynamicTableComponentMap } from "./DynamicTableRegistry";
+import { PricingStrategyComponentMap } from "./PricingStrategyRegistry";
 
 export const useStyles = makeStyles(theme => ({
     headerCol: {
@@ -37,19 +37,19 @@ export const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const includesUnit = (localTable: DynamicTable) => {
+export const includesUnit = (localTable: PricingStrategy) => {
     const allowedDynamicTypes = ["CategoryNestedThreshold", "BasicThreshold", "PercentOfThreshold"]; // Sorry - TODO / Add identifier from server
     return allowedDynamicTypes.includes(localTable.tableMeta.tableType);
 };
 
 export interface PricingStrategyTableProps {
-    availableDynamicTableOptions: PricingStrategyTableTypeResource[];
+    availablePricingStrategyOptions: PricingStrategyTableTypeResource[];
     tableNameMap: TableNameMap;
     intentId: string;
     showDebug: boolean;
     unitTypes: QuantUnitDefinition[];
-    table: DynamicTable;
-    tables: DynamicTable[];
+    table: PricingStrategy;
+    tables: PricingStrategy[];
     inUse: boolean;
     setTables: any;
     deleteAction: () => Promise<void>;
@@ -63,7 +63,7 @@ export const PricingStrategyTable = ({
     inUse,
     showDebug,
     tableIndex,
-    availableDynamicTableOptions,
+    availablePricingStrategyOptions,
     tableNameMap,
     intentId,
     unitTypes,
@@ -71,12 +71,12 @@ export const PricingStrategyTable = ({
 }: PricingStrategyTableProps) => {
     const cls = useStyles();
 
-    const tableProps: DynamicTableProps = {
+    const tableProps: PricingStrategyProps = {
         table,
         tableIndex, // required for save action
         tables, // required for save action
         setTables, // required for save action
-        availableDynamicTableOptions,
+        availablePricingStrategyOptions,
         tableNameMap,
         unitTypes,
         inUse,
@@ -86,11 +86,11 @@ export const PricingStrategyTable = ({
         deleteAction,
     };
 
-    const DynamicTableComponent = dynamicTableComponentMap[table.tableMeta.tableType];
+    const PricingStrategyComponent = PricingStrategyComponentMap[table.tableMeta.tableType];
 
     return (
         <section className={cls.section}>
-            <DynamicTableComponent {...tableProps} />
+            <PricingStrategyComponent {...tableProps} />
         </section>
     );
 };

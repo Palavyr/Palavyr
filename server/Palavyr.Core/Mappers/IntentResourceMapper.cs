@@ -23,11 +23,11 @@ namespace Palavyr.Core.Mappers
                 ConversationNodes = @from.ConversationNodes,
                 StaticTablesMetas = @from.StaticTablesMetas,
                 IsEnabled = @from.IsEnabled,
-                DynamicTableMetas = @from.DynamicTableMetas,
+                PricingStrategyTableMetas = @from.PricingStrategyTableMetas,
                 IntentSpecificEmail = @from.IntentSpecificEmail,
                 EmailIsVerified = @from.EmailIsVerified,
                 SendPdfResponse = @from.SendPdfResponse,
-                IncludeDynamicTableTotals = @from.IncludeDynamicTableTotals
+                IncludePricingStrategyTableTotals = @from.IncludePricingStrategyTableTotals
             };
         }
     }

@@ -8,9 +8,9 @@ namespace Palavyr.API.Controllers.Authentication
 {
     public class CreateLogoutRequestController : PalavyrBaseController
     {
-        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<UserSession> sessionStore;
 
-        public CreateLogoutRequestController(IEntityStore<Session> sessionStore)
+        public CreateLogoutRequestController(IEntityStore<UserSession> sessionStore)
         {
             this.sessionStore = sessionStore;
         }

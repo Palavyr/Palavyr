@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -11,35 +9,31 @@ namespace Palavyr.Core.Data.Entities
 {
     public class ConversationNode : Entity, IRecord, IHaveAccountId
     {
-        public string? IntentId { get; set; }
-        public string? AccountId { get; set; }
-        public string? NodeId { get; set; }
-        public string? Text { get; set; }
+        public string IntentId { get; set; }
+        public string AccountId { get; set; }
+        public string NodeId { get; set; }
+        public string Text { get; set; }
         public bool IsRoot { get; set; }
         public bool IsCritical { get; set; }
         public bool IsMultiOptionType { get; set; }
         public bool IsTerminalType { get; set; }
         public bool ShouldRenderChildren { get; set; }
-
         public bool IsLoopbackAnchorType { get; set; }
-
         public bool IsAnabranchType { get; set; }
         public bool IsAnabranchMergePoint { get; set; }
-
         public bool ShouldShowMultiOption { get; set; }
-        public bool IsDynamicTableNode { get; set; }
+        public bool IsPricingStrategyTableNode { get; set; }
         public bool IsMultiOptionEditable { get; set; }
         public bool IsImageNode { get; set; }
-        public string? ImageId { get; set; } // no extension on this (don't add .png)
-        // public string? FileId { get; set; } // TODO: Migration to add this and move away from imageId
-        public string? OptionPath { get; set; }
-        public string? ValueOptions { get; set; }
-        public string? NodeType { get; set; }
-        public string? DynamicType { get; set; }
-        public string? NodeComponentType { get; set; }
-        public int? ResolveOrder { get; set; }
+        public string FileId { get; set; }
+        public string OptionPath { get; set; }
+        public string ValueOptions { get; set; }
+        public string NodeType { get; set; }
+        public string PricingStrategyType { get; set; }
+        public string NodeComponentType { get; set; }
+        public int ResolveOrder { get; set; }
         public bool IsCurrency { get; set; }
-        public string? NodeChildrenString { get; set; } = ""; // stored as comma delimited list as string
+        public string NodeChildrenString { get; set; } = ""; // stored as comma delimited list as string
         public NodeTypeCode NodeTypeCode { get; set; }
 
         public ConversationNode()
@@ -61,7 +55,7 @@ namespace Palavyr.Core.Data.Entities
 
         public static List<ConversationNode> CreateDefaultNode(string intentId, string accountId, bool isRoot = false)
         {
-            return new List<ConversationNode>()
+            return new List<ConversationNode>
             {
                 new ConversationNode
                 {
@@ -70,8 +64,8 @@ namespace Palavyr.Core.Data.Entities
                     Text = "Click to add some meaningful text. Don't forget to add some personality!",
                     IsRoot = isRoot,
                     IntentId = intentId,
-                    OptionPath = "", // Previous had this set to null...
-                    NodeChildrenString = "",
+                    OptionPath = string.Empty, // Previous had this set to null...
+                    NodeChildrenString = string.Empty,
                     ValueOptions = "",
                     IsCritical = false,
                     AccountId = accountId,
@@ -81,13 +75,16 @@ namespace Palavyr.Core.Data.Entities
                     ShouldShowMultiOption = false,
                     IsAnabranchType = false,
                     IsAnabranchMergePoint = false,
-                    IsDynamicTableNode = false,
+                    IsPricingStrategyTableNode = false,
                     IsCurrency = false,
                     IsMultiOptionEditable = false,
-                    DynamicType = null,
+                    PricingStrategyType = string.Empty,
                     IsImageNode = false,
-                    ImageId = null,
-                    IsLoopbackAnchorType = false
+                    FileId = string.Empty,
+                    IsLoopbackAnchorType = false,
+                    NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.ProvideInfo,
+                    ResolveOrder = 0,
+                    NodeTypeCode = NodeTypeCode.II
                 }
             };
         }
@@ -98,15 +95,15 @@ namespace Palavyr.Core.Data.Entities
         }
 
         public static ConversationNode CreateNew(
-            string? nodeId,
-            string? nodeType,
-            string? text,
-            string? intentId,
-            string? nodeChildrenString,
-            string? optionPath,
-            string? valueOptions,
+            string nodeId,
+            string nodeType,
+            string text,
+            string intentId,
+            string nodeChildrenString,
+            string optionPath,
+            string valueOptions,
             string accountId,
-            string? nodeComponentType,
+            string nodeComponentType,
             NodeTypeCode nodeTypeCode,
             bool isRoot = false,
             bool isCritical = true,
@@ -116,13 +113,13 @@ namespace Palavyr.Core.Data.Entities
             bool shouldShowMultiOption = false,
             bool isAnabranchType = false,
             bool isAnabranchMergePoint = false,
-            bool isDynamicTableNode = false,
+            bool isPricingStrategyTableNode = false,
             bool isCurrency = false,
             bool isMultiOptionEditable = false,
-            int? resolveOrder = null,
-            string? dynamicType = null,
+            int resolveOrder = 0,
+            string pricingStrategyType = null,
             bool isImageNode = false,
-            string? imageId = null,
+            string imageId = "",
             bool isLoopbackAnchor = false
         )
         {
@@ -146,12 +143,12 @@ namespace Palavyr.Core.Data.Entities
                 IsAnabranchMergePoint = isAnabranchMergePoint,
                 IsCurrency = isCurrency,
                 IsMultiOptionEditable = isMultiOptionEditable,
-                IsDynamicTableNode = isDynamicTableNode,
+                IsPricingStrategyTableNode = isPricingStrategyTableNode,
                 ResolveOrder = resolveOrder,
                 NodeComponentType = nodeComponentType,
-                DynamicType = dynamicType,
+                PricingStrategyType = pricingStrategyType,
                 IsImageNode = isImageNode,
-                ImageId = imageId,
+                FileId = imageId,
                 IsLoopbackAnchorType = isLoopbackAnchor,
                 NodeTypeCode = nodeTypeCode
             };

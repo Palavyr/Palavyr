@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.Accounts.Setup
 
         [AllowAnonymous]
         [HttpPost(CreateNewAccountRequest.Route)]
-        public async Task<Credentials> Create(
+        public async Task<CredentialsResource> Create(
             [FromBody]
             CreateNewAccountRequest request,
             CancellationToken cancellationToken)

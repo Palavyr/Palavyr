@@ -1,7 +1,7 @@
 import { TableGroup } from "@Palavyr-Types";
 import { groupBy } from "lodash";
 import React from "react";
-import { CategoryNestedThresholdData, IDynamicTableBody } from "@Palavyr-Types";
+import { CategoryNestedThresholdData, IPricingStrategyBody } from "@Palavyr-Types";
 import { CategoryNestedThresholdItemTable } from "./CategoryNestedThresholdItemTable";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export interface CategoryNestedThresholdProps extends IDynamicTableBody {
+export interface CategoryNestedThresholdProps extends IPricingStrategyBody {
     tableId: string;
     intentId: string;
     modifier: CategoryNestedThresholdModifier;

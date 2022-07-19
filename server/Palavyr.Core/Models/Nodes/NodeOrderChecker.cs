@@ -8,7 +8,7 @@ namespace Palavyr.Core.Models.Nodes
 {
     public interface INodeOrderChecker
     {
-        NodeOrderCheckResult AllDynamicTypesAreOrderedCorrectlyByResolveOrder(ConversationNode[] nodeList);
+        NodeOrderCheckResult AllPricingStrategyTypesAreOrderedCorrectlyByResolveOrder(ConversationNode[] nodeList);
     }
 
     public class NodeOrderChecker : INodeOrderChecker
@@ -22,34 +22,34 @@ namespace Palavyr.Core.Models.Nodes
             this.guidFinder = guidFinder;
         }
         
-        public NodeOrderCheckResult AllDynamicTypesAreOrderedCorrectlyByResolveOrder(ConversationNode[] nodeList)
+        public NodeOrderCheckResult AllPricingStrategyTypesAreOrderedCorrectlyByResolveOrder(ConversationNode[] nodeList)
         {
             
-            var dynamicTypes = nodeList
-                .Where(x => !string.IsNullOrWhiteSpace(x.DynamicType))
-                .Select(x => x.DynamicType)
+            var pricingStrategyTypes = nodeList
+                .Where(x => !string.IsNullOrWhiteSpace(x.PricingStrategyType))
+                .Select(x => x.PricingStrategyType)
                 .Distinct()
                 .ToList();
 
             var orderResults = new List<bool>();
             var unorderedNodeTypes = new List<string>();
-            foreach (var dynamicType in dynamicTypes)
+            foreach (var pricingStrategyType in pricingStrategyTypes)
             {
-                // for each dynamic type, retrieve all of the nodes of this type (could be one or more here for multinode dynamic types)
-                var dynamicTableNodes = nodeList
-                    .Where(x => string.Equals(x.DynamicType, dynamicType))
+                // for each pricing strategy type, retrieve all of the nodes of this type (could be one or more here for multinode pricing stretegy types)
+                var pricingStrategyTableNodes = nodeList
+                    .Where(x => string.Equals(x.PricingStrategyType, pricingStrategyType))
                     .OrderBy(x => x.ResolveOrder)
                     .ToList();
 
-                if (dynamicTableNodes.Count == 1) continue; // not responsible for checking all required noes are included
+                if (pricingStrategyTableNodes.Count == 1) continue; // not responsible for checking all required noes are included
 
-                var nodeTypes = string.Join(",", dynamicTableNodes.Select(x => guidFinder.RemoveGuid(x.NodeType).Trim('-')));
+                var nodeTypes = string.Join(",", pricingStrategyTableNodes.Select(x => guidFinder.RemoveGuid(x.NodeType).Trim('-')));
                 var tableNodesAreOrderedInTheConvoCorrectly = true;
-                for (var i = dynamicTableNodes.Count - 1; i > 0; i--)
+                for (var i = pricingStrategyTableNodes.Count - 1; i > 0; i--)
                 {
-                    var currentNodes = new List<ConversationNode>() {dynamicTableNodes[i]}; // 2 of 0, 1, 2;
+                    var currentNodes = new List<ConversationNode>() {pricingStrategyTableNodes[i]}; // 2 of 0, 1, 2;
 
-                    var parentToFind = dynamicTableNodes[i - 1]; // 1 of 0, 1, 2;
+                    var parentToFind = pricingStrategyTableNodes[i - 1]; // 1 of 0, 1, 2;
 
                     var count = 0;
                     while (true)

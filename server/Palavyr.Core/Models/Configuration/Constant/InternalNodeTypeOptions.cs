@@ -23,7 +23,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
             }
@@ -46,7 +46,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
             }
@@ -69,7 +69,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
             }
@@ -92,7 +92,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
             }
@@ -117,7 +117,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;

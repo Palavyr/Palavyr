@@ -11,7 +11,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
         public static List<ConversationNode> CreateDefault(
             string accountId,
             string intentId,
-            string dynamicTableId
+            string pricingStrategyTableId
         )
         {
             var node1Id = StaticGuidUtils.CreateNewId(); // Do you love dogs?
@@ -68,7 +68,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     DefaultNodeTypeOptions.YesNo.No,
                     false
                 ),
-                // Dynamic table node doesn't have default creator method
+                // Pricing strategy table node doesn't have default creator method
                 new ConversationNode
                 {
                     NodeId = node5Id,
@@ -76,17 +76,17 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     Text = "Which kind of dog do you prefer!",
                     IsRoot = false,
                     NodeChildrenString = node6Id,
-                    NodeType = $"SelectOneFlat-{dynamicTableId}",
+                    NodeType = $"SelectOneFlat-{pricingStrategyTableId}",
                     OptionPath = DefaultNodeTypeOptions.YesNo.Yes,
                     ValueOptions = string.Join(Delimiters.PathOptionDelimiter, new[] {"Ruby", "Black and Tan", "Blenheim"}),
                     AccountId = accountId,
                     IsMultiOptionType = true,
                     IsTerminalType = false,
-                    IsDynamicTableNode = true,
+                    IsPricingStrategyTableNode = true,
                     ShouldRenderChildren = true,
                     NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                     NodeTypeCode = NodeTypeCode.III,
-                    DynamicType = $"SelectOneFlat-{dynamicTableId}"
+                    PricingStrategyType = $"SelectOneFlat-{pricingStrategyTableId}"
                 },
                 DefaultNodeTypeOptions.CreateSendResponse().MapNodeTypeOptionToConversationNode(
                     node6Id,

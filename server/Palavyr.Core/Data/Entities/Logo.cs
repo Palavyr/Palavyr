@@ -1,4 +1,4 @@
-﻿#nullable disable
+﻿
 
 using Palavyr.Core.Models.Contracts;
 

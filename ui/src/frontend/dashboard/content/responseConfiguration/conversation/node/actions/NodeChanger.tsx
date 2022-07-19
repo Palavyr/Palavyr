@@ -397,7 +397,7 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.nodeTypeCode = nodeOption.nodeTypeCode;
         currentNode.nodeType = nodeOption.value;
         currentNode.isCurrency = nodeOption.isCurrency;
-        currentNode.isDynamicTableNode = nodeOption.isDynamicType;
+        currentNode.isPricingStrategyNode = nodeOption.isDynamicType;
         currentNode.isMultiOptionType = nodeOption.isMultiOptionType;
         currentNode.isTerminal = nodeOption.isTerminalType;
         currentNode.nodeComponentType = nodeOption.nodeComponentType;

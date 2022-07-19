@@ -6,6 +6,6 @@ namespace Palavyr.Core.Services.AccountServices
 {
     public interface IAccountSetupService
     {
-        Task<Credentials> CreateNewAccount(string emailAddress, string password, CancellationToken cancellationToken);
+        Task<CredentialsResource> CreateNewAccount(string emailAddress, string password, CancellationToken cancellationToken);
     }
 }

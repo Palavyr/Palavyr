@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
-namespace Palavyr.API.Controllers.Intents
+namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyIntentNameHandler : IRequestHandler<ModifyIntentNameRequest, ModifyIntentNameResponse>
     {

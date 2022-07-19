@@ -1,11 +1,11 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import {
-    DynamicTableMetas,
-    DynamicTableMeta,
+    PricingStrategyMetas,
+    PricingStrategyMeta,
     StaticTableMetas,
     StaticTableMetaTemplate,
     Intents,
-    Prices,
+    PriceResources,
     EmailVerificationResponse,
     AreaTable,
     ConvoNode,
@@ -24,7 +24,7 @@ import {
     TreeErrors,
     StaticTableRow,
     PlanTypeMeta,
-    DynamicTableData,
+    PricingStrategyData,
     EnquiryActivtyResource,
     LocaleResponse,
     QuantUnitDefinition,
@@ -74,7 +74,7 @@ export class PalavyrRepository extends ApiRoutes {
             },
         },
         Prices: {
-            GetPrices: async (productId: string) => this.client.get<Prices>(this.Routes.GetPrices(productId)),
+            GetPrices: async (productId: string) => this.client.get<PriceResources>(this.Routes.GetPrices(productId)),
         },
         Checkout: {
             CreateCheckoutSession: async (priceId: string, cancelUrl: string, successUrl: string) =>
@@ -92,14 +92,14 @@ export class PalavyrRepository extends ApiRoutes {
 
     public Intent = {
         GetAllIntents: async () => this.client.get<Intents>(this.Routes.GetAllIntents(), CacheIds.Intents),
-        GetShowDynamicTotals: (intentId: string) => this.client.get<boolean>(this.Routes.GetShowDynamicTotals(intentId)),
+        GetShowDynamicTotals: (intentId: string) => this.client.get<boolean>(this.Routes.GetShowPricingStrategyTotals(intentId)),
 
         ToggleIsEnabled: async (intentToggleStateUpdate: boolean, intentId: string) => {
             const update = this.client.put<boolean, {}>(this.Routes.ToggleIsEnabled(), { IsEnabled: intentToggleStateUpdate, IntentId: intentId });
             SessionStorage.clearCacheValue(CacheIds.Intents);
             return update;
         },
-        SetShowDynamicTotals: (intentId: string, shouldShow: boolean) => this.client.put<boolean, {}>(this.Routes.SetShowDynamicTotals(), { ShowDynamicTotals: shouldShow, IntentId: intentId }),
+        SetShowDynamicTotals: (intentId: string, shouldShow: boolean) => this.client.put<boolean, {}>(this.Routes.SetShowricingStrategyTotals(), { ShowDynamicTotals: shouldShow, IntentId: intentId }),
         ToggleUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, intentId: string) =>
             this.client.put<boolean, {}>(this.Routes.ToggleUseIntentFallbackEmail(), { UseFallback: useAreaFallbackEmailUpdate, IntentId: intentId }),
         CreateIntent: async (intentName: string) => {
@@ -133,32 +133,32 @@ export class PalavyrRepository extends ApiRoutes {
         },
         Tables: {
             Dynamic: {
-                GetDynamicTableMetas: async (intentId: string) => this.client.get<DynamicTableMetas>(this.Routes.GetDynamicTableMetas(intentId)), // todo - cache
+                GetPricingStrategyMetas: async (intentId: string) => this.client.get<PricingStrategyMetas>(this.Routes.GetPricingStrategyMetas(intentId)), // todo - cache
 
-                GetDynamicTableTypes: async () => this.client.get<TableNameMap>(this.Routes.GetDynamicTableTypes()),
+                GetPricingStrategyTypes: async () => this.client.get<TableNameMap>(this.Routes.GetPricingStrategyTypes()),
 
-                ModifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta) => {
-                    return this.client.put<DynamicTableMeta, {}>(this.Routes.ModifyDynamicTableMeta(), dynamicTableMeta);
-                    // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, dynamicTableMeta.intentId].join("-"));
+                ModifyPricingStrategyMeta: async (PricingStrategyMeta: PricingStrategyMeta) => {
+                    return this.client.put<PricingStrategyMeta, {}>(this.Routes.ModifyPricingStrategyMeta(), PricingStrategyMeta);
+                    // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, PricingStrategyMeta.intentId].join("-"));
                     // return response;
                 },
 
-                CreateDynamicTable: async (intentId: string) => {
-                    const response = this.client.post<DynamicTableMeta, {}>(this.Routes.CreateDynamicTable(intentId));
+                CreatePricingStrategy: async (intentId: string) => {
+                    const response = this.client.post<PricingStrategyMeta, {}>(this.Routes.CreatePricingStrategy(intentId));
                     // SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
                     return response;
                 },
 
-                DeleteDynamicTable: async (intentId: string, tableType: string, tableId: string) => {
-                    const response = this.client.delete(this.Routes.DeleteDynamicTable(intentId, tableType, tableId));
+                DeletePricingStrategy: async (intentId: string, tableType: string, tableId: string) => {
+                    const response = this.client.delete(this.Routes.DeletePricingStrategy(intentId, tableType, tableId));
                     SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
                     return response;
                 },
-                GetDynamicTableDataTemplate: async <T>(intentId: string, tableType: string, tableId: string) => this.client.get<T>(this.Routes.GetDynamicTableDataTemplate(intentId, tableType, tableId)),
-                GetDynamicTableRows: async (intentId: string, tableType: string, tableId: string) => this.client.get<DynamicTableData>(this.Routes.GetDynamicTableRows(intentId, tableType, tableId)),
+                GetPricingStrategyDataTemplate: async <T>(intentId: string, tableType: string, tableId: string) => this.client.get<T>(this.Routes.GetPricingStrategyDataTemplate(intentId, tableType, tableId)),
+                GetPricingStrategyRows: async (intentId: string, tableType: string, tableId: string) => this.client.get<PricingStrategyData>(this.Routes.GetPricingStrategyRows(intentId, tableType, tableId)),
 
-                SaveDynamicTable: async <T>(intentId: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) => {
-                    const response = this.client.put<T, {}>(this.Routes.SaveDynamicTable(intentId, tableType, tableId), { TableTag: tableTag, TableData: tableData });
+                SavePricingStrategy: async <T>(intentId: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) => {
+                    const response = this.client.put<T, {}>(this.Routes.SavePricingStrategy(intentId, tableType, tableId), { TableTag: tableTag, TableData: tableData });
                     SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
                     return response;
                 },

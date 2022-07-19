@@ -90,7 +90,7 @@
 //             return this;
 //         }
 //
-//         public async Task<DynamicTableMeta> Build()
+//         public async Task<PricingStrategyTableMeta> Build()
 //         {
 //             var accId = this.accountId ?? test.AccountId;
 //
@@ -115,7 +115,7 @@
 //             var unitId = this.unitId ?? UnitIds.Currency;
 //
 //             await Task.Yield();
-//             return new DynamicTableMeta
+//             return new PricingStrategyTableMeta
 //             {
 //                 AccountId = accountId ?? test.AccountId,
 //                 IntentId = intentId,
@@ -129,7 +129,7 @@
 //             };
 //         }
 //
-//         public async Task<DynamicTableMeta> BuildAndMake<TableType, TResponse, TCompiler>()
+//         public async Task<PricingStrategyTableMeta> BuildAndMake<TableType, TResponse, TCompiler>()
 //             where TableType : class, IPricingStrategyTable<TableType>, IEntity, new()
 //             where TResponse : IPricingStrategyTableRowResource
 //             where TCompiler : IPricingStrategyTableCompiler

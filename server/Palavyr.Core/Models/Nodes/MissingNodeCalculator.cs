@@ -8,9 +8,9 @@ namespace Palavyr.Core.Models.Nodes
     public interface IMissingNodeCalculator
     {
         string[] CalculateMissingNodes(
-            NodeTypeOptionResource[] requiredDynamicNodeTypes,
+            NodeTypeOptionResource[] requiredPricingStrategyNodeTypes,
             List<ConversationNode> conversationNodes,
-            List<PricingStrategyTableMeta> dynamicTableMetas,
+            List<PricingStrategyTableMeta> pricingStrategyTableMetas,
             List<StaticTablesMeta> staticTablesMetas);
 
         NodeTypeOptionResource[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOptionResource[] requiredNodes);
@@ -32,17 +32,17 @@ namespace Palavyr.Core.Models.Nodes
         }
 
         public string[] CalculateMissingNodes(
-            NodeTypeOptionResource[] requiredDynamicNodeTypes,
+            NodeTypeOptionResource[] requiredPricingStrategyNodeTypes,
             List<ConversationNode> conversationNodes,
-            List<PricingStrategyTableMeta> dynamicTableMetas,
+            List<PricingStrategyTableMeta> pricingStrategyTableMetas,
             List<StaticTablesMeta> staticTablesMetas)
         {
             var allMissingNodeTypes = new List<string>();
 
-            if (requiredDynamicNodeTypes.Length > 0)
+            if (requiredPricingStrategyNodeTypes.Length > 0)
             {
-                var rawMissingDynamicNodeTypes = FindMissingNodes(conversationNodes.ToArray(), requiredDynamicNodeTypes);
-                var names = rawMissingDynamicNodeTypes.Select(x => x.Text).ToList();
+                var rawMissingPricingStrategyNodeTypes = FindMissingNodes(conversationNodes.ToArray(), requiredPricingStrategyNodeTypes);
+                var names = rawMissingPricingStrategyNodeTypes.Select(x => x.Text).ToList();
                 allMissingNodeTypes.AddRange(names);
             }
 

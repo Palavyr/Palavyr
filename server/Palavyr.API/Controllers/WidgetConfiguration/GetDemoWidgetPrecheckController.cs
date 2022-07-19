@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         }
 
         [HttpGet(Route)]
-        public async Task<PreCheckResult> Get(CancellationToken cancellationToken)
+        public async Task<PreCheckResultResource> Get(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetDemoWidgetPreCheckRequest(), cancellationToken);
             return response.Response;

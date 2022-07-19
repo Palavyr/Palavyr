@@ -10,7 +10,7 @@ export const ConvoNode: WidgetNodeResource = {
     intentId: "abc123",
     optionPath: "",
     valueOptions: "", // needs to be split by ",",
-    isDynamicTableNode: false,
+    isPricingStrategyNode: false,
     nodeComponentType: "YesNo",
     dynamicType: "",
     resolveOrder: 0,

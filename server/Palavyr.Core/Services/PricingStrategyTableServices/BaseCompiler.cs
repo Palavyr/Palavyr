@@ -56,26 +56,26 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             return success ? orderedEntities : rows;
         }
 
-        protected string GetSingleResponseValue(DynamicResponseParts dynamicResponses, List<string> dynamicResponseIds)
+        protected string GetSingleResponseValue(PricingStrategyResponseParts pricingStrategyResponses, List<string> pricingStrategyResponseIds)
         {
-            var responseComponent = dynamicResponses[0]; // this expects only a single response;
+            var responseComponent = pricingStrategyResponses[0]; // this expects only a single response;
             var responseValue = responseComponent.Values.ToList()[0];
             return responseValue;
         }
 
-        protected string GetSingleResponseId(List<string> dynamicResponseIds)
+        protected string GetSingleResponseId(List<string> responseIds)
         {
-            return dynamicResponseIds[0];
+            return responseIds[0];
         }
 
-        protected string GetResponseByResponseId(string responseId, DynamicResponseParts dynamicResponse)
+        protected string GetResponseByResponseId(string responseId, PricingStrategyResponseParts pricingStrategyResponse)
         {
-            return dynamicResponse.Single(x => x.ContainsKey(responseId)).Values.ToList().Single();
+            return pricingStrategyResponse.Single(x => x.ContainsKey(responseId)).Values.ToList().Single();
         }
 
-        protected async Task<List<string>> GetResponsesOrderedByResolveOrder(DynamicResponseParts dynamicResponseParts)
+        protected async Task<List<string>> GetResponsesOrderedByResolveOrder(PricingStrategyResponseParts pricingStrategyResponseParts)
         {
-            var responseKeys = dynamicResponseParts.SelectMany(row => row.Keys).ToList();
+            var responseKeys = pricingStrategyResponseParts.SelectMany(row => row.Keys).ToList();
             var nodes = await convoNodeStore.GetMany(responseKeys, s => s.NodeId);
             var sorted = nodes.OrderBy(x => x.ResolveOrder)
                 .Select(x => x.NodeId)
@@ -83,11 +83,11 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             return sorted;
         }
 
-        protected async Task<List<TEntity>> GetAllRowsMatchingResponseId(string dynamicResponseId)
+        protected async Task<List<TEntity>> GetAllRowsMatchingResponseId(string responseId)
         {
             return await entityStore
                 .RawReadonlyQuery()
-                .Where(x => dynamicResponseId.EndsWith(x.TableId))
+                .Where(x => responseId.EndsWith(x.TableId))
                 .ToListAsync(entityStore.CancellationToken);
         }
     }

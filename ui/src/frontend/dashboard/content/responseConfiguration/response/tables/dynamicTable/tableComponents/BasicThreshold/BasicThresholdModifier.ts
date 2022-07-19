@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { SetStateAction } from "react";
 import { BasicThresholdData, Modifier } from "@Palavyr-Types";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 
 export class BasicThresholdModifier implements Modifier {
@@ -12,7 +12,7 @@ export class BasicThresholdModifier implements Modifier {
 
     constructor(onClick: Dispatch<SetStateAction<BasicThresholdData[]>>) {
         this.onClick = onClick;
-        this.tableType = DynamicTableTypes.BasicThreshold;
+        this.tableType = PricingStrategyTypes.BasicThreshold;
     }
 
     setTables(newState: BasicThresholdData[]) {
@@ -29,7 +29,7 @@ export class BasicThresholdModifier implements Modifier {
     }
 
     async addThreshold(tableData: BasicThresholdData[], intentId: string, tableId: string, repository: PalavyrRepository) {
-        const newRowTemplate = await repository.Configuration.Tables.Dynamic.GetDynamicTableDataTemplate<BasicThresholdData>(intentId, this.tableType, tableId);
+        const newRowTemplate = await repository.Configuration.Tables.Dynamic.GetPricingStrategyDataTemplate<BasicThresholdData>(intentId, this.tableType, tableId);
         tableData.push(newRowTemplate);
         this.setTables(tableData);
     }

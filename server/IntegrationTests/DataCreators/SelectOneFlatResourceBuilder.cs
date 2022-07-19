@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using IntegrationTests.AppFactory.IntegrationTestFixtures;
-using Palavyr.Core.Data.Entities.DynamicTables;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Handlers.PricingStrategyHandlers;
 using Palavyr.Core.Resources.PricingStrategyResources;

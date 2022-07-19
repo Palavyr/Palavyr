@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { CategoryNestedThresholdData, DynamicTable, DynamicTableProps } from "@Palavyr-Types";
+import { CategoryNestedThresholdData, PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
 
 import { DisplayTableData } from "../DisplayTableData";
 import { CategoryNestedThresholdContainer } from "./CategoryNestedThresholdContainer";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
-import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { DynamicTableHeader } from "../../DynamicTableHeader";
+import { PricingStrategyHeader } from "../../PricingStrategyHeader";
 import { cloneDeep } from "lodash";
 import { useIsMounted } from "@common/hooks/useIsMounted";
 
@@ -39,17 +39,17 @@ export const CategoryNestedThreshold = ({
     deleteAction,
     tables,
     tableIndex,
-    availableDynamicTableOptions,
+    availablePricingStrategyOptions,
     tableNameMap,
     unitTypes,
     inUse,
     table,
-}: DynamicTableProps) => {
+}: PricingStrategyProps) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
     const isMounted = useIsMounted();
 
-    const [localTable, setLocalTable] = useState<DynamicTable>();
+    const [localTable, setLocalTable] = useState<PricingStrategy>();
     useEffect(() => {
         if (isMounted) setLocalTable(table);
     }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
@@ -57,7 +57,7 @@ export const CategoryNestedThreshold = ({
     useEffect(() => {
         (async () => {
             if (localTable && isMounted) {
-                const { tableRows } = await repository.Configuration.Tables.Dynamic.GetDynamicTableRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
+                const { tableRows } = await repository.Configuration.Tables.Dynamic.GetPricingStrategyRows(localTable.tableMeta.intentId, localTable.tableMeta.tableType, localTable.tableMeta.tableId);
                 localTable.tableRows = tableRows;
                 setLocalTable(cloneDeep(localTable));
             }
@@ -82,10 +82,10 @@ export const CategoryNestedThreshold = ({
             if (isValid) {
                 const currentMeta = localTable.tableMeta;
 
-                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyDynamicTableMeta(currentMeta);
-                const updatedRows = await repository.Configuration.Tables.Dynamic.SaveDynamicTable<CategoryNestedThresholdData[]>(
+                const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(currentMeta);
+                const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<CategoryNestedThresholdData[]>(
                     intentId,
-                    DynamicTableTypes.CategoryNestedThreshold,
+                    PricingStrategyTypes.CategoryNestedThreshold,
                     tableRows,
                     localTable.tableMeta.tableId,
                     localTable.tableMeta.tableTag
@@ -106,11 +106,11 @@ export const CategoryNestedThreshold = ({
 
     return localTable ? (
         <>
-            <DynamicTableHeader
+            <PricingStrategyHeader
                 localTable={localTable}
                 setLocalTable={setLocalTable}
                 setTables={setTables}
-                availableDynamicTableOptions={availableDynamicTableOptions}
+                availablePricingStrategyOptions={availablePricingStrategyOptions}
                 unitTypes={unitTypes}
                 inUse={inUse}
             />
