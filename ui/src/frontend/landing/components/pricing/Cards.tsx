@@ -78,16 +78,16 @@ export const Free = () => {
     const body = (
         <PricingCardBody
             response={checkIcon()}
-            perAreaEmail={checkIcon()}
+            perIntentEmail={checkIcon()}
             enquiriesDashboard={checkIcon()}
             fileAssetUpload={crossIcon()}
             emailNotifications={crossIcon()}
             inlineEmailEditor={crossIcon()}
             smsNotifications={crossIcon()}
-            attachmentsPerArea={<ExposureZeroIcon />}
+            attachmentsPerIntent={<ExposureZeroIcon />}
             staticFeeTables={<Filter1Icon />}
             dynamicFeeTables={<Filter1Icon />}
-            numberOfAreas={<Filter2Icon />}
+            numberOfIntents={<Filter2Icon />}
         />
     );
 
@@ -108,16 +108,16 @@ export const Lyte = ({ priceInfo, showYearly }: PriceInfoProps) => {
     const body = (
         <PricingCardBody
             response={checkIcon()}
-            perAreaEmail={checkIcon()}
+            perIntentEmail={checkIcon()}
             enquiriesDashboard={checkIcon()}
             fileAssetUpload={crossIcon()}
             emailNotifications={crossIcon()}
             inlineEmailEditor={crossIcon()}
             smsNotifications={crossIcon()}
-            attachmentsPerArea={<ExposureZeroIcon />}
+            attachmentsPerIntent={<ExposureZeroIcon />}
             staticFeeTables={<Filter2Icon />}
             dynamicFeeTables={<Filter2Icon />}
-            numberOfAreas={<Filter4Icon />}
+            numberOfIntents={<Filter4Icon />}
         />
     );
     return (
@@ -134,16 +134,16 @@ export const Premium = ({ priceInfo, showYearly }: PriceInfoProps) => {
     const body = (
         <PricingCardBody
             response={checkIcon()}
-            perAreaEmail={checkIcon()}
+            perIntentEmail={checkIcon()}
             enquiriesDashboard={checkIcon()}
             fileAssetUpload={checkIcon()}
             emailNotifications={checkIcon()}
             inlineEmailEditor={checkIcon()}
             smsNotifications={crossIcon()}
-            attachmentsPerArea={<Filter2Icon />}
+            attachmentsPerIntent={<Filter2Icon />}
             staticFeeTables={<Filter2Icon />}
             dynamicFeeTables={<Filter2Icon />}
-            numberOfAreas={<Filter8Icon />}
+            numberOfIntents={<Filter8Icon />}
             rowStyle={{ borderBottom: "2px solid black" }}
             textStyle={{ color: "black" }}
         />
@@ -163,16 +163,16 @@ export const Pro = ({ priceInfo, showYearly }: PriceInfoProps) => {
     const body = (
         <PricingCardBody
             response={checkIcon()}
-            perAreaEmail={checkIcon()}
+            perIntentEmail={checkIcon()}
             enquiriesDashboard={checkIcon()}
             fileAssetUpload={checkIcon()}
             emailNotifications={checkIcon()}
             inlineEmailEditor={checkIcon()}
             smsNotifications={checkIcon()}
-            attachmentsPerArea={unlimitedIcon()}
+            attachmentsPerIntent={unlimitedIcon()}
             staticFeeTables={unlimitedIcon()}
             dynamicFeeTables={unlimitedIcon()}
-            numberOfAreas={unlimitedIcon()}
+            numberOfIntents={unlimitedIcon()}
         />
     );
     return (

@@ -4,7 +4,7 @@ import { AddNewIntentModal, AddNewIntentModalProps } from './AddNewIntentModal';
 
 
 export default {
-    title: "Dashboard/AreaContent/AddNewAreaModal",
+    title: "Dashboard/IntentContent/AddNewIntentModal",
     component: AddNewIntentModal
 } as Meta;
 
@@ -15,5 +15,5 @@ export const Primary = Template.bind({});
 Primary.args = {
     open: true,
     handleClose: () => null,
-    setNewArea: ({}) => null
+    setNewIntent: ({}) => null
 }

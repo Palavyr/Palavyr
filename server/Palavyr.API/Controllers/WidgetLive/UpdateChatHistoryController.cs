@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.WidgetLive
@@ -12,17 +13,17 @@ namespace Palavyr.API.Controllers.WidgetLive
     public class UpdateChatHistoryController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "widget/conversation";
+
 
         public UpdateChatHistoryController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpPost(Route)]
-        public async Task Modify(UpdateChatHistoryRequest request, CancellationToken cancellationToken)
+        [HttpPost(UpdateChatHistoryRequest.Route)]
+        public async Task Modify(ConversationHistoryRowResource request, CancellationToken cancellationToken)
         {
-            await mediator.Publish(request, cancellationToken);
+            await mediator.Publish(new UpdateChatHistoryRequest(request), cancellationToken);
         }
     }
 }

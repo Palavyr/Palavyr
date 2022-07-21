@@ -1,7 +1,7 @@
 import React from "react";
 import { CONVERSATION_REVIEW, CONVERSATION_REVIEW_PARAMNAME } from "@constants";
 import { Checkbox, Link, makeStyles, TableRow, Typography } from "@material-ui/core";
-import { EnquiryRow } from "@Palavyr-Types";
+import { EnquiryResource } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useHistory } from "react-router-dom";
 import { EnquiryTableRowCell } from "./EnquiriesTableRowCell";
@@ -9,7 +9,7 @@ import { formatLegitTimeStamp } from "./enquiriesUtils";
 import { EnquiryTimeStamp } from "./EnquiryTimeStamp";
 
 export interface EnquiriesTableRowProps {
-    enquiry: EnquiryRow;
+    enquiry: EnquiryResource;
     toggleSelected: (conversationId: string) => void;
     markAsSeen: (conversationId: string) => Promise<void>;
     selected: boolean;
@@ -94,7 +94,7 @@ export const EnquiriesTableRow = ({ enquiry, toggleSelected, markAsSeen, selecte
                 )}
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
-                <Typography>{enquiry.areaName}</Typography>
+                <Typography>{enquiry.intentName}</Typography>
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
                 <EnquiryTimeStamp formattedDate={formattedDate} formattedTime={formattedTime} />

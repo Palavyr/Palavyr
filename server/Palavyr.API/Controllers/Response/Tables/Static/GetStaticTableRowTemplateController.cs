@@ -10,7 +10,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Static
     public class GetStaticTableRowTemplateController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "response/configuration/{intentId}/static/tables/{tableId}/row/template";
+        public const string Route = "response/configuration/{intentId}/static/row/template";
 
         public GetStaticTableRowTemplateController(IMediator mediator)
         {
@@ -21,11 +21,9 @@ namespace Palavyr.API.Controllers.Response.Tables.Static
         public async Task<StaticTableRowResource> Get(
             [FromRoute]
             string intentId,
-            [FromRoute]
-            string tableId,
             CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetStaticTableRowTemplateRequest(intentId, tableId), cancellationToken);
+            var response = await mediator.Send(new GetStaticTableRowTemplateRequest(intentId), cancellationToken);
             return response.Response;
         }
     }

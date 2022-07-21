@@ -8,7 +8,7 @@ import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 import { webUrl } from "@common/client/clientUtils";
 import SettingsIcon from "@material-ui/icons/Settings";
-import { GeneralSettingsLoc } from "@Palavyr-Types";
+import { GeneralSettingsLoc } from "@common/types/api/Enums";
 
 const useStyles = makeStyles(theme => ({
     icon: {

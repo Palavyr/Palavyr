@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Resources;
-using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -18,7 +17,6 @@ namespace Palavyr.Core.Models.Conversation
         private readonly IMapToNew<ConversationDesignerNodeResource, ConversationNode> mapper;
 
         public ConversationUpdater(
-            IAccountIdTransport accountIdTransport,
             IEntityStore<Intent> intentStore,
             IEntityStore<ConversationNode> convoNodeStore,
             IOrphanRemover orphanRemover,
@@ -30,10 +28,8 @@ namespace Palavyr.Core.Models.Conversation
             this.mapper = mapper;
         }
 
-        public async Task<List<ConversationNode>> UpdateConversation(string intentId, IEnumerable<ConversationNode> mappedUpdates, CancellationToken cancellationToken)
+        public async Task<List<ConversationNode>> UpdateDesignerConversationForIntent(string intentId, IEnumerable<ConversationNode> mappedUpdates, CancellationToken cancellationToken)
         {
-            // var mappedUpdates = MapUpdate(updatedConvo);
-            // var mappedUpdates = await mapper.MapMany(updatedConvo);
             var deOrphanedIntentConvo = orphanRemover.RemoveOrphanedNodes(mappedUpdates);
 
             var intent = await intentStore.GetIntentComplete(intentId);

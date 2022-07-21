@@ -20,10 +20,10 @@ export class LinkedListBucket implements ILinkedListBucket {
         return this.linkedListBucket.filter((x) => x.nodeId === node.nodeId).length > 0;
     }
 
-    public convertToConvoNodes(areaId: string) {
+    public convertToConvoNodes(IntentId: string) {
         const convoBucket: ConversationDesignerNodeResource[] = [];
         this.linkedListBucket.forEach((x: IPalavyrNode) => {
-            convoBucket.push(x.compileConvoNode(areaId));
+            convoBucket.push(x.compileConvoNode(IntentId));
         });
         return convoBucket;
     }

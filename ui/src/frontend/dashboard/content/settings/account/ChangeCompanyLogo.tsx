@@ -74,7 +74,7 @@ export const ChangeLogoImage = () => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
-    const [companyLogo, setcompanyLogo] = useState<FileAssetResource>({ fileId: "", fileName: "", link: "" });
+    const [companyLogo, setcompanyLogo] = useState<FileAssetResource>({ id: 0, fileId: "", fileName: "", link: "" });
 
     const loadCompanyLogo = useCallback(async () => {
         const logoFileAssetResource = await repository.Settings.Account.GetCompanyLogo();
@@ -97,13 +97,13 @@ export const ChangeLogoImage = () => {
 
     const handleDeleteLogo = async () => {
         await repository.Settings.Account.DeleteCompanyLogo();
-        setcompanyLogo({ fileId: "", fileName: "", link: "" });
+        setcompanyLogo({ id: 0, fileId: "", fileName: "", link: "" });
     };
 
     useEffect(() => {
         loadCompanyLogo();
         return () => {
-            setcompanyLogo({ fileId: "", fileName: "", link: "" });
+            setcompanyLogo({ id: 0, fileId: "", fileName: "", link: "" });
         };
     }, []);
 
@@ -118,7 +118,7 @@ export const ChangeLogoImage = () => {
                         </PalavyrText>
                     </AlertTitle>
                     <PalavyrText align="left" variant="body1" display="block">
-                        Your company logo is placed into the top left area of each response PDF.
+                        Your company logo is placed into the top left intentof each response PDF.
                     </PalavyrText>
                     <PalavyrText align="left" variant="body1" display="block">
                         For the best results, use a square 250px by 250px png or svg image.

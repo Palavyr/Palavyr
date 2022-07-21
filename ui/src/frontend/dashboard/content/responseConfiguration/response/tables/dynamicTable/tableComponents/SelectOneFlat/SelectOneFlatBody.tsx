@@ -18,7 +18,7 @@ export const SelectOneFlatBody = ({ tableData, modifier }: IPricingStrategyBody)
             {sortByPropertyNumeric((x: CategorySelectTableRowResource) => x.rowOrder, tableData).map((row: CategorySelectTableRowResource, index: number) => {
                 const rowId = row.tableId.toString() + index.toString();
                 return (
-                    <React.Fragment key={rowId}>{row && row.option ? <SelectOneFlatRow key={"row" + rowId} dataIndex={index} tableData={tableData} row={row} modifier={modifier} /> : <></>}</React.Fragment>
+                    <React.Fragment key={rowId}>{row && row.category ? <SelectOneFlatRow key={"row" + rowId} dataIndex={index} tableData={tableData} row={row} modifier={modifier} /> : <></>}</React.Fragment>
                 );
             })}
         </TableBody>

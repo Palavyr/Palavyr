@@ -72,7 +72,7 @@ import { WidgetDesignerPage } from "frontend/dashboard/content/designer/WidgetDe
 import { AppPageView } from "@common/Analytics/gtag";
 import { IntentSettingsHelp } from "@frontend/dashboard/content/help/IntentSettingsHelp";
 import { SignupPage } from "@landing/SignupPage";
-import { EnableIntents } from "@frontend/dashboard/content/responseConfiguration/areaSettings/enableAreas/EnableIntents";
+import { EnableIntents } from "@frontend/dashboard/content/responseConfiguration/areaSettings/enableIntents/EnableIntents";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -127,7 +127,7 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/editor/settings/:intentId" component={withLayout(withIntentSettingsTabs(<IntentSettings />), <IntentSettingsHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/pricingpreview/:intentId" component={withLayout(withIntentSettingsTabs(<ConfigurationPreview />), <PreviewHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/set-areas" component={withLayout(EnableIntents, <SetIntentsHelp />)} />
+                <ProtectedRoute exact path="/dashboard/set-intents" component={withLayout(EnableIntents, <SetIntentsHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/settings/password" component={withLayout(withGeneralSettingsTabs(<ChangePassword />), <ChangePasswordHelp />)} />
                 <ProtectedRoute exact path="/dashboard/settings/email" component={withLayout(withGeneralSettingsTabs(<ChangeEmail />), <ChangeDefaultEmailHelp />)} />

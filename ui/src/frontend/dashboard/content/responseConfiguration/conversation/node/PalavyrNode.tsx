@@ -1,11 +1,10 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { ValueOptionDelimiter, LineMap, AnabranchContext, LineLink, LoopbackContext } from "@Palavyr-Types";
+import { ValueOptionDelimiter, LineMap, AnabranchContext, LineLink, LoopbackContext, ConversationDesignerNodeResource } from "@Palavyr-Types";
 import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "@Palavyr-Types";
 import { NodeReferences } from "./PalavyrNodeReferences";
 import { NodeConfigurer } from "./actions/NodeConfigurer";
 import { NodeCreator } from "./actions/NodeCreator";
-import { ConversationDesignerNodeResource } from "@common/types/api/EntityResources";
 import { NodeTypeOptionResources } from "@common/types/api/ApiContracts";
 import { NodeTypeCodeEnum } from "@common/types/api/Enums";
 
@@ -81,7 +80,7 @@ export class PalavyrNode implements IPalavyrNode {
         leftmostBranch: boolean,
         sortableNodeTypes: string[]
     ) {
-        this.id = node.id;
+        this.id = node.id!;
         this.sortableNodeTypes = sortableNodeTypes;
 
         this.repository = repository;

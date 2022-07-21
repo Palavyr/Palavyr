@@ -24,7 +24,7 @@ namespace Palavyr.Core.Mappers
                 StaticTableRowResources = tableRows,
                 AccountId = @from.AccountId,
                 PerPersonInputRequired = @from.PerPersonInputRequired,
-                IncludeTotals = @from.IncludeTotals
+                IncludeTotals = @from.IncludeTotals,
             };
         }
     }

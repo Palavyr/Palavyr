@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, makeStyles, Typography } from "@material-ui/core";
-import { DropzoneArea, DropzoneDialog, FileObject } from "material-ui-dropzone";
+import { DropzoneIntent, DropzoneDialog, FileObject } from "material-ui-dropzone";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { getAnchorOrigin } from "@common/components/PalavyrSnackbar";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
@@ -85,7 +85,7 @@ export const Upload = ({ dropzoneType = "dialog", initialAccordianState = false,
                 ) : (
                     <>
                         {!disable && (
-                            <DropzoneArea
+                            <DropzoneIntent
                                 previewText=""
                                 showAlerts={false}
                                 getPreviewIcon={(_: FileObject) => <></>}

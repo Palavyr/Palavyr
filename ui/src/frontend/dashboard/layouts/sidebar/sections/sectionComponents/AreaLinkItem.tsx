@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     areaListItem: {
         backgroundColor: theme.palette.secondary.dark,
     },
-    areaNameText: {
+    intentNameText: {
         color: theme.palette.common.white,
         textDecoration: "none",
     },
@@ -24,32 +24,32 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export interface AreaLinkItemProps {
+export interface IntentLinkItemProps {
     intentId: string;
     isActive: boolean;
     disabled: boolean;
     currentPage: string;
-    areaName: string;
+    intentName: string;
     menuOpen: boolean;
 }
-export const AreaLinkItem = memo(({ intentId, isActive, disabled, currentPage, areaName, menuOpen }: AreaLinkItemProps) => {
+export const IntentLinkItem = memo(({ intentId, isActive, disabled, currentPage, intentName, menuOpen }: IntentLinkItemProps) => {
     const cls = useStyles();
 
     return (
-        <NavLink key={intentId} to={!isActive || disabled ? currentPage : createNavLink(intentId)} className={cls.areaNameText}>
+        <NavLink key={intentId} to={!isActive || disabled ? currentPage : createNavLink(intentId)} className={cls.intentNameText}>
             <ListItem className={cls.areaListItem} disabled={!isActive || disabled} button key={intentId}>
                 {menuOpen ? (
                     <ListItemIcon className={cls.icon}>
                         <ChatIcon />
                     </ListItemIcon>
                 ) : (
-                    <Tooltip title={areaName} placement="right">
+                    <Tooltip title={intentName} placement="right">
                         <ListItemIcon className={cls.icon}>
                             <ChatIcon />
                         </ListItemIcon>
                     </Tooltip>
                 )}
-                <ListItemText primary={areaName} primaryTypographyProps={{ component: PalavyrText, className: cls.sidebarText, noWrap: true }} />
+                <ListItemText primary={intentName} primaryTypographyProps={{ component: PalavyrText, className: cls.sidebarText, noWrap: true }} />
             </ListItem>
         </NavLink>
     );

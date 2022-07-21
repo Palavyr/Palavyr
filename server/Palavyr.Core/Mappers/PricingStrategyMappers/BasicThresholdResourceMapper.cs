@@ -5,12 +5,12 @@ using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers
 {
-    public class BasicThresholdResourceMapper : IMapToNew<SimpleThresholdTableRow, BasicThresholdResource>
+    public class BasicThresholdResourceMapper : IMapToNew<SimpleThresholdTableRow, SimpleThresholdResource>
     {
-        public async Task<BasicThresholdResource> Map(SimpleThresholdTableRow @from, CancellationToken cancellationToken)
+        public async Task<SimpleThresholdResource> Map(SimpleThresholdTableRow @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
-            return new BasicThresholdResource
+            return new SimpleThresholdResource
             {
                 Id = @from.Id,
                 AccountId = @from.AccountId,

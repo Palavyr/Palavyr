@@ -2,7 +2,7 @@
 
 namespace Palavyr.Core.Resources
 {
-    public class IntentResource : IEntityResource
+    public class IntentResource : EntityResource
     {
         public string IntentId { get; set; }
         public string IntentName { get; set; }

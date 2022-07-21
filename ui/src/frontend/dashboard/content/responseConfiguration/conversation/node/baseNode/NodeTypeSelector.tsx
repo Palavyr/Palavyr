@@ -1,5 +1,5 @@
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
-import { AlertType, NodeTypeOptionResource, NodeTypeOptions, ConversationDesignerNodeResource } from "@Palavyr-Types";
+import { AlertType, NodeTypeOptionResource, NodeTypeOptionResources, ConversationDesignerNodeResource } from "@Palavyr-Types";
 import { ConversationTreeContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { IPalavyrNode } from "@Palavyr-Types";
@@ -26,8 +26,8 @@ export const NodeTypeSelector = ({ currentNode, shouldDisableNodeTypeSelector }:
         }
     }, [currentNode.nodeType]);
 
-    const duplicateDynamicFeeNodeFound = (option: string, nodeTypeOptions: NodeTypeOptions) => {
-        const dynamicNodeTypeOptions = nodeTypeOptions.filter((x: NodeTypeOptionResource) => x.isDynamicType);
+    const duplicateDynamicFeeNodeFound = (option: string, nodeTypeOptions: NodeTypeOptionResources) => {
+        const dynamicNodeTypeOptions = nodeTypeOptions.filter((x: NodeTypeOptionResource) => x.isPricingStrategyType);
         if (dynamicNodeTypeOptions.length > 0) {
             const dynamicNodeTypes = dynamicNodeTypeOptions.map((x: NodeTypeOptionResource) => x.value);
             const nodeList = currentNode.palavyrLinkedList.compileToConvoNodes(); // Write methods to handle this natively - this is a bit of a cheat atm.

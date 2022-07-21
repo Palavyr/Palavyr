@@ -1,28 +1,23 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { COULD_NOT_FIND_SERVER, INVALID_EMAIL, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
 import { PalavyrLinkedList } from "frontend/dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
-import React, { Dispatch, ElementType, SetStateAction } from "react";
-import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
-import { ConversationDesignerNodeResource, ConversationDesignerNodeResources, FileAssetResource, IntentResource, PricingStrategyTableMetaResource, StaticTableMetaResources, TableData, WidgetNodeResource, WidgetNodeResources, WidgetPreferencesResource } from "./api/EntityResources";
-import { NodeTypeOptionResource, NodeTypeOptionResources, QuantUnitDefinition } from "./api/ApiContracts";
-import { NodeTypeCode, NodeTypeCodeEnum, PurchaseTypes, UnitGroups, UnitPrettyNames } from "./api/Enums";
+import React, { Dispatch, SetStateAction } from "react";
+
+import "./api/EntityResources";
+import { FileAssetResource, PricingStrategyTableMetaResource, PricingStrategyTableTypeResource, TableData } from "./api/EntityResources";
+import { NodeTypeCodeEnum, PurchaseTypes, UnitGroups, UnitPrettyNames } from "./api/Enums";
+import { QuantUnitDefinition, NodeTypeOptionResources } from "./api/ApiContracts";
+import { ConversationDesignerNodeResource, ConversationDesignerNodeResources } from "./api/NullableEntityResource";
+
+export * from "./api/EntityResources";
+export * from "./api/ApiContracts";
+export * from "./api/Enums";
+export * from "./api/NullableEntityResource";
+export * from "./widget/widget";
+
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />
-
-/*
-The front end needs to send a request to an end point with a PARAM, :intentId, and this
-will be sent to C# backend API which will use the accountID and intentId to retrieve from a particular endpoint
-
-something like /endpoints/:accountId/:intentId/?authToken=23b23k5iuhi2u5b2kjb2k34uhn234ujn
-
-Then the API will extract the accountID, the intentId and use it with the endpoint to call a DB controller
-which will can nevermore (which maps the json in the db column to a class) to retrieve ONLY the data for the area
-we are currently working on. This keeps the state object a little bit smaller.
-
-So we need to first make a call when the initial page loads to retieve the area ids (and their names) in order to
-render the area list on sidebar, and then also the first area in the list (a second get request).
-*/
 
 export type UUID = string;
 export type AnyFunction = (...args: any[]) => any;
@@ -50,21 +45,6 @@ export type ParsedAnchor = {
     y: number;
 };
 
-// Database
-export type GroupRow = {
-    id: number;
-    groupId: string;
-    parentId: string;
-    groupName: string;
-};
-export type GroupTable = Array<GroupRow>;
-
-export type AreaMeta = {
-    intentId: string;
-    groupId: string;
-    areaName: string;
-};
-
 export const ValueOptionDelimiter = "|peg|";
 
 export type StaticTableValidationResult = {
@@ -77,18 +57,8 @@ export type SelectionMap = {
 };
 
 export type MarkAsSeenUpdate = {
-    sonversationId: string;
+    conversationId: string;
     seen: boolean;
-};
-
-export type EnquiryActivtyResource = {
-    intentName: string;
-    numRecords: number;
-    intentIdentifier: string;
-    completed: number;
-    sentEmailCount: number;
-    averageIntentCompletion: number;
-    intentCompletePerIntent: number[];
 };
 
 export type AlertType = {
@@ -125,7 +95,7 @@ export type HelpTypes =
     | "email"
     | "attachments"
     | "preview"
-    | "areasettings"
+    | "intentsettings"
     | "password"
     | "email"
     | "companyname"
@@ -141,7 +111,7 @@ export type SessionState = {
     extraQueryParams: ExtraQueryParams;
 };
 
-export type Images = Array<string>;
+export type Images = string[];
 export type StripeProduct = {
     id: string;
     object: string;
@@ -155,30 +125,10 @@ export type StripeProduct = {
     type: string;
 };
 
-
-
 export type Action = {
     icon: React.ReactNode;
     name: string;
     onClick(): void;
-};
-
-export type ResponseConfigurationType = {
-    prologue: string;
-    epilogue: string;
-    staticTablesMetas: StaticTableMetaResources;
-    sendPdfResponse: boolean;
-};
-
-export type AccountEmailSettingsResponse = {
-    emailAddress: string;
-    isVerified: boolean;
-    awaitingVerification: boolean;
-};
-
-export type PhoneSettingsResponse = {
-    phoneNumber: string;
-    locale: string;
 };
 
 export type RequiredDetails = {
@@ -199,7 +149,7 @@ export type PlanTypeMeta = {
     allowedAttachments: number;
     allowedStaticTables: number;
     allowedPricingStrategys: number;
-    allowedAreas: number;
+    allowedIntents: number;
 
     allowedFileUpload: boolean;
     allowedEmailNotifications: boolean;
@@ -224,8 +174,8 @@ export type PriceMap = {
 };
 
 export type IncompleteIntent = {
-    areaDisplayTitle: string;
-    areaName: string;
+    intentDisplayTitle: string;
+    intentName: string;
     reason: string[];
 };
 
@@ -236,38 +186,21 @@ export type RememberMe = {
     password: string;
 };
 
-export type ResetEmailResponse = {
-    message: string;
-    status: boolean;
-    link: string;
-};
-
-export type ResetPasswordResponse = {
-    message: string;
-    status: boolean;
-};
-
-export type VerificationResponse = {
-    message: string;
-    status: boolean;
-    apiKey: string;
-};
-
 export type Settings = {
     emailAddress: string;
     isVerified: boolean;
     awaitingVerification: boolean;
-    areaName: string;
+    intentName: string;
     areaTitle: string;
     subject: string;
     isEnabled: boolean;
-    useAreaFallbackEmail: boolean;
+    useIntentFallbackEmail: boolean;
 };
 
 export type IntentsEnabled = {
-    areaId: string;
+    intentId: string;
     isEnabled: boolean;
-    areaName: string;
+    intentName: string;
 };
 
 export type ToggleStateChanger = Dispatch<SetStateAction<boolean | null>>;
@@ -410,17 +343,7 @@ export type PricingStrategyComponentMap = {
     [key: string]: (props: PricingStrategyProps) => JSX.Element;
 };
 
-export type PricingStrategyTableTypeResource = {
-    prettyName: string;
-    tableType: string;
-};
 export type TableNameMap = PricingStrategyTableTypeResource[];
-
-export type TreeErrors = {
-    missingNodes: string[];
-    outOfOrder: string[];
-    anyErrors: boolean;
-};
 
 export type IntentNameDetail = {
     intentName: string;
@@ -450,8 +373,8 @@ export type AnabranchContext = {
 
 export interface IDashboardContext {
     intentId: string;
-    checkAreaCount(): void;
-    areaName: string;
+    checkIntentCount(): void;
+    intentName: string;
     setViewName: SetState<string>;
     currencySymbol: string;
     setIsLoading: SetState<boolean>;
@@ -475,7 +398,7 @@ export interface IDashboardContext {
     panelErrors: ErrorResponse | null;
     setPanelErrors: SetState<ErrorResponse | null>;
     repository: PalavyrRepository;
-    areaNameDetails: IntentNameDetails;
+    intentNameDetails: IntentNameDetails;
     reRenderDashboard(): void;
     handleDrawerOpen(): void;
     handleDrawerClose(): void;
@@ -501,115 +424,17 @@ export interface IConversationHistoryTracker {
 
 export interface IConversationTreeContext {
     historyTracker: IConversationHistoryTracker;
-    nodeTypeOptions: NodeTypeOptionResource;
+    nodeTypeOptions: NodeTypeOptionResources;
     showDebugData: boolean;
     useNewEditor: boolean;
 }
 
-////////////////// Widget
-
-export type SecretKey = string | null;
-
-export type WidgetAreaTable = {
-    intentId: string;
-    areaDisplayTitle: string;
-};
-
-export type SelectedOption = {
-    intentDisplay: string;
-    intentId: string;
-};
-
-export type Registry = {
-    [key: string]: any;
-};
-
-export type WidgetConversationUpdate = {
-    ConversationId: string;
-    Prompt: string;
-    UserResponse: string | null;
-    NodeId: string;
-    NodeCritical: boolean;
-    NodeType: string;
-};
-
-export type ConversationRecordUpdate = {
-    ConversationId: string;
-    IntentId: string;
-    Name: string;
-    Email: string;
-    PhoneNumber: string;
-    Fallback: boolean;
-    Locale: string;
-    IsComplete: boolean;
-};
-
-export type WidgetPreCheckResult = {
-    isReady: boolean;
-    incompleteAreas: IntentResource[];
-};
-
-export interface IProgressTheChat {
-    node: WidgetNodeResource;
-    nodeList: WidgetNodeResources;
-    client: PalavyrWidgetRepository;
-    convoId: string;
-    designer?: boolean;
-}
-
-export type Nullable<T> = T | null;
-
-type BaseMessage = {
-    type: string;
-    component: ElementType;
-    sender: string;
-    showAvatar: boolean;
-    timestamp: Date;
-    unread: boolean;
-    customId?: string;
-    props?: any;
-    nodeType: string;
-};
-export interface UserMessageData extends BaseMessage {
-    text: string;
-}
-
-export interface BotMessageData extends BaseMessage {
-    props: any;
-}
-
-export type SpecificResponse = {
-    [nodeId: string]: string; // node.nodeId: response value;
-};
-export type DynamicResponse = {
-    [UniqueTableKey: string]: SpecificResponse[];
-};
-export type DynamicResponses = DynamicResponse[];
-
-export type KeyValue = {
-    [key: string]: string; // MUST BE STRING for server
-};
-
-export type KeyValues = KeyValue[];
-
-export type ContextProperties = {
-    name: string;
-    emailAddress: string;
-    phoneNumber: string;
-    region: string;
-    keyValues: KeyValues;
-    dynamicResponses: DynamicResponses;
-    numIndividuals: number | null;
-    widgetPreferences: WidgetPreferencesResource | null;
-    responseFileAsset: FileAssetResource;
-};
-
-export interface ImageState {
-    src: string;
-    alt?: string;
-    width: number;
-    height: number;
-}
+// export interface ImageState {
+//     src: string;
+//     alt?: string;
+//     width: number;
+//     height: number;
+// }
 
 export interface NodeOptionalProps {
     node: IPalavyrNode;
@@ -617,7 +442,7 @@ export interface NodeOptionalProps {
 
 export interface ILinkedListBucket {
     addToBucket(node: IPalavyrNode): void;
-    convertToConvoNodes(areaId: string): ConversationDesignerNodeResources;
+    convertToConvoNodes(intentId: string): ConversationDesignerNodeResources;
     addToBucket(node: IPalavyrNode): void;
     clear(): void;
     findById(nodeId: string): IPalavyrNode | null;
@@ -625,7 +450,7 @@ export interface ILinkedListBucket {
 
 export interface IPalavyrLinkedList {
     rootNode: IPalavyrNode;
-    areaId: string;
+    intentId: string;
     repository: PalavyrRepository;
     traverse(): void;
     insert(): void;
@@ -680,7 +505,7 @@ export interface IPalavyrNode {
     AddNewChildReference(newChildReference: IPalavyrNode): void;
     sortChildReferences(): void;
     addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources): void;
-    compileConvoNode(areaId: string): ConversationDesignerNodeResource;
+    compileConvoNode(intentId: string): ConversationDesignerNodeResource;
     recursiveReferenceThisAnabranchOrigin(node: IPalavyrNode): void;
     dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources): void;
     UpdateTree(): void;

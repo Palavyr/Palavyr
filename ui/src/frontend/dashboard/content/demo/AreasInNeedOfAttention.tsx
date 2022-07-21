@@ -65,8 +65,8 @@ export const IntentsInNeedOfAttention = ({ preCheckErrors }: IntentsInNeedOfAtte
                                     {preCheckErrors.map((error: PreCheckErrorResource, index: number) => {
                                         return (
                                             <TableRow>
-                                                <TableCell key={error.areaName} className={cls.cell} width="50%" align="center">
-                                                    <Typography>{error.areaName}</Typography>
+                                                <TableCell key={error.intentName} className={cls.cell} width="50%" align="center">
+                                                    <Typography>{error.intentName}</Typography>
                                                 </TableCell>
                                                 <TableCell key={index} className={cls.cell} width="50%" align="center">
                                                     {error.reasons.map((reason: string) => {

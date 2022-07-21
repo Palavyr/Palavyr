@@ -4,7 +4,6 @@
 import React from "react";
 import { StaticTableMetaResource, StaticTableMetaResources } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
-import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { Button, makeStyles, Typography } from "@material-ui/core";
 import { StaticFeeTable } from "./StaticFeeTable";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";

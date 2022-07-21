@@ -705,7 +705,7 @@ export const PrivacyPolicyContent = () => {
                 <span>European Union (or EU)</span>
             </h4>
             <p>
-                <span>Unless otherwise specified, all references made within this document to the European Union include all current member states to the European Union and the European Economic Area.</span>
+                <span>Unless otherwise specified, all references made within this document to the European Union include all current member states to the European Union and the European Economic Intent.</span>
             </p>
             <h4>
                 <span>Cookie</span>

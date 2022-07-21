@@ -1,15 +1,15 @@
-import { SelectedOption } from "@Palavyr-Types";
+import { SelectedOption } from "@common/types/widget/widget";
 
-export const getSelectedOption = (areaId: string) => {
+export const getSelectedOption = (IntentId: string) => {
     return {
-        areaDisplay: "An Area Name",
-        areaId: areaId,
+        areaDisplay: "An intentName",
+        IntentId: IntentId,
     };
 };
 
 export const options: SelectedOption[] = [
     {
-        IntentDisplay: "An Area Name",
-        IntentId: "abc123",
+        intentDisplay: "An intentName",
+        intentId: "abc123",
     },
 ];

@@ -1,6 +1,6 @@
 import { PreCheckResultResource, SendLiveEmailResultResource } from "@common/types/api/ApiContracts";
 import { IntentResource, NewConversationResource, WidgetNodeResource, WidgetNodeResources, WidgetPreferencesResource } from "@common/types/api/EntityResources";
-import { ConversationRecordUpdate, ConversationRecordUpdate as ConvoRecord, WidgetConversationUpdate, DynamicResponse, KeyValues, LocaleResponse, SecretKey } from "@Palavyr-Types";
+import { ConversationRecordUpdate, ConversationRecordUpdate as ConvoRecord, ConversationHistoryRowResource, DynamicResponse, KeyValues, LocaleResponse, SecretKey } from "@Palavyr-Types";
 import { ApiRoutes } from "./ApiRoutes";
 import { AxiosClient } from "./WidgetAxiosClient";
 
@@ -33,7 +33,7 @@ export class PalavyrWidgetRepository extends ApiRoutes {
                     Response: response,
                     CurrentDynamicResponseState: currentDynamicResponseState,
                 }),
-            UpdateConvoHistory: async (update: WidgetConversationUpdate) => this.client.post(this.Routes.updateConvoHistory(this.secretKey), update),
+            UpdateConvoHistory: async (update: ConversationHistoryRowResource) => this.client.post(this.Routes.updateConvoHistory(this.secretKey), update),
             UpdateConvoRecord: async (updatedConvoRecord: Partial<ConvoRecord>) => this.client.post(this.Routes.updateConvoRecord(this.secretKey), updatedConvoRecord),
         },
 

@@ -8,7 +8,7 @@ import { CategoryNestedThresholdContainer } from "./CategoryNestedThresholdConta
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { PricingStrategyHeader } from "../../DynamicTableHeader";
+import { PricingStrategyHeader } from "../../PricingStrategyTableHeader";
 
 import { cloneDeep } from "lodash";
 import { useIsMounted } from "@common/hooks/useIsMounted";
@@ -53,7 +53,7 @@ export const CategoryNestedThreshold = ({
     const [localTable, setLocalTable] = useState<PricingStrategy>();
     useEffect(() => {
         if (isMounted) setLocalTable(table);
-    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitIdEnum, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {

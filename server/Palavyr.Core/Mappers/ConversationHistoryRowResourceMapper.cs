@@ -12,14 +12,14 @@ namespace Palavyr.Core.Mappers
             await Task.Yield();
             var newResource = new ConversationHistoryRowResource
             {
+                Id = from.Id,
                 ConversationId = from.ConversationId,
                 Prompt = from.Prompt,
                 UserResponse = from.UserResponse,
                 NodeId = from.NodeId,
                 NodeCritical = from.NodeCritical,
                 NodeType = from.NodeType,
-                TimeStamp = from.TimeStamp.ToString(),
-                AccountId = from.AccountId
+                TimeStamp = from.TimeStamp,
             };
 
             return newResource;

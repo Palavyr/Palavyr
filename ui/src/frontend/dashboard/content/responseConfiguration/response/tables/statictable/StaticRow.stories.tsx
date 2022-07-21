@@ -35,7 +35,7 @@ const MockStaticTablesMeta: StaticTableMetaResource = {
     intentId: "abc-123",
     description: "This is a good first table.",
     tableOrder: 0,
-    staticTableRows: [MockStaticTableRow, MockStaticTableRow],
+    staticTableRowResources: [MockStaticTableRow, MockStaticTableRow],
     perPersonInputRequired: false,
     includeTotals: true,
 };

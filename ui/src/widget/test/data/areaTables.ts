@@ -1,6 +1,6 @@
-import { WidgetAreaTable } from "@Palavyr-Types";
+import { WidgetIntentTable } from "@Palavyr-Types";
 
-export const fakeAreaTables: Array<WidgetAreaTable> = [
+export const fakeIntentTables: Array<WidgetIntentTable> = [
     {
         intentId: "abc-123",
         areaDisplayTitle: "Test Display Title",

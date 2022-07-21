@@ -1,9 +1,9 @@
-import { NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
+import { NodeTypeCodeEnum, NodeTypeOptionResources } from "@Palavyr-Types";
 import { IPalavyrNode } from "@Palavyr-Types";
 import NodeChanger from "./NodeChanger";
 
 export class NodeUpdater {
-    public updateNode(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {
+    public updateNode(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptionResources) {
         this.updateValueOptions(currentNode, valueOptions, nodeTypeOptions);
         currentNode.UpdateTree();
     }
@@ -15,25 +15,25 @@ export class NodeUpdater {
         }
     }
 
-    private updateValueOptions(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {
-        switch (currentNode.nodeTypeCode) {
-            case NodeTypeCode.III: // Multioption Continue
+    private updateValueOptions(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptionResources) {
+        switch (currentNode.nodeTypeCodeEnum) {
+            case NodeTypeCodeEnum.III: // Multioption Continue
                 currentNode.setValueOptions(valueOptions);
                 break;
 
-            case NodeTypeCode.IV: // Multioption Path
-                currentNode.setValueOptions(valueOptions);
-                NodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
-                currentNode.childNodeReferences.applyOptionPaths(valueOptions);
-                break;
-
-            case NodeTypeCode.VI: //Anabranch
+            case NodeTypeCodeEnum.IV: // Multioption Path
                 currentNode.setValueOptions(valueOptions);
                 NodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
                 currentNode.childNodeReferences.applyOptionPaths(valueOptions);
                 break;
 
-            case NodeTypeCode.VII:
+            case NodeTypeCodeEnum.VI: //Anabranch
+                currentNode.setValueOptions(valueOptions);
+                NodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
+                currentNode.childNodeReferences.applyOptionPaths(valueOptions);
+                break;
+
+            case NodeTypeCodeEnum.VII:
                 currentNode.setValueOptions(valueOptions);
                 NodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
                 currentNode.childNodeReferences.applyOptionPaths(valueOptions);

@@ -56,7 +56,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.NodeUpdaters
                 updatedNodes = await ConvertToAsContinue(node, conversationNodes);
             }
 
-            await nodeUpdater.UpdateConversation(intentId, updatedNodes, CancellationToken.None);
+            await nodeUpdater.UpdateDesignerConversationForIntent(intentId, updatedNodes, CancellationToken.None);
         }
 
         private async Task<List<ConversationNode>> ConvertToAsPaths(List<CategorySelectTableRow> currentSelectOneFlatUpdate, ConversationNode node, string intentId, string accountId, List<ConversationNode> conversationNodes)

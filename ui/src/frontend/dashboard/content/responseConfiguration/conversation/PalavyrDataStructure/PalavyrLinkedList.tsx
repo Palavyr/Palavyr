@@ -1,6 +1,6 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { ConversationDesignerNodeResource, NodeTypeOptions } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, NodeTypeOptionResources } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { ILinkedListBucket, INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "@Palavyr-Types";
 import { LinkedListBucket } from "./LinkedListBucket";
@@ -11,7 +11,7 @@ import { Edge, Node as FlowNode, Position } from "react-flow-renderer";
 
 export class PalavyrLinkedList implements IPalavyrLinkedList {
     private linkedListBucket: ILinkedListBucket = new LinkedListBucket();
-    public areaId: string;
+    public intentId: string;
     public rootNode: IPalavyrNode;
     private head: ConversationDesignerNodeResource;
     public updateTree: (updatedTree: IPalavyrLinkedList) => void;
@@ -24,8 +24,8 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     /**
      * List object for interacting with the list. This will have methods for performing insertions, deletions, additions, subtractions, etc
      */
-    constructor(nodeList: ConversationDesignerNodeResource[], areaId: string, updateTree: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions, repository: PalavyrRepository, sortableNodeTypes: string[]) {
-        this.areaId = areaId;
+    constructor(nodeList: ConversationDesignerNodeResource[], IntentId: string, updateTree: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptionResources, repository: PalavyrRepository, sortableNodeTypes: string[]) {
+        this.intentId = IntentId;
         this.repository = repository;
         this.sortableNodeTypes = sortableNodeTypes;
         this.head = this.getRootNode(nodeList);
@@ -57,14 +57,14 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         return nodeChildrenString.split(",");
     }
 
-    private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConversationDesignerNodeResource[], nodeTypeOptions: NodeTypeOptions) {
+    private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConversationDesignerNodeResource[], nodeTypeOptions: NodeTypeOptionResources) {
         const headNode = this.convertToPalavyrNode(this.repository, this.head, this.updateTree, true);
         this.configurer.configure(headNode, null, nodeTypeOptions);
         this.rootNode = headNode;
         this.recursivelyAssembleLinkedList(headNode, this.head.nodeChildrenString, nodeList, nodeTypeOptions);
     }
 
-    private recursivelyAssembleLinkedList(parentNode: IPalavyrNode, nodeChildrenString: string, nodeList: ConversationDesignerNodeResource[], nodeTypeOptions: NodeTypeOptions) {
+    private recursivelyAssembleLinkedList(parentNode: IPalavyrNode, nodeChildrenString: string, nodeList: ConversationDesignerNodeResource[], nodeTypeOptions: NodeTypeOptionResources) {
         if (parentNode.parentNodeReferences.containsNodeType("Loopback")) return;
         const childIds = this._splitAndRemoveEmptyNodeChildrenString(nodeChildrenString);
         if (childIds.length === 0) return;
@@ -112,7 +112,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         };
         this.traverse(compileCallback);
 
-        return this.linkedListBucket.convertToConvoNodes(this.areaId);
+        return this.linkedListBucket.convertToConvoNodes(this.intentId);
     }
 
     compileToBucket(): ILinkedListBucket {
@@ -152,7 +152,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         recurseTheTree(headNode.childNodeReferences, headNode);
     }
 
-    reconfigureTree(nodeTypeOptions: NodeTypeOptions): void {
+    reconfigureTree(nodeTypeOptions: NodeTypeOptionResources): void {
         this.traverse((node: IPalavyrNode) => {
             if (node.isRoot) {
                 this.configurer.configure(node, null, nodeTypeOptions);

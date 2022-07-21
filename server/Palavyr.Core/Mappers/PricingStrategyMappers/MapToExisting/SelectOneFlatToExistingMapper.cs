@@ -22,9 +22,9 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.MapToExisting
         }
     }
 
-    public class BasicThresholdToExistingMapper : IMapToPreExisting<BasicThresholdResource, SimpleThresholdTableRow>
+    public class BasicThresholdToExistingMapper : IMapToPreExisting<SimpleThresholdResource, SimpleThresholdTableRow>
     {
-        public async Task Map(BasicThresholdResource from, SimpleThresholdTableRow to, CancellationToken cancellationToken)
+        public async Task Map(SimpleThresholdResource from, SimpleThresholdTableRow to, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 

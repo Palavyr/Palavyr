@@ -7,6 +7,6 @@ namespace Palavyr.Core.Models.Conversation
 {
     public interface IConversationNodeUpdater
     {
-        Task<List<ConversationNode>> UpdateConversation(string intentId, IEnumerable<ConversationNode> mappedUpdates, CancellationToken cancellationToken);
+        Task<List<ConversationNode>> UpdateDesignerConversationForIntent(string intentId, IEnumerable<ConversationNode> mappedUpdates, CancellationToken cancellationToken);
     }
 }

@@ -8,7 +8,7 @@ import { DisplayTableData } from "../DisplayTableData";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { cloneDeep } from "lodash";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
-import { PricingStrategyHeader } from "../../DynamicTableHeader";
+import { PricingStrategyHeader } from "../../PricingStrategyTableHeader";
 import { TwoNestedCategoryResource } from "@common/types/api/EntityResources";
 
 const useStyles = makeStyles(theme => ({

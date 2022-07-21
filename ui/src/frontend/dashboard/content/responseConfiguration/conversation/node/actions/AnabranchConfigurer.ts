@@ -1,4 +1,4 @@
-import { SetState, NodeTypeOptions, NodeTypeCode } from "@Palavyr-Types";
+import { SetState, NodeTypeOptionResources, NodeTypeCodeEnum } from "@Palavyr-Types";
 import { IPalavyrNode, INodeReferences } from "@Palavyr-Types";
 import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
 
@@ -49,7 +49,7 @@ class AnabranchConfigurer {
         recurse(currentNode.childNodeReferences, anabranchLeftmost);
     }
 
-    public SetAnabranchCheckBox(checked: boolean, setAnabranchMergeChecked: SetState<boolean>, node: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    public SetAnabranchCheckBox(checked: boolean, setAnabranchMergeChecked: SetState<boolean>, node: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources) {
         const origin = node.anabranchContext.anabranchOriginId;
         const anabranchOriginNode = node.palavyrLinkedList.findNode(origin);
 
@@ -103,7 +103,7 @@ class AnabranchConfigurer {
         }
     }
 
-    public configureAnabranch(currentNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    public configureAnabranch(currentNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources) {
         // all nodes establish their own anabranch context
         // possibly update this if parent has anabranch origin node set
         this.SetAnabranchContext(currentNode, "", false);
@@ -152,10 +152,10 @@ class AnabranchConfigurer {
         currentNode.isPalavyrAnabranchEnd = currentNode.isAnabranchMergePoint;
 
         if (currentNode.isPalavyrAnabranchMember) {
-            const notAllowedInsideAnabranch = [NodeTypeCode.VI, NodeTypeCode.VII];
+            const notAllowedInsideAnabranch = [NodeTypeCodeEnum.VI, NodeTypeCodeEnum.VII];
             if (currentNode.anabranchContext.leftmostAnabranch) {
-                notAllowedInsideAnabranch.push(NodeTypeCode.IV);
-                notAllowedInsideAnabranch.push(NodeTypeCode.V);
+                notAllowedInsideAnabranch.push(NodeTypeCodeEnum.IV);
+                notAllowedInsideAnabranch.push(NodeTypeCodeEnum.V);
             }
             const options = NodeTypeOptionConfigurer.filterUnallowedNodeOptions(notAllowedInsideAnabranch, nodeTypeOptions);
             currentNode.setNodeTypeOptions(options);

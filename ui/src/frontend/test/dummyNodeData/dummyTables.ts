@@ -39,7 +39,7 @@ export const MockStaticTablesMeta: StaticTableMetaResource = {
     description: "This is a good first table.",
     tableOrder: 0,
     includeTotals: true,
-    staticTableRows: [
+    staticTableRowResources: [
         row1,
         row2,
         row3

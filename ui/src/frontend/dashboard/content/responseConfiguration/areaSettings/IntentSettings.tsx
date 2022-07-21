@@ -7,7 +7,7 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { HeaderStrip } from "@common/components/HeaderStrip";
-import { OsTypeToggle } from "./enableAreas/OsTypeToggle";
+import { OsTypeToggle } from "./enableIntents/OsTypeToggle";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(theme => ({
@@ -46,7 +46,7 @@ export const IntentSettings = () => {
         emailAddress: "",
         isVerified: false,
         awaitingVerification: false,
-        areaName: "",
+        intentName: "",
         areaTitle: "",
         subject: "",
         isEnabled: false,
@@ -58,19 +58,19 @@ export const IntentSettings = () => {
     const history = useHistory();
 
     const loadSettings = useCallback(async () => {
-        const areas = await repository.Intent.GetAllIntents();
-        const areaData = areas.filter(x => x.intentId === intentId)[0];
+        const intents = await repository.Intent.GetAllIntents();
+        const intentData = intents.filter(x => x.intentId === intentId)[0];
+        const email = await repository.Settings.Account.GetEmail();
 
         setSettings({
-            emailAddress: areaData.areaSpecificEmail,
-            isVerified: areaData.emailIsVerified,
-            awaitingVerification: areaData.awaitingVerification,
-            areaName: areaData.areaName,
-            areaTitle: areaData.areaDisplayTitle,
-            subject: areaData.subject,
-            isEnabled: areaData.isEnabled,
+            emailAddress: intentData.intentSpecificEmail,
+            isVerified: intentData.emailIsVerified,
+            awaitingVerification: email.awaitingVerification,
+            intentName: intentData.intentName,
+            subject: intentData.subject,
+            isEnabled: intentData.isEnabled,
         });
-        setIsEnabledState(areaData.isEnabled);
+        setIsEnabledState(intentData.isEnabled);
     }, [intentId]);
 
     useEffect(() => {
@@ -84,20 +84,12 @@ export const IntentSettings = () => {
         };
     }, []);
 
-    const handleIntentNameChange = async (newAreaName: string) => {
-        if (newAreaName === settings.areaName) return;
-        const updatedAreaName = await repository.Intent.UpdateIntentName(intentId, newAreaName);
-        const updatedSettings = { ...settings, areaName: updatedAreaName };
+    const handleIntentNameChange = async (newIntentName: string) => {
+        if (newIntentName === settings.intentName) return;
+        const updatedIntentName = await repository.Intent.UpdateIntentName(intentId, newIntentName);
+        const updatedSettings = { ...settings, intentName: updatedIntentName };
         setSettings(updatedSettings);
         window.location.reload(); // reloads the sidebar...
-    };
-
-    const handleIntentDisplayTitleChange = async (newAreaDisplayTitle: any) => {
-        if (newAreaDisplayTitle === settings.areaTitle) return;
-        const updatedDisplayTitle = await repository.Intent.updateDisplayTitle(intentId, newAreaDisplayTitle);
-        window.location.reload();
-        const updatedSettings = { ...settings, areaTitle: updatedDisplayTitle };
-        setSettings(updatedSettings);
     };
 
     const handleIntentDelete = async () => {
@@ -143,7 +135,7 @@ export const IntentSettings = () => {
     // I'll refactor this later. . .
     return loaded ? (
         <>
-            <HeaderStrip title="Intent Settings" subtitle={`Modify settings that are specific to this intent (${settings.areaName}).`} />
+            <HeaderStrip title="Intent Settings" subtitle={`Modify settings that are specific to this intent (${settings.intentName}).`} />
             {isEnabledState !== null && <OsTypeToggle controlledState={isEnabledState} onChange={onIntentEnabledToggleChange} enabledLabel="Intent Enabled" disabledLabel="Intent Disabled" />}
 
             <Grid container spacing={3} justify="center">
@@ -153,16 +145,16 @@ export const IntentSettings = () => {
                         classNames={cls.paperColor}
                         fullWidth
                         alertNode={
-                            <Alert className={cls.alert} severity={settings.areaTitle === "Change this in the area Settings." || settings.areaTitle === "" ? "error" : "success"}>
+                            <Alert className={cls.alert} severity={settings.areaTitle === "Change this in the intentSettings." || settings.areaTitle === "" ? "error" : "success"}>
                                 <AlertTitle>
-                                    <Typography variant="h5">Update Widget Display Name</Typography>
+                                    <Typography variant="h5">Update intent display Name</Typography>
                                 </AlertTitle>
-                                Set the name of this area as used in the widget.
+                                Set the name of this intentas used in the widget.
                             </Alert>
                         }
-                        placeholder="New Area Name (Widget)"
+                        placeholder="New intentName (Widget)"
                         currentValue={settings.areaTitle}
-                        onClick={handleIntentDisplayTitleChange}
+                        onClick={handleIntentNameChange}
                         clearVal={false}
                     />
                 </Grid>
@@ -200,15 +192,15 @@ export const IntentSettings = () => {
                         classNames={cls.paperColor}
                         fullWidth
                         alertNode={
-                            <Alert className={cls.alert} severity={settings.areaName ? "success" : "warning"}>
+                            <Alert className={cls.alert} severity={settings.intentName ? "success" : "warning"}>
                                 <AlertTitle>
                                     <Typography variant="h5">Update Dashboard Display Name</Typography>
                                 </AlertTitle>
-                                Set the name of area used for your reference on this dashboard.
+                                Set the name of intentused for your reference on this dashboard.
                             </Alert>
                         }
-                        placeholder="New Area Name (Dashboard)"
-                        currentValue={settings.areaName}
+                        placeholder="New intentName (Dashboard)"
+                        currentValue={settings.intentName}
                         onClick={handleIntentNameChange}
                         clearVal={false}
                     />
@@ -222,7 +214,7 @@ export const IntentSettings = () => {
                 <Grid item xs={5}>
                     <SettingsGridRowText
                         classNames={cls.paperColor}
-                        successText="Area Deleted"
+                        successText="intentDeleted"
                         alertNode={
                             <Alert className={cls.alert} severity="error">
                                 <AlertTitle>

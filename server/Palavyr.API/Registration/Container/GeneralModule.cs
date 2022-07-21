@@ -96,7 +96,7 @@ namespace Palavyr.API.Registration.Container
             //     .InstancePerLifetimeScope();
 
             // pricing strategy validators
-            builder.RegisterType<BasicThresholdResourceValidator>().As<IValidator<PricingStrategyTableDataResource<BasicThresholdResource>>>();
+            builder.RegisterType<BasicThresholdResourceValidator>().As<IValidator<PricingStrategyTableDataResource<SimpleThresholdResource>>>();
             builder.RegisterType<CategoryNestedThresholdValidator>().As<IValidator<PricingStrategyTableDataResource<CategoryNestedThresholdResource>>>();
             builder.RegisterType<PercentOfThresholdResourceValidator>().As<IValidator<PricingStrategyTableDataResource<PercentOfThresholdResource>>>();
             builder.RegisterType<SelectOneFlatResourceValidator>().As<IValidator<PricingStrategyTableDataResource<CategorySelectTableRowResource>>>();
@@ -196,7 +196,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<SelectOneFlatCompiler>().As<ISelectOneFlatCompiler>();
             builder.RegisterType<TwoNestedCategoryCompiler>().As<ITwoNestedCategoryCompiler>();
             builder.RegisterType<PercentOfThresholdCompiler>().As<IPercentOfThresholdCompiler>();
-            builder.RegisterType<BasicThresholdCompiler>().As<IBasicThresholdCompiler>();
+            builder.RegisterType<SimpleThresholdCompiler>().As<ISimpleThresholdCompiler>();
             builder.RegisterType<CategoryNestedThresholdCompiler>().As<ICategoryNestedThresholdCompiler>();
 
             builder.RegisterType<StaticTableCompiler>().As<IStaticTableCompiler>();

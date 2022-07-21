@@ -10,14 +10,13 @@ namespace Palavyr.API.Controllers.Accounts.Settings
     public class GetDefaultEmailController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "account/settings/email";
 
         public GetDefaultEmailController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpGet(Route)]
+        [HttpGet(GetDefaultEmailRequest.Route)]
         public async Task<AccountEmailSettingsResource> Get(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetDefaultEmailRequest(), cancellationToken);

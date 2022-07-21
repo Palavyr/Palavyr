@@ -12,7 +12,7 @@ import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { cloneDeep } from "lodash";
 import { useIsMounted } from "@common/hooks/useIsMounted";
-import { PricingStrategyHeader } from "../../DynamicTableHeader";
+import { PricingStrategyHeader } from "../../PricingStrategyTableHeader";
 import { BasicThresholdResource } from "@common/types/api/EntityResources";
 
 const useStyles = makeStyles(theme => ({

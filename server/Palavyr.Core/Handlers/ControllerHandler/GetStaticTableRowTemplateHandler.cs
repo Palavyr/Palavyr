@@ -19,11 +19,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             this.mapper = mapper;
         }
 
-        public async Task<GetStaticTableRowTemplateResponse> Handle(GetStaticTableRowTemplateRequest request, CancellationToken cancellationToken)
+        public Task<GetStaticTableRowTemplateResponse> Handle(GetStaticTableRowTemplateRequest request, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
-            var resource = await mapper.Map(StaticTableRow.CreateStaticTableRowTemplate(int.Parse(request.TableId), request.IntentId, accountIdTransport.AccountId));
-            return new GetStaticTableRowTemplateResponse(resource);
+            return Task.FromResult(new GetStaticTableRowTemplateResponse(new StaticTableRowResource()));
         }
     }
 
@@ -35,13 +33,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetStaticTableRowTemplateRequest : IRequest<GetStaticTableRowTemplateResponse>
     {
-        public GetStaticTableRowTemplateRequest(string intentId, string tableId)
+        public GetStaticTableRowTemplateRequest(string intentId)
         {
             IntentId = intentId;
-            TableId = tableId;
         }
 
         public string IntentId { get; set; }
-        public string TableId { get; set; }
     }
 }

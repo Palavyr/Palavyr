@@ -1,6 +1,6 @@
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { Dialog, DialogTitle, DialogContent, DialogActions, makeStyles } from "@material-ui/core";
-import { NodeTypeOptions } from "@Palavyr-Types";
+import { NodeTypeOptionResources } from "@Palavyr-Types";
 import { ConversationTreeContext, DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { INodeReferences, IPalavyrNode } from "@Palavyr-Types";
@@ -48,12 +48,12 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
         setSwitchState(!switchState);
     };
 
-    const handleMultiOptionUpdateNode = (valueOptions: string[], nodeTypeOptions: NodeTypeOptions) => {
+    const handleMultiOptionUpdateNode = (valueOptions: string[], nodeTypeOptions: NodeTypeOptionResources) => {
         NodeUpdater.updateNode(currentNode, valueOptions, nodeTypeOptions);
     };
 
     const handleTextOnlyUpdate = async (userText: string) => {
-        const intentId = currentNode.palavyrLinkedList.areaId;
+        const intentId = currentNode.palavyrLinkedList.IntentId;
         const updatedNode = await repository.Conversations.ModifyConversationNodeText(currentNode.nodeId, intentId, userText);
         NodeUpdater.updateText(currentNode, updatedNode === null ? userText : updatedNode.text, useNewEditor);
     };

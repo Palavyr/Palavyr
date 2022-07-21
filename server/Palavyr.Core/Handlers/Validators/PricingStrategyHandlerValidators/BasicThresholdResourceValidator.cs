@@ -6,7 +6,7 @@ using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 {
-    public class BasicThresholdResourceValidator : AbstractValidator<PricingStrategyTableDataResource<BasicThresholdResource>>
+    public class BasicThresholdResourceValidator : AbstractValidator<PricingStrategyTableDataResource<SimpleThresholdResource>>
     {
         public BasicThresholdResourceValidator()
         {
@@ -33,7 +33,7 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
             RuleFor(x => x.TableRows).Must(BeOrderedCorrectly).WithMessage("Rows must be ordered correctly");
         }
 
-        private bool BeOrderedCorrectly(List<BasicThresholdResource> arg)
+        private bool BeOrderedCorrectly(List<SimpleThresholdResource> arg)
         {
             var tableIdGroups = arg.GroupBy(x => x.TableId);
             var isValid = true;
@@ -52,12 +52,12 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
             return isValid;
         }
 
-        private bool HaveDistinctRowOrders(List<BasicThresholdResource> arg)
+        private bool HaveDistinctRowOrders(List<SimpleThresholdResource> arg)
         {
             return arg.Select(x => x.RowOrder).Count() == arg.Select(x => x.RowOrder).Distinct().Count();
         }
 
-        private bool MustHaveDistinctThresholds(List<BasicThresholdResource> arg)
+        private bool MustHaveDistinctThresholds(List<SimpleThresholdResource> arg)
         {
             return arg.Select(x => x.Threshold).Distinct().ToList().Count == arg.Count;
         }

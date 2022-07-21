@@ -1,10 +1,10 @@
-export const areas = [
+export const intents = [
     {
         intentId: "1-1",
-        areaDisplayTitle: "First Area",
+        areaDisplayTitle: "First Intent",
     },
     {
         intentId: "1-2",
-        areaDisplayTitle: "Second Area",
+        areaDisplayTitle: "Second Intent",
     },
 ];

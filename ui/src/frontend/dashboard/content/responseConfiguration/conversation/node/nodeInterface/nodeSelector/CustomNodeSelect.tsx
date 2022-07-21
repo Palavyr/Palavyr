@@ -1,12 +1,12 @@
 import React from "react";
-import { NodeTypeOptionResource, NodeTypeOptions } from "@Palavyr-Types";
+import { NodeTypeOptionResource, NodeTypeOptionResources } from "@Palavyr-Types";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 import { TextField } from "@material-ui/core";
 
 export interface ISelectNodeType {
     onChange: (event: any, nodeOption: NodeTypeOptionResource) => void;
-    nodeTypeOptions: NodeTypeOptions;
+    nodeTypeOptions: NodeTypeOptionResources;
     label: string;
     shouldDisabledNodeTypeSelector: boolean;
 }

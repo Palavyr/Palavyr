@@ -4,7 +4,7 @@ import { IntentContent, IntentContentProps } from './IntentContent';
 
 
 export default {
-    title: "Dashboard/AreaContent",
+    title: "Dashboard/IntentContent",
     component: IntentContent
 } as Meta;
 
@@ -13,7 +13,7 @@ const Template = (args: IntentContentProps) => <IntentContent {...args} />;
 export const Primary = Template.bind({});
 Primary.args = {
     intentId: "abc-123",
-    areaName: "Test Name",
+    intentName: "Test Name",
     classes: "",
     setLoaded: () => {},
     setViewName: () => {}

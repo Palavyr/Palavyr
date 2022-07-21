@@ -65,7 +65,7 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                     variant="standard"
                     label="Option"
                     type="text"
-                    value={row.option}
+                    value={row.category}
                     color="primary"
                     onChange={event => {
                         event.preventDefault();

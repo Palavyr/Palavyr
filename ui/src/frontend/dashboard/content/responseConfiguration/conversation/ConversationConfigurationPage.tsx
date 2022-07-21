@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { ConversationDesignerNodeResource, IPalavyrLinkedList, NodeTypeOptions, SetState, TreeErrors } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, IPalavyrLinkedList, NodeTypeOptionResources, SetState, TreeErrorsResource } from "@Palavyr-Types";
 import { useParams } from "react-router-dom";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { ConversationHistoryTracker } from "./node/ConversationHistoryTracker";
@@ -11,10 +11,10 @@ import { StructuredConvoTree } from "./PalavyrConfiguration";
 export const ConversationConfigurationPage = () => {
     const { planTypeMeta, repository } = useContext(DashboardContext);
     const { intentId } = useParams<{ intentId: string }>();
-    const [nodeTypeOptions, setNodeTypeOptions] = useState<NodeTypeOptions>([]);
+    const [nodeTypeOptions, setNodeTypeOptions] = useState<NodeTypeOptionResources>([]);
     const [linkedNodeList, setLinkedNodes] = useState<IPalavyrLinkedList>();
     const [historyTracker, setHistoryTracker] = useState<ConversationHistoryTracker | null>(null);
-    const [treeErrors, setTreeErrors] = useState<TreeErrors>();
+    const [treeErrors, setTreeErrors] = useState<TreeErrorsResource>();
     const [useNewEditor, setUseNewEditor] = useState<boolean>(true);
 
     const loadNodes = useCallback(async () => {
@@ -36,7 +36,7 @@ export const ConversationConfigurationPage = () => {
         loadNodes();
     }, [loadNodes, planTypeMeta]);
 
-    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, intentId: string, nodeList: ConversationDesignerNodeResource[]) => {
+    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrorsResource>, repository: PalavyrRepository, intentId: string, nodeList: ConversationDesignerNodeResource[]) => {
         const treeErrors = await repository.Conversations.GetErrors(intentId, nodeList);
         setTreeErrors(treeErrors);
     };

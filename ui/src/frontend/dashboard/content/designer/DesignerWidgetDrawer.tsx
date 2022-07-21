@@ -132,6 +132,7 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
     const theme = useTheme();
     const context = useAppContext();
     context.AppContext.responseFileAsset = {
+        id: 0,
         fileName: "test.png",
         link: "https://i.chzbgr.com/full/9591491840/h124EF692/cat-oizzyandthef",
         fileId: "1234",

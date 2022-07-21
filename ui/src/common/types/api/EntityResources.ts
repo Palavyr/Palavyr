@@ -1,4 +1,5 @@
 import { NodeTypeCodeEnum, UnitGroups, UnitIdEnum, UnitPrettyNames } from "./Enums";
+import { ConversationDesignerNodeResources, StaticTableMetaResources } from "./NullableEntityResource";
 
 export type EntityResource = {
     id: number;
@@ -49,7 +50,6 @@ export type IntentResource = EntityResource & {
 
 export type WidgetPreferencesResource = EntityResource & {
     placeholder: string;
-    accountId: string;
     landingHeader: string;
     chatHeader: string;
     selectListColor: string;
@@ -85,11 +85,9 @@ export type FileAssetResource = EntityResource & {
 
 export type EnquiryResources = EnquiryResource[];
 export type EnquiryResource = EntityResource & {
-    id: number;
     conversationId: string;
     fileAssetResource: FileAssetResource;
     timeStamp: string;
-    accountId: string;
     intentName: string;
     emailTemplateUsed: string;
     seen: boolean;
@@ -100,34 +98,11 @@ export type EnquiryResource = EntityResource & {
 };
 
 export type StaticFeeResources = StaticFeeResource[];
-export type StaticFeeResource = {
+export type StaticFeeResource = EntityResource & {
     min: number;
     max: number;
     feeId: string;
     intentId: string;
-    int: number;
-};
-
-export type StaticTableRowResources = StaticTableRowResource[];
-export type StaticTableRowResource = EntityResource & {
-    rowOrder: number;
-    description: string;
-    fee: StaticFeeResource;
-    range: boolean;
-    perPerson: boolean;
-    tableOrder: number;
-    intentId: string;
-};
-
-export type StaticTableMetaResources = StaticTableMetaResource[];
-export type StaticTableMetaResource = EntityResource & {
-    tableOrder: number;
-    description: string;
-    intentId: string;
-    staticTableRowResources: StaticTableRowResources;
-    accountId: string;
-    perPersonInputRequired: boolean;
-    includeTotals: boolean;
 };
 
 export type PricingStrategyTableTypeResource = EntityResource & {
@@ -145,14 +120,12 @@ export type PricingStrategyTableMetaResource = EntityResource & {
     unitPrettyName: UnitPrettyNames;
     unitGroup: UnitGroups;
     unitIdEnum: UnitIdEnum;
-    accountId: string;
     valuesAsPaths: boolean;
 };
 
 export type TableData = CategorySelectTableRowResource[] | PercentOfThresholdResource[] | BasicThresholdResource[] | TwoNestedCategoryResource[] | CategoryNestedThresholdResource[] | any;
 
 export type BasicThresholdResource = EntityResource & {
-    accountId: string;
     intentId: string;
     rowId: string;
     threshold: number;
@@ -162,12 +135,10 @@ export type BasicThresholdResource = EntityResource & {
     itemName: string;
     rowOrder: number;
     triggerFallback: boolean;
-    id: number;
     tableId: string;
 };
 
 export type CategoryNestedThresholdResource = EntityResource & {
-    accountId: string;
     intentId: string;
     valueMin: number;
     valueMax: number;
@@ -179,7 +150,6 @@ export type CategoryNestedThresholdResource = EntityResource & {
     itemName: string;
     threshold: number;
     triggerFallback: boolean;
-    id: number;
     tableId: string;
 };
 
@@ -197,7 +167,6 @@ export type PercentOfThresholdResource = EntityResource & {
     itemOrder: number;
     itemId: string;
     itemName: string;
-    id: number;
     tableId: string;
 };
 
@@ -208,7 +177,6 @@ export type CategorySelectTableRowResource = EntityResource & {
     valueMax: number;
     range: boolean;
     rowOrder: number;
-    id: number;
     tableId: string;
 };
 
@@ -223,48 +191,5 @@ export type TwoNestedCategoryResource = EntityResource & {
     itemOrder: number;
     itemName: string;
     innerItemName: string;
-    id: number;
     tableId: string;
-};
-
-export type ConversationHistoryRowResources = ConversationHistoryRowResource[];
-
-export type ConversationHistoryRowResource = EntityResource & {
-    conversationId: string;
-    prompt: string;
-    userResponse: string;
-    nodeId: string;
-    nodeCritical: boolean;
-    nodeType: string;
-    timeStamp: string;
-};
-
-export type ConversationDesignerNodeResources = ConversationDesignerNodeResource[];
-
-export type ConversationDesignerNodeResource = EntityResource & {
-    intentId: string;
-    nodeId: string;
-    text: string;
-    isRoot: boolean;
-    isCritical: boolean;
-    isMultiOptionType: boolean;
-    isTerminalType: boolean;
-    shouldRenderChildren: boolean;
-    isLoopbackAnchorType: boolean;
-    isAnabranchType: boolean;
-    isAnabranchMergePoint: boolean;
-    shouldShowMultiOption: boolean;
-    isPricingStrategyNode: boolean;
-    isMultiOptionEditable: boolean;
-    isImageNode: boolean;
-    fileId: string;
-    optionPath: string;
-    valueOptions: string;
-    nodeType: string;
-    pricingStrategyType: string;
-    nodeComponentType: string;
-    resolveOrder: number;
-    isCurrency: boolean;
-    nodeChildrenString: string;
-    nodeTypeCodeEnum: NodeTypeCodeEnum;
 };

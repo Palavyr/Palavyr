@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography, Chip, makeStyles, Divider } from "@material-ui/core";
-import { TreeErrors } from "@Palavyr-Types";
+import { TreeErrorsResource } from "@Palavyr-Types";
 
 const useStyles = makeStyles((theme) => ({
     missingNodeText: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface TreeErrorProps {
-    treeErrors: TreeErrors;
+    treeErrors: TreeErrorsResource;
 }
 
 export const TreeErrorPanel = ({ treeErrors }: TreeErrorProps) => {

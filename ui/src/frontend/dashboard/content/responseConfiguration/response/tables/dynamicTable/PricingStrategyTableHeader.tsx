@@ -8,7 +8,7 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { TextInput } from "@common/components/TextField/TextInput";
 import { useStyles, includesUnit } from "./PricingStrategyTable";
 import { QuantUnitDefinition } from "@common/types/api/ApiContracts";
-import { PricingStrategySelector, UnitSelector } from "./DynamicTableSelector";
+import { PricingStrategySelector, UnitSelector } from "./PricingStrategyTableSelector";
 
 export interface PricingStrategyHeaderProps {
     availablePricingStrategyOptions: PricingStrategyTableTypeResource[];

@@ -1,7 +1,6 @@
 import { StaticTableMetaResources, StaticTableRowResources, StaticTableRowResource, StaticTableMetaResource, AnyVoidFunction, SetState } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { v4 as uuid } from "uuid";
 
 export class StaticTablesModifier {
     onClick: SetState<StaticTableMetaResources> | AnyVoidFunction;
@@ -52,7 +51,7 @@ export class StaticTablesModifier {
     }
 
     setRowDescription(staticTableMetas: StaticTableMetaResources, tableOrder: number, rowOrder: number, description: string) {
-        staticTableMetas[tableOrder].staticTableRows[rowOrder].description = description;
+        staticTableMetas[tableOrder].staticTableRowResources[rowOrder].description = description;
         this.setTableMetas(staticTableMetas);
     }
 
@@ -93,10 +92,11 @@ export class StaticTablesModifier {
         const tableOrders = this._getIDs_(staticTableMetas);
         const newtableOrder = this._generateNextId_(tableOrders);
 
-        const newTableTemplate = await repository.Configuration.Tables.Static.GetStaticTablesMetaTemplate(intentId);
+        const newTableTemplate = await repository.Configuration.Tables.Static.GetStaticTablesMetaTemplate();
         const newTable = ((): StaticTableMetaResource => ({
             ...newTableTemplate,
             tableOrder: newtableOrder,
+            intentId: intentId,
         }))();
 
         staticTableMetas.push(newTable);
@@ -109,23 +109,28 @@ export class StaticTablesModifier {
         this.setTableMetas(staticTableMetas);
     }
 
-    async addRow(staticTableMetas: StaticTableMetaResources, tableOrder: number) {
-        const rowOrders = this._getrowOrders_(staticTableMetas[tableOrder].staticTableRows);
+    async addRow(staticTableMetas: StaticTableMetaResources, tableId: string) {
+        const table = staticTableMetas.filter(t => t.tableId === tableId)[0];
+        const tableRows = table.staticTableRowResources;
+
+        const rowOrders = this._getrowOrders_(tableRows);
         const nextrowOrder = this._generateNextId_(rowOrders);
-        const curTableOrder = staticTableMetas[0].tableOrder;
-        const curintentId = staticTableMetas[0].intentId;
 
-        const newRow = await this.repository.Configuration.Tables.Static.GetStaticTableRowTemplate(curintentId, curTableOrder);
+        const curTableId = table.tableId;
 
+        const newRow = await this.repository.Configuration.Tables.Static.GetStaticTableRowTemplate(table.intentId, curTableId);
+
+        newRow.intentId = table.intentId;
         newRow.rowOrder = nextrowOrder;
+        newRow.tableOrder = table.tableOrder;
 
-        staticTableMetas[tableOrder].staticTableRows.push(newRow);
+        table.staticTableRowResources.push(newRow);
 
         this.setTableMetas(staticTableMetas);
     }
 
     delRow(staticTableMetas: StaticTableMetaResources, tableOrder: number, rowOrder: number) {
-        staticTableMetas[tableOrder].staticTableRows = this._rectifyrowOrders_(staticTableMetas[tableOrder].staticTableRows.filter(r => r.rowOrder !== rowOrder));
+        staticTableMetas[tableOrder].staticTableRowResources = this._rectifyrowOrders_(staticTableMetas[tableOrder].staticTableRowResources.filter(r => r.rowOrder !== rowOrder));
 
         this.setTableMetas(staticTableMetas);
     }
@@ -134,53 +139,53 @@ export class StaticTablesModifier {
         if (rowOrder === 0) {
             return false;
         } else {
-            staticTableMetas[tableOrder].staticTableRows[rowOrder].rowOrder--;
+            staticTableMetas[tableOrder].staticTableRowResources[rowOrder].rowOrder--;
 
             const nextRowIndex = rowOrder - 1;
-            staticTableMetas[tableOrder].staticTableRows[nextRowIndex].rowOrder++;
+            staticTableMetas[tableOrder].staticTableRowResources[nextRowIndex].rowOrder++;
 
-            staticTableMetas[tableOrder].staticTableRows = staticTableMetas[tableOrder].staticTableRows.sort((a, b) => a.rowOrder - b.rowOrder);
+            staticTableMetas[tableOrder].staticTableRowResources = staticTableMetas[tableOrder].staticTableRowResources.sort((a, b) => a.rowOrder - b.rowOrder);
 
             this.setTableMetas(staticTableMetas);
         }
     }
 
     shiftRowDown(staticTableMetas: StaticTableMetaResources, tableOrder: number, rowOrder: number) {
-        const ids = this._getrowOrders_(staticTableMetas[tableOrder].staticTableRows);
+        const ids = this._getrowOrders_(staticTableMetas[tableOrder].staticTableRowResources);
 
         const lastID = ids[ids.length - 1];
         if (lastID === rowOrder) {
             return false;
         } else {
-            staticTableMetas[tableOrder].staticTableRows[rowOrder].rowOrder++;
+            staticTableMetas[tableOrder].staticTableRowResources[rowOrder].rowOrder++;
 
             const nextRowIndex = rowOrder + 1;
-            staticTableMetas[tableOrder].staticTableRows[nextRowIndex].rowOrder--;
+            staticTableMetas[tableOrder].staticTableRowResources[nextRowIndex].rowOrder--;
 
-            staticTableMetas[tableOrder].staticTableRows = staticTableMetas[tableOrder].staticTableRows.sort((a, b) => a.rowOrder - b.rowOrder);
+            staticTableMetas[tableOrder].staticTableRowResources = staticTableMetas[tableOrder].staticTableRowResources.sort((a, b) => a.rowOrder - b.rowOrder);
         }
         this.setTableMetas(staticTableMetas);
     }
 
     changePer(staticTableMetas: StaticTableMetaResources, tableOrder: number, rowOrder: number) {
-        const perState = staticTableMetas[tableOrder].staticTableRows[rowOrder].perPerson;
-        staticTableMetas[tableOrder].staticTableRows[rowOrder].perPerson = !perState;
+        const perState = staticTableMetas[tableOrder].staticTableRowResources[rowOrder].perPerson;
+        staticTableMetas[tableOrder].staticTableRowResources[rowOrder].perPerson = !perState;
         this.setTableMetas(staticTableMetas);
     }
 
     changeRange(staticTableMetas: StaticTableMetaResources, tableOrder: number, rowOrder: number) {
-        const rangeState = staticTableMetas[tableOrder].staticTableRows[rowOrder].range;
-        staticTableMetas[tableOrder].staticTableRows[rowOrder].range = !rangeState;
+        const rangeState = staticTableMetas[tableOrder].staticTableRowResources[rowOrder].range;
+        staticTableMetas[tableOrder].staticTableRowResources[rowOrder].range = !rangeState;
         this.setTableMetas(staticTableMetas);
     }
 
     setFeeMin(staticTableMetas: StaticTableMetaResources, tableOrder: number, rowOrder: number, val: number) {
-        staticTableMetas[tableOrder].staticTableRows[rowOrder].fee.min = val;
+        staticTableMetas[tableOrder].staticTableRowResources[rowOrder].fee.min = val;
         this.setTableMetas(staticTableMetas);
     }
 
     setFeeMax(staticTableMetas: StaticTableMetaResources, tableOrder: number, rowOrder: number, val: number) {
-        staticTableMetas[tableOrder].staticTableRows[rowOrder].fee.max = val;
+        staticTableMetas[tableOrder].staticTableRowResources[rowOrder].fee.max = val;
         this.setTableMetas(staticTableMetas);
     }
 
@@ -188,7 +193,7 @@ export class StaticTablesModifier {
         return rowOrder === 0;
     }
     isRowLastPosition(staticTableMetas: StaticTableMetaResources, tableOrder: number, rowOrder: number) {
-        const ids = this._getrowOrders_(staticTableMetas[tableOrder].staticTableRows);
+        const ids = this._getrowOrders_(staticTableMetas[tableOrder].staticTableRowResources);
         const lastID = ids[ids.length - 1];
         return rowOrder === lastID;
     }

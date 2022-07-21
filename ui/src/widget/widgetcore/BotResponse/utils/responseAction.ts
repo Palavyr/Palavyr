@@ -1,4 +1,4 @@
-import { WidgetConversationUpdate, KeyValue, UserMessageData } from "@Palavyr-Types";
+import { ConversationHistoryRowResource, KeyValue, UserMessageData } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 
 import { floor, max, min } from "lodash";
@@ -89,13 +89,15 @@ export const responseAction = async (
 
     if (!isDemo) {
         if (convoId !== null) {
-            const updatePayload: WidgetConversationUpdate = {
-                ConversationId: convoId,
-                Prompt: stripHtml(node.text),
-                UserResponse: response,
-                NodeId: node.nodeId,
-                NodeCritical: node.isCritical,
-                NodeType: node.nodeType,
+            const updatePayload: ConversationHistoryRowResource = {
+                conversationId: convoId,
+                prompt: stripHtml(node.text),
+                userResponse: response ?? "",
+                nodeId: node.nodeId,
+                nodeCritical: node.isCritical,
+                nodeType: node.nodeType,
+                timeStamp: new Date().toDateString(),
+                id: null,
             };
 
             await client.Widget.Post.UpdateConvoHistory(updatePayload); // no need to await for this

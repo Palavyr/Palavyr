@@ -5,7 +5,7 @@ import { Button, FormControlLabel, Checkbox } from "@material-ui/core";
 import { PricingStrategyTable } from "./PricingStrategyTable";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { isDevelopmentStage } from "@common/client/clientUtils";
-import { OsTypeToggle } from "frontend/dashboard/content/responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
+import { OsTypeToggle } from "frontend/dashboard/content/responseConfiguration/areaSettings/enableIntents/OsTypeToggle";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import Fade from "react-reveal/Fade";

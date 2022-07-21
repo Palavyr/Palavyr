@@ -1,7 +1,7 @@
 import { PreCheckErrorResource } from "@Palavyr-Types";
 import React, { useState, useCallback, useEffect } from "react";
 import { Paper, makeStyles } from "@material-ui/core";
-import { IntentsInNeedOfAttention } from "./AreasInNeedOfAttention";
+import { IntentsInNeedOfAttention } from "./IntentsInNeedOfAttention";
 import { ChatDemoHeader } from "./ChatDemoHeader";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { PalavyrDemoWidget } from "./DemoWidget";

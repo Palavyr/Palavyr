@@ -4,7 +4,7 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import { makeStyles } from "@material-ui/core";
 import { IPalavyrNode } from "@Palavyr-Types";
 import { ConversationTreeContext, DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { NodeTypeOptions } from "@Palavyr-Types";
+import { NodeTypeOptionResources } from "@Palavyr-Types";
 
 export interface IPositionSwitcherProps {
     currentNode: IPalavyrNode;
@@ -113,15 +113,14 @@ class PositionSwapper {
     };
 }
 
-const rightArrowOnClick = (event: any, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) => {
+const rightArrowOnClick = (event: any, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources) => {
     currentNode.parentNodeReferences.Single().childNodeReferences.ShiftRight(currentNode);
     // currentNode.UpdateTree();
     currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
 };
 
-const leftArrowOnClick = (event: any, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) => {
+const leftArrowOnClick = (event: any, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources) => {
     currentNode.parentNodeReferences.Single().childNodeReferences.ShiftLeft(currentNode);
-    // currentNode.UpdateTree();
     currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
 };
 
@@ -133,7 +132,9 @@ export const PositionSwitcher = ({ currentNode }: IPositionSwitcherProps) => {
     return positions.Show ? (
         <div className={cls.arrows}>
             <span>{positions.Left && <ArrowLeftIcon onClick={(event: any) => leftArrowOnClick(event, currentNode, nodeTypeOptions)} className={cls.arrow} fontSize="large" />}</span>
+
             {/* <span>TODO: Text to indicate which position in the option list this will be</span> */}
+
             <span>{positions.Right && <ArrowRightIcon onClick={(event: any) => rightArrowOnClick(event, currentNode, nodeTypeOptions)} className={cls.arrow} fontSize="large" />}</span>
         </div>
     ) : (

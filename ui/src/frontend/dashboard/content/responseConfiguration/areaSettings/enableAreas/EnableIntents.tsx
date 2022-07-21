@@ -45,9 +45,9 @@ export const EnableIntents = () => {
         const intentData = await repository.Intent.GetAllIntents();
         const intentIds = intentData.map((x: IntentResource) => {
             return {
-                areaId: x.intentId,
+                IntentId: x.intentId,
                 isEnabled: x.isEnabled,
-                areaName: x.areaName,
+                intentName: x.intentName,
             };
         });
         setIntentIds(intentIds);
@@ -81,8 +81,8 @@ export const EnableIntents = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortByPropertyAlphabetical((x: IntentsEnabled) => x.areaName, intentIds).map((x: IntentsEnabled, index: number) => {
-                            return <EnableIntentRow key={index} rowNumber={index + 1} areasEnabled={x} />;
+                        {sortByPropertyAlphabetical((x: IntentsEnabled) => x.intentName, intentIds).map((x: IntentsEnabled, index: number) => {
+                            return <EnableIntentRow key={index} rowNumber={index + 1} intentsEnabled={x} />;
                         })}
                     </TableBody>
                 </Table>

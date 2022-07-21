@@ -11,7 +11,7 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { cloneDeep } from "lodash";
 import { CategorySelectTableRowResource } from "@common/types/api/EntityResources";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
-import { PricingStrategyHeader } from "../../DynamicTableHeader";
+import { PricingStrategyHeader } from "../../PricingStrategyTableHeader";
 
 const useStyles = makeStyles(theme => ({
     tableStyles: {

@@ -323,7 +323,7 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
     private ConvertToImageNode(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources) {
         const newImageNode = currentNode.palavyrLinkedList.convertToPalavyrNode(
             currentNode.repository,
-            currentNode.compileConvoNode(currentNode.palavyrLinkedList.areaId),
+            currentNode.compileConvoNode(currentNode.palavyrLinkedList.IntentId),
             currentNode.setTreeWithHistory,
             currentNode.isMemberOfLeftmostBranch
         );
@@ -352,7 +352,7 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
     private ConvertToTextNode(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources) {
         const newTextNode = currentNode.palavyrLinkedList.convertToPalavyrNode(
             currentNode.repository,
-            currentNode.compileConvoNode(currentNode.palavyrLinkedList.areaId),
+            currentNode.compileConvoNode(currentNode.palavyrLinkedList.IntentId),
             currentNode.setTreeWithHistory,
             currentNode.isMemberOfLeftmostBranch
         );

@@ -7,7 +7,7 @@ import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
 import { DisplayTableData } from "../DisplayTableData";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { PricingStrategyHeader } from "../../DynamicTableHeader";
+import { PricingStrategyHeader } from "../../PricingStrategyTableHeader";
 
 import { cloneDeep } from "lodash";
 
@@ -51,7 +51,7 @@ export const PercentOfThreshold = ({
     useEffect(() => {
         setLocalTable(table);
         setLoaded(true);
-    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitId, localTable?.tableMeta.unitPrettyName]);
+    }, [intentId, table, tables, table.tableRows, localTable?.tableMeta.unitIdEnum, localTable?.tableMeta.unitPrettyName]);
 
     useEffect(() => {
         (async () => {

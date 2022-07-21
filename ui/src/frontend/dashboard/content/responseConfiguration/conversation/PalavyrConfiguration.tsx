@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Action, ConversationDesignerNodeResource, IPalavyrLinkedList, NodeTypeOptions, PlanTypeMeta, SetState, TreeErrors } from "@Palavyr-Types";
+import { Action, ConversationDesignerNodeResource, IPalavyrLinkedList, NodeTypeOptionResources, PlanTypeMeta, SetState, TreeErrorsResource } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
@@ -76,15 +76,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface StructuredConvoTreeProps {
-    errorCheckCallback(setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, intentId: string, nodeList: ConversationDesignerNodeResource[]): Promise<void>;
+    errorCheckCallback(setTreeErrors: SetState<TreeErrorsResource>, repository: PalavyrRepository, intentId: string, nodeList: ConversationDesignerNodeResource[]): Promise<void>;
     historyTracker: ConversationHistoryTracker;
-    nodeTypeOptions: NodeTypeOptions;
+    nodeTypeOptions: NodeTypeOptionResources;
     loadNodes(): void;
     planTypeMeta: PlanTypeMeta;
     useNewEditor: boolean;
     setUseNewEditor: SetState<boolean>;
-    treeErrors: TreeErrors | undefined;
-    setTreeErrors: SetState<TreeErrors | undefined>;
+    treeErrors: TreeErrorsResource | undefined;
+    setTreeErrors: SetState<TreeErrorsResource | undefined>;
 
     onSave(): void;
 }

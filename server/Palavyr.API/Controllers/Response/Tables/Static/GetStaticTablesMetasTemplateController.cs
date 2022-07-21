@@ -10,15 +10,14 @@ namespace Palavyr.API.Controllers.Response.Tables.Static
     public class GetStaticTablesMetasTemplateController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "response/configuration/{intentId}/static/tables/template";
 
 
         public GetStaticTablesMetasTemplateController(IMediator mediator)
         {
             this.mediator = mediator;
         }
-        
-        [HttpGet(Route)]
+
+        [HttpGet(GetStaticTablesMetasTemplateRequest.Route)]
         public async Task<StaticTableMetaResource> CreateNewStaticTablesMeta(string intentId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetStaticTablesMetasTemplateRequest(intentId), cancellationToken);

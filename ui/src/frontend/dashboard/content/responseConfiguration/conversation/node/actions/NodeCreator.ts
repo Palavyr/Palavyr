@@ -1,11 +1,11 @@
-import { ConversationDesignerNodeResource, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, NodeTypeCodeEnum, NodeTypeOptionResources } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { IPalavyrNode, IPalavyrLinkedList, INodeReferences } from "@Palavyr-Types";
 import { DEFAULT_NODE_TEXT } from "@constants";
 
 export class NodeCreator {
-    public addDefaultChild(currentParentNodes: IPalavyrNode[], optionPath: string, nodeTypeOptions: NodeTypeOptions, defaultText?: string) {
+    public addDefaultChild(currentParentNodes: IPalavyrNode[], optionPath: string, nodeTypeOptions: NodeTypeOptionResources, defaultText?: string) {
         if (currentParentNodes.length === 0) throw new Error("Attempting to add default child node to no parent nodes");
 
         const defaultNode = this.createDefaultNode(optionPath);
@@ -62,10 +62,13 @@ export class NodeCreator {
             nodeComponentType: "ProvideInfo",
             isPricingStrategyNode: false,
             resolveOrder: 0,
-            dynamicType: "",
+            pricingStrategyType: "",
             isImageNode: false,
-            imageId: null,
-            nodeTypeCode: NodeTypeCode.I,
+            fileId: "",
+            nodeTypeCodeEnum: NodeTypeCodeEnum.I,
+            isMultiOptionEditable: false,
+            isCurrency: false,
+            id: null
         };
     }
 }

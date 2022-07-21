@@ -1,5 +1,4 @@
-﻿
-
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -16,37 +15,23 @@ namespace Palavyr.Core.Data.Entities
         public string AccountId { get; set; }
         public bool PerPersonInputRequired { get; set; }
         public bool IncludeTotals { get; set; }
+        public string TableId { get; set; }
+
 
         [NotMapped]
         private static string DefaultDescription { get; } = "Default Description";
 
-        public static List<StaticTablesMeta> CreateDefaultMetas(string intentId, string accountId)
-        {
-            return new List<StaticTablesMeta>()
-            {
-                new StaticTablesMeta()
-                {
-                    TableOrder = 0,
-                    Description = DefaultDescription,
-                    IntentId = intentId,
-                    StaticTableRows = StaticTableRow.CreateDefaultStaticTable(0, intentId, accountId),
-                    AccountId = accountId,
-                    PerPersonInputRequired = false,
-                    IncludeTotals = true
-                }
-            };
-        }
-
         public static StaticTablesMeta CreateNewMetaTemplate(string intentId, string accountId)
         {
-            return new StaticTablesMeta()
+            return new StaticTablesMeta
             {
                 TableOrder = 0,
                 Description = DefaultDescription,
                 IntentId = intentId,
                 StaticTableRows = StaticTableRow.CreateDefaultStaticTable(0, intentId, accountId),
                 PerPersonInputRequired = false,
-                IncludeTotals = true
+                IncludeTotals = true,
+                TableId = Guid.NewGuid().ToString()
             };
         }
 

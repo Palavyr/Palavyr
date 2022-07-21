@@ -1,4 +1,5 @@
-import { ContextProperties, DynamicResponses, KeyValues, UserMessageData, BotMessageData, WidgetPreferencesResource, FileAssetResource, KeyValue } from "@Palavyr-Types";
+import { FileAssetResource, WidgetPreferencesResource } from "@common/types/api/EntityResources";
+import { ContextProperties, DynamicResponses, KeyValues, UserMessageData, BotMessageData, KeyValue } from "@Palavyr-Types";
 import { useState } from "react";
 
 export interface BehaviorState {
@@ -39,7 +40,7 @@ const defaultContextProperties: ContextProperties = {
     region: "",
     numIndividuals: null,
     widgetPreferences: null,
-    responseFileAsset: { fileId: "", fileName: "", link: "" },
+    responseFileAsset: { id: 0, fileId: "", fileName: "", link: "" },
 };
 
 const defaultMessages: MessagesState = {
@@ -114,7 +115,7 @@ export const useAppContext = (): IAppContext => {
             keyValues: [],
             dynamicResponses: [],
             numIndividuals: null,
-            responseFileAsset: { fileId: "", fileName: "", link: "" },
+            responseFileAsset: { id: 0, fileId: "", fileName: "", link: "" },
             badgeCount: 0,
             chatStarted: false,
         }));

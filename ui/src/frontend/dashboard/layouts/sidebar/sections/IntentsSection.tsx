@@ -6,7 +6,7 @@ import { List, Collapse, Divider, makeStyles, Tooltip } from "@material-ui/core"
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { useHistory } from "react-router-dom";
-import { AreaLinkItem } from "./sectionComponents/AreaLinkItem";
+import { IntentLinkItem } from "./sectionComponents/IntentLinkItem";
 import { IntentNameDetail, IntentNameDetails } from "@Palavyr-Types";
 import classNames from "classnames";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
@@ -20,19 +20,19 @@ const useStyles = makeStyles(theme => ({
 export interface IntentsSectionProps {
     isActive: boolean;
     currentPage: string;
-    areaNameDetails: IntentNameDetails;
+    intentNameDetails: IntentNameDetails;
     menuOpen: boolean;
 }
 
-export const IntentsSection = memo(({ isActive, currentPage, areaNameDetails, menuOpen }: IntentsSectionProps) => {
+export const IntentsSection = memo(({ isActive, currentPage, intentNameDetails, menuOpen }: IntentsSectionProps) => {
     const [configureOpen, setConfigureOpen] = useState<boolean>(true);
-    const { checkAreaCount, planTypeMeta, repository } = React.useContext(DashboardContext);
+    const { checkIntentCount, planTypeMeta, repository } = React.useContext(DashboardContext);
 
     const history = useHistory();
     const cls = useStyles();
 
-    const enableAreasOnClick = () => {
-        history.push("/dashboard/set-areas");
+    const enableIntentsOnClick = () => {
+        history.push("/dashboard/set-intents");
     };
 
     const pushToIntro = async () => {
@@ -58,7 +58,7 @@ export const IntentsSection = memo(({ isActive, currentPage, areaNameDetails, me
                 className={"add-new-area-tour"}
                 text="Add New Intent"
                 isActive={isActive}
-                onClick={checkAreaCount}
+                onClick={checkIntentCount}
                 IconComponent={<AddCircleOutlineIcon className={cls.icon} />}
             />
             <SidebarLinkItem
@@ -67,22 +67,22 @@ export const IntentsSection = memo(({ isActive, currentPage, areaNameDetails, me
                 className={"enable-disable-area-tour"}
                 text="Enable / Disable Intents"
                 isActive={isActive}
-                onClick={enableAreasOnClick}
+                onClick={enableIntentsOnClick}
                 IconComponent={<PowerSettingsNewIcon className={cls.icon} />}
             />
             <Collapse className={"configure-your-area-tour"} in={configureOpen} timeout="auto" unmountOnExit>
                 <Divider />
-                {areaNameDetails.map(
+                {intentNameDetails.map(
                     (x: IntentNameDetail, index: number) =>
                         planTypeMeta && (
-                            <AreaLinkItem
+                            <IntentLinkItem
                                 key={index}
                                 menuOpen={menuOpen}
                                 intentId={x.intentId}
                                 isActive={isActive}
-                                disabled={index >= planTypeMeta.allowedAreas}
+                                disabled={index >= planTypeMeta.allowedIntents}
                                 currentPage={currentPage}
-                                areaName={x.intentName}
+                                intentName={x.intentName}
                             />
                         )
                 )}

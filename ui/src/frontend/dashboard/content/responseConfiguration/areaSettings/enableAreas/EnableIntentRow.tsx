@@ -27,24 +27,24 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export interface EnableAreaRowProps {
-    areasEnabled: IntentsEnabled;
+export interface EnableIntentRowProps {
+    intentsEnabled: IntentsEnabled;
     rowNumber: number;
 }
 
-export const EnableIntentRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) => {
+export const EnableIntentRow = ({ intentsEnabled, rowNumber }: EnableIntentRowProps) => {
     const { repository } = useContext(DashboardContext);
     const [isEnabled, setIsEnabled] = useState<boolean | null>(null);
 
     const cls = useStyles({ isEnabled });
 
     const onToggleChange = async () => {
-        const updatedIsEnabled = await repository.Intent.ToggleIsEnabled(!isEnabled, areasEnabled.areaId);
+        const updatedIsEnabled = await repository.Intent.ToggleIsEnabled(!isEnabled, intentsEnabled.intentId);
         setIsEnabled(updatedIsEnabled);
     };
 
     useEffect(() => {
-        setIsEnabled(areasEnabled.isEnabled);
+        setIsEnabled(intentsEnabled.isEnabled);
     }, []);
 
     return (
@@ -53,7 +53,7 @@ export const EnableIntentRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps)
                 <Typography variant="body2">{rowNumber}</Typography>
             </TableCell>
             <TableCell className={cls.cell}>
-                <Typography variant="h6">{areasEnabled.areaName}</Typography>
+                <Typography variant="h6">{intentsEnabled.intentName}</Typography>
             </TableCell>
             <TableCell className={classNames(cls.cell, cls.wide)}>
                 <OsTypeToggle controlledState={isEnabled === true} onChange={onToggleChange} enabledLabel="Enabled" disabledLabel="Disabled" />

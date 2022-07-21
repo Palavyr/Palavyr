@@ -51,21 +51,21 @@ const calcualateDailEnquiryByDay = (areaDetails: IntentNameDetails, enquiries: E
 
     const enquiryData: EnqDataSet[] = [];
     areaDetails.forEach((detail: IntentNameDetail) => {
-        const areaDataResult: number[] = [];
-        const areaName = detail.intentName;
-        const areaEnquiries = enquiries.filter((enq: EnquiryResource) => enq.intentName === areaName);
+        const intentDataResult: number[] = [];
+        const intentName = detail.intentName;
+        const areaEnquiries = enquiries.filter((enq: EnquiryResource) => enq.intentName === intentName);
         lastSevenDays.forEach(previousDate => {
-            const enquiriesOnDateInArea = areaEnquiries.filter(enq => {
+            const enquiriesOnDateInIntent = areaEnquiries.filter(enq => {
                 const timeStampDate = new Date(Date.parse(enq.timeStamp)).toDateString();
                 const isEqual = previousDate.toDateString() === timeStampDate;
                 return isEqual;
             });
-            areaDataResult.push(enquiriesOnDateInArea.length);
+            intentDataResult.push(enquiriesOnDateInIntent.length);
         });
 
         enquiryData.push({
-            label: areaName,
-            data: areaDataResult,
+            label: intentName,
+            data: intentDataResult,
             borderColor: getRandomColor(detail.intentName),
             fill: false,
             cubicInterpolationMode: "monotone",
@@ -124,7 +124,7 @@ type PlotData = {
 };
 
 export const DailyEnquiriesWeekly = () => {
-    const { repository, areaNameDetails } = useContext(DashboardContext);
+    const { repository, intentNameDetails } = useContext(DashboardContext);
     const cls = widgetStyles();
 
     const [data, setData] = useState<any>();
@@ -133,7 +133,7 @@ export const DailyEnquiriesWeekly = () => {
 
     const loadEnquiries = useCallback(async () => {
         const enquiries = await repository.Enquiries.GetEnquiries();
-        const { enquiryData, enquiryOptions, lastSevenDays } = calcualateDailEnquiryByDay(areaNameDetails, enquiries);
+        const { enquiryData, enquiryOptions, lastSevenDays } = calcualateDailEnquiryByDay(intentNameDetails, enquiries);
 
         const plotdata: PlotData = {
             labels: lastSevenDays.map(x => x.toDateString()),
@@ -144,7 +144,7 @@ export const DailyEnquiriesWeekly = () => {
         setOptions(enquiryOptions);
 
         setLoadingSpinner(false);
-    }, [areaNameDetails]);
+    }, [intentNameDetails]);
 
     useEffect(() => {
         loadEnquiries();

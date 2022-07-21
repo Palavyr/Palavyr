@@ -14,12 +14,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetFinishedConversationHistoryHandler : IRequestHandler<GetCompleteConversationDetailsRequest, GetCompleteConversationDetailsResponse>
     {
         private readonly IEntityStore<ConversationHistoryRow> convoHistoryRowStore;
-        private readonly IMapToNew<ConversationHistoryRow, ConversationHistoryRowResource> conversationHistoryRowResourceMapper;
+        private readonly IMapToNew<ConversationHistoryRow, Resources.ConversationHistoryRowResource> conversationHistoryRowResourceMapper;
         private readonly ILogger<GetFinishedConversationHistoryHandler> logger;
 
         public GetFinishedConversationHistoryHandler(
             IEntityStore<ConversationHistoryRow> convoHistoryRowStore,
-            IMapToNew<ConversationHistoryRow, ConversationHistoryRowResource> conversationHistoryRowResourceMapper,
+            IMapToNew<ConversationHistoryRow, Resources.ConversationHistoryRowResource> conversationHistoryRowResourceMapper,
             ILogger<GetFinishedConversationHistoryHandler> logger)
         {
             this.convoHistoryRowStore = convoHistoryRowStore;
@@ -41,8 +41,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetCompleteConversationDetailsResponse
     {
-        public GetCompleteConversationDetailsResponse(ConversationHistoryRowResource[] response) => Response = response;
-        public ConversationHistoryRowResource[] Response { get; set; }
+        public GetCompleteConversationDetailsResponse(Resources.ConversationHistoryRowResource[] response) => Response = response;
+        public Resources.ConversationHistoryRowResource[] Response { get; set; }
     }
 
     public class GetCompleteConversationDetailsRequest : IRequest<GetCompleteConversationDetailsResponse>

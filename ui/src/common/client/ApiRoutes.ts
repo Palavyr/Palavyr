@@ -31,8 +31,8 @@ export class ApiRoutes {
         GetPricingStrategyDataTemplate: (intentId: string, tableType: string, tableId: string) => `tables/pricing-strategy/${tableType}/intent/${intentId}/table/${tableId}/template`,
         GetPricingStrategyRows: (intentId: string, tableType: string, tableId: string) => `tables/pricing-strategy/${tableType}/intent/${intentId}/table/${tableId}`,
         UpdateStaticTableMetas: () => `response/configuration/static/tables/save`,
-        GetStaticTablesMetaTemplate: (intentId: string) => `response/configuration/${intentId}/static/tables/template`,
-        GetStaticTableRowTemplate: (intentId: string, tableId: string) => `response/configuration/${intentId}/static/tables/${tableId}/row/template`,
+        GetStaticTablesMetaTemplate: () => `response/configuration/static/tables/template`,
+        GetStaticTableRowTemplate: (intentId: string, tableId: string) => `response/configuration/${intentId}/static/tables/row/template`,
         FetchPreview: (intentId: string) => `preview/estimate/${intentId}`,
 
         GetVariableDetails: () => `email/variables`,
@@ -137,6 +137,8 @@ export class ApiRoutes {
         FallbackEmail: (secretKey: SecretKey, intentId: string, isDemo: boolean) => `widget/intent/${intentId}/email/fallback/send?key=${secretKey}&demo=${isDemo}`,
         InternalCheck: (secretKey: SecretKey) => `widget/internal-check?key=${secretKey}`,
         GetIntroSequence: (secretKey: SecretKey) => `account/settings/intro-sequence?key=${secretKey}`,
+        GetUpdateTemplate: (secretKey: SecretKey) => `widget/conversation/update/template?key=${secretKey}`,
+
 
         // Login
         RequestLogin: () => "authentication/login",

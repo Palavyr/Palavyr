@@ -19,7 +19,7 @@ export class BasicThresholdModifier implements Modifier {
         this.onClick(cloneDeep(newState));
     }
 
-    removeRow(tableData: BasicThresholdResource[], rowId: number) {
+    removeRow(tableData: BasicThresholdResource[], rowId: string) {
         const filteredRows = tableData.filter((x: BasicThresholdResource) => x.rowId !== rowId);
         if (filteredRows.length < 1) {
             alert("Basic Threshold tables must contain at least one row.");
@@ -34,25 +34,25 @@ export class BasicThresholdModifier implements Modifier {
         this.setTables(tableData);
     }
 
-    setThresholdValue(tableData: BasicThresholdResource[], rowId: number, newValue: number) {
+    setThresholdValue(tableData: BasicThresholdResource[], rowId: string, newValue: number) {
         const index = findIndex(tableData, (x: BasicThresholdResource) => x.rowId === rowId);
         tableData[index].threshold = newValue;
         this.setTables(tableData);
     }
 
-    setValueMin(tableData: BasicThresholdResource[], rowId: number, newValue: number) {
+    setValueMin(tableData: BasicThresholdResource[], rowId: string, newValue: number) {
         const index = findIndex(tableData, (x: BasicThresholdResource) => x.rowId === rowId);
         tableData[index].valueMin = newValue;
         this.setTables(tableData);
     }
 
-    setValueMax(tableData: BasicThresholdResource[], rowId: number, newValue: number) {
+    setValueMax(tableData: BasicThresholdResource[], rowId: string, newValue: number) {
         const index = findIndex(tableData, (x: BasicThresholdResource) => x.rowId === rowId);
         tableData[index].valueMax = newValue;
         this.setTables(tableData);
     }
 
-    setRangeOrValue(tableData: BasicThresholdResource[], rowId: number) {
+    setRangeOrValue(tableData: BasicThresholdResource[], rowId: string) {
         const index = findIndex(tableData, (x: BasicThresholdResource) => x.rowId === rowId);
         tableData[index].range = !tableData[index].range;
         this.setTables(tableData);

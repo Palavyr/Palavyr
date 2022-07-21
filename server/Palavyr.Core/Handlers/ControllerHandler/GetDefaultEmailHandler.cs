@@ -49,5 +49,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetDefaultEmailRequest : IRequest<GetDefaultEmailResponse>
     {
+        public const string Route = "account/settings/email";
     }
 }

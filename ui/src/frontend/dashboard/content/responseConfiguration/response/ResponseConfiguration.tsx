@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, ChangeEvent } from "react";
-import { StaticTableValidationResult } from "@Palavyr-Types";
+import { StaticTableMetaResource, StaticTableMetaResources, StaticTableRowResource, StaticTableValidationResult } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./tables/statictable/staticTableModifier";
 import { LogueModifier } from "./logueModifier";
 import { cloneDeep } from "lodash";
@@ -7,11 +7,10 @@ import { ExpandableTextBox } from "@common/components/ExpandableTextBox";
 import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { OsTypeToggle } from "../areaSettings/enableAreas/OsTypeToggle";
 import { useContext } from "react";
 import { makeStyles, Paper } from "@material-ui/core";
-import { StaticTableMetaResource, StaticTableMetaResources, StaticTableRowResource } from "@common/types/api/EntityResources";
-import { PricingStrategyConfiguration } from "./tables/dynamicTable/DynamicTableConfiguration";
+import { PricingStrategyConfiguration } from "./tables/dynamicTable/PricingStrategyTableConfiguration";
+import { OsTypeToggle } from "../areaSettings/enableAreas/OsTypeToggle";
 
 const getStaticTableValidationResult = (staticTables: StaticTableMetaResources): StaticTableValidationResult => {
     let validationResult = true;
@@ -103,10 +102,10 @@ export const ResponseConfiguration = () => {
     };
 
     const loadEstimateConfiguration = useCallback(async () => {
-        const { prologue, epilogue, staticTablesMetas, sendPdfResponse } = await repository.Configuration.getEstimateConfiguration(intentId);
+        const { prologue, epilogue, staticTablesMetaResources, sendPdfResponse } = await repository.Configuration.getEstimateConfiguration(intentId);
         setPrologue(cloneDeep(prologue));
         setEpilogue(cloneDeep(epilogue));
-        setStaticTables(staticTablesMetas);
+        setStaticTables(staticTablesMetaResources);
         setSendPdfWithResponse(sendPdfResponse);
         setLoaded(true);
     }, [intentId]);

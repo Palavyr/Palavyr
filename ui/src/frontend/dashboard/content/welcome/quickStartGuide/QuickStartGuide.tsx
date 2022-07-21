@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const QuickStartGuide = () => {
-    const { repository, checkAreaCount, setViewName } = useContext(DashboardContext);
+    const { repository, checkIntentCount, setViewName } = useContext(DashboardContext);
     const history = useHistory();
     setViewName("Welcome!");
 
@@ -101,7 +101,7 @@ export const QuickStartGuide = () => {
                 rowNumber={1}
                 title="Create your first intent"
                 content="Each intent that shows up in the chatbot is created individually. When you create intents for your chatbot, consider how your business is modelled and how your customers are likely to interact with it."
-                onClick={checkAreaCount}
+                onClick={checkIntentCount}
             />
             <QuickStartCard rowNumber={2} title="Configure your new intent" content="In your intent configuration, simply follow the tabs from left to right." />
             <QuickStartCard

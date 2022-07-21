@@ -1,4 +1,4 @@
-import { ConversationDesignerNodeResource, NodeTypeCode } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, NodeTypeCodeEnum } from "@Palavyr-Types";
 
 export const ParentNode: ConversationDesignerNodeResource = {
     nodeId: "xyz-1",
@@ -25,7 +25,7 @@ export const ParentNode: ConversationDesignerNodeResource = {
     imageId: null,
     resolveOrder: 0,
     dynamicType: null,
-    nodeTypeCode: NodeTypeCode.I,
+    nodeTypeCode: NodeTypeCodeEnum.I,
 };
 
 export const ChildNode1: ConversationDesignerNodeResource = {
@@ -52,7 +52,7 @@ export const ChildNode1: ConversationDesignerNodeResource = {
     imageId: null,
     resolveOrder: 0,
     dynamicType: null,
-    nodeTypeCode: NodeTypeCode.I,
+    nodeTypeCode: NodeTypeCodeEnum.I,
 };
 
 export const ChildNode2: ConversationDesignerNodeResource = {
@@ -79,7 +79,7 @@ export const ChildNode2: ConversationDesignerNodeResource = {
     imageId: null,
     resolveOrder: 0,
     dynamicType: null,
-    nodeTypeCode: NodeTypeCode.I,
+    nodeTypeCode: NodeTypeCodeEnum.I,
 };
 
 export const DummyConvo = [ParentNode, ChildNode1, ChildNode2];

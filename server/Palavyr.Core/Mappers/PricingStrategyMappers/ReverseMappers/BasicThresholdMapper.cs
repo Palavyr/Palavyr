@@ -5,9 +5,9 @@ using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
 {
-    public class BasicThresholdMapper : IMapToNew<BasicThresholdResource, SimpleThresholdTableRow>
+    public class BasicThresholdMapper : IMapToNew<SimpleThresholdResource, SimpleThresholdTableRow>
     {
-        public async Task<SimpleThresholdTableRow> Map(BasicThresholdResource from, CancellationToken cancellationToken = default)
+        public async Task<SimpleThresholdTableRow> Map(SimpleThresholdResource from, CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
             return new SimpleThresholdTableRow

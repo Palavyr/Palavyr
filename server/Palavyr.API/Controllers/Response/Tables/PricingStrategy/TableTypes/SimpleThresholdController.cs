@@ -8,9 +8,9 @@ namespace Palavyr.API.Controllers.Response.Tables.PricingStrategy.TableTypes
 {
     [Route(BaseRoute + nameof(SimpleThresholdTableRow), Order = 0)]
     [ApiController]
-    public class BasicThresholdController : PricingStrategyControllerBase<SimpleThresholdTableRow, BasicThresholdResource, IBasicThresholdCompiler>
+    public class SimpleThresholdController : PricingStrategyControllerBase<SimpleThresholdTableRow, SimpleThresholdResource, ISimpleThresholdCompiler>
     {
-        public BasicThresholdController(IMediator mediator) : base(mediator)
+        public SimpleThresholdController(IMediator mediator) : base(mediator)
         {
         }
     }

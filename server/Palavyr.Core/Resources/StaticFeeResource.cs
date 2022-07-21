@@ -1,6 +1,6 @@
 ﻿namespace Palavyr.Core.Resources
 {
-    public class StaticFeeResource
+    public class StaticFeeResource : EntityResource
     {
         public double Min { get; set; }
         public double Max { get; set; }

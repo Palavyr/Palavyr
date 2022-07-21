@@ -1,6 +1,6 @@
 ﻿namespace Palavyr.Core.Resources
 {
-    public class StaticTableRowResource : IEntityResource
+    public class StaticTableRowResource : NullableEntityResource
     {
         
         public int RowOrder { get; set; }
@@ -10,6 +10,6 @@
         public bool PerPerson { get; set; }
         public int TableOrder { get; set; }
         public string IntentId { get; set; }
-        public int Id { get; set; }
+        public int? Id { get; set; }
     }
 }

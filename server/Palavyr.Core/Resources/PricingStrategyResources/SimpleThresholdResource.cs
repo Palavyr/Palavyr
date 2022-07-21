@@ -1,6 +1,6 @@
 ﻿namespace Palavyr.Core.Resources.PricingStrategyResources
 {
-    public class BasicThresholdResource : PricingStrategyTableRowResource
+    public class SimpleThresholdResource : PricingStrategyTableRowResource
     {
         public string AccountId { get; set; }
         public string IntentId { get; set; }

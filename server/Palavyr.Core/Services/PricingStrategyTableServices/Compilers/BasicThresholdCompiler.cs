@@ -15,18 +15,18 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 {
-    public interface IBasicThresholdCompiler : IPricingStrategyTableCompiler
+    public interface ISimpleThresholdCompiler : IPricingStrategyTableCompiler
     {
     }
 
-    public class BasicThresholdCompiler : BaseCompiler<SimpleThresholdTableRow>, IBasicThresholdCompiler
+    public class SimpleThresholdCompiler : BaseCompiler<SimpleThresholdTableRow>, ISimpleThresholdCompiler
     {
         private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyMetaStore;
         private readonly IEntityStore<SimpleThresholdTableRow> basicThresholdStore;
         private readonly IThresholdEvaluator thresholdEvaluator;
         private readonly IResponseRetriever<SimpleThresholdTableRow> responseRetriever;
 
-        public BasicThresholdCompiler(
+        public SimpleThresholdCompiler(
             IEntityStore<PricingStrategyTableMeta> pricingStrategyMetaStore,
             IEntityStore<SimpleThresholdTableRow> basicThresholdStore,
             IEntityStore<ConversationNode> convoNodeStore,

@@ -54,7 +54,7 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
 
     const anyStaticTableRowsWithPerIndividualSet = (staticTableMeta: StaticTableMetaResource) => {
         let result = false;
-        staticTableMeta.staticTableRows.forEach((row: StaticTableRowResource) => {
+        staticTableMeta.staticTableRowResources.forEach((row: StaticTableRowResource) => {
             if (row.perPerson === true) {
                 result = true;
             }
@@ -97,7 +97,7 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                         </TableRow>
                     </TableHead>
                     <TableBody style={{ borderTop: "2px solid black" }}>
-                        {staticTableMeta.staticTableRows.map((row: StaticTableRowResource, index: number) => (
+                        {staticTableMeta.staticTableRowResources.map((row: StaticTableRowResource, index: number) => (
                             <StaticRow
                                 key={row.id}
                                 index={index}
@@ -121,7 +121,7 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                         size="small"
                         color="primary"
                         className={cls.feeTableButton}
-                        onClick={() => tableModifier.addRow(staticTableMetas, staticTableMeta.tableOrder)}
+                        onClick={() => tableModifier.addRow(staticTableMetas, staticTableMeta.tableId)}
                     >
                         Add Row
                     </Button>

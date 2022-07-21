@@ -1,6 +1,5 @@
-import { CredentialsResource } from "@common/types/api/ApiContracts";
+import { CredentialsResource, PasswordResetRequestResource, PasswordVerificationResource, ResetPasswordResource } from "@common/types/api/ApiContracts";
 import { RESET_PASSWORD_LINK } from "@constants";
-import { ResetEmailResponse, ResetPasswordResponse, VerificationResponse } from "@Palavyr-Types";
 import { ApiRoutes } from "./ApiRoutes";
 import { AxiosClient } from "./FrontendAxiosClient";
 export class LoginRepository extends ApiRoutes {
@@ -31,11 +30,11 @@ export class LoginRepository extends ApiRoutes {
 
     public Reset = {
         ResetPasswordRequest: async (emailAddress: string) =>
-            this.client.post<ResetEmailResponse, {}>(this.Routes.ResetPasswordRequest(), {
+            this.client.post<PasswordResetRequestResource, {}>(this.Routes.ResetPasswordRequest(), {
                 EmailAddress: emailAddress,
                 ResetPasswordLinkTemplate: RESET_PASSWORD_LINK,
             }),
-        VerifyResetIdentity: async (accessToken: string) => this.client.post<VerificationResponse, {}>(this.Routes.VerifyResetIdentity(accessToken)),
-        ResetPassword: async (password: string, secretKey: string) => this.resetClient.post<ResetPasswordResponse, {}>(this.Routes.ResetPassword(secretKey), { Password: password }),
+        VerifyResetIdentity: async (accessToken: string) => this.client.post<PasswordVerificationResource, {}>(this.Routes.VerifyResetIdentity(accessToken)),
+        ResetPassword: async (password: string, secretKey: string) => this.resetClient.post<ResetPasswordResource, {}>(this.Routes.ResetPassword(secretKey), { Password: password }),
     };
 }

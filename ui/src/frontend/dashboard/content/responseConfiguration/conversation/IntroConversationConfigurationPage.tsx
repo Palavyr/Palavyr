@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { SetState, TreeErrors } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, SetState, TreeErrorsResource } from "@Palavyr-Types";
 import { useParams } from "react-router-dom";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { ConversationHistoryTracker } from "./node/ConversationHistoryTracker";
@@ -8,7 +8,6 @@ import { useContext } from "react";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { StructuredConvoTree } from "./PalavyrConfiguration";
 import { IPalavyrLinkedList } from "@Palavyr-Types";
-import { ConversationDesignerNodeResource } from "@common/types/api/EntityResources";
 import { NodeTypeOptionResources } from "@common/types/api/ApiContracts";
 
 export const IntroConversationConfigurationPage = () => {
@@ -17,7 +16,7 @@ export const IntroConversationConfigurationPage = () => {
     const [nodeTypeOptions, setNodeTypeOptions] = useState<NodeTypeOptionResources>([]);
     const [linkedNodeList, setLinkedNodes] = useState<IPalavyrLinkedList>();
     const [historyTracker, setHistoryTracker] = useState<ConversationHistoryTracker | null>(null);
-    const [treeErrors, setTreeErrors] = useState<TreeErrors>();
+    const [treeErrors, setTreeErrors] = useState<TreeErrorsResource>();
     const [useNewEditor, setUseNewEditor] = useState<boolean>(true);
 
     const loadNodes = useCallback(async () => {
@@ -37,7 +36,7 @@ export const IntroConversationConfigurationPage = () => {
         loadNodes();
     }, [loadNodes, planTypeMeta]);
 
-    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, intentId: string, nodeList: ConversationDesignerNodeResource[]) => {
+    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrorsResource>, repository: PalavyrRepository, intentId: string, nodeList: ConversationDesignerNodeResource[]) => {
         const treeErrors = await repository.Conversations.GetIntroErrors(intentId, nodeList);
         setTreeErrors(treeErrors);
     };

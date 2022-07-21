@@ -43,6 +43,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class UploadFileAssetsRequest : IRequest<UploadFileAssetsResponse>
     {
+        public const string Route = "file-assets/upload";
+
         public UploadFileAssetsRequest(List<IFormFile> imageFiles)
         {
             ImageFiles = imageFiles;

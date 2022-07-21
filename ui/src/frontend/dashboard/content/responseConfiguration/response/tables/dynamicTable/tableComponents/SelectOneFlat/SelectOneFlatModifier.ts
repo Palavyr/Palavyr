@@ -42,7 +42,7 @@ export class SelectOneFlatModifier implements Modifier {
     }
 
     setOptionText(tableData: CategorySelectTableRowResource[], index: number, newText: string) {
-        tableData[index].option = newText;
+        tableData[index].category = newText;
         this.setTables(tableData);
     }
 

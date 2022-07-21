@@ -30,7 +30,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             var mappedUpdates = await modelMapper.MapMany(request.Transactions, cancellationToken);
 
-            var updatedConvo = await conversationNodeUpdater.UpdateConversation(request.IntentId, mappedUpdates, cancellationToken);
+            var updatedConvo = await conversationNodeUpdater.UpdateDesignerConversationForIntent(request.IntentId, mappedUpdates, cancellationToken);
 
             var resource = await resourceMapper.MapMany(updatedConvo, cancellationToken);
             return new ModifyConversationResponse(resource);

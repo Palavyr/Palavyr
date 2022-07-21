@@ -87,7 +87,7 @@ export class StandardComponents {
 
             const cls = useStyles(preferences);
 
-            const loadAreas = useCallback(async () => {
+            const loadIntents = useCallback(async () => {
                 var intents = await client.Widget.Get.Intents();
                 var options = intents.map((intent: IntentResource) => {
                     return { intentDisplay: intent.intentName, intentId: intent.intentId } as SelectedOption;
@@ -100,8 +100,8 @@ export class StandardComponents {
                 if (designer) {
                     setOpen(true);
                 }
-                loadAreas();
-            }, [loadAreas]);
+                loadIntents();
+            }, [loadIntents]);
 
             const onChange = async (_: any, newOption: SelectedOption) => {
                 if (designer) return;
@@ -537,7 +537,7 @@ export class StandardComponents {
     }
 
     makeSendEmail({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
-        const areaId = nodeList[0].intentId;
+        const IntentId = nodeList[0].intentId;
 
         return () => {
             const { context, isDemo } = useContext(WidgetContext);
@@ -563,9 +563,9 @@ export class StandardComponents {
                     numIndividuals = 1;
                 }
 
-                const response = await client.Widget.Send.ConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId, isDemo);
+                const response = await client.Widget.Send.ConfirmationEmail(IntentId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId, isDemo);
                 if (response.result) {
-                    const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale);
+                    const completeConvo = assembleEmailRecordData(convoId, IntentId, name, email, phone, locale);
                     if (!isDemo) {
                         await client.Widget.Post.UpdateConvoRecord(completeConvo);
                     }
@@ -645,7 +645,7 @@ export class StandardComponents {
     };
 
     makeSendFallbackEmail({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
-        const areaId = nodeList[0].intentId;
+        const IntentId = nodeList[0].intentId;
 
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
@@ -658,10 +658,10 @@ export class StandardComponents {
                 const phone = context.AppContext[ConvoContextProperties.phoneNumber];
                 const locale = context.AppContext[ConvoContextProperties.region];
 
-                const response = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId, isDemo);
+                const response = await client.Widget.Send.FallbackEmail(IntentId, email, name, phone, convoId, isDemo);
                 if (response.result) {
                     if (!isDemo) {
-                        const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale, true);
+                        const completeConvo = assembleEmailRecordData(convoId, IntentId, name, email, phone, locale, true);
                         await client.Widget.Post.UpdateConvoRecord(completeConvo);
                     }
                 }

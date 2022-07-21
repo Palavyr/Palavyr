@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Palavyr.Core.Data.Entities;
 using Shouldly;
@@ -14,7 +15,10 @@ namespace Pure.Models.Schemas
             var testAccountId = "test-account";
             var testIntentId = "test-intentId";
 
-            var testStaticTablesMetas = StaticTablesMeta.CreateDefaultMetas(testIntentId, testAccountId);
+            var testStaticTablesMetas = new List<StaticTablesMeta>()
+            {
+                StaticTablesMeta.CreateNewMetaTemplate(testIntentId, testAccountId)
+            };
             
             var result = StaticTablesMeta.BindTemplateList(testStaticTablesMetas, testAccountId).First();
             
