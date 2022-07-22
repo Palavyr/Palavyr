@@ -20,7 +20,7 @@ export class PalavyrNode implements IPalavyrNode {
     public userText: string; // text
     public resolveOrder: number;
     public nodeComponentType: string; // type of component to use in the widget - standardized list of types in the widget registry
-    public pricingStrategyType: string; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423 or ""
+    public pricingStrategyType: string; // generic dynamic type, e.g. CategorySelect-3242-2342-234-2423 or ""
     public nodeTypeOptions: NodeTypeOptionResources;
     public valueOptions: string[]; // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
     public optionPath: string; // the value option that was used with the parent of this node.
@@ -102,7 +102,7 @@ export class PalavyrNode implements IPalavyrNode {
         this.nodeType = node.nodeType; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
         this.nodeTypeCodeEnum = node.nodeTypeCodeEnum;
         this.nodeComponentType = node.nodeComponentType; // type of component to use in the widget - standardized list of types in the widget registry
-        this.pricingStrategyType = node.pricingStrategyType; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423
+        this.pricingStrategyType = node.pricingStrategyType; // generic dynamic type, e.g. CategorySelect-3242-2342-234-2423
         this.isImageNode = node.isImageNode;
         this.fileId = node.fileId;
         this.shouldShowMultiOption = node.shouldShowMultiOption;

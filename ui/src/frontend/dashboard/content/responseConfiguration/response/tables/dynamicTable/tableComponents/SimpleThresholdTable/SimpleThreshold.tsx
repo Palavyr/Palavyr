@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
-import { BasicThresholdModifier } from "./BasicThresholdModifier";
+import { BasicThresholdModifier } from "./SimpleThresholdModifier";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { BasicThresholdHeader } from "./BasicThresholdHeader";
-import { BasicThresholdBody } from "./BasicThresholdBody";
+import { BasicThresholdHeader } from "./SimpleThresholdHeader";
+import { BasicThresholdBody } from "./SimpleThresholdBody";
 import { useState } from "react";
 import { Button, makeStyles, Table, AccordionActions } from "@material-ui/core";
 import { DisplayTableData } from "../DisplayTableData";

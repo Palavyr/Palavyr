@@ -27,7 +27,7 @@ export const getRandomColor = (seed: number | string) => {
     return color;
 };
 
-const calcualateDailEnquiryByDay = (areaDetails: IntentNameDetails, enquiries: EnquiryResources) => {
+const calcualateDailEnquiryByDay = (intentDetails: IntentNameDetails, enquiries: EnquiryResources) => {
     // const dates = enquiries.map((x) => {
     //     const date = new Date(Date.parse(x.timeStamp));
     //     date.toLocaleDateString();
@@ -50,12 +50,12 @@ const calcualateDailEnquiryByDay = (areaDetails: IntentNameDetails, enquiries: E
     lastSevenDays.reverse();
 
     const enquiryData: EnqDataSet[] = [];
-    areaDetails.forEach((detail: IntentNameDetail) => {
+    intentDetails.forEach((detail: IntentNameDetail) => {
         const intentDataResult: number[] = [];
         const intentName = detail.intentName;
-        const areaEnquiries = enquiries.filter((enq: EnquiryResource) => enq.intentName === intentName);
+        const intentEnquiries = enquiries.filter((enq: EnquiryResource) => enq.intentName === intentName);
         lastSevenDays.forEach(previousDate => {
-            const enquiriesOnDateInIntent = areaEnquiries.filter(enq => {
+            const enquiriesOnDateInIntent = intentEnquiries.filter(enq => {
                 const timeStampDate = new Date(Date.parse(enq.timeStamp)).toDateString();
                 const isEqual = previousDate.toDateString() === timeStampDate;
                 return isEqual;
@@ -166,7 +166,7 @@ export const DailyEnquiriesWeekly = () => {
     return (
         <DataPlot
             title="Activity over the last 7 days"
-            subtitle="Learn about the daily activity of your widget, broken down by area"
+            subtitle="Learn about the daily activity of your widget, broken down by intent"
             hasData={hasData} /*&& sum(data.datasets.map(x => sum(x.data))) > 0 */
             loadingSpinner={loadingspinner}
         >

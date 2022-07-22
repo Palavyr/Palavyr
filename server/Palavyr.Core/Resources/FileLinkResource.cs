@@ -8,7 +8,6 @@
 
         public FileLinkResource()
         {
-            
         }
 
         public FileLinkResource(string fileName, string link, string fileId)

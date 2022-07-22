@@ -44,7 +44,7 @@ export const FileAssetUpload = ({ setFileAssets, numImages }: FileAssetUploadPro
     return (
         <div className={cls.imageBlock}>
             <Upload
-                dropzoneType="area"
+                dropzoneType="intent"
                 initialAccordianState={numImages === 0}
                 handleFileSave={handleFileSave}
                 summary="Upload a file"

@@ -1,5 +1,5 @@
 import React from "react";
-import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
+import { CategorySelectModifier } from "./CategorySelectModifier";
 import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { CategorySelectTableRowResource } from "@Palavyr-Types";
@@ -8,11 +8,11 @@ import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField"
 import { NumberFormatValues } from "react-number-format";
 import { TableButton } from "./TableButton";
 
-export interface ISelectOneFlatRow {
+export interface ICategorySelectRow {
     dataIndex: number;
     tableData: CategorySelectTableRowResource[];
     row: CategorySelectTableRowResource;
-    modifier: SelectOneFlatModifier;
+    modifier: CategorySelectModifier;
 }
 
 type StyleProps = {
@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelectOneFlatRow) => {
+export const CategorySelectRow = ({ dataIndex, tableData, row, modifier }: ICategorySelectRow) => {
     const cls = useStyles({ isTrue: !row.range });
     const cellAlignment = "center";
     const key = dataIndex.toString() + row.tableId.toString();

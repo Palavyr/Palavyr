@@ -6,7 +6,7 @@ export type SecretKey = string | null;
 
 export type WidgetIntentTable = {
     intentId: string;
-    areaDisplayTitle: string;
+    intentDisplayTitle: string;
 };
 
 export type SelectedOption = {

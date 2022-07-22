@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     icon: {
         color: theme.palette.secondary.light,
     },
-    areaListItem: {
+    intentListItem: {
         backgroundColor: theme.palette.secondary.dark,
     },
     intentNameText: {
@@ -37,7 +37,7 @@ export const IntentLinkItem = memo(({ intentId, isActive, disabled, currentPage,
 
     return (
         <NavLink key={intentId} to={!isActive || disabled ? currentPage : createNavLink(intentId)} className={cls.intentNameText}>
-            <ListItem className={cls.areaListItem} disabled={!isActive || disabled} button key={intentId}>
+            <ListItem className={cls.intentListItem} disabled={!isActive || disabled} button key={intentId}>
                 {menuOpen ? (
                     <ListItemIcon className={cls.icon}>
                         <ChatIcon />

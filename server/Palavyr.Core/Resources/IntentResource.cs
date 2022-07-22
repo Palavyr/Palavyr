@@ -25,6 +25,5 @@ namespace Palavyr.Core.Resources
         public bool IncludePricingStrategyTableTotals { get; set; }
 
         public string Subject { get; set; }
-        public int Id { get; set; }
     }
 }

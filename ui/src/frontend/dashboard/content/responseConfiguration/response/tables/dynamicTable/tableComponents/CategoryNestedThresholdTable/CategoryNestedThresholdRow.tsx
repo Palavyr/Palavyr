@@ -1,22 +1,23 @@
 import React from "react";
-import { TableRow, makeStyles, FormControlLabel, Checkbox, Typography } from "@material-ui/core";
-import { PercentOfThresholdResource, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
-import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
+import { TableRow, makeStyles, TextField, FormControlLabel, Checkbox } from "@material-ui/core";
+import { CategoryNestedThresholdResource, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { UnitInput } from "../../components/UnitInput";
 import { Cell } from "../../components/Cell";
-import { TableButton } from "../SelectOneFlat/TableButton";
-import { TableDeleteButton } from "./TableDeleteButton";
+import { TableButton } from "../CategorySelectTable/TableButton";
+import { TableDeleteButton } from "../PercentOfThresholdTable/TableDeleteButton";
 
-export interface IPercentOfThresholdRow {
-    tableData: PercentOfThresholdResource[];
-    itemData: PercentOfThresholdResource[];
-    itemLength: number;
-    row: PercentOfThresholdResource;
-    modifier: PercentOfThresholdModifier;
-    baseValue: boolean;
+export interface CategoryNestedThresholdProps {
+    rowIndex: number;
+    categoryId: string;
+    categoryName: string;
+    categorySize: number;
+    tableData: CategoryNestedThresholdResource[];
+    row: CategoryNestedThresholdResource;
+    modifier: CategoryNestedThresholdModifier;
     unitGroup: UnitGroups;
     unitPrettyName: UnitPrettyNames;
 }
@@ -24,7 +25,7 @@ export interface IPercentOfThresholdRow {
 type StyleProps = {
     isTrue: boolean;
 };
-export const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
     number: {
         border: "1px solid lightgray",
         padding: "1.2rem",
@@ -49,32 +50,51 @@ export const useStyles = makeStyles(theme => ({
             return {};
         }
     },
-    tableRow: {
-        boxShadow: "none",
-        border: "0px solid black",
+    categoryInput: {
+        margin: "0.6rem",
+        width: "30ch",
+        paddingLeft: "0.4rem",
     },
 }));
 
-export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, modifier, baseValue, unitGroup, unitPrettyName }: IPercentOfThresholdRow) => {
+const cellAlignment = "center";
+
+export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName, categorySize, tableData, row, modifier, unitGroup, unitPrettyName }: CategoryNestedThresholdProps) => {
     const cls = useStyles({ isTrue: !row.range });
 
     const onTriggerFallbackChange = event => {
-        modifier.checkTriggerFallbackChange(tableData, itemData, row, event.target.checked);
+        modifier.checkTriggerFallbackChange(tableData, row, categoryId, event.target.checked);
     };
 
     const { currencySymbol } = React.useContext(DashboardContext);
 
     return (
-        <TableRow className={cls.tableRow}>
+        <TableRow>
             <Cell>
-                <TableDeleteButton onClick={() => modifier.removeRow(tableData, row.rowId)} />
+                <TableDeleteButton onClick={() => modifier.removeThreshold(tableData, row.rowId)} />
+            </Cell>
+            <Cell>
+                {rowIndex === 0 && (
+                    <TextField
+                        className={cls.categoryInput}
+                        variant="standard"
+                        label="Category name"
+                        type="text"
+                        value={categoryName}
+                        color="primary"
+                        onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
+                            event.preventDefault();
+                            modifier.setCategoryName(tableData, categoryId, event.target.value);
+                        }}
+                    />
+                )}
             </Cell>
             <Cell>
                 <UnitInput
                     unitGroup={unitGroup}
                     unitPrettyName={unitPrettyName}
                     unitHelperText={unitGroup}
-                    disabled={baseValue}
+                    disabled={rowIndex === 0}
                     label="Threshold"
                     value={row.threshold}
                     currencySymbol={currencySymbol}
@@ -84,7 +104,7 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                     }}
                     onCurrencyChange={(values: NumberFormatValues) => {
                         if (values.floatValue !== undefined) {
-                            modifier.setThresholdValue(tableData, row.rowId, values.floatValue);
+                            modifier.setThreshold(tableData, row.rowId, values.floatValue);
                         }
                     }}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +112,7 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                         if (val !== "") {
                             const result = parseFloat(val);
                             if (result) {
-                                modifier.setThresholdValue(tableData, row.rowId, result);
+                                modifier.setThreshold(tableData, row.rowId, result);
                             }
                         }
                     }}
@@ -100,34 +120,6 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
             </Cell>
             {!row.triggerFallback ? (
                 <>
-                    <Cell>
-                        {!row.triggerFallback && (
-                            <TableButton
-                                onClick={() => {
-                                    modifier.setAddOrSubtract(tableData, row.rowId);
-                                }}
-                                onMessage="Add"
-                                offMessage="Subtract"
-                                state={row.posNeg}
-                            />
-                        )}
-                    </Cell>
-                    <Cell>
-                        {!row.triggerFallback && (
-                            <CurrencyTextField
-                                label="(5% is 0.05)"
-                                value={row.modifier}
-                                currencySymbol="%"
-                                decimalCharacter="."
-                                digitGroupSeparator=","
-                                onValueChange={(values: NumberFormatValues) => {
-                                    if (values.floatValue !== undefined) {
-                                        modifier.setPercentToModify(tableData, row.rowId, values.floatValue);
-                                    }
-                                }}
-                            />
-                        )}
-                    </Cell>
                     <Cell>
                         {!row.triggerFallback && (
                             <CurrencyTextField
@@ -165,30 +157,26 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                     <Cell>
                         {!row.triggerFallback && (
                             <TableButton
+                                state={row.range}
                                 onClick={() => {
                                     modifier.setRangeOrValue(tableData, row.rowId);
                                 }}
-                                onMessage="Range"
-                                offMessage="Value"
-                                state={row.range}
                             />
                         )}
                     </Cell>
                 </>
             ) : (
                 <>
-                    <Cell>
-                        <Typography align="center" style={{ paddingTop: "10px" }}>
-                            If this threshold value is exceeded in the chat,
-                        </Typography>
-                        <Typography align="center">then a 'Too Complicated' response will be executed.</Typography>
-                    </Cell>
-                    <Cell></Cell>
-                    <Cell></Cell>
+                    <>
+                        If this threshold value is exceeded in the chat, then a <strong>'Too Complicated'</strong> response will be executed.
+                        <Cell></Cell>
+                        <Cell></Cell>
+                        <Cell></Cell>
+                    </>
                 </>
             )}
             <Cell>
-                {itemLength > 1 && row.rowOrder === itemLength - 1 && (
+                {row.rowOrder === categorySize - 1 && categorySize > 1 && (
                     <FormControlLabel label="Trigger Too Complicated" control={<Checkbox checked={row.triggerFallback} onChange={onTriggerFallbackChange} />} />
                 )}
             </Cell>

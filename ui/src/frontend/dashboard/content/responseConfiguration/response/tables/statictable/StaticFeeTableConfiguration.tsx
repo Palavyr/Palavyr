@@ -95,7 +95,7 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
                 {children}
                 {staticTables.length === 0 && (
                     <Typography align="center" color="secondary" style={{ padding: "0.8rem" }} variant="h5">
-                        No static fee tables configured for this area.
+                        No static fee tables configured for this intent.
                     </Typography>
                 )}
                 {sortByPropertyNumeric((x: StaticTableMetaResource) => x.tableOrder, staticTables).map((table: StaticTableMetaResource, index: number) => (

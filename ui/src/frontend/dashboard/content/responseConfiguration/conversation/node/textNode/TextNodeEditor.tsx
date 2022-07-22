@@ -53,7 +53,7 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
     };
 
     const handleTextOnlyUpdate = async (userText: string) => {
-        const intentId = currentNode.palavyrLinkedList.IntentId;
+        const intentId = currentNode.palavyrLinkedList.intentId;
         const updatedNode = await repository.Conversations.ModifyConversationNodeText(currentNode.nodeId, intentId, userText);
         NodeUpdater.updateText(currentNode, updatedNode === null ? userText : updatedNode.text, useNewEditor);
     };

@@ -2,7 +2,6 @@
 {
     public class CategorySelectTableRowResource : PricingStrategyTableRowResource
     {
-        public string AccountId { get; set; }
         public string IntentId { get; set; }
         public string Category { get; set; }
         public double ValueMin { get; set; }

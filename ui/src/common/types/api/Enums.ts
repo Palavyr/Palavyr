@@ -15,7 +15,7 @@ export enum NodeTypeCodeEnum {
 
 export enum UnitGroups {
     Length = "length",
-    intent= "area",
+    intent= "intent",
     Weight = "weight",
     Currency = "currency",
 }

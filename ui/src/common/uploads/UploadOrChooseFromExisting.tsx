@@ -45,7 +45,7 @@ export const UploadOrSelectFromExisting = ({
             <Divider />
             <div className={cls.imageBlock}>
                 <Upload
-                    dropzoneType="area"
+                    dropzoneType="intent"
                     initialAccordianState={initialAccordianState}
                     modalState={uploadModal}
                     toggleModal={() => toggleModal()}

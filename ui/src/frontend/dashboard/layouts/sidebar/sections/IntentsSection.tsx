@@ -55,7 +55,7 @@ export const IntentsSection = memo(({ isActive, currentPage, intentNameDetails, 
             <SidebarLinkItem
                 toolTipText="Add New Intent"
                 menuOpen={menuOpen}
-                className={"add-new-area-tour"}
+                className={"add-new-intent-tour"}
                 text="Add New Intent"
                 isActive={isActive}
                 onClick={checkIntentCount}
@@ -64,13 +64,13 @@ export const IntentsSection = memo(({ isActive, currentPage, intentNameDetails, 
             <SidebarLinkItem
                 toolTipText="Enable / Disable Intents"
                 menuOpen={menuOpen}
-                className={"enable-disable-area-tour"}
+                className={"enable-disable-intent-tour"}
                 text="Enable / Disable Intents"
                 isActive={isActive}
                 onClick={enableIntentsOnClick}
                 IconComponent={<PowerSettingsNewIcon className={cls.icon} />}
             />
-            <Collapse className={"configure-your-area-tour"} in={configureOpen} timeout="auto" unmountOnExit>
+            <Collapse className={"configure-your-intent-tour"} in={configureOpen} timeout="auto" unmountOnExit>
                 <Divider />
                 {intentNameDetails.map(
                     (x: IntentNameDetail, index: number) =>

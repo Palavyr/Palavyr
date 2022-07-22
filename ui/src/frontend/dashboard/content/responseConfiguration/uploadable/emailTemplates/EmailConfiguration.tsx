@@ -3,7 +3,8 @@ import { Divider } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { Settings, ResponseVariable } from "@Palavyr-Types";
 import { HeaderStrip } from "@common/components/HeaderStrip";
-import { OsTypeToggle } from "../../areaSettings/enableIntents/OsTypeToggle";
+import { OsTypeToggle } from "../../intentSettings/enableIntents/OsTypeToggle";
+
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { EmailConfigurationComponent } from "./EmailConfigurationComponent";
 
@@ -71,7 +72,7 @@ export const EmailConfiguration = () => {
                 <>
                     <HeaderStrip
                         title="Fallback Email Response"
-                        subtitle="Use this editor to create a fallback email response that is specific to this area. For example, this email is sent if a 'Too Complicated' node is encountered during the chat."
+                        subtitle="Use this editor to create a fallback email response that is specific to this intent. For example, this email is sent if a 'Too Complicated' node is encountered during the chat."
                     />
                     {variableDetails && (
                         <EmailConfigurationComponent

@@ -2,7 +2,7 @@ import React from "react";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { TableBody } from "@material-ui/core";
 import { BasicThresholdResource, IPricingStrategyBody } from "@Palavyr-Types";
-import { BasicThresholdRow } from "./BasicThresholdRow";
+import { BasicThresholdRow } from "./SimpleThresholdRow";
 
 const getter = (x: BasicThresholdResource) => x.rowOrder;
 export const BasicThresholdBody = ({ tableData, modifier, unitGroup, unitPrettyName }: IPricingStrategyBody) => {

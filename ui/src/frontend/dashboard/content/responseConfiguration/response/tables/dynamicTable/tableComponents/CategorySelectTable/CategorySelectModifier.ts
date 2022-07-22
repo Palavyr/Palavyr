@@ -3,13 +3,13 @@ import { cloneDeep } from "lodash";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 
-export class SelectOneFlatModifier implements Modifier {
+export class CategorySelectModifier implements Modifier {
     onClick: SetState<CategorySelectTableRowResource[]>;
     tableType: string;
 
     constructor(onClick: SetState<CategorySelectTableRowResource[]>) {
         this.onClick = onClick;
-        this.tableType = PricingStrategyTypes.SelectOneFlat;
+        this.tableType = PricingStrategyTypes.CategorySelect;
     }
 
     setTables(newState: CategorySelectTableRowResource[]) {

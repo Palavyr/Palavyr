@@ -8,10 +8,8 @@ namespace Palavyr.Core.Resources
         public string Description { get; set; }
         public string IntentId { get; set; }
         public IEnumerable<StaticTableRowResource> StaticTableRowResources { get; set; }
-        public string AccountId { get; set; }
         public bool PerPersonInputRequired { get; set; }
         public bool IncludeTotals { get; set; }
         public string TableId { get; set; }
-        public int? Id { get; set; }
     }
 }

@@ -1,8 +1,7 @@
 ﻿namespace Palavyr.Core.Resources.PricingStrategyResources
 {
-    public class PricingStrategyTableRowResource : IPricingStrategyTableRowResource
+    public class PricingStrategyTableRowResource : EntityResource, IPricingStrategyTableRowResource
     {
-        public int Id { get; set; }
         public string TableId { get; set; }
     }
 }

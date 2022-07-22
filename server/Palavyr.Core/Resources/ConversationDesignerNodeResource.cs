@@ -36,6 +36,5 @@ namespace Palavyr.Core.Resources
         public bool IsCurrency { get; set; }
         public string NodeChildrenString { get; set; } = ""; // stored as comma delimited list as string
         public NodeTypeCodeEnum NodeTypeCodeEnum { get; set; }
-        public int? Id { get; set; }
     }
 }

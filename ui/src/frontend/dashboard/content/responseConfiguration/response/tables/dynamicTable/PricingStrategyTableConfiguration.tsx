@@ -5,7 +5,7 @@ import { Button, FormControlLabel, Checkbox } from "@material-ui/core";
 import { PricingStrategyTable } from "./PricingStrategyTable";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { isDevelopmentStage } from "@common/client/clientUtils";
-import { OsTypeToggle } from "frontend/dashboard/content/responseConfiguration/areaSettings/enableIntents/OsTypeToggle";
+import { OsTypeToggle } from "frontend/dashboard/content/responseConfiguration/intentSettings/enableIntents/OsTypeToggle";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import Fade from "react-reveal/Fade";
@@ -60,7 +60,7 @@ export const PricingStrategyConfiguration = ({ title, intentId, children, initia
             const tableNameMap = await repository.Configuration.Tables.Dynamic.GetPricingStrategyTypes();
             const quantTypes = await repository.Configuration.Units.GetSupportedUnitIds();
 
-            // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
+            // map that provides e.g. Select One Flat: CategorySelect. used to derive the pretty names
             setAvailableTables(tableNameMap);
             // map of pricing trategy pretty names
             setTableNameMap(tableNameMap);
@@ -140,7 +140,7 @@ export const PricingStrategyConfiguration = ({ title, intentId, children, initia
             <Suspense fallback={<h1>Loading Dynamic Tables...</h1>}>
                 {tables.length === 0 && (
                     <PalavyrText align="center" color="secondary" style={{ padding: "0.8rem" }} variant="h5">
-                        No dynamic tables configured for this area.
+                        No dynamic tables configured for this intent.
                     </PalavyrText>
                 )}
 

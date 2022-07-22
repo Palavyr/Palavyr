@@ -1,10 +1,10 @@
 export const intents = [
     {
         intentId: "1-1",
-        areaDisplayTitle: "First Intent",
+        intentDisplayTitle: "First Intent",
     },
     {
         intentId: "1-2",
-        areaDisplayTitle: "Second Intent",
+        intentDisplayTitle: "Second Intent",
     },
 ];

@@ -51,8 +51,8 @@ export const DEFAULT_NODE_TEXT = () => (Math.ceil(Math.random()) % 2 == 0 ? DEFA
 export const defaultUrlForNewIntent = (intentId: string) => `/dashboard/editor/pricing/${intentId}?tab=0`;
 
 // layers
-export const ADD_NEW_AREA_DIALOG_BOX_zINDEX = 150;
-export const ADD_NEW_AREA_BACKDROP_zINDEX = 120;
+export const ADD_NEW_INTENT_DIALOG_BOX_zINDEX = 150;
+export const ADD_NEW_INTENT_BACKDROP_zINDEX = 120;
 export const DASHBOARD_HEADER_TOPBAR_zINDEX = 100;
 export const CHAT_DEMO_LISTBOX_zINDEX = 50;
 

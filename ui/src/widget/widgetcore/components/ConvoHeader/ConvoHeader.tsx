@@ -6,7 +6,7 @@ import { WidgetContext } from "../../context/WidgetContext";
 import classNames from "classnames";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import "@widgetcore/widget/widget.module.scss";
-import { OsTypeToggle } from "@frontend/dashboard/content/responseConfiguration/areaSettings/enableIntents/OsTypeToggle";
+import { OsTypeToggle } from "@frontend/dashboard/content/responseConfiguration/intentSettings/enableIntents/OsTypeToggle";
 
 export interface ConvoHeaderProps {
     titleAvatar?: string;

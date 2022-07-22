@@ -1,20 +1,30 @@
-import React, { useContext } from "react";
-import { Button, Checkbox, FormControlLabel, makeStyles, TableCell, TableRow } from "@material-ui/core";
+import React from "react";
+import { TableRow, makeStyles, FormControlLabel, Checkbox, Typography } from "@material-ui/core";
+import { PercentOfThresholdResource, UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
+import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { BasicThresholdModifier } from "./BasicThresholdModifier";
-import DeleteIcon from "@material-ui/icons/Delete";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { UnitInput } from "../../components/UnitInput";
-import { TableButton } from "../SelectOneFlat/TableButton";
-import { TextInput } from "@common/components/TextField/TextInput";
-import { UnitGroups, UnitPrettyNames } from "@common/types/api/Enums";
-import { BasicThresholdResource } from "@common/types/api/EntityResources";
+import { Cell } from "../../components/Cell";
+import { TableButton } from "../CategorySelectTable/TableButton";
+import { TableDeleteButton } from "./TableDeleteButton";
+
+export interface IPercentOfThresholdRow {
+    tableData: PercentOfThresholdResource[];
+    itemData: PercentOfThresholdResource[];
+    itemLength: number;
+    row: PercentOfThresholdResource;
+    modifier: PercentOfThresholdModifier;
+    baseValue: boolean;
+    unitGroup: UnitGroups;
+    unitPrettyName: UnitPrettyNames;
+}
 
 type StyleProps = {
     isTrue: boolean;
 };
-const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles(theme => ({
     number: {
         border: "1px solid lightgray",
         padding: "1.2rem",
@@ -28,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     },
     input: {
         margin: "0.6rem",
-        width: "30ch",
+        width: "55ch",
     },
     maxValInput: (props: StyleProps) => {
         if (props.isTrue === true) {
@@ -39,60 +49,32 @@ const useStyles = makeStyles(theme => ({
             return {};
         }
     },
-    inputPropsCls: {
-        paddingLeft: "0.4rem",
+    tableRow: {
+        boxShadow: "none",
+        border: "0px solid black",
     },
 }));
 
-interface IBasicThresholdRow {
-    rowIndex: number;
-    tableData: BasicThresholdResource[];
-    row: BasicThresholdResource;
-    modifier: BasicThresholdModifier;
-    unitGroup: UnitGroups;
-    unitPrettyName: UnitPrettyNames;
-}
-
-const cellAlignment = "center";
-
-export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGroup, unitPrettyName }: IBasicThresholdRow) => {
+export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, modifier, baseValue, unitGroup, unitPrettyName }: IPercentOfThresholdRow) => {
     const cls = useStyles({ isTrue: !row.range });
+
     const onTriggerFallbackChange = event => {
-        modifier.checkTriggerFallbackChange(tableData, row, event.target.checked);
+        modifier.checkTriggerFallbackChange(tableData, itemData, row, event.target.checked);
     };
 
     const { currencySymbol } = React.useContext(DashboardContext);
-    const key = rowIndex.toString() + row.tableId.toString();
 
     return (
-        <TableRow key={key}>
-            <TableCell width="25" align={cellAlignment}>
-                {rowIndex > 0 ? (
-                    <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeRow(tableData, row.rowId)}>
-                        Delete
-                    </Button>
-                ) : (
-                    <TextInput
-                        className={cls.input}
-                        variant="standard"
-                        label="Name to use in PDF fee table"
-                        type="text"
-                        value={tableData[0].itemName}
-                        InputLabelProps={{ className: cls.inputPropsCls }}
-                        color="primary"
-                        onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
-                            event.preventDefault();
-                            modifier.setItemName(tableData, event.target.value);
-                        }}
-                    />
-                )}
-            </TableCell>
-            <TableCell align={cellAlignment}>
+        <TableRow className={cls.tableRow}>
+            <Cell>
+                <TableDeleteButton onClick={() => modifier.removeRow(tableData, row.rowId)} />
+            </Cell>
+            <Cell>
                 <UnitInput
                     unitGroup={unitGroup}
                     unitPrettyName={unitPrettyName}
                     unitHelperText={unitGroup}
-                    disabled={rowIndex === 0}
+                    disabled={baseValue}
                     label="Threshold"
                     value={row.threshold}
                     currencySymbol={currencySymbol}
@@ -115,10 +97,38 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
                         }
                     }}
                 />
-            </TableCell>
+            </Cell>
             {!row.triggerFallback ? (
                 <>
-                    <TableCell align={cellAlignment}>
+                    <Cell>
+                        {!row.triggerFallback && (
+                            <TableButton
+                                onClick={() => {
+                                    modifier.setAddOrSubtract(tableData, row.rowId);
+                                }}
+                                onMessage="Add"
+                                offMessage="Subtract"
+                                state={row.posNeg}
+                            />
+                        )}
+                    </Cell>
+                    <Cell>
+                        {!row.triggerFallback && (
+                            <CurrencyTextField
+                                label="(5% is 0.05)"
+                                value={row.modifier}
+                                currencySymbol="%"
+                                decimalCharacter="."
+                                digitGroupSeparator=","
+                                onValueChange={(values: NumberFormatValues) => {
+                                    if (values.floatValue !== undefined) {
+                                        modifier.setPercentToModify(tableData, row.rowId, values.floatValue);
+                                    }
+                                }}
+                            />
+                        )}
+                    </Cell>
+                    <Cell>
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 label="Amount"
@@ -133,16 +143,15 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
                                 }}
                             />
                         )}
-                    </TableCell>
-                    <TableCell width="200px" align={cellAlignment}>
+                    </Cell>
+                    <Cell>
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 className={cls.maxValInput}
-                                label={row.range ? "Amount" : "Not used"}
+                                label="Amount"
                                 disabled={!row.range}
                                 value={row.range ? row.valueMax : 0.0}
                                 currencySymbol={currencySymbol}
-                                minimumValue="0"
                                 decimalCharacter="."
                                 digitGroupSeparator=","
                                 onValueChange={(values: NumberFormatValues) => {
@@ -152,32 +161,37 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier, unitGrou
                                 }}
                             />
                         )}
-                    </TableCell>
-                    <TableCell align={cellAlignment}>
+                    </Cell>
+                    <Cell>
                         {!row.triggerFallback && (
                             <TableButton
-                                state={row.range}
                                 onClick={() => {
                                     modifier.setRangeOrValue(tableData, row.rowId);
                                 }}
+                                onMessage="Range"
+                                offMessage="Value"
+                                state={row.range}
                             />
                         )}
-                    </TableCell>
+                    </Cell>
                 </>
             ) : (
                 <>
-                    <TableCell>
-                        If this threshold value is exceeded in the chat, then a <strong>'Too Complicated'</strong> response will be executed.
-                    </TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
+                    <Cell>
+                        <Typography align="center" style={{ paddingTop: "10px" }}>
+                            If this threshold value is exceeded in the chat,
+                        </Typography>
+                        <Typography align="center">then a 'Too Complicated' response will be executed.</Typography>
+                    </Cell>
+                    <Cell></Cell>
+                    <Cell></Cell>
                 </>
             )}
-            <TableCell>
-                {tableData.length > 1 && row.rowOrder === tableData.length - 1 && (
+            <Cell>
+                {itemLength > 1 && row.rowOrder === itemLength - 1 && (
                     <FormControlLabel label="Trigger Too Complicated" control={<Checkbox checked={row.triggerFallback} onChange={onTriggerFallbackChange} />} />
                 )}
-            </TableCell>
+            </Cell>
         </TableRow>
     );
 };

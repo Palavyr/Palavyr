@@ -6,7 +6,7 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { EnquiriesTableRow } from "./EnquiriesRow";
 import { EnquiriesHeader } from "./EnquiriesHeader";
 import { HeaderStrip } from "@common/components/HeaderStrip";
-import { OsTypeToggle } from "../responseConfiguration/areaSettings/enableIntents/OsTypeToggle";
+import { OsTypeToggle } from "../responseConfiguration/intentSettings/enableIntents/OsTypeToggle";
 import { NoDataAvailable } from "./NoDataMessage";
 import Pagination from "@material-ui/lab/Pagination";
 import { EnquiryBehaviorButtons } from "./EnquiryBehaviorButtons";

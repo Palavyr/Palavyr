@@ -191,7 +191,7 @@ export type Settings = {
     isVerified: boolean;
     awaitingVerification: boolean;
     intentName: string;
-    areaTitle: string;
+    intentTitle: string;
     subject: string;
     isEnabled: boolean;
     useIntentFallbackEmail: boolean;

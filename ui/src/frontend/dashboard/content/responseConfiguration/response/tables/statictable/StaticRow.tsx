@@ -7,8 +7,8 @@ import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
-import { TableDeleteButton } from "../dynamicTable/tableComponents/PercentOfThreshold/TableDeleteButton";
-import { TableButton } from "../dynamicTable/tableComponents/SelectOneFlat/TableButton";
+import { TableDeleteButton } from "../dynamicTable/tableComponents/PercentOfThresholdTable/TableDeleteButton";
+import { TableButton } from "../dynamicTable/tableComponents/CategorySelectTable/TableButton";
 
 type styleProp = {
     index: number;

@@ -43,8 +43,8 @@ export const transparentize = (value, opacity) => {
         .rgbString();
 };
 
-const calculateRadarData = (areaDetails: IntentNameDetails, enquiries: EnquiryResources) => {
-    const intents = areaDetails.map(x => x.intentName);
+const calculateRadarData = (intentDetails: IntentNameDetails, enquiries: EnquiryResources) => {
+    const intents = intentDetails.map(x => x.intentName);
     const enquiryIntents = enquiries.map(x => x.intentName);
 
     const counts: number[] = [];

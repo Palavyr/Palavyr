@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Requests;
@@ -10,7 +9,7 @@ namespace Palavyr.Core.Data.Entities.PricingStrategyTables
     {
         private const string PrettyName = "Two Nested Categories";
 
-        
+
         public string AccountId { get; set; }
         public string IntentId { get; set; }
         public string TableId { get; set; }
@@ -108,7 +107,6 @@ namespace Palavyr.Core.Data.Entities.PricingStrategyTables
         {
             return PrettyName;
         }
-
 
 
         public string GetTableType()

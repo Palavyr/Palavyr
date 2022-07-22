@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
+import { CategorySelectModifier } from "./CategorySelectModifier";
 import { TableContainer, Paper, Table, Button, FormControlLabel, Checkbox, AccordionActions, makeStyles } from "@material-ui/core";
-import { SelectOneFlatHeader } from "./SelectOneFlatHeader";
-import { SelectOneFlatBody } from "./SelectOneFlatBody";
+import { CategorySelectHeader } from "./CategorySelectHeader";
+import { CategorySelectBody } from "./CategorySelectBody";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { PricingStrategy, PricingStrategyProps } from "@Palavyr-Types";
 import AddBoxIcon from "@material-ui/icons/AddBox";
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteAction, tables, tableIndex, availablePricingStrategyOptions, tableNameMap, unitTypes, inUse, table }: PricingStrategyProps) => {
+export const CategorySelect = ({ showDebug, tableId, setTables, intentId, deleteAction, tables, tableIndex, availablePricingStrategyOptions, tableNameMap, unitTypes, inUse, table }: PricingStrategyProps) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
@@ -70,7 +70,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteA
         })();
     }, [intentId, localTable?.tableMeta.tableType]);
 
-    const modifier = new SelectOneFlatModifier(updatedRows => {
+    const modifier = new CategorySelectModifier(updatedRows => {
         if (localTable) {
             localTable.tableRows = updatedRows;
         }
@@ -96,7 +96,7 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteA
                 const newTableMeta = await repository.Configuration.Tables.Dynamic.ModifyPricingStrategyMeta(currentMeta);
                 const updatedRows = await repository.Configuration.Tables.Dynamic.SavePricingStrategy<CategorySelectTableRowResource[]>(
                     intentId,
-                    PricingStrategyTypes.SelectOneFlat,
+                    PricingStrategyTypes.CategorySelect,
                     tableRows,
                     localTable.tableMeta.tableId,
                     localTable.tableMeta.tableTag
@@ -127,8 +127,8 @@ export const SelectOneFlat = ({ showDebug, tableId, setTables, intentId, deleteA
             />
             <TableContainer className={cls.tableStyles} component={Paper}>
                 <Table className={cls.table}>
-                    <SelectOneFlatHeader />
-                    <SelectOneFlatBody tableData={localTable.tableRows} modifier={modifier} />
+                    <CategorySelectHeader />
+                    <CategorySelectBody tableData={localTable.tableRows} modifier={modifier} />
                 </Table>
             </TableContainer>
             <AccordionActions>

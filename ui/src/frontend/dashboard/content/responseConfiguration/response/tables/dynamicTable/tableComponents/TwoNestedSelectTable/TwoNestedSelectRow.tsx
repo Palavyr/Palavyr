@@ -2,12 +2,12 @@ import React from "react";
 import { TableRow, Button, makeStyles, TextField } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { TwoNestedCategoryResource } from "@Palavyr-Types";
-import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
+import { TwoNestedCategoriesModifier } from "./TwoNestedSelectModifier";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 import { Cell } from "../../components/Cell";
-import { TableButton } from "../SelectOneFlat/TableButton";
+import { TableButton } from "../CategorySelectTable/TableButton";
 
 export interface TwoNestedCategoriesRowProps {
     index: number;

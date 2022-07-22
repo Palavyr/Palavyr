@@ -10,7 +10,7 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useContext } from "react";
 import { makeStyles, Paper } from "@material-ui/core";
 import { PricingStrategyConfiguration } from "./tables/dynamicTable/PricingStrategyTableConfiguration";
-import { OsTypeToggle } from "../areaSettings/enableAreas/OsTypeToggle";
+import { OsTypeToggle } from "../intentSettings/enableIntents/OsTypeToggle";
 
 const getStaticTableValidationResult = (staticTables: StaticTableMetaResources): StaticTableValidationResult => {
     let validationResult = true;

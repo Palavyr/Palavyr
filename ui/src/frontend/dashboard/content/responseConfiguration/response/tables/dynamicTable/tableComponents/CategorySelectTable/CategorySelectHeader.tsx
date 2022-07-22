@@ -32,7 +32,7 @@ const TableCell = (props: TableCellProps) => {
     return <TC classes={{ root: cls.cellInner }} className={cls.cellInner} {...props} />;
 };
 
-export const SelectOneFlatHeader = () => {
+export const CategorySelectHeader = () => {
     const cls = useStyles();
 
     return (

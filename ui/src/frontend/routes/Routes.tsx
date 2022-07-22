@@ -31,7 +31,7 @@ import Auth from "frontend/auth/Auth";
 import { EmailConfiguration } from "frontend/dashboard/content/responseConfiguration/uploadable/emailTemplates/EmailConfiguration";
 import { ResponseConfiguration } from "frontend/dashboard/content/responseConfiguration/response/ResponseConfiguration";
 import { AttachmentConfiguration } from "frontend/dashboard/content/responseConfiguration/uploadable/attachments/AttachmentConfiguration";
-import { IntentSettings } from "@frontend/dashboard/content/responseConfiguration/areaSettings/IntentSettings";
+import { IntentSettings } from "@frontend/dashboard/content/responseConfiguration/intentSettings/IntentSettings";
 import { ConfigurationPreview } from "frontend/dashboard/content/responseConfiguration/previews/ConfigurationPreview";
 import { IntentContent } from "@frontend/dashboard/content/responseConfiguration/IntentContent";
 import { ChangeCompanyName } from "frontend/dashboard/content/settings/account/ChangeCompanyName";
@@ -72,7 +72,7 @@ import { WidgetDesignerPage } from "frontend/dashboard/content/designer/WidgetDe
 import { AppPageView } from "@common/Analytics/gtag";
 import { IntentSettingsHelp } from "@frontend/dashboard/content/help/IntentSettingsHelp";
 import { SignupPage } from "@landing/SignupPage";
-import { EnableIntents } from "@frontend/dashboard/content/responseConfiguration/areaSettings/enableIntents/EnableIntents";
+import { EnableIntents } from "@frontend/dashboard/content/responseConfiguration/intentSettings/enableIntents/EnableIntents";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {

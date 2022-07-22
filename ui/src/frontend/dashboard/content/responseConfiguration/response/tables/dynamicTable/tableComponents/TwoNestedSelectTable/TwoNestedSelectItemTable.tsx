@@ -4,9 +4,9 @@ import { takeNCharacters } from "@common/utils/textSlicing";
 import { Button, makeStyles, TableBody, Table } from "@material-ui/core";
 import React from "react";
 import { ButtonBar } from "../../components/SaveBar";
-import { TwoNestedCategoriesHeader } from "./TwoNestedCategoriesHeader";
-import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
-import { TwoNestedCategoriesRow } from "./TwoNestedCategoriesRow";
+import { TwoNestedCategoriesHeader } from "./TwoNestedSelectHeader";
+import { TwoNestedCategoriesModifier } from "./TwoNestedSelectModifier";
+import { TwoNestedCategoriesRow } from "./TwoNestedSelectRow";
 
 interface ITwoNestedCategoriesItemTable {
     tableData: TwoNestedCategoryResource[];

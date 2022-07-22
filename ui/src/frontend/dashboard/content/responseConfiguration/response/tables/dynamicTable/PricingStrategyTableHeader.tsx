@@ -38,7 +38,7 @@ export const PricingStrategyHeader = ({ availablePricingStrategyOptions, unitTyp
     }, [localTable, unitTypes]);
 
     const onPricingStrategyChange = async (_: any, value: PricingStrategyTableTypeResource) => {
-        // this needs to map to the form used in the table dataresponse format (e.g. SelectOneFlat)
+        // this needs to map to the form used in the table dataresponse format (e.g. CategorySelect)
 
         localTable.tableMeta.tableType = value.tableType;
         localTable.tableMeta.prettyName = value.prettyName;

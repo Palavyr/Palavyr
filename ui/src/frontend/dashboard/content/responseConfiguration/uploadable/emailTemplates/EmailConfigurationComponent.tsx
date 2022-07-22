@@ -34,7 +34,7 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
     const [loaded, setLoaded] = useState<boolean>(false);
     const [emailTemplate, setEmailTemplate] = useState<string>("");
     const [modalState, setmodalState] = useState<boolean>(false);
-    const [areaSubjectState, setIntentSubjectState] = useState<string>("");
+    const [intentSubjectState, setIntentSubjectState] = useState<string>("");
 
     const toggleModal = () => {
         setmodalState(!modalState);
@@ -68,7 +68,7 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
 
     const onIntentSubjectChange = (event: any) => setIntentSubjectState(event.target.value);
     const onSaveIntentSubject = async () => {
-        const updatedSubject = await saveEmailSubject(areaSubjectState);
+        const updatedSubject = await saveEmailSubject(intentSubjectState);
         setIntentSubjectState(updatedSubject);
         return true;
     };
@@ -94,7 +94,7 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
 
     return (
         <>
-            <EmailSubject subject={areaSubjectState} accordianTitle="Email Subject Line" onChange={onIntentSubjectChange}>
+            <EmailSubject subject={intentSubjectState} accordianTitle="Email Subject Line" onChange={onIntentSubjectChange}>
                 <div className={cls.saveOrCancel}>
                     <SaveOrCancel onSave={onSaveIntentSubject} onCancel={loadIntentSubject} />
                 </div>

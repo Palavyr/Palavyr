@@ -10,6 +10,5 @@
         public bool PerPerson { get; set; }
         public int TableOrder { get; set; }
         public string IntentId { get; set; }
-        public int? Id { get; set; }
     }
 }

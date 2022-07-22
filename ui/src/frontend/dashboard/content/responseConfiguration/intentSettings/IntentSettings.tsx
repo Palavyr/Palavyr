@@ -7,8 +7,8 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { HeaderStrip } from "@common/components/HeaderStrip";
-import { OsTypeToggle } from "./enableIntents/OsTypeToggle";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { OsTypeToggle } from "./enableIntents/OsTypeToggle";
 
 const useStyles = makeStyles(theme => ({
     alert: {
@@ -47,7 +47,7 @@ export const IntentSettings = () => {
         isVerified: false,
         awaitingVerification: false,
         intentName: "",
-        areaTitle: "",
+        intentTitle: "",
         subject: "",
         isEnabled: false,
     });
@@ -145,7 +145,7 @@ export const IntentSettings = () => {
                         classNames={cls.paperColor}
                         fullWidth
                         alertNode={
-                            <Alert className={cls.alert} severity={settings.areaTitle === "Change this in the intentSettings." || settings.areaTitle === "" ? "error" : "success"}>
+                            <Alert className={cls.alert} severity={settings.intentTitle === "Change this in the intentSettings." || settings.intentTitle === "" ? "error" : "success"}>
                                 <AlertTitle>
                                     <Typography variant="h5">Update intent display Name</Typography>
                                 </AlertTitle>
@@ -153,7 +153,7 @@ export const IntentSettings = () => {
                             </Alert>
                         }
                         placeholder="New intentName (Widget)"
-                        currentValue={settings.areaTitle}
+                        currentValue={settings.intentTitle}
                         onClick={handleIntentNameChange}
                         clearVal={false}
                     />
@@ -167,7 +167,7 @@ export const IntentSettings = () => {
                         alertNode={
                             <Alert className={cls.alert} severity={emailSeverity()}>
                                 <AlertTitle>
-                                    <Typography variant="h5">{settings.isVerified ? "Email Verified" : "Verify the email used to send responses for this area"}</Typography>
+                                    <Typography variant="h5">{settings.isVerified ? "Email Verified" : "Verify the email used to send responses for this intent"}</Typography>
                                 </AlertTitle>
                                 Submit a new email to be used for responses.
                             </Alert>

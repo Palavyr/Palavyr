@@ -6,16 +6,16 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { DialogContent, makeStyles } from "@material-ui/core";
 import { AddOrCancel } from "@common/components/AddOrCancel";
 import { DashboardContext } from "../DashboardContext";
-import { ADD_NEW_AREA_BACKDROP_zINDEX, ADD_NEW_AREA_DIALOG_BOX_zINDEX } from "@constants";
+import { ADD_NEW_INTENT_BACKDROP_zINDEX, ADD_NEW_INTENT_DIALOG_BOX_zINDEX } from "@constants";
 import { IntentResource } from "@common/types/api/EntityResources";
 
 const useStyles = makeStyles(theme => ({
     dialog: {
-        zIndex: ADD_NEW_AREA_DIALOG_BOX_zINDEX,
+        zIndex: ADD_NEW_INTENT_DIALOG_BOX_zINDEX,
     },
     backdrop: {
         "& .MuiBackdrop-root": {
-            zIndex: ADD_NEW_AREA_BACKDROP_zINDEX,
+            zIndex: ADD_NEW_INTENT_BACKDROP_zINDEX,
         },
 
         backgroundColor: theme.palette.primary.dark,

@@ -1,12 +1,12 @@
-import { BasicThreshold } from "./tableComponents/BasicThreshold/BasicThreshold";
-import { CategoryNestedThreshold } from "./tableComponents/CategoryNestedThreshold/CategoryNestedThreshold";
-import { PercentOfThreshold } from "./tableComponents/PercentOfThreshold/PercentOfThreshold";
-import { SelectOneFlat } from "./tableComponents/SelectOneFlat/SelectOneFlat";
-import { TwoNestedCategories } from "./tableComponents/TwoNestedCategories/TwoNestedCategories";
+import { BasicThreshold } from "./tableComponents/SimpleThresholdTable/SimpleThreshold";
+import { CategoryNestedThreshold } from "./tableComponents/CategoryNestedThresholdTable/CategoryNestedThreshold";
+import { PercentOfThreshold } from "./tableComponents/PercentOfThresholdTable/PercentOfThreshold";
+import { CategorySelect } from "./tableComponents/CategorySelectTable/CaetgorySelect";
+import { TwoNestedCategories } from "./tableComponents/TwoNestedSelectTable/TwoNestedSelect";
 
 //These must be kept in sync
 export enum PricingStrategyTypes {
-    SelectOneFlat = "SelectOneFlat",
+    CategorySelect = "CategorySelect",
     PercentOfThreshold = "PercentOfThreshold",
     BasicThreshold = "BasicThreshold",
     TwoNestedCategory = "TwoNestedCategory",
@@ -14,7 +14,7 @@ export enum PricingStrategyTypes {
 }
 
 export const PricingStrategyComponentMap = {
-    [PricingStrategyTypes.SelectOneFlat]: SelectOneFlat,
+    [PricingStrategyTypes.CategorySelect]: CategorySelect,
     [PricingStrategyTypes.PercentOfThreshold]: PercentOfThreshold,
     [PricingStrategyTypes.BasicThreshold]: BasicThreshold,
     [PricingStrategyTypes.TwoNestedCategory]: TwoNestedCategories,

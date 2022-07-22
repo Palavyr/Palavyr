@@ -8,7 +8,6 @@ namespace Palavyr.Core.Resources
         public string ConversationId { get; set; }
         public FileAssetResource FileAssetResource { get; set; }
         public string TimeStamp { get; set; }
-        public string AccountId { get; set; }
         public string IntentName { get; set; }
         public string EmailTemplateUsed { get; set; }
         public bool Seen { get; set; }

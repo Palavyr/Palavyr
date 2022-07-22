@@ -1,8 +1,7 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core";
+import { CardActionArea, makeStyles } from "@material-ui/core";
 import { PalavyrCard } from "@material/surface/PalavyrCard";
 
-import CardActionIntent from "@material-ui/core/CardActionIntent";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -62,14 +61,14 @@ export const IntentActivityCard = ({ activityResource, onClick }: ActivityCardPr
     const cls = useStyles();
     return (
         <PalavyrCard className={cls.root}>
-            <CardActionIntent onClick={onClick}>
+            <CardActionArea onClick={onClick}>
                 <CardMedia component="img" alt="AnimatedLines" height="140" image={AnimatedLines} title="Animated Lines" />
                 <CardContent>
                     <PalavyrText align="center" gutterBottom variant="h5" component="h2">
                         {activityResource.intentName}
                     </PalavyrText>
                 </CardContent>
-            </CardActionIntent>
+            </CardActionArea>
             <CardActions className={cls.infoContainer}>
                 <MiniTable header="Started" content={activityResource.numRecords} />
                 <div className={cls.sepBar} />

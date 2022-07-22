@@ -45,7 +45,7 @@ export const EnableIntents = () => {
         const intentData = await repository.Intent.GetAllIntents();
         const intentIds = intentData.map((x: IntentResource) => {
             return {
-                IntentId: x.intentId,
+                intentId: x.intentId,
                 isEnabled: x.isEnabled,
                 intentName: x.intentName,
             };

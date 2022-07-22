@@ -2,7 +2,7 @@ import { SelectedOption } from "@common/types/widget/widget";
 
 export const getSelectedOption = (IntentId: string) => {
     return {
-        areaDisplay: "An intentName",
+        intentDisplay: "An intentName",
         IntentId: IntentId,
     };
 };
