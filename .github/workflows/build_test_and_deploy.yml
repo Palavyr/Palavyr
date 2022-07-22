@@ -1,0 +1,44 @@
+# name: Run Tests and push packages to Octopus on merge to main
+# on:
+#   push:
+#     branches:
+#       - main
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 15
+
+#     steps:
+
+#     - name: Generate build number
+#       id: buildnumber
+#       uses: einaregilsson/build-number@v3
+#       with:
+#         token: ${{secrets.github_token}}
+
+#     - uses: actions/checkout@v2
+#     - name: Setup dotnet
+#       uses: actions/setup-dotnet@v1
+#       with:
+#         dotnet-version: 6.0.x
+
+#     - name: Checkout
+#       uses: actions/checkout@v2
+
+#     - name: Verify commit exists in origin/main
+#       run: echo "Going to use ${{ steps.buildnumber.outputs.build_number }} for the package Id."
+
+#     - name: Set VERSION variable from tag
+#       run: echo "VERSION=0.0.${{ steps.buildnumber.outputs.build_number }}" >> $GITHUB_ENV
+
+#     - name: Build
+#       run: dotnet build ./server/Palavyr.API/Palavyr.API.csproj --configuration Release /p:Version=${VERSION}-pull-request
+
+#     - name: Test Pure
+#       run: dotnet test ./server/Palavyr.API/Palavyr.API.csproj --verbosity normal
+
+#     - name: Test Components
+#       run: dotnet test ./server/Palavyr.API/Palavyr.API.csproj --verbosity normal
+
+#     - name: Test Integration
+#       run: dotnet test ./server/Palavyr.API/Palavyr.API.csproj --verbosity normal

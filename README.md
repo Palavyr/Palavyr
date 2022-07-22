@@ -9,6 +9,18 @@ The target market for Palavyr is Law firms. Firms tend to have enquiries that ar
 
 Palavyr allows any law firm to integrate such a chat bot, without having to pay engineers thousands of dollars to create it.
 
+
+# TODO Updates
+
+To test github actions locally:
+ - https://github.com/nektos/act
+
+.e.g act pull_request -W ./.github/workflows/server_PR_checks.yml -j build-frontend
+This will trigger a pull_request, executing the given yml, and then specifically execute the build-frontend job. Too easy.
+
+
+
+
 ## Project organization
 
 Palavyr includes 2 subprojects:

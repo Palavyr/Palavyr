@@ -6,7 +6,7 @@ using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators;
+using Palavyr.Core.Handlers.Validators.ResourceValidators.PricingStrategyResourceValidators;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Constant;

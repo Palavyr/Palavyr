@@ -4,7 +4,7 @@ using FluentValidation;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.PricingStrategyTableServices;
 
-namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
+namespace Palavyr.Core.Handlers.Validators.ResourceValidators.PricingStrategyResourceValidators
 {
     public class CategorySelectResourceValidator : AbstractValidator<PricingStrategyTableDataResource<CategorySelectTableRowResource>>
     {
