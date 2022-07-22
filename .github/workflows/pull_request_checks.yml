@@ -23,7 +23,7 @@ jobs:
           dotnet-version: 6.0.x
 
       - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Verify commit exists in origin/main
         run: echo "Going to use ${{ steps.buildnumber.outputs.build_number }} for the package Id."
@@ -46,7 +46,6 @@ jobs:
       - name: Zip server into a packaged
         run: zip ./server palavyr.server.{VERSION}.zip
 
-      - uses: actions/checkout@v3
       - name: Install Octopus CLI 🐙
         uses: OctopusDeploy/install-octopus-cli-action@v1
         with:
@@ -65,7 +64,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Setup
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v1
 
       - name: Goto working dir, print its name, install the frontend npm packages, then build => ./dist-frontend
@@ -94,10 +93,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
 
       - name: Goto working dir, print its name, install the widget npm packages, then build => ./dist-widget
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v1
         # working-directory: ./ui
       - run: echo "---------------"
       - run: pwd

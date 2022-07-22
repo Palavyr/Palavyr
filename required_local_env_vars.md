@@ -1,7 +1,7 @@
 Palavyr_AWS__AccessKey
 Palavyr_AWS__Region
-Palavyr_AWS__SecretKey
 Palavyr_ConnectionString
 Palavyr_Environment
+Palavyr_AWS__SecretKey
 Palavyr_JWT__SecretKey
 Palavyr_STRIPE__SecretKey
