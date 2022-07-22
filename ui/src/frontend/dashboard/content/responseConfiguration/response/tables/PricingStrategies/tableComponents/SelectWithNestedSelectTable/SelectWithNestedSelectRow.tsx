@@ -2,7 +2,7 @@ import React from "react";
 import { TableRow, Button, makeStyles, TextField } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { TwoNestedCategoryResource } from "@Palavyr-Types";
-import { TwoNestedCategoriesModifier } from "./TwoNestedSelectModifier";
+import { TwoNestedCategoriesModifier } from "./SelectWithNestedSelectModifier";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";

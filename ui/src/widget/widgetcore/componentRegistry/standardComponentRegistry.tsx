@@ -53,7 +53,6 @@ const useStyles = makeStyles(theme => ({
         },
     },
     inputLabel: (props: WidgetPreferencesResource) => ({
-        // borderBottom: "1px solid " + props.chatFontColor,
         fontFamily: props.fontFamily,
         color: props.chatFontColor,
         "& .MuiFormLabel-root": {

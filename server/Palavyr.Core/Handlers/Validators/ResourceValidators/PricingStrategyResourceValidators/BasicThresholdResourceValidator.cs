@@ -16,7 +16,6 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                     {
                         r.RuleFor(x => x.Range).NotNull();
                         r.RuleFor(x => x.Threshold).NotNull().GreaterThanOrEqualTo(0);
-                        r.RuleFor(x => x.AccountId).NotEmpty();
                         r.RuleFor(x => x.IntentId).NotEmpty();
                         r.RuleFor(x => x.ItemName).NotEmpty();
                         r.RuleFor(x => x.RowId).NotEmpty();

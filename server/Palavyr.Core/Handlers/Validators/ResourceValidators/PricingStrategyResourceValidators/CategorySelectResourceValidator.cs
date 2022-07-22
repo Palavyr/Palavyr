@@ -6,9 +6,9 @@ using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 {
-    public class SelectOneFlatResourceValidator : AbstractValidator<PricingStrategyTableDataResource<CategorySelectTableRowResource>>
+    public class CategorySelectResourceValidator : AbstractValidator<PricingStrategyTableDataResource<CategorySelectTableRowResource>>
     {
-        public SelectOneFlatResourceValidator()
+        public CategorySelectResourceValidator()
         {
             RuleFor(c => c.TableTag).NotEmpty().WithMessage("A table tag must be provided");
             
@@ -18,7 +18,6 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                     {
                         r.RuleFor(x => x.Category).NotEmpty();
                         r.RuleFor(x => x.Range).NotNull();
-                        r.RuleFor(x => x.AccountId).NotEmpty();
                         r.RuleFor(x => x.IntentId).NotEmpty();
                         r.RuleFor(x => x.RowOrder).NotNull().GreaterThanOrEqualTo(0);
                         r.RuleFor(x => x.TableId).NotEmpty();

@@ -2,8 +2,8 @@ import { TableGroup } from "@Palavyr-Types";
 import { groupBy } from "lodash";
 import React from "react";
 import { IPricingStrategyBody, TwoNestedCategoryResource } from "@Palavyr-Types";
-import { TwoNestedCategoriesItemTable } from "./TwoNestedSelectItemTable";
-import { TwoNestedCategoriesModifier } from "./TwoNestedSelectModifier";
+import { TwoNestedCategoriesItemTable } from "./SelectWithNestedSelectItemTable";
+import { TwoNestedCategoriesModifier } from "./SelectWithNestedSelectModifier";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { makeStyles } from "@material-ui/core";
 

@@ -1,15 +1,15 @@
 import React, { useState, useCallback, useEffect, ChangeEvent } from "react";
 import { StaticTableMetaResource, StaticTableMetaResources, StaticTableRowResource, StaticTableValidationResult } from "@Palavyr-Types";
-import { StaticTablesModifier } from "./tables/statictable/staticTableModifier";
+import { StaticTablesModifier } from "./tables/Statictables/staticTableModifier";
 import { LogueModifier } from "./logueModifier";
 import { cloneDeep } from "lodash";
 import { ExpandableTextBox } from "@common/components/ExpandableTextBox";
-import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
+import { StaticTableConfiguration } from "./tables/Statictables/StaticFeeTableConfiguration";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useContext } from "react";
 import { makeStyles, Paper } from "@material-ui/core";
-import { PricingStrategyConfiguration } from "./tables/dynamicTable/PricingStrategyTableConfiguration";
+import { PricingStrategyConfiguration } from "./tables/PricingStrategies/PricingStrategyTableConfiguration";
 import { OsTypeToggle } from "../intentSettings/enableIntents/OsTypeToggle";
 
 const getStaticTableValidationResult = (staticTables: StaticTableMetaResources): StaticTableValidationResult => {

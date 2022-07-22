@@ -2,7 +2,7 @@ import { BasicThreshold } from "./tableComponents/SimpleThresholdTable/SimpleThr
 import { CategoryNestedThreshold } from "./tableComponents/CategoryNestedThresholdTable/CategoryNestedThreshold";
 import { PercentOfThreshold } from "./tableComponents/PercentOfThresholdTable/PercentOfThreshold";
 import { CategorySelect } from "./tableComponents/CategorySelectTable/CaetgorySelect";
-import { TwoNestedCategories } from "./tableComponents/TwoNestedSelectTable/TwoNestedSelect";
+import { TwoNestedCategories } from "./tableComponents/SelectWithNestedSelectTable/SelectWithNestedSelect";
 
 //These must be kept in sync
 export enum PricingStrategyTypes {

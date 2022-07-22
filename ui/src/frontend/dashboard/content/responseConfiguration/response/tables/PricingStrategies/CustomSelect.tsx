@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, FormControl, InputLabel, Select, MenuItem, FormHelperText, Tooltip } from "@material-ui/core";
+import { makeStyles, FormControl, Select, MenuItem, FormHelperText, Tooltip } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import classNames from "classnames";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
