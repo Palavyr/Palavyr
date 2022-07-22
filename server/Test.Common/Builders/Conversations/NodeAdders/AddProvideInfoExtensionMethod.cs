@@ -1,13 +1,13 @@
 ﻿using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Test.Common.Constants;
 
 namespace Test.Common.Builders.Conversations.NodeAdders
 {
     public static class AddProvideInfoExtensionMethod
     {
-        public static SingleNodeReturnObject AddProvideInfo(this ConversationNode previousNode, string areaId = DefaultConstants.AreaIdentifier, string accountId = DefaultConstants.AccountId)
+        public static SingleNodeReturnObject AddProvideInfo(this ConversationNode previousNode, string intentId = DefaultConstants.IntentId, string accountId = DefaultConstants.AccountId)
         {
             var thisNodesId = StaticGuidUtils.CreateNewId();
             previousNode.AttachNewChildId(thisNodesId);
@@ -16,13 +16,13 @@ namespace Test.Common.Builders.Conversations.NodeAdders
                 thisNodesId,
                 DefaultNodeTypeOptions.ProvideInfo.StringName,
                 "",
-                areaId,
+                intentId,
                 "",
                 "",
                 "",
                 accountId,
                 DefaultNodeTypeOptions.ProvideInfo.StringName,
-                NodeTypeCode.II,
+                NodeTypeCodeEnum.II,
                 false,
                 false,
                 false,

@@ -1,11 +1,11 @@
 ﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Sessions;
-using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Mappers
 {
@@ -13,18 +13,16 @@ namespace Palavyr.Core.Mappers
     {
         private readonly IAccountIdTransport transport;
         private readonly IGuidUtils guidUtils;
-        private readonly IEntityStore<FileAsset> fileAssetStore;
 
         private string AccountId => transport.AccountId;
 
-        public PdfServerResponseMapper(IAccountIdTransport transport, IGuidUtils guidUtils, IEntityStore<FileAsset> fileAssetStore)
+        public PdfServerResponseMapper(IAccountIdTransport transport, IGuidUtils guidUtils)
         {
             this.transport = transport;
             this.guidUtils = guidUtils;
-            this.fileAssetStore = fileAssetStore;
         }
 
-        public async Task<FileAsset> Map(PdfServerResponse @from)
+        public async Task<FileAsset> Map(PdfServerResponse @from, CancellationToken cancellationToken)
         {
             var extension = Path.GetExtension(@from.FileNameWithExtension);
             if (extension is null) throw new DomainException("File extensions cannot be null in the mapper");

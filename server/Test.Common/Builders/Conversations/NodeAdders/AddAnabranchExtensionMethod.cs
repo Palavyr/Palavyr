@@ -1,13 +1,13 @@
 ﻿using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Test.Common.Constants;
 
 namespace Test.Common.Builders.Conversations.NodeAdders
 {
     public static class AddAnabranchExtensionMethod
     {
-        public static MultiNodeReturnObject AddAnabranch(this ConversationNode previousNode, string[] options, string areaId = DefaultConstants.AreaIdentifier, string accountId = DefaultConstants.AccountId)
+        public static MultiNodeReturnObject AddAnabranch(this ConversationNode previousNode, string[] options, string itentId = DefaultConstants.IntentId, string accountId = DefaultConstants.AccountId)
         {
             var newId = StaticGuidUtils.CreateNewId();
             previousNode.AttachNewChildId(newId);
@@ -16,13 +16,13 @@ namespace Test.Common.Builders.Conversations.NodeAdders
                 StaticGuidUtils.CreateNewId(),
                 DefaultNodeTypeOptions.Anabranch.StringName,
                 "",
-                areaId,
+                itentId,
                 "",
                 "",
                 "",
                 accountId,
                 DefaultNodeTypeOptions.Anabranch.StringName,
-                NodeTypeCode.VI,
+                NodeTypeCodeEnum.VI,
                 false,
                 false,
                 true,

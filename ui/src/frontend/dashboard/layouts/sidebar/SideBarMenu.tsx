@@ -7,11 +7,11 @@ import { ReviewSection } from "./sections/ReviewSection";
 import { AccountSection } from "./sections/AccountSection";
 import { WidgetStateSwitch } from "./WidgetStateSwitch";
 import { OtherSection } from "./sections/OtherSection";
-import { AreaNameDetails } from "@Palavyr-Types";
+import { IntentNameDetails } from "@Palavyr-Types";
 import classNames from "classnames";
 
 export interface ISideBarMenu {
-    areaNameDetails: AreaNameDetails;
+    intentNameDetails: IntentNameDetails;
     menuOpen: boolean;
 }
 
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SideBarMenu = memo(({ areaNameDetails, menuOpen }: ISideBarMenu) => {
+export const SideBarMenu = memo(({ intentNameDetails, menuOpen }: ISideBarMenu) => {
     const history = useHistory();
     const { isActive } = React.useContext(AuthContext);
     const currentPage = history.location.pathname + history.location.search;
@@ -32,7 +32,7 @@ export const SideBarMenu = memo(({ areaNameDetails, menuOpen }: ISideBarMenu) =>
     return (
         <div className={classNames(cls.sidebarlist)}>
             <WidgetStateSwitch isActive={isActive} menuOpen={menuOpen} />
-            <IntentsSection menuOpen={menuOpen} currentPage={currentPage} areaNameDetails={areaNameDetails} isActive={isActive} />
+            <IntentsSection menuOpen={menuOpen} currentPage={currentPage} intentNameDetails={intentNameDetails} isActive={isActive} />
             <Divider />
             <ReviewSection menuOpen={menuOpen} isActive={isActive} />
             <Divider />

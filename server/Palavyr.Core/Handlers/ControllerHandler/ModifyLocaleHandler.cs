@@ -3,7 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -35,7 +36,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             
             var culture = new CultureInfo(newLocale.Name);
 
-            var localeMeta = new LocaleDetails
+            var localeMeta = new LocaleResource
             {
                 CurrentLocale = culture.ConvertToResource(),
                 LocaleMap = culture.CreateLocaleMap()
@@ -47,14 +48,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyLocaleResponse
     {
-        public ModifyLocaleResponse(LocaleDetails response) => Response = response;
-        public LocaleDetails Response { get; set; }
+        public ModifyLocaleResponse(LocaleResource response) => Response = response;
+        public LocaleResource Response { get; set; }
     }
 
-    public class LocaleDetails
+    public class LocaleResource
     {
-        public LocaleResource CurrentLocale { get; set; }
-        public LocaleResource[] LocaleMap { get; set; }
+        public Resources.LocaleResource CurrentLocale { get; set; }
+        public Resources.LocaleResource[] LocaleMap { get; set; }
     }
 
     public class ModifyLocaleRequest : IRequest<ModifyLocaleResponse>

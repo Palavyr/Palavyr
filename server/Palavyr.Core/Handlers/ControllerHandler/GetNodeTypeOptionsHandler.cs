@@ -1,11 +1,12 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -13,35 +14,35 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetNodeTypeOptionsHandler : IRequestHandler<GetNodeTypeOptionsRequest, GetNodeTypeOptionsResponse>
     {
         private readonly ILogger<GetNodeTypeOptionsHandler> logger;
-        private readonly IDynamicTableCompilerOrchestrator dynamicTableCompilerOrchestrator;
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IPricingStrategyTableCompilerOrchestrator pricingStrategyTableCompilerOrchestrator;
+        private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
 
         public GetNodeTypeOptionsHandler(
             ILogger<GetNodeTypeOptionsHandler> logger,
-            IDynamicTableCompilerOrchestrator dynamicTableCompilerOrchestrator,
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore)
+            IPricingStrategyTableCompilerOrchestrator pricingStrategyTableCompilerOrchestrator,
+            IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore)
         {
             this.logger = logger;
-            this.dynamicTableCompilerOrchestrator = dynamicTableCompilerOrchestrator;
-            this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.pricingStrategyTableCompilerOrchestrator = pricingStrategyTableCompilerOrchestrator;
+            this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
         }
 
         public async Task<GetNodeTypeOptionsResponse> Handle(GetNodeTypeOptionsRequest request, CancellationToken cancellationToken)
         {
-            var dynamicTableMetas = await dynamicTableMetaStore.GetMany(request.IntentId, s => s.AreaIdentifier);
-            var dynamicTableData = await dynamicTableCompilerOrchestrator.CompileTablesToConfigurationNodes(dynamicTableMetas, request.IntentId);
+            var pricingStrategyTableMetas = await pricingStrategyTableMetaStore.GetMany(request.IntentId, s => s.IntentId);
+            var pricingStrategyTableData = await pricingStrategyTableCompilerOrchestrator.CompileTablesToConfigurationNodes(pricingStrategyTableMetas, request.IntentId);
             var defaultNodeTypeOptions = DefaultNodeTypeOptions.DefaultNodeTypeOptionsList;
 
-            var fullNodeTypeOptionsList = defaultNodeTypeOptions.AddAdditionalNodes(dynamicTableData);
+            var fullNodeTypeOptionsList = defaultNodeTypeOptions.AddAdditionalNodes(pricingStrategyTableData);
 
-            return new GetNodeTypeOptionsResponse(fullNodeTypeOptionsList.ToArray());
+            return new GetNodeTypeOptionsResponse(fullNodeTypeOptionsList);
         }
     }
 
     public class GetNodeTypeOptionsResponse
     {
-        public GetNodeTypeOptionsResponse(NodeTypeOption[] response) => Response = response;
-        public NodeTypeOption[] Response { get; set; }
+        public GetNodeTypeOptionsResponse(IEnumerable<NodeTypeOptionResource> response) => Response = response;
+        public IEnumerable<NodeTypeOptionResource> Response { get; set; }
     }
 
     public class GetNodeTypeOptionsRequest : IRequest<GetNodeTypeOptionsResponse>

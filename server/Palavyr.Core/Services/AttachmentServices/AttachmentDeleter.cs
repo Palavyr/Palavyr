@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
 using Palavyr.Core.Stores;
@@ -11,18 +11,18 @@ namespace Palavyr.Core.Services.AttachmentServices
     public interface IAttachmentDeleter
     {
         Task DeleteAttachment(string fileId, string intentId);
-        Task DeleteAllAreaAttachments(string areaId);
+        Task DeleteAllAttachmentsForIntent(string intentId);
     }
 
     public class AttachmentDeleter : IAttachmentDeleter
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IFileAssetDeleter fileAssetDeleter;
         private readonly IFileAssetLinker<AttachmentLinker> linker;
 
 
         public AttachmentDeleter(
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IFileAssetDeleter fileAssetDeleter,
             IFileAssetLinker<AttachmentLinker> linker)
         {
@@ -36,7 +36,7 @@ namespace Palavyr.Core.Services.AttachmentServices
             await linker.Unlink(fileId, intentId);
         }
 
-        public async Task DeleteAllAreaAttachments(string intentId)
+        public async Task DeleteAllAttachmentsForIntent(string intentId)
         {
             var intent = await intentStore.GetIntentComplete(intentId);
             var fileIds = intent.AttachmentRecords.Select(att => att.FileId).ToArray();

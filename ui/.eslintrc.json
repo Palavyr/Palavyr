@@ -24,7 +24,7 @@
                 "elements": ["img", "object", "area", "input[type=\"image\"]"],
                 "img": ["Image"],
                 "object": ["Object"],
-                "area": ["Area"],
+                "intent": ["Intent"],
                 "input[type=\"image\"]": ["InputImage"]
             }
         ]

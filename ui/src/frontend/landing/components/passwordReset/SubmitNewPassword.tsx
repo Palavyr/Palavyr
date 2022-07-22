@@ -49,7 +49,7 @@ export const RenderPasswordDialog = () => {
             setIsLoading(true);
             setTimeout(async () => {
                 if (registerPassword !== null) {
-                    const resetResponse = await client.Reset.resetPassword(registerPassword.value, secretKey);
+                    const resetResponse = await client.Reset.ResetPassword(registerPassword.value, secretKey);
                     if (resetResponse.status) {
                         history.push(RESET_PASSWORD_SUCCESS);
                     }

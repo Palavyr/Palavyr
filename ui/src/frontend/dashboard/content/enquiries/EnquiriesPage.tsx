@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
-import { Enquiries, EnquiryRow, SelectionMap, SetState } from "@Palavyr-Types";
+import { EnquiryResource, EnquiryResources, SelectionMap, SetState } from "@Palavyr-Types";
 import { TableContainer, Paper, TableHead, TableBody, Table, makeStyles, CircularProgress } from "@material-ui/core";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { EnquiriesTableRow } from "./EnquiriesRow";
 import { EnquiriesHeader } from "./EnquiriesHeader";
 import { HeaderStrip } from "@common/components/HeaderStrip";
-import { OsTypeToggle } from "../responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
+import { OsTypeToggle } from "../responseConfiguration/intentSettings/enableIntents/OsTypeToggle";
 import { NoDataAvailable } from "./NoDataMessage";
 import Pagination from "@material-ui/lab/Pagination";
 import { EnquiryBehaviorButtons } from "./EnquiryBehaviorButtons";
@@ -42,13 +42,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const paginateEnquiries = (enq: Enquiries, currentPage: number, pageSize: number) => {
+const paginateEnquiries = (enq: EnquiryResources, currentPage: number, pageSize: number) => {
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;
     return enq.slice(start, end);
 };
 
-const updateTotalPages = (setTotalPages: SetState<number>, fullEnquiryList: Enquiries, pageSize: number, showSeen: boolean) => {
+const updateTotalPages = (setTotalPages: SetState<number>, fullEnquiryList: EnquiryResources, pageSize: number, showSeen: boolean) => {
     let totalPages = 0;
     if (showSeen) {
         totalPages = Math.ceil(fullEnquiryList.length / pageSize);
@@ -63,8 +63,8 @@ export const EnquiresPage = () => {
     setViewName("Enquiries");
     const cls = useStyles();
 
-    const [fullEnquiryList, setFullEnquiryList] = useState<Enquiries>([]);
-    const [currentPageList, setCurrentPageList] = useState<Enquiries>([]);
+    const [fullEnquiryList, setFullEnquiryList] = useState<EnquiryResources>([]);
+    const [currentPageList, setCurrentPageList] = useState<EnquiryResources>([]);
     const [selectionMap, setSelectionMap] = useState<SelectionMap>({});
 
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -75,13 +75,13 @@ export const EnquiresPage = () => {
     const [showSeen, setShowSeen] = useState<boolean | null>(null);
     const [allSelected, setAllSelected] = useState<boolean>(false);
 
-    const filterEnqsByShowSeen = (enqs: Enquiries, s: boolean) => (s ? enqs : enqs.filter(e => !e.seen));
+    const filterEnqsByShowSeen = (enqs: EnquiryResources, s: boolean) => (s ? enqs : enqs.filter(e => !e.seen));
 
     const loadEnquiries = useCallback(async () => {
-        const show = await repository.Enquiries.getShowSeenEnquiries();
+        const show = await repository.Enquiries.GetShowSeenEnquiries();
         setShowSeen(show);
 
-        const enqs = await repository.Enquiries.getEnquiries();
+        const enqs = await repository.Enquiries.GetEnquiries();
         setFullEnquiryList(enqs);
 
         const map = {} as SelectionMap;
@@ -116,12 +116,12 @@ export const EnquiresPage = () => {
         }
     }, [currentPage, pageSize, fullEnquiryList, showSeen]);
 
-    const numberPropertyGetter = (enquiry: EnquiryRow) => {
+    const numberPropertyGetter = (enquiry: EnquiryResource) => {
         return enquiry.id;
     };
 
     const toggleShowSeen = async () => {
-        const result = await repository.Enquiries.toggleShowSeenEnquiries();
+        const result = await repository.Enquiries.ToggleShowSeenEnquiries();
         setShowSeen(result);
     };
 
@@ -144,10 +144,10 @@ export const EnquiresPage = () => {
             .filter(x => selectionMap[x])
             .map(x => {
                 selectionMap[x] = !bool;
-                return { ConversationId: x, Seen: bool };
+                return { conversationId: x, seen: bool };
             });
         updates.forEach(x => {
-            const e = fullEnquiryList.find(y => y.conversationId === x.ConversationId);
+            const e = fullEnquiryList.find(y => y.conversationId === x.conversationId);
             if (e) {
                 e.seen = bool;
             }
@@ -193,7 +193,7 @@ export const EnquiresPage = () => {
                         <EnquiriesHeader />
                     </TableHead>
                     <TableBody>
-                        {sortByPropertyNumeric(numberPropertyGetter, currentPageList, true).map((enq: EnquiryRow, index: number) => {
+                        {sortByPropertyNumeric(numberPropertyGetter, currentPageList, true).map((enq: EnquiryResource, index: number) => {
                             if (!showSeen) {
                                 if (!enq.seen) {
                                     return (
@@ -228,7 +228,7 @@ export const EnquiresPage = () => {
             ) : fullEnquiryList.length === 0 ? (
                 <NoDataAvailable text="There are no completed enquires available." />
             ) : (
-                !showSeen && currentPageList.filter((x: EnquiryRow) => x.seen === false).length === 0 && <NoDataAvailable text="There are no unseen enquiries." />
+                !showSeen && currentPageList.filter((x: EnquiryResource) => x.seen === false).length === 0 && <NoDataAvailable text="There are no unseen enquiries." />
             )}
         </div>
     );

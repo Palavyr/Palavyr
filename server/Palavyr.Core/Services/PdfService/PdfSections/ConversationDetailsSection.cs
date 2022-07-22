@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Requests;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.PdfService.PdfSections

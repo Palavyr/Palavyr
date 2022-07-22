@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -11,18 +12,20 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         {
             await Task.CompletedTask;
             var introOptionList = DefaultNodeTypeOptions.IntroNodeOptionList;
-            return new GetIntroductionNodeTypeOptionsResponse(introOptionList.ToArray());
+            return new GetIntroductionNodeTypeOptionsResponse(introOptionList);
         }
     }
 
     public class GetIntroductionNodeTypeOptionsResponse
     {
-        public GetIntroductionNodeTypeOptionsResponse(NodeTypeOption[] response) => Response = response;
-        public NodeTypeOption[] Response { get; set; }
+        public GetIntroductionNodeTypeOptionsResponse(IEnumerable<NodeTypeOptionResource> response) => Response = response;
+        public IEnumerable<NodeTypeOptionResource> Response { get; set; }
     }
 
     public class GetIntroductionNodeTypeOptionsRequest : IRequest<GetIntroductionNodeTypeOptionsResponse>
     {
+        public const string Route = "configure-intro/node-type-options";
+
         public GetIntroductionNodeTypeOptionsRequest(string introId)
         {
             IntroId = introId;

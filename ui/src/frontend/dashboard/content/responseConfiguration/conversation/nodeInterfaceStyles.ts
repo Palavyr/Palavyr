@@ -23,7 +23,7 @@ export const useNodeInterfaceStyles = makeStyles(theme => ({
     card: {
         display: "flex",
         flexDirection: "column",
-        justifyContent: "area",
+        justifyContent: "intent",
     },
     bullet: {
         display: "inline-block",

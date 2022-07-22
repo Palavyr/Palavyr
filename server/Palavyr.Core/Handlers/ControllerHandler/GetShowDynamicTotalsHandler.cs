@@ -1,38 +1,38 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class GetShowDynamicTotalsHandlerHandler : IRequestHandler<GetShowDynamicTotalsHandlerRequest, GetShowDynamicTotalsHandlerResponse>
+    public class GetShowPricingStrategyTotalsHandlerHandler : IRequestHandler<GetShowPricingStrategyTotalsHandlerRequest, GetShowPricingStrategyTotalsHandlerResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
 
-        public GetShowDynamicTotalsHandlerHandler(IEntityStore<Area> intentStore)
+        public GetShowPricingStrategyTotalsHandlerHandler(IEntityStore<Intent> intentStore)
         {
             this.intentStore = intentStore;
         }
 
-        public async Task<GetShowDynamicTotalsHandlerResponse> Handle(GetShowDynamicTotalsHandlerRequest request, CancellationToken cancellationToken)
+        public async Task<GetShowPricingStrategyTotalsHandlerResponse> Handle(GetShowPricingStrategyTotalsHandlerRequest request, CancellationToken cancellationToken)
         {
-            var intent = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
-            return new GetShowDynamicTotalsHandlerResponse(intent.IncludeDynamicTableTotals);
+            var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
+            return new GetShowPricingStrategyTotalsHandlerResponse(intent.IncludePricingStrategyTableTotals);
         }
     }
 
-    public class GetShowDynamicTotalsHandlerResponse
+    public class GetShowPricingStrategyTotalsHandlerResponse
     {
-        public GetShowDynamicTotalsHandlerResponse(bool response) => Response = response;
+        public GetShowPricingStrategyTotalsHandlerResponse(bool response) => Response = response;
         public bool Response { get; set; }
     }
 
-    public class GetShowDynamicTotalsHandlerRequest : IRequest<GetShowDynamicTotalsHandlerResponse>
+    public class GetShowPricingStrategyTotalsHandlerRequest : IRequest<GetShowPricingStrategyTotalsHandlerResponse>
     {
         public string IntentId { get; set; }
 
-        public GetShowDynamicTotalsHandlerRequest(string intentId)
+        public GetShowPricingStrategyTotalsHandlerRequest(string intentId)
         {
             IntentId = intentId;
         }

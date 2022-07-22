@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -25,13 +25,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         }
     }
 
+    public class GetApiKeyRequest : IRequest<GetApiKeyResponse>
+    {
+        public const string Route = "account/settings/api-key";
+    }
+
     public class GetApiKeyResponse
     {
         public GetApiKeyResponse(string response) => Response = response;
         public string Response { get; set; }
-    }
-
-    public class GetApiKeyRequest : IRequest<GetApiKeyResponse>
-    {
     }
 }

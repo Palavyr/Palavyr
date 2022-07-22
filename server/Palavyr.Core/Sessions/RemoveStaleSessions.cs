@@ -2,17 +2,17 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
-using Palavyr.Core.Models.Accounts.Schemas;
 
 
 namespace Palavyr.Core.Sessions
 {
     public class RemoveStaleSessions : IRemoveStaleSessions
     {
-        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<UserSession> sessionStore;
 
-        public RemoveStaleSessions(IEntityStore<Session> sessionStore)
+        public RemoveStaleSessions(IEntityStore<UserSession> sessionStore)
         {
             this.sessionStore = sessionStore;
         }

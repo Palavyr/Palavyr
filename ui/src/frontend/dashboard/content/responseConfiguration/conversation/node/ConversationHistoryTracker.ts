@@ -1,5 +1,5 @@
 import { IPalavyrLinkedList } from "@Palavyr-Types";
-import { IConversationHistoryTracker, NodeTypeOptions, SetState } from "@Palavyr-Types";
+import { IConversationHistoryTracker, NodeTypeOptionResources, SetState } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 
 export class ConversationHistoryTracker implements IConversationHistoryTracker {
@@ -10,9 +10,9 @@ export class ConversationHistoryTracker implements IConversationHistoryTracker {
     private setLinkedNodes: React.Dispatch<React.SetStateAction<IPalavyrLinkedList | undefined>>;
 
     public linkedNodeList: IPalavyrLinkedList;
-    public nodeTypeOptions: NodeTypeOptions;
+    public nodeTypeOptions: NodeTypeOptionResources;
 
-    constructor(setLinkedNodes: SetState<IPalavyrLinkedList>, linkedNodeList: IPalavyrLinkedList | undefined, nodeTypeOptions: NodeTypeOptions) {
+    constructor(setLinkedNodes: SetState<IPalavyrLinkedList>, linkedNodeList: IPalavyrLinkedList | undefined, nodeTypeOptions: NodeTypeOptionResources) {
         this.setLinkedNodes = setLinkedNodes;
         this.nodeTypeOptions = nodeTypeOptions;
         if (linkedNodeList) {

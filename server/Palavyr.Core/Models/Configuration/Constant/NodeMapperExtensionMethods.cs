@@ -1,92 +1,59 @@
-﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Palavyr.Core.Models.Configuration.Schemas;
+﻿using System;
+using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Models.Configuration.Constant
 {
     public static class NodeMapperExtensionMethods
     {
-        public static List<WidgetNodeResource> MapConversationToWidgetNodes(this List<ConversationNode> nodes)
-        {
-            return nodes.Select(x => MapConversationNodeToWidgetNodeResource(x)).ToList();
-        }
-
-        public static WidgetNodeResource MapConversationNodeToWidgetNodeResource(this ConversationNode node)
-        {
-            return new WidgetNodeResource
-            {
-                AreaIdentifier = node.AreaIdentifier,
-                Text = node.Text,
-                NodeType = node.NodeType,
-                NodeComponentType = node.NodeComponentType,
-                NodeId = node.NodeId,
-                NodeChildrenString = node.NodeChildrenString,
-                IsRoot = node.IsRoot,
-                IsCritical = node.IsCritical,
-                OptionPath = node.OptionPath,
-                ValueOptions = node.ValueOptions,
-                IsDynamicTableNode = node.IsDynamicTableNode,
-                DynamicType = node.DynamicType,
-                ResolveOrder = node.ResolveOrder
-            };
-        }
-
         public static ConversationNode MapNodeTypeOptionToConversationNode(
-            this NodeTypeOption nodeTypeOption,
+            this NodeTypeOptionResource nodeTypeOptionResource,
             string nodeId,
             string text,
             bool isRoot,
             string nodeChildrenString,
             string nodeType,
             string accountId,
-            string areaIdentifier,
+            string intentId,
             string optionPath,
-            bool isDynamic,
+            bool isPricingStrategy,
             bool isCritical = false,
-            string? nodeComponentType = null,
-            int? resolveOrder = null,
-            string? dynamicType = null,
+            string nodeComponentType = "",
+            int resolveOrder = 0,
+            string pricingStrategyType = "",
             bool loopbackAnchor = false
         )
         {
-            if (nodeComponentType == null && nodeTypeOption.NodeComponentType == null)
+            if (nodeComponentType == null && nodeTypeOptionResource.NodeComponentType == null)
             {
-                throw new Exception("NodeComponent must be set for dynamic table node types"); // TODO: can I enforce this via the compiler? Rosalyn Analyzer
+                throw new Exception("NodeComponent must be set for pricing strategy table node types"); // TODO: can I enforce this via the compiler? Rosalyn Analyzer
             }
 
-            if (isDynamic && (resolveOrder == null || dynamicType == null))
-            {
-                throw new Exception("Dynamic node types MUST provide a resolve order and dynamic type name.");
-            }
-
-            return new ConversationNode()
+            return new ConversationNode
             {
                 NodeId = nodeId,
                 Text = text,
                 IsRoot = isRoot,
                 NodeChildrenString = nodeChildrenString, //"node-456,node-789",
                 NodeType = nodeType,
-                NodeComponentType = nodeComponentType ?? nodeTypeOption.NodeComponentType,
+                NodeComponentType = nodeComponentType ?? nodeTypeOptionResource.NodeComponentType,
                 OptionPath = optionPath,
-                ValueOptions = string.Join(Delimiters.ValueOptionDelimiter, nodeTypeOption.ValueOptions),
+                ValueOptions = string.Join(Delimiters.ValueOptionDelimiter, nodeTypeOptionResource.ValueOptions),
                 AccountId = accountId,
-                AreaIdentifier = areaIdentifier,
-                IsMultiOptionType = nodeTypeOption.IsMultiOptionType,
-                IsTerminalType = nodeTypeOption.IsTerminalType,
-                IsDynamicTableNode = isDynamic,
+                IntentId = intentId,
+                IsMultiOptionType = nodeTypeOptionResource.IsMultiOptionType,
+                IsTerminalType = nodeTypeOptionResource.IsTerminalType,
+                IsPricingStrategyTableNode = isPricingStrategy,
                 ResolveOrder = resolveOrder,
-                DynamicType = dynamicType,
-                ShouldRenderChildren = nodeTypeOption.ShouldRenderChildren,
-                IsAnabranchType = nodeTypeOption.IsAnabranchType,
-                IsAnabranchMergePoint = nodeTypeOption.IsAnabranchMergePoint,
-                IsMultiOptionEditable = nodeTypeOption.IsMultiOptionEditable,
-                ShouldShowMultiOption = nodeTypeOption.ShouldShowMultiOption,
-                IsCurrency = nodeTypeOption.IsCurrency,
+                PricingStrategyType = pricingStrategyType,
+                ShouldRenderChildren = nodeTypeOptionResource.ShouldRenderChildren,
+                IsAnabranchType = nodeTypeOptionResource.IsAnabranchType,
+                IsAnabranchMergePoint = nodeTypeOptionResource.IsAnabranchMergePoint,
+                IsMultiOptionEditable = nodeTypeOptionResource.IsMultiOptionEditable,
+                ShouldShowMultiOption = nodeTypeOptionResource.ShouldShowMultiOption,
+                IsCurrency = nodeTypeOptionResource.IsCurrency,
                 IsCritical = isCritical,
                 IsLoopbackAnchorType = loopbackAnchor,
-                NodeTypeCode = nodeTypeOption.NodeTypeCode
+                NodeTypeCodeEnum = nodeTypeOptionResource.NodeTypeCodeEnum
             };
         }
     }

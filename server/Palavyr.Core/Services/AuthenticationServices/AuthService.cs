@@ -1,13 +1,12 @@
-#nullable enable
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
@@ -16,13 +15,13 @@ namespace Palavyr.Core.Services.AuthenticationServices
 {
     public interface IAuthService
     {
-        public Task<Credentials> PerformLoginAction(CreateLoginRequest loginCredentialsRequest);
+        public Task<CredentialsResource> PerformLoginAction(CreateLoginRequest loginCredentialsRequest);
     }
 
     public class AuthService : IAuthService
     {
         private readonly IRemoveStaleSessions removeStaleSessions;
-        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<UserSession> sessionStore;
         private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<AuthService> logger;
         private readonly IJwtAuthenticationService jwtAuthService;
@@ -36,7 +35,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
         public AuthService(
             IRemoveStaleSessions removeStaleSessions,
-            IEntityStore<Session> sessionStore,
+            IEntityStore<UserSession> sessionStore,
             IEntityStore<Account> accountStore,
             ILogger<AuthService> logger,
             IJwtAuthenticationService jwtService
@@ -84,14 +83,14 @@ namespace Palavyr.Core.Services.AuthenticationServices
             CouldNot
         }
 
-        public async Task<Credentials> PerformLoginAction(CreateLoginRequest loginCredentialsRequest)
+        public async Task<CredentialsResource> PerformLoginAction(CreateLoginRequest loginCredentialsRequest)
         {
             logger.LogDebug("Requesting account using login credentials...");
             var (account, message) = await RequestAccount(loginCredentialsRequest);
             if (account == null)
             {
                 logger.LogDebug("Login failed -- could not find account ");
-                return Credentials.CreateUnauthenticatedResponse(message);
+                return CredentialsResource.CreateUnauthenticatedResponse(message);
             }
 
             logger.LogDebug("Successfully authenticated using the login credentials...");
@@ -103,14 +102,14 @@ namespace Palavyr.Core.Services.AuthenticationServices
             logger.LogDebug("Creating and adding a new session...");
 
             await removeStaleSessions.CleanSessionDb(account.AccountId);
-            var newSession = Session.CreateNew(token, account.AccountId, account.ApiKey);
+            var newSession = UserSession.CreateNew(token, account.AccountId, account.ApiKey);
             var sessionEntity = await sessionStore.DangerousRawQuery().AddAsync(newSession);
             var session = sessionEntity.Entity;
 
-            logger.LogDebug("Committing the new session to the DB.");
+            logger.LogDebug("Committing the new session to the DB");
 
-            logger.LogDebug("Session saved to DB. Returning auth response.");
-            return Credentials.CreateAuthenticatedResponse(
+            logger.LogDebug("Session saved to DB. Returning auth response");
+            return CredentialsResource.CreateAuthenticatedResponse(
                 session.SessionId,
                 session.ApiKey,
                 token,
@@ -121,7 +120,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
         {
             // update the current active state
             // if the current_period_end plus a few days is in the future, then active stays true
-            logger.LogDebug("Updated current active state given the subscription status.");
+            logger.LogDebug("Updated current active state given the subscription status");
             var periodEndWithBuffer = account.CurrentPeriodEnd.AddDays(GracePeriod); // 5 day grace period if they don't pay.
             if (account.PlanType != Account.PlanTypeEnum.Free && DateTime.Now > periodEndWithBuffer)
             {

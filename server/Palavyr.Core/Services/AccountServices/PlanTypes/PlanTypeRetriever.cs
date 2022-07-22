@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 

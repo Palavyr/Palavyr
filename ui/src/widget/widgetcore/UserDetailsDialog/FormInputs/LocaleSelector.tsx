@@ -1,12 +1,13 @@
 import { makeStyles, Paper, PaperProps, Popper, PopperProps, TextField } from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
-import { LocaleMap, LocaleResource, WidgetPreferences } from "@Palavyr-Types";
+import { LocaleMap, LocaleResource } from "@Palavyr-Types";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import React, { useContext } from "react";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import classNames from "classnames";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 
 export interface LocaleSelectorProps {
     options: LocaleMap;
@@ -15,10 +16,10 @@ export interface LocaleSelectorProps {
 }
 
 const useStyles = makeStyles(theme => ({
-    select: (props: WidgetPreferences) => ( {
+    select: (props: WidgetPreferencesResource) => ({
         backgroundColor: props.selectListColor,
     }),
-    root: (props: WidgetPreferences) => ({
+    root: (props: WidgetPreferencesResource) => ({
         marginTop: "2.2rem",
         background: "none",
         // borderBottom: "1px solid " + props.chatFontColor,
@@ -26,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     paper: {
         backgroundColor: theme.palette.common.white,
     },
-    inputLabel: (props: WidgetPreferences) => ({
+    inputLabel: (props: WidgetPreferencesResource) => ({
         borderBottom: "1px solid " + props.chatFontColor,
         fontFamily: props.fontFamily,
         color: props.chatFontColor,
@@ -51,18 +52,18 @@ const useStyles = makeStyles(theme => ({
         },
     }),
 
-    icon: (prefs: WidgetPreferences) => ({
+    icon: (prefs: WidgetPreferencesResource) => ({
         color: prefs.chatFontColor,
     }),
-    selectListBgColor: (prefs: WidgetPreferences) => ({
+    selectListBgColor: (prefs: WidgetPreferencesResource) => ({
         backgroundColor: prefs.selectListColor,
         fontFamily: prefs.fontFamily,
     }),
-    selectListFontColor: (prefs: WidgetPreferences) => ({
+    selectListFontColor: (prefs: WidgetPreferencesResource) => ({
         fontFamily: prefs.fontFamily,
         color: prefs.listFontColor,
     }),
-    selectbox: (props: WidgetPreferences) => ({
+    selectbox: (props: WidgetPreferencesResource) => ({
         marginTop: "1rem",
         backgroundColor: props.selectListColor,
         // padding: "0px",

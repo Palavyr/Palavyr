@@ -3,20 +3,22 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetIsTerminalTypeHandler : IRequestHandler<GetIsTerminalTypeRequest, GetIsTerminalTypeResponse>
     {
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
+        private readonly IPricingStrategyTypeLister pricingStrategyTypeLister;
         string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";
 
-        public GetIsTerminalTypeHandler(IEntityStore<DynamicTableMeta> dynamicTableMetaStore)
+        public GetIsTerminalTypeHandler(IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore, IPricingStrategyTypeLister pricingStrategyTypeLister)
         {
-            this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
+            this.pricingStrategyTypeLister = pricingStrategyTypeLister;
         }
 
         public async Task<GetIsTerminalTypeResponse> Handle(GetIsTerminalTypeRequest request, CancellationToken cancellationToken)
@@ -29,14 +31,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 }
             }
 
-            // node is a dynamic table node type
+            // node is a pricing strategy table node type
             // Comes in as e.g. SelectOneFlat-234234-324-2342-324
-            foreach (var dynamicTableType in DynamicTableTypes.GetDynamicTableTypes())
+            foreach (var pricingStrategyTableType in pricingStrategyTypeLister.ListPricingStrategies())
             {
-                if (request.NodeType.StartsWith(dynamicTableType.TableType))
+                if (request.NodeType.StartsWith(pricingStrategyTableType.GetTableType()))
                 {
                     var tableId = Regex.Match(request.NodeType, GUIDPattern, RegexOptions.IgnoreCase).Value;
-                    var table = await dynamicTableMetaStore.Get(tableId, s => s.TableId);
+                    var table = await pricingStrategyTableMetaStore.Get(tableId, s => s.TableId);
                     if (table != null)
                     {
                         return new GetIsTerminalTypeResponse(false);

@@ -10,23 +10,21 @@ using Stripe;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class ProcessStripeNotificationWebhookHandler : INotificationHandler<ProcessStripeNotificationWebhookNotification>
+    public class ProcessStripeNotificationWebhookHandler : IRequestHandler<ProcessStripeNotificationWebhookRequest, ProcessStripeNotificationWebhookResponse>
     {
         private readonly ILogger<ProcessStripeNotificationWebhookHandler> logger;
-        private readonly StripeWebhookAuthService stripeWebhookAuthService;
+        private readonly IStripeWebhookAuthService stripeWebhookAuthService;
         private readonly IStripeEventWebhookRoutingService stripeEventWebhookRoutingService;
-        private readonly IHttpContextAccessor httpContextAccessor;
 
         public ProcessStripeNotificationWebhookHandler(
             ILogger<ProcessStripeNotificationWebhookHandler> logger,
-            StripeWebhookAuthService stripeWebhookAuthService,
-            IStripeEventWebhookRoutingService stripeEventWebhookRoutingService,
-            IHttpContextAccessor httpContextAccessor)
+            IStripeWebhookAuthService stripeWebhookAuthService,
+            IStripeEventWebhookRoutingService stripeEventWebhookRoutingService
+        )
         {
             this.logger = logger;
             this.stripeWebhookAuthService = stripeWebhookAuthService;
             this.stripeEventWebhookRoutingService = stripeEventWebhookRoutingService;
-            this.httpContextAccessor = httpContextAccessor;
         }
 
         /// HOW TO USE STRIPE CLI WITH THIS SERVER
@@ -41,12 +39,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         /// 2. The request is forwarded to the stripe CLI WOOT
         /// 3. The ClI then forwards this to the server
         /// 4. The server is running https, so we need to indicate the above url (https://localhost:5001)
-        public async Task Handle(ProcessStripeNotificationWebhookNotification notification, CancellationToken cancellationToken)
+        public async Task<ProcessStripeNotificationWebhookResponse> Handle(ProcessStripeNotificationWebhookRequest request, CancellationToken cancellationToken)
         {
-            var (stripeEvent, signature) = await stripeWebhookAuthService.AuthenticateWebhookRequest(httpContextAccessor.HttpContext);
+            var httpContext = request.HttpContext;
+            var (stripeEvent, signature) = await stripeWebhookAuthService.AuthenticateWebhookRequest(httpContext);
+            
+            
             if (stripeEvent == null)
             {
-                logger.LogDebug("Stripe webhook authentication failed. Check that you are using the correct webhook auth key.");
+                logger.LogDebug("Stripe webhook authentication failed. Check that you are using the correct webhook auth key");
                 throw new AuthenticationException("Stripe webhook request not authenticated.");
             }
 
@@ -55,19 +56,32 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             // https://stripe.com/docs/billing/subscriptions/webhooks
             try
             {
-                logger.LogDebug($"Trying to process a stripe event: {stripeEvent.Type}");
+                logger.LogDebug("Trying to process a stripe event: {StripeEventType}", stripeEvent.Type);
                 await stripeEventWebhookRoutingService.ProcessStripeEvent(stripeEvent, signature, cancellationToken);
+                return new ProcessStripeNotificationWebhookResponse();
             }
             catch (StripeException ex)
             {
-                logger.LogDebug($"Stripe error: {ex.Message}");
+                logger.LogDebug("Stripe error: {StripeError}", ex.Message);
                 throw new DomainException(ex.Message);
             }
         }
     }
 
 
-    public class ProcessStripeNotificationWebhookNotification : INotification
+    public class ProcessStripeNotificationWebhookRequest : IRequest<ProcessStripeNotificationWebhookResponse>
     {
+        public HttpContext HttpContext { get; }
+        public const string Route = "payments/payments-webhook";
+
+        public ProcessStripeNotificationWebhookRequest(HttpContext httpContext)
+        {
+            HttpContext = httpContext;
+        }
+    }
+
+    public class ProcessStripeNotificationWebhookResponse
+    {
+        
     }
 }

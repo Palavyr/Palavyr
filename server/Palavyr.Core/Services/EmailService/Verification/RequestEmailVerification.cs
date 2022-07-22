@@ -26,7 +26,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
 
         public async Task<bool> VerifyEmailAddressAsync(string emailAddress)
         {
-            logger.LogDebug("Attempting to verify email address.");
+            logger.LogDebug("Attempting to verify email address");
 
             bool result;
             try
@@ -42,11 +42,11 @@ namespace Palavyr.Core.Services.EmailService.Verification
             }
             catch (Exception ex)
             {
-                logger.LogDebug($"Exception: {ex.Message}");
+                logger.LogDebug("Exception: {Message}", ex.Message);
                 result = false;
             }
 
-            logger.LogDebug($"Email verification sent: {result.ToString()}");
+            logger.LogDebug("Email verification sent: {Result}", result.ToString());
             return result;
         }
 
@@ -64,11 +64,11 @@ namespace Palavyr.Core.Services.EmailService.Verification
             }
             catch (Exception ex)
             {
-                logger.LogDebug($"Exception: {ex.Message}");
+                logger.LogDebug("Exception: {Message}", ex.Message);
                 result = false;
             }
 
-            logger.LogDebug($"Identity deletion request sent: {result.ToString()}");
+            logger.LogDebug("Identity deletion request sent: {Result}", result.ToString());
             return result;
         }
     }

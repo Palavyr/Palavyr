@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
@@ -10,12 +10,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ResendConfirmationTokenHandler : IRequestHandler<ResendConfirmationTokenRequest, ResendConfirmationTokenResponse>
     {
-        private readonly IEntityStore<EmailVerification> emailVerificationStore;
+        private readonly IEntityStore<AccountEmailVerification> emailVerificationStore;
         private readonly IEmailVerificationService emailVerificationService;
         private readonly IAccountIdTransport accountIdTransport;
 
         public ResendConfirmationTokenHandler(
-            IEntityStore<EmailVerification> emailVerificationStore,
+            IEntityStore<AccountEmailVerification> emailVerificationStore,
             IEmailVerificationService emailVerificationService,
             IAccountIdTransport accountIdTransport)
         {

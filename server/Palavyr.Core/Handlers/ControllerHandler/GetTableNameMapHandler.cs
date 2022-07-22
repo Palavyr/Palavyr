@@ -2,31 +2,37 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Mappers;
 using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetTableNameMapHandler : IRequestHandler<GetTableNameMapRequest, GetTableNameMapResponse>
     {
+        private readonly IMapToNew<IHaveAPrettyNameAndTableType, PricingStrategyTableTypeResource> mapper;
+        private readonly IPricingStrategyTypeLister pricingStrategyTypeLister;
+
+        public GetTableNameMapHandler(IMapToNew<IHaveAPrettyNameAndTableType, PricingStrategyTableTypeResource> mapper, IPricingStrategyTypeLister pricingStrategyTypeLister)
+        {
+            this.mapper = mapper;
+            this.pricingStrategyTypeLister = pricingStrategyTypeLister;
+        }
+
         public async Task<GetTableNameMapResponse> Handle(GetTableNameMapRequest request, CancellationToken cancellationToken)
         {
             // map that provides e.g. Select One Flat: SelectOneFlat.
-            await Task.CompletedTask;
-            var availableTables = DynamicTableTypes.GetDynamicTableTypes();
-            var tableNameMap = new Dictionary<string, string>();
-            foreach (var table in availableTables)
-            {
-                tableNameMap.Add(table.PrettyName, table.TableType);
-            }
-
-            return new GetTableNameMapResponse(tableNameMap);
+            var availableTables = pricingStrategyTypeLister.ListPricingStrategies();
+            var resource = await mapper.MapMany(availableTables, cancellationToken);
+            return new GetTableNameMapResponse(resource);
         }
     }
 
     public class GetTableNameMapResponse
     {
-        public GetTableNameMapResponse(Dictionary<string, string> response) => Response = response;
-        public Dictionary<string, string> Response { get; set; }
+        public GetTableNameMapResponse(IEnumerable<PricingStrategyTableTypeResource> response) => Response = response;
+        public IEnumerable<PricingStrategyTableTypeResource> Response { get; set; }
     }
 
     public class GetTableNameMapRequest : IRequest<GetTableNameMapResponse>

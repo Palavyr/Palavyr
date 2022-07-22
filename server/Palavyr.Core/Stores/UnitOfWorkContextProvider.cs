@@ -5,59 +5,39 @@ using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Stores
 {
-    public class UnitOfWorkContextProvider // this must be registered as instance per lifetime scope as IUnitOfWorkContextProvider
-        : IUnitOfWorkContextProvider
+    // this must be registered as instance per lifetime scope as IUnitOfWorkContextProvider
+    public class UnitOfWorkContextProvider : IUnitOfWorkContextProvider
     {
-        private readonly DashContext dashContext;
-        private readonly AccountsContext accountsContext;
-        private readonly ConvoContext convoContext;
+        private readonly AppDataContexts appDataContexts;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
 
-        public UnitOfWorkContextProvider(DashContext dashContext, AccountsContext accountsContext, ConvoContext convoContext, ICancellationTokenTransport cancellationTokenTransport)
+        public UnitOfWorkContextProvider(AppDataContexts appDataContexts, ICancellationTokenTransport cancellationTokenTransport)
         {
-            this.dashContext = dashContext;
-            this.accountsContext = accountsContext;
-            this.convoContext = convoContext;
+            this.appDataContexts = appDataContexts;
             this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
-        public DashContext ConfigurationContext()
+        public AppDataContexts AppDataContexts()
         {
-            return dashContext;
-        }
-
-        public AccountsContext AccountsContext()
-        {
-            return accountsContext;
-        }
-
-        public ConvoContext ConvoContext()
-        {
-            return convoContext;
+            return appDataContexts;
         }
 
         public async Task CloseUnitOfWork()
         {
             var token = GetOrCreateCancellationToken();
-            await dashContext.SaveChangesAsync(token);
-            await accountsContext.SaveChangesAsync(token);
-            await convoContext.SaveChangesAsync(token);
+            await appDataContexts.SaveChangesAsync(token);
             await DisposeContexts();
         }
 
         public async Task DisposeContexts()
         {
-            await dashContext.DisposeAsync();
-            await accountsContext.DisposeAsync();
-            await convoContext.DisposeAsync();
+            await appDataContexts.DisposeAsync();
         }
 
         public async Task DangerousCommitAllContexts()
         {
             var token = GetOrCreateCancellationToken();
-            await dashContext.SaveChangesAsync(token);
-            await accountsContext.SaveChangesAsync(token);
-            await convoContext.SaveChangesAsync(token);
+            await appDataContexts.SaveChangesAsync(token);
         }
 
         private CancellationToken GetOrCreateCancellationToken()

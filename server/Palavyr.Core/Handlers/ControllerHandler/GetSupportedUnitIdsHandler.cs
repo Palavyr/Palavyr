@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.Units;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -32,7 +32,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetSupportedUnitIdsResponse
     {
-        public List<QuantUnit> Response { get; set; }
-        public GetSupportedUnitIdsResponse(List<QuantUnit> response) => Response = response;
+        public List<QuantityUnitResource> Response { get; set; }
+        public GetSupportedUnitIdsResponse(List<QuantityUnitResource> response) => Response = response;
     }
 }

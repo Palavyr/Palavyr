@@ -20,7 +20,7 @@ interface DashboardHeaderProps {
     title: string;
     unseenNotifications: number;
     isLoading: boolean;
-    dashboardAreasLoading: boolean;
+    dashboardIntentsLoading: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -80,7 +80,7 @@ const baseRoutesToExclude = [
     "/dashboard/settings/locale",
     "/dashboard/settings/default_email_template",
     "/dashboard/settings/deleteaccount",
-    "/dashboard/set-areas",
+    "/dashboard/set-intents",
     "/dashboard/enquiries",
     "/dashboard/demo",
     "/dashboard/subscribe",
@@ -93,7 +93,7 @@ const baseRoutesToExclude = [
 
 export const routesToExclude = baseRoutesToExclude.concat(baseRoutesToExclude.map(x => x + "/"));
 
-export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifications, open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
+export const DashboardHeader = ({ isLoading, dashboardIntentsLoading, unseenNotifications, open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
     const cls = useStyles();
     const [sized, setSized] = useState<boolean>(false);
     const handle = () => setSized(!sized);
@@ -144,7 +144,7 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
                     </Align>
                 </div>
             </Toolbar>
-            {(isLoading || dashboardAreasLoading) && <LinearProgress classes={{ bar: cls.bar }} className={cls.loading} />}
+            {(isLoading || dashboardIntentsLoading) && <LinearProgress classes={{ bar: cls.bar }} className={cls.loading} />}
             <ErrorPanel />
         </AppBar>
     );

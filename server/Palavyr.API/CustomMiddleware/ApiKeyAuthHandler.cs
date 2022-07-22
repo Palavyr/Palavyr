@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Palavyr.API.CustomMiddleware.MiddlewareHandlers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.GlobalConstants;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.API.CustomMiddleware

@@ -1,7 +1,7 @@
 import { Grid, makeStyles } from "@material-ui/core";
-import { EnquiryActivtyResource } from "@Palavyr-Types";
+import { EnquiryInsightsResource } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { createNavLink } from "frontend/dashboard/layouts/sidebar/sections/sectionComponents/AreaLinkItem";
+import { createNavLink } from "frontend/dashboard/layouts/sidebar/sections/sectionComponents/IntentLinkItem";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { IntentActivityCard } from "./IntentActivityCard";
@@ -14,21 +14,21 @@ const useStyles = makeStyles(theme => ({
 }));
 
 type Meta = {
-    areaName: string;
+    intentName: string;
     count: number;
-    areaId: string;
+    IntentId: string;
     completed: number;
     emails: number;
 };
 
 export const IntentActivityCards = () => {
     const { repository } = useContext(DashboardContext);
-    const [activity, setActivity] = useState<EnquiryActivtyResource[]>([]);
+    const [activity, setActivity] = useState<EnquiryInsightsResource[]>([]);
     const cls = useStyles();
     const history = useHistory();
 
     const loadEnquiries = useCallback(async () => {
-        const enquiryActivy = await repository.Enquiries.getEnquiryInsights();
+        const enquiryActivy = await repository.Enquiries.GetEnquiryInsights();
         setActivity(enquiryActivy);
     }, []);
 
@@ -38,7 +38,7 @@ export const IntentActivityCards = () => {
 
     return (
         <Grid container>
-            {activity.map((a: EnquiryActivtyResource, index: number) => {
+            {activity.map((a: EnquiryInsightsResource, index: number) => {
                 return <Grid item>{a && <IntentActivityCard key={index} activityResource={a} onClick={() => history.push(createNavLink(a.intentIdentifier))} />}</Grid>;
             })}
         </Grid>

@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -24,15 +24,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetPhoneNumberResponse> Handle(GetPhoneNumberRequest request, CancellationToken cancellationToken)
         {
             var account = await accountStore.GetAccount();
-            var phoneDetails = PhoneDetails.Create(account.PhoneNumber, account.Locale);
+            var phoneDetails = PhoneDetailsResource.Create(account.PhoneNumber, account.Locale);
             return new GetPhoneNumberResponse(phoneDetails);
         }
     }
 
     public class GetPhoneNumberResponse
     {
-        public GetPhoneNumberResponse(PhoneDetails response) => Response = response;
-        public PhoneDetails Response { get; set; }
+        public GetPhoneNumberResponse(PhoneDetailsResource response) => Response = response;
+        public PhoneDetailsResource Response { get; set; }
     }
 
     public class GetPhoneNumberRequest : IRequest<GetPhoneNumberResponse>

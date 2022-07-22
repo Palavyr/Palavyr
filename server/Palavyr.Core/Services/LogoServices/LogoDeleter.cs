@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
 using Palavyr.Core.Stores;
 

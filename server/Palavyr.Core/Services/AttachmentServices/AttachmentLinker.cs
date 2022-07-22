@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.FileAssetServices.FileAssetLinkers;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
@@ -9,12 +9,12 @@ namespace Palavyr.Core.Services.AttachmentServices
 {
     public class AttachmentLinker : IFileAssetLinker<AttachmentLinker>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IEntityStore<AttachmentLinkRecord> attachmentLinkRecordStore;
         private readonly IAccountIdTransport accountIdTransport;
 
         public AttachmentLinker(
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IEntityStore<AttachmentLinkRecord> attachmentLinkRecordStore,
             IAccountIdTransport accountIdTransport)
         {
@@ -23,7 +23,7 @@ namespace Palavyr.Core.Services.AttachmentServices
             this.accountIdTransport = accountIdTransport;
         }
 
-        public async Task Link(string fileId, string intentId)
+        public async Task Link(string fileId, string? intentId)
         {
             var attachment = new AttachmentLinkRecord
             {

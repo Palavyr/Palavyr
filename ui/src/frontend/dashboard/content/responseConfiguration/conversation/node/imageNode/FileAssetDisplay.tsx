@@ -3,7 +3,7 @@ import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
 import { Variant } from "@material-ui/core/styles/createTypography";
 import { Align } from "@common/positioning/Align";
 import React, { memo, useEffect, useState } from "react";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 

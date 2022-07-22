@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Services.Localization;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -18,10 +18,10 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet(Route)]
-        public async Task<CurrentLocaleAndLocaleMapRetriever.LocaleResponse> Get([FromQuery] bool read, CancellationToken cancellationToken)
+        public async Task<LocaleMetaResource> Get([FromQuery] bool read, CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetCurrentLocalAndLocaleMapRequest(){ Read = read}, cancellationToken);
-            return response.Response;
+            var response = await mediator.Send(new GetCurrentLocalAndLocaleMapRequest() { Read = read }, cancellationToken);
+            return response.Resource;
         }
     }
 }

@@ -1,4 +1,4 @@
-import { AreaNameDetail, AreaNameDetails, Enquiries, EnquiryRow } from "@Palavyr-Types";
+import { IntentNameDetail, IntentNameDetails } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { widgetStyles } from "../designer/WidgetColorOptions";
@@ -6,6 +6,7 @@ import { Line } from "react-chartjs-2";
 import { DataPlot } from "./components/DataPlot";
 import seedrandom from "seedrandom";
 import { sum } from "lodash";
+import { EnquiryResource, EnquiryResources } from "@common/types/api/EntityResources";
 
 type EnqDataSet = {
     label: string;
@@ -26,7 +27,7 @@ export const getRandomColor = (seed: number | string) => {
     return color;
 };
 
-const calcualateDailEnquiryByDay = (areaDetails: AreaNameDetails, enquiries: Enquiries) => {
+const calcualateDailEnquiryByDay = (intentDetails: IntentNameDetails, enquiries: EnquiryResources) => {
     // const dates = enquiries.map((x) => {
     //     const date = new Date(Date.parse(x.timeStamp));
     //     date.toLocaleDateString();
@@ -49,23 +50,23 @@ const calcualateDailEnquiryByDay = (areaDetails: AreaNameDetails, enquiries: Enq
     lastSevenDays.reverse();
 
     const enquiryData: EnqDataSet[] = [];
-    areaDetails.forEach((detail: AreaNameDetail) => {
-        const areaDataResult: number[] = [];
-        const areaName = detail.areaName;
-        const areaEnquiries = enquiries.filter((enq: EnquiryRow) => enq.areaName === areaName);
+    intentDetails.forEach((detail: IntentNameDetail) => {
+        const intentDataResult: number[] = [];
+        const intentName = detail.intentName;
+        const intentEnquiries = enquiries.filter((enq: EnquiryResource) => enq.intentName === intentName);
         lastSevenDays.forEach(previousDate => {
-            const enquiriesOnDateInArea = areaEnquiries.filter(enq => {
+            const enquiriesOnDateInIntent = intentEnquiries.filter(enq => {
                 const timeStampDate = new Date(Date.parse(enq.timeStamp)).toDateString();
                 const isEqual = previousDate.toDateString() === timeStampDate;
                 return isEqual;
             });
-            areaDataResult.push(enquiriesOnDateInArea.length);
+            intentDataResult.push(enquiriesOnDateInIntent.length);
         });
 
         enquiryData.push({
-            label: areaName,
-            data: areaDataResult,
-            borderColor: getRandomColor(detail.areaName),
+            label: intentName,
+            data: intentDataResult,
+            borderColor: getRandomColor(detail.intentName),
             fill: false,
             cubicInterpolationMode: "monotone",
             tension: 0.8,
@@ -123,7 +124,7 @@ type PlotData = {
 };
 
 export const DailyEnquiriesWeekly = () => {
-    const { repository, areaNameDetails } = useContext(DashboardContext);
+    const { repository, intentNameDetails } = useContext(DashboardContext);
     const cls = widgetStyles();
 
     const [data, setData] = useState<any>();
@@ -131,8 +132,8 @@ export const DailyEnquiriesWeekly = () => {
     const [loadingspinner, setLoadingSpinner] = useState<boolean>(true);
 
     const loadEnquiries = useCallback(async () => {
-        const enquiries = await repository.Enquiries.getEnquiries();
-        const { enquiryData, enquiryOptions, lastSevenDays } = calcualateDailEnquiryByDay(areaNameDetails, enquiries);
+        const enquiries = await repository.Enquiries.GetEnquiries();
+        const { enquiryData, enquiryOptions, lastSevenDays } = calcualateDailEnquiryByDay(intentNameDetails, enquiries);
 
         const plotdata: PlotData = {
             labels: lastSevenDays.map(x => x.toDateString()),
@@ -143,7 +144,7 @@ export const DailyEnquiriesWeekly = () => {
         setOptions(enquiryOptions);
 
         setLoadingSpinner(false);
-    }, [areaNameDetails]);
+    }, [intentNameDetails]);
 
     useEffect(() => {
         loadEnquiries();
@@ -165,7 +166,7 @@ export const DailyEnquiriesWeekly = () => {
     return (
         <DataPlot
             title="Activity over the last 7 days"
-            subtitle="Learn about the daily activity of your widget, broken down by area"
+            subtitle="Learn about the daily activity of your widget, broken down by intent"
             hasData={hasData} /*&& sum(data.datasets.map(x => sum(x.data))) > 0 */
             loadingSpinner={loadingspinner}
         >

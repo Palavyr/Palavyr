@@ -1,13 +1,13 @@
-import { ConvoNode, NodeTypeCode } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, NodeTypeCodeEnum } from "@Palavyr-Types";
 
-export const ParentNode: ConvoNode = {
+export const ParentNode: ConversationDesignerNodeResource = {
     nodeId: "xyz-1",
     nodeType: "YesNo",
     text: "Test Text",
     nodeChildrenString: "xyz-2,xyz-3",
     isCritical: true,
     isRoot: true,
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
     optionPath: "",
     valueOptions: "", // an array, but bc of the dtabase we store as a string delimited by |peg|
     id: 0,
@@ -20,22 +20,22 @@ export const ParentNode: ConvoNode = {
     shouldRenderChildren: true,
     shouldShowMultiOption: false,
     nodeComponentType: "YesNo",
-    isDynamicTableNode: false,
+    isPricingStrategyNode: false,
     isImageNode: false,
     imageId: null,
     resolveOrder: 0,
     dynamicType: null,
-    nodeTypeCode: NodeTypeCode.I,
+    nodeTypeCode: NodeTypeCodeEnum.I,
 };
 
-export const ChildNode1: ConvoNode = {
+export const ChildNode1: ConversationDesignerNodeResource = {
     nodeId: "xyz-2",
     nodeType: "",
     text: "Test Text",
     nodeChildrenString: "",
     isCritical: true,
     isRoot: true,
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
     optionPath: "Yes",
     valueOptions: "", // an array, but bc of the dtabase we store as a string delimited by |peg|
     id: 0,
@@ -47,22 +47,22 @@ export const ChildNode1: ConvoNode = {
     shouldRenderChildren: true,
     shouldShowMultiOption: false,
     nodeComponentType: "YesNo",
-    isDynamicTableNode: false,
+    isPricingStrategyNode: false,
     isImageNode: false,
     imageId: null,
     resolveOrder: 0,
     dynamicType: null,
-    nodeTypeCode: NodeTypeCode.I,
+    nodeTypeCode: NodeTypeCodeEnum.I,
 };
 
-export const ChildNode2: ConvoNode = {
+export const ChildNode2: ConversationDesignerNodeResource = {
     nodeId: "xyz-3",
     nodeType: "",
     text: "Test Text",
     nodeChildrenString: "",
     isCritical: true,
     isRoot: true,
-    areaIdentifier: "abc-123",
+    intentId: "abc-123",
     optionPath: "No",
     valueOptions: "", // an array, but bc of the dtabase we store as a string delimited by |peg|
     id: 0,
@@ -74,12 +74,12 @@ export const ChildNode2: ConvoNode = {
     shouldRenderChildren: true,
     shouldShowMultiOption: false,
     nodeComponentType: "YesNo",
-    isDynamicTableNode: false,
+    isPricingStrategyNode: false,
     isImageNode: false,
     imageId: null,
     resolveOrder: 0,
     dynamicType: null,
-    nodeTypeCode: NodeTypeCode.I,
+    nodeTypeCode: NodeTypeCodeEnum.I,
 };
 
 export const DummyConvo = [ParentNode, ChildNode1, ChildNode2];

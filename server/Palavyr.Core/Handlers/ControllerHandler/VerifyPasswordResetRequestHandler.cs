@@ -2,16 +2,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class VerifyPasswordResetRequestHandler : IRequestHandler<VerifyPasswordResetRequestRequest, VerifyPasswordResetRequestResponse>
     {
-        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<UserSession> sessionStore;
 
-        public VerifyPasswordResetRequestHandler(IEntityStore<Session> sessionStore)
+        public VerifyPasswordResetRequestHandler(IEntityStore<UserSession> sessionStore)
         {
             this.sessionStore = sessionStore;
         }
@@ -23,16 +23,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             if (session == null)
             {
-                return new VerifyPasswordResetRequestResponse(new VerificationResponse("Not Authorized.", false, ""));
+                return new VerifyPasswordResetRequestResponse(new PasswordVerificationResource("Not Authorized.", false, ""));
             }
 
             if (sessionIsExpired(session.Expiration))
             {
-                return new VerifyPasswordResetRequestResponse(new VerificationResponse("Verification link has expired. Please resubmit a password change request.", false, ""));
+                return new VerifyPasswordResetRequestResponse(new PasswordVerificationResource("Verification link has expired. Please resubmit a password change request.", false, ""));
             }
 
             return new VerifyPasswordResetRequestResponse(
-                new VerificationResponse(
+                new PasswordVerificationResource(
                     "Successfully verified your request to reset your password.",
                     true,
                     session.ApiKey
@@ -47,8 +47,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class VerifyPasswordResetRequestResponse
     {
-        public VerifyPasswordResetRequestResponse(VerificationResponse response) => Response = response;
-        public VerificationResponse Response { get; set; }
+        public VerifyPasswordResetRequestResponse(PasswordVerificationResource resource) => Resource = resource;
+        public PasswordVerificationResource Resource { get; set; }
     }
 
     public class VerifyPasswordResetRequestRequest : IRequest<VerifyPasswordResetRequestResponse>
@@ -62,13 +62,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     }
 
 
-    public class VerificationResponse
+    public class PasswordVerificationResource
     {
         public string Message { get; set; }
         public bool Status { get; set; }
         public string ApiKey { get; set; }
 
-        public VerificationResponse(string message, bool status, string apiKey)
+        public PasswordVerificationResource(string message, bool status, string apiKey)
         {
             Message = message;
             Status = status;

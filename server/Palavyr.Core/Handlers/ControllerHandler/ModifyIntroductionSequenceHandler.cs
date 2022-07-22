@@ -2,8 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -13,39 +14,39 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IEntityStore<Account> accountStore;
+        private readonly IMapToNew<ConversationDesignerNodeResource, ConversationNode> conversationNodeMapper;
 
         public ModifyIntroductionSequenceHandler(
             IEntityStore<ConversationNode> convoNodeStore,
-            IEntityStore<Account> accountStore
-        )
+            IEntityStore<Account> accountStore,
+            IMapToNew<ConversationDesignerNodeResource, ConversationNode> conversationNodeMapper)
         {
             this.convoNodeStore = convoNodeStore;
             this.accountStore = accountStore;
+            this.conversationNodeMapper = conversationNodeMapper;
         }
 
         public async Task<ModifyIntroductionSequenceResponse> Handle(ModifyIntroductionSequenceRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountStore.GetAccount();
-            foreach (var node in request.Transactions)
-            {
-                node.AccountId = account.AccountId;
-            }
-            
-            await convoNodeStore.Delete(account.IntroductionId, s => s.AreaIdentifier);
-            await convoNodeStore.CreateMany(request.Transactions.ToArray());
+            var conversationNodes = await conversationNodeMapper
+                .MapMany(request.Transactions, cancellationToken);
 
+            var account = await accountStore.GetAccount();
+            await convoNodeStore.Delete(account.IntroIntentId, s => s.IntentId);
+
+            await convoNodeStore.CreateMany(conversationNodes);
             return new ModifyIntroductionSequenceResponse(request.Transactions.ToArray());
         }
     }
 
     public class ModifyIntroductionSequenceResponse
     {
-        public ModifyIntroductionSequenceResponse(ConversationNode[] response) => Response = response;
-        public ConversationNode[] Response { get; set; }
+        public ModifyIntroductionSequenceResponse(IEnumerable<ConversationDesignerNodeResource> response) => Response = response;
+        public IEnumerable<ConversationDesignerNodeResource> Response { get; set; }
     }
 
     public class ModifyIntroductionSequenceRequest : IRequest<ModifyIntroductionSequenceResponse>
     {
-        public List<ConversationNode> Transactions { get; set; }
+        public List<ConversationDesignerNodeResource> Transactions { get; set; }
     }
 }

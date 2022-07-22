@@ -1,7 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -27,7 +28,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var account = await accountStore.GetAccount();
 
             var planStatus = await planTypeRetriever.GetCurrentPlanType();
-            var currentPlan = new PlanStatus
+            var currentPlan = new PlanStatusResource
             {
                 HasUpgraded = account.HasUpgraded,
                 Status = planStatus
@@ -38,17 +39,11 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetCurrentPlanResponse
     {
-        public GetCurrentPlanResponse(PlanStatus response) => Response = response;
-        public PlanStatus Response { get; set; }
+        public GetCurrentPlanResponse(PlanStatusResource response) => Response = response;
+        public PlanStatusResource Response { get; set; }
     }
 
     public class GetCurrentPlanRequest : IRequest<GetCurrentPlanResponse>
     {
-    }
-
-    public class PlanStatus
-    {
-        public string Status { get; set; }
-        public bool HasUpgraded { get; set; }
     }
 }

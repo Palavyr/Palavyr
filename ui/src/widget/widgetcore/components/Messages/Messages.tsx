@@ -1,6 +1,6 @@
 import React, { memo, useContext, useEffect, useMemo, useRef } from "react";
 import { Loader } from "./components/Loader/Loader";
-import { BotMessageData, UserMessageData, WidgetPreferences } from "@Palavyr-Types";
+import { BotMessageData, UserMessageData } from "@Palavyr-Types";
 import { scrollToBottom } from "@widgetcore/utils/messages";
 import { makeStyles } from "@material-ui/core";
 
@@ -10,6 +10,7 @@ import { MessageWrapper } from "../../BotResponse/utils/MessageWrapper";
 import "@widgetcore/widget/widget.module.scss";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import classNames from "classnames";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 
 export interface MessageProps {
     showTimeStamp: boolean;
@@ -17,13 +18,13 @@ export interface MessageProps {
 }
 
 const useStyles = makeStyles(theme => ({
-    message: (prefs: WidgetPreferences) => ({
+    message: (prefs: WidgetPreferencesResource) => ({
         backgroundColor: prefs.chatBubbleColor,
         overflowY: "hidden",
         marginTop: ".6rem",
         marginBottom: ".6rem",
     }),
-    messageTubeContainer: (prefs: WidgetPreferences) => ({
+    messageTubeContainer: (prefs: WidgetPreferencesResource) => ({
         paddingTop: "2rem",
         backgroundColor: prefs.chatBubbleColor,
         paddingLeft: "0.8rem",

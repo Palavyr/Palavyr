@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Stores;
 
@@ -14,11 +14,11 @@ namespace Palavyr.Core.Services.EnquiryServices
     public class EnquiryDeleter : IEnquiryDeleter
     {
         private readonly IFileAssetDeleter fileAssetDeleter;
-        private readonly IEntityStore<ConversationRecord> convoRecordStore;
+        private readonly IEntityStore<ConversationHistoryMeta> convoRecordStore;
 
         public EnquiryDeleter(
             IFileAssetDeleter fileAssetDeleter,
-            IEntityStore<ConversationRecord> convoRecordStore
+            IEntityStore<ConversationHistoryMeta> convoRecordStore
         )
         {
             this.fileAssetDeleter = fileAssetDeleter;

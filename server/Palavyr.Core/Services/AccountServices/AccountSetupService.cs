@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
@@ -13,7 +13,7 @@ namespace Palavyr.Core.Services.AccountServices
 {
     public class AccountSetupService : IAccountSetupService
     {
-        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<UserSession> sessionStore;
         private readonly IEntityStore<Account> accountStore;
 
         private readonly INewAccountUtils newAccountUtils;
@@ -29,7 +29,7 @@ namespace Palavyr.Core.Services.AccountServices
         private const string EmailAddressNotFound = "Email Address Not Found";
 
         public AccountSetupService(
-            IEntityStore<Session> sessionStore,
+            IEntityStore<UserSession> sessionStore,
             IEntityStore<Account> accountStore,
             INewAccountUtils newAccountUtils,
             ILogger<AccountSetupService> logger,
@@ -54,23 +54,23 @@ namespace Palavyr.Core.Services.AccountServices
             return jwtAuthService.GenerateJwtTokenAfterAuthentication(account.EmailAddress);
         }
 
-        private Session CreateNewSession(Account account)
+        private UserSession CreateNewSession(Account account)
         {
             var sessionId = guidUtils.CreateNewId();
             logger.LogDebug("Attempting to create a new Session.");
-            var session = Session.CreateNew(sessionId, account.AccountId, account.ApiKey);
+            var session = UserSession.CreateNew(sessionId, account.AccountId, account.ApiKey);
             logger.LogDebug($"New Session created: {session.SessionId}");
             return session;
         }
 
-        public async Task<Credentials> CreateNewAccountViaDefaultAsync(string emailAddress, string password, CancellationToken cancellationToken)
+        public async Task<CredentialsResource> CreateNewAccount(string emailAddress, string password, CancellationToken cancellationToken)
         {
             // confirm account doesn't already exist
             var accountExists = await AccountExists(emailAddress);
             if (accountExists)
             {
-                logger.LogDebug($"Account for email address {emailAddress} already exists");
-                return Credentials.CreateUnauthenticatedResponse(AccountAlreadyExists);
+                logger.LogDebug("Account for email address {EmailAddress} already exists", emailAddress);
+                return CredentialsResource.CreateUnauthenticatedResponse(AccountAlreadyExists);
             }
 
             // Add the new account
@@ -88,17 +88,17 @@ namespace Palavyr.Core.Services.AccountServices
             logger.LogDebug("Adding new account via DEFAULT...");
             await accountStore.Create(account);
 
-            var introId = account.IntroductionId;
+            var introId = account.IntroIntentId;
             var ok = await accountRegistrationMaker.TryRegisterAccountAndSendEmailVerificationToken(accountId, apiKey, emailAddress, introId, cancellationToken);
             logger.LogDebug("Send Email result was " + (ok ? "OK" : " a FAIL"));
 
-            if (!ok) return Credentials.CreateUnauthenticatedResponse(EmailAddressNotFound);
+            if (!ok) return CredentialsResource.CreateUnauthenticatedResponse(EmailAddressNotFound);
 
             var token = CreateNewJwtToken(account);
             var session = CreateNewSession(account);
             await sessionStore.Create(session);
 
-            return Credentials.CreateAuthenticatedResponse(session.SessionId, session.ApiKey, token, account.EmailAddress);
+            return CredentialsResource.CreateAuthenticatedResponse(session.SessionId, session.ApiKey, token, account.EmailAddress);
         }
 
         private async Task<bool> AccountExists(string emailAddress)

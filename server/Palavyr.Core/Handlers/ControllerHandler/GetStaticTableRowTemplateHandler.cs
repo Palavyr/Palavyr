@@ -1,7 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -9,35 +11,33 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetStaticTableRowTemplateHandler : IRequestHandler<GetStaticTableRowTemplateRequest, GetStaticTableRowTemplateResponse>
     {
         private readonly IAccountIdTransport accountIdTransport;
+        private readonly IMapToNew<StaticTableRow, StaticTableRowResource> mapper;
 
-        public GetStaticTableRowTemplateHandler(IAccountIdTransport accountIdTransport)
+        public GetStaticTableRowTemplateHandler(IAccountIdTransport accountIdTransport, IMapToNew<StaticTableRow, StaticTableRowResource> mapper)
         {
             this.accountIdTransport = accountIdTransport;
+            this.mapper = mapper;
         }
 
-        public async Task<GetStaticTableRowTemplateResponse> Handle(GetStaticTableRowTemplateRequest request, CancellationToken cancellationToken)
+        public Task<GetStaticTableRowTemplateResponse> Handle(GetStaticTableRowTemplateRequest request, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
-            return new GetStaticTableRowTemplateResponse(StaticTableRow.CreateStaticTableRowTemplate(int.Parse(request.TableId), request.IntentId, accountIdTransport.AccountId));
-
+            return Task.FromResult(new GetStaticTableRowTemplateResponse(new StaticTableRowResource()));
         }
     }
 
     public class GetStaticTableRowTemplateResponse
     {
-        public GetStaticTableRowTemplateResponse(StaticTableRow response) => Response = response;
-        public StaticTableRow Response { get; set; }
+        public GetStaticTableRowTemplateResponse(StaticTableRowResource response) => Response = response;
+        public StaticTableRowResource Response { get; set; }
     }
 
     public class GetStaticTableRowTemplateRequest : IRequest<GetStaticTableRowTemplateResponse>
     {
-        public GetStaticTableRowTemplateRequest(string intentId, string tableId)
+        public GetStaticTableRowTemplateRequest(string intentId)
         {
             IntentId = intentId;
-            TableId = tableId;
         }
-        public string IntentId { get; set; }
-        public string TableId { get; set; }
 
+        public string IntentId { get; set; }
     }
 }

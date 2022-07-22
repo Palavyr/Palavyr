@@ -1,6 +1,6 @@
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { makeStyles } from "@material-ui/core";
-import { SetState, WidgetPreferences } from "@Palavyr-Types";
+import { SetState, WidgetPreferencesResource } from "@Palavyr-Types";
 import { Align } from "@common/positioning/Align";
 import React from "react";
 import { WidgetColorOptions } from "../WidgetColorOptions";
@@ -13,8 +13,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface ColorPickerProps {
-    widgetPreferences: WidgetPreferences;
-    setWidgetPreferences: SetState<WidgetPreferences>;
+    widgetPreferences: WidgetPreferencesResource;
+    setWidgetPreferences: SetState<WidgetPreferencesResource>;
 }
 export const ColorSelectors = ({ widgetPreferences, setWidgetPreferences }: ColorPickerProps) => {
     const cls = useStyles();

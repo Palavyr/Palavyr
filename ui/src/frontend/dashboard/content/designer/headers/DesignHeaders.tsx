@@ -1,12 +1,12 @@
 import { makeStyles } from "@material-ui/core";
-import { WidgetPreferences, SetState } from "@Palavyr-Types";
+import { WidgetPreferencesResource, SetState } from "@Palavyr-Types";
 import React from "react";
 import { DesignChatHeader } from "./ChatHeader";
 import { DesignLandingHeader } from "./LandingHeader";
 
 export interface DesignHeadersProps {
-    widgetPreferences: WidgetPreferences;
-    setWidgetPreferences: SetState<WidgetPreferences>;
+    widgetPreferences: WidgetPreferencesResource;
+    setWidgetPreferences: SetState<WidgetPreferencesResource>;
 }
 
 const useStyles = makeStyles(theme => ({

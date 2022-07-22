@@ -4,8 +4,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Requests;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.WidgetLive
@@ -13,7 +13,6 @@ namespace Palavyr.API.Controllers.WidgetLive
     public class SendWidgetResponseEmailController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "widget/area/{intentId}/email/send";
 
         public SendWidgetResponseEmailController(IMediator mediator)
         {
@@ -21,8 +20,8 @@ namespace Palavyr.API.Controllers.WidgetLive
         }
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-        [HttpPost(Route)]
-        public async Task<SendEmailResultResponse> SendEmail(
+        [HttpPost(SendWidgetResponseEmailRequest.Route)]
+        public async Task<SendLiveEmailResultResource> SendEmail(
             [FromRoute]
             string intentId,
             [FromQuery] bool demo,
@@ -32,7 +31,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         )
         {
             var response = await mediator.Send(new SendWidgetResponseEmailRequest(emailRequest, intentId, demo), cancellationToken);
-            return response.Response;
+            return response.Resource;
         }
     }
 }

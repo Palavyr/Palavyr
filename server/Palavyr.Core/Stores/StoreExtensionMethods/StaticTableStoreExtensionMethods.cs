@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Stores.StoreExtensionMethods
 {
@@ -12,7 +12,7 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
         {
             return await staticTablesStore
                 .Query()
-                .Where(meta => meta.AreaIdentifier == intentId)
+                .Where(meta => meta.IntentId == intentId)
                 .Include(meta => meta.StaticTableRows)
                 .ThenInclude(row => row.Fee)
                 .ToListAsync(staticTablesStore.CancellationToken);

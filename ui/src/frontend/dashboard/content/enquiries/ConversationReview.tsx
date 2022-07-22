@@ -1,7 +1,6 @@
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
-import { CompletedConversation, ConversationUpdate } from "@Palavyr-Types";
 import classNames from "classnames";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { Align } from "@common/positioning/Align";
@@ -11,6 +10,7 @@ import { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { formatLegitTimeStamp } from "./enquiriesUtils";
 import { EnquiryTimeStamp } from "./EnquiryTimeStamp";
+import { ConversationHistoryRowResource, ConversationHistoryRowResources } from "@Palavyr-Types";
 
 const useStyles = makeStyles(theme => ({
     headerCell: {
@@ -41,19 +41,19 @@ export const ConversationReview = () => {
 
     const { repository } = useContext(DashboardContext);
 
-    const [completeConversation, setCompleteConversation] = useState<CompletedConversation>([]);
+    const [completeConversation, setCompleteConversation] = useState<ConversationHistoryRowResources>([]);
 
     const loadConversation = useCallback(async () => {
-        const completeConversation = await repository.Enquiries.getConversation(conversationId);
-        setCompleteConversation(completeConversation);
+        const completedConvo = await repository.Enquiries.GetConversation(conversationId);
+        setCompleteConversation(completedConvo);
     }, []);
 
     useEffect(() => {
         loadConversation();
     }, []);
-    const numberPropertyGetter = (convo: ConversationUpdate) => {
-        return convo.id;
-    };
+
+    // id won't be null when retrieving from the server
+    const numberPropertyGetter = (convo: ConversationHistoryRowResource) => convo.id!;
 
     return (
         <>
@@ -81,7 +81,7 @@ export const ConversationReview = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {sortByPropertyNumeric(numberPropertyGetter, completeConversation).map((convo: ConversationUpdate, index: number) => {
+                            {sortByPropertyNumeric(numberPropertyGetter, completeConversation).map((convo: ConversationHistoryRowResource, index: number) => {
                                 const { formattedDate, formattedTime } = formatLegitTimeStamp(convo.timeStamp);
 
                                 return (

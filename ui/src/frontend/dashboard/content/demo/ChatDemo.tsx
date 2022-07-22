@@ -1,7 +1,7 @@
-import { PreCheckError } from "@Palavyr-Types";
+import { PreCheckErrorResource } from "@Palavyr-Types";
 import React, { useState, useCallback, useEffect } from "react";
 import { Paper, makeStyles } from "@material-ui/core";
-import { IntentsInNeedOfAttention } from "./AreasInNeedOfAttention";
+import { IntentsInNeedOfAttention } from "./IntentsInNeedOfAttention";
 import { ChatDemoHeader } from "./ChatDemoHeader";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { PalavyrDemoWidget } from "./DemoWidget";
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 export const ChatDemoPage = () => {
     const { repository, setViewName } = useContext(DashboardContext);
     setViewName("Widget Demo");
-    const [preCheckErrors, setPreCheckErrors] = useState<PreCheckError[]>([]);
+    const [preCheckErrors, setPreCheckErrors] = useState<PreCheckErrorResource[]>([]);
     const [apiKey, setApiKey] = useState<string>("");
     const [iframeRefreshed, reloadIframe] = useState<boolean>(false);
 
@@ -49,7 +49,7 @@ export const ChatDemoPage = () => {
     }, [loadMissingNodes]);
 
     const loadDemoWidget = useCallback(async () => {
-        const key = await repository.Settings.Account.getApiKey();
+        const key = await repository.Settings.Account.GetApiKey();
         setApiKey(key);
     }, []);
 

@@ -1,28 +1,30 @@
 import React from "react";
-import { NodeOption, NodeTypeOptions } from "@Palavyr-Types";
+import { NodeTypeOptionResource, NodeTypeOptionResources } from "@Palavyr-Types";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
+import { TextField } from "@material-ui/core";
 
 export interface ISelectNodeType {
-    onChange: (event: any, nodeOption: NodeOption) => void;
-    nodeTypeOptions: NodeTypeOptions;
+    onChange: (event: any, nodeOption: NodeTypeOptionResource) => void;
+    nodeTypeOptions: NodeTypeOptionResources;
     label: string;
     shouldDisabledNodeTypeSelector: boolean;
 }
 
 //https://github.com/mui-org/material-ui/issues/19173 to help resolve the label not resetting to '' when unsetting the node.
 export const CustomNodeSelect = ({ onChange, label, nodeTypeOptions, shouldDisabledNodeTypeSelector }: ISelectNodeType) => {
-    const groupGetter = (val: NodeOption) => val.groupName;
+    const groupGetter = (val: NodeTypeOptionResource) => val.groupName;
     const sortedNodeOptions = sortByPropertyAlphabetical(groupGetter, nodeTypeOptions);
     return (
-        <PalavyrAutoComplete
+        <PalavyrAutoComplete<NodeTypeOptionResource>
             label={label}
             options={sortedNodeOptions}
-            shouldDisableSelect={shouldDisabledNodeTypeSelector}
+            disabled={shouldDisabledNodeTypeSelector}
             onChange={onChange}
-            groupby={(nodeOption: NodeOption) => nodeOption.groupName}
-            getOptionLabel={(option: NodeOption) => option.text}
-            getOptionSelected={(option: NodeOption, value: NodeOption) => option.value === value.value}
+            groupBy={(nodeOption: NodeTypeOptionResource) => nodeOption.groupName}
+            getOptionLabel={(option: NodeTypeOptionResource) => option.text}
+            getOptionSelected={(option: NodeTypeOptionResource, value: NodeTypeOptionResource) => option.value === value.value}
+            renderInput={params => <TextField {...params} label={label} variant="standard" />}
         />
     );
 };

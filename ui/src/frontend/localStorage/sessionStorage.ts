@@ -117,7 +117,7 @@ class SessionStorageAccess {
     }
 
     unsetOtherSessionItems(){
-        this._setItem(CacheIds.Areas, "");
+        this._setItem(CacheIds.Intents, "");
         this._setItem(CacheIds.CurrentPlanMeta, "")
     }
 

@@ -1,11 +1,11 @@
-import { ConvoNode, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, NodeTypeCodeEnum, NodeTypeOptionResources } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { IPalavyrNode, IPalavyrLinkedList, INodeReferences } from "@Palavyr-Types";
 import { DEFAULT_NODE_TEXT } from "@constants";
 
 export class NodeCreator {
-    public addDefaultChild(currentParentNodes: IPalavyrNode[], optionPath: string, nodeTypeOptions: NodeTypeOptions, defaultText?: string) {
+    public addDefaultChild(currentParentNodes: IPalavyrNode[], optionPath: string, nodeTypeOptions: NodeTypeOptionResources, defaultText?: string) {
         if (currentParentNodes.length === 0) throw new Error("Attempting to add default child node to no parent nodes");
 
         const defaultNode = this.createDefaultNode(optionPath);
@@ -41,7 +41,7 @@ export class NodeCreator {
         return this.createDefaultNode("Continue", "ProvideInfo");
     }
 
-    private createDefaultNode(optionPath: string, nodeType: string = ""): ConvoNode {
+    private createDefaultNode(optionPath: string, nodeType: string = ""): ConversationDesignerNodeResource {
         return {
             isLoopbackAnchorType: false,
             nodeId: uuid(),
@@ -50,7 +50,7 @@ export class NodeCreator {
             nodeChildrenString: "",
             isRoot: false,
             isCritical: false,
-            areaIdentifier: "",
+            intentId: "",
             optionPath: optionPath,
             valueOptions: "",
             isMultiOptionType: false,
@@ -60,12 +60,15 @@ export class NodeCreator {
             isAnabranchMergePoint: false,
             isAnabranchType: false,
             nodeComponentType: "ProvideInfo",
-            isDynamicTableNode: false,
+            isPricingStrategyNode: false,
             resolveOrder: 0,
-            dynamicType: "",
+            pricingStrategyType: "",
             isImageNode: false,
-            imageId: null,
-            nodeTypeCode: NodeTypeCode.I,
+            fileId: "",
+            nodeTypeCodeEnum: NodeTypeCodeEnum.I,
+            isMultiOptionEditable: false,
+            isCurrency: false,
+            id: null
         };
     }
 }

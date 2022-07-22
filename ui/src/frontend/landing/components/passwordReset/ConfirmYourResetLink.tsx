@@ -14,7 +14,7 @@ export const ConfirmYourResetLink = () => {
 
     const sendVerificationRequest = useCallback(async () => {
         const client = new LoginRepository();
-        const response = await client.Reset.verifyResetIdentity(secretId);
+        const response = await client.Reset.VerifyResetIdentity(secretId);
 
         if (response.status) {
             setTimeout(() => {

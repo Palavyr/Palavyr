@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import { responseAction } from "@widgetcore/BotResponse/utils/responseAction";
 import { ConvoContextProperties } from "./registry";
-import { AreaTable, FileAssetResource, IProgressTheChat, SelectedOption, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
+import { IProgressTheChat, SelectedOption } from "@Palavyr-Types";
 import { ResponseButton } from "@widgetcore/BotResponse/ResponseButton";
 import { splitValueOptionsByDelimiter } from "@widgetcore/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "@widgetcore/UserDetailsDialog/ChatLoadingSpinner";
@@ -18,6 +18,7 @@ import { ChoiceList } from "@widgetcore/BotResponse/optionFormats/ChoiceList";
 import { MiniContactForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { CurrencyTextField } from "@widgetcore/BotResponse/numbers/CurrencyTextField";
 import { widgetSelection } from "@common/Analytics/gtag";
+import { WidgetPreferencesResource, IntentResource, WidgetNodeResource, FileAssetResource } from "@common/types/api/EntityResources";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -29,13 +30,13 @@ const useStyles = makeStyles(theme => ({
     root: {
         borderBottom: "none",
     },
-    textField: (prefs: WidgetPreferences) => ({
+    textField: (prefs: WidgetPreferencesResource) => ({
         textDecoration: "none",
         color: prefs.chatFontColor,
         borderColor: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
         fontFamily: prefs.fontFamily,
     }),
-    textLabel: (prefs: WidgetPreferences) => ({
+    textLabel: (prefs: WidgetPreferencesResource) => ({
         color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
         "&:focus": {
             color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
@@ -51,8 +52,7 @@ const useStyles = makeStyles(theme => ({
             cursor: "pointer",
         },
     },
-    inputLabel: (props: WidgetPreferences) => ({
-        // borderBottom: "1px solid " + props.chatFontColor,
+    inputLabel: (props: WidgetPreferencesResource) => ({
         fontFamily: props.fontFamily,
         color: props.chatFontColor,
         "& .MuiFormLabel-root": {
@@ -80,16 +80,16 @@ export class StandardComponents {
     public makeSelectOptions({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         return () => {
             const { context, isDemo, preferences } = useContext(WidgetContext);
-            const [options, setOptions] = useState<Array<SelectedOption>>();
+            const [options, setOptions] = useState<SelectedOption[]>();
             const [disabled, setDisabled] = useState<boolean>(false);
             const [open, setOpen] = useState<boolean>(false);
 
             const cls = useStyles(preferences);
 
-            const loadAreas = useCallback(async () => {
+            const loadIntents = useCallback(async () => {
                 var intents = await client.Widget.Get.Intents();
-                var options = intents.map((intent: AreaTable) => {
-                    return { areaDisplay: intent.areaDisplayTitle, areaId: intent.areaIdentifier };
+                var options = intents.map((intent: IntentResource) => {
+                    return { intentDisplay: intent.intentName, intentId: intent.intentId } as SelectedOption;
                 });
 
                 setOptions(options);
@@ -99,13 +99,13 @@ export class StandardComponents {
                 if (designer) {
                     setOpen(true);
                 }
-                loadAreas();
-            }, [loadAreas]);
+                loadIntents();
+            }, [loadIntents]);
 
             const onChange = async (_: any, newOption: SelectedOption) => {
                 if (designer) return;
 
-                const newConversation = await client.Widget.Get.NewConversationHistory({ IntentId: newOption.areaId, Name: context.name, Email: context.emailAddress }, isDemo);
+                const newConversation = await client.Widget.Get.NewConversationHistory({ IntentId: newOption.intentId, Name: context.name, Email: context.emailAddress }, isDemo);
                 const nodes = newConversation.conversationNodes;
                 const convoId = newConversation.conversationId;
                 const rootNode = getRootNode(nodes);
@@ -119,7 +119,7 @@ export class StandardComponents {
                 //
 
                 let secretKey = new URLSearchParams(location.search).get("key") as string;
-                widgetSelection(secretKey, newOption.areaDisplay, newOption.areaId);
+                widgetSelection(secretKey, newOption.intentDisplay, newOption.intentId);
                 context.enableReset();
                 context.setChatStarted();
                 renderNextBotMessage(context, rootNode, nodes, client, convoId);
@@ -398,6 +398,7 @@ export class StandardComponents {
             let fileAsset: FileAssetResource | null;
             if (designer) {
                 fileAsset = {
+                    id: 1,
                     fileName: "test.png",
                     link: "https://i.chzbgr.com/full/9591491840/h124EF692/cat-oizzyandthef",
                     fileId: "1234",
@@ -535,7 +536,7 @@ export class StandardComponents {
     }
 
     makeSendEmail({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
-        const areaId = nodeList[0].areaIdentifier;
+        const IntentId = nodeList[0].intentId;
 
         return () => {
             const { context, isDemo } = useContext(WidgetContext);
@@ -561,9 +562,9 @@ export class StandardComponents {
                     numIndividuals = 1;
                 }
 
-                const response = await client.Widget.Send.ConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId, isDemo);
+                const response = await client.Widget.Send.ConfirmationEmail(IntentId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId, isDemo);
                 if (response.result) {
-                    const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale);
+                    const completeConvo = assembleEmailRecordData(convoId, IntentId, name, email, phone, locale);
                     if (!isDemo) {
                         await client.Widget.Post.UpdateConvoRecord(completeConvo);
                     }
@@ -643,7 +644,7 @@ export class StandardComponents {
     };
 
     makeSendFallbackEmail({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
-        const areaId = nodeList[0].areaIdentifier;
+        const IntentId = nodeList[0].intentId;
 
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
@@ -656,10 +657,10 @@ export class StandardComponents {
                 const phone = context.AppContext[ConvoContextProperties.phoneNumber];
                 const locale = context.AppContext[ConvoContextProperties.region];
 
-                const response = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId, isDemo);
+                const response = await client.Widget.Send.FallbackEmail(IntentId, email, name, phone, convoId, isDemo);
                 if (response.result) {
                     if (!isDemo) {
-                        const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale, true);
+                        const completeConvo = assembleEmailRecordData(convoId, IntentId, name, email, phone, locale, true);
                         await client.Widget.Post.UpdateConvoRecord(completeConvo);
                     }
                 }

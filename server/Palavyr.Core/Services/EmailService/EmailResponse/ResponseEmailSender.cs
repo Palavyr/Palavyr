@@ -1,15 +1,14 @@
-﻿#nullable enable
+﻿
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Models;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Requests;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.PdfService;
@@ -22,14 +21,14 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
     public interface IResponseEmailSender
     {
-        Task<SendEmailResultResponse> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isdemo);
-        Task<SendEmailResultResponse> SendFallbackResponse(string intentId, EmailRequest emailRequest, bool isDemo);
+        Task<SendLiveEmailResultResource> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isDemo);
+        Task<SendLiveEmailResultResource> SendFallbackResponse(string intentId, EmailRequest emailRequest, bool isDemo);
     }
 
     public class ResponseEmailSender : IResponseEmailSender
     {
         private readonly IMapToNew<FileAsset, FileAssetResource> mapper;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly ILogger<ResponseEmailSender> logger;
         private readonly ICriticalResponses criticalResponses;
         private readonly IAttachmentRetriever attachmentRetriever;
@@ -41,7 +40,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
         public ResponseEmailSender(
             IMapToNew<FileAsset, FileAssetResource> mapper,
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             ILogger<ResponseEmailSender> logger,
             ICriticalResponses criticalResponses,
             IAttachmentRetriever attachmentRetriever,
@@ -63,7 +62,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             this.client = client;
         }
 
-        public async Task<SendEmailResultResponse> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isDemo)
+        public async Task<SendLiveEmailResultResource> SendWidgetResponse(string intentId, EmailRequest emailRequest, bool isDemo)
         {
             var responses = criticalResponses.Compile(emailRequest.KeyValues);
             var culture = await accountStore.GetCulture();
@@ -83,7 +82,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                     isDemo
                 );
                 additionalFiles.Add(fileAsset.ToCloudFileDownloadRequest());
-                fileAssetResource = await mapper.Map(fileAsset);
+                fileAssetResource = await mapper.Map(fileAsset, default);
             }
 
             var senderDetails = await compileSenderDetails.Compile(intentId, emailRequest);
@@ -96,7 +95,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             return responseResult;
         }
 
-        public async Task<SendEmailResultResponse> SendFallbackResponse(string intentId, EmailRequest emailRequest, bool isDemo)
+        public async Task<SendLiveEmailResultResource> SendFallbackResponse(string intentId, EmailRequest emailRequest, bool isDemo)
         {
             var sendAttachmentsOnFallback = await SendAttachmentsWhenFallback(intentId);
 
@@ -126,7 +125,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             }
         }
 
-        private async Task<SendEmailResultResponse> Send(CompileSenderDetails.CompiledSenderDetails details, string[] attachments, FileAssetResource? fileAssetResource = null)
+        private async Task<SendLiveEmailResultResource> Send(CompileSenderDetails.CompiledSenderDetails details, string[] attachments, FileAssetResource? fileAssetResource = null)
         {
             bool ok;
             if (attachments.Length == 0)
@@ -148,8 +147,8 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                     notifyIntentOwner: true); // Attachments here should be local file paths that are temporary
 
             return ok
-                ? SendEmailResultResponse.CreateSuccess(EndingSequenceAttacher.EmailSuccessfulNodeId, fileAssetResource)
-                : SendEmailResultResponse.CreateFailure(EndingSequenceAttacher.EmailFailedNodeId);
+                ? SendLiveEmailResultResource.CreateSuccess(EndingSequenceAttacher.EmailSuccessfulNodeId, fileAssetResource)
+                : SendLiveEmailResultResource.CreateFailure(EndingSequenceAttacher.EmailFailedNodeId);
         }
 
         private async Task<bool> SendAttachmentsWhenFallback(string intentId)

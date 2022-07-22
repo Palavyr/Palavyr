@@ -4,25 +4,28 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetIsMultiOptionTypeHandler : IRequestHandler<GetIsMultiOptionTypeRequest, GetIsMultiOptionTypeResponse>
     {
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
+        private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
         private readonly ILogger<GetIsMultiOptionTypeHandler> logger;
+        private readonly IPricingStrategyTypeLister pricingStrategyTypeLister;
         private readonly IGuidFinder guidFinder;
 
         public GetIsMultiOptionTypeHandler(
             ILogger<GetIsMultiOptionTypeHandler> logger,
+            IPricingStrategyTypeLister pricingStrategyTypeLister,
             IGuidFinder guidFinder,
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore)
+            IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore)
         {
-            this.dynamicTableMetaStore = dynamicTableMetaStore;
+            this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
             this.logger = logger;
+            this.pricingStrategyTypeLister = pricingStrategyTypeLister;
             this.guidFinder = guidFinder;
         }
 
@@ -36,14 +39,14 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 }
             }
 
-            // node is a dynamic table node type
+            // node is a pricing strategy table node type
             // Comes in as e.g. SelectOneFlat-234234-324-2342-324
-            foreach (var dynamicTableType in DynamicTableTypes.GetDynamicTableTypes())
+            foreach (var pricingStrategyTableType in pricingStrategyTypeLister.ListPricingStrategies())
             {
-                if (request.NodeType.StartsWith(dynamicTableType.TableType))
+                if (request.NodeType.StartsWith(pricingStrategyTableType.GetTableType()))
                 {
                     var tableId = guidFinder.FindFirstGuidSuffixOrNull(request.NodeType);
-                    var table = await dynamicTableMetaStore.Get(tableId, s => s.TableId);
+                    var table = await pricingStrategyTableMetaStore.Get(tableId, s => s.TableId);
                     if (table != null)
                     {
                         var isMultiOption = table.ValuesAsPaths;

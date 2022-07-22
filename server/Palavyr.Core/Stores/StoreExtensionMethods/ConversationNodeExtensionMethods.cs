@@ -2,17 +2,17 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Stores.StoreExtensionMethods
 {
     public static class ConversationNodeExtensionMethods
     {
-        public static async Task<List<ConversationNode>> UpdateConversation(this IEntityStore<Area> intentStore, string intentId, List<ConversationNode> convoUpdate)
+        public static async Task<List<ConversationNode>> UpdateConversation(this IEntityStore<Intent> intentStore, string intentId, List<ConversationNode> convoUpdate)
         {
             var intent = await intentStore
                 .Query()
-                .Where(row => row.AreaIdentifier == intentId)
+                .Where(row => row.IntentId == intentId)
                 .Include(p => p.ConversationNodes)
                 .SingleOrDefaultAsync();
 
@@ -21,7 +21,7 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
             return convoUpdate;
         }
 
-        public static async Task<ConversationNode?> UpdateConversationNodeText(this IEntityStore<ConversationNode> convoNodeStore, string areaId, string nodeId, string nodeTextUpdate)
+        public static async Task<ConversationNode?> UpdateConversationNodeText(this IEntityStore<ConversationNode> convoNodeStore, string intentId, string nodeId, string nodeTextUpdate)
         {
             var node = await convoNodeStore.GetOrNull(nodeId, s => s.NodeId);
             if (node != null)

@@ -8,7 +8,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public const string PathOptionDelimiter = PathAndValueOptionDelimiter;
         public const string ValueOptionDelimiter = PathAndValueOptionDelimiter;
         public const string NodeChildrenStringDelimiter = CommaDelimiter;
-        public const string DynamicTableKeyDelimiter = "-";
+        public const string PricingStrategyTableKeyDelimiter = "-";
         public const string InternalItemDelimiter = CommaDelimiter;
 
         public const string UnixDelimiter = "/";

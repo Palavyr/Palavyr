@@ -1,21 +1,21 @@
 import React, { useState, useCallback, useEffect, ChangeEvent } from "react";
-import { StaticTableMeta, StaticTableMetas, StaticTableRow, StaticTableValidationResult } from "@Palavyr-Types";
-import { StaticTablesModifier } from "./tables/statictable/staticTableModifier";
+import { StaticTableMetaResource, StaticTableMetaResources, StaticTableRowResource, StaticTableValidationResult } from "@Palavyr-Types";
+import { StaticTablesModifier } from "./tables/Statictables/staticTableModifier";
 import { LogueModifier } from "./logueModifier";
 import { cloneDeep } from "lodash";
 import { ExpandableTextBox } from "@common/components/ExpandableTextBox";
-import { DynamicTableConfiguration } from "./tables/dynamicTable/DynamicTableConfiguration";
-import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
+import { StaticTableConfiguration } from "./tables/Statictables/StaticFeeTableConfiguration";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { OsTypeToggle } from "../areaSettings/enableAreas/OsTypeToggle";
 import { useContext } from "react";
 import { makeStyles, Paper } from "@material-ui/core";
+import { PricingStrategyConfiguration } from "./tables/PricingStrategies/PricingStrategyTableConfiguration";
+import { OsTypeToggle } from "../intentSettings/enableIntents/OsTypeToggle";
 
-const getStaticTableValidationResult = (staticTables: StaticTableMetas): StaticTableValidationResult => {
+const getStaticTableValidationResult = (staticTables: StaticTableMetaResources): StaticTableValidationResult => {
     let validationResult = true;
-    staticTables.map((staticTable: StaticTableMeta) => {
-        staticTable.staticTableRows.map((staticTableRow: StaticTableRow) => {
+    staticTables.map((staticTable: StaticTableMetaResource) => {
+        staticTable.staticTableRowResources.map((staticTableRow: StaticTableRowResource) => {
             if (staticTableRow.range) {
                 if (staticTableRow.fee.max <= staticTableRow.fee.min) {
                     validationResult = false;
@@ -49,23 +49,23 @@ const useStyles = makeStyles(theme => ({
 export const ResponseConfiguration = () => {
     const [, setLoaded] = useState(false);
     const [prologue, setPrologue] = useState<string>("");
-    const [staticTables, setStaticTables] = useState<StaticTableMetas>([]);
+    const [staticTables, setStaticTables] = useState<StaticTableMetaResources>([]);
     const [epilogue, setEpilogue] = useState<string>("");
     const cls = useStyles();
-    const { repository, areaIdentifier } = useContext(DashboardContext);
+    const { repository, intentId } = useContext(DashboardContext);
 
     const staticTablesModifier = new StaticTablesModifier(setStaticTables, repository);
     const prologueModifier = new LogueModifier(setPrologue);
     const epilogueModifier = new LogueModifier(setEpilogue);
 
     const savePrologue = async () => {
-        const _prologue_ = await repository.Configuration.updatePrologue(areaIdentifier, prologue);
+        const _prologue_ = await repository.Configuration.UpdatePrologue(intentId, prologue);
         setPrologue(_prologue_);
         return true;
     };
 
     const saveEpilogue = async () => {
-        const _epilogue_ = await repository.Configuration.updateEpilogue(areaIdentifier, epilogue);
+        const _epilogue_ = await repository.Configuration.UpdateEpilogue(intentId, epilogue);
         setEpilogue(_epilogue_);
         return true;
     };
@@ -82,11 +82,7 @@ export const ResponseConfiguration = () => {
 
     const tableSaver = async () => {
         staticTables.forEach(table => {
-            table.id = null;
-            table.staticTableRows.forEach(row => {
-                row.id = null;
-                row.fee.id = null;
-            });
+            table.staticTableRowResources.forEach(row => {});
         });
 
         const validationResult = getStaticTableValidationResult(staticTables);
@@ -95,7 +91,7 @@ export const ResponseConfiguration = () => {
             return false;
         } // TODO: the table saver needs to return the validation result and the SaveOrCancel component needs to require this standard type for the error message.
 
-        const updatedStaticTables = await repository.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
+        const updatedStaticTables = await repository.Configuration.Tables.Static.UpdateStaticTablesMetas(intentId, staticTables);
         setStaticTables([]); // This is a hack to get the darn tables to save and rerender correctly.
         setStaticTables(cloneDeep(updatedStaticTables));
         return true;
@@ -106,25 +102,25 @@ export const ResponseConfiguration = () => {
     };
 
     const loadEstimateConfiguration = useCallback(async () => {
-        const { prologue, epilogue, staticTablesMetas, sendPdfResponse } = await repository.Configuration.getEstimateConfiguration(areaIdentifier);
+        const { prologue, epilogue, staticTablesMetaResources, sendPdfResponse } = await repository.Configuration.getEstimateConfiguration(intentId);
         setPrologue(cloneDeep(prologue));
         setEpilogue(cloneDeep(epilogue));
-        setStaticTables(staticTablesMetas);
+        setStaticTables(staticTablesMetaResources);
         setSendPdfWithResponse(sendPdfResponse);
         setLoaded(true);
-    }, [areaIdentifier]);
+    }, [intentId]);
 
     useEffect(() => {
         loadEstimateConfiguration();
         return () => {
             setLoaded(false);
         };
-    }, [areaIdentifier, loadEstimateConfiguration]);
+    }, [intentId, loadEstimateConfiguration]);
 
     const [sendPdfWithResponse, setSendPdfWithResponse] = useState<boolean | null>(null);
 
     const onToggleSendPdfWithResponse = async () => {
-        const toSend = await repository.Area.toggleSendPdfResponse(areaIdentifier);
+        const toSend = await repository.Intent.ToggleSendPdfResponse(intentId);
         setSendPdfWithResponse(toSend);
     };
 
@@ -147,16 +143,16 @@ export const ResponseConfiguration = () => {
                     />
                 </ExpandableTextBox>
 
-                <DynamicTableConfiguration title="Pricing Strategies" areaIdentifier={areaIdentifier}>
+                <PricingStrategyConfiguration title="Pricing Strategies" intentId={intentId}>
                     <HeaderStrip
                         divider
                         light
                         title="Configure a pricing strategy"
                         subtitle="Pricing strategies are fee tables that require input from the customer to determine the fee. By selecting one, you are telling Palavyr.com that you will be including a node in the conversation that will ask the customer for their input."
                     />
-                </DynamicTableConfiguration>
+                </PricingStrategyConfiguration>
 
-                <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} tableCanceler={tableCanceler} modifier={staticTablesModifier}>
+                <StaticTableConfiguration intentId={intentId} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} tableCanceler={tableCanceler} modifier={staticTablesModifier}>
                     <HeaderStrip
                         divider
                         light

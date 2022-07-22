@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Palavyr.API;
@@ -12,7 +11,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
         public static HttpClient ConfigureInMemoryClient(this WebApplicationFactory<Startup> builder, string sessionId)
         {
             var client = builder.CreateClient();
-            client.BaseAddress = new Uri(IntegrationConstants.BaseUri);
+            client.BaseAddress = new Uri(BaseUriBuilder.BuildBaseUri());
             client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.SessionId, sessionId);
             return client;
         }
@@ -20,7 +19,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
         public static HttpClient ConfigureInMemoryApiKeyClient(this WebApplicationFactory<Startup> builder, string apikey)
         {
             var client = builder.CreateClient();
-            client.BaseAddress = new Uri(IntegrationConstants.BaseUri);
+            client.BaseAddress = new Uri(BaseUriBuilder.BuildBaseUri());
 
             client.DefaultRequestHeaders.Remove("action");
             client.DefaultRequestHeaders.Add("action", "apiKeyAccess");

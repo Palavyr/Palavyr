@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.FileAssetServices;
 
@@ -22,7 +22,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<SaveSingleImageResponse> Handle(SaveSingleImageRequest request, CancellationToken cancellationToken)
         {
             var fileAsset = await nodeFileAssetSaver.SaveFile(request.ImageFile);
-            var fileLink = new FileLink
+            var fileLink = new FileLinkResource
             {
                 Link = await linkCreator.CreateLink(fileAsset.FileId),
                 FileId = fileAsset.FileId,
@@ -34,8 +34,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class SaveSingleImageResponse
     {
-        public SaveSingleImageResponse(FileLink[] response) => Response = response;
-        public FileLink[] Response { get; set; }
+        public SaveSingleImageResponse(FileLinkResource[] response) => Response = response;
+        public FileLinkResource[] Response { get; set; }
     }
 
     public class SaveSingleImageRequest : IRequest<SaveSingleImageResponse>

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Requests;
+using Palavyr.Core.Resources;
+using Palavyr.Core.Services.ResponseCustomization;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -10,17 +10,17 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
     public interface ICompileSenderDetails
     {
-        Task<CompileSenderDetails.CompiledSenderDetails> Compile(string areaId, EmailRequest emailRequest);
+        Task<CompileSenderDetails.CompiledSenderDetails> Compile(string intentId, EmailRequest emailRequest);
     }
 
     public class CompileSenderDetails : ICompileSenderDetails
     {
         private readonly IEntityStore<Account> accountStore;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IResponseCustomizer responseCustomizer;
 
         public CompileSenderDetails(
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IEntityStore<Account> accountStore,
             IResponseCustomizer responseCustomizer
         )
@@ -34,11 +34,11 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         public async Task<CompiledSenderDetails> Compile(string intentId, EmailRequest emailRequest)
         {
             var account = await accountStore.GetAccount();
-            var area = await intentStore.Get(intentId, s => s.AreaIdentifier);
-            var fromAddress = string.IsNullOrWhiteSpace(area.AreaSpecificEmail) ? account.EmailAddress : area.AreaSpecificEmail;
+            var intent = await intentStore.Get(intentId, s => s.IntentId);
+            var fromAddress = string.IsNullOrWhiteSpace(intent.IntentSpecificEmail) ? account.EmailAddress : intent.IntentSpecificEmail;
 
-            var subject = area.UseAreaFallbackEmail ? account.GeneralFallbackSubject : area.Subject;
-            var htmlBody = area.UseAreaFallbackEmail ? account.GeneralFallbackEmailTemplate : area.EmailTemplate;
+            var subject = intent.UseIntentFallbackEmail ? account.GeneralFallbackSubject : intent.Subject;
+            var htmlBody = intent.UseIntentFallbackEmail ? account.GeneralFallbackEmailTemplate : intent.EmailTemplate;
 
             var textBody = htmlBody; // This can be another upload. People can decide one or both. Html is prioritized.
             if (string.IsNullOrWhiteSpace(htmlBody))

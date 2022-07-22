@@ -3,10 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -45,7 +45,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             }
             catch (Exception e)
             {
-                logger.LogDebug($"Failed to Create a preview! Error: {e.Message}");
+                logger.LogDebug("Failed to Create a preview! Error: {ErrorMessage}", e.Message);
                 throw new DomainException(e.Message);
             }
         }

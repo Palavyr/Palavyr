@@ -28,7 +28,9 @@ namespace Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory
         public IServiceProvider CreateServiceProvider(ContainerBuilder containerBuilder)
         {
             var sp = services.BuildServiceProvider();
+#pragma warning disable CS0612
             var filters = sp.GetRequiredService<IEnumerable<IStartupConfigureContainerFilter<ContainerBuilder>>>();
+#pragma warning restore CS0612
 
             foreach (var filter in filters)
             {

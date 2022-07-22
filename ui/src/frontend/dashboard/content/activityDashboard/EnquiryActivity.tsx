@@ -1,7 +1,7 @@
 // ts-ignore
 
 import React, { useContext, useState, useEffect, useCallback } from "react";
-import { AreaNameDetails, Enquiries } from "@Palavyr-Types";
+import { IntentNameDetails, EnquiryResources } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { Radar } from "react-chartjs-2";
 import { DataPlot } from "./components/DataPlot";
@@ -43,18 +43,18 @@ export const transparentize = (value, opacity) => {
         .rgbString();
 };
 
-const calculateRadarData = (areaDetails: AreaNameDetails, enquiries: Enquiries) => {
-    const areas = areaDetails.map(x => x.areaName);
-    const enquiryAreas = enquiries.map(x => x.areaName);
+const calculateRadarData = (intentDetails: IntentNameDetails, enquiries: EnquiryResources) => {
+    const intents = intentDetails.map(x => x.intentName);
+    const enquiryIntents = enquiries.map(x => x.intentName);
 
     const counts: number[] = [];
-    areas.forEach(area => {
-        const singleArea = enquiryAreas.filter((x: string) => x === area);
-        counts.push(singleArea.length);
+    intents.forEach(intent => {
+        const singleIntent = enquiryIntents.filter((x: string) => x === intent);
+        counts.push(singleIntent.length);
     });
 
     const enquiryData: ChartData = {
-        labels: areas,
+        labels: intents,
         datasets: [{ label: "Enquiries", data: counts, backgroundColor: transparentize(getRandomColor("tobyface"), 0.5) }],
     };
     const enquiryOptions: any = {
@@ -77,20 +77,20 @@ const calculateRadarData = (areaDetails: AreaNameDetails, enquiries: Enquiries) 
 };
 
 export const EnquiryActivity = () => {
-    const { repository, areaNameDetails } = useContext(DashboardContext);
+    const { repository, intentNameDetails } = useContext(DashboardContext);
 
     const [data, setData] = useState<any>();
     const [options, setOptions] = useState<any>();
     const [loadingspinner, setLoadingSpinner] = useState<boolean>(true);
 
     const loadEnquiries = useCallback(async () => {
-        const enquiries = await repository.Enquiries.getEnquiries();
-        const { enquiryData, enquiryOptions } = calculateRadarData(areaNameDetails, enquiries);
+        const enquiries = await repository.Enquiries.GetEnquiries();
+        const { enquiryData, enquiryOptions } = calculateRadarData(intentNameDetails, enquiries);
         setData(enquiryData);
         setOptions(enquiryOptions);
 
         setLoadingSpinner(false);
-    }, [areaNameDetails]);
+    }, [intentNameDetails]);
 
     useEffect(() => {
         loadEnquiries();
@@ -111,12 +111,7 @@ export const EnquiryActivity = () => {
     };
 
     return (
-        <DataPlot
-            title="Activity Per Area"
-            subtitle="Learn which areas are seeing the most amount of traffic"
-            hasData={hasData}
-            loadingSpinner={loadingspinner}
-        >
+        <DataPlot title="Activity Per Intent" subtitle="Learn which intents are seeing the most amount of traffic" hasData={hasData} loadingSpinner={loadingspinner}>
             <Radar data={data} options={options} />
         </DataPlot>
     );

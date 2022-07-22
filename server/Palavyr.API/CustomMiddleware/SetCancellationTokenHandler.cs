@@ -30,4 +30,5 @@ namespace Palavyr.API.CustomMiddleware
         public CancellationToken CancellationToken { get; set; }
         public SetCancellationTokenRequest(CancellationToken contextRequestAborted) => CancellationToken = contextRequestAborted;
     }
+    
 }

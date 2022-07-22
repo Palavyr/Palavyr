@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.IO;
@@ -84,13 +83,6 @@ namespace Palavyr.API.CustomMiddleware
             } while (readChunkLength > 0);
 
             return textWriter.ToString();
-        }
-    }
-    public static class RequestResponseLoggingMiddlewareExtensions
-    {
-        public static IApplicationBuilder UseRequestResponseLogging(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<RequestResponseLoggingMiddleware>();
         }
     }
 }

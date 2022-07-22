@@ -21,7 +21,7 @@ export const ChangePhoneNumber = () => {
     const [locale, setLocale] = useState<string>("");
 
     const loadPhoneNumber = useCallback(async () => {
-        const { phoneNumber, locale } = await repository.Settings.Account.getPhoneNumber();
+        const { phoneNumber, locale } = await repository.Settings.Account.GetPhoneNumber();
         setPhoneNumber(phoneNumber ?? "");
         setLocale(locale);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -37,7 +37,7 @@ export const ChangePhoneNumber = () => {
     }, [setPhoneNumber, loadPhoneNumber]);
 
     const handlePhoneNumberChange = async (newPhoneNumber: string) => {
-        await repository.Settings.Account.updatePhoneNumber(newPhoneNumber);
+        await repository.Settings.Account.UpdatePhoneNumber(newPhoneNumber);
         setPhoneNumber(newPhoneNumber);
         return true;
     };

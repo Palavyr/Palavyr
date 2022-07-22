@@ -1,10 +1,10 @@
 import { Divider, makeStyles, Typography } from "@material-ui/core";
-import { FileAssetResource } from "@Palavyr-Types";
 import { Upload } from "frontend/dashboard/content/responseConfiguration/uploadable/Upload";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useState } from "react";
 import { ACCEPTED_FILES } from "@constants";
 import { SelectFromExistingFileAssets } from "./SelectFromExistingFileAssets";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 
 export interface UploadOrSelectFromExistingProps {
     handleFileSave: (files: File[]) => void;
@@ -45,7 +45,7 @@ export const UploadOrSelectFromExisting = ({
             <Divider />
             <div className={cls.imageBlock}>
                 <Upload
-                    dropzoneType="area"
+                    dropzoneType="intent"
                     initialAccordianState={initialAccordianState}
                     modalState={uploadModal}
                     toggleModal={() => toggleModal()}

@@ -73,7 +73,7 @@ export const NodeInterface = ({
             <CardContent className={classNames(cls.card, nodeId)}>
                 {showDebugData && <DataLogging debugData={compileDebug(currentNode)} nodeChildren={joinedChildReferenceString} nodeId={nodeId} />}
                 <NodeHeader isRoot={isRoot} optionPath={optionPath} nodeId={currentNode.nodeId} />
-                {currentNode.isImageNode ? <FileAssetNodeFace fileAssetId={currentNode.imageId} repository={repository} openEditor={openEditor} /> : <TextNodeFace openEditor={openEditor} userText={userText} />}
+                {currentNode.isImageNode ? <FileAssetNodeFace fileAssetId={currentNode.fileId} repository={repository} openEditor={openEditor} /> : <TextNodeFace openEditor={openEditor} userText={userText} />}
                 <NodeTypeSelector currentNode={currentNode} shouldDisableNodeTypeSelector={shouldDisableNodeTypeSelector} />
                 {currentNode.isImageNode ? (
                     <FileAssetNodeEditor currentNode={currentNode} repository={repository} editorIsOpen={editorIsOpen} closeEditor={closeEditor} />

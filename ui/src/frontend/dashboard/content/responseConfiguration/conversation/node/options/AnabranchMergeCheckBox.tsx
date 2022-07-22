@@ -1,5 +1,5 @@
 import { Tooltip } from "@material-ui/core";
-import { NodeTypeOptions, SetState } from "@Palavyr-Types";
+import { NodeTypeOptionResources, SetState } from "@Palavyr-Types";
 import { ConversationTreeContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useState } from "react";
 import { useEffect } from "react";
@@ -7,7 +7,7 @@ import { PalavyrCheckbox } from "@common/components/PalavyrCheckBox";
 import { IPalavyrNode, NodeOptionalProps } from "@Palavyr-Types";
 import AnabranchConfigurer from "../actions/AnabranchConfigurer";
 
-const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChecked: SetState<boolean>, node: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) => {
+const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChecked: SetState<boolean>, node: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources) => {
     const checked = event.target.checked;
     AnabranchConfigurer.SetAnabranchCheckBox(checked, setAnabranchMergeChecked, node, nodeTypeOptions);
 };

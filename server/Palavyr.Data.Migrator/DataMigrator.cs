@@ -5,9 +5,9 @@ using Amazon.Lambda.Core;
 using DbUp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Common.ExtensionMethods;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
-
 
 namespace Palavyr.Data.Migrator
 {
@@ -22,18 +22,9 @@ namespace Palavyr.Data.Migrator
         }
     }
 
-
     public class DataMigrator
     {
-        private const string AccountConfigKey = "AccountsContextPostgres";
-        private const string AccountFilterName = "accounts_migration";
-
-        private const string ConvoConfigKey = "ConvoContextPostgres";
-        private const string ConvoFilterName = "convo_migration";
-
-        private const string ConfigConfigKey = "DashContextPostgres";
-        private const string ConfigFilterName = "configuration_migration";
-
+        private const string ConnectionStringAppSettingsKey = "ConnectionString";
         private const string Environment = "Environment";
 
         private static ILogger<DataMigrator> Logger { get; set; }
@@ -53,50 +44,40 @@ namespace Palavyr.Data.Migrator
                     }
                 });
             Logger = loggerFactory.CreateLogger<DataMigrator>();
-            Logger.LogDebug("This is the first thing that happens. A TEST.");
-            var assembly = Assembly.GetExecutingAssembly();
-            var configurationBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.migrator.json", true);
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                // a os specific call for compatibility with AWS Lambda
-                configurationBuilder.AddUserSecrets(assembly, true);
-            }
+            Logger.LogDebug("{Message}", "This is the first thing that happens. A TEST");
+
+            var configurationBuilder = new ConfigurationBuilder()
+                .AddEnvironmentVariables(prefix: "Palavyr_");
             var configuration = configurationBuilder.Build();
 
-            Logger.LogInformation("This is a test of the logging system.");
-            var env = configuration.GetValue<string>(Environment);
+            Logger.LogInformation("This is a test of the logging system");
+            var env = configuration.GetCurrentEnvironment();
+            var connectionString = configuration.CorrectConnectionString();
 
-            Logger.LogDebug($"This is a debug test to print the env... printing: {env}");
-            Logger.LogInformation($"Data Migrations being performed in {env}");
+            Logger.LogDebug("This is a debug test to print the env... printing: {Environment}", env);
+            Logger.LogInformation("Data Migrations being performed in {Environment}", env);
 
-            var accountsRes = ApplyMigrations(env, AccountConfigKey, AccountFilterName, configuration);
-            if (accountsRes == -1) return -1;
+            var result = ApplyMigrations(env, connectionString, configuration);
+            if (result == -1) return -1;
 
-            var convoRes = ApplyMigrations(env, ConvoConfigKey, ConvoFilterName, configuration);
-            if (convoRes == -1) return -1;
-
-            var configRes = ApplyMigrations(env, ConfigConfigKey, ConfigFilterName, configuration);
-            if (configRes == -1) return -1;
             Logger.LogInformation("Successfully updated the database!");
             return 0;
         }
 
-        private static int ApplyMigrations(string env, string configKey, string filterName, IConfiguration config)
+        private static int ApplyMigrations(string env, string connectionString, IConfiguration config)
         {
-            Logger.LogInformation($"Deploying migration for {configKey} in {env}.");
-            var connection = config.GetConnectionString(configKey);
-            Logger.LogInformation($"Connection String: {connection}");
-            EnsureDatabase.For.PostgresqlDatabase(connection);
-            var accountsRes = DeployMigration(connection, filterName);
-            return accountsRes;
+            Logger.LogInformation("Deploying migration for in {Environment}", env);
+            Logger.LogInformation("Connection String: {ConnectionString}", connectionString);
+            EnsureDatabase.For.PostgresqlDatabase(connectionString);
+            return DeployMigration(connectionString);
         }
 
-        private static int DeployMigration(string connectionString, string filterName)
+        private static int DeployMigration(string connectionString)
         {
             var upgrader =
                 DeployChanges.To
                     .PostgresqlDatabase(connectionString)
-                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), name => name.Contains(filterName)) // reflection used to get the db context
+                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly()) // reflection used to get the db context
                     .LogToConsole()
                     .WithTransactionPerScript()
                     .Build();
@@ -104,7 +85,7 @@ namespace Palavyr.Data.Migrator
             var result = upgrader.PerformUpgrade();
 
             if (result.Successful) return 0;
-            Logger.LogCritical($"Encountered error while running migration for {connectionString}. Error: {result.Error}");
+            Logger.LogCritical("Encountered error while running migration for {ConnectionString}. Error: {Error}", result.Error, connectionString);
             Console.ResetColor();
 #if DEBUG
             Console.ReadLine();

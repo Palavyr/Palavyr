@@ -1,166 +1,55 @@
-﻿#nullable enable
-using System;
-using System.Threading.Tasks;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.IntegrationTests.AppFactory;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
-using Test.Common.Random;
+﻿using System.Threading.Tasks;
+using MediatR;
+using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Resources;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
-    public static class CreateAccountBuilder
+    public static class CreateDefaultTestAccountBuilderExtensionMethods
     {
-        public static DefaultAccountAndSessionBuilder CreateDefaultAccountAndSessionBuilder(this BaseIntegrationFixture test)
+        public static DefaultTestAccountBuilder CreateDefaultTestAccountBuilder(this IntegrationTest testBase)
         {
-            return new DefaultAccountAndSessionBuilder(test);
+            return new DefaultTestAccountBuilder(testBase);
         }
     }
 
-    public class DefaultAccountAndSessionBuilder
+    public class DefaultTestAccountBuilder
     {
-        private readonly BaseIntegrationFixture test;
-        private string? emailAddress;
-        private string? password;
-        private string? accountId;
-        private AccountType? accountType;
-        private string? apikey;
-        private Account.PlanTypeEnum? planType;
-        private bool? asActive;
-        private string? customerId;
-        private DateTime? currentPeriodEnd;
-        private Account.PaymentIntervalEnum? paymentInterval;
-        private bool? hasUpgrade;
+        private readonly IntegrationTest testBase;
 
-        private readonly DateTime futureDate = DateTime.Parse("01/01/2200");
-        private readonly DateTime pastDate = DateTime.Parse("01/01/2200");
 
-        public DefaultAccountAndSessionBuilder(BaseIntegrationFixture test)
+        public DefaultTestAccountBuilder(IntegrationTest testBase)
         {
-            this.test = test;
+            this.testBase = testBase;
         }
 
-        public DefaultAccountAndSessionBuilder AsActive()
+        public async Task<CredentialsResource> Build(string email, string password)
         {
-            this.asActive = true;
-            return this;
-        }
+            var credentials = await testBase.Client.Post<CreateNewAccountRequest, CredentialsResource>(
+                new CreateNewAccountRequest
+                {
+                    EmailAddress = email,
+                    Password = password
+                }, testBase.CancellationToken);
 
-        public DefaultAccountAndSessionBuilder WithAccountId(string accountId)
-        {
-            this.accountId = accountId;
-            return this;
-        }
+            testBase.SessionId = credentials.SessionId;
+            testBase.ApiKey = credentials.ApiKey;
 
+            // TODO: If we make the client lazy again, does it break everything? bc if not, then we can just do this
+            // testBase.Client.AddHeader(ApplicationConstants.MagicUrlStrings.SessionId, credentials.SessionId);
 
-        public DefaultAccountAndSessionBuilder WithDefaultEmailAddress()
-        {
-            this.emailAddress = this.test.EmailAddress;
-            return this;
-        }
+            // activate the account
+            await testBase.Client.Post<ConfirmEmailAddressRequest, bool>(
+                testBase.CancellationToken,
+                r => ConfirmEmailAddressRequest.FormatRoute(IntegrationTest.ConfirmationToken));
 
-        public DefaultAccountAndSessionBuilder WithDefaultPassword()
-        {
-            this.password = IntegrationConstants.Password;
-            return this;
-        }
-
-        public DefaultAccountAndSessionBuilder WithDefaultAccountType()
-        {
-            this.accountType = AccountType.Default;
-            return this;
-        }
-
-        public DefaultAccountAndSessionBuilder WithApiKey(string? apiKey)
-        {
-            this.apikey = apiKey;
-            return this;
-        }
-
-        public DefaultAccountAndSessionBuilder WithProPlan()
-        {
-            this.planType = Account.PlanTypeEnum.Pro;
-            this.currentPeriodEnd = Convert.ToDateTime(futureDate);
-            this.paymentInterval = Account.PaymentIntervalEnum.Month;
-            this.hasUpgrade = true;
-            return this;
-        }
-
-        public DefaultAccountAndSessionBuilder WithPremiumPlan()
-        {
-            this.planType = Account.PlanTypeEnum.Premium;
-            this.currentPeriodEnd = Convert.ToDateTime(futureDate);
-            this.paymentInterval = Account.PaymentIntervalEnum.Month;
-            this.hasUpgrade = true;
-
-            return this;
-        }
-
-        public DefaultAccountAndSessionBuilder WithLytePlan()
-        {
-            this.planType = Account.PlanTypeEnum.Lyte;
-            this.currentPeriodEnd = Convert.ToDateTime(futureDate);
-            this.paymentInterval = Account.PaymentIntervalEnum.Month;
-            this.hasUpgrade = true;
-
-            return this;
-        }
-
-        public DefaultAccountAndSessionBuilder WithFreePlan()
-        {
-            this.planType = Account.PlanTypeEnum.Free;
-            this.currentPeriodEnd = Convert.ToDateTime(pastDate);
-            this.paymentInterval = Account.PaymentIntervalEnum.Null;
-            this.hasUpgrade = false;
-
-            return this;
-        }
-
-        public DefaultAccountAndSessionBuilder WithStripeCustomerId(string id)
-        {
-            this.customerId = id;
-            return this;
-        }
+            // with the mocks registered, we update the account to Pro
+            // the upgrade path is deliberately hard - it only happens via the stripe webhooks
+            await testBase.Client.Post<ProcessStripeNotificationWebhookRequest, Unit>(testBase.CancellationToken);
 
 
-        public async Task<Account> Build()
-        {
-            var email = this.emailAddress ?? "test@gmail.com";
-            var pass = this.password ?? "123456";
-            var id = this.accountId ?? test.AccountId;
-            var accType = this.accountType ?? AccountType.Default;
-            var active = this.asActive ?? false;
-            var custId = this.customerId ?? test.StripeCustomerId;
-            var payinterval = this.paymentInterval ?? Account.PaymentIntervalEnum.Null;
-            var hasUpgraded = this.hasUpgrade ?? false;
-            var planT = this.planType ?? Account.PlanTypeEnum.Free;
-            var periodEnd = this.currentPeriodEnd ?? DateTime.UtcNow;
-            var apiKey = this.apikey ?? test.ApiKey;
-            
-            
-            var defaultAccount = new Account
-            {
-                EmailAddress = email,
-                Password = pass,
-                AccountId = id,
-                ApiKey = apiKey,
-                AccountType = accType,
-                StripeCustomerId = custId,
-                PhoneNumber = null,
-                Locale = "en-AU",
-                HasUpgraded = hasUpgraded,
-                PaymentInterval = payinterval,
-                PlanType = planT,
-                Active = active,
-                CurrentPeriodEnd = periodEnd,
-                IntroductionId = A.RandomId()
-            };
-
-            await test.CreateAndSave(defaultAccount);
-            await test.CreateAndSave(Session.CreateNew(test.SessionId, test.AccountId, test.ApiKey));
-            
-
-            return defaultAccount;
+            return credentials;
         }
     }
 }

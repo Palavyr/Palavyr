@@ -8,7 +8,7 @@ namespace Test.Common.Constants
         public const AccountType AccountType = Palavyr.Core.Services.AuthenticationServices.AccountType.Default;
         public const string ApiKey = "key-456789";
 
-        public const string AreaIdentifier = "area-2345";
+        public const string IntentId = "intent-2345";
     }
     
     

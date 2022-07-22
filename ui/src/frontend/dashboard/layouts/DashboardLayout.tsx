@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles, useTheme, Theme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -13,9 +12,9 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewIntentModal } from "./sidebar/AddNewIntentModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
+import { AlertType, IntentNameDetail, IntentNameDetails, ErrorResponse, PlanTypeMeta, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { defaultUrlForNewArea, DRAWER_WIDTH, MAIN_CONTENT_DIV_ID, MENU_DRAWER_STATE_COOKIE_NAME, WELCOME_TOUR_COOKIE_NAME } from "@constants";
+import { defaultUrlForNewIntent, DRAWER_WIDTH, MAIN_CONTENT_DIV_ID, MENU_DRAWER_STATE_COOKIE_NAME, WELCOME_TOUR_COOKIE_NAME } from "@constants";
 
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { DashboardContext } from "./DashboardContext";
@@ -32,15 +31,17 @@ import classNames from "classnames";
 import { Typography } from "@material-ui/core";
 import { enableBodyScroll } from "body-scroll-lock";
 import $ from "jquery";
+import { IntentResource, IntentResources } from "@common/types/api/EntityResources";
+import { PurchaseTypes } from "@common/types/api/Enums";
 
-const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
-    const areaNameDetails = areaData.map((x: AreaTable) => {
+const fetchSidebarInfo = (intentData: IntentResources): IntentNameDetails => {
+    const intentNameDetails = intentData.map((x: IntentResource) => {
         return {
-            areaIdentifier: x.areaIdentifier,
-            areaName: x.areaName,
+            intentId: x.intentId,
+            intentName: x.intentName,
         };
     });
-    return areaNameDetails;
+    return intentNameDetails;
 };
 
 type StyleProps = {
@@ -127,7 +128,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexGrow: 1,
     },
     iconButton: {
-    borderRadius: "5px",
+        borderRadius: "5px",
         width: "10ch",
         "&:hover": {
             backgroundColor: theme.palette.grey[200],
@@ -145,9 +146,9 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const theme = useTheme();
 
     const history = useHistory();
-    const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
+    const { intentId } = useParams<{ contentType: string; intentId: string }>();
 
-    const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
+    const [intentNameDetails, setIntentNameDetails] = useState<IntentNameDetails>([]);
     const [, setLoaded] = useState<boolean>(false);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -162,7 +163,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const [planTypeMeta, setPlanTypeMeta] = useState<PlanTypeMeta>();
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
+    const [dashboardIntentsLoading, setDashboardIntentsLoading] = useState<boolean>(false);
     const cls = useStyles({ helpOpen });
 
     const [panelErrors, setPanelErrors] = useState<ErrorResponse | null>(null);
@@ -196,30 +197,30 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         })();
     }, []);
 
-    const loadAreas = useCallback(async () => {
-        setDashboardAreasLoading(true);
+    const loadIntents = useCallback(async () => {
+        setDashboardIntentsLoading(true);
 
-        const planTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();
+        const planTypeMeta = await repository.Settings.Subscriptions.GetCurrentPlanMeta();
         setPlanTypeMeta(planTypeMeta);
 
-        const areas = await repository.Area.GetAreas();
-        setAreaNameDetails(sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, fetchSidebarInfo(areas)));
+        const intents = await repository.Intent.GetAllIntents();
+        setIntentNameDetails(sortByPropertyAlphabetical((x: IntentNameDetail) => x.intentName, fetchSidebarInfo(intents)));
 
         const locale = await repository.Settings.Account.GetLocale(true); // readonly == true
         setCurrencySymbol(locale.currentLocale.currencySymbol);
 
-        const numUnseen = await repository.Enquiries.getEnquiryCount();
+        const numUnseen = await repository.Enquiries.GetEnquiryCount();
         setUnseenNotifications(numUnseen);
 
-        if (areaIdentifier) {
-            const currentView = areas.filter((x: AreaTable) => x.areaIdentifier === areaIdentifier).pop();
+        if (intentId) {
+            const currentView = intents.filter((x: IntentResource) => x.intentId === intentId).pop();
 
             if (currentView) {
-                setViewName(currentView.areaName);
+                setViewName(currentView.intentName);
             }
         }
-        setDashboardAreasLoading(false);
-    }, [areaIdentifier]);
+        setDashboardIntentsLoading(false);
+    }, [intentId]);
 
     useEffect(() => {
         const menuStateString = Cookies.get(MENU_DRAWER_STATE_COOKIE_NAME);
@@ -232,19 +233,19 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         }
         const MAIN_DIV = `#${MAIN_CONTENT_DIV_ID}`;
         enableBodyScroll($(MAIN_DIV));
-        loadAreas();
+        loadIntents();
         setLoaded(true);
         return () => {
             setLoaded(false);
         };
-    }, [areaIdentifier, loadAreas]);
+    }, [intentId, loadIntents]);
 
-    const setNewArea = (newArea: AreaTable) => {
-        const newNames = cloneDeep(areaNameDetails);
+    const setNewIntent = (newIntent: IntentResource) => {
+        const newNames = cloneDeep(intentNameDetails);
 
-        newNames.push({ areaName: newArea.areaName, areaIdentifier: newArea.areaIdentifier });
-        setAreaNameDetails(newNames);
-        history.push(defaultUrlForNewArea(newArea.areaIdentifier));
+        newNames.push({ intentName: newIntent.intentName, intentId: newIntent.intentId });
+        setIntentNameDetails(newNames);
+        history.push(defaultUrlForNewIntent(newIntent.intentId));
     };
 
     const handleDrawerClose: () => void = () => {
@@ -271,8 +272,8 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const closeModal = () => {
         setModalState(false);
     };
-    const checkAreaCount = () => {
-        if (planTypeMeta && areaNameDetails.length >= planTypeMeta.allowedAreas) {
+    const checkIntentCount = () => {
+        if (planTypeMeta && intentNameDetails.length >= planTypeMeta.allowedIntents) {
             setAlertState(true);
         } else {
             openModal();
@@ -280,11 +281,11 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     };
 
     const alertDetails: AlertType = {
-        title: `Maximum areas reached for your current plan (${planTypeMeta ? planTypeMeta.planType : ""})`,
+        title: `Maximum intents reached for your current plan (${planTypeMeta ? planTypeMeta.planType : ""})`,
         message:
             planTypeMeta && planTypeMeta.planType === PurchaseTypes.Free
-                ? "Thanks for using Palavyr! Please consider purchasing a subscription to increase the number of areas you can provide."
-                : "Thanks for using Palavyr! To increase the number of areas you can provide, please consider upgrading your subscription the Manage link in the side bar menu.",
+                ? "Thanks for using Palavyr! Please consider purchasing a subscription to increase the number of intents you can provide."
+                : "Thanks for using Palavyr! To increase the number of intents you can provide, please consider upgrading your subscription the Manage link in the side bar menu.",
         link: planTypeMeta && planTypeMeta.isFreePlan ? "/dashboard/subscribe" : "/dashboard",
         linktext: "Subscriptions",
     };
@@ -309,7 +310,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
             {planTypeMeta && (
                 <DashboardContext.Provider
                     value={{
-                        areaIdentifier,
+                        intentId,
                         reRenderDashboard,
                         successOpen,
                         setSuccessOpen,
@@ -327,9 +328,9 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                         setSnackPosition,
                         setIsLoading: setIsLoading,
                         currencySymbol: currencySymbol,
-                        checkAreaCount,
-                        areaName: currentViewName,
-                        areaNameDetails: areaNameDetails,
+                        checkIntentCount,
+                        intentName: currentViewName,
+                        intentNameDetails: intentNameDetails,
                         setViewName: setViewName,
                         unseenNotifications: unseenNotifications,
                         setUnseenNotifications: setUnseenNotifications,
@@ -351,7 +352,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                             helpOpen={helpOpen}
                             title={currentViewName}
                             isLoading={isLoading}
-                            dashboardAreasLoading={dashboardAreasLoading}
+                            dashboardIntentsLoading={dashboardIntentsLoading}
                         />
                         <Drawer
                             variant="permanent"
@@ -375,7 +376,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                                 </IconButton>
                             </div>
                             <Divider />
-                            <SideBarMenu areaNameDetails={areaNameDetails} menuOpen={menuOpen} />
+                            <SideBarMenu intentNameDetails={intentNameDetails} menuOpen={menuOpen} />
                             <div className={cls.drawerFiller}></div>
                         </Drawer>
                         <ContentLoader open={menuOpen}>{children}</ContentLoader>
@@ -394,7 +395,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                             <Divider />
                             {helpComponent}
                         </Drawer>
-                        {planTypeMeta && (areaNameDetails.length < planTypeMeta.allowedAreas ? <AddNewIntentModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
+                        {planTypeMeta && (intentNameDetails.length < planTypeMeta.allowedIntents ? <AddNewIntentModal open={modalState} handleClose={closeModal} setNewIntent={setNewIntent} /> : null)}
                         <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
                         {successOpen && <PalavyrSnackbar position={snackPosition} successText={successText} successOpen={successOpen} setSuccessOpen={setSuccessOpen} />}
                         {warningOpen && <PalavyrSnackbar position={snackPosition} warningText={warningText} warningOpen={warningOpen} setWarningOpen={setWarningOpen} />}

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, makeStyles, PropTypes } from "@material-ui/core";
-import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 import { useContext } from "react";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 
@@ -15,7 +15,7 @@ export interface IResponseButton {
 }
 
 const useStyles = makeStyles(theme => ({
-    button: (prefs: WidgetPreferences) => ({
+    button: (prefs: WidgetPreferencesResource) => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',

@@ -1,70 +1,54 @@
 ﻿using System.Threading.Tasks;
-using Autofac;
-using Palavyr.API.Controllers.WidgetLive;
+using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Models.Aliases;
+using Palavyr.Core.Requests;
+using Palavyr.Core.Resources;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
-using Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.DataCreators;
-using Palavyr.IntegrationTests.Tests.Mocks;
 using Shouldly;
-using Test.Common.Random;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
 {
-    public class SendWidgetResponseEmailControllerFixture : RealDatabaseIntegrationFixture
+    public class SendWidgetResponseEmailControllerFixture : IntegrationTest
     {
-        private readonly string Route = SendWidgetResponseEmailController.Route;
-
-        public SendWidgetResponseEmailControllerFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public SendWidgetResponseEmailControllerFixture(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
-        }
-
-        public override async Task InitializeAsync()
-        {
-            await this.SetupProAccount();
-            await base.InitializeAsync();
         }
 
         [Fact]
         public async Task SendEmailWithoutPdfResponse()
         {
-            // arrange 
-            var intentId = A.RandomId();
-
-            var record = await this.CreateConversationRecordBuilder().WithIntentId(intentId).Build();
-
+            // TODO: NEED TO TRY AND MAKE A "MODIFY INTENT" Controller and have the consolidate all the intent pieces
+            // right now for w/e/ reason, we've got a separate controller for each piece of the intent.
+            // good god. review the UI code to check feasibility...
+            
             // create intent without response PDF set
-            await this.CreateIntentBuilder().WithoutResponsePdf().WithIntentId(intentId).Build(); //SendPdfResponse needs to be false for this test
+            var intent = await this.CreateIntentBuilder()
+                .WithoutResponsePdf()
+                .Build(); //SendPdfResponse needs to be false for this test
 
+            var record = await this.CreateConversationRecordBuilder().WithIntentId(intent.IntentId).Build();
+            
             var emailRequest = new EmailRequest
             {
                 ConversationId = record.ConversationId,
-                DynamicResponses = null,
+                PricingStrategyResponses = new PricingStrategyResponses(),
                 EmailAddress = "test.palavyr@example.com",
                 Name = "Palavyr",
                 Phone = "123456"
             };
 
             // act
-            var response = await ClientApiKey.PostWithApiKey<SendEmailResultResponse>(Route.Replace("{intentId}", intentId), emailRequest);
+            var response = await ApikeyClient.Post<SendWidgetResponseEmailRequest, SendLiveEmailResultResource>(emailRequest, CancellationToken, s => s.Replace("{intentId}", intent.IntentId));
 
             // assert
             response.NextNodeId.ShouldBe(EndingSequenceAttacher.EmailSuccessfulNodeId);
             response.Result.ShouldBeTrue();
             response.FileAsset.ShouldBeNull();
-        }
-
-        public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
-        {
-            builder.RegisterType<MockSeSEmail>().As<ISesEmail>();
-            return base.CustomizeContainer(builder);
         }
     }
 }

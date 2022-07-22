@@ -6,7 +6,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
     {
         // these are only exposed internal to the API - used in the ending sequence to some extent. These are not availalable right now in the ui until we have very 
         // thorough validation logic when saving trees. Right now we do not.
-        public class ShowResponseFileAsset : NodeTypeOption
+        public class ShowResponseFileAsset : NodeTypeOptionResource
         {
             public new static string StringName => nameof(ShowResponseFileAsset);
 
@@ -23,13 +23,13 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
             }
             
         }
-        public class Restart : NodeTypeOption
+        public class Restart : NodeTypeOptionResource
         {
             public new static string StringName => nameof(Restart);
 
@@ -46,13 +46,13 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
             }
         }
 
-        public class SendEmail : NodeTypeOption
+        public class SendEmail : NodeTypeOptionResource
         {
             public new static string StringName => nameof(SendEmail);
 
@@ -69,13 +69,13 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
             }
         }
 
-        public class SendTooComplicatedEmail : NodeTypeOption
+        public class SendTooComplicatedEmail : NodeTypeOptionResource
         {
             public new static string StringName => nameof(SendTooComplicatedEmail);
 
@@ -92,13 +92,13 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
             }
         }
 
-        public class EvaluateThreshold : NodeTypeOption
+        public class EvaluateThreshold : NodeTypeOptionResource
         {
             // hidden node
             public new static string StringName => nameof(EvaluateThreshold);
@@ -117,7 +117,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;

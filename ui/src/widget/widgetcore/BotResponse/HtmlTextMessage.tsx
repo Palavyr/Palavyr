@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
-import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 
 const useStyles = makeStyles(theme => ({
-    outer: (widgetPreferences: WidgetPreferences) => ({
+    outer: (widgetPreferences: WidgetPreferencesResource) => ({
         fontFamily: widgetPreferences.fontFamily,
     }),
-    inner: (widgetPreferences: WidgetPreferences) => ({
+    inner: (widgetPreferences: WidgetPreferencesResource) => ({
         fontSize: "15px",
         fontFamily: widgetPreferences.fontFamily,
     }),

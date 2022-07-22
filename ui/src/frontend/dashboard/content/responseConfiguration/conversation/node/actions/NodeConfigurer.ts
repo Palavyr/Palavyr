@@ -1,4 +1,4 @@
-import { NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
+import { NodeTypeCodeEnum, NodeTypeOptionResources } from "@Palavyr-Types";
 import { IPalavyrNode } from "@Palavyr-Types";
 import AnabranchConfigurer from "./AnabranchConfigurer";
 import LoopbackAnchorConfigurer from "./LoopbackAnchorConfigurer";
@@ -6,18 +6,18 @@ import LoopbackAnchorConfigurer from "./LoopbackAnchorConfigurer";
 export class NodeConfigurer {
     constructor() {}
 
-    public configure(currentNode: IPalavyrNode, parentNode: IPalavyrNode | null = null, nodeTypeOptions: NodeTypeOptions) {
+    public configure(currentNode: IPalavyrNode, parentNode: IPalavyrNode | null = null, nodeTypeOptions: NodeTypeOptionResources) {
         if (currentNode.isRoot) {
             AnabranchConfigurer.configureAnabranchWhenRoot(currentNode);
             LoopbackAnchorConfigurer.ConfigureLoopbackAnchorWhenRoot(currentNode);
         } else if (parentNode !== null) {
             currentNode.parentNodeReferences.addReference(parentNode);
 
-            if (currentNode.nodeTypeCode !== NodeTypeCode.VII) {
+            if (currentNode.nodeTypeCodeEnum !== NodeTypeCodeEnum.VII) {
                 currentNode.addLine(parentNode.nodeId);
             }
-            if (currentNode.nodeTypeCode === NodeTypeCode.VII) {
-                if (parentNode.nodeTypeCode !== NodeTypeCode.VIII) {
+            if (currentNode.nodeTypeCodeEnum === NodeTypeCodeEnum.VII) {
+                if (parentNode.nodeTypeCodeEnum !== NodeTypeCodeEnum.VIII) {
                     currentNode.addLine(parentNode.nodeId);
                 }
             }

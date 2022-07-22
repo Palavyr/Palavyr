@@ -6,7 +6,6 @@ using Amazon.S3;
 using Amazon.SimpleEmail;
 using Autofac;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.EmailService.SmtpEmail;
 
@@ -28,9 +27,9 @@ namespace Palavyr.API.Registration.Container
             var accessKey = configuration.GetAccessKey();
             var secretKey = configuration.GetSecretKey();
 
-            var loggerFactory = new LoggerFactory().AddLambdaLogger();
-            var logger = loggerFactory.CreateLogger<AmazonModule>();
-            logger.LogDebug("LOGGING!");
+            // var loggerFactory = new LoggerFactory().AddLambdaLogger();
+            // var logger = loggerFactory.CreateLogger<AmazonModule>();
+            // logger.LogDebug("LOGGING!");
 
             // logger.LogDebug("====================================");
             // Console.WriteLine("====================================");
@@ -63,7 +62,6 @@ namespace Palavyr.API.Registration.Container
                 RegionEndpoint = RegionEndpoint.USEast1,
             };
 
-            base.Load(builder);
             builder.Register(
                     context => { return new AmazonS3Client(credentials, s3Config); })
                 .As<IAmazonS3>()
@@ -75,6 +73,7 @@ namespace Palavyr.API.Registration.Container
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<SmtpEmailClient>().As<ISmtpEmailClient>();
+            base.Load(builder);
         }
     }
 }

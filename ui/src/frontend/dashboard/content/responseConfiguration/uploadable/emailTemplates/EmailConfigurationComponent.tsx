@@ -1,7 +1,7 @@
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { UploadOrSelectFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
 import { makeStyles, Typography } from "@material-ui/core";
-import { VariableDetail } from "@Palavyr-Types";
+import { ResponseVariable } from "@Palavyr-Types";
 import { EmailSubject } from "frontend/dashboard/content/settings/subject/EmailSubject";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
@@ -18,7 +18,7 @@ const useEmailStyles = makeStyles(() => ({
 }));
 
 export interface EmailConfigurationComponentProps {
-    variableDetails: VariableDetail[];
+    variableDetails: ResponseVariable[];
     saveEmailTemplate: (emailTemplate: string) => Promise<string>;
     saveEmailSubject: (emailSubject: string) => Promise<string>;
     getCurrentEmailTemplate: () => Promise<string>;
@@ -34,7 +34,7 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
     const [loaded, setLoaded] = useState<boolean>(false);
     const [emailTemplate, setEmailTemplate] = useState<string>("");
     const [modalState, setmodalState] = useState<boolean>(false);
-    const [areaSubjectState, setAreaSubjectState] = useState<string>("");
+    const [intentSubjectState, setIntentSubjectState] = useState<string>("");
 
     const toggleModal = () => {
         setmodalState(!modalState);
@@ -66,16 +66,16 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
         return true;
     };
 
-    const onAreaSubjectChange = (event: any) => setAreaSubjectState(event.target.value);
-    const onSaveAreaSubject = async () => {
-        const updatedSubject = await saveEmailSubject(areaSubjectState);
-        setAreaSubjectState(updatedSubject);
+    const onIntentSubjectChange = (event: any) => setIntentSubjectState(event.target.value);
+    const onSaveIntentSubject = async () => {
+        const updatedSubject = await saveEmailSubject(intentSubjectState);
+        setIntentSubjectState(updatedSubject);
         return true;
     };
 
-    const loadAreaSubject = useCallback(async () => {
+    const loadIntentSubject = useCallback(async () => {
         const currentSubject = await getCurrentEmailSubject();
-        setAreaSubjectState(currentSubject);
+        setIntentSubjectState(currentSubject);
     }, []);
 
     const loadTemplate = useCallback(async () => {
@@ -86,17 +86,17 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
 
     useEffect(() => {
         loadTemplate();
-        loadAreaSubject();
+        loadIntentSubject();
         return () => {
             setLoaded(false);
         };
-    }, [loadTemplate, loadAreaSubject]);
+    }, [loadTemplate, loadIntentSubject]);
 
     return (
         <>
-            <EmailSubject subject={areaSubjectState} accordianTitle="Email Subject Line" onChange={onAreaSubjectChange}>
+            <EmailSubject subject={intentSubjectState} accordianTitle="Email Subject Line" onChange={onIntentSubjectChange}>
                 <div className={cls.saveOrCancel}>
-                    <SaveOrCancel onSave={onSaveAreaSubject} onCancel={loadAreaSubject} />
+                    <SaveOrCancel onSave={onSaveIntentSubject} onCancel={loadIntentSubject} />
                 </div>
             </EmailSubject>
             <hr />

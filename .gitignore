@@ -248,3 +248,10 @@ widget/build/*
 ui/dist*
 
 *HTMLTEST.html
+
+dev.local.env
+localdev.env
+appsettings.development.json
+appsettings.migrator.development.json
+the--all-route.txt
+*terraform*

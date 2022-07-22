@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Authentication
 {
@@ -23,7 +23,7 @@ namespace Palavyr.API.Controllers.Authentication
         // https://codeburst.io/jwt-auth-in-asp-net-core-148fb72bed03
         [AllowAnonymous]
         [HttpPost(Route)]
-        public async Task<Credentials> RequestLogin([FromBody] CreateLoginRequest request, CancellationToken cancellationToken)
+        public async Task<CredentialsResource> RequestLogin([FromBody] CreateLoginRequest request, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;

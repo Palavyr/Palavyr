@@ -1,7 +1,7 @@
 import { widgetUrl } from "@common/client/clientUtils";
 import { makeStyles, Typography, useTheme } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { PreCheckError } from "@Palavyr-Types";
+import { PreCheckErrorResource } from "@Palavyr-Types";
 import { Align } from "@common/positioning/Align";
 import React from "react";
 import { IFrame } from "./IFrame";
@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface DemoWidgetProps {
-    preCheckErrors: PreCheckError[];
+    preCheckErrors: PreCheckErrorResource[];
     apiKey: string;
     iframeRefreshed: boolean;
 }

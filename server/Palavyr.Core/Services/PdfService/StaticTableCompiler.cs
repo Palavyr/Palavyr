@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Stores;
@@ -13,11 +13,11 @@ namespace Palavyr.Core.Services.PdfService
     public class StaticTableCompiler : IStaticTableCompiler
     {
         private readonly IBusinessRules businessRules;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
 
         public StaticTableCompiler(
             IBusinessRules businessRules,
-            IEntityStore<Area> intentStore)
+            IEntityStore<Intent> intentStore)
         {
             this.businessRules = businessRules;
             this.intentStore = intentStore;

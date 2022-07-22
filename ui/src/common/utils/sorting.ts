@@ -1,4 +1,4 @@
-import { WidgetNodes } from "@Palavyr-Types";
+import { WidgetNodeResources } from "@common/types/api/EntityResources";
 
 
 export const sortByPropertyAlphabetical = (stringPropertyGetter: (x: object) => string, array: Array<any>, reverse: boolean = false) => {
@@ -50,7 +50,7 @@ function compareValues<T>(valA: T, valB: T, reverse: boolean = false) {
     return 0;
 }
 
-export const sortChildrenByOptions = (children: WidgetNodes) => {
+export const sortChildrenByOptions = (children: WidgetNodeResources) => { // TODO make generic...
     return children.sort((a, b) => {
         if (a.optionPath == null || b.optionPath == null) {
             return 0;

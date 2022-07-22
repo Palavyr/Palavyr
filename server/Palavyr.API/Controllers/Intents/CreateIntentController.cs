@@ -3,21 +3,20 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Intents
 {
-    public class CreateAreaController : PalavyrBaseController
+    public class CreateNewIntentController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "intents/create";
-        public CreateAreaController(IMediator mediator)
+        public CreateNewIntentController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpPost(Route)]
-        public async Task<Area> Create(
+        [HttpPost(CreateIntentRequest.Route)]
+        public async Task<IntentResource> Create(
             [FromBody]
             CreateIntentRequest request,
             CancellationToken cancellationToken)

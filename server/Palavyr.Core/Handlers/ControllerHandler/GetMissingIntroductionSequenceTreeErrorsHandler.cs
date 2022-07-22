@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
@@ -35,15 +35,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 missingNodes.Add(DefaultNodeTypeOptions.CollectDetails.StringName);
             }
 
-            var treeErrors = new TreeErrorsResponse(missingNodes.ToArray(), new string[] { });
+            var treeErrors = new TreeErrorsResource(missingNodes.ToArray(), new string[] { });
             return new GetMissingIntroductionSequenceTreeErrorsResponse(treeErrors);
         }
     }
 
     public class GetMissingIntroductionSequenceTreeErrorsResponse
     {
-        public GetMissingIntroductionSequenceTreeErrorsResponse(TreeErrorsResponse response) => Response = response;
-        public TreeErrorsResponse Response { get; set; }
+        public GetMissingIntroductionSequenceTreeErrorsResponse(TreeErrorsResource resource) => Resource = resource;
+        public TreeErrorsResource Resource { get; set; }
     }
 
     public class GetMissingIntroductionSequenceTreeErrorsRequest : IRequest<GetMissingIntroductionSequenceTreeErrorsResponse>

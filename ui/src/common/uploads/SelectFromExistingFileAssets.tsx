@@ -3,7 +3,7 @@ import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 import React, { useCallback, useEffect, useState } from "react";
 
 export interface SelectFromExistingImagesProps {
@@ -60,14 +60,15 @@ export const SelectFromExistingFileAssets = ({ repository, disable, onSelectChan
         <>
             <PalavyrAccordian title="Select from your files" disable={disable} initialState={false}>
                 {options && (
-                    <PalavyrAutoComplete
-                        groupby={groupby}
+                    <PalavyrAutoComplete<FileAssetResource>
+                        groupBy={groupby}
                         options={options}
                         label=""
-                        shouldDisableSelect={false}
+                        disabled={false}
                         onChange={onSelectChange}
-                        getOptionLabel={option => option.fileName}
+                        getOptionLabel={(option: FileAssetResource) => option.fileName}
                         getOptionSelected={getOptionSelected}
+                        renderInput={params => <PalavyrText {...params} variant="standard" />}
                     />
                 )}
             </PalavyrAccordian>

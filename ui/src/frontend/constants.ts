@@ -48,11 +48,11 @@ export const HELP_DRAWER_WIDTH: number = 300;
 export const DEFAULT_NODE_TEXT_LIST = ["Add some meaningful text.", "Asking questions periodically is a good way to keep your customers engaged."];
 export const DEFAULT_NODE_TEXT = () => (Math.ceil(Math.random()) % 2 == 0 ? DEFAULT_NODE_TEXT_LIST[0] : DEFAULT_NODE_TEXT_LIST[1]);
 
-export const defaultUrlForNewArea = (areaIdentifier: string) => `/dashboard/editor/pricing/${areaIdentifier}?tab=0`;
+export const defaultUrlForNewIntent = (intentId: string) => `/dashboard/editor/pricing/${intentId}?tab=0`;
 
 // layers
-export const ADD_NEW_AREA_DIALOG_BOX_zINDEX = 150;
-export const ADD_NEW_AREA_BACKDROP_zINDEX = 120;
+export const ADD_NEW_INTENT_DIALOG_BOX_zINDEX = 150;
+export const ADD_NEW_INTENT_BACKDROP_zINDEX = 120;
 export const DASHBOARD_HEADER_TOPBAR_zINDEX = 100;
 export const CHAT_DEMO_LISTBOX_zINDEX = 50;
 

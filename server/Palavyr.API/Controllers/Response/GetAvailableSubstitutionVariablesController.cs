@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Response
 {
@@ -19,10 +18,10 @@ namespace Palavyr.API.Controllers.Response
         }
 
         [HttpGet(Route)]
-        public async Task<List<ResponseVariable>> Get(CancellationToken cancellationToken)
+        public async Task<ResponseVariableResource> Get(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetAvailableSubstitutionVariablesRequest(), cancellationToken);
-            return response.Response;
+            return response.Resource;
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Stripe;
 using Stripe.Checkout;
-using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
+using Account = Palavyr.Core.Data.Entities.Account;
 
 namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
 {

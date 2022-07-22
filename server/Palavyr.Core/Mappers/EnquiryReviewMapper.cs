@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
-using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.Core.Models.Resources.Responses;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.Core.Mappers
 {
-    public class EnquiryReviewMapper : IMapToNew<ConversationRecord, Enquiry>
+    public class EnquiryReviewMapper : IMapToNew<ConversationHistoryMeta, EnquiryResource>
     {
         private readonly ILinkCreator linkCreator;
 
@@ -14,7 +15,7 @@ namespace Palavyr.Core.Mappers
             this.linkCreator = linkCreator;
         }
 
-        public async Task<Enquiry> Map(ConversationRecord @from)
+        public async Task<EnquiryResource> Map(ConversationHistoryMeta @from, CancellationToken cancellationToken)
         {
             var fileAssetResource = new FileAssetResource();
 
@@ -25,14 +26,13 @@ namespace Palavyr.Core.Mappers
                 fileAssetResource.Link = link;
             }
 
-            return new Enquiry
+            return new EnquiryResource
             {
                 Id = @from.Id,
                 ConversationId = @from.ConversationId,
                 FileAssetResource = fileAssetResource,
                 TimeStamp = @from.TimeStamp.ToString(),
-                AccountId = @from.AccountId,
-                AreaName = @from.AreaName,
+                IntentName = @from.IntentName,
                 EmailTemplateUsed = @from.EmailTemplateUsed,
                 Seen = @from.Seen,
                 Name = @from.Name,

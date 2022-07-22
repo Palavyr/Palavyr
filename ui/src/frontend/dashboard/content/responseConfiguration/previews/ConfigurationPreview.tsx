@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 import { CircularProgress, makeStyles, Paper } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { HeaderStrip } from "@common/components/HeaderStrip";
@@ -27,17 +27,17 @@ const useStyles = makeStyles(theme => ({
 
 export const ConfigurationPreview = () => {
     const { repository, setIsLoading } = useContext(DashboardContext);
-    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
+    const { intentId } = useParams<{ intentId: string }>();
     const [localLoading, setLocalLoading] = useState<boolean>(true);
 
     const [preview, setPreview] = useState<FileAssetResource>();
     const cls = useStyles({ preview: preview ? true : false });
 
     const loadPreview = React.useCallback(async () => {
-        const fileAssetResource = await repository.Configuration.Preview.FetchPreview(areaIdentifier);
+        const fileAssetResource = await repository.Configuration.Preview.FetchPreview(intentId);
         setPreview(fileAssetResource);
         setIsLoading(true);
-    }, [areaIdentifier]);
+    }, [intentId]);
 
     const reload = () => {
         loadPreview();
@@ -46,7 +46,7 @@ export const ConfigurationPreview = () => {
     useEffect(() => {
         loadPreview();
         setIsLoading(true);
-    }, [areaIdentifier, loadPreview]);
+    }, [intentId, loadPreview]);
 
     const onLoad = () => {
         setIsLoading(false);

@@ -1,46 +1,38 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
-using Palavyr.Core.Services.StripeServices.Products;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers;
-using Palavyr.Core.Stores;
 using Stripe;
-using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
+using Account = Palavyr.Core.Data.Entities.Account;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
     public class ProcessStripeSubscriptionUpdatedHandler : INotificationHandler<SubscriptionUpdatedEvent>
     {
-        private readonly IEntityStore<Account> accountStore;
+        private readonly IStripeWebhookAccountGetter stripeWebhookAccountGetter;
         private readonly IStripeSubscriptionService stripeSubscriptionService;
-        private readonly IProductRegistry productRegistry;
-        private readonly ILogger<ProcessStripeSubscriptionUpdatedHandler> logger;
 
         public ProcessStripeSubscriptionUpdatedHandler(
-            IEntityStore<Account> accountStore,
-            IStripeSubscriptionService stripeSubscriptionService,
-            IProductRegistry productRegistry,
-            ILogger<ProcessStripeSubscriptionUpdatedHandler> logger
+            IStripeWebhookAccountGetter stripeWebhookAccountGetter,
+            IStripeSubscriptionService stripeSubscriptionService
         )
         {
-            this.accountStore = accountStore;
+            this.stripeWebhookAccountGetter = stripeWebhookAccountGetter;
             this.stripeSubscriptionService = stripeSubscriptionService;
-            this.productRegistry = productRegistry;
-            this.logger = logger;
         }
 
         public async Task Handle(SubscriptionUpdatedEvent @event, CancellationToken cancellationToken)
         {
             var subscription = @event.Subscription;
 
-            var account = await subscription.GetAccount(accountStore, logger);
+            var account = await stripeWebhookAccountGetter.GetAccount(subscription.CustomerId);
+
             if (subscription.CancelAtPeriodEnd)
             {
                 account.CurrentPeriodEnd = subscription.CurrentPeriodEnd;
                 // if we are canceling at period end, then we've cancelled the subscription
-                account.PlanType = Models.Accounts.Schemas.Account.PlanTypeEnum.Free;
+                account.PlanType = Account.PlanTypeEnum.Free;
             }
             else
             {
@@ -49,7 +41,7 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 
                 // check the updated subscription type and apply
                 var planTypeEnum = await stripeSubscriptionService.GetPlanTypeEnum(subscription);
-                
+
                 account.PlanType = planTypeEnum;
             }
         }

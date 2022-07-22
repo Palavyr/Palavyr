@@ -9,17 +9,16 @@ namespace Palavyr.API.Controllers.Accounts
     public class DeleteAccountController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "account/delete-account";
 
         public DeleteAccountController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpPost(Route)]
+        [HttpDelete(DeleteAccountRequest.Route)]
         public async Task DeleteAccount(CancellationToken cancellationToken)
         {
-            await mediator.Publish(new DeleteAccountNotification(), cancellationToken);
+            await mediator.Send(new DeleteAccountRequest(), cancellationToken);
         }
     }
 }

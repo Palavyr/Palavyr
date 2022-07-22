@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Mappers;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.FileAssets
 {

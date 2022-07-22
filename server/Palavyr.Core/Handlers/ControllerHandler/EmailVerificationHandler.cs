@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Stores;
 
@@ -10,12 +10,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class EmailVerificationHandler : IRequestHandler<EmailAddressVerificationRequest, EmailAddressVerificationResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IEmailVerificationStatus emailVerificationStatus;
         private readonly ILogger<EmailVerificationHandler> logger;
 
         public EmailVerificationHandler(
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IEmailVerificationStatus emailVerificationStatus,
             ILogger<EmailVerificationHandler> logger
         )
@@ -27,15 +27,15 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<EmailAddressVerificationResponse> Handle(EmailAddressVerificationRequest request, CancellationToken cancellationToken)
         {
-            var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
+            var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(request.EmailAddress);
 
-            area.EmailIsVerified = verificationResponse.IsVerified();
-            area.AwaitingVerification = verificationResponse.IsPending();
+            intent.EmailIsVerified = verificationResponse.IsVerified();
+            intent.AwaitingVerification = verificationResponse.IsPending();
 
             if (!verificationResponse.IsFailed())
             {
-                area.AreaSpecificEmail = request.EmailAddress;
+                intent.IntentSpecificEmail = request.EmailAddress;
             }
 
             return new EmailAddressVerificationResponse(verificationResponse);

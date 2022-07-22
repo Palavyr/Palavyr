@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useContext } from "react";
-import { FileAssetResource } from "@Palavyr-Types";
+import { FileAssetResource } from "@common/types/api/EntityResources";
 import { UploadOrSelectFromExisting } from "@common/uploads/UploadOrChooseFromExisting";
 import { cloneDeep } from "lodash";
 
@@ -15,7 +15,7 @@ const uploadDetails = <div className="alert alert-info">Use this dialog to uploa
 export const AttachmentConfiguration = () => {
     const { repository } = useContext(DashboardContext);
 
-    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
+    const { intentId } = useParams<{ intentId: string }>();
 
     const { setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
 
@@ -25,18 +25,18 @@ export const AttachmentConfiguration = () => {
     const [currentFileAssetId, setCurrentFileAssetId] = useState<string>("");
 
     const removeAttachment = async (fileId: string) => {
-        const fileAssetResources = await repository.Configuration.Attachments.DeleteAttachment(areaIdentifier, fileId);
+        const fileAssetResources = await repository.Configuration.Attachments.DeleteAttachment(intentId, fileId);
         setAttachmentList(fileAssetResources);
         setSuccessText("Attachment Removed");
         setSuccessOpen(true);
     };
 
     const loadAttachments = useCallback(async () => {
-        const fileAssetResources = await repository.Configuration.Attachments.GetAttachments(areaIdentifier);
+        const fileAssetResources = await repository.Configuration.Attachments.GetAttachments(intentId);
         setAttachmentList(fileAssetResources);
         setLoaded(true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier]);
+    }, [intentId]);
 
     useEffect(() => {
         loadAttachments();
@@ -44,7 +44,7 @@ export const AttachmentConfiguration = () => {
             setLoaded(false);
             setCurrentPreview(null);
         };
-    }, [areaIdentifier, attachmentList.length, loadAttachments]);
+    }, [intentId, attachmentList.length, loadAttachments]);
 
     const handleFileSave = async (files: File[]) => {
         if (files.length === 0) return;
@@ -52,7 +52,7 @@ export const AttachmentConfiguration = () => {
         var formData = new FormData();
         files.forEach((file: File) => formData.append("files", file));
 
-        const fileAssetResources = await repository.Configuration.Attachments.UploadAttachments(areaIdentifier, formData);
+        const fileAssetResources = await repository.Configuration.Attachments.UploadAttachments(intentId, formData);
         setAttachmentList(fileAssetResources);
         setSuccessText("Attachment Uploaded");
         setSuccessOpen(true);
@@ -66,7 +66,7 @@ export const AttachmentConfiguration = () => {
 
     const onSelectChange = async (_: any, option: FileAssetResource) => {
         setCurrentFileAssetId(option.fileId);
-        await repository.Configuration.FileAssets.LinkFileAssetToIntent(option.fileId, areaIdentifier);
+        await repository.Configuration.FileAssets.LinkFileAssetToIntent(option.fileId, intentId);
         setAttachmentList(cloneDeep([...attachmentList.filter(x => x.fileId != option.fileId), option]));
         setSuccessText("Attachment Added");
         setSuccessOpen(true);

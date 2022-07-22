@@ -2,8 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AttachmentServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -29,7 +30,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             await attachmentDeleter.DeleteAttachment(request.FileId, request.IntentId);
             var fileAssets = await attachmentRetriever.GetAttachmentLinksForIntent(request.IntentId);
 
-            var resources = await mapper.MapMany(fileAssets);
+            var resources = await mapper.MapMany(fileAssets, cancellationToken);
             return new DeleteAttachmentResponse(resources);
         }
     }

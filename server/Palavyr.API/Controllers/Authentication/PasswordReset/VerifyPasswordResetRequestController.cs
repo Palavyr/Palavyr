@@ -19,10 +19,10 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
 
         [AllowAnonymous]
         [HttpPost(Route)]
-        public async Task<VerificationResponse> Post([FromRoute] string token, CancellationToken cancellationToken)
+        public async Task<PasswordVerificationResource> Post([FromRoute] string token, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new VerifyPasswordResetRequestRequest(token), cancellationToken);
-            return response.Response;
+            return response.Resource;
         }
     }
 }

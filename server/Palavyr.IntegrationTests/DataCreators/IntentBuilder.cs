@@ -1,13 +1,14 @@
 ﻿using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Resources;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
     public static partial class BuilderExtensionMethods
     {
-        public static IntentBuilder CreateIntentBuilder(this BaseIntegrationFixture test)
+        public static IntentBuilder CreateIntentBuilder(this IntegrationTest test)
         {
             return new IntentBuilder(test);
         }
@@ -15,14 +16,14 @@ namespace Palavyr.IntegrationTests.DataCreators
 
     public class IntentBuilder
     {
-        private readonly BaseIntegrationFixture test;
-        private bool? sendPdfResponse = null!;
-        private string intentId;
-        private string accountId;
-        private string emailTemplate;
-        private string subject;
+        private readonly IntegrationTest test;
+        private bool? sendPdfResponse;
+        private string? emailTemplate;
+        private string? subject;
 
-        public IntentBuilder(BaseIntegrationFixture test)
+        private string? name;
+
+        public IntentBuilder(IntegrationTest test)
         {
             this.test = test;
         }
@@ -30,18 +31,6 @@ namespace Palavyr.IntegrationTests.DataCreators
         public IntentBuilder WithoutResponsePdf()
         {
             this.sendPdfResponse = false;
-            return this;
-        }
-
-        public IntentBuilder WithIntentId(string intentId)
-        {
-            this.intentId = intentId;
-            return this;
-        }
-
-        public IntentBuilder WithAccountId(string accountId)
-        {
-            this.accountId = accountId;
             return this;
         }
 
@@ -57,25 +46,43 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
-        public async Task<Area> Build()
+        public IntentBuilder WithName(string name)
         {
-            var intentId = this.intentId ?? A.RandomId();
-            var sendPdf = this.sendPdfResponse ?? false;
-            var accountId = this.accountId ?? test.AccountId;
-            var emailTemplate = this.emailTemplate ?? A.RandomString();
-            var subject = this.subject ?? A.RandomString();
+            this.name = name;
+            return this;
+        }
 
-            var intent = new Area
+        public async Task<IntentResource> Build()
+        {
+            var nm = name ?? A.RandomName();
+            var newIntent = await test.Client.Post<CreateIntentRequest, IntentResource>(new CreateIntentRequest { IntentName = nm }, test.CancellationToken);
+
+            if (sendPdfResponse != null)
             {
-                AreaIdentifier = intentId,
-                SendPdfResponse = sendPdf,
-                AccountId = accountId,
-                EmailTemplate = emailTemplate,
-                Subject = subject
-            };
+                newIntent.SendPdfResponse = this.sendPdfResponse.Value;
+                await test.Client.Post<ModifySendResponseRequest, bool>(test.CancellationToken, s => ModifySendResponseRequest.FormatRoute(newIntent.IntentId));
+            }
 
-            await test.CreateAndSave(intent);
-            return intent;
+            if (emailTemplate != null && !string.IsNullOrEmpty(emailTemplate))
+            {
+                newIntent.EmailTemplate = emailTemplate;
+                await test.Client.Post<ModifyIntentEmailTemplateRequest, string>(test.CancellationToken);
+            }
+
+            if (subject != null && !string.IsNullOrEmpty(subject))
+            {
+                newIntent.Subject = subject;
+                await test.Client.Post<ModifyIntentEmailSubjectRequest, string>(test.CancellationToken);
+            }
+
+            if (name != null && !string.IsNullOrEmpty(name))
+            {
+                newIntent.IntentName = name;
+                await test.Client.Post<ModifyIntentNameRequest, string>(test.CancellationToken, _ => ModifyIntentNameRequest.FormatRoute(newIntent.IntentId));
+            }
+
+            
+            return newIntent;
         }
     }
 }

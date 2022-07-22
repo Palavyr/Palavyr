@@ -1,42 +1,37 @@
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Stores;
 
 namespace Palavyr.API.Controllers.Intents
 {
-    [Authorize]
     public class ModifyIntentNameController : PalavyrBaseController
     {
-        private readonly IEntityStore<Area> intentStore;
-        private readonly ILogger<ModifyIntentNameController> logger;
+        private readonly IMediator mediator;
 
         public ModifyIntentNameController(
-            IEntityStore<Area> intentStore,
-            ILogger<ModifyIntentNameController> logger
+            IMediator mediator
         )
         {
-            this.intentStore = intentStore;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpPut("areas/update/name/{intentId}")]
+        public class IntentNameBody
+        {
+            public string IntentName { get; set; }
+        }
+
+        [HttpPut(ModifyIntentNameRequest.Route)]
         public async Task<string> Modify(
             [FromBody]
-            UpdateIntentNameRequest intentNameText,
-            string intentId
+            IntentNameBody intentNameText,
+            string intentId,
+            CancellationToken cancellationToken
         )
         {
-            var intent = await intentStore.Get(intentId, s => s.AreaIdentifier);
-            if (intentNameText.AreaName != intent.AreaName)
-            {
-                intent.AreaName = intentNameText.AreaName;
-            }
-
-            return intentNameText.AreaName;
+            var response = await mediator.Send(new ModifyIntentNameRequest(), cancellationToken);
+            return response.IntentName;
         }
     }
 }

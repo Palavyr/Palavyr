@@ -1,48 +1,45 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Mappers
 {
     public class WidgetNodeResourceMapper : IMapToNew<ConversationNode, WidgetNodeResource>
     {
-        private readonly IEntityStore<DynamicTableMeta> dynamicTableMetaStore;
-        private readonly ILinkCreator linkCreator;
+        private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
         private readonly IEntityStore<FileAsset> fileAssetStore;
         private readonly IMapToNew<FileAsset, FileAssetResource> fileAssetMapper;
         private readonly IGuidFinder guidFinder;
 
         public WidgetNodeResourceMapper(
-            IEntityStore<DynamicTableMeta> dynamicTableMetaStore,
-            ILinkCreator linkCreator,
+            IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore,
             IEntityStore<FileAsset> fileAssetStore,
             IMapToNew<FileAsset, FileAssetResource> fileAssetMapper,
             IGuidFinder guidFinder)
         {
-            this.dynamicTableMetaStore = dynamicTableMetaStore;
-            this.linkCreator = linkCreator;
+            this.pricingStrategyTableMetaStore = pricingStrategyTableMetaStore;
             this.fileAssetStore = fileAssetStore;
             this.fileAssetMapper = fileAssetMapper;
             this.guidFinder = guidFinder;
         }
 
-        public async Task<WidgetNodeResource> Map(ConversationNode @from)
+        public async Task<WidgetNodeResource> Map(ConversationNode @from, CancellationToken cancellationToken)
         {
             FileAssetResource? fileAssetResource = null;
-            if (!string.IsNullOrEmpty(@from.ImageId))
+            if (!string.IsNullOrEmpty(@from.FileId))
             {
-                var fileAsset = await fileAssetStore.GetOrNull(@from.ImageId, s => s.FileId);
+                var fileAsset = await fileAssetStore.GetOrNull(@from.FileId, s => s.FileId);
                 if (fileAsset is null) throw new DomainException("The file Id attached to the convo node wasn't found.");
                 fileAssetResource = await fileAssetMapper.Map(fileAsset);
             }
             
             return new WidgetNodeResource
             {
-                AreaIdentifier = @from.AreaIdentifier,
+                IntentId = @from.IntentId,
                 Text = @from.Text,
                 NodeType = @from.NodeType,
                 NodeComponentType = @from.NodeComponentType,
@@ -52,23 +49,23 @@ namespace Palavyr.Core.Mappers
                 IsCritical = @from.IsCritical,
                 OptionPath = @from.OptionPath,
                 ValueOptions = @from.ValueOptions,
-                IsDynamicTableNode = @from.IsDynamicTableNode,
-                DynamicType = @from.DynamicType,
+                IsPricingStrategyTableNode = @from.IsPricingStrategyTableNode,
+                PricingStrategyType = @from.PricingStrategyType,
                 ResolveOrder = @from.ResolveOrder,
                 FileAssetResource= fileAssetResource
                 // UnitId = await AttachUnitIdOrNull(@from)
             };
         }
 
-        private async Task<UnitIds?> AttachUnitIdOrNull(ConversationNode @from)
+        private async Task<UnitIdEnum?> AttachUnitIdOrNull(ConversationNode @from)
         {
-            if (@from.IsDynamicTableNode)
+            if (@from.IsPricingStrategyTableNode)
             {
-                if (@from.DynamicType == null) throw new DomainException("Dynamic Type not set.");
-                var tableId = guidFinder.FindFirstGuidSuffixOrNull(@from.DynamicType);
+                if (@from.PricingStrategyType == null) throw new DomainException("Pricing Strategy Type not set.");
+                var tableId = guidFinder.FindFirstGuidSuffixOrNull(@from.PricingStrategyType);
 
-                var pricingStrategyMeta = await dynamicTableMetaStore.Get(tableId, s => s.TableId);
-                var unitId = pricingStrategyMeta.UnitId;
+                var pricingStrategyMeta = await pricingStrategyTableMetaStore.Get(tableId, s => s.TableId);
+                var unitId = pricingStrategyMeta.UnitIdEnum;
                 return unitId;
             }
 

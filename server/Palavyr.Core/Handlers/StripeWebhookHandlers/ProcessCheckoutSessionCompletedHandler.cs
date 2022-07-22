@@ -2,29 +2,20 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
-using Palavyr.Core.Stores;
+using Palavyr.Core.Services.StripeServices;
 using Session = Stripe.Checkout.Session;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
     public class ProcessStripeCheckoutSessionCompletedHandler : INotificationHandler<CheckoutSessionCompletedNotification>
     {
-        private readonly IEntityStore<Account> accountStore;
-        private readonly ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger;
-        private IStripeSubscriptionService stripeSubscriptionService;
+        private readonly IStripeSubscriptionSetter subscriptionSetter;
 
         public ProcessStripeCheckoutSessionCompletedHandler(
-            IEntityStore<Account> accountStore, 
-            ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger,
-            IStripeSubscriptionService stripeSubscriptionService
+            IStripeSubscriptionSetter subscriptionSetter
         )
         {
-            this.accountStore = accountStore;
-            this.logger = logger;
-            this.stripeSubscriptionService = stripeSubscriptionService;
+            this.subscriptionSetter = subscriptionSetter;
         }
 
         /// <summary>
@@ -36,23 +27,10 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
         /// <exception cref="Exception"></exception>
         public async Task Handle(CheckoutSessionCompletedNotification notification, CancellationToken cancellationToken)
         {
-            var session = notification.session;
-            var account = await accountStore.Get(session.CustomerId, s => s.StripeCustomerId);
-            if (account == null)
-            {
-                throw new Exception("ERROR TODO: EMAIL paul.e.gradie@gmail.com to manually set status");
-            }
-
-            var subscription = await stripeSubscriptionService.GetSubscription(session);
-
-            var planTypeEnum = await stripeSubscriptionService.GetPlanTypeEnum(subscription);
-            var bufferedPeriodEnd = await stripeSubscriptionService.GetBufferedEndTime(subscription);
-            
-            account.PlanType = planTypeEnum;
-            account.HasUpgraded = true;
-            account.CurrentPeriodEnd = bufferedPeriodEnd;
+            await subscriptionSetter.SetSubscription(notification.session, cancellationToken);
         }
     }
+
 
     public class CheckoutSessionCompletedNotification : INotification
     {

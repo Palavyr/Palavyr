@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware.MiddlewareHandlers;
-using Palavyr.Core.Data;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.GlobalConstants;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.API.CustomMiddleware
@@ -33,8 +32,7 @@ namespace Palavyr.API.CustomMiddleware
             HttpContext context,
             IWebHostEnvironment env,
             IMediator mediator,
-            IEntityStore<Session> sessionStore,
-            AccountsContext accountContext,
+            IEntityStore<UserSession> sessionStore,
             IUnitOfWorkContextProvider unitOfWorkContextProvider)
         {
             logger.LogDebug("Settings magic string headers...");
@@ -51,7 +49,7 @@ namespace Palavyr.API.CustomMiddleware
                     var session = await sessionStore.RawReadonlyQuery().SingleOrDefaultAsync(x => x.SessionId == sessionId);
                     if (session != null)
                     {
-                        logger.LogDebug("Session found. Assigning account Id to the Request Header.");
+                        logger.LogDebug("Session found. Assigning account Id to the Request Header");
                         await mediator.Publish(new SetAccountEvent(session.AccountId), context.RequestAborted);
                     }
                 }
@@ -65,7 +63,7 @@ namespace Palavyr.API.CustomMiddleware
                         foreach (var (key, value) in ResponseHeaders)
                         {
                             context.Request.Headers[key] = value;
-                            logger.LogDebug($"Adding Header: {key} with value: {value}");
+                            logger.LogDebug("Adding Header: {key} with value: {value}", key, value);
                         }
                     }
                 }, context);

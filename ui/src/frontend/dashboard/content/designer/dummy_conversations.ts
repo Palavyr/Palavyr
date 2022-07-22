@@ -1,6 +1,6 @@
-export const convoA = (areaId: string) => [
+export const convoA = (IntentId: string) => [
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
         nodeId: "ba765849-ef8c-4e5e-9d64-9203d7cdb541",
         text: "Hello, this is a test. A really good test because it has a  long text. A realllllllly long text. To check stylings!",
         nodeType: "ProvideInfo",
@@ -10,13 +10,13 @@ export const convoA = (areaId: string) => [
         optionPath: "",
         valueOptions: "Placeholder",
         nodeComponentType: "ProvideInfo",
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         dynamicType: null,
         resolveOrder: 0,
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
         nodeId: "4ff32fc7-ecac-4b29-aa38-46b33f29b9a5",
         nodeType: "ProvideInfo",
         dynamicType: null,
@@ -26,7 +26,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "Placeholder",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "ProvideInfo",
 
         resolveOrder: 0,
@@ -34,7 +34,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "d1cf63d8-f182-4989-bb67-4f1fedfa9c10",
         nodeType: "MultipleChoiceAsPath",
@@ -46,7 +46,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "Good|peg|Bad",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "MultipleChoiceAsPath",
 
         resolveOrder: 0,
@@ -54,7 +54,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "fc237abf-fdc5-45d4-a145-beff96c6bcf2",
         nodeType: "SendResponse",
@@ -68,7 +68,7 @@ export const convoA = (areaId: string) => [
 
         isTerminalType: true,
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendResponse",
 
         resolveOrder: 0,
@@ -76,7 +76,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "bee2c623-98d5-4831-bb6d-4a94a1fc7205",
         nodeType: "SendResponse",
@@ -90,7 +90,7 @@ export const convoA = (areaId: string) => [
 
         isTerminalType: true,
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendResponse",
 
         resolveOrder: 0,
@@ -98,7 +98,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "cd16584a-6b06-412a-881b-7402c2b9986e",
         nodeType: "YesNo",
@@ -110,7 +110,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "No|peg|Yes",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "YesNo",
 
         resolveOrder: null,
@@ -118,7 +118,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "5e95a84a-de6b-4453-8ed9-2c7ebb2e8b1c",
         nodeType: "SendEmail",
@@ -130,7 +130,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendEmail",
 
         resolveOrder: null,
@@ -138,7 +138,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "4523a9ec-1acb-4e7d-bbaf-d2ef0cfaa3e2",
         nodeType: "Restart",
@@ -152,7 +152,7 @@ export const convoA = (areaId: string) => [
 
         isTerminalType: true,
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "Restart",
 
         resolveOrder: null,
@@ -160,7 +160,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "EmailSuccessfulNodeId",
         nodeType: "ProvideInfo",
@@ -172,7 +172,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "ProvideInfo",
 
         resolveOrder: null,
@@ -180,7 +180,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "Restart",
         nodeType: "Restart",
@@ -194,7 +194,7 @@ export const convoA = (areaId: string) => [
 
         isTerminalType: true,
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "Restart",
 
         resolveOrder: null,
@@ -202,7 +202,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "EmailFailedNodeId",
         nodeType: "EmailSendFailedFirstAttempt",
@@ -214,7 +214,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "ProvideInfo",
 
         resolveOrder: null,
@@ -222,7 +222,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "11640f68-7551-41cb-b4f3-f414c94c8c47",
         nodeType: "SendEmail",
@@ -234,7 +234,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendEmail",
 
         resolveOrder: null,
@@ -242,7 +242,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "FallbackEmailFailedNodeId",
         nodeType: "EmailSendFailedFirstAttempt",
@@ -254,7 +254,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "ProvideInfo",
 
         resolveOrder: null,
@@ -262,7 +262,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "e8d6d29c-62e3-46d2-aa8b-75aed7125500",
         nodeType: "SendEmail",
@@ -274,7 +274,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendEmail",
 
         resolveOrder: null,
@@ -282,7 +282,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "4c452b9e-d471-425a-80fc-15f5bb9ad04a",
         nodeType: "YesNo",
@@ -294,7 +294,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "No|peg|Yes",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "YesNo",
 
         resolveOrder: null,
@@ -302,7 +302,7 @@ export const convoA = (areaId: string) => [
         fileAssetResource: null,
     },
     {
-        areaIdentifier: areaId,
+        intentId: IntentId,
 
         nodeId: "bf068b90-f087-48cd-951a-415f733ef42f",
         nodeType: "SendTooComplicatedEmail",
@@ -314,7 +314,7 @@ export const convoA = (areaId: string) => [
         isCritical: false,
         valueOptions: "",
 
-        isDynamicTableNode: false,
+        isPricingStrategyNode: false,
         nodeComponentType: "SendTooComplicatedEmail",
 
         resolveOrder: null,
@@ -323,10 +323,10 @@ export const convoA = (areaId: string) => [
     },
 ];
 
-export const shortStaticConvoSequence = (areaId: string) => {
+export const shortStaticConvoSequence = (IntentId: string) => {
     return [
         {
-            areaIdentifier: areaId,
+            intentId: IntentId,
 
             nodeId: "ba765849-ef8c-4e5e-9d64-9203d7cdb541",
             nodeType: "ProvideInfo",
@@ -338,7 +338,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             isCritical: false,
             valueOptions: "Placeholder",
 
-            isDynamicTableNode: false,
+            isPricingStrategyNode: false,
             nodeComponentType: "ProvideInfo",
 
             resolveOrder: 0,
@@ -346,7 +346,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             fileAssetResource: null,
         },
         {
-            areaIdentifier: areaId,
+            intentId: IntentId,
 
             nodeId: "4ff32fc7-ecac-4b29-aa38-46b33f29b9a5",
             nodeType: "ProvideInfo",
@@ -358,7 +358,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             isCritical: false,
             valueOptions: "Placeholder",
 
-            isDynamicTableNode: false,
+            isPricingStrategyNode: false,
             nodeComponentType: "ProvideInfo",
 
             resolveOrder: 0,
@@ -366,7 +366,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             fileAssetResource: null,
         },
         {
-            areaIdentifier: areaId,
+            intentId: IntentId,
 
             nodeId: "d1cf63d8-f182-4989-bb67-4f1fedfa9c10",
             nodeType: "MultipleChoiceAsPath",
@@ -378,7 +378,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             isCritical: false,
             valueOptions: "Good|peg|Bad",
 
-            isDynamicTableNode: false,
+            isPricingStrategyNode: false,
             nodeComponentType: "MultipleChoiceAsPath",
 
             resolveOrder: 0,
@@ -390,7 +390,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
             fileAssetResource: null,
         },
         {
-            areaIdentifier: areaId,
+            intentId: IntentId,
 
             nodeId: "bee2c623-98d5-4831-bb6d-4a94a1fc7205",
             nodeType: "SendResponse",
@@ -404,7 +404,7 @@ export const shortStaticConvoSequence = (areaId: string) => {
 
             isTerminalType: true,
 
-            isDynamicTableNode: false,
+            isPricingStrategyNode: false,
             nodeComponentType: "SendResponse",
 
             resolveOrder: 0,

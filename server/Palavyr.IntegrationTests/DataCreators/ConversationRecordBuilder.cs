@@ -1,56 +1,40 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Conversation.Schemas;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Models;
+using Palavyr.Core.Resources;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
     public static partial class BuilderExtensionMethods
     {
-        public static ConversationRecordBuilder CreateConversationRecordBuilder(this BaseIntegrationFixture test)
+        public static ConversationRecordBuilder CreateConversationRecordBuilder(this IntegrationTest test)
         {
             return new ConversationRecordBuilder(test);
         }
-
     }
 
 
     public class ConversationRecordBuilder
     {
-        private readonly BaseIntegrationFixture test;
-        private string? conversationId = null!;
-        private string? accountId = null!;
-        private DateTime? timeStamp = null!;
-        private string? intentName = null!;
-        private string? intentId = null!;
+        private readonly IntegrationTest test;
+        private string? name;
+        private string? intentId;
+        private string? email;
+        private bool isDemo = false;
 
-        public ConversationRecordBuilder(BaseIntegrationFixture test)
+        public ConversationRecordBuilder(IntegrationTest test)
         {
             this.test = test;
         }
 
-        public ConversationRecordBuilder WithConversationId(string conversationId)
-        {
-            this.conversationId = conversationId;
-            return this;
-        }
 
-        public ConversationRecordBuilder WithAccountId(string accountId)
+        public ConversationRecordBuilder WithName(string intentName)
         {
-            this.accountId = accountId;
-            return this;
-        }
-
-        public ConversationRecordBuilder WithTimeStamp(DateTime timeStamp)
-        {
-            this.timeStamp = timeStamp;
-            return this;
-        }
-
-        public ConversationRecordBuilder WithIntentName(string intentName)
-        {
-            this.intentName = intentName;
+            this.name = intentName;
             return this;
         }
 
@@ -60,25 +44,43 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
-        public async Task<ConversationRecord> Build()
+        public ConversationRecordBuilder WithEmail(string email)
         {
-            var intentId = this.intentId ?? A.RandomId();
-            var intentName = this.intentName ?? A.RandomName();
-            var timeStamp = this.timeStamp ?? DateTime.Now;
-            var accountId = this.accountId ?? test.AccountId;
-            var conversationId = this.conversationId ?? A.RandomId();
+            this.email = email;
+            return this;
+        }
 
-            var record = new ConversationRecord
+        public ConversationRecordBuilder AsDemo()
+        {
+            this.isDemo = true;
+            return this;
+        }
+
+        public async Task<NewConversationResource> Build()
+        {
+            var id = this.intentId ?? A.RandomId();
+            var name = this.name ?? A.RandomName();
+            var email = this.email ?? A.RandomTestEmail();
+            var isDemo = this.isDemo;
+
+            var intents = await test.Client.GetResource<GetAllIntentsRequest, IEnumerable<IntentResource>>(test.CancellationToken);
+            var intent = intents.SingleOrDefault(x => x.IntentId == id);
+            if (intent is null)
             {
-                AreaIdentifier = intentId,
-                AreaName = intentName,
-                TimeStamp = timeStamp,
-                AccountId = accountId,
-                ConversationId = conversationId
+                intent = await test.CreateIntentBuilder().Build();
+                id = intent.IntentId;
+            }
+
+            var newConversationRecordRequest = new CreateNewConversationHistoryRequest
+            {
+                IntentId = id,
+                Name = name,
+                Email = email,
+                IsDemo = isDemo
             };
 
-            await test.CreateAndSave(record);
-            return record;
+            var newConversationResource = await test.ApikeyClient.Post<CreateNewConversationHistoryRequest, NewConversationResource>(newConversationRecordRequest, test.CancellationToken);
+            return newConversationResource;
         }
     }
 }

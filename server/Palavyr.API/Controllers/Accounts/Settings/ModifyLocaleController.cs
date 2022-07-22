@@ -17,7 +17,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpPut(Route)]
-        public async Task<LocaleDetails> Modify(
+        public async Task<LocaleResource> Modify(
             [FromBody]
             ModifyLocaleRequest request,
             CancellationToken cancellationToken)

@@ -29,7 +29,7 @@ namespace Palavyr.API.CustomMiddleware
             this.logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext, IDetermineCurrentEnvironment environment)
+        public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AppDataContexts rawDataContext, IDetermineCurrentEnvironment environment)
         {
             try
             {
@@ -42,84 +42,7 @@ namespace Palavyr.API.CustomMiddleware
                 var message = "Bad Request";
                 var additionalMessages = new string[] { };
 
-                switch (ex)
-                {
-                    case StripeException stripeException:
-                        logger.LogInformation("Encountered an exception with Stripe");
-                        logger.LogError($"{stripeException.Message}");
-                        message = ex.Message;
-                        break;
-
-                    case IOException ioException:
-                        logger.LogInformation("File IO exception.");
-                        logger.LogError($"{ioException.Message}");
-                        break;
-
-                    case HttpRequestException httpRequestException:
-                        logger.LogInformation("Failed to create/write PDF to S3");
-                        logger.LogError($"{httpRequestException.Message}");
-                        break;
-
-                    case AmazonS3Exception amazonS3Exception:
-                        logger.LogInformation("Failed to communicate with S3");
-                        logger.LogError($"{amazonS3Exception.Message}");
-                        break;
-
-                    case GuidNotFoundException guidNotFoundException:
-                        logger.LogInformation("Failed to find a GUID substring.");
-                        logger.LogError($"{guidNotFoundException.Message}");
-                        break;
-
-                    case MultiMessageDomainException multiMessageDomainException: // must come before domain exception
-                        logger.LogInformation("A domain exception was encountered.");
-                        logger.LogError($"{multiMessageDomainException.Message}");
-                        statusCode = StatusCodes.Status400BadRequest;
-                        message = multiMessageDomainException.Message;
-                        additionalMessages = multiMessageDomainException.AdditionalMessages;
-                        break;
-
-                    case DomainException domainException:
-                        logger.LogInformation("A domain exception was encountered.");
-                        logger.LogError($"{domainException.Message}");
-                        statusCode = StatusCodes.Status400BadRequest;
-                        message = domainException.Message;
-                        break;
-
-                    case MicroserviceException microserviceException:
-                        logger.LogInformation("A Microservice exception was encountered.");
-                        logger.LogError($"{microserviceException.Message}");
-                        statusCode = StatusCodes.Status500InternalServerError;
-                        message = microserviceException.Message;
-                        break;
-                    
-                    case DependencyResolutionException dependencyResolutionException:
-                        logger.LogDebug("A dependency wasn't registered!");
-                        logger.LogDebug(dependencyResolutionException.Message);
-                        statusCode = StatusCodes.Status500InternalServerError;
-                        message = "Sorry! We made a mistake internally! Please reach out and let us know!";
-                        break;
-                    
-                    case AccountMisMatchException accountMisMatchException:
-                        logger.LogCritical("An attempt was made to access data across accounts. This is not allowed.");
-                        logger.LogCritical(accountMisMatchException.Message);
-                        statusCode = StatusCodes.Status500InternalServerError;
-                        message = "Sorry! We made a mistake internally! Please reach out and let us know!";
-                        if (environment.IsDevelopment())
-                            message = message + $" {accountMisMatchException.Message}";
-                        break;
-
-                    default:
-                        logger.LogError("Unknown Exception");
-                        logger.LogError($"{ex.Source}");
-                        logger.LogError($"{ex.StackTrace}");
-                        logger.LogError($"{ex.GetType().Name}");
-                        logger.LogError($"{ex.Message}");
-                        logger.LogError($"{ex.InnerException}");
-                        logger.LogError($"{ex.GetBaseException()}");
-                        message = ex.Message;
-                        // message = "Oops! We've made a mistake. Please consider reporting this to info.palavyr.com, or you can visit https://github.com/Palavyr/Palavyr-Issues";
-                        break;
-                }
+                message = ProcessException(environment, ex, message, ref statusCode, ref additionalMessages);
 
                 if (context.Response.HasStarted)
                 {
@@ -130,12 +53,101 @@ namespace Palavyr.API.CustomMiddleware
             }
         }
 
-        public async Task FormatErrors(HttpContext context, string message, string[] additionalMessage, int statusCode)
+        private string ProcessException(IDetermineCurrentEnvironment environment, Exception ex, string message, ref int statusCode, ref string[] additionalMessages)
+        {
+            switch (ex)
+            {
+                case StripeException stripeException:
+                    logger.LogInformation("Encountered an exception with Stripe");
+                    logger.LogError("{Exception}", stripeException.Message);
+                    message = ex.Message;
+                    break;
+
+                case IOException ioException:
+                    logger.LogInformation("File IO exception");
+                    logger.LogError("{Exception}", ioException.Message);
+                    break;
+
+                case HttpRequestException httpRequestException:
+                    logger.LogInformation("Failed to create/write PDF to S3");
+                    logger.LogError("{Exception}", httpRequestException.Message);
+                    break;
+
+                case AmazonS3Exception amazonS3Exception:
+                    logger.LogInformation("Failed to communicate with S3");
+                    logger.LogError("{ExceptionMessage}", amazonS3Exception.Message);
+                    break;
+
+                case GuidNotFoundException guidNotFoundException:
+                    logger.LogInformation("{ExceptionMessage}", "Failed to find a GUID substring.");
+                    logger.LogError("{ExceptionMessage}", guidNotFoundException.Message);
+                    break;
+
+                case MultiMessageDomainException multiMessageDomainException: // must come before domain exception
+                    logger.LogInformation("{ExceptionMessage}", "A domain exception was encountered.");
+                    logger.LogError("{ExceptionMessage}", multiMessageDomainException.Message);
+                    statusCode = StatusCodes.Status400BadRequest;
+                    message = multiMessageDomainException.Message;
+                    additionalMessages = multiMessageDomainException.AdditionalMessages;
+                    break;
+
+                case DomainException domainException:
+                    logger.LogInformation("{ExceptionMessage}", "A domain exception was encountered.");
+                    logger.LogError("{ExceptionMessage}", domainException.Message);
+                    statusCode = StatusCodes.Status400BadRequest;
+                    message = domainException.Message;
+                    break;
+
+                case MicroserviceException microserviceException:
+                    logger.LogInformation("{ExceptionMessage}", "A Microservice exception was encountered.");
+                    logger.LogError("{ExceptionMessage}", microserviceException.Message);
+                    statusCode = StatusCodes.Status500InternalServerError;
+                    message = microserviceException.Message;
+                    break;
+
+                case DependencyResolutionException dependencyResolutionException:
+                    logger.LogDebug("{ExceptionMessage}", "A dependency wasn't registered!");
+                    logger.LogDebug("{ExceptionMessage}", dependencyResolutionException.Message);
+                    statusCode = StatusCodes.Status500InternalServerError;
+                    message = "Sorry! We made a mistake internally! Please reach out and let us know!";
+                    break;
+
+                case AccountMisMatchException accountMisMatchException:
+                    logger.LogCritical("{ExceptionMessage}", "An attempt was made to access data across accounts. This is not allowed.");
+                    logger.LogCritical("{ExceptionMessage}", accountMisMatchException.Message);
+                    statusCode = StatusCodes.Status500InternalServerError;
+                    message = "Sorry! We made a mistake internally! Please reach out and let us know!";
+                    if (environment.IsDevelopment())
+                        message = message + $" {accountMisMatchException.Message}";
+                    break;
+
+                default:
+                    logger.LogError("Unknown Exception");
+                    logger.LogError("{ExceptionMessage}", ex.Source);
+                    logger.LogError("{ExceptionMessage}", ex.StackTrace);
+                    logger.LogError("{ExceptionMessage}", ex.GetType().Name);
+                    logger.LogError("{ExceptionMessage}", ex.Message);
+                    logger.LogError("{ExceptionMessage}", ex.InnerException);
+                    logger.LogError("{ExceptionMessage}", ex.GetBaseException());
+                    message = ex.Message;
+                    // message = "Oops! We've made a mistake. Please consider reporting this to info.palavyr.com, or you can visit https://github.com/Palavyr/Palavyr-Issues";
+                    break;
+            }
+
+            return message;
+        }
+
+        public async Task FormatErrors(HttpContext context, string message, string[] additionalMessages, int statusCode)
         {
             context.Response.ContentType = "application/json; charset=UTF-8";
             context.Response.StatusCode = statusCode;
 
-            var errorResponse = new ErrorResponse(message, additionalMessage, statusCode).ToString();
+            foreach (var additionalMessage in additionalMessages)
+            {
+                logger.LogError("{ExceptionMessage}", additionalMessage);
+            }
+
+            var errorResponse = new ErrorResponse(message, additionalMessages, statusCode);
 
             // I found it very challenging to write directly to the response body with a structure I can control, so I'm clearing the lot
             // and serializing my own structure. I'll handle this in the client error response handler
@@ -149,25 +161,6 @@ namespace Palavyr.API.CustomMiddleware
             var serializer = JsonSerializer.Create();
             serializer.Serialize(writer, errorResponse);
             await writer.FlushAsync();
-        }
-    }
-
-    public class ErrorResponse
-    {
-        public string Message { get; set; }
-        public string[] AdditionalMessages { get; set; }
-        public int StatusCode { get; set; }
-
-        public ErrorResponse(string messages, string[] additionalMessages, int statusCode)
-        {
-            Message = messages;
-            AdditionalMessages = additionalMessages;
-            StatusCode = statusCode;
-        }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
         }
     }
 }

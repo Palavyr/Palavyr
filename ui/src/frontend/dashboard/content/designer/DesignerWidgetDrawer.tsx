@@ -1,5 +1,5 @@
 import { Drawer, makeStyles, useTheme } from "@material-ui/core";
-import { WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
+import { WidgetNodeResource, WidgetPreferencesResource } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { WidgetLayout } from "@widgetcore/widget/WidgetLayout";
 import React, { useEffect } from "react";
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface DesignerWidgetDrawerProps {
-    widgetPreferences: WidgetPreferences;
+    widgetPreferences: WidgetPreferencesResource;
 }
 
 const render = (componentType: string, text: string, nodeId: string, nodeChildrenString: string, context: IAppContext, client: PalavyrWidgetRepository) => {
@@ -68,7 +68,7 @@ const render = (componentType: string, text: string, nodeId: string, nodeChildre
     context.addNewBotMessage(message);
 };
 const initializer = async (context: IAppContext, repository: PalavyrRepository) => {
-    const apiKey = await repository.Settings.Account.getApiKey();
+    const apiKey = await repository.Settings.Account.GetApiKey();
     const client = new PalavyrWidgetRepository(apiKey);
 
     render("ProvideInfo", "You can use this display to customize your widget.", "1", "2", context, client);
@@ -132,6 +132,7 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
     const theme = useTheme();
     const context = useAppContext();
     context.AppContext.responseFileAsset = {
+        id: 0,
         fileName: "test.png",
         link: "https://i.chzbgr.com/full/9591491840/h124EF692/cat-oizzyandthef",
         fileId: "1234",

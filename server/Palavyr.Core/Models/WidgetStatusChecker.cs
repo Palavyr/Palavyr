@@ -2,12 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Nodes;
-using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Resources;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -15,8 +14,8 @@ namespace Palavyr.Core.Models
 {
     public interface IWidgetStatusChecker
     {
-        Task<PreCheckResult> ExecuteWidgetStatusCheck(
-            List<Area> areas,
+        Task<PreCheckResultResource> ExecuteWidgetStatusCheck(
+            List<Intent> intents,
             WidgetPreference widgetPreferences,
             bool demo,
             ILogger logger);
@@ -25,7 +24,6 @@ namespace Palavyr.Core.Models
     public class WidgetStatusChecker : IWidgetStatusChecker
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IDynamicTableCompilerOrchestrator orchestrator;
         private readonly IRequiredNodeCalculator requiredNodeCalculator;
         private readonly IMissingNodeCalculator missingNodeCalculator;
         private readonly INodeOrderChecker nodeOrderChecker;
@@ -36,52 +34,51 @@ namespace Palavyr.Core.Models
 
         public WidgetStatusChecker(
             IEntityStore<ConversationNode> convoNodeStore,
-            IDynamicTableCompilerOrchestrator orchestrator,
+            IPricingStrategyTableCompilerOrchestrator orchestrator,
             IRequiredNodeCalculator requiredNodeCalculator,
             IMissingNodeCalculator missingNodeCalculator,
             INodeOrderChecker nodeOrderChecker,
             IEntityStore<Account> accountStore)
         {
             this.convoNodeStore = convoNodeStore;
-            this.orchestrator = orchestrator;
             this.requiredNodeCalculator = requiredNodeCalculator;
             this.missingNodeCalculator = missingNodeCalculator;
             this.nodeOrderChecker = nodeOrderChecker;
             this.accountStore = accountStore;
         }
 
-        public async Task<PreCheckResult> ExecuteWidgetStatusCheck(
-            List<Area> areas,
+        public async Task<PreCheckResultResource> ExecuteWidgetStatusCheck(
+            List<Intent> intents,
             WidgetPreference widgetPreferences,
             bool demo,
             ILogger logger)
         {
             var widgetState = widgetPreferences.WidgetState;
-            // dynamic tables might have a 'num individuals' requirement
+            // pricing strategy tables might have a 'num individuals' requirement
             // static tables might have a 'num individuals' requirement
             // user may simply wish to collect 'num individuals'
 
-            logger.LogDebug("Collected areas.... running pre-check");
-            var result = await StatusCheck(areas, widgetState, demo, logger);
+            logger.LogDebug("Collected intents.... running pre-check");
+            var result = await StatusCheck(intents, widgetState, demo, logger);
             return result;
         }
 
-        private async Task<PreCheckResult> StatusCheck(List<Area> areas, bool widgetState, bool demo, ILogger logger)
+        private async Task<PreCheckResultResource> StatusCheck(List<Intent> intents, bool widgetState, bool demo, ILogger logger)
         {
             logger.LogDebug("Attempting RunConversationsPreCheck...");
 
 
-            var errors = new List<PreCheckError>();
+            var errors = new List<PreCheckErrorResource>();
             var isReady = true;
 
-            var introError = new PreCheckError()
+            var introError = new PreCheckErrorResource()
             {
-                AreaName = introSequenceName
+                IntentName = introSequenceName
             };
 
-            var generalError = new PreCheckError
+            var generalError = new PreCheckErrorResource
             {
-                AreaName = generalName
+                IntentName = generalName
             };
 
             var allRequiredIntroNodesArePresent = await AllIntroRequiredIntroNodesArePresent(introError);
@@ -89,40 +86,39 @@ namespace Palavyr.Core.Models
             {
                 isReady = false;
                 introError.Reasons.Add("The introduction sequence has not been completed.");
-                // errors.Add(introError);
             }
 
             var numberOfEnabledIntents = 0;
-            foreach (var area in areas)
+            foreach (var intent in intents)
             {
-                var error = new PreCheckError()
+                var error = new PreCheckErrorResource()
                 {
-                    AreaName = area.AreaName
+                    IntentName = intent.IntentName
                 };
 
-                var nodeList = area.ConversationNodes.ToArray();
-                var allRequiredNodes = (await requiredNodeCalculator.FindRequiredNodes(area)).ToList();
+                var nodeList = intent.ConversationNodes.ToArray();
+                var allRequiredNodes = (await requiredNodeCalculator.FindRequiredNodes(intent)).ToList();
 
-                logger.LogDebug($"Required Nodes Found. Number of required nodes: {allRequiredNodes.Count}");
+                logger.LogDebug("Required Nodes Found. Number of required nodes: {NumRequiredNodes}", allRequiredNodes.Count);
 
                 var nodesSet = AllNodesAreSet(nodeList, error);
                 var branchesTerminate = AllBranchesTerminate(nodeList, error);
                 var nodesSatisfied = AllRequiredNodesSatisfied(nodeList, allRequiredNodes.ToArray(), error);
-                var dynamicNodesAreOrdered = DynamicNodesAreOrdered(nodeList, error);
+                var pricingStrategyNodesAreOrdered = PricingStrategyNodesAreOrdered(nodeList, error);
                 var allImageNodesHaveImagesSet = AllImageNodesSet(nodeList, error);
-                var allCategoricalPricingStrategiesAreUnique = await AllCategoricalPricingStrategiesAreUnique(area, error);
+                // var allCategoricalPricingStrategiesAreUnique = await AllCategoricalPricingStrategiesAreUnique(intent, error);
 
-                var checks = new List<bool>() { nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered, allImageNodesHaveImagesSet, allCategoricalPricingStrategiesAreUnique };
+                var checks = new List<bool>() { nodesSet, branchesTerminate, nodesSatisfied, pricingStrategyNodesAreOrdered, allImageNodesHaveImagesSet};//, allCategoricalPricingStrategiesAreUnique };
 
-                var areaChecksPassed = checks.TrueForAll(x => x);
-                if (!areaChecksPassed)
+                var intentChecksPassed = checks.TrueForAll(x => x);
+                if (!intentChecksPassed)
                 {
                     isReady = false;
                     errors.Add(error);
-                    logger.LogDebug($"Area not currently ready: {area.AreaName}");
+                    logger.LogDebug("Intent not currently ready: {Name}", intent.IntentName);
                 }
 
-                if (area.IsEnabled)
+                if (intent.IsEnabled)
                 {
                     numberOfEnabledIntents++;
                 }
@@ -151,76 +147,76 @@ namespace Palavyr.Core.Models
                 }
             }
 
-            logger.LogDebug("Pre-check Complete. Returning result.");
+            logger.LogDebug("Pre-check Complete. Returning result");
             if (demo)
             {
                 logger.LogDebug("Demo widget activated");
-                return PreCheckResult.CreateConvoResult(isReady, errors);
+                return PreCheckResultResource.CreateConvoResult(isReady, errors);
             }
 
             logger.LogDebug("Live Widget activated");
             if (widgetState)
             {
                 logger.LogDebug("WidgetState is true");
-                return PreCheckResult.CreateConvoResult(isReady, errors);
+                return PreCheckResultResource.CreateConvoResult(isReady, errors);
             }
             else
             {
                 logger.LogDebug("WidgetState is false");
-                return PreCheckResult.CreateConvoResult(false, errors);
+                return PreCheckResultResource.CreateConvoResult(false, errors);
             }
         }
 
 
-        private async Task<bool> AllIntroRequiredIntroNodesArePresent(PreCheckError error)
+        private async Task<bool> AllIntroRequiredIntroNodesArePresent(PreCheckErrorResource errorResource)
         {
             var isReady = true;
             var account = await accountStore.GetAccount();
-            var introId = account.IntroductionId;
+            var introId = account.IntroIntentId;
 
-            var introSequence = await convoNodeStore.GetMany(introId, s => s.AreaIdentifier);
+            var introSequence = await convoNodeStore.GetMany(introId, s => s.IntentId);
             if (!introSequence.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.Selection.StringName))
             {
                 isReady = false;
-                error.Reasons.Add($"Missing {DefaultNodeTypeOptions.CreateSelection().Text}");
+                errorResource.Reasons.Add($"Missing {DefaultNodeTypeOptions.CreateSelection().Text}");
             }
 
             if (!introSequence.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.CollectDetails.StringName))
             {
                 isReady = false;
-                error.Reasons.Add($"Missing {DefaultNodeTypeOptions.CreateCollectDetails().Text}");
+                errorResource.Reasons.Add($"Missing {DefaultNodeTypeOptions.CreateCollectDetails().Text}");
             }
 
             return isReady;
         }
 
-        private async Task<bool> AllCategoricalPricingStrategiesAreUnique(Area area, PreCheckError error)
-        {
-            var pricingStrategies = area.DynamicTableMetas;
-            var results = await orchestrator.ValidatePricingStrategies(pricingStrategies);
-            var ready = true;
-            if (results.Count > 0)
-            {
-                foreach (var result in results)
-                {
-                    if (!result.IsValid && result.Reasons != null)
-                    {
-                        ready = false;
-                        error.Reasons.AddRange(result.Reasons);
-                    }
-                }
-            }
+        // private async Task<bool> AllCategoricalPricingStrategiesAreUnique(Intent intent, PreCheckError error)
+        // {
+        //     var pricingStrategies = intent.PricingStrategyTableMetas;
+        //     var results = await orchestrator.ValidatePricingStrategies(pricingStrategies);
+        //     var ready = true;
+        //     if (results.Count > 0)
+        //     {
+        //         foreach (var result in results)
+        //         {
+        //             if (!result.IsValid && result.Reasons != null)
+        //             {
+        //                 ready = false;
+        //                 error.Reasons.AddRange(result.Reasons);
+        //             }
+        //         }
+        //     }
+        //
+        //     return ready;
+        // }
 
-            return ready;
-        }
-
-        private bool AllImageNodesSet(ConversationNode[] nodeList, PreCheckError error)
+        private bool AllImageNodesSet(ConversationNode[] nodeList, PreCheckErrorResource errorResource)
         {
             var imageNodes = nodeList.Where(x => x.IsImageNode);
             var count = 0;
             foreach (var imageNode in imageNodes)
             {
-                if (imageNode.ImageId == null)
+                if (imageNode.FileId == null)
                 {
                     count++;
                 }
@@ -228,53 +224,38 @@ namespace Palavyr.Core.Models
 
             if (count > 0)
             {
-                error.Reasons.Add($"A total of {count} image nodes do not have images set.");
+                errorResource.Reasons.Add($"A total of {count} image nodes do not have images set.");
                 return false;
             }
 
             return true;
         }
 
-        private bool DynamicNodesAreOrdered(ConversationNode[] nodeList, PreCheckError error)
+        private bool PricingStrategyNodesAreOrdered(ConversationNode[] nodeList, PreCheckErrorResource errorResource)
         {
-            var nodeOrderCheckResult = nodeOrderChecker.AllDynamicTypesAreOrderedCorrectlyByResolveOrder(nodeList);
+            var nodeOrderCheckResult = nodeOrderChecker.AllPricingStrategyTypesAreOrderedCorrectlyByResolveOrder(nodeList);
             if (!nodeOrderCheckResult.IsOrdered)
             {
-                error.Reasons.Add("Dynamic Table nodes are not present in the correct order.");
+                errorResource.Reasons.Add("Pricing Strategy Table nodes are not present in the correct order.");
             }
 
             return nodeOrderCheckResult.IsOrdered;
         }
 
-        private bool AllNodesAreSet(ConversationNode[] nodeList, PreCheckError error)
+        private bool AllNodesAreSet(ConversationNode[] nodeList, PreCheckErrorResource errorResource)
         {
             var emptyNodeTypes = nodeList.Select(x => string.IsNullOrEmpty(x.NodeType)).ToArray();
             var result = emptyNodeTypes.All(x => x == false);
             if (!result)
             {
-                error.Reasons.Add("All nodes are not set.");
+                errorResource.Reasons.Add("All nodes are not set.");
             }
 
             return result;
         }
 
-        private bool AllBranchesTerminate(ConversationNode[] nodeList, PreCheckError error)
+        private bool AllBranchesTerminate(ConversationNode[] nodeList, PreCheckErrorResource errorResource)
         {
-            // TODO: This is really fucking weird that I wrote this. Why would all Terminal Nodes ever want, need or simple be equal to nodeChilds
-
-            // var allTerminalNodes = nodeList
-            //     .Where(t => t.IsTerminalType)
-            //     .OrderBy(x => x.NodeId)
-            //     .ToList();
-            // var nodeChilds = nodeList
-            //     .Where(a => string.IsNullOrWhiteSpace(a.NodeChildrenString) && a.NodeType != "Loopback")
-            //     .OrderBy(x => x.NodeId)
-            //     .ToList();
-            // var sequencesAreEqual = allTerminalNodes.SequenceEqual(nodeChilds);
-            // if (!sequencesAreEqual)
-            // {
-            //     error.Reasons.Add("All branches do not terminate.");
-            // }
             var terminalTypes = DefaultNodeTypeOptions
                 .DefaultNodeTypeOptionsList
                 .Where(x => x.IsTerminalType || x.Value == nameof(DefaultNodeTypeOptions.Loopback))
@@ -293,13 +274,13 @@ namespace Palavyr.Core.Models
             return false;
         }
 
-        private bool AllRequiredNodesSatisfied(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes, PreCheckError error)
+        private bool AllRequiredNodesSatisfied(ConversationNode[] nodeList, NodeTypeOptionResource[] requiredNodes, PreCheckErrorResource errorResource)
         {
             var missingNodes = missingNodeCalculator.FindMissingNodes(nodeList, requiredNodes);
             var result = missingNodes.Length == 0;
             if (!result)
             {
-                error.Reasons.Add($"A total of {missingNodes.Length} Dynamic Table nodes have not been added.");
+                errorResource.Reasons.Add($"A total of {missingNodes.Length} Pricing strategy table nodes have not been added.");
             }
 
             return result;

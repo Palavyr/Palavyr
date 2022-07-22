@@ -4,7 +4,7 @@ import { FormCard } from "@common/components/borrowed/FormCard";
 import { LoginActions } from "@landing/login/LoginActions";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Credentials, FormStatusTypes } from "@Palavyr-Types";
+import { FormStatusTypes } from "@Palavyr-Types";
 import { SessionStorage } from "@localStorage/sessionStorage";
 import {
     COULD_NOT_FIND_ACCOUNT,
@@ -21,6 +21,7 @@ import {
 import { FormDialogContent } from "@common/components/borrowed/FormDialogContent";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import { CredentialsResource } from "@common/types/api/ApiContracts";
 
 interface ILoginDialog {
     status: FormStatusTypes;
@@ -54,7 +55,7 @@ export const LoginDialog = ({ status, setStatus, openChangePasswordDialog }: ILo
         }, 150);
     };
 
-    const error = (response: Credentials) => {
+    const error = (response: CredentialsResource) => {
         if (response.message === PASSWORD_DOES_NOT_MATCH) {
             setStatus(INVALID_PASSWORD);
         } else if (response.message === COULD_NOT_FIND_ACCOUNT) {

@@ -1,4 +1,4 @@
-﻿using Palavyr.Core.Models.Configuration.Schemas;
+﻿using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.AttachmentServices;
 
 namespace Palavyr.Core.Common.ExtensionMethods

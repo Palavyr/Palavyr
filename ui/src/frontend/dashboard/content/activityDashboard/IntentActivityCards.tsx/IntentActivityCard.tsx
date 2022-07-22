@@ -1,14 +1,13 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core";
+import { CardActionArea, makeStyles } from "@material-ui/core";
 import { PalavyrCard } from "@material/surface/PalavyrCard";
 
-import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import AnimatedLines from "../images/animated-lines.gif";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
-import { EnquiryActivtyResource } from "@Palavyr-Types";
+import { EnquiryInsightsResource } from "@Palavyr-Types";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -36,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface ActivityCardProps {
-    activityResource: EnquiryActivtyResource;
+    activityResource: EnquiryInsightsResource;
     onClick?(): void;
 }
 

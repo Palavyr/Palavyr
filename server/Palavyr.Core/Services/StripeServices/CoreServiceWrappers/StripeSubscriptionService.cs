@@ -6,7 +6,7 @@ using Palavyr.Core.Exceptions;
 using Palavyr.Core.Services.StripeServices.Products;
 using Stripe;
 using Stripe.Checkout;
-using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
+using Account = Palavyr.Core.Data.Entities.Account;
 
 namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
 {
@@ -30,7 +30,7 @@ namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
             }
             catch (StripeException ex)
             {
-                logger.LogDebug($"Could not find Stripe Subscription: {ex.Message}");
+                logger.LogDebug("Could not find Stripe Subscription: {Message}", ex.Message);
                 throw new DomainException($"Could not find Stripe Subscription: {ex.Message}");
             }
 

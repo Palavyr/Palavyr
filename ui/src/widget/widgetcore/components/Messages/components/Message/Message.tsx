@@ -1,14 +1,15 @@
 import React, { useContext } from "react";
 import format from "date-fns/format";
-import { UserMessageData, WidgetPreferences } from "@Palavyr-Types";
+import { UserMessageData } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import "./styles.scss";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 
 const useStyles = makeStyles(theme => ({
-    timeStamp: (prefs: WidgetPreferences) => ({
+    timeStamp: (prefs: WidgetPreferencesResource) => ({
         fontSize: "9px",
         borderTop: "1px dashed gray",
         float: "right",

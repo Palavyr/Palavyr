@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 using Stripe;
 
@@ -13,7 +13,7 @@ namespace Palavyr.Core.Services.StripeServices
 {
     public interface IStripeWebhookAuthService
     {
-        Task<(Event eventPayload, string payloadSignature)> AuthenticateWebhookRequest(HttpContext context);
+        Task<(Event? eventPayload, string? payloadSignature)> AuthenticateWebhookRequest(HttpContext context);
     }
 
     public class StripeWebhookAuthService : IStripeWebhookAuthService
@@ -35,7 +35,7 @@ namespace Palavyr.Core.Services.StripeServices
             this.configuration = configuration;
         }
 
-        public async Task<(Event eventPayload, string payloadSignature)> AuthenticateWebhookRequest(HttpContext context)
+        public async Task<(Event? eventPayload, string? payloadSignature)> AuthenticateWebhookRequest(HttpContext context)
         {
             var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
 
@@ -71,18 +71,18 @@ namespace Palavyr.Core.Services.StripeServices
             {
                 if (string.IsNullOrWhiteSpace(requestBody))
                 {
-                    logger.LogDebug($"Webhook failed: request body was empty: {ex.Message}");
+                    logger.LogDebug("Webhook failed: request body was empty: {Message}", ex.Message);
                 }
                 else
                 {
-                    logger.LogDebug($"Webhook failed: HttpContext: {ex.Message}");
+                    logger.LogDebug("Webhook failed: HttpContext: {Message}", ex.Message);
                 }
 
                 return (null, null);
             }
             catch (Exception ex)
             {
-                logger.LogDebug($"Webhook Failed: {ex.Message}");
+                logger.LogDebug("Webhook Failed: {Message}", ex.Message);
                 return (null, null);
             }
         }

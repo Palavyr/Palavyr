@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Stores.StoreExtensionMethods
 {

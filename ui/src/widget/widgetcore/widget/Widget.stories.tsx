@@ -12,11 +12,11 @@ export const dummy =  () => null;
 // import { Widget, WidgetProps } from "./Widget";
 
 // const fakeKey = "secret-key";
-// const areaId = "abc123";
+// const IntentId = "abc123";
 // const routes = new PalavyrWidgetRepository(fakeKey).Routes;
 
 // const conf = new ConfigureMockClient();
-// conf.ConfigureGet(routes.newConvo(fakeKey, areaId), newConversation(areaId));
+// conf.ConfigureGet(routes.newConvo(fakeKey, IntentId), newConversation(IntentId));
 
 // export default {
 //     title: "Widget/Widget",
@@ -35,14 +35,14 @@ export const dummy =  () => null;
 //     return <Widget {...args} />;
 // };
 // ChatStart.args = {
-//     option: getSelectedOption(areaId)
+//     option: getSelectedOption(IntentId)
 // };
 
 // export const PopulatedChat: Story<WidgetProps> = (args: WidgetProps) => {
 //     useEffect(() => {
 //         dropMessages();
 //         closeUserDetails();
-//         shortStaticConvoSequence(areaId).forEach(convoNode => {
+//         shortStaticConvoSequence(IntentId).forEach(convoNode => {
 //             if (convoNode.userResponse !== undefined){
 //                 addUserMessage(convoNode.userResponse)
 //             } else {
@@ -56,5 +56,5 @@ export const dummy =  () => null;
 //     return <Widget {...args} />;
 // };
 // PopulatedChat.args = {
-//     option: getSelectedOption(areaId),
+//     option: getSelectedOption(IntentId),
 // };

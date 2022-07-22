@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
         [HttpGet(Route)]
-        public async Task<IEnumerable<Enquiry>> Get([FromQuery] GetEnquiriesRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<EnquiryResource>> Get([FromQuery] GetEnquiriesRequest request, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;

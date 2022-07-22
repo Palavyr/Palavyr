@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests
 {
-    public class WhenAttemptingToResolveAllTypes : InMemoryIntegrationFixture
+    public class WhenAttemptingToResolveAllTypes : IntegrationTest
     {
         private readonly ITestOutputHelper testOutputHelper;
 
@@ -20,7 +20,7 @@ namespace Palavyr.IntegrationTests.Tests
             var allTypes = AppDomain
                 .CurrentDomain
                 .GetAssemblies()
-                .Where(x => x.FullName.Contains("Palavyr"))
+                .Where(x => x.FullName!.Contains("Palavyr"))
                 .SelectMany(x => x.GetTypes())
                 .Where(x => x.IsInterface)
                 .ToList();
@@ -58,7 +58,7 @@ namespace Palavyr.IntegrationTests.Tests
         }
 
 
-        public WhenAttemptingToResolveAllTypes(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory)
+        public WhenAttemptingToResolveAllTypes(ITestOutputHelper testOutputHelper, ServerFactory factory)
             : base(testOutputHelper, factory)
         {
             this.testOutputHelper = testOutputHelper;

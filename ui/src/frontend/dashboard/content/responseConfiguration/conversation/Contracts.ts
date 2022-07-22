@@ -1,5 +1,5 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptions, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
+import { ConversationDesignerNodeResource, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptionResources, NodeTypeCodeEnum, LoopbackContext } from "@Palavyr-Types";
 
 // export interface NodeOptionalProps {
 //     node: IPalavyrNode;
@@ -7,7 +7,7 @@ import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptio
 
 // export interface ILinkedListBucket {
 //     addToBucket(node: IPalavyrNode): void;
-//     convertToConvoNodes(areaId: string): ConvoNode[];
+//     convertToConvoNodes(IntentId: string): ConvoNode[];
 //     addToBucket(node: IPalavyrNode): void;
 //     clear(): void;
 //     findById(nodeId: string): IPalavyrNode | null;
@@ -15,13 +15,13 @@ import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptio
 
 // export interface IPalavyrLinkedList {
 //     rootNode: IPalavyrNode;
-//     areaId: string;
+//     IntentId: string;
 //     repository: PalavyrRepository;
 //     traverse(): void;
 //     insert(): void;
 //     delete(): void;
 //     compileToConvoNodes(): ConvoNode[];
-//     reconfigureTree(nodeTypeOptions: NodeTypeOptions): void;
+//     reconfigureTree(nodeTypeOptions: NodeTypeOptionResources): void;
 //     findNode(nodeId: string): IPalavyrNode | null;
 //     retrieveCleanHeadNode(): IPalavyrNode;
 //     updateTree: (updatedTree: IPalavyrLinkedList) => void;
@@ -69,12 +69,12 @@ import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptio
 //     nodeIsNotSet(): boolean;
 //     AddNewChildReference(newChildReference: IPalavyrNode): void;
 //     sortChildReferences(): void;
-//     addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void;
-//     compileConvoNode(areaId: string): ConvoNode;
+//     addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources): void;
+//     compileConvoNode(IntentId: string): ConvoNode;
 //     recursiveReferenceThisAnabranchOrigin(node: IPalavyrNode): void;
-//     dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void;
+//     dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources): void;
 //     UpdateTree(): void;
-//     unsetSelf(nodeTypeOptions: NodeTypeOptions): void;
+//     unsetSelf(nodeTypeOptions: NodeTypeOptionResources): void;
 //     nodeIsSet(): boolean;
 //     nodeIsNotSet(): boolean;
 //     setValueOptions(newValueOptions: string[]): void;
@@ -83,11 +83,11 @@ import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptio
 //     addLine(parentId: string): void;
 //     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
 //     removeLine(toNode: IPalavyrNode): void;
-//     setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptions): void;
+//     setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptionResources): void;
 //     Equals(otherNode: IPalavyrNode): boolean;
 //     LoopbackContextIsSet(): boolean;
-//     InsertChildNodeLink(nodeTypeOptions: NodeTypeOptions): void;
-//     DeleteCurrentNode(nodeTypeOptions: NodeTypeOptions): void;
+//     InsertChildNodeLink(nodeTypeOptions: NodeTypeOptionResources): void;
+//     DeleteCurrentNode(nodeTypeOptions: NodeTypeOptionResources): void;
 //     SetLoopbackContext(anchorId: string): void;
 
 //     isRoot: boolean;
@@ -97,16 +97,16 @@ import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptio
 //     shouldPresentResponse: boolean; // isCritical
 //     nodeType: string; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
 //     isMultiOptionType: boolean;
-//     isDynamicTableNode: boolean;
+//     isPricingStrategyNode: boolean;
 //     nodeComponentType: string;
 //     resolveOrder: number;
 //     shouldShowMultiOption: boolean;
 //     dynamicType: string | null;
 //     imageId: string | null | undefined;
-//     nodeTypeOptions: NodeTypeOptions;
+//     nodeTypeOptions: NodeTypeOptionResources;
 //     shouldDisableNodeTypeSelector: boolean;
 //     isImageNode: boolean;
-//     nodeTypeCode: NodeTypeCode;
+//     nodeTypeCode: NodeTypeCodeEnum;
 //     repository: PalavyrRepository;
 //     isLocked: boolean;
 

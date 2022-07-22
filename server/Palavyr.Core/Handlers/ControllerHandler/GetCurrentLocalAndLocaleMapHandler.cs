@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.Localization;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -23,8 +24,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetCurrentLocalAndLocaleMapResponse
     {
-        public GetCurrentLocalAndLocaleMapResponse(CurrentLocaleAndLocaleMapRetriever.LocaleResponse response) => Response = response;
-        public CurrentLocaleAndLocaleMapRetriever.LocaleResponse Response { get; set; }
+        public GetCurrentLocalAndLocaleMapResponse(LocaleMetaResource resource) => Resource = resource;
+        public LocaleMetaResource Resource { get; set; }
     }
 
     public class GetCurrentLocalAndLocaleMapRequest : IRequest<GetCurrentLocalAndLocaleMapResponse>

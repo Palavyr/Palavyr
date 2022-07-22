@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  stripe:
+    image: stripe/stripe-mock:latest
+    ports:
+      - '12111-12112:12111-12112'
+    env_file:
+      - dev.local.env
+
+
+  stripe-cli:
+    image: stripe/stripe-cli
+    container_name: stripe-cli
+    command: "listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
+    env_file:
+      - dev.local.env
+
+  postgres-server:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Password01!
+    ports:
+      - '5432:5432'

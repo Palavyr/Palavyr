@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
         [HttpGet(Route)]
-        public async Task<EnquiryInsightsResource[]> Get(CancellationToken cancellationToken)
+        public async Task<IEnumerable<EnquiryInsightsResource>> Get(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new EnquiryInsightsRequest(), cancellationToken);
             return response.Response;

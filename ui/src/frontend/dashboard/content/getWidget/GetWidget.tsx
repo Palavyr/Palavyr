@@ -59,7 +59,7 @@ export const GetWidget = () => {
     const cls = useStyles();
 
     const loadApiKey = useCallback(async () => {
-        const key = await repository.Settings.Account.getApiKey();
+        const key = await repository.Settings.Account.GetApiKey();
         console.log(`ApiKey: ${key}`);
         setApiKey(key);
     }, []);

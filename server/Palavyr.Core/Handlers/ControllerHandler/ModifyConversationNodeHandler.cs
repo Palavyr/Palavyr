@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -11,11 +13,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyConversationNodeHandler : IRequestHandler<ModifyConversationNodeRequest, ModifyConversationNodeResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
+        private readonly IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper;
 
-        public ModifyConversationNodeHandler(IEntityStore<Area> intentStore)
+        public ModifyConversationNodeHandler(IEntityStore<Intent> intentStore, IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper)
         {
             this.intentStore = intentStore;
+            this.mapper = mapper;
         }
 
         public async Task<ModifyConversationNodeResponse> Handle(ModifyConversationNodeRequest request, CancellationToken cancellationToken)
@@ -28,13 +32,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 newNode.NodeId,
                 newNode.NodeType,
                 newNode.Text,
-                newNode.AreaIdentifier,
+                newNode.IntentId,
                 newNode.NodeChildrenString,
                 newNode.OptionPath,
                 newNode.ValueOptions,
                 intentStore.AccountId,
                 newNode.NodeComponentType,
-                newNode.NodeTypeCode,
+                newNode.NodeTypeCodeEnum,
                 newNode.IsRoot,
                 newNode.IsCritical,
                 newNode.IsMultiOptionType,
@@ -43,19 +47,22 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             convoUpdate.Add(updatedNode);
             intent.ConversationNodes = convoUpdate;
-            return new ModifyConversationNodeResponse(convoUpdate);
+
+
+            var resource = await mapper.MapMany(convoUpdate, cancellationToken);
+            return new ModifyConversationNodeResponse(resource);
         }
     }
 
     public class ModifyConversationNodeResponse
     {
-        public ModifyConversationNodeResponse(List<ConversationNode> response) => Response = response;
-        public List<ConversationNode> Response { get; set; }
+        public ModifyConversationNodeResponse(IEnumerable<ConversationDesignerNodeResource> response) => Response = response;
+        public IEnumerable<ConversationDesignerNodeResource> Response { get; set; }
     }
 
     public class ModifyConversationNodeRequest : IRequest<ModifyConversationNodeResponse>
     {
-        public ModifyConversationNodeRequest(string nodeId, string intentId, ConversationNode nodeUpdate)
+        public ModifyConversationNodeRequest(string nodeId, string intentId, ConversationDesignerNodeResource nodeUpdate)
         {
             NodeId = nodeId;
             IntentId = intentId;
@@ -64,6 +71,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public string NodeId { get; set; }
         public string IntentId { get; set; }
-        public ConversationNode NodeUpdate { get; set; }
+        public ConversationDesignerNodeResource NodeUpdate { get; set; }
     }
 }

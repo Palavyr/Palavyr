@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Test.Common.Builders.Conversations.NodeAdders
 {
@@ -20,9 +20,9 @@ namespace Test.Common.Builders.Conversations.NodeAdders
         }
 
 
-        public static void SetAreaId(this ConversationNode node, string areaId)
+        public static void SetIntentId(this ConversationNode node, string intentId)
         {
-            node.AreaIdentifier = areaId;
+            node.IntentId = intentId;
         }
 
         public static void SetNodeChildrenString(this ConversationNode node, string childrenString)
@@ -94,9 +94,9 @@ namespace Test.Common.Builders.Conversations.NodeAdders
             node.IsAnabranchMergePoint = isAnaMergePoint;
         }
 
-        public static void SetIsDynamic(this ConversationNode node, bool isDynamic)
+        public static void SetIsPricingStrategy(this ConversationNode node, bool isPricingStrategy)
         {
-            node.IsDynamicTableNode = isDynamic;
+            node.IsPricingStrategyTableNode = isPricingStrategy;
         }
 
         public static void SetIsCurrency(this ConversationNode node, bool isCurrency)
@@ -114,9 +114,9 @@ namespace Test.Common.Builders.Conversations.NodeAdders
             node.ResolveOrder = resolveOrder;
         }
 
-        public static void SetDynamicType(this ConversationNode node, string dynamicType)
+        public static void SetPricingStrategyType(this ConversationNode node, string pricingStrategyType)
         {
-            node.DynamicType = dynamicType;
+            node.PricingStrategyType = pricingStrategyType;
         }
     }
 }

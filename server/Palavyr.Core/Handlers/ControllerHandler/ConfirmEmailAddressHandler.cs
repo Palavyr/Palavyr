@@ -30,7 +30,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class ConfirmEmailAddressRequest : IRequest<ConfirmEmailAddressResponse>
     {
         public string AuthToken { get; set; }
+        public const string Route = "account/confirmation/{authToken}/action/setup";
 
+        public static string FormatRoute(string authToken)
+        {
+            return Route.Replace("{authToken}", authToken);
+        }
         public ConfirmEmailAddressRequest(string authToken)
         {
             AuthToken = authToken;

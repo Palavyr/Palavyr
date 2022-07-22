@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         }
 
         [HttpGet(Route)]
-        public async Task<PreCheckResult> Get(CancellationToken cancellationToken)
+        public async Task<PreCheckResultResource> Get(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetDemoWidgetPreCheckRequest(), cancellationToken);
             return response.Response;

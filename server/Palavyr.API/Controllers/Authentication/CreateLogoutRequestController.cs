@@ -1,16 +1,16 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Requests;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.API.Controllers.Authentication
 {
     public class CreateLogoutRequestController : PalavyrBaseController
     {
-        private readonly IEntityStore<Session> sessionStore;
+        private readonly IEntityStore<UserSession> sessionStore;
 
-        public CreateLogoutRequestController(IEntityStore<Session> sessionStore)
+        public CreateLogoutRequestController(IEntityStore<UserSession> sessionStore)
         {
             this.sessionStore = sessionStore;
         }

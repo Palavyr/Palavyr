@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useCallback } from "react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Interval, Price, PriceMap, Prices } from "@Palavyr-Types";
+import { Interval, PriceResource, PriceMap, PriceResources } from "@Palavyr-Types";
 import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { stripeKey, webUrl } from "@common/client/clientUtils";
@@ -45,7 +45,7 @@ export const Purchase = () => {
 const PurchaseInner = () => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
-    const [prices, setPrices] = useState<Prices>([]);
+    const [prices, setPrices] = useState<PriceResources>([]);
     const location = useLocation();
     const [priceMap, setPriceMap] = useState<PriceMap>({});
     const [priceId, setSelectedPriceId] = useState<string | number>("");
@@ -64,7 +64,7 @@ const PurchaseInner = () => {
         setPrices(priceOptions);
 
         const filledPriceMap: PriceMap = {};
-        priceOptions.map((option: Price) => {
+        priceOptions.map((option: PriceResource) => {
             filledPriceMap[option.recurring.interval] = option.unitAmountDecimal;
         });
         setPriceMap(filledPriceMap);
@@ -88,7 +88,7 @@ const PurchaseInner = () => {
         if (stripe) stripe.redirectToCheckout({ sessionId: sessionId }).then(handleResult);
     };
 
-    const intervalGetter = (x: Price) => x.recurring.interval;
+    const intervalGetter = (x: PriceResource) => x.recurring.interval;
 
     return (
         <div className={cls.container}>
@@ -102,7 +102,7 @@ const PurchaseInner = () => {
                 <Paper className={cls.paper}>
                     <DividerWithText text={productType} variant="h4" />
                     <SpaceEvenly>
-                        {sortByPropertyAlphabetical(intervalGetter, prices).map((price: Price, key: number) => {
+                        {sortByPropertyAlphabetical(intervalGetter, prices).map((price: PriceResource, key: number) => {
                             return (
                                 <FrequencyCard
                                     key={price.productId + "-" + key.toString()}

@@ -1,9 +1,11 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -18,7 +20,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpPost(Route)]
-        public async Task<ConversationNode[]> Post(
+        public async Task<IEnumerable<ConversationDesignerNodeResource>> Post(
             [FromBody]
             ModifyIntroductionSequenceRequest request,
             CancellationToken cancellationToken)

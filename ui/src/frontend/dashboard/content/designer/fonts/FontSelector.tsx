@@ -1,5 +1,5 @@
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
-import { SetState, WidgetPreferences } from "@Palavyr-Types";
+import { SetState, WidgetPreferencesResource } from "@Palavyr-Types";
 import { Align } from "@common/positioning/Align";
 import React, { useEffect, useState } from "react";
 import { googleFontApikey } from "@api-client/clientUtils";
@@ -10,8 +10,8 @@ import { makeStyles } from "@material-ui/core";
 import { getFontManager } from "./Initializer";
 
 export interface FontSelector {
-    widgetPreferences: WidgetPreferences;
-    setWidgetPreferences: SetState<WidgetPreferences>;
+    widgetPreferences: WidgetPreferencesResource;
+    setWidgetPreferences: SetState<WidgetPreferencesResource>;
 }
 
 const useStyles = makeStyles(theme => ({

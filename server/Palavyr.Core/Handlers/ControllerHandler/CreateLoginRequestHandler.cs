@@ -1,9 +1,10 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -21,7 +22,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public async Task<CreateLoginRequestResponse> Handle(CreateLoginRequest request, CancellationToken cancellationToken)
         {
-            logger.LogDebug("Login Request Received.");
+            logger.LogDebug("Login Request Received");
             try
             {
                 var credentials = await authService.PerformLoginAction(request);
@@ -38,18 +39,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class CreateLoginRequestResponse
     {
-        public CreateLoginRequestResponse(Credentials response) => Response = response;
-        public Credentials Response { get; set; }
+        public CreateLoginRequestResponse(CredentialsResource response) => Response = response;
+        public CredentialsResource Response { get; set; }
     }
 
     public class CreateLoginRequest : IRequest<CreateLoginRequestResponse>
     {
-        public string Username { get; set; }
+        [Required]
         public string EmailAddress { get; set; }
+        
+        [Required]
         public string Password { get; set; }
-        public string SessionToken { get; set; }
-
-        public string OldPassword { get; set; }
-        public string PhoneNumber { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.WidgetLive
@@ -22,7 +22,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         }
 
         [HttpGet(Route)]
-        public async Task<PreCheckResult> Get([FromQuery] bool demo, CancellationToken cancellationToken)
+        public async Task<PreCheckResultResource> Get([FromQuery] bool demo, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetWidgetPreCheckRequest(), cancellationToken);
             return response.Response;

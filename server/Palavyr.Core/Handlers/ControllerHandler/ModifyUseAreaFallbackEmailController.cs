@@ -1,35 +1,35 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class ModifyUseAreaFallbackEmailHandler : IRequestHandler<ModifyUseAreaFallbackEmailRequest, ModifyUseAreaFallbackEmailResponse>
+    public class ModifyUseIntentFallbackEmailHandler : IRequestHandler<ModifyUseIntentFallbackEmailRequest, ModifyUseIntentFallbackEmailResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
 
-        public ModifyUseAreaFallbackEmailHandler(IEntityStore<Area> intentStore)
+        public ModifyUseIntentFallbackEmailHandler(IEntityStore<Intent> intentStore)
         {
             this.intentStore = intentStore;
         }
 
-        public async Task<ModifyUseAreaFallbackEmailResponse> Handle(ModifyUseAreaFallbackEmailRequest request, CancellationToken cancellationToken)
+        public async Task<ModifyUseIntentFallbackEmailResponse> Handle(ModifyUseIntentFallbackEmailRequest request, CancellationToken cancellationToken)
         {
-            var area = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
-            area.UseAreaFallbackEmail = request.UseFallback;
-            return new ModifyUseAreaFallbackEmailResponse(area.UseAreaFallbackEmail);
+            var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
+            intent.UseIntentFallbackEmail = request.UseFallback;
+            return new ModifyUseIntentFallbackEmailResponse(intent.UseIntentFallbackEmail);
         }
     }
 
-    public class ModifyUseAreaFallbackEmailResponse
+    public class ModifyUseIntentFallbackEmailResponse
     {
-        public ModifyUseAreaFallbackEmailResponse(bool response) => Response = response;
+        public ModifyUseIntentFallbackEmailResponse(bool response) => Response = response;
         public bool Response { get; set; }
     }
 
-    public class ModifyUseAreaFallbackEmailRequest : IRequest<ModifyUseAreaFallbackEmailResponse>
+    public class ModifyUseIntentFallbackEmailRequest : IRequest<ModifyUseIntentFallbackEmailResponse>
     {
         public string IntentId { get; set; }
         public bool UseFallback { get; set; }

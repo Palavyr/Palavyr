@@ -3,15 +3,14 @@ import { makeStyles, TextField } from "@material-ui/core";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserName, INVALID_NAME } from "../UserDetailsCheck";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
-import { WidgetPreferences } from "@Palavyr-Types";
-import classNames from "classnames";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 
 export interface NameFormProps extends BaseFormProps {
     disabled: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
-    helperTextRoot: (props: WidgetPreferences) => ({
+    helperTextRoot: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,
         border: "none",
         "&.Mui-error": {
@@ -19,19 +18,19 @@ const useStyles = makeStyles(theme => ({
             border: "none",
         },
     }),
-    formHelperTextProps: (props: WidgetPreferences) => ({
+    formHelperTextProps: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,
     }),
-    classesRoot: (props: WidgetPreferences) => ({
+    classesRoot: (props: WidgetPreferencesResource) => ({
         border: "none",
     }),
-    inputProps: (props: WidgetPreferences) => ({
+    inputProps: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,
     }),
-    InputLabelProps: (props: WidgetPreferences) => ({
+    InputLabelProps: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,
     }),
-    InputLabelPropsRoot: (props: WidgetPreferences) => ({
+    InputLabelPropsRoot: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,
         borderBottomColor: props.chatFontColor,
         "&.Mui-focused": {
@@ -43,10 +42,10 @@ const useStyles = makeStyles(theme => ({
             borderBottomColor: props.chatFontColor,
         },
     }),
-    InputPropsClassName: (props: WidgetPreferences) => ({
+    InputPropsClassName: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,
     }),
-    textField: (props: WidgetPreferences) => ({
+    textField: (props: WidgetPreferencesResource) => ({
         "&.Mui-error": {
             color: props.chatFontColor,
             borderBottomColor: props.chatFontColor,

@@ -5,10 +5,10 @@ import React, { useContext } from "react";
 import { QuickStartCard } from "../../quickStartGuide/QuickStartCard";
 import Cookies from "js-cookie";
 import { useHistory, useLocation } from "react-router-dom";
-import { createNavLink } from "frontend/dashboard/layouts/sidebar/sections/sectionComponents/AreaLinkItem";
+import { createNavLink } from "frontend/dashboard/layouts/sidebar/sections/sectionComponents/IntentLinkItem";
 
 export const ToursPage = () => {
-    const { reRenderDashboard, areaNameDetails } = useContext(DashboardContext);
+    const { reRenderDashboard, intentNameDetails } = useContext(DashboardContext);
     const history = useHistory();
     const location = useLocation();
 
@@ -24,12 +24,12 @@ export const ToursPage = () => {
         }
     };
 
-    const enableAreaEditorTour = () => {
+    const enableIntentEditorTour = () => {
         if (Cookies.get(EDITOR_TOUR_COOKIE_NAME) !== undefined) {
             Cookies.remove(EDITOR_TOUR_COOKIE_NAME);
         }
 
-        const navUrl = createNavLink(areaNameDetails[0].areaIdentifier);
+        const navUrl = createNavLink(intentNameDetails[0].intentId);
         history.push(navUrl);
     };
 
@@ -42,7 +42,7 @@ export const ToursPage = () => {
                     content="This tour will cover the basics of Palavyr."
                     onClick={enableGettingStartedTour}
                 />
-                <QuickStartCard title="Intent Editor Tour" content="This tour will cover basics of the Intent Editor." onClick={enableAreaEditorTour} />
+                <QuickStartCard title="Intent Editor Tour" content="This tour will cover basics of the Intent Editor." onClick={enableIntentEditorTour} />
             </div>
         </>
     );

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Requests;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.PdfService
@@ -10,7 +10,7 @@ namespace Palavyr.Core.Services.PdfService
         public Task<string> BuildResponseHtml(
             string intentId,
             CriticalResponses criticalResponses,
-            List<Table> dynamicThenStaticTables,
+            List<Table> pricingStrategyThenStaticTables,
             EmailRequest emailRequest);
     }
 }

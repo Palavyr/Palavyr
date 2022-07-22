@@ -1,4 +1,4 @@
-import { WidgetNodeResource, WidgetConversationUpdate, WidgetNodes, KeyValue, UserMessageData } from "@Palavyr-Types";
+import { ConversationHistoryRowResource, KeyValue, UserMessageData } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 
 import { floor, max, min } from "lodash";
@@ -6,6 +6,7 @@ import { renderNextBotMessage } from "./renderBotMessage";
 import { setDynamicResponse } from "./setDynamicResponse";
 import { IAppContext } from "widget/hook";
 import { UserMessage } from "@widgetcore/components/Messages/components/Message/Message";
+import { WidgetNodeResource, WidgetNodeResources } from "@common/types/api/EntityResources";
 
 const WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN = 11;
 const MIN_SPEED_MILLISECONDS = 18000;
@@ -43,7 +44,7 @@ export const responseAction = async (
     context: IAppContext,
     node: WidgetNodeResource,
     child: WidgetNodeResource,
-    nodeList: WidgetNodes,
+    nodeList: WidgetNodeResources,
     client: PalavyrWidgetRepository,
     convoId: string,
     isDemo: boolean,
@@ -60,12 +61,12 @@ export const responseAction = async (
             context.addKeyValue(keyValue);
         }
 
-        if (node.isDynamicTableNode && node.dynamicType) {
-            const updatedDynamicResponses = setDynamicResponse(context.dynamicResponses, node.dynamicType, node.nodeId, response.toString());
+        if (node.isPricingStrategyTableNode && node.pricingStrategyType) {
+            const updatedDynamicResponses = setDynamicResponse(context.dynamicResponses, node.pricingStrategyType, node.nodeId, response.toString());
 
             context.setDynamicResponses(updatedDynamicResponses);
 
-            const currentDynamicResponseState = updatedDynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
+            const currentDynamicResponseState = updatedDynamicResponses.filter(x => Object.keys(x)[0] === node.pricingStrategyType)[0];
 
             const tooComplicated = await client.Widget.Post.InternalCheck(node, response, currentDynamicResponseState);
             if (tooComplicated) {
@@ -88,13 +89,15 @@ export const responseAction = async (
 
     if (!isDemo) {
         if (convoId !== null) {
-            const updatePayload: WidgetConversationUpdate = {
-                ConversationId: convoId,
-                Prompt: stripHtml(node.text),
-                UserResponse: response,
-                NodeId: node.nodeId,
-                NodeCritical: node.isCritical,
-                NodeType: node.nodeType,
+            const updatePayload: ConversationHistoryRowResource = {
+                conversationId: convoId,
+                prompt: stripHtml(node.text),
+                userResponse: response ?? "",
+                nodeId: node.nodeId,
+                nodeCritical: node.isCritical,
+                nodeType: node.nodeType,
+                timeStamp: new Date().toDateString(),
+                id: null,
             };
 
             await client.Widget.Post.UpdateConvoHistory(updatePayload); // no need to await for this

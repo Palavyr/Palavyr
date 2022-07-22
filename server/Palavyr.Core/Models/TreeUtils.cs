@@ -1,5 +1,5 @@
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models
 {
@@ -7,9 +7,9 @@ namespace Palavyr.Core.Models
     {
         public const string Separator = "-";
 
-        public static string TransformRequiredNodeType(DynamicTableMeta dynamicTableMeta)
+        public static string TransformRequiredNodeType(PricingStrategyTableMeta pricingStrategyTableMeta)
         {
-            return string.Join(Separator, new[] {dynamicTableMeta.TableType, dynamicTableMeta.TableId});
+            return string.Join(Separator, new[] {pricingStrategyTableMeta.TableType, pricingStrategyTableMeta.TableId});
         }
 
         public static string TransformRequiredNodeType(string tableType, string tableId)
@@ -17,19 +17,19 @@ namespace Palavyr.Core.Models
             return string.Join(Separator, new[] {tableType, tableId});
         }
 
-        public static string TransformRequiredNodeType(DynamicTableMeta dynamicTableMeta, string prefix)
+        public static string TransformRequiredNodeType(PricingStrategyTableMeta pricingStrategyTableMeta, string prefix)
         {
-            return string.Join(Separator, new[] {prefix, dynamicTableMeta.TableType, dynamicTableMeta.TableId});
+            return string.Join(Separator, new[] {prefix, pricingStrategyTableMeta.TableType, pricingStrategyTableMeta.TableId});
         }
 
-        public static string TransformRequiredNodeType(DynamicTableMeta dynamicTableMeta, string prefix, string suffix)
+        public static string TransformRequiredNodeType(PricingStrategyTableMeta pricingStrategyTableMeta, string prefix, string suffix)
         {
-            return string.Join(Separator, new[] {prefix, dynamicTableMeta.TableType, dynamicTableMeta.TableId, suffix});
+            return string.Join(Separator, new[] {prefix, pricingStrategyTableMeta.TableType, pricingStrategyTableMeta.TableId, suffix});
         }
 
-        public static string TransformRequiredNodeTypeToPrettyName(DynamicTableMeta dynamicTableMeta)
+        public static string TransformRequiredNodeTypeToPrettyName(PricingStrategyTableMeta pricingStrategyTableMeta)
         {
-            return string.Join(Separator, new[] {dynamicTableMeta.PrettyName, dynamicTableMeta.TableTag});
+            return string.Join(Separator, new[] {pricingStrategyTableMeta.PrettyName, pricingStrategyTableMeta.TableTag});
         }
 
         public static string TransformRequiredNodeTypeToPrettyName(string prettyName, string tableTag)
@@ -37,9 +37,9 @@ namespace Palavyr.Core.Models
             return string.Join(Separator, new[] {prettyName, tableTag});
         }
 
-        public static string TransformRequiredNodeTypeToPrettyName(DynamicTableMeta dynamicTableMeta, string extraName)
+        public static string TransformRequiredNodeTypeToPrettyName(PricingStrategyTableMeta pricingStrategyTableMeta, string extraName)
         {
-            return string.Join(Separator, new[] {dynamicTableMeta.PrettyName, extraName, dynamicTableMeta.TableTag});
+            return string.Join(Separator, new[] {pricingStrategyTableMeta.PrettyName, extraName, pricingStrategyTableMeta.TableTag});
         }
 
         public static string CreateNodeChildrenString(params string[] nodeIds)

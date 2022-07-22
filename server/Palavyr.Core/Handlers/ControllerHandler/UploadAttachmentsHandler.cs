@@ -3,8 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AttachmentServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -34,7 +35,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                 fileAssets.Add(fileAsset);
             }
 
-            var resources = await mapper.MapMany(fileAssets);
+            var resources = await mapper.MapMany(fileAssets, cancellationToken);
             return new UploadAttachmentsResponse(resources);
         }
     }

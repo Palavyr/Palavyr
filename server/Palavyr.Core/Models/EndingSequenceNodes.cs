@@ -1,7 +1,7 @@
 ﻿using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models
 {
@@ -16,9 +16,9 @@ namespace Palavyr.Core.Models
         ConversationNode CreateRetrySendEmailSecondAttempt(string intentId, string accountId, params string[] nodeChildrenIds);
         ConversationNode CreateFallbackEmailSendFailedFirstAttempt(string intentId, string accountId, params string[] nodeChildrenIds);
         ConversationNode CreateFallbackRetrySendEmailSecondAttempt(string intentId, string accountId, params string[] nodeChildrenIds);
-        ConversationNode CreateMayWeSendAnInformationalEmailForTooComplicated(string areaId, string accountId, params string[] nodeChildrenIds);
-        ConversationNode CreateSendFallbackEmail(string areaId, string accountId, params string[] nodeChildrenIds);
-        ConversationNode CreateGenericTooComplicated(string areaId, string accountId, params string[] nodeChildrenIds);
+        ConversationNode CreateMayWeSendAnInformationalEmailForTooComplicated(string intentId, string accountId, params string[] nodeChildrenIds);
+        ConversationNode CreateSendFallbackEmail(string intentId, string accountId, params string[] nodeChildrenIds);
+        ConversationNode CreateGenericTooComplicated(string intentId, string accountId, params string[] nodeChildrenIds);
 
         ConversationNode CreateShowResponseFileAsset(string intentId, string accountId, params string[] nodeChildrenIds);
     }
@@ -49,7 +49,7 @@ namespace Palavyr.Core.Models
                 TreeUtils.JoinValueOptionsOnDelimiter(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
                 accountId,
                 DefaultNodeTypeOptions.YesNo.StringName,
-                NodeTypeCode.V,
+                NodeTypeCodeEnum.V,
                 false,
                 false,
                 true,
@@ -73,7 +73,7 @@ namespace Palavyr.Core.Models
                 "",
                 accountId,
                 InternalNodeTypeOptions.SendEmail.StringName,
-                NodeTypeCode.II,
+                NodeTypeCodeEnum.II,
                 false,
                 false,
                 false,
@@ -97,7 +97,7 @@ namespace Palavyr.Core.Models
                 "",
                 accountId,
                 InternalNodeTypeOptions.Restart.StringName,
-                NodeTypeCode.IV,
+                NodeTypeCodeEnum.IV,
                 false,
                 false,
                 false,
@@ -120,7 +120,7 @@ namespace Palavyr.Core.Models
                 "",
                 accountId,
                 DefaultNodeTypeOptions.ProvideInfo.StringName,
-                NodeTypeCode.II,
+                NodeTypeCodeEnum.II,
                 false,
                 false,
                 false,
@@ -143,7 +143,7 @@ namespace Palavyr.Core.Models
                 "",
                 accountId,
                 InternalNodeTypeOptions.Restart.StringName,
-                NodeTypeCode.IV,
+                NodeTypeCodeEnum.IV,
                 false,
                 false,
                 false,
@@ -168,7 +168,7 @@ namespace Palavyr.Core.Models
                 "",
                 accountId,
                 DefaultNodeTypeOptions.ProvideInfo.StringName,
-                NodeTypeCode.II,
+                NodeTypeCodeEnum.II,
                 false,
                 false,
                 false,
@@ -189,7 +189,7 @@ namespace Palavyr.Core.Models
                 "",
                 accountId,
                 InternalNodeTypeOptions.SendEmail.StringName,
-                NodeTypeCode.II,
+                NodeTypeCodeEnum.II,
                 false,
                 false,
                 false,
@@ -214,7 +214,7 @@ namespace Palavyr.Core.Models
                 "",
                 accountId,
                 DefaultNodeTypeOptions.ProvideInfo.StringName,
-                NodeTypeCode.II,
+                NodeTypeCodeEnum.II,
                 false,
                 false,
                 false,
@@ -235,7 +235,7 @@ namespace Palavyr.Core.Models
                 "",
                 accountId,
                 InternalNodeTypeOptions.SendEmail.StringName,
-                NodeTypeCode.II,
+                NodeTypeCodeEnum.II,
                 false,
                 false,
                 false,
@@ -243,7 +243,7 @@ namespace Palavyr.Core.Models
             );
         }
 
-        public ConversationNode CreateMayWeSendAnInformationalEmailForTooComplicated(string areaId, string accountId, params string[] nodeChildrenIds)
+        public ConversationNode CreateMayWeSendAnInformationalEmailForTooComplicated(string intentId, string accountId, params string[] nodeChildrenIds)
         {
             var nodeId = guidUtils.CreateNewId();
             var text = "We'd like to send you a follow-up email with some general information regarding your enquiry. Would that be okay?";
@@ -252,13 +252,13 @@ namespace Palavyr.Core.Models
                 nodeId,
                 DefaultNodeTypeOptions.YesNo.StringName,
                 text,
-                areaId,
+                intentId,
                 nodeChildrenString: TreeUtils.CreateNodeChildrenString(nodeChildrenIds),
                 "",
                 TreeUtils.JoinValueOptionsOnDelimiter(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
                 accountId,
                 DefaultNodeTypeOptions.YesNo.StringName,
-                NodeTypeCode.V,
+                NodeTypeCodeEnum.V,
                 false,
                 false,
                 true,
@@ -266,7 +266,7 @@ namespace Palavyr.Core.Models
             );
         }
 
-        public ConversationNode CreateSendFallbackEmail(string areaId, string accountId, params string[] nodeChildrenIds)
+        public ConversationNode CreateSendFallbackEmail(string intentId, string accountId, params string[] nodeChildrenIds)
         {
             var nodeId = guidUtils.CreateNewId();
 
@@ -274,13 +274,13 @@ namespace Palavyr.Core.Models
                 nodeId,
                 InternalNodeTypeOptions.SendTooComplicatedEmail.StringName,
                 "Wait just a moment while I send an email.",
-                areaId,
+                intentId,
                 nodeChildrenString: TreeUtils.CreateNodeChildrenString(nodeChildrenIds),
                 DefaultNodeTypeOptions.YesNo.Yes,
                 "",
                 accountId,
                 InternalNodeTypeOptions.SendTooComplicatedEmail.StringName,
-                NodeTypeCode.II,
+                NodeTypeCodeEnum.II,
                 false,
                 false,
                 false,
@@ -288,7 +288,7 @@ namespace Palavyr.Core.Models
             );
         }
 
-        public ConversationNode CreateGenericTooComplicated(string areaId, string accountId, params string[] nodeChildrenIds)
+        public ConversationNode CreateGenericTooComplicated(string intentId, string accountId, params string[] nodeChildrenIds)
         {
             var nodeId = guidUtils.CreateNewId();
 
@@ -297,13 +297,13 @@ namespace Palavyr.Core.Models
                 nodeId,
                 DefaultNodeTypeOptions.TooComplicated.StringName,
                 text,
-                areaId,
+                intentId,
                 nodeChildrenString: TreeUtils.CreateNodeChildrenString(nodeChildrenIds),
                 "",
                 "",
                 accountId,
                 DefaultNodeTypeOptions.TooComplicated.StringName,
-                NodeTypeCode.I,
+                NodeTypeCodeEnum.I,
                 false,
                 false,
                 false,
@@ -326,7 +326,7 @@ namespace Palavyr.Core.Models
                 "",
                 accountId,
                 InternalNodeTypeOptions.ShowResponseFileAsset.StringName,
-                NodeTypeCode.IV,
+                NodeTypeCodeEnum.IV,
                 false,
                 false,
                 false,

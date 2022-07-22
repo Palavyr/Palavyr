@@ -2,8 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.FileAssetServices;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -22,7 +23,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<DeleteImagesResponse> Handle(DeleteImagesRequest request, CancellationToken cancellationToken)
         {
             var fileAssets = await fileAssetDeleter.RemoveFiles(request.FileIds);
-            var mapped = await mapper.MapMany(FilterResponsesOut(fileAssets));
+            var mapped = await mapper.MapMany(FilterResponsesOut(fileAssets), cancellationToken);
             return new DeleteImagesResponse(mapped);
         }
 
@@ -52,21 +53,20 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             return filtered;
         }
     }
-}
 
-public class DeleteImagesResponse
-{
-    public DeleteImagesResponse(IEnumerable<FileAssetResource> response) => Response = response;
-    public IEnumerable<FileAssetResource> Response { get; set; }
-}
-
-public class DeleteImagesRequest : IRequest<DeleteImagesResponse>
-{
-    public DeleteImagesRequest(string[] fileIds)
+    public class DeleteImagesResponse
     {
-        FileIds = fileIds;
+        public DeleteImagesResponse(IEnumerable<FileAssetResource> response) => Response = response;
+        public IEnumerable<FileAssetResource> Response { get; set; }
     }
 
-    public string[] FileIds { get; set; }
-}
+    public class DeleteImagesRequest : IRequest<DeleteImagesResponse>
+    {
+        public DeleteImagesRequest(string[] fileIds)
+        {
+            FileIds = fileIds;
+        }
 
+        public string[] FileIds { get; set; }
+    }
+}

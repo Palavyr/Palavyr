@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Handlers.StripeWebhookHandlers;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed;
-using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.SubscriptionCreated;
+using Palavyr.Core.Handlers.StripeWebhookHandlers.InvoiceCreated;
+using Palavyr.Core.Handlers.StripeWebhookHandlers.InvoicePaid;
+using Palavyr.Core.Handlers.StripeWebhookHandlers.PaymentFailed;
+using Palavyr.Core.Handlers.StripeWebhookHandlers.SubscriptionCreated;
 using Stripe;
 using Stripe.Checkout;
 
@@ -31,7 +31,7 @@ namespace Palavyr.Core.Services.StripeServices
 
         public async Task ProcessStripeEvent(Event stripeEvent, string signature, CancellationToken cancellationToken)
         {
-            // TODO: write a cleanup task to remove old stripe events (older than say a week?
+            // TODO: write a cleanup task to remove old stripe events (older than say a week?)
             var response = await mediator.Send(new NewStripeEventReceivedEvent(signature), cancellationToken);
             if (response == null || (response != null && response.ShouldCancelProcessing))
             {

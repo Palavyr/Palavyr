@@ -6,14 +6,14 @@ import { HtmlTextMessage } from "@widgetcore/BotResponse/HtmlTextMessage";
 import { SingleRowSingleCell } from "@widgetcore/BotResponse/TableCell";
 import Fade from "react-reveal/Fade";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
-import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 const useStyles = makeStyles(theme => ({
-    textField: (props: WidgetPreferences) => ({
+    textField: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,
     }),
-    timeStamp: (props: WidgetPreferences) => ({
+    timeStamp: (props: WidgetPreferencesResource) => ({
         fontSize: "9px",
         marginTop: "0.6rem",
         marginBottom: "0.6rem",
@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
             borderRadius: "10px",
         },
     },
-    link: (props: WidgetPreferences) => ({
+    link: (props: WidgetPreferencesResource) => ({
         fontFamily: props.fontFamily,
         textDecoration: "none",
         textAlign: "center",

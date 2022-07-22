@@ -1,6 +1,5 @@
-﻿#nullable enable
-using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Models.Configuration.Schemas;
+﻿using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Test.Common.Constants;
 
 namespace Test.Common.Builders.Conversations
@@ -15,14 +14,14 @@ namespace Test.Common.Builders.Conversations
 
     public class ConversationNodeBuilder
     {
-        public ConversationNode CreateRootNode(string accountId = DefaultConstants.AccountId, string areaIdentifier = DefaultConstants.AreaIdentifier)
+        public ConversationNode CreateRootNode(string accountId = DefaultConstants.AccountId, string intentId = DefaultConstants.IntentId)
         {
             return new ConversationNode
             {
                 IsRoot = true,
                 NodeId = StaticGuidUtils.CreateNewId(),
                 Text = "Root Node",
-                AreaIdentifier = areaIdentifier,
+                IntentId = intentId,
                 AccountId = accountId,
             };
         }

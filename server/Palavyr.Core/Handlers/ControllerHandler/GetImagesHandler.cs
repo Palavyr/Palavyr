@@ -2,8 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
@@ -32,7 +33,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             }
 
             var filteredAssets = FilterResponsesOut(fileAssets);
-            var resources = await mapper.MapMany(filteredAssets);
+            var resources = await mapper.MapMany(filteredAssets, cancellationToken);
             return new GetFileAssetsResponse(resources);
         }
 

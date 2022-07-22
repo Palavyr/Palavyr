@@ -1,24 +1,24 @@
 using System.Collections.Generic;
 using System.Linq;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models.Nodes
 {
     public interface IMissingNodeCalculator
     {
         string[] CalculateMissingNodes(
-            NodeTypeOption[] requiredDynamicNodeTypes,
+            NodeTypeOptionResource[] requiredPricingStrategyNodeTypes,
             List<ConversationNode> conversationNodes,
-            List<DynamicTableMeta> dynamicTableMetas,
+            List<PricingStrategyTableMeta> pricingStrategyTableMetas,
             List<StaticTablesMeta> staticTablesMetas);
 
-        NodeTypeOption[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes);
+        NodeTypeOptionResource[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOptionResource[] requiredNodes);
 
-        NodeTypeOption[] SearchTerminalResponseBranchesForMissingRequiredNodes(
+        NodeTypeOptionResource[] SearchTerminalResponseBranchesForMissingRequiredNodes(
             ConversationNode node,
             ConversationNode[] nodeList,
-            NodeTypeOption[] requiredNodes // array of node type names
+            NodeTypeOptionResource[] requiredNodes // array of node type names
         );
     }
 
@@ -32,26 +32,26 @@ namespace Palavyr.Core.Models.Nodes
         }
 
         public string[] CalculateMissingNodes(
-            NodeTypeOption[] requiredDynamicNodeTypes,
+            NodeTypeOptionResource[] requiredPricingStrategyNodeTypes,
             List<ConversationNode> conversationNodes,
-            List<DynamicTableMeta> dynamicTableMetas,
+            List<PricingStrategyTableMeta> pricingStrategyTableMetas,
             List<StaticTablesMeta> staticTablesMetas)
         {
             var allMissingNodeTypes = new List<string>();
 
-            if (requiredDynamicNodeTypes.Length > 0)
+            if (requiredPricingStrategyNodeTypes.Length > 0)
             {
-                var rawMissingDynamicNodeTypes = FindMissingNodes(conversationNodes.ToArray(), requiredDynamicNodeTypes);
-                var names = rawMissingDynamicNodeTypes.Select(x => x.Text).ToList();
+                var rawMissingPricingStrategyNodeTypes = FindMissingNodes(conversationNodes.ToArray(), requiredPricingStrategyNodeTypes);
+                var names = rawMissingPricingStrategyNodeTypes.Select(x => x.Text).ToList();
                 allMissingNodeTypes.AddRange(names);
             }
 
             return allMissingNodeTypes.ToArray();
         }
 
-        public NodeTypeOption[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes)
+        public NodeTypeOptionResource[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOptionResource[] requiredNodes)
         {
-            var allMissingNodeTypes = new List<NodeTypeOption>();
+            var allMissingNodeTypes = new List<NodeTypeOptionResource>();
             var terminalNodes = GetCompletePathTerminalNodes(nodeList);
 
             foreach (var terminalNode in terminalNodes)
@@ -73,13 +73,13 @@ namespace Palavyr.Core.Models.Nodes
                 .ToArray();
         }
 
-        public NodeTypeOption[] SearchTerminalResponseBranchesForMissingRequiredNodes(
+        public NodeTypeOptionResource[] SearchTerminalResponseBranchesForMissingRequiredNodes(
             ConversationNode node,
             ConversationNode[] nodeList,
-            NodeTypeOption[] requiredNodes // array of node type names
+            NodeTypeOptionResource[] requiredNodes // array of node type names
         )
         {
-            var requiredNodesClone = new List<NodeTypeOption>(requiredNodes);
+            var requiredNodesClone = new List<NodeTypeOptionResource>(requiredNodes);
             if (requiredNodesClone.Select(x => x.Value).Contains(node.NodeType))
             {
                 requiredNodesClone.RemoveAt(requiredNodesClone.Select(x => x.Value).ToList().FindIndex(x => x == node.NodeType));

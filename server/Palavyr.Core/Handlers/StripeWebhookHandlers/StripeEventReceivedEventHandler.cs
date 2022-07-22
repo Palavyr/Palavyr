@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
@@ -18,7 +18,7 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
         public async Task Handle(StripeEventProcessedSuccessfullyEvent notification, CancellationToken cancellationToken)
         {
             var newRecord = StripeWebhookReceivedRecord.CreateNewRecord(notification.Id, notification.Signature);
-            await stripeWebhookStore.Create(newRecord);
+            stripeWebhookStore.DangerousRawQuery().Add(newRecord);
         }
     }
 

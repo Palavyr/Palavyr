@@ -1,15 +1,12 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Autofac;
-using Palavyr.API.Controllers.Accounts;
-using Palavyr.API.Controllers.Accounts.Setup;
+﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Resources;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
@@ -17,13 +14,13 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
 {
-    public class WithAnyAccount : RealDatabaseIntegrationFixture
+    public class WithAnyAccount : IntegrationTest<DbTypes.Real>
     {
-        public WithAnyAccount(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public WithAnyAccount(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)
         {
         }
 
-        private async Task<Credentials> Create(string email, string password)
+        private async Task<CredentialsResource> Create(string email, string password)
         {
             var request = new CreateNewAccountRequest
             {
@@ -31,7 +28,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
                 Password = password
             };
 
-            var result = await Client.PostWithContent<Credentials>(CreateNewAccountDefaultController.Route, request);
+            var result = await Client.Post<CreateNewAccountRequest, CredentialsResource>(request, CancellationToken);
             return result;
         }
 
@@ -54,21 +51,25 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
             var password = A.RandomId();
 
             var credentials = await Create(email, password);
+            var accountStore = ResolveStore<Account>();
+            var current = await accountStore
+                .RawReadonlyQuery()
+                .SingleOrDefaultAsync(x => x.EmailAddress == credentials.EmailAddress, CancellationToken);
+            current.ShouldNotBeNull();
+
             await Delete(credentials);
+
+            var result = await accountStore
+                .RawReadonlyQuery()
+                .SingleOrDefaultAsync(x => x.EmailAddress == credentials.EmailAddress, CancellationToken);
+
+            result.ShouldBeNull();
         }
 
-        private async Task Delete(Credentials credentials)
+        private async Task Delete(CredentialsResource credentialsResource)
         {
-            var tempClient = ConfigurableClient(credentials.SessionId);
-            var result = await tempClient.PostAsync(DeleteAccountController.Route, null);
-            result.EnsureSuccessStatusCode();
-        }
-
-
-        public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
-        {
-            builder.RegisterType<MockEmailVerificationService>().As<IEmailVerificationService>();
-            return base.CustomizeContainer(builder);
+            var tempClient = ConfigurableClient(credentialsResource.SessionId);
+            await tempClient.Delete<DeleteAccountRequest>(CancellationToken);
         }
 
         public override async Task DisposeAsync()
@@ -76,19 +77,6 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts
             await Task.CompletedTask;
             Client.DefaultRequestHeaders.Remove("Authorization");
             Client.DefaultRequestHeaders.Remove(ApplicationConstants.MagicUrlStrings.SessionId);
-        }
-    }
-
-    public class MockEmailVerificationService : IEmailVerificationService
-    {
-        public Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(true);
-        }
-
-        public Task<bool> SendConfirmationTokenEmail(string emailAddress, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(true);
         }
     }
 }

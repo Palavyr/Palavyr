@@ -1,6 +1,6 @@
-﻿#nullable enable
+﻿
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.PdfService.PdfServer;
 
 namespace Palavyr.Core.Services.PdfService

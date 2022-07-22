@@ -3,13 +3,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Requests;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.PdfService.PdfSections;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Services.ResponseCustomization;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -21,14 +21,14 @@ namespace Palavyr.Core.Services.PdfService
         private readonly ILinkCreator linkCreator;
         private readonly IConfiguration configuration;
         private readonly IEntityStore<Account> accountStore;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
 
         public ResponseHtmlBuilder(
             ILinkCreator linkCreator,
             IConfiguration configuration,
             IEntityStore<Logo> logoStore,
             IEntityStore<Account> accountStore,
-            IEntityStore<Area> intentStore)
+            IEntityStore<Intent> intentStore)
         {
             this.logoStore = logoStore;
             this.linkCreator = linkCreator;
@@ -40,7 +40,7 @@ namespace Palavyr.Core.Services.PdfService
         public async Task<string> BuildResponseHtml(
             string intentId,
             CriticalResponses criticalResponses,
-            List<Table> responseTables,
+            List<Table> pricingStrategyThenStaticTables,
             EmailRequest emailRequest)
         {
             var account = await accountStore.Get(accountStore.AccountId, x => x.AccountId);
@@ -62,7 +62,7 @@ namespace Palavyr.Core.Services.PdfService
                 LogoLink = logoLink ?? "",
                 CompanyName = account.CompanyName,
                 PhoneNumber = account.PhoneNumber,
-                EmailAddress = string.IsNullOrEmpty(intent.AreaSpecificEmail) ? account.EmailAddress : intent.AreaSpecificEmail
+                EmailAddress = string.IsNullOrEmpty(intent.IntentSpecificEmail) ? account.EmailAddress : intent.IntentSpecificEmail
             };
 
 
@@ -79,9 +79,9 @@ namespace Palavyr.Core.Services.PdfService
                             <div>");
             var userDataBucket = configuration.GetUserDataBucket();
             previewBuilder.Append(HeaderSection.GetHeader(options, linkCreator, userDataBucket));
-            previewBuilder.Append(AreaTitleSection.GetAreaDisplayTitle(intent.AreaDisplayTitle, emailRequest.ConversationId));
+            previewBuilder.Append(IntentTitleSection.GetIntentDisplayTitle(intent.IntentName, emailRequest.ConversationId));
             previewBuilder.Append(PrologueSection.GetPrologue(intent.Prologue));
-            previewBuilder.Append(TablesSection.GetEstimateTables(responseTables));
+            previewBuilder.Append(TablesSection.GetEstimateTables(pricingStrategyThenStaticTables));
             previewBuilder.Append(EpilogueSection.GetEpilogue(intent.Epilogue));
             previewBuilder.Append(ConversationDetailsSection.GetConversationDetails(emailRequest, criticalResponses));
 
@@ -104,9 +104,9 @@ namespace Palavyr.Core.Services.PdfService
             this.responseCustomizer = responseCustomizer;
         }
 
-        public async Task<string> BuildResponseHtml(string intentId, CriticalResponses criticalResponses, List<Table> responseTables, EmailRequest emailRequest)
+        public async Task<string> BuildResponseHtml(string intentId, CriticalResponses criticalResponses, List<Table> pricingStrategyThenStaticTables, EmailRequest emailRequest)
         {
-            var html = await builder.BuildResponseHtml(intentId, criticalResponses, responseTables, emailRequest);
+            var html = await builder.BuildResponseHtml(intentId, criticalResponses, pricingStrategyThenStaticTables, emailRequest);
             var customizedHtml = await responseCustomizer.Customize(html, emailRequest);
             return customizedHtml;
         }

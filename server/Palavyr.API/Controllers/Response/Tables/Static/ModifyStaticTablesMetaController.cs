@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Response.Tables.Static
 {
@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Static
         }
 
         [HttpPut(Route)]
-        public async Task<List<StaticTablesMeta>> Modify(
+        public async Task<IEnumerable<StaticTableMetaResource>> Modify(
             ModifyStaticTablesMetaRequest request,
             CancellationToken cancellationToken
         )

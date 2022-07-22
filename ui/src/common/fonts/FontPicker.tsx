@@ -224,12 +224,12 @@ export default class FontPicker extends PureComponent<Props, State> {
         }
 
         return (
-            <PalavyrAutoComplete
+            <PalavyrAutoComplete<Font>
                 label={activeFontFamily}
                 options={fonts}
-                shouldDisableSelect={false}
+                disabled={false}
                 onChange={this.props.onChange}
-                groupby={(font: Font) => font.family.slice(0, 1).toUpperCase()}
+                groupBy={(font: Font) => font.family.slice(0, 1).toUpperCase()}
                 getOptionLabel={(option: Font) => option.family}
                 getOptionSelected={(option: Font, value: Font) => option.family === value.family}
                 size="medium"

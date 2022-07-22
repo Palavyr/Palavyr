@@ -1,5 +1,6 @@
-﻿#nullable enable
-using System;
+﻿using System;
+using System.Linq;
+using System.Text;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.GlobalConstants;
 
@@ -7,20 +8,18 @@ namespace Palavyr.Core.Common.ExtensionMethods
 {
     public static class ConfigurationExtensionMethods
     {
-        public static string GetSmtpUsername(this IConfiguration configuration)
+        public static string CorrectConnectionString(this IConfiguration configuration)
         {
-            return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.SmtpUsername);
-        }
-
-        public static string GetSmtpPassword(this IConfiguration configuration)
-        {
-            return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.SmtpPassword);
+            return configuration
+                .GetSectionOrThrow(ApplicationConstants.ConfigSections.ConnectionString)
+                .Replace("<SplitMe>", ";");
         }
 
         public static string GetUserDataBucket(this IConfiguration configuration)
         {
             return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.UserDataSection);
         }
+
         public static string GetStripeKey(this IConfiguration configuration)
         {
             return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.StripeKeySection);
@@ -41,14 +40,9 @@ namespace Palavyr.Core.Common.ExtensionMethods
             return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.SecretKeySection);
         }
 
-        public static string GetPdfServerPort(this IConfiguration configuration)
+        public static string GetPdfUrl(this IConfiguration configuration)
         {
-            return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.PdfServerPort);
-        }
-
-        public static string GetPdfServerHost(this IConfiguration configuration)
-        {
-            return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.PdfServerHost);
+            return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.PdfServerUrl);
         }
 
         public static string GetJwtKey(this IConfiguration configuration)
@@ -64,7 +58,20 @@ namespace Palavyr.Core.Common.ExtensionMethods
         private static string GetSectionOrThrow(this IConfiguration configuration, string sectionId)
         {
             var sectionVal = configuration.GetSection(sectionId).Value;
-            if (sectionVal is null) throw new Exception("Failed to load the configuration section.");
+            if (sectionVal is null)
+            {
+                var sb = new StringBuilder();
+                foreach (var (key, value) in configuration.AsEnumerable().ToList())
+                {
+                    sb.AppendLine($"{key} - {value}");
+                }
+
+                sb.AppendLine("__________________________");
+
+                sb.AppendLine($"Failed to load the configuration section: {sectionId}.");
+                throw new Exception(sb.ToString());
+            }
+
             return sectionVal;
         }
     }

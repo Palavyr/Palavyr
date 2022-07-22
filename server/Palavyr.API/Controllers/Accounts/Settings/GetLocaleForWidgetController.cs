@@ -4,8 +4,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.Core.Services.Localization;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -21,10 +21,10 @@ namespace Palavyr.API.Controllers.Accounts.Settings
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
         [HttpGet(Route)]
-        public async Task<CurrentLocaleAndLocaleMapRetriever.LocaleResponse> GetForWidget(CancellationToken cancellationToken)
+        public async Task<LocaleMetaResource> GetForWidget(CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetCurrentLocalAndLocaleMapRequest(), cancellationToken);
-            return response.Response;
+            return response.Resource;
         }
     }
 }

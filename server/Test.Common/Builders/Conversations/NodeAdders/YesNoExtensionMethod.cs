@@ -1,7 +1,7 @@
 ﻿using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Test.Common.Constants;
 
 namespace Test.Common.Builders.Conversations.NodeAdders
@@ -10,7 +10,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
     {
         public static MultiNodeReturnObject AddYesNo(
             this ConversationNode previousNode,
-            string areaId = DefaultConstants.AreaIdentifier,
+            string intentId = DefaultConstants.IntentId,
             string accountId = DefaultConstants.AccountId
         )
         {
@@ -20,13 +20,13 @@ namespace Test.Common.Builders.Conversations.NodeAdders
                 newId,
                 DefaultNodeTypeOptions.YesNo.StringName,
                 "",
-                areaId,
+                intentId,
                 "",
                 "",
                 TreeUtils.JoinValueOptionsOnDelimiter(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
                 accountId,
                 DefaultNodeTypeOptions.YesNo.StringName,
-                NodeTypeCode.V,
+                NodeTypeCodeEnum.V,
                 false,
                 false,
                 true,

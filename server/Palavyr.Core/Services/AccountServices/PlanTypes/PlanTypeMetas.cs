@@ -1,15 +1,15 @@
-﻿using Palavyr.Core.Models.Accounts.Schemas;
+﻿using Palavyr.Core.Data.Entities;
 
 namespace Palavyr.Core.Services.AccountServices.PlanTypes
 {
-    public class FreePlanTypeMetaBase : PlanTypeMetaBase
+    public class FreePlanTypeMeta : PlanTypeMetaResource
     {
-        public FreePlanTypeMetaBase()
+        public FreePlanTypeMeta()
         {
             AllowedAttachments = 0;
             AllowedStaticTables = 1;
-            AllowedDynamicTables = 1;
-            AllowedAreas = 2;
+            AllowedPricingStrategyTables = 1;
+            AllowedIntents = 2;
 
             AllowedFileUpload = false;
             AllowedEmailNotifications = false;
@@ -21,14 +21,14 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class LytePlanTypeMetaBase : PlanTypeMetaBase
+    public class LytePlanTypeMeta : PlanTypeMetaResource
     {
-        public LytePlanTypeMetaBase()
+        public LytePlanTypeMeta()
         {
             AllowedAttachments = 0;
             AllowedStaticTables = 2;
-            AllowedDynamicTables = 2;
-            AllowedAreas = 6;
+            AllowedPricingStrategyTables = 2;
+            AllowedIntents = 6;
 
             AllowedFileUpload = false;
             AllowedEmailNotifications = false;
@@ -40,14 +40,14 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class PremiumPlanTypeMetaBase : PlanTypeMetaBase
+    public class PremiumPlanTypeMeta : PlanTypeMetaResource
     {
-        public PremiumPlanTypeMetaBase()
+        public PremiumPlanTypeMeta()
         {
             AllowedAttachments = 2;
             AllowedStaticTables = 2;
-            AllowedDynamicTables = 2;
-            AllowedAreas = 10;
+            AllowedPricingStrategyTables = 2;
+            AllowedIntents = 10;
 
             AllowedFileUpload = true;
             AllowedEmailNotifications = true;
@@ -59,20 +59,20 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
         }
     }
 
-    public class ProPlanTypeMetaBase : PlanTypeMetaBase
+    public class ProPlanTypeMeta : PlanTypeMetaResource
     {
-        public ProPlanTypeMetaBase()
+        public ProPlanTypeMeta()
         {
             AllowedAttachments = 999999;
             AllowedStaticTables = 999999;
-            AllowedDynamicTables = 999999;
-            AllowedAreas = 999999;
+            AllowedPricingStrategyTables = 999999;
+            AllowedIntents = 999999;
 
             AllowedFileUpload = true;
             AllowedEmailNotifications = true;
             AllowedInlineEmailEditor = true;
             AllowedSmsNotifications = true;
-            
+
             PlanType = Account.PlanTypeEnum.Pro.ToString();
             IsFreePlan = false;
         }

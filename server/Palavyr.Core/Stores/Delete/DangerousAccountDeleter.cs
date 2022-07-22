@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,12 +8,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Data;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Sessions;
@@ -29,14 +26,14 @@ namespace Palavyr.Core.Stores.Delete
         public UltraDangerousGlobalDeleter(
             IServiceProvider serviceProvider,
             IUnitOfWorkContextProvider unitOfWorkContextProvider,
-            IEntityStore<Account> accountStore,
             IDetermineCurrentEnvironment currentEnvironment,
             IFileAssetDeleter fileAssetDeleter,
-            DashContext dashContext,
-            ConvoContext convoContext,
-            AccountsContext accountsContext,
+            AppDataContexts appDataContexts,
             AccountIdTransport accountIdTransport,
-            ICancellationTokenTransport cancellationTokenTransport) : base(serviceProvider, unitOfWorkContextProvider, fileAssetDeleter, dashContext, convoContext, accountsContext, accountIdTransport, cancellationTokenTransport)
+            ICancellationTokenTransport cancellationTokenTransport)
+            : base(
+                serviceProvider,
+                unitOfWorkContextProvider, fileAssetDeleter, appDataContexts, accountIdTransport, cancellationTokenTransport)
         {
             this.currentEnvironment = currentEnvironment;
         }
@@ -63,9 +60,7 @@ namespace Palavyr.Core.Stores.Delete
         private readonly IServiceProvider lifetimeScope;
         private readonly IUnitOfWorkContextProvider contextProvider;
         private readonly IFileAssetDeleter fileAssetDeleter;
-        private readonly DashContext dashContext; // Try not to call these contexts directly.
-        private readonly ConvoContext convoContext;
-        private readonly AccountsContext accountsContext;
+        private readonly AppDataContexts appDataContexts;
         private readonly IAccountIdTransport accountIdTransport;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
         private readonly List<IEntityType> allEntities = new List<IEntityType>();
@@ -78,24 +73,18 @@ namespace Palavyr.Core.Stores.Delete
             IServiceProvider lifetimeScope,
             IUnitOfWorkContextProvider contextProvider,
             IFileAssetDeleter fileAssetDeleter,
-            DashContext dashContext,
-            ConvoContext convoContext,
-            AccountsContext accountsContext,
+            AppDataContexts appDataContexts,
             IAccountIdTransport accountIdTransport,
             ICancellationTokenTransport cancellationTokenTransport)
         {
             this.lifetimeScope = lifetimeScope;
             this.contextProvider = contextProvider;
             this.fileAssetDeleter = fileAssetDeleter;
-            this.dashContext = dashContext;
-            this.convoContext = convoContext;
-            this.accountsContext = accountsContext;
+            this.appDataContexts = appDataContexts;
             this.accountIdTransport = accountIdTransport;
             this.cancellationTokenTransport = cancellationTokenTransport;
 
-            allEntities.AddRange(dashContext.Model.GetEntityTypes().ToList());
-            allEntities.AddRange(accountsContext.Model.GetEntityTypes().ToList());
-            allEntities.AddRange(convoContext.Model.GetEntityTypes().ToList());
+            allEntities.AddRange(appDataContexts.Model.GetEntityTypes().ToList());
         }
 
         public async Task DeleteAllThings()
@@ -106,7 +95,7 @@ namespace Palavyr.Core.Stores.Delete
 
         internal virtual async Task DeleteFileAssets()
         {
-            var fileAssetIds = await dashContext
+            var fileAssetIds = await appDataContexts
                 .FileAssets
                 .Where(row => row.AccountId == AccountId)
                 .Select(asset => asset.FileId)
@@ -148,37 +137,37 @@ namespace Palavyr.Core.Stores.Delete
             if (!fileAssetsDeleted) throw new DomainException("Cannot Delete Account without first deleting file assets.");
 
             var accountStore = lifetimeScope.GetService<IEntityStore<Account>>();
+
             var account = await accountStore.GetAccount();
             var stripeCustomerId = account.StripeCustomerId;
 
             // ORDER MATTERS HERE SINCE WE LINK TABLES IN THE ORM AND WE DONT USE REFLECTION TO AUTO-INCLUDE ALL CHILD ENTITIES from the aggregate root
-            await DeleteAccountAt<DashContext, ConversationNode>();
-            await DeleteAccountAt<DashContext, DynamicTableMeta>();
-            await DeleteAccountAt<DashContext, FileAsset>();
-            await DeleteAccountAt<DashContext, WidgetPreference>();
+            await DeleteAccountAt<AppDataContexts, ConversationNode>();
+            await DeleteAccountAt<AppDataContexts, PricingStrategyTableMeta>();
+            await DeleteAccountAt<AppDataContexts, FileAsset>();
+            await DeleteAccountAt<AppDataContexts, WidgetPreference>();
 
-            await DeleteAccountAt<DashContext, StaticTableRow>();
-            await DeleteAccountAt<DashContext, StaticFee>();
+            await DeleteAccountAt<AppDataContexts, StaticTableRow>();
+            await DeleteAccountAt<AppDataContexts, StaticFee>();
 
-            await DeleteAccountAt<DashContext, SelectOneFlat>();
-            await DeleteAccountAt<DashContext, PercentOfThreshold>();
-            await DeleteAccountAt<DashContext, BasicThreshold>();
-            await DeleteAccountAt<DashContext, TwoNestedCategory>();
-            await DeleteAccountAt<DashContext, CategoryNestedThreshold>();
-            await DeleteAccountAt<DashContext, Logo>();
-            await DeleteAccountAt<DashContext, StaticTablesMeta>();
-            await DeleteAccountAt<DashContext, Area>();
-            await DeleteAccountAt<DashContext, AttachmentLinkRecord>();
+            await DeleteAccountAt<AppDataContexts, CategorySelectTableRow>();
+            await DeleteAccountAt<AppDataContexts, PercentOfThresholdTableRow>();
+            await DeleteAccountAt<AppDataContexts, SimpleThresholdTableRow>();
+            await DeleteAccountAt<AppDataContexts, SelectWithNestedSelectTableRow>();
+            await DeleteAccountAt<AppDataContexts, CategoryNestedThresholdTableRow>();
+            await DeleteAccountAt<AppDataContexts, Logo>();
+            await DeleteAccountAt<AppDataContexts, StaticTablesMeta>();
+            await DeleteAccountAt<AppDataContexts, Intent>();
+            await DeleteAccountAt<AppDataContexts, AttachmentLinkRecord>();
 
-            await DeleteAccountAt<AccountsContext, Account>();
-            await DeleteAccountAt<AccountsContext, Session>();
-            await DeleteAccountAt<AccountsContext, EmailVerification>();
-            await DeleteAccountAt<AccountsContext, Subscription>();
-            await DeleteAccountAt<AccountsContext, StripeWebhookReceivedRecord>();
+            await DeleteAccountAt<AppDataContexts, Account>();
+            await DeleteAccountAt<AppDataContexts, UserSession>();
+            await DeleteAccountAt<AppDataContexts, AccountEmailVerification>();
+            await DeleteAccountAt<AppDataContexts, Subscription>();
+            await DeleteAccountAt<AppDataContexts, StripeWebhookReceivedRecord>();
 
-
-            await DeleteAccountAt<ConvoContext, ConversationHistory>();
-            await DeleteAccountAt<ConvoContext, ConversationRecord>();
+            await DeleteAccountAt<AppDataContexts, ConversationHistoryRow>();
+            await DeleteAccountAt<AppDataContexts, ConversationHistoryMeta>();
 
             if (Counter != allEntities.Count - 1) throw new DomainException($"Failed to delete all data - contact palavyr. hit {Counter} of {allEntities.Count}");
             await contextProvider.DangerousCommitAllContexts();
@@ -197,10 +186,10 @@ namespace Palavyr.Core.Stores.Delete
             var entities = new List<TEntity>();
             try
             {
-                var selected = unfiltered.Select(x => (IHaveAccountId)x);
+                var selected = unfiltered.Select(x => x as IHaveAccountId).Where(x => x != null);
                 foreach (var select in selected)
                 {
-                    if (select.AccountId == AccountId)
+                    if (select?.AccountId == AccountId)
                     {
                         entities.Add((TEntity)select);
                     }

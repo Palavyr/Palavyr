@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: "0.8rem",
         backgroundColor: theme.palette.error.light,
     },
-    panelArea: {
+    panelIntent: {
         width: "100%",
         backgroundOpacity: 0.6,
     },
@@ -52,7 +52,7 @@ export const ErrorPanel = () => {
                     </Typography>
                     <div className={cls.innerContainer}>
                         <Align direction="flex-start">
-                            <div className={cls.panelArea}>
+                            <div className={cls.panelIntent}>
                                 {panelErrors.message && (
                                     <Typography variant="body1" align="center" gutterBottom className={cls.errorTitle}>
                                         {panelErrors.message}

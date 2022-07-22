@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Constant;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
 {
@@ -10,8 +10,8 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
     {
         public static List<ConversationNode> CreateDefault(
             string accountId,
-            string areaIdentifier,
-            string dynamicTableId
+            string intentId,
+            string pricingStrategyTableId
         )
         {
             var node1Id = StaticGuidUtils.CreateNewId(); // Do you love dogs?
@@ -30,7 +30,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     TreeUtils.CreateNodeChildrenString(node3Id, node2Id),
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId,
-                    areaIdentifier,
+                    intentId,
                     null,
                     false
                 ),
@@ -41,7 +41,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     "",
                     DefaultNodeTypeOptions.TooComplicated.StringName,
                     accountId,
-                    areaIdentifier,
+                    intentId,
                     DefaultNodeTypeOptions.YesNo.No,
                     false
                 ),
@@ -52,7 +52,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     TreeUtils.CreateNodeChildrenString(node5Id, node4Id),
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId,
-                    areaIdentifier,
+                    intentId,
                     DefaultNodeTypeOptions.YesNo.Yes,
                     false
                 ),
@@ -64,29 +64,29 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     "",
                     DefaultNodeTypeOptions.TooComplicated.StringName,
                     accountId,
-                    areaIdentifier,
+                    intentId,
                     DefaultNodeTypeOptions.YesNo.No,
                     false
                 ),
-                // Dynamic table node doesn't have default creator method
+                // Pricing strategy table node doesn't have default creator method
                 new ConversationNode
                 {
                     NodeId = node5Id,
-                    AreaIdentifier = areaIdentifier,
+                    IntentId = intentId,
                     Text = "Which kind of dog do you prefer!",
                     IsRoot = false,
                     NodeChildrenString = node6Id,
-                    NodeType = $"SelectOneFlat-{dynamicTableId}",
+                    NodeType = $"SelectOneFlat-{pricingStrategyTableId}",
                     OptionPath = DefaultNodeTypeOptions.YesNo.Yes,
                     ValueOptions = string.Join(Delimiters.PathOptionDelimiter, new[] {"Ruby", "Black and Tan", "Blenheim"}),
                     AccountId = accountId,
                     IsMultiOptionType = true,
                     IsTerminalType = false,
-                    IsDynamicTableNode = true,
+                    IsPricingStrategyTableNode = true,
                     ShouldRenderChildren = true,
                     NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
-                    NodeTypeCode = NodeTypeCode.III,
-                    DynamicType = $"SelectOneFlat-{dynamicTableId}"
+                    NodeTypeCodeEnum = NodeTypeCodeEnum.III,
+                    PricingStrategyType = $"SelectOneFlat-{pricingStrategyTableId}"
                 },
                 DefaultNodeTypeOptions.CreateSendResponse().MapNodeTypeOptionToConversationNode(
                     node6Id,
@@ -95,7 +95,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     "",
                     DefaultNodeTypeOptions.SendResponse.StringName,
                     accountId,
-                    areaIdentifier,
+                    intentId,
                     "Continue",
                     false
                 )

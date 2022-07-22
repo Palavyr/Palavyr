@@ -1,10 +1,12 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, LineMap, AnabranchContext, LineLink, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
+import { ValueOptionDelimiter, LineMap, AnabranchContext, LineLink, LoopbackContext, ConversationDesignerNodeResource } from "@Palavyr-Types";
 import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "@Palavyr-Types";
 import { NodeReferences } from "./PalavyrNodeReferences";
 import { NodeConfigurer } from "./actions/NodeConfigurer";
 import { NodeCreator } from "./actions/NodeCreator";
+import { NodeTypeOptionResources } from "@common/types/api/ApiContracts";
+import { NodeTypeCodeEnum } from "@common/types/api/Enums";
 
 export class PalavyrNode implements IPalavyrNode {
     // used in widget resource
@@ -14,12 +16,12 @@ export class PalavyrNode implements IPalavyrNode {
     public shouldPresentResponse: boolean; // isCritical
     public nodeType: string; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
     public isMultiOptionType: boolean;
-    public isDynamicTableNode: boolean;
+    public isPricingStrategyNode: boolean;
     public userText: string; // text
     public resolveOrder: number;
     public nodeComponentType: string; // type of component to use in the widget - standardized list of types in the widget registry
-    public dynamicType: string | null; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423
-    public nodeTypeOptions: NodeTypeOptions;
+    public pricingStrategyType: string; // generic dynamic type, e.g. CategorySelect-3242-2342-234-2423 or ""
+    public nodeTypeOptions: NodeTypeOptionResources;
     public valueOptions: string[]; // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
     public optionPath: string; // the value option that was used with the parent of this node.
 
@@ -27,8 +29,8 @@ export class PalavyrNode implements IPalavyrNode {
     public shouldRenderChildren: boolean;
     public shouldShowMultiOption: boolean;
     public isImageNode: boolean;
-    public imageId: string | null;
-    public nodeTypeCode: NodeTypeCode;
+    public fileId: string;
+    public nodeTypeCodeEnum: NodeTypeCodeEnum;
     public isCurrency: boolean;
     public isLocked: boolean = false;
 
@@ -68,14 +70,17 @@ export class PalavyrNode implements IPalavyrNode {
 
     public sortableNodeTypes: string[];
 
+    public id: number;
+
     constructor(
         containerList: IPalavyrLinkedList,
         repository: PalavyrRepository,
-        node: ConvoNode,
+        node: ConversationDesignerNodeResource,
         setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftmostBranch: boolean,
         sortableNodeTypes: string[]
     ) {
+        this.id = node.id!;
         this.sortableNodeTypes = sortableNodeTypes;
 
         this.repository = repository;
@@ -91,15 +96,15 @@ export class PalavyrNode implements IPalavyrNode {
         this.isMultiOptionType = node.isMultiOptionType;
         this.userText = node.text; // text
         this.shouldPresentResponse = node.isCritical; // isCritical
-        this.isDynamicTableNode = node.isDynamicTableNode;
+        this.isPricingStrategyNode = node.isPricingStrategyNode;
         this.resolveOrder = node.resolveOrder;
         this.shouldRenderChildren = node.shouldRenderChildren;
         this.nodeType = node.nodeType; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
-        this.nodeTypeCode = node.nodeTypeCode;
+        this.nodeTypeCodeEnum = node.nodeTypeCodeEnum;
         this.nodeComponentType = node.nodeComponentType; // type of component to use in the widget - standardized list of types in the widget registry
-        this.dynamicType = node.dynamicType; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423
+        this.pricingStrategyType = node.pricingStrategyType; // generic dynamic type, e.g. CategorySelect-3242-2342-234-2423
         this.isImageNode = node.isImageNode;
-        this.imageId = node.imageId;
+        this.fileId = node.fileId;
         this.shouldShowMultiOption = node.shouldShowMultiOption;
         this.isAnabranchType = node.isAnabranchType;
         this.isAnabranchMergePoint = node.isAnabranchMergePoint;
@@ -116,7 +121,7 @@ export class PalavyrNode implements IPalavyrNode {
         }
     }
 
-    public unsetSelf(nodeTypeOptions: NodeTypeOptions) {
+    public unsetSelf(nodeTypeOptions: NodeTypeOptionResources) {
         if (this.isRoot) {
             this.childNodeReferences.Clear();
             this.palavyrLinkedList.resetRootNode();
@@ -158,13 +163,13 @@ export class PalavyrNode implements IPalavyrNode {
         }
     }
 
-    public addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    public addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources) {
         // double linked
         parentNode.childNodeReferences.addReference(newNode);
         this.configurer.configure(newNode, parentNode, nodeTypeOptions);
     }
 
-    public setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptions): void {
+    public setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptionResources): void {
         this.nodeTypeOptions = newNodeTypeOptions;
     }
 
@@ -199,10 +204,11 @@ export class PalavyrNode implements IPalavyrNode {
         }
     }
 
-    public compileConvoNode(areaId: string): ConvoNode {
+    public compileConvoNode(intentId: string): ConversationDesignerNodeResource {
         // returns an object resource that matches the database schema
         return {
-            areaIdentifier: areaId,
+            id: this.id,
+            intentId: intentId,
             isRoot: this.isRoot,
             nodeId: this.nodeId,
             text: this.userText,
@@ -212,8 +218,8 @@ export class PalavyrNode implements IPalavyrNode {
             isCritical: this.shouldPresentResponse,
             optionPath: this.optionPath,
             valueOptions: this.valueOptions.join(ValueOptionDelimiter),
-            isDynamicTableNode: this.isDynamicTableNode,
-            dynamicType: this.dynamicType,
+            isPricingStrategyNode: this.isPricingStrategyNode,
+            pricingStrategyType: this.pricingStrategyType,
             resolveOrder: this.resolveOrder,
             isTerminalType: this.isTerminal,
             shouldRenderChildren: this.shouldRenderChildren,
@@ -222,9 +228,11 @@ export class PalavyrNode implements IPalavyrNode {
             isAnabranchType: this.isAnabranchType,
             isAnabranchMergePoint: this.isAnabranchMergePoint,
             isImageNode: this.isImageNode,
-            imageId: this.imageId,
-            nodeTypeCode: this.nodeTypeCode,
+            fileId: this.fileId,
+            nodeTypeCodeEnum: this.nodeTypeCodeEnum,
             isLoopbackAnchorType: this.isLoopbackAnchorType,
+            isCurrency: this.isCurrency,
+            isMultiOptionEditable: this.isMultiOptionType,
         };
     }
 
@@ -311,7 +319,7 @@ export class PalavyrNode implements IPalavyrNode {
         });
     }
 
-    public dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void {
+    public dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources): void {
         // Assumes that this node is the anabranch merge node with the checkbox
         if (!this.isAnabranchMergePoint) throw new Error("Attempting to call anabranch reference method from non-anabranch-merge-point node");
 
@@ -350,7 +358,7 @@ export class PalavyrNode implements IPalavyrNode {
         recurseAndDereference(anabranchOriginNode.childNodeReferences);
     }
 
-    public InsertChildNodeLink(nodeTypeOptions: NodeTypeOptions) {
+    public InsertChildNodeLink(nodeTypeOptions: NodeTypeOptionResources) {
         // creates a new default Provide Info node and attaches it to this node as a single child. All current children are attached to the new child node as children.
         // since this is a doubly linked list, we need to re-reference
         // - the children of this node
@@ -384,7 +392,7 @@ export class PalavyrNode implements IPalavyrNode {
         this.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
-    public DeleteCurrentNode(nodeTypeOptions: NodeTypeOptions) {
+    public DeleteCurrentNode(nodeTypeOptions: NodeTypeOptionResources) {
         if (this.isRoot) return;
         if (this.childNodeReferences.Length !== 1) return;
         if (this.parentNodeReferences.Length !== 1) return;

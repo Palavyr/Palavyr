@@ -14,7 +14,7 @@ export interface IUploadAttachment {
     buttonText: string;
     uploadDetails: string | JSX.Element;
     acceptedFiles: Array<string>;
-    dropzoneType?: "dialog" | "area";
+    dropzoneType?: "dialog" | "intent";
     disableButton?: boolean;
     disable?: boolean;
 }

@@ -1,11 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.Core.Services.AccountServices
 {
     public interface IAccountSetupService
     {
-        Task<Credentials> CreateNewAccountViaDefaultAsync(string emailAddress, string password, CancellationToken cancellationToken);
+        Task<CredentialsResource> CreateNewAccount(string emailAddress, string password, CancellationToken cancellationToken);
     }
 }

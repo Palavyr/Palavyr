@@ -1,16 +1,16 @@
 import * as React from "react";
 import { Grid, makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { SubscribeStepper } from "../purchse/SubscribeStepper";
-import { PurchaseTypes, ProductOptions, ProductOption, ProductIds, PlanStatus } from "@Palavyr-Types";
+import {  ProductOptions, ProductOption, ProductIds } from "@Palavyr-Types";
 import { PURCHASE_ROUTE } from "@constants";
 import { Lyte, Premium, Pro } from "@landing/components/pricing/Cards";
 import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
 import classnames from "classnames";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { PurchaseTypes } from "@common/types/api/Enums";
 
 const useStyles = makeStyles((theme) => ({
     body: {
@@ -57,7 +57,7 @@ export const Subscribe = () => {
     };
 
     const getProducts = useCallback(async () => {
-        const products = await repository.Products.getProducts();
+        const products = await repository.Products.GetProducts();
         setProductList(products);
     }, []);
 

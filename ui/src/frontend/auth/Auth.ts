@@ -1,8 +1,8 @@
 import { SessionStorage } from "@localStorage/sessionStorage";
 import { LoginRepository } from "@common/client/LoginRepository";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { Credentials } from "@Palavyr-Types";
 import { LogoutRepository } from "@common/client/LogoutRepository";
+import { CredentialsResource } from "@common/types/api/ApiContracts";
 
 class Auth {
     private authenticated: boolean = false;
@@ -23,7 +23,7 @@ class Auth {
 
     async register(email: string, password: string, callback: () => any, errorCallback: (response) => any) {
         try {
-            const authenticationResponse = await this.loginClient.Account.registerNewAccount(email, password);
+            const authenticationResponse = await this.loginClient.Account.RegisterNewAccount(email, password);
             return await this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
         } catch {
             console.log("Error trying to reach the server.");
@@ -31,7 +31,7 @@ class Auth {
         }
     }
 
-    private async processAuthenticationResponse(authenticationResponse: Credentials, successRedirectToDashboard: () => any, errorCallback: (response: Credentials) => any): Promise<boolean> {
+    private async processAuthenticationResponse(authenticationResponse: CredentialsResource, successRedirectToDashboard: () => any, errorCallback: (response: CredentialsResource) => any): Promise<boolean> {
         if (authenticationResponse.authenticated) {
             this.authenticated = true;
             SessionStorage.setAuthorization(authenticationResponse.sessionId, authenticationResponse.jwtToken);
@@ -39,7 +39,7 @@ class Auth {
 
             const _client = new PalavyrRepository(); // needs to be authenticated
 
-            const accountIsActive = await _client.Settings.Account.checkIsActive();
+            const accountIsActive = await _client.Settings.Account.CheckIsActive();
             this.isActive = accountIsActive;
             SessionStorage.setIsActive(accountIsActive);
 
@@ -53,7 +53,7 @@ class Auth {
         }
     }
 
-    async login(email: string | null, password: string | null, callback: () => any, errorCallback: (response: Credentials) => any) {
+    async login(email: string | null, password: string | null, callback: () => any, errorCallback: (response: CredentialsResource) => any) {
         if (email === null || password === null) return false;
         try {
             const authenticationResponse = await this.loginClient.Login.RequestLogin(email, password);

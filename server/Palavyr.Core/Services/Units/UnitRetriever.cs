@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Services.Units
 {
     public interface IUnitRetriever
     {
         List<string> GetUnitTypes();
-        List<UnitIds> GetUnitIds();
-        List<QuantUnit> GetUnitDefinitions();
+        List<UnitIdEnum> GetUnitIds();
+        List<QuantityUnitResource> GetUnitDefinitions();
 
-        List<QuantUnit> GetUnitDefinitionsByType(string type);
-        QuantUnit GetUnitDefinitionById(UnitIds id);
-        public UnitIds ConvertToUnitId(string id);
+        List<QuantityUnitResource> GetUnitDefinitionsByType(string type);
+        QuantityUnitResource GetUnitDefinitionById(UnitIdEnum idEnum);
+        public UnitIdEnum ConvertToUnitId(string id);
     }
 
     public class UnitRetriever : IUnitRetriever
     {
-        private readonly Models.Configuration.Schemas.Units units;
+        private readonly Data.Entities.Units units;
 
-        public UnitRetriever(Models.Configuration.Schemas.Units units)
+        public UnitRetriever(Data.Entities.Units units)
         {
             this.units = units;
         }
@@ -32,18 +32,18 @@ namespace Palavyr.Core.Services.Units
             return unitTypes;
         }
 
-        public List<UnitIds> GetUnitIds()
+        public List<UnitIdEnum> GetUnitIds()
         {
-            var unitIds = units.UnitDefinitions.Select(x => x.UnitId).ToList();
+            var unitIds = units.UnitDefinitions.Select(x => x.UnitIdEnum).ToList();
             return unitIds;
         }
 
-        public List<QuantUnit> GetUnitDefinitions()
+        public List<QuantityUnitResource> GetUnitDefinitions()
         {
             return units.UnitDefinitions;
         }
 
-        public List<QuantUnit> GetUnitDefinitionsByType(string type)
+        public List<QuantityUnitResource> GetUnitDefinitionsByType(string type)
         {
             var types = GetUnitTypes();
             if (!types.Contains(type))
@@ -55,21 +55,21 @@ namespace Palavyr.Core.Services.Units
             return definitions;
         }
 
-        public QuantUnit GetUnitDefinitionById(UnitIds id)
+        public QuantityUnitResource GetUnitDefinitionById(UnitIdEnum idEnum)
         {
-            if (!Enum.IsDefined(typeof(UnitIds), id))
+            if (!Enum.IsDefined(typeof(UnitIdEnum), idEnum))
             {
                 throw new DomainException("The unit Id provided is not supported");
             }
 
-            var definition = units.UnitDefinitions.Single(x => x.UnitId == id);
+            var definition = units.UnitDefinitions.Single(x => x.UnitIdEnum == idEnum);
             return definition;
         }
 
 
-        public UnitIds ConvertToUnitId(string id)
+        public UnitIdEnum ConvertToUnitId(string id)
         {
-            if (UnitIds.TryParse(id, out UnitIds unit))
+            if (UnitIdEnum.TryParse(id, out UnitIdEnum unit))
             {
                 return unit;
             }

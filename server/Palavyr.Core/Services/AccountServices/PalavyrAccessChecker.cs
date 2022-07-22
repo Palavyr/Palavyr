@@ -1,4 +1,5 @@
 ﻿using Palavyr.Core.Common.Environment;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
 
 namespace Palavyr.Core.Services.AccountServices
@@ -22,6 +23,13 @@ namespace Palavyr.Core.Services.AccountServices
                     throw new PalavyrStartupException($"The allowed email lists in {nameof(PalavyrAccessChecker)} contain overlapped emails. This will cause stripe to blow up since they only offer dev and live.");
                 }
             }
+        }
+
+        private static bool MatchesTestEmail(string email)
+        {
+            var guidUtils = new GuidFinder();
+            var result = guidUtils.FindFirstGuidSuffixOrNull(email);
+            return result != null;
         }
 
         private void ThrowException(string emailAddress)

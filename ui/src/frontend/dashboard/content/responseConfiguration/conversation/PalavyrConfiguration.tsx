@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Action, ConvoNode, IPalavyrLinkedList, NodeTypeOptions, PlanTypeMeta, SetState, TreeErrors } from "@Palavyr-Types";
+import { Action, ConversationDesignerNodeResource, IPalavyrLinkedList, NodeTypeOptionResources, PlanTypeMeta, SetState, TreeErrorsResource } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
@@ -76,15 +76,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface StructuredConvoTreeProps {
-    errorCheckCallback(setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, areaIdentifier: string, nodeList: ConvoNode[]): Promise<void>;
+    errorCheckCallback(setTreeErrors: SetState<TreeErrorsResource>, repository: PalavyrRepository, intentId: string, nodeList: ConversationDesignerNodeResource[]): Promise<void>;
     historyTracker: ConversationHistoryTracker;
-    nodeTypeOptions: NodeTypeOptions;
+    nodeTypeOptions: NodeTypeOptionResources;
     loadNodes(): void;
     planTypeMeta: PlanTypeMeta;
     useNewEditor: boolean;
     setUseNewEditor: SetState<boolean>;
-    treeErrors: TreeErrors | undefined;
-    setTreeErrors: SetState<TreeErrors | undefined>;
+    treeErrors: TreeErrorsResource | undefined;
+    setTreeErrors: SetState<TreeErrorsResource | undefined>;
 
     onSave(): void;
 }
@@ -102,7 +102,7 @@ export const StructuredConvoTree = ({
     onSave,
 }: StructuredConvoTreeProps) => {
     const { repository, handleDrawerClose } = useContext(DashboardContext);
-    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
+    const { intentId } = useParams<{ intentId: string }>();
     const [, setLoaded] = useState<boolean>(false);
 
     const [showDebugData, setShowDebugData] = useState<boolean>(false);
@@ -149,25 +149,25 @@ export const StructuredConvoTree = ({
         return () => {
             setLoaded(false);
         };
-    }, [areaIdentifier, loadNodes]);
+    }, [intentId, loadNodes]);
 
     useEffect(() => {
         const nodeList = historyTracker.linkedNodeList.compileToConvoNodes();
         if (nodeList.length > 0) {
             (async () => {
-                await errorCheckCallback(setTreeErrors, repository, areaIdentifier, nodeList);
+                await errorCheckCallback(setTreeErrors, repository, intentId, nodeList);
             })();
         }
         return () => {
             setTreeErrors(undefined);
         };
-    }, [areaIdentifier, historyTracker.linkedNodeList]);
+    }, [intentId, historyTracker.linkedNodeList]);
 
     const resetTree = async () => {
-        const head = historyTracker.linkedNodeList.retrieveCleanHeadNode().compileConvoNode(areaIdentifier);
-        const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
+        const head = historyTracker.linkedNodeList.retrieveCleanHeadNode().compileConvoNode(intentId);
+        const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(intentId, planTypeMeta);
 
-        const newList = new PalavyrLinkedList([head], areaIdentifier, () => null, nodeTypeOptions, repository, []);
+        const newList = new PalavyrLinkedList([head], intentId, () => null, nodeTypeOptions, repository, []);
         historyTracker.initializeConversation(newList);
     };
 

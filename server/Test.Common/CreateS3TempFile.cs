@@ -3,8 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.AmazonServices.S3Service;
-using Test.Common.ExtensionsMethods;
 using Test.Common.Random;
 
 namespace Test.Common

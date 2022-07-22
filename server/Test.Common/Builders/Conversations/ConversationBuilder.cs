@@ -1,6 +1,5 @@
-﻿#nullable enable
-using System.Collections.Generic;
-using Palavyr.Core.Models.Configuration.Schemas;
+﻿using System.Collections.Generic;
+using Palavyr.Core.Data.Entities;
 
 namespace Test.Common.Builders.Conversations
 {

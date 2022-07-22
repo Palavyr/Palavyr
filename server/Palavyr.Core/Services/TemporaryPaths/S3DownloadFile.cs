@@ -22,8 +22,8 @@
     
     public class S3DownloadFile : IHaveBeenDownloadedFromCloudToLocal
     {
-        public string TempFilePath { get; set; }
-        public string FileNameWithExtension { get; set; }
-        public string TempDirectory { get; set; }
+        public string TempFilePath { get; set; } = null!;
+        public string FileNameWithExtension { get; set; } = null!;
+        public string TempDirectory { get; set; } = null!;
     }
 }

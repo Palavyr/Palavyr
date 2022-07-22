@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Requests;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.PdfService
@@ -20,7 +20,7 @@ namespace Palavyr.Core.Services.PdfService
     
     public interface IResponsePdfTableCompiler
     {
-        Task<List<Table>> CompileResponseTables(string intentId, EmailRequest emailRequest, CultureInfo culture, bool includeDynamicTableTotals);
+        Task<List<Table>> CompileResponseTables(string intentId, EmailRequest emailRequest, CultureInfo culture, bool includePricingStrategyTableTotals);
     }
 
 }

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,9 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Contracts;
-using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Stores
@@ -26,36 +23,18 @@ namespace Palavyr.Core.Stores
         public CancellationToken CancellationToken => CancellationTokenTransport.CancellationToken;
         public string AccountId => AccountIdTransport.AccountId;
 
-        private Type[] accountContextTypes = new[] // separated out because of a poor decision I made early on. All new tables will go into the configuration context
-        {
-            typeof(Account),
-            typeof(EmailVerification),
-            typeof(Session),
-            typeof(StripeWebhookReceivedRecord),
-            typeof(Subscription)
-        };
-
-        private Type[] convoTypes = new[]
-        {
-            typeof(ConversationHistory),
-            typeof(ConversationRecord)
-        };
-
-        private readonly DbContext currentContext;
-
         public EntityStore(IUnitOfWorkContextProvider contextProvider, IAccountIdTransport accountIdTransport, ICancellationTokenTransport cancellationTokenTransport)
         {
             this.AccountIdTransport = accountIdTransport;
             this.CancellationTokenTransport = cancellationTokenTransport;
-            this.currentContext = ChooseContext(contextProvider);
-            this.QueryExecutor = ChooseContext(contextProvider).Set<TEntity>();
+            this.QueryExecutor = contextProvider.AppDataContexts().Set<TEntity>();
         }
 
         private IQueryable<TEntity> RestrictToCurrentAccount(DbSet<TEntity> queryExecutor)
         {
             if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
             {
-                return queryExecutor.Where(x => ((IHaveAccountId)x).AccountId == AccountIdTransport.AccountId);
+                return queryExecutor.Where(x => ((IHaveAccountId)x).AccountId == AccountId);
             }
 
             return queryExecutor;
@@ -65,27 +44,10 @@ namespace Palavyr.Core.Stores
         {
             if (typeof(TEntity).GetInterfaces().Contains(typeof(IHaveAccountId)))
             {
-                return localEntities.Where(x => ((IHaveAccountId)x).AccountId == AccountIdTransport.AccountId);
+                return localEntities.Where(x => ((IHaveAccountId)x).AccountId == AccountId);
             }
 
             return localEntities;
-        }
-
-
-        private DbContext ChooseContext(IUnitOfWorkContextProvider contextProvider)
-        {
-            if (accountContextTypes.Contains(typeof(TEntity)))
-            {
-                return contextProvider.AccountsContext();
-            }
-            else if (convoTypes.Contains(typeof(TEntity)))
-            {
-                return contextProvider.ConvoContext();
-            }
-            else
-            {
-                return contextProvider.ConfigurationContext();
-            }
         }
 
         private void AssertAccountIsCorrect(TEntity entity)
@@ -128,12 +90,13 @@ namespace Palavyr.Core.Stores
 
         public async Task CreateMany(IEnumerable<TEntity> entities)
         {
-            foreach (var entity in entities)
+            var entityList = entities.ToList();
+            foreach (var entity in entityList)
             {
                 AssertAccountIsCorrect(entity);
             }
 
-            await QueryExecutor.AddRangeAsync(entities, CancellationToken);
+            await QueryExecutor.AddRangeAsync(entityList, CancellationToken);
         }
 
         public async Task<TEntity[]> Get(Expression<Func<TEntity, bool>> whereFilterPredicate)
@@ -162,9 +125,25 @@ namespace Palavyr.Core.Stores
             return entity;
         }
 
+        public async Task<TEntity> Get(int id)
+        {
+            var entity = await RestrictToCurrentAccount(QueryExecutor).Where(x => x.Id == id).SingleOrDefaultAsync(CancellationToken);
+            if (entity is null)
+            {
+                throw new DomainException("Entity not found.");
+            }
+
+            return entity;
+        }
+
         public async Task<TEntity?> GetOrNull(string id, Expression<Func<TEntity, string>> propertySelectorExpression)
         {
             return await RestrictToCurrentAccount(QueryExecutor).CustomWhere(id, propertySelectorExpression).SingleOrDefaultAsync(CancellationToken);
+        }
+
+        public async Task<TEntity?> GetOrNull(int id)
+        {
+            return await RestrictToCurrentAccount(QueryExecutor).Where(x => x.Id == id).SingleOrDefaultAsync(CancellationToken);
         }
 
         public async Task<List<TEntity>> GetMany(IEnumerable<string> ids, Expression<Func<TEntity, string>> propertySelectorExpression)
@@ -190,14 +169,25 @@ namespace Palavyr.Core.Stores
             return result;
         }
 
+        public async Task<List<TEntity>> GetMany(IEnumerable<int> ids)
+        {
+            var idList = ids.ToList();
+            return await RestrictToCurrentAccount(QueryExecutor)
+                .Where(x => idList.Contains((int)x.Id))
+                .ToListAsync(CancellationToken);
+        }
+
         public async Task<TEntity[]> GetAll()
         {
             return await RestrictToCurrentAccount(QueryExecutor).ToArrayAsync(CancellationToken);
         }
 
+
         public async Task<TEntity> Update(TEntity entity)
         {
-            if (entity.Id is null)
+#pragma warning disable CS0464
+            if (entity.Id == null)
+#pragma warning restore CS0464
             {
                 throw new InvalidOperationException("Cannot update entities that are not referenced by their primary Id key");
             }
@@ -206,6 +196,55 @@ namespace Palavyr.Core.Stores
             AssertAccountIsCorrect(entity);
             var entityEntry = QueryExecutor.Update(entity);
             return entityEntry.Entity;
+        }
+
+        public async Task<TEntity> CreateOrUpdate(TEntity entity)
+        {
+            await Task.CompletedTask;
+            AssertAccountIsCorrect(entity);
+
+            var shouldCreate = (await QueryExecutor.SingleOrDefaultAsync(x => x.Id == entity.Id, CancellationToken)) is null;
+            if (shouldCreate)
+            {
+                var entityEntry = await QueryExecutor.AddAsync(entity, CancellationToken);
+                return entityEntry.Entity;
+            }
+            else
+            {
+                var entityEntry = QueryExecutor.Update(entity);
+                return entityEntry.Entity;
+            }
+        }
+
+        public async Task<List<TEntity>> CreateOrUpdateMany(IEnumerable<TEntity> entities)
+        {
+            await Task.CompletedTask;
+            var entityList = entities.ToList();
+            foreach (var entity in entityList)
+            {
+                AssertAccountIsCorrect(entity);
+            }
+
+            var toReturn = new List<TEntity>();
+            foreach (var entity in entityList)
+            {
+                await CreateOrUpdate(entity);
+                toReturn.Add(entity);
+            }
+
+            return toReturn;
+        }
+
+        public async Task DeleteMany(IEnumerable<int> ids)
+        {
+            var entities = await GetMany(ids);
+            await Delete(entities);
+        }
+
+        public async Task Delete(int id)
+        {
+            var entity = await Get(id);
+            await Delete(entity);
         }
 
         public async Task Delete(TEntity entity)
@@ -229,8 +268,9 @@ namespace Palavyr.Core.Stores
         public async Task Delete(IEnumerable<TEntity> entities)
         {
             await Task.CompletedTask;
-            AssertAccountIsCorrect(entities);
-            QueryExecutor.RemoveRange(entities);
+            var entityList = entities.ToList();
+            AssertAccountIsCorrect(entityList);
+            QueryExecutor.RemoveRange(entityList);
         }
 
 

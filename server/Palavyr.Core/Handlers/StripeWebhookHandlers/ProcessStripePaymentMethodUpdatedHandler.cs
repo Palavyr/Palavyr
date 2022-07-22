@@ -3,31 +3,30 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
-using Palavyr.Core.Stores;
+using Palavyr.Core.Services.StripeServices;
 using Stripe;
-using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
 namespace Palavyr.Core.Handlers.StripeWebhookHandlers
 {
     public class ProcessStripePaymentMethodUpdatedHandler : INotificationHandler<PaymentMethodUpdatedEvent>
     {
         private readonly ISesEmail emailClient;
-        private readonly IEntityStore<Account> accountStore;
+        private readonly IStripeWebhookAccountGetter stripeWebhookAccountGetter;
 
         public ProcessStripePaymentMethodUpdatedHandler(
             ISesEmail emailClient,
-            IEntityStore<Account> accountStore
+            IStripeWebhookAccountGetter stripeWebhookAccountGetter
         )
         {
             this.emailClient = emailClient;
-            this.accountStore = accountStore;
+            this.stripeWebhookAccountGetter = stripeWebhookAccountGetter;
         }
 
         public async Task Handle(PaymentMethodUpdatedEvent notification, CancellationToken cancellationToken)
         {
             var paymentMethodUpdate = notification.paymentMethod;
-            var account = await accountStore.Get(paymentMethodUpdate.CustomerId, s => s.StripeCustomerId);
-
+            var account = await stripeWebhookAccountGetter.GetAccount(paymentMethodUpdate.CustomerId);
+            
             if (paymentMethodUpdate.Livemode)
             {
                 if (account == null)

@@ -1,7 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
 
@@ -9,24 +11,27 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class GetResponseConfigurationHandler : IRequestHandler<GetResponseConfigurationRequest, GetResponseConfigurationResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
+        private readonly IMapToNew<Intent, IntentResource> mapper;
 
-        public GetResponseConfigurationHandler(IEntityStore<Area> intentStore)
+        public GetResponseConfigurationHandler(IEntityStore<Intent> intentStore, IMapToNew<Intent, IntentResource> mapper)
         {
             this.intentStore = intentStore;
+            this.mapper = mapper;
         }
 
         public async Task<GetResponseConfigurationResponse> Handle(GetResponseConfigurationRequest request, CancellationToken cancellationToken)
         {
-            var areaWithAllData = await intentStore.GetIntentComplete(request.IntentId);
-            return new GetResponseConfigurationResponse(areaWithAllData);
+            var intentDeep = await intentStore.GetIntentComplete(request.IntentId);
+            var resource = await mapper.Map(intentDeep);
+            return new GetResponseConfigurationResponse(resource);
         }
     }
 
     public class GetResponseConfigurationResponse
     {
-        public GetResponseConfigurationResponse(Area response) => Response = response;
-        public Area Response { get; set; }
+        public GetResponseConfigurationResponse(IntentResource response) => Response = response;
+        public IntentResource Response { get; set; }
     }
 
     public class GetResponseConfigurationRequest : IRequest<GetResponseConfigurationResponse>

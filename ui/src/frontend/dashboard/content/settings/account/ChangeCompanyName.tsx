@@ -22,7 +22,7 @@ export const ChangeCompanyName = () => {
     const [] = useState<boolean>(false);
 
     const loadCompanyName = useCallback(async () => {
-        const name = await repository.Settings.Account.getCompanyName();
+        const name = await repository.Settings.Account.GetCompanyName();
         setCompanyName(name);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -37,7 +37,7 @@ export const ChangeCompanyName = () => {
     }, [setCompanyName, loadCompanyName]);
 
     const handleCompanyNameChange = async (newCompanyName: string) => {
-        await repository.Settings.Account.updateCompanyName(newCompanyName);
+        await repository.Settings.Account.UpdateCompanyName(newCompanyName);
         setCompanyName(newCompanyName);
     };
 

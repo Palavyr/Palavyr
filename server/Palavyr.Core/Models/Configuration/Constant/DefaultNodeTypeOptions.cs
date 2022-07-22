@@ -30,16 +30,16 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         }
 
-        public static List<NodeTypeOption> IntroNodeOptionList =>
-            new List<NodeTypeOption>()
+        public static List<NodeTypeOptionResource> IntroNodeOptionList =>
+            new List<NodeTypeOptionResource>()
             {
                 new ProvideInfo(),
                 new CollectDetails(),
                 new Selection()
             };
 
-        public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
-            new List<NodeTypeOption>()
+        public static List<NodeTypeOptionResource> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
+            new List<NodeTypeOptionResource>()
             {
                 new YesNo(),
                 new YesNoNotSure(),
@@ -55,7 +55,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new SendResponse(),
                 new TooComplicated(),
                 new Anabranch(),
-                // new ShowImage(),
                 new ShowFileAsset(),
                 new EndWithoutEmail(),
                 new LoopbackAnchor(),
@@ -93,7 +92,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static CollectDetails CreateCollectDetails() => new CollectDetails();
 
 
-        public class LoopbackAnchor : NodeTypeOption
+        public class LoopbackAnchor : NodeTypeOptionResource
         {
             public new static string StringName => nameof(LoopbackAnchor);
 
@@ -111,15 +110,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsLoopbackAnchor = true;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
-                NodeTypeCode = NodeTypeCode.VII;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.VII;
             }
         }
 
-        public class Loopback : NodeTypeOption
+        public class Loopback : NodeTypeOptionResource
         {
             public new static string StringName => nameof(Loopback);
 
@@ -136,16 +135,16 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.VIII;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.VIII;
             }
         }
 
 
-        public class EndWithoutEmail : NodeTypeOption
+        public class EndWithoutEmail : NodeTypeOptionResource
         {
             public new static string StringName => nameof(EndWithoutEmail);
 
@@ -162,15 +161,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.EndWithoutEmail;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.I;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.I;
             }
         }
 
-        public class ShowFileAsset : NodeTypeOption
+        public class ShowFileAsset : NodeTypeOptionResource
 
         {
             public new static string StringName => nameof(ShowFileAsset);
@@ -188,16 +187,16 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.ShowFileAsset;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 IsImageNode = true;
-                NodeTypeCode = NodeTypeCode.IX;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.IX;
             }
         }
 
-        public class ShowImage : NodeTypeOption
+        public class ShowImage : NodeTypeOptionResource
         {
             public new static string StringName => nameof(ShowImage);
 
@@ -214,17 +213,17 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.ShowImage;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 IsImageNode = true;
-                NodeTypeCode = NodeTypeCode.IX;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.IX;
             }
         }
 
 
-        public class Anabranch : NodeTypeOption
+        public class Anabranch : NodeTypeOptionResource
         {
             public new static string StringName => nameof(Anabranch);
 
@@ -241,15 +240,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = true;
                 IsAnabranchType = true;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
-                NodeTypeCode = NodeTypeCode.VI;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.VI;
             }
         }
 
-        public class TakeCurrency : NodeTypeOption
+        public class TakeCurrency : NodeTypeOptionResource
         {
             public new static string StringName => nameof(TakeCurrency);
 
@@ -266,15 +265,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.TakeCurrency;
                 IsCurrency = true;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
-        public class TakeNumberIndividuals : NodeTypeOption
+        public class TakeNumberIndividuals : NodeTypeOptionResource
         {
             public new static string StringName => nameof(TakeNumberIndividuals);
 
@@ -291,15 +290,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.TakeNumber;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
-        public class TakeNumber : NodeTypeOption
+        public class TakeNumber : NodeTypeOptionResource
         {
             public new static string StringName => nameof(TakeNumber);
 
@@ -316,16 +315,16 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.TakeNumber;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
 
-        public class YesNo : NodeTypeOption
+        public class YesNo : NodeTypeOptionResource
         {
             public new static string StringName => nameof(YesNo);
             public const string Yes = "Yes";
@@ -344,16 +343,16 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.YesNo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.V;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.V;
             }
         }
 
 
-        public class YesNoNotSure : NodeTypeOption
+        public class YesNoNotSure : NodeTypeOptionResource
         {
             public new static string StringName => nameof(YesNoNotSure);
 
@@ -370,15 +369,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.YesNoNotSure;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.V;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.V;
             }
         }
 
-        public class YesNotSureCombined : NodeTypeOption
+        public class YesNotSureCombined : NodeTypeOptionResource
         {
             public new static string StringName => nameof(YesNotSureCombined);
 
@@ -395,15 +394,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.YesNotSureCombined;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.V;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.V;
             }
         }
 
-        public class NoNotSureCombined : NodeTypeOption
+        public class NoNotSureCombined : NodeTypeOptionResource
         {
             public new static string StringName => nameof(NoNotSureCombined);
 
@@ -420,15 +419,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.NoNotSureCombined;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.V;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.V;
             }
         }
 
-        public class TakeText : NodeTypeOption
+        public class TakeText : NodeTypeOptionResource
         {
             public new static string StringName => nameof(TakeText);
 
@@ -445,16 +444,16 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.TakeText;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
 
-        public class CollectDetails : NodeTypeOption
+        public class CollectDetails : NodeTypeOptionResource
         {
             public new static string StringName => nameof(CollectDetails);
 
@@ -471,15 +470,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.CollectDetails;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
-        public class Selection : NodeTypeOption
+        public class Selection : NodeTypeOptionResource
         {
             public new static string StringName => nameof(Selection);
 
@@ -496,15 +495,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.Selection;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.I;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.I;
             }
         }
 
-        public class ProvideInfo : NodeTypeOption
+        public class ProvideInfo : NodeTypeOptionResource
         {
             public new static string StringName => nameof(ProvideInfo);
 
@@ -521,15 +520,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 
-        public class MultipleChoiceAsPath : NodeTypeOption
+        public class MultipleChoiceAsPath : NodeTypeOptionResource
         {
             public new static string StringName => nameof(MultipleChoiceAsPath);
 
@@ -546,15 +545,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = true;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
-                NodeTypeCode = NodeTypeCode.IV;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.IV;
             }
         }
 
-        public class MultipleChoiceContinue : NodeTypeOption
+        public class MultipleChoiceContinue : NodeTypeOptionResource
         {
             public new static string StringName => nameof(MultipleChoiceContinue);
 
@@ -571,16 +570,16 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = true;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.MultipleChoiceContinue;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
-                NodeTypeCode = NodeTypeCode.III;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.III;
             }
         }
 
         //Ending Sequences
-        public class TooComplicated : NodeTypeOption
+        public class TooComplicated : NodeTypeOptionResource
         {
             public new static string StringName => nameof(TooComplicated);
 
@@ -597,15 +596,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.TooComplicated;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
-                NodeTypeCode = NodeTypeCode.I;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.I;
             }
         }
 
-        public class SendResponse : NodeTypeOption
+        public class SendResponse : NodeTypeOptionResource
         {
             public new static string StringName => nameof(SendResponse);
 
@@ -622,16 +621,16 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.SendResponse;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
-                NodeTypeCode = NodeTypeCode.I;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.I;
             }
         }
         
         
-        public class ProvideInfoWithPdfLink : NodeTypeOption
+        public class ProvideInfoWithPdfLink : NodeTypeOptionResource
         {
             public new static string StringName => nameof(ProvideInfoWithPdfLink);
 
@@ -648,11 +647,11 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
-                IsDynamicType = false;
+                IsPricingStrategyType = false;
                 NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCodeEnum = NodeTypeCodeEnum.II;
             }
         }
 

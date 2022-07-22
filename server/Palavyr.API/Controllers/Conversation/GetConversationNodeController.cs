@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Conversation
 {
@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Conversation
         }
 
         [HttpGet(Route)]
-        public async Task<ConversationNode> Get([FromRoute] string nodeId, CancellationToken cancellationToken)
+        public async Task<ConversationDesignerNodeResource> Get([FromRoute] string nodeId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetConversationNodeRequest(nodeId), cancellationToken);
             return response.Response;

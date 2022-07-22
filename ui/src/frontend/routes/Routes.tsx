@@ -31,7 +31,7 @@ import Auth from "frontend/auth/Auth";
 import { EmailConfiguration } from "frontend/dashboard/content/responseConfiguration/uploadable/emailTemplates/EmailConfiguration";
 import { ResponseConfiguration } from "frontend/dashboard/content/responseConfiguration/response/ResponseConfiguration";
 import { AttachmentConfiguration } from "frontend/dashboard/content/responseConfiguration/uploadable/attachments/AttachmentConfiguration";
-import { IntentSettings } from "@frontend/dashboard/content/responseConfiguration/areaSettings/IntentSettings";
+import { IntentSettings } from "@frontend/dashboard/content/responseConfiguration/intentSettings/IntentSettings";
 import { ConfigurationPreview } from "frontend/dashboard/content/responseConfiguration/previews/ConfigurationPreview";
 import { IntentContent } from "@frontend/dashboard/content/responseConfiguration/IntentContent";
 import { ChangeCompanyName } from "frontend/dashboard/content/settings/account/ChangeCompanyName";
@@ -72,7 +72,7 @@ import { WidgetDesignerPage } from "frontend/dashboard/content/designer/WidgetDe
 import { AppPageView } from "@common/Analytics/gtag";
 import { IntentSettingsHelp } from "@frontend/dashboard/content/help/IntentSettingsHelp";
 import { SignupPage } from "@landing/SignupPage";
-import { EnableIntents } from "@frontend/dashboard/content/responseConfiguration/areaSettings/enableAreas/EnableIntents";
+import { EnableIntents } from "@frontend/dashboard/content/responseConfiguration/intentSettings/enableIntents/EnableIntents";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -117,17 +117,17 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/tour" component={withLayout(ToursPage, <ToursPageHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/activity" component={withLayout(ActivityDashboardPage, <ActivityDashboardHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<EmailConfiguration />), <EmailHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/pricing/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/email/:intentId" component={withLayout(withIntentSettingsTabs(<EmailConfiguration />), <EmailHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/pricing/:intentId" component={withLayout(withIntentSettingsTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/attachments/:intentId" component={withLayout(withIntentSettingsTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<ConversationConfigurationPage />), <ConversationHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/conversation/intro/:areaIdentifier" component={withLayout(IntroConversationConfigurationPage, <ConversationHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/conversation/:intentId" component={withLayout(withIntentSettingsTabs(<ConversationConfigurationPage />), <ConversationHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/conversation/intro/:intentId" component={withLayout(IntroConversationConfigurationPage, <ConversationHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<IntentSettings />), <IntentSettingsHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/pricingpreview/:areaIdentifier" component={withLayout(withIntentSettingsTabs(<ConfigurationPreview />), <PreviewHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/settings/:intentId" component={withLayout(withIntentSettingsTabs(<IntentSettings />), <IntentSettingsHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/pricingpreview/:intentId" component={withLayout(withIntentSettingsTabs(<ConfigurationPreview />), <PreviewHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/set-areas" component={withLayout(EnableIntents, <SetIntentsHelp />)} />
+                <ProtectedRoute exact path="/dashboard/set-intents" component={withLayout(EnableIntents, <SetIntentsHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/settings/password" component={withLayout(withGeneralSettingsTabs(<ChangePassword />), <ChangePasswordHelp />)} />
                 <ProtectedRoute exact path="/dashboard/settings/email" component={withLayout(withGeneralSettingsTabs(<ChangeEmail />), <ChangeDefaultEmailHelp />)} />

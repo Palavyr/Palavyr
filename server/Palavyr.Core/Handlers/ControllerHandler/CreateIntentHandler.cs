@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Mappers;
+using Palavyr.Core.Resources;
 using Palavyr.Core.Sessions;
 using Palavyr.Core.Stores;
 
@@ -14,18 +15,21 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<CreateIntentHandler> logger;
         private readonly IAccountIdTransport accountIdTransport;
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
+        private readonly IMapToNew<Intent, IntentResource> mapper;
 
         public CreateIntentHandler(
             IEntityStore<Account> accountStore,
             ILogger<CreateIntentHandler> logger,
             IAccountIdTransport accountIdTransport,
-            IEntityStore<Area> intentStore)
+            IEntityStore<Intent> intentStore,
+            IMapToNew<Intent, IntentResource> mapper)
         {
             this.accountStore = accountStore;
             this.logger = logger;
             this.accountIdTransport = accountIdTransport;
             this.intentStore = intentStore;
+            this.mapper = mapper;
         }
 
         public async Task<CreateIntentResponse> Handle(CreateIntentRequest request, CancellationToken cancellationToken)
@@ -35,25 +39,26 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             var defaultEmail = account.EmailAddress;
             var isVerified = account.DefaultEmailIsVerified;
 
-            logger.LogInformation($"Creating new area for account: {accountIdTransport.AccountId} called {request.AreaName}");
-            var newIntent = Area.CreateNewArea(request.AreaName, accountIdTransport.AccountId, defaultEmail, isVerified);
+            logger.LogInformation("Creating new intent for account: {Account} called {IntentName}", accountIdTransport.AccountId, request.IntentName);
+            var newIntent = Intent.CreateNewIntent(request.IntentName, accountIdTransport.AccountId, defaultEmail, isVerified);
             var intent = await intentStore.Create(newIntent);
 
-            return new CreateIntentResponse(intent);
+            var resource = await mapper.Map(intent);
+            return new CreateIntentResponse(resource);
         }
     }
-    
+
     public class CreateIntentRequest : IRequest<CreateIntentResponse>
     {
-        public string AreaName { get; set; }
+        public const string Route = "intents/create";
+        public string IntentName { get; set; }
     }
     
-    public class UpdateIntentNameRequest : CreateIntentRequest {} 
 
     public class CreateIntentResponse
     {
-        public readonly Area Response;
+        public readonly IntentResource Response;
 
-        public CreateIntentResponse(Area response) => Response = response;
+        public CreateIntentResponse(IntentResource response) => Response = response;
     }
 }

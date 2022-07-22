@@ -1,20 +1,21 @@
-import { ConversationRecordUpdate, WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
+import { WidgetNodeResource, WidgetNodeResources } from "@common/types/api/EntityResources";
+import { ConversationRecordUpdate} from "@Palavyr-Types";
 
 export const MinNumeric: number = 0;
 
-export const getRootNode = (nodeList: WidgetNodes): WidgetNodeResource => {
+export const getRootNode = (nodeList: WidgetNodeResources): WidgetNodeResource => {
     var node = nodeList.filter(x => x.isRoot === true)[0];
     return node;
 };
 
-export const getSelectorNode = (nodeList: WidgetNodes): WidgetNodeResource => {
+export const getSelectorNode = (nodeList: WidgetNodeResources): WidgetNodeResource => {
     const node = nodeList.filter(x => x.nodeComponentType === "Selection")[0];
     return node;
 };
 
-export const getOrderedChildNodes = (childrenIDs: string, nodeList: WidgetNodes) => {
+export const getOrderedChildNodes = (childrenIDs: string, nodeList: WidgetNodeResources) => {
     const ids = childrenIDs.split(",");
-    const children: WidgetNodes = [];
+    const children: WidgetNodeResources = [];
     ids.forEach((id: string) => {
         const node = nodeList.filter(node => node.nodeId === id)[0]; // each ID should only refer to 1 existing node.
         if (node) children.push(node);
@@ -24,7 +25,7 @@ export const getOrderedChildNodes = (childrenIDs: string, nodeList: WidgetNodes)
 
 export const assembleEmailRecordData = (
     conversationId: string,
-    areaIdentifier: string,
+    intentId: string,
     name: string,
     email: string,
     PhoneNumber: string,
@@ -33,7 +34,7 @@ export const assembleEmailRecordData = (
 ): Partial<ConversationRecordUpdate> => {
     return {
         ConversationId: conversationId,
-        IntentId: areaIdentifier,
+        IntentId: intentId,
         Name: name,
         Email: email,
         PhoneNumber: PhoneNumber,

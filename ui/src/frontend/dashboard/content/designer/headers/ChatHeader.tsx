@@ -1,11 +1,11 @@
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
-import { SetState, WidgetPreferences } from "@Palavyr-Types";
+import { SetState, WidgetPreferencesResource } from "@Palavyr-Types";
 import { HeaderEditor } from "frontend/dashboard/content/demo/HeaderEditor";
 import React from "react";
 
 export interface DesignChatHeaderProps {
-    widgetPreferences: WidgetPreferences;
-    setWidgetPreferences: SetState<WidgetPreferences>;
+    widgetPreferences: WidgetPreferencesResource;
+    setWidgetPreferences: SetState<WidgetPreferencesResource>;
 }
 export const DesignChatHeader = ({ widgetPreferences, setWidgetPreferences }: DesignChatHeaderProps) => {
     return (

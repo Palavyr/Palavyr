@@ -1,6 +1,6 @@
 import React from "react";
 import { Hidden, makeStyles } from "@material-ui/core";
-import { SetState, WidgetPreferences } from "@Palavyr-Types";
+import { SetState, WidgetPreferencesResource } from "@Palavyr-Types";
 import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
 import { SketchPicker } from "react-color";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
@@ -14,8 +14,8 @@ export type ColorPickerType = {
 };
 
 export interface WidgetColorOptionsProps {
-    widgetPreferences: WidgetPreferences;
-    setWidgetPreferences: SetState<WidgetPreferences>;
+    widgetPreferences: WidgetPreferencesResource;
+    setWidgetPreferences: SetState<WidgetPreferencesResource>;
 }
 
 export const widgetStyles = makeStyles(theme => ({
@@ -36,7 +36,7 @@ export const widgetStyles = makeStyles(theme => ({
 export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: WidgetColorOptionsProps) => {
     const cls = widgetStyles();
 
-    const rowOne = (widgetPreferences: WidgetPreferences): ColorPickerType[] => {
+    const rowOne = (widgetPreferences: WidgetPreferencesResource): ColorPickerType[] => {
         return [
             { name: "Header Color", variable: widgetPreferences.headerColor, method: (headerColor: string) => setWidgetPreferences({ ...widgetPreferences, headerColor }), disable: true },
             { name: "Header Font Color", variable: widgetPreferences.headerFontColor, method: (headerFontColor: string) => setWidgetPreferences({ ...widgetPreferences, headerFontColor }), disable: true },
@@ -45,7 +45,7 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
         ];
     };
 
-    const rowTwo = (widgetPreferences: WidgetPreferences): ColorPickerType[] => {
+    const rowTwo = (widgetPreferences: WidgetPreferencesResource): ColorPickerType[] => {
         return [
             { name: "Background Color", variable: widgetPreferences.chatBubbleColor, method: (chatBubbleColor: string) => setWidgetPreferences({ ...widgetPreferences, chatBubbleColor }), disable: true },
             { name: "Text Color", variable: widgetPreferences.chatFontColor, method: (chatFontColor: string) => setWidgetPreferences({ ...widgetPreferences, chatFontColor }), disable: true },

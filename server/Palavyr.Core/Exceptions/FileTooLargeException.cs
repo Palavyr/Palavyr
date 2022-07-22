@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿
 using System;
 
 namespace Palavyr.Core.Exceptions

@@ -2,7 +2,6 @@ import { TableRow, TableCell } from "@material-ui/core";
 import React from "react";
 import { LinkButton } from "./LinkButton";
 import AttachmentIcon from "@material-ui/icons/Attachment";
-import { FileAssetResource } from "@Palavyr-Types";
 
 interface IAttachmentTableRow {
     fileName: string;
@@ -25,7 +24,7 @@ var tableRowStyle = {
 
 export const AttachmentListRow = ({ fileName, link, fileId, setCurrentPreview, removeAttachment }: IAttachmentTableRow) => {
     const viewButtonClickAction = (fileName: string, link: string, fileId: string) => {
-        const attachmentLink: FileAssetResource = {
+        const attachmentLink = {
             fileName,
             fileId,
             link,

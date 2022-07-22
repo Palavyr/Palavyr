@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Resources;
 
 namespace Palavyr.API.Controllers.Conversation
 {
@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.Conversation
         }
 
         [HttpPut(Route)]
-        public async Task<ConversationNode> Modify(
+        public async Task<ConversationDesignerNodeResource> Modify(
             [FromBody]
             ModifyConversationNodeTextRequest request,
             CancellationToken cancellationToken)

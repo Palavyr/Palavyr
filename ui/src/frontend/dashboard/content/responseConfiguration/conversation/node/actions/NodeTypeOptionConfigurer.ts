@@ -1,50 +1,50 @@
-import { NodeOption, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
+import { NodeTypeOptionResource, NodeTypeCodeEnum, NodeTypeOptionResources } from "@Palavyr-Types";
 import { INodeReferences, IPalavyrNode } from "@Palavyr-Types";
 
 class NodeTypeOptionConfigurer {
     constructor() {}
 
-    public ConfigureNodeTypeOptions(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    public ConfigureNodeTypeOptions(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources) {
         let options = nodeTypeOptions;
         if (!currentNode.isPalavyrAnabranchStart && currentNode.isPalavyrAnabranchMember) {
-            options = this.filterUnallowedNodeOptions([NodeTypeCode.VI, NodeTypeCode.VII, NodeTypeCode.VIII], options);
+            options = this.filterUnallowedNodeOptions([NodeTypeCodeEnum.VI, NodeTypeCodeEnum.VII, NodeTypeCodeEnum.VIII], options);
         }
 
         if (currentNode.childNodeReferences.references.map((x) => x.nodeType).includes("Anabranch")) {
-            options = this.filterUnallowedNodeOptions([NodeTypeCode.VI], options);
+            options = this.filterUnallowedNodeOptions([NodeTypeCodeEnum.VI], options);
         }
 
         if (currentNode.isLoopbackMember && !currentNode.isLoopbackStart) {
-            options = this.filterUnallowedNodeOptions([NodeTypeCode.VII], options);
+            options = this.filterUnallowedNodeOptions([NodeTypeCodeEnum.VII], options);
         } else {
-            options = this.filterUnallowedNodeOptions([NodeTypeCode.VIII], options);
+            options = this.filterUnallowedNodeOptions([NodeTypeCodeEnum.VIII], options);
         }
 
         if (currentNode.childNodeReferences.containsNodeType("Loopback")) {
-            options = this.filterUnallowedNodeOptions([NodeTypeCode.VI], options);
+            options = this.filterUnallowedNodeOptions([NodeTypeCodeEnum.VI], options);
         }
 
         if (currentNode.parentNodeReferences.Length === 1 && currentNode.parentNodeReferences.retrieveLeftmostReference()?.isPalavyrAnabranchStart && currentNode.isLocked) {
-            options = this.filterUnallowedNodeOptions([NodeTypeCode.VIII], options);
+            options = this.filterUnallowedNodeOptions([NodeTypeCodeEnum.VIII], options);
         }
 
         if (currentNode.parentNodeReferences.Length === 1 && currentNode.parentNodeReferences.retrieveLeftmostReference()?.isLoopbackAnchorType) {
-            options = this.filterUnallowedNodeOptions([NodeTypeCode.VII], options);
+            options = this.filterUnallowedNodeOptions([NodeTypeCodeEnum.VII], options);
         }
 
         if (currentNode.childNodeReferences.containsNodeType("LoopbackAnchor")) {
-            options = this.filterUnallowedNodeOptions([NodeTypeCode.VII], options);
+            options = this.filterUnallowedNodeOptions([NodeTypeCodeEnum.VII], options);
         }
 
         // if we are the primary anabranch branch and a anabranch member...
         if (currentNode.isPalavyrAnabranchMember && currentNode.anabranchContext && currentNode.anabranchContext.leftmostAnabranch && currentNode.anabranchContext.leftmostAnabranch === true) {
-            options = this.filterUnallowedNodeOptions([NodeTypeCode.I], options);
+            options = this.filterUnallowedNodeOptions([NodeTypeCodeEnum.I], options);
         }
 
         return options;
     }
 
-    public RecursivelyReconfigureNodeTypeOptions(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    public RecursivelyReconfigureNodeTypeOptions(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptionResources) {
         this.ConfigureNodeTypeOptions(currentNode, nodeTypeOptions);
 
         const recurse = (childNodeReferences: INodeReferences) => {
@@ -61,9 +61,9 @@ class NodeTypeOptionConfigurer {
         recurse(currentNode.childNodeReferences);
     }
 
-    public filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>, nodeTypeOptions: NodeTypeOptions) {
-        const filteredNodeTypeOptions = nodeTypeOptions.filter((option: NodeOption) => {
-            return !forbiddenOptions.includes(option.nodeTypeCode);
+    public filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCodeEnum>, nodeTypeOptions: NodeTypeOptionResources) {
+        const filteredNodeTypeOptions = nodeTypeOptions.filter((option: NodeTypeOptionResource) => {
+            return !forbiddenOptions.includes(option.nodeTypeCodeEnum);
         });
         return filteredNodeTypeOptions;
     }

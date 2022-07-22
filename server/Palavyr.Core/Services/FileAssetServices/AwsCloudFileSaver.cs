@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.GlobalConstants;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.CloudKeyResolvers;
 using Palavyr.Core.Sessions;

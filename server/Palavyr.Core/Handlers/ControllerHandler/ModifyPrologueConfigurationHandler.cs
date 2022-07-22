@@ -1,16 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
     public class ModifyPrologueConfigurationHandler : IRequestHandler<ModifyPrologueConfigurationRequest, ModifyPrologueConfigurationResponse>
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
 
-        public ModifyPrologueConfigurationHandler(IEntityStore<Area> intentStore)
+        public ModifyPrologueConfigurationHandler(IEntityStore<Intent> intentStore)
         {
             this.intentStore = intentStore;
         }
@@ -18,7 +18,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<ModifyPrologueConfigurationResponse> Handle(ModifyPrologueConfigurationRequest request, CancellationToken cancellationToken)
         {
             var updatedPrologue = request.Prologue;
-            var intent = await intentStore.Get(request.IntentId, s => s.AreaIdentifier);
+            var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
             intent.Prologue = updatedPrologue;
             return new ModifyPrologueConfigurationResponse(updatedPrologue);
         }

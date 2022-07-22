@@ -20,7 +20,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet(Route)]
-        public async Task<PlanTypeMetaBase> GetCurrentPlan(
+        public async Task<PlanTypeMetaResource> GetCurrentPlan(
             CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetCurrentPlanMetaRequest(), cancellationToken);

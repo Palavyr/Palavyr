@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Requests;
 using Palavyr.Core.Services.CloudKeyResolvers;
-using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.FileAssetServices;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.PdfService.PdfServer;
+using Palavyr.Core.Services.PricingStrategyTableServices;
 using Palavyr.Core.Services.TemporaryPaths;
 using Palavyr.Core.Stores;
 using Palavyr.Core.Stores.StoreExtensionMethods;
@@ -20,7 +20,7 @@ namespace Palavyr.Core.Services.PdfService
 {
     public class PreviewResponseGenerator : IPreviewResponseGenerator
     {
-        private readonly IEntityStore<Area> intentStore;
+        private readonly IEntityStore<Intent> intentStore;
         private readonly IConfiguration configuration;
         private readonly ILogger<PreviewResponseGenerator> logger;
         private readonly IHtmlToPdfClient htmlToPdfClient;
@@ -29,11 +29,11 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IResponsePdfPreviewKeyResolver previewKeyResolver;
         private readonly ITemporaryPath temporaryPath;
         private readonly ICriticalResponses criticalResponses;
-        private readonly IDynamicTableCompilerRetriever compilerRetriever;
+        private readonly IPricingStrategyTableCompilerRetriever compilerRetriever;
         private readonly IGuidUtils guidUtils;
 
         public PreviewResponseGenerator(
-            IEntityStore<Area> intentStore,
+            IEntityStore<Intent> intentStore,
             IConfiguration configuration,
             ILogger<PreviewResponseGenerator> logger,
             IHtmlToPdfClient htmlToPdfClient,
@@ -42,7 +42,7 @@ namespace Palavyr.Core.Services.PdfService
             IResponsePdfPreviewKeyResolver previewKeyResolver,
             ITemporaryPath temporaryPath,
             ICriticalResponses criticalResponses,
-            IDynamicTableCompilerRetriever compilerRetriever,
+            IPricingStrategyTableCompilerRetriever compilerRetriever,
             IGuidUtils guidUtils
         )
         {
@@ -106,28 +106,27 @@ namespace Palavyr.Core.Services.PdfService
         {
             var tables = new List<Table>();
             var staticTables = await staticTableCompiler.CollectStaticTables(intentId, culture, 2); // ui always sends a number - 1 or greater.
-            var dynamicTables = await CollectPreviewDynamicTables(intentId, culture);
+            var pricingStrategyTables = await CollectPreviewPricingStrategyTables(intentId, culture);
 
             tables.AddRange(staticTables);
-            tables.AddRange(dynamicTables);
+            tables.AddRange(pricingStrategyTables);
             return tables;
         }
 
-        private async Task<List<Table>> CollectPreviewDynamicTables(string intentId, CultureInfo culture)
+        private async Task<List<Table>> CollectPreviewPricingStrategyTables(string intentId, CultureInfo culture)
         {
             var intent = await intentStore.GetIntentComplete(intentId);
-            var dynamicTableMetas = intent.DynamicTableMetas;
+            var pricingStrategyTableMetas = intent.PricingStrategyTableMetas;
 
             var rows = new List<TableRow>();
-            foreach (var tableMeta in dynamicTableMetas)
+            foreach (var tableMeta in pricingStrategyTableMetas)
             {
-                // TODO: These need to retrieve the INTERFACE Yo
-                var dynamicCompiler = compilerRetriever.RetrieveCompiler(tableMeta.TableType);
-                var newRows = await dynamicCompiler.CreatePreviewData(tableMeta, intent, culture);
+                var pricingStrategyCompiler = compilerRetriever.RetrieveCompiler(tableMeta.TableType);
+                var newRows = await pricingStrategyCompiler.CreatePreviewData(tableMeta, intent, culture);
                 rows.AddRange(newRows);
             }
 
-            var table = new Table("Variable estimates determined by your responses", rows, culture, intent.IncludeDynamicTableTotals);
+            var table = new Table("Variable estimates determined by your responses", rows, culture, intent.IncludePricingStrategyTableTotals);
             return new List<Table>() { table };
         }
     }
