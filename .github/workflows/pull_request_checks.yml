@@ -22,14 +22,14 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - name: Checkout
       - uses: actions/checkout@v3
+      - name: Checkout
 
       - name: Verify commit exists in origin/main
         run: echo "Going to use ${{ steps.buildnumber.outputs.build_number }} for the package Id."
 
       - name: Set VERSION variable from tag
-        run: echo "VERSION=0.0.0" >> $GITHUB_ENV # 0.1.${{ steps.buildnumber.outputs.build_number }}" >> $GITHUB_ENV
+        run: echo "0.1.${{ steps.buildnumber.outputs.build_number }}" >> $GITHUB_ENV
 
       - name: Build
         run: dotnet build ./source/server/Palavyr.API/Palavyr.API.csproj --configuration Release /p:Version=${VERSION}-${GITHUB_REF##*/} --output ./server
@@ -46,97 +46,39 @@ jobs:
       - name: Zip server into a packaged
         run: zip ./server palavyr.server.{VERSION}.zip
 
-      - name: Install Octopus CLI 🐙
-        uses: OctopusDeploy/install-octopus-cli-action@v1
-        with:
-          version: latest
-      - name: Push a package to Octopus Deploy 🐙
-        uses: OctopusDeploy/push-package-action@v2
-        env:
-          OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
-          OCTOPUS_HOST: ${{ secrets.SERVER }}
-          OCTOPUS_SPACE: 'Spaces-2'
-        with:
-          packages: ./server/palavyr.server.{VERSION}.zip
-
   build-frontend:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - name: Setup
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v1
 
-      - name: Goto working dir, print its name, install the frontend npm packages, then build => ./dist-frontend
+      - name: "Install and build"
         working-directory: ./ui/src/
-      - run: npm install
-      - run: npm run build # ui goes to ./dist-frontend
-      - run: mv ./dist-frontend ..
-        working-directory: ${github.GITHUB_WORKSPACE}
-      - run: zip ./dist-frontend palavyr-frontend.{VERSION}.zip
+        run: |
+          cd ./ui/src
+          npm install
+          npm run build
+          mv ./dist-frontend ../..
 
-      - uses: actions/checkout@v3
-      - name: Install Octopus CLI 🐙
-        uses: OctopusDeploy/install-octopus-cli-action@v1
-        with:
-          version: latest
-      - name: Push a package to Octopus Deploy 🐙
-        uses: OctopusDeploy/push-package-action@v2
-        env:
-          OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
-          OCTOPUS_HOST: ${{ secrects.SERVER }}
-          OCTOPUS_SPACE: 'Spaces-2'
-        with:
-          packages: palavyr.frontend.{VERSION}.zip
+      - name: "Zip the distribution"
+        working-directory: ${github.GITHUB_WORKSPACE}
+        run: zip ./dist-frontend palavyr-frontend.{VERSION}.zip
 
   build-widget:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-
-      - name: Goto working dir, print its name, install the widget npm packages, then build => ./dist-widget
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v1
-        # working-directory: ./ui
-      - run: echo "---------------"
-      - run: pwd
-      - run: echo "---------------"
-      - run: cd ./ui/src/widget
-      - run: npm install
-      - run: npm run build # ui goes to ./dist-widget
-      - run: mv ./dist-widget ../..
-        # working-directory: ..
-      - run: cd ../..
+
+      - name: Install and build
+      - run: |
+          cd ./ui/src
+          npm install
+          npm run build
+          mv ./dist-widget ../..
+
+      - name: Zip the distribution
       - run: zip ./dist-widget palavyr-widget.{VERSION}.zip
-      - uses: actions/checkout@v3
-      - name: Install Octopus CLI 🐙
-        uses: OctopusDeploy/install-octopus-cli-action@v1
-        with:
-          version: latest
-      - name: Push a package to Octopus Deploy 🐙
-        uses: OctopusDeploy/push-package-action@v2
-        env:
-          OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
-          OCTOPUS_HOST: ${{ secrects.SERVER }}
-          OCTOPUS_SPACE: 'Spaces-2'
-        with:
-          packages: palavyr.widget.{VERSION}.zip
-
-  # no tests in the UI at this time - so long as it builds we're okay for now.
-
-  create-release:
-    needs: [build-and-test-server, build-frontend, build-widget]
-    steps:
-      - name: Install Octopus CLI 🐙
-        uses: OctopusDeploy/install-octopus-cli-action@v1
-        with:
-          version: latest
-
-      - name: Create a release in Octopus Deploy 🐙
-        uses: OctopusDeploy/create-release-action@v2
-        env:
-          OCTOPUS_API_KEY: ${{ secrets.API_KEY  }}
-          OCTOPUS_HOST: ${{ secrets.SERVER }}
-          OCTOPUS_SPACE: 'Spaces-2'
-        with:
-          project: 'Palavyr'
