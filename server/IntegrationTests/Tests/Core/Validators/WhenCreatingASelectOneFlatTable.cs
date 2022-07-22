@@ -38,7 +38,7 @@ namespace IntegrationTests.Tests.Core.Validators
                 CategorySelectTableRowResource,
                 SelectOneFlatCompiler>, PricingStrategyTableDataResource<CategorySelectTableRowResource>>(CancellationToken, _ => getRoute);
 
-            currentTable.TableRows.First().AccountId.ShouldBe(this.AccountId);
+            currentTable.TableRows.First().TableId.ShouldBe(selectOneFlatTableMeta.TableId);
         }
 
         public WhenCreatingASelectOneFlatTable(ITestOutputHelper testOutputHelper, ServerFactory factory) : base(testOutputHelper, factory)

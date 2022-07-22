@@ -20,7 +20,6 @@ namespace Palavyr.Core.Mappers
                 LandingHeader = @from.LandingHeader,
                 ChatHeader = @from.ChatHeader,
                 Placeholder = @from.Placeholder,
-                AccountId = @from.AccountId,
                 WidgetState = @from.WidgetState,
                 OptionsHeaderColor = @from.OptionsHeaderColor,
                 OptionsHeaderFontColor = @from.OptionsHeaderFontColor,

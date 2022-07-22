@@ -153,7 +153,7 @@ namespace Palavyr.Core.Stores.Delete
             await DeleteAccountAt<AppDataContexts, CategorySelectTableRow>();
             await DeleteAccountAt<AppDataContexts, PercentOfThresholdTableRow>();
             await DeleteAccountAt<AppDataContexts, SimpleThresholdTableRow>();
-            await DeleteAccountAt<AppDataContexts, TwoNestedSelectTableRow>();
+            await DeleteAccountAt<AppDataContexts, SelectWithNestedSelectTableRow>();
             await DeleteAccountAt<AppDataContexts, CategoryNestedThresholdTableRow>();
             await DeleteAccountAt<AppDataContexts, Logo>();
             await DeleteAccountAt<AppDataContexts, StaticTablesMeta>();

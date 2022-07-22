@@ -13,7 +13,6 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers
             return new CategorySelectTableRowResource
             {
                 Id = @from.Id,
-                AccountId = @from.AccountId,
                 IntentId = @from.IntentId,
                 TableId = @from.TableId,
                 Category = @from.Category,

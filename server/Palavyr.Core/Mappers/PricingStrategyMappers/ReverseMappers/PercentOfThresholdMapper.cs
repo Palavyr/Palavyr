@@ -2,11 +2,19 @@
 using System.Threading.Tasks;
 using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
 {
     public class PercentOfThresholdMapper : IMapToNew<PercentOfThresholdResource, PercentOfThresholdTableRow>
     {
+        private readonly IAccountIdTransport accountIdTransport;
+
+        public PercentOfThresholdMapper(IAccountIdTransport accountIdTransport)
+        {
+            this.accountIdTransport = accountIdTransport;
+        }
+
         public async Task<PercentOfThresholdTableRow> Map(PercentOfThresholdResource from, CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
@@ -16,7 +24,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
                 Modifier = from.Modifier,
                 Range = from.Range,
                 Threshold = from.Threshold,
-                AccountId = from.AccountId,
+                AccountId = accountIdTransport.AccountId,
                 IntentId = from.IntentId,
                 ItemId = from.ItemId,
                 Category = from.ItemName,

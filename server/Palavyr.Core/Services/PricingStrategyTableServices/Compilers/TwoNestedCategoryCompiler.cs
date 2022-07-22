@@ -18,19 +18,19 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
     {
     }
 
-    public class TwoNestedCategoryCompiler : BaseCompiler<TwoNestedSelectTableRow>, ITwoNestedCategoryCompiler
+    public class TwoNestedCategoryCompiler : BaseCompiler<SelectWithNestedSelectTableRow>, ITwoNestedCategoryCompiler
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IEntityStore<TwoNestedSelectTableRow> psStore;
+        private readonly IEntityStore<SelectWithNestedSelectTableRow> psStore;
         private readonly IConversationOptionSplitter splitter;
-        private readonly IResponseRetriever<TwoNestedSelectTableRow> responseRetriever;
+        private readonly IResponseRetriever<SelectWithNestedSelectTableRow> responseRetriever;
         private readonly IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore;
 
         public TwoNestedCategoryCompiler(
             IEntityStore<ConversationNode> convoNodeStore,
-            IEntityStore<TwoNestedSelectTableRow> psStore,
+            IEntityStore<SelectWithNestedSelectTableRow> psStore,
             IConversationOptionSplitter splitter,
-            IResponseRetriever<TwoNestedSelectTableRow> responseRetriever,
+            IResponseRetriever<SelectWithNestedSelectTableRow> responseRetriever,
             IEntityStore<PricingStrategyTableMeta> pricingStrategyTableMetaStore) : base(psStore, convoNodeStore)
         {
             this.convoNodeStore = convoNodeStore;
@@ -143,12 +143,12 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
             return currentRows;
         }
 
-        public async Task<List<TwoNestedSelectTableRow>> RetrieveAllAvailableResponses(string responseId)
+        public async Task<List<SelectWithNestedSelectTableRow>> RetrieveAllAvailableResponses(string responseId)
         {
             return await GetAllRowsMatchingResponseId(responseId);
         }
 
-        private CategoryRetriever GetInnerAndOuterCategories(List<TwoNestedSelectTableRow> rawRows)
+        private CategoryRetriever GetInnerAndOuterCategories(List<SelectWithNestedSelectTableRow> rawRows)
         {
             // This table type does not facilitate multiple branches. I.e. the inner categories are all the same for all of the outer categories.
             var rows = rawRows.OrderBy(row => row.RowOrder).ToList();
@@ -167,7 +167,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices.Compilers
 
         public async Task UpdateConversationNode<T>(List<T> table, string tableId, string intentId)
         {
-            var update = table as List<TwoNestedSelectTableRow>;
+            var update = table as List<SelectWithNestedSelectTableRow>;
 
             var (innerCategories, outerCategories) = GetInnerAndOuterCategories(update);
 

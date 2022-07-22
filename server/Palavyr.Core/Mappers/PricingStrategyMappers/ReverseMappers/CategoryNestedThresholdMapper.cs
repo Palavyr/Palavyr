@@ -2,11 +2,19 @@
 using System.Threading.Tasks;
 using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
 {
     public class CategoryNestedThresholdMapper : IMapToNew<CategoryNestedThresholdResource, CategoryNestedThresholdTableRow>
     {
+        private readonly IAccountIdTransport accountIdTransport;
+
+        public CategoryNestedThresholdMapper(IAccountIdTransport accountIdTransport)
+        {
+            this.accountIdTransport = accountIdTransport;
+        }
+
         public async Task<CategoryNestedThresholdTableRow> Map(CategoryNestedThresholdResource from, CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
@@ -15,7 +23,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
                 Id = from.Id,
                 Range = from.Range,
                 Threshold = from.Threshold,
-                AccountId = from.AccountId,
+                AccountId = accountIdTransport.AccountId,
                 IntentId = from.IntentId,
                 ItemId = from.ItemId,
                 Category = from.ItemName,

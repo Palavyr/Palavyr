@@ -13,7 +13,6 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers
             return new PercentOfThresholdResource
             {
                 Id = @from.Id,
-                AccountId = @from.AccountId,
                 IntentId = @from.IntentId,
                 TableId = @from.TableId,
                 RowId = @from.RowId,

@@ -1,6 +1,6 @@
 ﻿namespace Palavyr.Core.Resources.PricingStrategyResources
 {
-    public class SelectWithNestedCategoryResource : PricingStrategyTableRowResource
+    public class SelectWithNestedSelectResource : PricingStrategyTableRowResource
     {
         public string IntentId { get; set; }
         public double ValueMin { get; set; }

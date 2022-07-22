@@ -13,6 +13,7 @@ namespace Palavyr.Core.Mappers
         {
             this.staticTableRowMapper = staticTableRowMapper;
         }
+
         public async Task<StaticTableMetaResource> Map(StaticTablesMeta @from, CancellationToken cancellationToken)
         {
             var tableRows = await staticTableRowMapper.MapMany(@from.StaticTableRows, cancellationToken);
@@ -22,7 +23,6 @@ namespace Palavyr.Core.Mappers
                 Description = @from.Description,
                 IntentId = @from.IntentId,
                 StaticTableRowResources = tableRows,
-                AccountId = @from.AccountId,
                 PerPersonInputRequired = @from.PerPersonInputRequired,
                 IncludeTotals = @from.IncludeTotals,
             };

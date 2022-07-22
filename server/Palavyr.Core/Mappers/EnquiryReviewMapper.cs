@@ -32,7 +32,6 @@ namespace Palavyr.Core.Mappers
                 ConversationId = @from.ConversationId,
                 FileAssetResource = fileAssetResource,
                 TimeStamp = @from.TimeStamp.ToString(),
-                AccountId = @from.AccountId,
                 IntentName = @from.IntentName,
                 EmailTemplateUsed = @from.EmailTemplateUsed,
                 Seen = @from.Seen,

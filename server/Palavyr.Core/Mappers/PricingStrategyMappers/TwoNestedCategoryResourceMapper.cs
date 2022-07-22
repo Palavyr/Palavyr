@@ -5,15 +5,14 @@ using Palavyr.Core.Resources.PricingStrategyResources;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers
 {
-    public class TwoNestedCategoryResourceMapper : IMapToNew<TwoNestedSelectTableRow, TwoNestedCategoryResource>
+    public class TwoNestedCategoryResourceMapper : IMapToNew<SelectWithNestedSelectTableRow, SelectWithNestedSelectResource>
     {
-        public async Task<TwoNestedCategoryResource> Map(TwoNestedSelectTableRow @from, CancellationToken cancellationToken)
+        public async Task<SelectWithNestedSelectResource> Map(SelectWithNestedSelectTableRow @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
-            return new TwoNestedCategoryResource
+            return new SelectWithNestedSelectResource
             {
                 Id = @from.Id,
-                AccountId = @from.AccountId,
                 IntentId = @from.IntentId,
                 TableId = @from.TableId,
                 ValueMin = @from.ValueMin,

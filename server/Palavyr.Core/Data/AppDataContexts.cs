@@ -30,7 +30,7 @@ namespace Palavyr.Core.Data
         public DbSet<CategorySelectTableRow> SimpleSelectTableRows { get; set; }
         public DbSet<PercentOfThresholdTableRow> PercentOfThresholds { get; set; }
         public DbSet<SimpleThresholdTableRow> SimpleThresholdTableRows { get; set; }
-        public DbSet<TwoNestedSelectTableRow> TwoNestedSelectTableRows { get; set; }
+        public DbSet<SelectWithNestedSelectTableRow> TwoNestedSelectTableRows { get; set; }
         public DbSet<CategoryNestedThresholdTableRow> CategoryNestedThresholdTableRows { get; set; }
 
         public DbSet<ConversationHistoryRow> ConversationHistoryRows { get; set; }

@@ -6,9 +6,9 @@ using Palavyr.Core.Services.PricingStrategyTableServices.Compilers;
 
 namespace Palavyr.API.Controllers.Response.Tables.PricingStrategy.TableTypes
 {
-    [Route(BaseRoute + nameof(TwoNestedSelectTableRow))]
+    [Route(BaseRoute + nameof(SelectWithNestedSelectTableRow))]
     [ApiController]
-    public class TwoNestedCategoriesController : PricingStrategyControllerBase<TwoNestedSelectTableRow, TwoNestedCategoryResource, ITwoNestedCategoryCompiler>
+    public class TwoNestedCategoriesController : PricingStrategyControllerBase<SelectWithNestedSelectTableRow, SelectWithNestedSelectResource, ITwoNestedCategoryCompiler>
     {
         public TwoNestedCategoriesController(IMediator mediator) : base(mediator)
         {

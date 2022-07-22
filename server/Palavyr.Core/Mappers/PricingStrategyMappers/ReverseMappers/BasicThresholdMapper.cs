@@ -2,11 +2,18 @@
 using System.Threading.Tasks;
 using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Resources.PricingStrategyResources;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
 {
     public class BasicThresholdMapper : IMapToNew<SimpleThresholdResource, SimpleThresholdTableRow>
     {
+        private readonly IAccountIdTransport accountIdTransport;
+
+        public BasicThresholdMapper(IAccountIdTransport accountIdTransport)
+        {
+            this.accountIdTransport = accountIdTransport;
+        }
         public async Task<SimpleThresholdTableRow> Map(SimpleThresholdResource from, CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
@@ -15,7 +22,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers.ReverseMappers
                 Id = from.Id,
                 Range = from.Range,
                 Threshold = from.Threshold,
-                AccountId = from.AccountId,
+                AccountId = accountIdTransport.AccountId,
                 IntentId = from.IntentId,
                 ItemName = from.ItemName,
                 RowId = from.RowId,

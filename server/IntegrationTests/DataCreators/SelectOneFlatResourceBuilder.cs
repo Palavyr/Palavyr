@@ -90,7 +90,6 @@ namespace IntegrationTests.DataCreators
 
             var resource = new CategorySelectTableRowResource()
             {
-                AccountId = this.accountId ?? test.AccountId,
                 IntentId = intentid ?? A.RandomId(),
                 TableId = this.tableId ?? A.RandomId(),
                 Category = this.option ?? A.RandomString(),

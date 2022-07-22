@@ -6,7 +6,7 @@ using Palavyr.Core.Services.PricingStrategyTableServices;
 
 namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
 {
-    public class TwoNestedCategoryResourceValidator : AbstractValidator<PricingStrategyTableDataResource<TwoNestedCategoryResource>>
+    public class TwoNestedCategoryResourceValidator : AbstractValidator<PricingStrategyTableDataResource<SelectWithNestedSelectResource>>
     {
         public TwoNestedCategoryResourceValidator()
         {
@@ -36,7 +36,7 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
                     });
         }
 
-        private bool HaveUniqueItemOrders(List<TwoNestedCategoryResource> arg)
+        private bool HaveUniqueItemOrders(List<SelectWithNestedSelectResource> arg)
         {
             
             
@@ -44,7 +44,7 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
             return itemOrders.Count() == itemOrders.Distinct().Count();
         }
 
-        private bool HaveUniqueRowOrders(List<TwoNestedCategoryResource> arg)
+        private bool HaveUniqueRowOrders(List<SelectWithNestedSelectResource> arg)
         {
             var itemGroups = arg.GroupBy(x => x.ItemId);
             foreach (var group in itemGroups)
@@ -58,14 +58,14 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
             return true;
         }
 
-        private bool HaveUniqueOuterCategories(List<TwoNestedCategoryResource> arg)
+        private bool HaveUniqueOuterCategories(List<SelectWithNestedSelectResource> arg)
         {
             var itemIds = arg.Select(x => x.ItemId).Distinct().ToList();
             var itemNames = arg.Select(x => x.ItemName).Distinct().ToList();
             return itemNames.Count() == itemIds.Count();
         }
 
-        private bool HaveUniqueInnerCategories(List<TwoNestedCategoryResource> arg)
+        private bool HaveUniqueInnerCategories(List<SelectWithNestedSelectResource> arg)
         {
             var itemId = arg.Select(x => x.ItemId).Distinct().ToList().First();
             var innerItemNames = arg.Where(x => x.ItemId == itemId).Select(x => x.InnerItemName).ToList();
@@ -73,7 +73,7 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
             return innerItemNames.Count() == innerItemNames.Distinct().Count();
         }
 
-        private bool HaveCorrectlyOrderedRows(List<TwoNestedCategoryResource> arg)
+        private bool HaveCorrectlyOrderedRows(List<SelectWithNestedSelectResource> arg)
         {
             var itemGroups = arg.GroupBy(x => x.ItemId);
             foreach (var group in itemGroups)
@@ -88,7 +88,7 @@ namespace Palavyr.Core.Handlers.Validators.PricingStrategyHandlerValidators
             return true;
         }
 
-        private bool HaveCorrectlyOrderedItems(List<TwoNestedCategoryResource> arg)
+        private bool HaveCorrectlyOrderedItems(List<SelectWithNestedSelectResource> arg)
         {
             var itemOrders = arg.Select(x => x.ItemOrder).Distinct().ToList();
             return Enumerable.SequenceEqual(itemOrders, itemOrders.OrderBy(x => x));

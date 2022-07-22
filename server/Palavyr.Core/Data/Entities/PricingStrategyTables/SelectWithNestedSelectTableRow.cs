@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Requests;
 
 namespace Palavyr.Core.Data.Entities.PricingStrategyTables
 {
-    public class TwoNestedSelectTableRow : Entity, IOrderedTable, IPricingStrategyTable<TwoNestedSelectTableRow>, IHaveRange, IMultiItem, IHaveAccountId
+    public class SelectWithNestedSelectTableRow : Entity, IOrderedTable, IPricingStrategyTable<SelectWithNestedSelectTableRow>, IHaveRange, IMultiItem, IHaveAccountId
     {
+        [NotMapped]
         private const string PrettyName = "Two Nested Categories";
-
-
+        
         public string AccountId { get; set; }
         public string IntentId { get; set; }
         public string TableId { get; set; }
@@ -23,7 +24,7 @@ namespace Palavyr.Core.Data.Entities.PricingStrategyTables
         public string Category { get; set; }
         public string InnerItemName { get; set; }
 
-        public TwoNestedSelectTableRow CreateNew(
+        public SelectWithNestedSelectTableRow CreateNew(
             string accountId,
             string intentId,
             string tableId,
@@ -38,7 +39,7 @@ namespace Palavyr.Core.Data.Entities.PricingStrategyTables
             int itemOrder
         )
         {
-            return new TwoNestedSelectTableRow
+            return new SelectWithNestedSelectTableRow
             {
                 AccountId = accountId,
                 IntentId = intentId,
@@ -55,9 +56,9 @@ namespace Palavyr.Core.Data.Entities.PricingStrategyTables
             };
         }
 
-        public TwoNestedSelectTableRow CreateTemplate(string accountId, string intentId, string tableId)
+        public SelectWithNestedSelectTableRow CreateTemplate(string accountId, string intentId, string tableId)
         {
-            return new TwoNestedSelectTableRow
+            return new SelectWithNestedSelectTableRow
             {
                 AccountId = accountId,
                 IntentId = intentId,
@@ -74,9 +75,9 @@ namespace Palavyr.Core.Data.Entities.PricingStrategyTables
             };
         }
 
-        public List<TwoNestedSelectTableRow> UpdateTable(PricingStrategyTable<TwoNestedSelectTableRow> table)
+        public List<SelectWithNestedSelectTableRow> UpdateTable(PricingStrategyTable<SelectWithNestedSelectTableRow> table)
         {
-            var mappedTableRows = new List<TwoNestedSelectTableRow>();
+            var mappedTableRows = new List<SelectWithNestedSelectTableRow>();
             foreach (var row in table.TableData)
             {
                 mappedTableRows.Add(
