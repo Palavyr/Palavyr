@@ -1,6 +1,8 @@
 name: Build and Run Tests on pull request
 on:
-  - pull_request
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-and-test-server:
