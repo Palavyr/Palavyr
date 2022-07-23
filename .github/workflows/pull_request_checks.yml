@@ -5,6 +5,31 @@ on:
       - main
 
 jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    name: Build frontend
+
+    steps:
+      - uses: actions/setup-node@v3
+      - name: Set up node
+        with:
+          node-version: 12
+
+      - uses: actions/checkout@v3
+      - name: Install and build
+      - run: |
+          cd ./ui/src
+          npm install
+          npm run build
+          mv ./dist-frontend ../..
+
+      - name: Zip the distribution
+      - run: |
+          pwd
+          cd ${{ github.workspace }}
+          zip ./dist-frontend palavyr-frontend.{VERSION}.zip
+
   # build-and-test-server:
   #   name: Build and test server
   #   runs-on: ubuntu-latest
@@ -48,31 +73,6 @@ jobs:
 
   #     - name: Zip server into a packaged
   #       run: zip ./server palavyr.server.{VERSION}.zip
-
-  build-frontend:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    name: Build frontend
-
-    steps:
-      - name: Set up node
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 12
-
-      - name: Install and build
-      - uses: actions/checkout@v3
-      - run: |
-          cd ./ui/src
-          npm install
-          npm run build
-          mv ./dist-frontend ../..
-
-      - name: Zip the distribution
-      - run: |
-          pwd
-          cd ${{ github.workspace }}
-          zip ./dist-frontend palavyr-frontend.{VERSION}.zip
 
   # build-widget:
   #   runs-on: ubuntu-latest
