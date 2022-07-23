@@ -17,18 +17,20 @@ jobs:
           node-version: 12
 
       - uses: actions/checkout@v3
-      - name: Install and build
-      - run: |
-          cd ./ui/src
-          npm install
-          npm run build
-          mv ./dist-frontend ../..
+      - run: cd ./ui/src
+
+      - name: Install
+      - run: npm install
+
+      - name: Build
+      - run: npm run build
+
+      - name: Move up
+      - run: mv ./dist-frontend ../..
 
       - name: Zip the distribution
-      - run: |
-          pwd
-          cd ${{ github.workspace }}
-          zip ./dist-frontend palavyr-frontend.{VERSION}.zip
+      - run: cd ${{ github.workspace }}
+      - run: zip ./dist-frontend palavyr-frontend.{VERSION}.zip
 
   # build-and-test-server:
   #   name: Build and test server
