@@ -28,7 +28,6 @@ jobs:
         run: |
           rawVersion="0.${{ steps.buildnumber.outputs.build_number }}-${{ github.event.pull_request.head.ref }}"
           echo "::set-output name=VERSION::$(echo ${rawVersion} | tr "/" "-")"
-          echo "Build Number: ${{ generate-build-number.outputs.VERSION }}"
 
   build-and-test-server:
     name: Build and test server
