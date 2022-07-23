@@ -11,26 +11,29 @@ jobs:
     name: Build frontend
 
     steps:
-      - uses: actions/setup-node@v3
       - name: Set up node
+        uses: actions/setup-node@v3
         with:
           node-version: 12
 
-      - uses: actions/checkout@v3
-      - run: cd ./ui/src
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        run: cd ./ui/src
 
       - name: Install
-      - run: npm install
+        run: npm install
 
       - name: Build
-      - run: npm run build
+        run: npm run build
 
       - name: Move up
-      - run: mv ./dist-frontend ../..
+        run: mv ./dist-frontend ../..
+
+      - name: Return to working dir
+        run: cd ${{ github.workspace }}
 
       - name: Zip the distribution
-      - run: cd ${{ github.workspace }}
-      - run: zip ./dist-frontend palavyr-frontend.{VERSION}.zip
+        run: zip ./dist-frontend palavyr-frontend.{VERSION}.zip
 
   # build-and-test-server:
   #   name: Build and test server
