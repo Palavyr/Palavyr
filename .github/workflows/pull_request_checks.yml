@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Create next build number
 
-    # MAJOR VERSION
+    # Major Release Version
     env:
       MAJOR_VERSION: "0"
 
@@ -28,7 +28,11 @@ jobs:
         run: |
           rawVersion=$MAJOR_VERSION.${{ steps.buildnumber.outputs.build_number }}-${{ github.event.pull_request.head.ref }}
           cleanVersion=${rawVersion} | tr "/" "-"
-          echo "::set-output name=VERSION::${cleanVerson}"
+          echo "::set-output name=VERSION::${cleanVersion}"
+
+      - name: Show Build Number
+        run: echo ${cleanVersion}
+
 
   build-and-test-server:
     name: Build and test server
