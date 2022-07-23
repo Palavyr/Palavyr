@@ -67,7 +67,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Restore dependencies
+        run: dotnet restore
+
       - name: Build
+        run: dotnet build --no-restore
+
+      - name: Publish
         run: |
           cd ./server
           dotnet publish -c Release /p:Version=${{ needs.generate-build-number.outputs.build_number }} --output ../solution_output
