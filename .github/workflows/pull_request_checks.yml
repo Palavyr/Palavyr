@@ -51,28 +51,27 @@ jobs:
 
   build-frontend:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     name: Build frontend
 
     steps:
-      # - name: Install and build
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
+        with:
+          node-version: 12
+
+      - name: Install and build
       - run: |
-          echo -----------------
-          pwd
-          ls -lath
-          echo -----------------
           cd ./ui/src
           npm install
           npm run build
           mv ./dist-frontend ../..
 
-      # - name: "Zip the distribution"
-      # - run: |
-      #     pwd
-      #     cd ${{ github.workspace }}
-      #     zip ./dist-frontend palavyr-frontend.{VERSION}.zip
+      - name: Zip the distribution
+      - run: |
+          pwd
+          cd ${{ github.workspace }}
+          zip ./dist-frontend palavyr-frontend.{VERSION}.zip
 
   # build-widget:
   #   runs-on: ubuntu-latest
