@@ -61,14 +61,12 @@ jobs:
       - run: |
           echo -----------------
           pwd
-          ls  /mnt/c/Users/paule/code/palavyr/Palavyr
-          echo -----------------
           ls -lath
           echo -----------------
-      #     cd ./ui/src
-      #     npm install
-      #     npm run build
-      #     mv ./dist-frontend ../..
+          cd ./ui/src
+          npm install
+          npm run build
+          mv ./dist-frontend ../..
 
       # - name: "Zip the distribution"
       # - run: |
