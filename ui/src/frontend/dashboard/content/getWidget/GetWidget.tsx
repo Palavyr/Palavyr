@@ -5,7 +5,7 @@ import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { ZoomImage } from "@common/components/borrowed/ZoomImage";
 import Styles from "./minimalStyles.png";
-import SiteBuilders from "./siteBuilders.png";
+import SiteBuilders from "./SiteBuilders.png";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { Align } from "@common/positioning/Align";
 

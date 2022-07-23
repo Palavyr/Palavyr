@@ -10,6 +10,15 @@ The target market for Palavyr is Law firms. Firms tend to have enquiries that ar
 Palavyr allows any law firm to integrate such a chat bot, without having to pay engineers thousands of dollars to create it.
 
 
+# Getting Started
+
+####
+
+
+
+
+
+
 # TODO Updates
 
 To test github actions locally:

@@ -1,14 +1,24 @@
-name: Run Tests on pull request
+name: Build and Run Tests on pull request
 on:
-  - pull_request
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build-and-test-server:
+  generate-build-number:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    name: Create next build number
+
+    # Major Release Version
     env:
-      STRIPE_API_KEY: ${{secrets.STRIPE_API_KEY}}
-      STRIPE_DEVICE_NAME: Palavyr
+      MAJOR_VERSION: "0"
+
+    # Lots of useful bits of information to use here
+    # env:
+    #   GITHUB_CONTEXT: ${{ toJson(github) }}
+
+    outputs:
+      version: ${{ steps.buildversion.outputs.version}}
 
     steps:
       - name: Generate build number
@@ -17,68 +27,144 @@ jobs:
         with:
           token: ${{secrets.github_token}}
 
+      - name: Set Build Version
+        id: buildversion
+        run: |
+          rawVersion="0.${{ steps.buildnumber.outputs.build_number }}-${{ github.event.pull_request.head.ref }}"
+          echo ${rawVersion}
+          echo ::set-output name=version::$(echo ${rawVersion} | tr "/" "-")
+
+  build-and-test-server:
+    name: Build and test server
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [generate-build-number]
+
+    env:
+      STRIPE_API_KEY: ${{secrets.STRIPE_API_KEY}}
+      STRIPE_DEVICE_NAME: Palavyr
+
+      Palavyr_AWS__AccessKey: ${{secrets.Palavyr_AWS__AccessKey}}
+      Palavyr_AWS__SecretKey: ${{secrets.Palavyr_AWS__SecretKey}}
+      Palavyr_AWS__Region: ${{secrets.Palavyr_AWS__Region}}
+      Palavyr_ConnectionString: ${{secrets.Palavyr_ConnectionString}}
+      Palavyr_Environment: ${{secrets.Palavyr_Environment}}
+      Palavyr_JWT__SecretKey: ${{secrets.Palavyr_JWT__SecretKey}}
+      Palavyr_STRIPE__SecretKey: ${{secrets.Palavyr_STRIPE__SecretKey}}
+
+    steps:
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 3.1.x
 
-      - uses: actions/checkout@v3
+      - name: What I think the version number is
+        run: |
+          echo ==========================
+          echo ${{ needs.generate-build-number.outputs.version }}
+          echo ==========================
+
       - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Verify commit exists in origin/main
-        run: echo "Going to use ${{ steps.buildnumber.outputs.build_number }} for the package Id."
-
-      - name: Set VERSION variable from tag
-        run: echo "0.1.${{ steps.buildnumber.outputs.build_number }}" >> $GITHUB_ENV
+      - name: Restore dependencies
+        run: |
+          cd ./server
+          dotnet restore
 
       - name: Build
-        run: dotnet build ./source/server/Palavyr.API/Palavyr.API.csproj --configuration Release /p:Version=${VERSION}-${GITHUB_REF##*/} --output ./server
+        run: |
+          cd ./server
+          dotnet build --no-restore
+
+      - name: Publish
+        run: |
+          cd ./server
+          vers=${{ needs.generate-build-number.outputs.build_number }}
+          dotnet publish -c Release /p:Version=${vers} --output ../solution_output
 
       - name: Start Docker environment
-        run: docker compose up -d -f docker-compose.ci.yml
+        run: docker compose -f ./docker-compose.ci.yml up
 
-      - name: Test
-        run: dotnet test ./server/Palavyr.API/Palavyr.API.csproj --verbosity normal
+      - name: Pure Tests
+        run: dotnet test ./solution_output/Palavyr.PureTests.dll --verbosity normal --no-restore
+
+      - name: Component Tests
+        run: dotnet test ./solution_output/Palavyr.ComponentTests.dll --verbosity normal --no-restore
+
+      - name: Integration Tests
+        run: dotnet test ./solution_output/Palavyr.IntegrationTests.dll --verbositry normal --no-restore
 
       - name: Delete the test dlls
-        run: rm ./server/Palavyr.IntegrationTest.dll ./server/Palavyr.ComponentTests.dll ./server/Palavyr.PureTests.dll
-
-      - name: Zip server into a packaged
-        run: zip ./server palavyr.server.{VERSION}.zip
-
-  build-frontend:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v1
-
-      - name: "Install and build"
-        working-directory: ./ui/src/
         run: |
-          cd ./ui/src
-          npm install
-          npm run build
-          mv ./dist-frontend ../..
+          rm ./solution_output/Palavyr.IntegrationTest.*
+          rm ./solution_output/Palavyr.ComponentTests.*
+          rm ./solution_output/Palavyr.PureTests.*
+          rm ./solution_output/Tests.Common*
 
-      - name: "Zip the distribution"
-        working-directory: ${github.GITHUB_WORKSPACE}
-        run: zip ./dist-frontend palavyr-frontend.{VERSION}.zip
+      - name: Zip server into a package
+        run: zip ./solution_output palavyr.server.${{ needs.generate-build-number.outputs.build_number }}.zip
 
-  build-widget:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v1
+  # build-frontend:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 5
+  #   name: Build frontend
+  #   needs: [generate-build-number]
 
-      - name: Install and build
-      - run: |
-          cd ./ui/src
-          npm install
-          npm run build
-          mv ./dist-widget ../..
+  #   steps:
+  #     - name: Set up node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 12
 
-      - name: Zip the distribution
-      - run: zip ./dist-widget palavyr-widget.{VERSION}.zip
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v3
+
+  #     - name: Move into ui dir and install
+  #       run: |
+  #         cd ./ui
+  #         npm ci
+
+  #     - name: Move into ui dir and Build
+  #       run: |
+  #         cd ./ui
+  #         npm run build
+
+  #     - name: Move into ui dir and Zip the distribution
+  #       run: |
+  #         cd ./ui
+  #         ls -lath
+  #         zip -r palavyr-frontend.${{ needs.generate-build-number.outputs.build_number }}.zip ./dist-frontend
+  #         mv palavyr-frontend.${{ needs.generate-build-number.outputs.build_number }}.zip ${{ github.workspace }}
+
+  # build-widget:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 5
+  #   name: Build widget
+  #   needs: [generate-build-number]
+
+  #   steps:
+  #     - name: Set up node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 12
+
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v3
+
+  #     - name: Move into ui dir and install
+  #       run: |
+  #         cd ./ui
+  #         npm ci
+
+  #     - name: Move into ui dir and Build
+  #       run: |
+  #         cd ./ui
+  #         npm run build-widget
+
+  #     - name: Move into ui dir and Zip the distribution
+  #       run: |
+  #         cd ./ui
+  #         ls -lath
+  #         zip -r palavyr-widget.${{ needs.generate-build-number.outputs.build_number }}.zip ./dist-widget
+  #         mv palavyr-widget.${{ needs.generate-build-number.outputs.build_number }}.zip ${{ github.workspace }}

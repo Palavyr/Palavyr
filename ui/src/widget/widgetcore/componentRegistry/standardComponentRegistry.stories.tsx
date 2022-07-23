@@ -24,7 +24,7 @@ export default {
     decorators: [
         Story => (
             <div style={{ border: "1px solid lightgray", position: "static", width: "350px" }}>
-                <MessageWrapper >
+                <MessageWrapper>
                     <Story />
                 </MessageWrapper>
             </div>
