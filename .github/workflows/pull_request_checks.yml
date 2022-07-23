@@ -83,7 +83,7 @@ jobs:
           echo ==========================
           echo ${{ needs.generate-build-number.outputs.version }}
           echo ==========================
-          vers=${{ needs.generate-build-number.outputs.build_number }}
+          vers=${{ needs.generate-build-number.outputs.version }}
           dotnet publish -c Release /p:Version=${vers} --output ../solution_output
 
       - name: Start Docker environment
