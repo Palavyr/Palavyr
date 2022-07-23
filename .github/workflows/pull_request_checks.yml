@@ -26,12 +26,10 @@ jobs:
 
       - name: Set Build Number
         run: |
-          rawVersion="$MAJOR_VERSION.${{ steps.buildnumber.outputs.build_number }}-${{ github.event.pull_request.head.ref }}"
+          rawVersion=0.${{ steps.buildnumber.outputs.build_number }}-${{ github.event.pull_request.head.ref }}
           cleanVersion=${rawVersion} | tr "/" "-"
           echo "::set-output name=VERSION::${cleanVersion}"
-
-      - name: Show Build Number
-        run: echo "${cleanVersion}"
+          echo "Build Number: ${cleanVersion}"
 
   build-and-test-server:
     name: Build and test server
