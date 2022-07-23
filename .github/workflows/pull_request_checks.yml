@@ -27,8 +27,8 @@ jobs:
         with:
           token: ${{secrets.github_token}}
 
-      - id: buildversion
-      - name: Set Build Number
+      - name: Set Build Version
+        id: buildversion
         run: |
           rawVersion="0.${{ steps.buildnumber.outputs.build_number }}-${{ github.event.pull_request.head.ref }}"
           echo '::set-output name=version::$(echo ${rawVersion} | tr "/" "-")'
