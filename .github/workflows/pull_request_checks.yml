@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Create next build number
     outputs:
-      build_number: ${{ steps.buildnumber.outputs.build_number }}
+      build_number: 1.${{ steps.buildnumber.outputs.build_number }}-${GITHUB_REF##*/}
 
     steps:
       - name: Generate build number
@@ -43,14 +43,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Verify commit exists in origin/main
-        run: echo "Going to use ${{ needs.generate-build-number.outputs.build_number }} for the version Id."
-
-      - name: Set VERSION variable from tag
-        run: echo "0.1.${{ needs.generate-build-number.outputs.build_number }}" >> $GITHUB_ENV
-
       - name: Build
-        run: dotnet build ./source/server/Palavyr.API/Palavyr.API.csproj --configuration Release /p:Version=${VERSION}-${GITHUB_REF##*/} --output ./server
+        run: dotnet build ./source/server/Palavyr.API/Palavyr.API.csproj --configuration Release /p:Version=${{ needs.generate-build-number.outputs.build_number }} --output ./server
 
       - name: Start Docker environment
         run: docker compose up -d -f docker-compose.ci.yml
@@ -62,7 +56,7 @@ jobs:
         run: rm ./server/Palavyr.IntegrationTest.dll ./server/Palavyr.ComponentTests.dll ./server/Palavyr.PureTests.dll
 
       - name: Zip server into a packaged
-        run: zip ./server palavyr.server.{VERSION}.zip
+        run: zip ./server palavyr.server.${{ needs.generate-build-number.outputs.build_number }}.zip
 
   # build-frontend:
   #   runs-on: ubuntu-latest
