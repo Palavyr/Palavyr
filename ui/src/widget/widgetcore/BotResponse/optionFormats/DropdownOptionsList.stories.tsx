@@ -15,20 +15,20 @@ export const Primary: Story<DropdownListProps> = Template.bind({});
 Primary.args = {
     options: [
         {
-            IntentDisplay: "intent1",
-            IntentId: "abc-1",
+            intentDisplay: "intent1",
+            intentId: "abc-1",
         },
         {
-            IntentDisplay: "intent2",
-            IntentId: "abc-2",
+            intentDisplay: "intent2",
+            intentId: "abc-2",
         },
         {
-            IntentDisplay: "intent3",
-            IntentId: "abc-123",
+            intentDisplay: "intent3",
+            intentId: "abc-123",
         },
         {
-            IntentDisplay: "intent4",
-            IntentId: "abc-123",
+            intentDisplay: "intent4",
+            intentId: "abc-123",
         },
     ],
 };

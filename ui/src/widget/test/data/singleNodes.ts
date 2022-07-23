@@ -1,6 +1,7 @@
 import { WidgetNodeResource } from "@Palavyr-Types";
 
 export const ConvoNode: WidgetNodeResource = {
+    id: 0,
     nodeId: "abc",
     nodeType: "YesNo",
     isCritical: true,
@@ -9,10 +10,11 @@ export const ConvoNode: WidgetNodeResource = {
     isRoot: true,
     intentId: "abc123",
     optionPath: "",
-    valueOptions: "", // needs to be split by ",",
-    isPricingStrategyNode: false,
+    valueOptions: "",
     nodeComponentType: "YesNo",
-    dynamicType: "",
+    pricingStrategyType: "",
     resolveOrder: 0,
     fileAssetResource: null,
+    isPricingStrategyTableNode: false,
+    unitId: "currency"
 };

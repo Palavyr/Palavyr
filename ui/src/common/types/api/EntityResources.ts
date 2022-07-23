@@ -22,7 +22,7 @@ export type WidgetNodeResource = EntityResource & {
     pricingStrategyType: string;
     resolveOrder: number;
     unitId: string;
-    fileAssetResource?: FileAssetResource;
+    fileAssetResource: FileAssetResource | null;
 };
 
 export type IntentResources = IntentResource[];

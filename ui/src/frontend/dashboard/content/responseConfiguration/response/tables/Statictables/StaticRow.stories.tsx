@@ -22,12 +22,11 @@ const MockStaticTableRow: StaticTableRowResource = {
     id: 0,
     rowOrder: 0,
     description: "Damn Fee 1!",
-    fee: { id: 0, feeId: "0as", min: 0.0, max: 12.0 },
+    fee: { id: 0, feeId: "0as", min: 0.0, max: 12.0, intentId: "1234" },
     range: false,
     perPerson: false,
     tableOrder: 0,
     intentId: "abc-123",
-    includeTotals: true,
 };
 
 const MockStaticTablesMeta: StaticTableMetaResource = {
@@ -38,6 +37,7 @@ const MockStaticTablesMeta: StaticTableMetaResource = {
     staticTableRowResources: [MockStaticTableRow, MockStaticTableRow],
     perPersonInputRequired: false,
     includeTotals: true,
+    tableId: "12345"
 };
 
 // TODO: Mock api call to get data

@@ -1,12 +1,13 @@
-import { StaticTableRowResource, StaticTableMetaResource } from "@Palavyr-Types"
+import { StaticTableRowResource, StaticTableMetaResource } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 
 export const MockStaticFee = {
     id: 0,
     feeId: "0as",
-    min: 0.00,
-    max: 12.00
-}
+    min: 0.0,
+    max: 12.0,
+    intentId: "123",
+};
 
 export const MockStaticTableRow: StaticTableRowResource = {
     id: 0,
@@ -17,9 +18,7 @@ export const MockStaticTableRow: StaticTableRowResource = {
     perPerson: true,
     tableOrder: 0,
     intentId: "abc-123",
-    includeTotals: true
-
-}
+};
 
 const row1 = cloneDeep(MockStaticTableRow);
 row1.rowOrder = 0;
@@ -33,19 +32,14 @@ const row3 = cloneDeep(MockStaticTableRow);
 row3.rowOrder = 2;
 
 export const MockStaticTablesMeta: StaticTableMetaResource = {
-    id: 0,
+    id: null,
+    tableId: "3434",
     perPersonInputRequired: false,
     intentId: "abc-123",
     description: "This is a good first table.",
     tableOrder: 0,
     includeTotals: true,
-    staticTableRowResources: [
-        row1,
-        row2,
-        row3
-    ]
-}
+    staticTableRowResources: [row1, row2, row3],
+};
 
-export const MockStaticTablesMetas: Array<StaticTableMetaResource> = [
-    MockStaticTablesMeta
-]
+export const MockStaticTablesMetas: Array<StaticTableMetaResource> = [MockStaticTablesMeta];

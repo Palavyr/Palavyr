@@ -22,10 +22,12 @@ export const ParentNode: ConversationDesignerNodeResource = {
     nodeComponentType: "YesNo",
     isPricingStrategyNode: false,
     isImageNode: false,
-    imageId: null,
+    fileId: "",
     resolveOrder: 0,
-    dynamicType: null,
-    nodeTypeCode: NodeTypeCodeEnum.I,
+    pricingStrategyType: "",
+    nodeTypeCodeEnum: NodeTypeCodeEnum.I,
+    isCurrency: false,
+    isMultiOptionEditable: false,
 };
 
 export const ChildNode1: ConversationDesignerNodeResource = {
@@ -49,10 +51,12 @@ export const ChildNode1: ConversationDesignerNodeResource = {
     nodeComponentType: "YesNo",
     isPricingStrategyNode: false,
     isImageNode: false,
-    imageId: null,
+    fileId: "",
     resolveOrder: 0,
-    dynamicType: null,
-    nodeTypeCode: NodeTypeCodeEnum.I,
+    pricingStrategyType: "",
+    nodeTypeCodeEnum: NodeTypeCodeEnum.I,
+    isCurrency: false,
+    isMultiOptionEditable: false,
 };
 
 export const ChildNode2: ConversationDesignerNodeResource = {
@@ -76,10 +80,12 @@ export const ChildNode2: ConversationDesignerNodeResource = {
     nodeComponentType: "YesNo",
     isPricingStrategyNode: false,
     isImageNode: false,
-    imageId: null,
+    fileId: "",
     resolveOrder: 0,
-    dynamicType: null,
-    nodeTypeCode: NodeTypeCodeEnum.I,
+    pricingStrategyType: "",
+    nodeTypeCodeEnum: NodeTypeCodeEnum.I,
+    isCurrency: false,
+    isMultiOptionEditable: false,
 };
 
 export const DummyConvo = [ParentNode, ChildNode1, ChildNode2];
