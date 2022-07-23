@@ -87,7 +87,7 @@ jobs:
           dotnet publish -c Release /p:Version=${vers} --output ../solution_output
 
       - name: Start Docker environment
-        run: docker compose -f ./docker-compose.ci.yml up
+        run: docker compose -f ./docker-compose.ci.yml up -d
 
       - name: Pure Tests
         run: dotnet test ./solution_output/Palavyr.PureTests.dll --verbosity normal --no-restore
