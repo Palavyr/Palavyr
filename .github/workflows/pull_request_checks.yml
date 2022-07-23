@@ -8,12 +8,61 @@ jobs:
   generate-build-number:
     runs-on: ubuntu-latest
     name: Create next build number
+    outputs:
+      build_number: ${{ steps.buildnumber.outputs.build_number }}
+
     steps:
       - name: Generate build number
         id: buildnumber
         uses: einaregilsson/build-number@v3
         with:
           token: ${{secrets.github_token}}
+
+  # build-and-test-server:
+  #   name: Build and test server
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 15
+  #   needs: [generate-build-number]
+
+  #   env:
+  #     STRIPE_API_KEY: ${{secrets.STRIPE_API_KEY}}
+  #     STRIPE_DEVICE_NAME: Palavyr
+
+  #   steps:
+  #     - name: Generate build number
+  #       id: buildnumber
+  #       uses: einaregilsson/build-number@v3
+  #       with:
+  #         token: ${{secrets.github_token}}
+
+  #     - name: Setup dotnet
+  #       uses: actions/setup-dotnet@v2
+  #       with:
+  #         dotnet-version: 6.0.x
+
+  #     - name: Checkout
+  #     - uses: actions/checkout@v3
+
+  #     - name: Verify commit exists in origin/main
+  #       run: echo "Going to use ${{ needs.generate-build-number.outputs.build_number }} for the package Id."
+
+  #     - name: Set VERSION variable from tag
+  #       run: echo "0.1.${{ needs.generate-build-number.outputs.build_number }}" >> $GITHUB_ENV
+
+  #     - name: Build
+  #       run: dotnet build ./source/server/Palavyr.API/Palavyr.API.csproj --configuration Release /p:Version=${VERSION}-${GITHUB_REF##*/} --output ./server
+
+  #     - name: Start Docker environment
+  #       run: docker compose up -d -f docker-compose.ci.yml
+
+  #     - name: Test
+  #       run: dotnet test ./server/Palavyr.API/Palavyr.API.csproj --verbosity normal
+
+  #     - name: Delete the test dlls
+  #       run: rm ./server/Palavyr.IntegrationTest.dll ./server/Palavyr.ComponentTests.dll ./server/Palavyr.PureTests.dll
+
+  #     - name: Zip server into a packaged
+  #       run: zip ./server palavyr.server.{VERSION}.zip
 
   # build-frontend:
   #   runs-on: ubuntu-latest
@@ -44,54 +93,8 @@ jobs:
   #       run: |
   #         cd ./ui
   #         ls -lath
-  #         zip -r palavyr-frontend.{VERSION}.zip ./dist-frontend
-  #         mv palavyr-frontend.{VERSION}.zip ${{ github.workspace }}
-
-  # build-and-test-server:
-  #   name: Build and test server
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 15
-  #  needs: [generate-build-number]
-
-  #   env:
-  #     STRIPE_API_KEY: ${{secrets.STRIPE_API_KEY}}
-  #     STRIPE_DEVICE_NAME: Palavyr
-
-  #   steps:
-  #     - name: Generate build number
-  #       id: buildnumber
-  #       uses: einaregilsson/build-number@v3
-  #       with:
-  #         token: ${{secrets.github_token}}
-
-  #     - name: Setup dotnet
-  #       uses: actions/setup-dotnet@v2
-  #       with:
-  #         dotnet-version: 6.0.x
-
-  #     - name: Checkout
-  #     - uses: actions/checkout@v3
-
-  #     - name: Verify commit exists in origin/main
-  #       run: echo "Going to use ${{ steps.buildnumber.outputs.build_number }} for the package Id."
-
-  #     - name: Set VERSION variable from tag
-  #       run: echo "0.1.${{ steps.buildnumber.outputs.build_number }}" >> $GITHUB_ENV
-
-  #     - name: Build
-  #       run: dotnet build ./source/server/Palavyr.API/Palavyr.API.csproj --configuration Release /p:Version=${VERSION}-${GITHUB_REF##*/} --output ./server
-
-  #     - name: Start Docker environment
-  #       run: docker compose up -d -f docker-compose.ci.yml
-
-  #     - name: Test
-  #       run: dotnet test ./server/Palavyr.API/Palavyr.API.csproj --verbosity normal
-
-  #     - name: Delete the test dlls
-  #       run: rm ./server/Palavyr.IntegrationTest.dll ./server/Palavyr.ComponentTests.dll ./server/Palavyr.PureTests.dll
-
-  #     - name: Zip server into a packaged
-  #       run: zip ./server palavyr.server.{VERSION}.zip
+  #         zip -r palavyr-frontend.${{ needs.generate-build-number.outputs.build_number }}.zip ./dist-frontend
+  #         mv palavyr-frontend.${{ needs.generate-build-number.outputs.build_number }}.zip ${{ github.workspace }}
 
   build-widget:
     runs-on: ubuntu-latest
@@ -116,11 +119,11 @@ jobs:
       - name: Move into ui dir and Build
         run: |
           cd ./ui
-          npm run build
+          npm run build-widget
 
       - name: Move into ui dir and Zip the distribution
         run: |
           cd ./ui
           ls -lath
-          zip -r palavyr-widget.{VERSION}.zip ./dist-widget
-          mv palavyr-widget.{VERSION}.zip ${{ github.workspace }}
+          zip -r palavyr-widget.${{ needs.generate-build-number.outputs.build_number }}.zip ./dist-widget
+          mv palavyr-widget.${{ needs.generate-build-number.outputs.build_number }}.zip ${{ github.workspace }}
