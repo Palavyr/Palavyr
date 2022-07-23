@@ -5,10 +5,21 @@ on:
       - main
 
 jobs:
+  generate-build-number:
+    runs-on: ubuntu-latest
+    name: Create next build number
+    steps:
+      - name: Generate build number
+        id: buildnumber
+        uses: einaregilsson/build-number@v3
+        with:
+          token: ${{secrets.github_token}}
+
   build-frontend:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     name: Build frontend
+    needs: [generate-build-number]
 
     steps:
       - name: Set up node
@@ -40,6 +51,8 @@ jobs:
   #   name: Build and test server
   #   runs-on: ubuntu-latest
   #   timeout-minutes: 15
+  #  needs: [generate-build-number]
+
   #   env:
   #     STRIPE_API_KEY: ${{secrets.STRIPE_API_KEY}}
   #     STRIPE_DEVICE_NAME: Palavyr
@@ -84,6 +97,7 @@ jobs:
   #   runs-on: ubuntu-latest
   #   timeout-minutes: 15
   #   name: Build widget
+  #  needs: [generate-build-number]
 
   #   steps:
   #     - uses: actions/checkout@v3
