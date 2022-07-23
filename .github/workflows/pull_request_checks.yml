@@ -66,7 +66,6 @@ jobs:
       - name: Integration Tests
         run: dotnet test ./solution_output/Palavyr.IntegrationTests.dll --verbositry normal
 
-
       - name: Delete the test dlls
         run: |
           rm ./solution_output/Palavyr.IntegrationTest.dll
