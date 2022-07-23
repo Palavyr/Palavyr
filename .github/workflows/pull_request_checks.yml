@@ -55,12 +55,13 @@ jobs:
     name: Build frontend
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Set up node
       - uses: actions/setup-node@v3
         with:
           node-version: 12
 
-      # - name: Install and build
+      - name: Install and build
+      - uses: actions/checkout@v3
       - run: |
           cd ./ui/src
           npm install
