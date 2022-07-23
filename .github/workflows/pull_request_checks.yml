@@ -18,7 +18,9 @@ jobs:
 
       - name: Checkout repo
         uses: actions/checkout@v3
-        run: cd ./ui/src
+
+      - name: Move into ui
+        run: cd ./ui
 
       - name: Install
         run: npm install
@@ -27,7 +29,7 @@ jobs:
         run: npm run build
 
       - name: Move up
-        run: mv ./dist-frontend ../..
+        run: mv ./dist-frontend ${{ github.workspace }}
 
       - name: Return to working dir
         run: cd ${{ github.workspace }}
