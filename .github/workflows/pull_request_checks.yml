@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Create next build number
     outputs:
-      build_number: 1.${{ steps.buildnumber.outputs.build_number }}-${GITHUB_REF##*/}
+      build_number: 1.${{ steps.buildnumber.outputs.build_number }}-${{ github.payload.pull_request.head.ref }}
 
     steps:
       - name: Generate build number
@@ -61,7 +61,7 @@ jobs:
         run: dotnet build ./server/Palavyr-Server.sln --configuration Release /p:Version=${{ needs.generate-build-number.outputs.build_number }} --output ./solution_output
 
       - name: Start Docker environment
-        run: docker compose -f .\docker-compose.yml up
+        run: docker compose -f ./docker-compose.ci.yml up
 
       - name: Pure Tests
         run: dotnet test ./solution_output/Palavyr.PureTests.dll --verbosity normal
