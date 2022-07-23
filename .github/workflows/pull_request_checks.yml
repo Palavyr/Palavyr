@@ -32,7 +32,8 @@ jobs:
       - name: Move into ui dir and Zip the distribution
         run: |
           cd ./ui
-          zip -r ./dist-frontend palavyr-frontend.{VERSION}.zip
+          ls -lath
+          zip -r palavyr-frontend.{VERSION}.zip ./dist-frontend
           mv palavyr-frontend.{VERSION}.zip ${{ github.workspace }}
 
   # build-and-test-server:
