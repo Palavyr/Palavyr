@@ -24,9 +24,11 @@ jobs:
 
       - name: Set Build Number
         run: |
-          $rawVersion=0.${{ steps.buildnumber.outputs.build_number }}-${{ github.event.pull_request.head.ref }}
-          $cleanVersion=${rawVersion} | tr "/" "-"
-          echo $cleanVerson >> $VERSION
+          rawVersion=0.${{ steps.buildnumber.outputs.build_number }}-${{ github.event.pull_request.head.ref }}
+          cleanVersion=${rawVersion} | tr "/" "-"
+          echo $cleanVerson >> ${VERSION}
+
+
 
   build-and-test-server:
     name: Build and test server
