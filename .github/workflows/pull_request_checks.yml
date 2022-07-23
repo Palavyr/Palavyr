@@ -58,7 +58,6 @@ jobs:
           dotnet-version: 6.0.x
 
       - name: What I think the version number is
-
         run: |
           echo ==========================
           echo ${{ needs.generate-build-number.outputs.build_number }}
