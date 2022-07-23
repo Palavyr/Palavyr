@@ -80,7 +80,8 @@ jobs:
       - name: Publish
         run: |
           cd ./server
-          dotnet publish -c Release /p:Version=${{ needs.generate-build-number.outputs.build_number }} --output ../solution_output
+          vers=${{ needs.generate-build-number.outputs.build_number }}
+          dotnet publish -c Release /p:Version=${vers} --output ../solution_output
 
       - name: Start Docker environment
         run: docker compose -f ./docker-compose.ci.yml up
