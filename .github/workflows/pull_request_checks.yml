@@ -56,7 +56,7 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 3.1.x
 
       - name: What I think the version number is
         run: |
@@ -68,29 +68,29 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: dotnet build ./server/Palavyr-Server.sln --configuration Release /p:Version=${{ needs.generate-build-number.outputs.build_number }} --output ./solution_output
+        run: dotnet build ./server/Palavyr-Server.sln --configuration publish /p:Version=${{ needs.generate-build-number.outputs.build_number }} --output ./solution_output
 
       - name: Start Docker environment
         run: docker compose -f ./docker-compose.ci.yml up
 
       - name: Pure Tests
-        run: dotnet test ./solution_output/Palavyr.PureTests.dll --verbosity normal
+        run: dotnet test ./solution_output/Palavyr.PureTests.dll --verbosity normal --no-restore
 
       - name: Component Tests
-        run: dotnet test ./solution_output/Palavyr.ComponentTests.dll --verbosity normal
+        run: dotnet test ./solution_output/Palavyr.ComponentTests.dll --verbosity normal --no-restore
 
       - name: Integration Tests
-        run: dotnet test ./solution_output/Palavyr.IntegrationTests.dll --verbositry normal
+        run: dotnet test ./solution_output/Palavyr.IntegrationTests.dll --verbositry normal --no-restore
 
       - name: Delete the test dlls
         run: |
-          rm ./solution_output/Palavyr.IntegrationTest.dll
-          rm ./solution_output/Palavyr.ComponentTests.dll
-          rm ./solution_output/Palavyr.PureTests.dll
-          rm ./Tests.Common*
+          rm ./solution_output/Palavyr.IntegrationTest.*
+          rm ./solution_output/Palavyr.ComponentTests.*
+          rm ./solution_output/Palavyr.PureTests.*
+          rm ./solution_output/Tests.Common*
 
       - name: Zip server into a package
-        run: zip ./server palavyr.server.${{ needs.generate-build-number.outputs.build_number }}.zip
+        run: zip ./solution_output palavyr.server.${{ needs.generate-build-number.outputs.build_number }}.zip
 
   # build-frontend:
   #   runs-on: ubuntu-latest
