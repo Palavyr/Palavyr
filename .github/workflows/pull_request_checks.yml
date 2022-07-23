@@ -31,8 +31,7 @@ jobs:
           echo "::set-output name=VERSION::${cleanVersion}"
 
       - name: Show Build Number
-        run: echo ${cleanVersion}
-
+        run: "echo ${cleanVersion}"
 
   build-and-test-server:
     name: Build and test server
@@ -57,6 +56,13 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
+
+      - name: What I think the version number is
+
+        run: |
+          echo ==========================
+          echo ${{ needs.generate-build-number.outputs.build_number }}
+          echo ==========================
 
       - name: Checkout
         uses: actions/checkout@v3
