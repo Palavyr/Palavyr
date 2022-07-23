@@ -31,7 +31,7 @@ jobs:
           echo "::set-output name=VERSION::${cleanVersion}"
 
       - name: Show Build Number
-        run: "echo ${cleanVersion}"
+        run: echo "${cleanVersion}"
 
   build-and-test-server:
     name: Build and test server
