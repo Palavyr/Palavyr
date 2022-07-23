@@ -60,7 +60,7 @@ jobs:
         with:
           node-version: 12
 
-      - name: Install and build
+      # - name: Install and build
       - run: |
           cd ./ui/src
           npm install
