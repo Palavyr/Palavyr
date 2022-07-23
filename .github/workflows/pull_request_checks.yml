@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Create next build number
     outputs:
-      build_number: 1.${{ steps.buildnumber.outputs.build_number }}-${{ github.payload.pull_request.head.ref }}
+      build_number: 0.${{ steps.buildnumber.outputs.build_number }}-${{ github.event.pull_request.head.ref }}
 
     steps:
       - name: Generate build number
