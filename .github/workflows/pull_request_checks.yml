@@ -17,6 +17,9 @@ jobs:
     # env:
     #   GITHUB_CONTEXT: ${{ toJson(github) }}
 
+    outputs:
+      version: ${{ steps.buildnumber.outputs.version}}
+
     steps:
       - name: Generate build number
         id: buildnumber
@@ -24,10 +27,11 @@ jobs:
         with:
           token: ${{secrets.github_token}}
 
+      - id: buildnumber
       - name: Set Build Number
         run: |
           rawVersion="0.${{ steps.buildnumber.outputs.build_number }}-${{ github.event.pull_request.head.ref }}"
-          echo "::set-output name=VERSION::$(echo ${rawVersion} | tr "/" "-")"
+          echo '::set-output name=version::$(echo ${rawVersion} | tr "/" "-")'
 
   build-and-test-server:
     name: Build and test server
@@ -56,8 +60,7 @@ jobs:
       - name: What I think the version number is
         run: |
           echo ==========================
-          echo ${{ needs.generate-build-number.output.build_number }}
-          echo ${{ needs.generate-build-number.outputs.build_number }}
+          echo ${{ needs.generate-build-number.output.version }}
           echo ==========================
 
       - name: Checkout
