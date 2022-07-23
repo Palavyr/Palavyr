@@ -80,6 +80,9 @@ jobs:
       - name: Publish
         run: |
           cd ./server
+          echo ==========================
+          echo ${{ needs.generate-build-number.outputs.version }}
+          echo ==========================
           vers=${{ needs.generate-build-number.outputs.build_number }}
           dotnet publish -c Release /p:Version=${vers} --output ../solution_output
 
