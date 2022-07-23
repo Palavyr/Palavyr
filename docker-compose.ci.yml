@@ -16,7 +16,7 @@ services:
 
     environment:
       - STRIPE_API_KEY={{ secrets.STRIPE_API_KEY }}
-      - STRIPE_DEVICE_NAME={{}}
+      - STRIPE_DEVICE_NAME={{ secrets.STRIPE_DEVICE_NAME }}
 
   postgres-server:
     image: postgres:14.1-alpine
