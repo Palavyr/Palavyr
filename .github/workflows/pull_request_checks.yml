@@ -51,11 +51,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Print Build number
+        run: |
+          echo -------------------
+          echo ${{ needs.generate-build-number.outputs.build_number }}
+          echo -------------------
+
       - name: Build
         run: dotnet build ./server/Palavyr-Server.sln --configuration Release /p:Version=${{ needs.generate-build-number.outputs.build_number }} --output ./solution_output
 
       - name: Start Docker environment
-        run: docker compose up -d -f docker-compose.ci.yml
+        run: docker compose -f .\docker-compose.yml up
 
       - name: Pure Tests
         run: dotnet test ./solution_output/Palavyr.PureTests.dll --verbosity normal
