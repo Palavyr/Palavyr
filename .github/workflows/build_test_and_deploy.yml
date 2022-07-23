@@ -63,23 +63,35 @@ jobs:
 
   build-frontend:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
+    name: Build frontend
+    needs: [generate-build-number]
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v1
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
 
-      - name: "Install and build"
-        working-directory: ./ui/src/
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Move into ui dir and install
         run: |
-          cd ./ui/src
-          npm install
-          npm run build
-          mv ./dist-frontend ../..
+          cd ./ui
+          npm ci
 
-      - name: "Zip the distribution"
-        working-directory: ${github.GITHUB_WORKSPACE}
-        run: zip ./dist-frontend palavyr-frontend.{VERSION}.zip
+      - name: Move into ui dir and Build
+        run: |
+          cd ./ui
+          npm run build
+
+      - name: Move into ui dir and Zip the distribution
+        run: |
+          cd ./ui
+          ls -lath
+          zip -r palavyr-frontend.{VERSION}.zip ./dist-frontend
+          mv palavyr-frontend.{VERSION}.zip ${{ github.workspace }}
 
       - name: Install Octopus CLI 🐙
         uses: OctopusDeploy/install-octopus-cli-action@v1

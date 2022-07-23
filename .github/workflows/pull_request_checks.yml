@@ -15,37 +15,37 @@ jobs:
         with:
           token: ${{secrets.github_token}}
 
-  build-frontend:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    name: Build frontend
-    needs: [generate-build-number]
+  # build-frontend:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 5
+  #   name: Build frontend
+  #   needs: [generate-build-number]
 
-    steps:
-      - name: Set up node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 12
+  #   steps:
+  #     - name: Set up node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 12
 
-      - name: Checkout repo
-        uses: actions/checkout@v3
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v3
 
-      - name: Move into ui dir and install
-        run: |
-          cd ./ui
-          npm ci
+  #     - name: Move into ui dir and install
+  #       run: |
+  #         cd ./ui
+  #         npm ci
 
-      - name: Move into ui dir and Build
-        run: |
-          cd ./ui
-          npm run build
+  #     - name: Move into ui dir and Build
+  #       run: |
+  #         cd ./ui
+  #         npm run build
 
-      - name: Move into ui dir and Zip the distribution
-        run: |
-          cd ./ui
-          ls -lath
-          zip -r palavyr-frontend.{VERSION}.zip ./dist-frontend
-          mv palavyr-frontend.{VERSION}.zip ${{ github.workspace }}
+  #     - name: Move into ui dir and Zip the distribution
+  #       run: |
+  #         cd ./ui
+  #         ls -lath
+  #         zip -r palavyr-frontend.{VERSION}.zip ./dist-frontend
+  #         mv palavyr-frontend.{VERSION}.zip ${{ github.workspace }}
 
   # build-and-test-server:
   #   name: Build and test server
@@ -93,22 +93,34 @@ jobs:
   #     - name: Zip server into a packaged
   #       run: zip ./server palavyr.server.{VERSION}.zip
 
-  # build-widget:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 15
-  #   name: Build widget
-  #  needs: [generate-build-number]
+  build-widget:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    name: Build widget
+    needs: [generate-build-number]
 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-node@v3
+    steps:
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
 
-  #     - name: Install and build
-  #     - run: |
-  #         cd ./ui/src
-  #         npm install
-  #         npm run build
-  #         mv ./dist-widget ../..
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-  #     - name: Zip the distribution
-  #     - run: zip ./dist-widget palavyr-widget.{VERSION}.zip
+      - name: Move into ui dir and install
+        run: |
+          cd ./ui
+          npm ci
+
+      - name: Move into ui dir and Build
+        run: |
+          cd ./ui
+          npm run build
+
+      - name: Move into ui dir and Zip the distribution
+        run: |
+          cd ./ui
+          ls -lath
+          zip -r palavyr-widget.{VERSION}.zip ./dist-widget
+          mv palavyr-widget.{VERSION}.zip ${{ github.workspace }}
