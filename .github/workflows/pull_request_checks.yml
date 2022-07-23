@@ -52,24 +52,29 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: dotnet build ./server/source/Palavyr.API/Palavyr.API.csproj --configuration Release /p:Version=${{ needs.generate-build-number.outputs.build_number }} --output ./server_output
+        run: dotnet build ./server/Palavyr-Server.sln --configuration Release /p:Version=${{ needs.generate-build-number.outputs.build_number }} --output ./solution_output
 
       - name: Start Docker environment
         run: docker compose up -d -f docker-compose.ci.yml
 
       - name: Pure Tests
-        run: dotnet test ./server_output/Palavyr.PureTests.dll --verbosity normal
+        run: dotnet test ./solution_output/Palavyr.PureTests.dll --verbosity normal
 
       - name: Component Tests
-        run: dotnet test ./server_output/Palavyr.ComponentTests.dll --verbosity normal
+        run: dotnet test ./solution_output/Palavyr.ComponentTests.dll --verbosity normal
 
       - name: Integration Tests
-        run: dotnet test ./server_output/Palavyr.IntegrationTests.dll --verbositry normal
+        run: dotnet test ./solution_output/Palavyr.IntegrationTests.dll --verbositry normal
+
 
       - name: Delete the test dlls
-        run: rm ./server/Palavyr.IntegrationTest.dll ./server/Palavyr.ComponentTests.dll ./server/Palavyr.PureTests.dll
+        run: |
+          rm ./solution_output/Palavyr.IntegrationTest.dll
+          rm ./solution_output/Palavyr.ComponentTests.dll
+          rm ./solution_output/Palavyr.PureTests.dll
+          rm ./Tests.Common*
 
-      - name: Zip server into a packaged
+      - name: Zip server into a package
         run: zip ./server palavyr.server.${{ needs.generate-build-number.outputs.build_number }}.zip
 
   # build-frontend:
