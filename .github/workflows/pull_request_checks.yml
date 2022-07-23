@@ -27,7 +27,7 @@ jobs:
       - name: Set Build Number
         run: |
           rawVersion=0.${{ steps.buildnumber.outputs.build_number }}-${{ github.event.pull_request.head.ref }}
-          cleanVersion=$(${rawVersion} | tr "/" "-")
+          cleanVersion=$(echo ${rawVersion} | tr "/" "-")
           echo "::set-output name=VERSION::${cleanVersion}"
           echo "Build Number: ${cleanVersion}"
 
