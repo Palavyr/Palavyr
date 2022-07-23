@@ -56,6 +56,7 @@ jobs:
       - name: What I think the version number is
         run: |
           echo ==========================
+          echo ${{ needs.generate-build-number.output.build_number }}
           echo ${{ needs.generate-build-number.outputs.build_number }}
           echo ==========================
 
