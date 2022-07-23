@@ -19,25 +19,21 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Move into ui
+      - name: Move into ui dir and install
         run: |
           cd ./ui
-          npm install
+          npm ci
 
-      - name: Build
+      - name: Move into ui dir and Build
         run: |
           cd ./ui
           npm run build
 
-      - name: Move up
-        run: |
-          cd ./ui
-          mv ./dist-frontend ${{ github.workspace }}
-
-      - name: Zip the distribution
+      - name: Move into ui dir and Zip the distribution
         run: |
           cd ./ui
           zip -r ./dist-frontend palavyr-frontend.{VERSION}.zip
+          mv palavyr-frontend.{VERSION}.zip ${{ github.workspace }}
 
   # build-and-test-server:
   #   name: Build and test server
