@@ -68,7 +68,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: dotnet build ./server/Palavyr-Server.sln --configuration publish  /p:Platform="linux-x64" /p:Version=${{ needs.generate-build-number.outputs.build_number }} --output ./solution_output
+        run: dotnet publish ./server/Palavyr-Server.sln -c Release /p:Version=${{ needs.generate-build-number.outputs.build_number }} --output ./solution_output
 
       - name: Start Docker environment
         run: docker compose -f ./docker-compose.ci.yml up
