@@ -20,22 +20,24 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Move into ui
-        run: cd ./ui
-
-      - name: Install
-        run: npm install
+        run: |
+          cd ./ui
+          npm install
 
       - name: Build
-        run: npm run build
+        run: |
+          cd ./ui
+          npm run build
 
       - name: Move up
-        run: mv ./dist-frontend ${{ github.workspace }}
-
-      - name: Return to working dir
-        run: cd ${{ github.workspace }}
+        run: |
+          cd ./ui
+          mv ./dist-frontend ${{ github.workspace }}
 
       - name: Zip the distribution
-        run: zip ./dist-frontend palavyr-frontend.{VERSION}.zip
+        run: |
+          cd ./ui
+          zip -r ./dist-frontend palavyr-frontend.{VERSION}.zip
 
   # build-and-test-server:
   #   name: Build and test server
