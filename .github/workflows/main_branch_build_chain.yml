@@ -138,7 +138,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./server/Dockerfile
+          file: ./server/Dockerfile.server
           push: true
           tags: palavyr/palavyr-server:latest
 

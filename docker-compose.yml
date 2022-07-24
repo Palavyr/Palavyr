@@ -33,14 +33,22 @@ services:
       - 5000:5000
       - 5001:5001
 
-  # TODO: Set up docker build and push steps for these images
-  # palavyr-pdf-server:
-  #   image: palavyr/palavyr-pdf-server:latest
-  #   restart: always
-  #   env_file:
-  #     - local.env
-  #   ports:
-  #     - 5300:5300
+  reverse-proxy:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - palavyr-server
+    ports:
+      - 4000:4000
+
+  palavyr-pdf-server:
+    image: palavyr/palavyr-pdf-server:latest
+    restart: always
+    env_file:
+      - local.env
+    ports:
+      - 5603:5603
 
   palavyr-web-frontend:
     image: palavyr/palavyr-frontend:latest

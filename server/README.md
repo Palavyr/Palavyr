@@ -8,6 +8,13 @@ To set the credentials for accessing AWS, ask Paul to generate some aws credenti
 
 ## Running the Stripe CLI tool
 
+We now have docker support for this. When you run `docker compose up` in the project root directory, you'll pull and spin up all of the services that Palavyr depends on.
+
+
+
+
+Alternatively, this is the old manual way...
+
 HOW TO USE STRIPE CLI WITH THIS SERVER
 
 TO EXECUTE WEBHOOK
