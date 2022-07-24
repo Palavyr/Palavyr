@@ -115,7 +115,7 @@ namespace Test.Common
                     scopedServices,
                     contextProvider,
                     deleter,
-                    contextProvider.AppDataContexts(),
+                    contextProvider.Data,
                     accountTransport,
                     cancellationTokenTransport);
                 accountDeleter.DeleteAllThings().Wait();

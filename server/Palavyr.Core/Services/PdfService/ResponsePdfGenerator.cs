@@ -95,7 +95,7 @@ namespace Palavyr.Core.Services.PdfService
             var fileAsset = await inner.GeneratePdfResponse(criticalResponses, emailRequest, culture, intentId, isDemo);
 
             await fileAssetStore.Create(fileAsset);
-            await contextProvider.AppDataContexts().SaveChangesAsync(CancellationToken); // TODO: need to break the unit of work?
+            await contextProvider.Data.SaveChangesAsync(CancellationToken); // TODO: need to break the unit of work?
 
             if (!isDemo)
             {

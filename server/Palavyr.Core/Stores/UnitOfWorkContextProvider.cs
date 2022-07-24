@@ -10,6 +10,7 @@ namespace Palavyr.Core.Stores
     {
         private readonly AppDataContexts appDataContexts;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
+        private AppDataContexts data;
 
         public UnitOfWorkContextProvider(AppDataContexts appDataContexts, ICancellationTokenTransport cancellationTokenTransport)
         {
@@ -17,7 +18,6 @@ namespace Palavyr.Core.Stores
             this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
-        public AppDataContexts Data() => appDataContexts;
 
         public async Task CloseUnitOfWork()
         {
@@ -29,6 +29,12 @@ namespace Palavyr.Core.Stores
         public async Task DisposeContexts()
         {
             await appDataContexts.DisposeAsync();
+        }
+
+        AppDataContexts IUnitOfWorkContextProvider.Data
+        {
+            get => data;
+            set => data = value;
         }
 
         public async Task DangerousCommitAllContexts()
