@@ -19,7 +19,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         public async Task<TResponse> Handle(TEvent request, CancellationToken cancellationToken)
         {
             var response = await inner.Handle(request, cancellationToken);
-            await unitOfWorkContextProvider.DangerousCommitAllContexts();
+            // await unitOfWorkContextProvider.DangerousCommitAllContexts();
             return response;
         }
     }
