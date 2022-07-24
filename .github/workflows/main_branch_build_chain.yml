@@ -83,30 +83,30 @@ jobs:
         run: |
           cd ./server
           vers=${{ needs.generate-build-number.outputs.version }}
-          dotnet publish -c Release /p:Version=${vers} --output ../solution_output
+          dotnet publish -c Release /p:Version=${vers} --output ../server_build
 
       - name: Start Docker environment
         run: docker compose -f ./docker-compose.ci.yml up -d
 
       - name: Pure Tests
-        run: dotnet test ./solution_output/Palavyr.PureTests.dll --verbosity normal --no-restore
+        run: dotnet test ./server_build/Palavyr.PureTests.dll --verbosity normal --no-restore
 
       - name: Component Tests
-        run: dotnet test ./solution_output/Palavyr.ComponentTests.dll --verbosity normal --no-restore
+        run: dotnet test ./server_build/Palavyr.ComponentTests.dll --verbosity normal --no-restore
 
       - name: Integration Tests
-        run: dotnet test ./solution_output/Palavyr.IntegrationTests.dll --verbosity normal --no-restore
+        run: dotnet test ./server_build/Palavyr.IntegrationTests.dll --verbosity normal --no-restore
 
       - name: Delete the test dlls
         run: |
-          ls -lath ./solution_output
-          rm -rf ./solution_output/Palavyr.IntegrationTests*
-          rm -rf ./solution_output/Palavyr.ComponentTests*
-          rm -rf ./solution_output/Palavyr.PureTests*
-          rm -rf ./solution_output/Test.Common*
+          ls -lath ./server_build
+          rm -rf ./server_build/Palavyr.IntegrationTests*
+          rm -rf ./server_build/Palavyr.ComponentTests*
+          rm -rf ./server_build/Palavyr.PureTests*
+          rm -rf ./server_build/Test.Common*
 
       - name: Zip server into a package
-        run: zip -r palavyr.server.${{ needs.generate-build-number.outputs.version }}.zip ./solution_output
+        run: zip -r palavyr.server.${{ needs.generate-build-number.outputs.version }}.zip ./server_build
 
       - name: Install Octopus CLI 🐙
         uses: OctopusDeploy/install-octopus-cli-action@v1
@@ -120,7 +120,27 @@ jobs:
           OCTOPUS_HOST: ${{ secrets.SERVER }}
           OCTOPUS_SPACE: "Spaces-2"
         with:
-          packages: ./server/palavyr.server.${{ needs.generate-build-number.outputs.version }}.zip
+          packages: palavyr.server.${{ needs.generate-build-number.outputs.version }}.zip
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./server/Dockerfile
+          push: true
+          tags: palavyr/palavyr-server:latest
 
   build-frontend:
     if: github.event.pull_request.merged == true
@@ -167,6 +187,26 @@ jobs:
           OCTOPUS_SPACE: "Spaces-2"
         with:
           packages: palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./ui/Dockerfile.frontend
+          push: true
+          tags: palavyr/palavyr-frontend:latest
 
   build-widget:
     if: github.event.pull_request.merged == true
@@ -215,7 +255,28 @@ jobs:
         with:
           packages: palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./ui/Dockerfile.widget
+          push: true
+          tags: palavyr/palavyr-widget:latest
+
   create-release:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     needs: [build-and-test-server, build-frontend, build-widget]
     steps:

@@ -6,15 +6,14 @@ services:
     ports:
       - '12111-12112:12111-12112'
     env_file:
-      - dev.local.env
-
+      - local.env
 
   stripe-cli:
     image: stripe/stripe-cli
     container_name: stripe-cli
     command: "listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
     env_file:
-      - dev.local.env
+      - local.env
 
   postgres-server:
     image: postgres:14.1-alpine
@@ -24,3 +23,37 @@ services:
       - POSTGRES_PASSWORD=Password01!
     ports:
       - '5432:5432'
+
+  palavyr-server:
+    image: palavyr/palavyr-server:latest
+    restart: always
+    env_file:
+      - local.env
+    ports:
+      - 5000:5000
+      - 5001:5001
+
+  # TODO: Set up docker build and push steps for these images
+  # palavyr-pdf-server:
+  #   image: palavyr/palavyr-pdf-server:latest
+  #   restart: always
+  #   env_file:
+  #     - local.env
+  #   ports:
+  #     - 5300:5300
+
+  # palavyr-web-frontend:
+  #   image: palavyr/palavyr-frontend:latest
+  #   restart: always
+  #   env_file:
+  #     - local.env
+  #   ports:
+  #     - 5306:5306
+
+  # palavyr-web-widget:
+  #   image: palavyr/palavyr-widget:latest
+  #   restart: always
+  #   env_file:
+  #     - local.env
+  #   ports:
+  #     - 5400:5400
