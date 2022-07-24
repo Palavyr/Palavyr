@@ -8,6 +8,22 @@ namespace Palavyr.Core.Stores.StoreExtensionMethods
 {
     public static class IntentStoreExtensionMethods
     {
+        public static async Task<List<Intent>> GetAllIntentsComplete(this IEntityStore<Intent> intentStore)
+        {
+            var allIntentsComplete = await intentStore
+                .Query()
+                .Include(row => row.AttachmentRecords)
+                .Include(row => row.ConversationNodes)
+                .Include(row => row.PricingStrategyTableMetas)
+                .Include(row => row.StaticTablesMetas)
+                .ThenInclude(meta => meta.StaticTableRows)
+                .ThenInclude(row => row.Fee)
+                .Where(row => row.AccountId == intentStore.AccountId)
+                .ToListAsync(intentStore.CancellationToken);
+            return allIntentsComplete;
+        }
+        
+        
         public static async Task<Intent> GetIntentComplete(this IEntityStore<Intent> intentStore, string intentId)
         {
             var intentComplete = await intentStore
