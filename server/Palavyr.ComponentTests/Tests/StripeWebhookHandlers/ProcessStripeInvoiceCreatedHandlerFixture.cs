@@ -6,6 +6,7 @@ using Palavyr.Component.Mocks;
 using Palavyr.Core.Data;
 using Palavyr.Core.Handlers.StripeWebhookHandlers.InvoiceCreated;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Shouldly;
 using Test.Common.ApprovalTests;
 using Test.Common.Builders.Accounts;
 using Test.Common.Builders.StripeBuilders;
@@ -42,7 +43,8 @@ namespace Palavyr.Component.Tests.StripeWebhookHandlers
             await handler.Handle(@event, CancellationToken);
 
             var result = ResolveType<ISesEmail>() as IGetEmailSent;
-            this.PalavyrAssent(result?.GetSentHtml());
+            result?.GetSentHtml().ShouldContain("This invoice will be automatically billed at the end of this billing period.");
+            // this.PalavyrAssent(result?.GetSentHtml());
         }
 
         public ProcessStripeInvoiceCreatedHandlerTest(ComponentClassFixture fixture) : base(fixture)
