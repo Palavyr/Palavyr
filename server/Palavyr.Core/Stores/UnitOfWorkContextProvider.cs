@@ -17,10 +17,7 @@ namespace Palavyr.Core.Stores
             this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
-        public AppDataContexts AppDataContexts()
-        {
-            return appDataContexts;
-        }
+        public AppDataContexts Data() => appDataContexts;
 
         public async Task CloseUnitOfWork()
         {

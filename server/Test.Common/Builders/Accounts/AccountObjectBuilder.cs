@@ -134,14 +134,21 @@ namespace Test.Common.Builders.Accounts
                 ApiKey = apiKey,
                 AccountType = accType,
                 StripeCustomerId = custId,
-                PhoneNumber = null,
+                PhoneNumber = string.Empty,
                 Locale = "en-AU",
                 HasUpgraded = hasUpgraded,
                 PaymentInterval = payinterval,
                 PlanType = planT,
                 Active = active,
                 CurrentPeriodEnd = periodEnd,
-                IntroIntentId = A.RandomId()
+                IntroIntentId = A.RandomId(),
+                AccountLogoUri = string.Empty,
+                CompanyName = string.Empty,
+                GeneralFallbackSubject = string.Empty,
+                GeneralFallbackEmailTemplate = string.Empty,
+                CreationDate = DateTime.Now,
+                ShowSeenEnquiries = false,
+                DefaultEmailIsVerified = true
             };
         }
 

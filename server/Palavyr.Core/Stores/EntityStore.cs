@@ -27,7 +27,7 @@ namespace Palavyr.Core.Stores
         {
             this.AccountIdTransport = accountIdTransport;
             this.CancellationTokenTransport = cancellationTokenTransport;
-            this.QueryExecutor = contextProvider.AppDataContexts().Set<TEntity>();
+            this.QueryExecutor = contextProvider.Data.Set<TEntity>();
         }
 
         private IQueryable<TEntity> RestrictToCurrentAccount(DbSet<TEntity> queryExecutor)
@@ -71,7 +71,7 @@ namespace Palavyr.Core.Stores
 
         public void ResetCancellationToken(CancellationTokenSource tokenSource)
         {
-            this.CancellationTokenTransport = new CancellationTokenTransport(tokenSource.Token);
+            CancellationTokenTransport = new CancellationTokenTransport(tokenSource.Token);
         }
 
         public async Task<TEntity[]> GetPaginated(int skip, int take)

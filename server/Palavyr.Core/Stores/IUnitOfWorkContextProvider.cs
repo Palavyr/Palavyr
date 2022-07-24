@@ -5,7 +5,8 @@ namespace Palavyr.Core.Stores
 {
     public interface IUnitOfWorkContextProvider
     {
-        AppDataContexts AppDataContexts();
+        AppDataContexts Data { get; set; }
+
         Task DangerousCommitAllContexts();
         Task CloseUnitOfWork();
         Task DisposeContexts();
