@@ -98,10 +98,10 @@ jobs:
       - name: Delete the test dlls
         run: |
           ls -lath ./solution_output
-          rm ./solution_output/Palavyr.IntegrationTest.*
-          rm ./solution_output/Palavyr.ComponentTests.*
-          rm ./solution_output/Palavyr.PureTests.*
-          rm ./solution_output/Tests.Common*
+          rm -rf ./solution_output/Palavyr.IntegrationTests*
+          rm -rf ./solution_output/Palavyr.ComponentTests*
+          rm -rf ./solution_output/Palavyr.PureTests*
+          rm -rf ./solution_output/Test.Common*
 
       - name: Zip server into a package
         run: zip ./solution_output palavyr.server.${{ needs.generate-build-number.outputs.build_number }}.zip
