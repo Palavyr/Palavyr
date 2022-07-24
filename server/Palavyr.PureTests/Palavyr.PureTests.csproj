@@ -28,4 +28,10 @@
       <ProjectReference Include="..\Palavyr.Core\Palavyr.Core.csproj" />
       <ProjectReference Include="..\Test.Common\Test.Common.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <Content Include="**\*.approved.*" Exclude="bin\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 </Project>

@@ -59,6 +59,9 @@
       <EmbeddedResource Include="appsettings.test.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
+        <Content Include="**\*.approved.*" Exclude="bin\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

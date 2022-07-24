@@ -41,17 +41,11 @@
       <EmbeddedResource Include="xunit.runner.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Remove="Tests\Core\Services\AccountServices\**" />
-      <None Remove="Tests\Core\Services\AccountServices\**" />
-      <EmbeddedResource Remove="AppFactory\ExtensionMethods\ClientExtensionMethods\**" />
-      <None Remove="AppFactory\ExtensionMethods\ClientExtensionMethods\**" />
-      <EmbeddedResource Remove="DataCreators\PricingStrategyBuilders\**" />
-      <None Remove="DataCreators\PricingStrategyBuilders\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Tests\Core\Services\AccountServices\**" />
-      <Compile Remove="AppFactory\ExtensionMethods\ClientExtensionMethods\**" />
-      <Compile Remove="DataCreators\PricingStrategyBuilders\**" />
+        <Content Include="**\*.approved.*" Exclude="bin\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 </Project>
