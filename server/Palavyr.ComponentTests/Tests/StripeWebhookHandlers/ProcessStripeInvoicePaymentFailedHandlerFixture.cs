@@ -1,6 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Autofac;
 using MediatR;
 using Palavyr.Component.ComponentTestBase;
 using Palavyr.Component.Mocks;
@@ -15,34 +14,29 @@ using Xunit;
 
 namespace Palavyr.Component.Tests.StripeWebhookHandlers
 {
-    public class ProcessStripeInvoicePaymentFailedHandlerFixture : ComponentTest
+    public class ProcessStripeInvoicePaymentFailedHandlerTest : ComponentTest
     {
         [Fact]
-        public async Task ProcessStripeInvoicePaymentFailIsHandled()
+        public async Task HandlesEvent()
         {
             var customerId = A.RandomId();
-            var account = await new AccountObjectBuilder()
+            await new AccountObjectBuilder()
                 .WithAccountId(AccountId)
                 .WithStripeCustomerId(customerId)
                 .BuildAndMakeRaw(ResolveType<AppDataContexts>(), CancellationToken);
 
-            var invoice = new StripeInvoiceBuilder(this).WithCustomerId(account.StripeCustomerId).Build();
+            var invoice = new StripeInvoiceBuilder(this).WithCustomerId(customerId).Build();
             var @event = new InvoicePaymentFailedEvent(invoice);
-            var handler = ResolveType<INotificationHandler<InvoicePaymentFailedEvent>>();
 
+            var handler = ResolveType<INotificationHandler<InvoicePaymentFailedEvent>>();
             await handler.Handle(@event, CancellationToken);
 
-            var result = (IGetEmailSent)ResolveType<ISesEmail>();
-            this.PalavyrAssent(result.GetSentHtml(), ignoreLines: new List<int>() { 33 });
+            var result = ResolveType<ISesEmail>() as IGetEmailSent;
+
+            this.PalavyrAssent(result?.GetSentHtml(), ignoreLines: new List<int>(){ 33 });
         }
 
-        public override void OverrideCustomization(ContainerBuilder fixtureUnBuiltContainer)
-        {
-            base.OverrideCustomization(fixtureUnBuiltContainer);
-            fixtureUnBuiltContainer.RegisterType<MockSeSEmail>().As<ISesEmail>().SingleInstance();
-        }
-
-        public ProcessStripeInvoicePaymentFailedHandlerFixture(ComponentClassFixture fixture) : base(fixture)
+        public ProcessStripeInvoicePaymentFailedHandlerTest(ComponentClassFixture fixture) : base(fixture)
         {
             TransportsEnabled = false;
         }
