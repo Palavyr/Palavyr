@@ -42,18 +42,18 @@ services:
   #   ports:
   #     - 5300:5300
 
-  # palavyr-web-frontend:
-  #   image: palavyr/palavyr-frontend:latest
-  #   restart: always
-  #   env_file:
-  #     - local.env
-  #   ports:
-  #     - 5306:5306
+  palavyr-web-frontend:
+    image: palavyr/palavyr-frontend:latest
+    restart: always
+    env_file:
+      - local.env
+    ports:
+      - 8080:8080
 
-  # palavyr-web-widget:
-  #   image: palavyr/palavyr-widget:latest
-  #   restart: always
-  #   env_file:
-  #     - local.env
-  #   ports:
-  #     - 5400:5400
+  palavyr-web-widget:
+    image: palavyr/palavyr-widget:latest
+    restart: always
+    env_file:
+      - local.env
+    ports:
+      - 3400:3400
