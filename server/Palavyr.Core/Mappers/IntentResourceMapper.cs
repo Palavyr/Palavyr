@@ -35,7 +35,7 @@ namespace Palavyr.Core.Mappers
 
             return new IntentResource
             {
-                Id = @from.Id,
+                Id = @from.Id.Value,
                 IntentId = @from.IntentId,
                 IntentName = @from.IntentName,
                 Prologue = @from.Prologue,

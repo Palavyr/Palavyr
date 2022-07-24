@@ -57,9 +57,9 @@ namespace Palavyr.Core.Services.AccountServices
         private UserSession CreateNewSession(Account account)
         {
             var sessionId = guidUtils.CreateNewId();
-            logger.LogDebug("Attempting to create a new Session.");
+            logger.LogDebug("Attempting to create a new Session");
             var session = UserSession.CreateNew(sessionId, account.AccountId, account.ApiKey);
-            logger.LogDebug($"New Session created: {session.SessionId}");
+            logger.LogDebug("New Session created: {SessionId}", session.SessionId);
             return session;
         }
 

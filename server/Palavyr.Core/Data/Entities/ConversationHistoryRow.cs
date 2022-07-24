@@ -1,5 +1,6 @@
 ﻿
 using System;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Data.Entities
@@ -32,7 +33,7 @@ namespace Palavyr.Core.Data.Entities
                 NodeId = nodeId,
                 NodeCritical = nodeCritical,
                 NodeType = nodeType,
-                TimeStamp = DateTime.UtcNow,
+                TimeStamp = TimeUtils.CreateNewTimeStamp(),
                 AccountId = accountId
             };
         }

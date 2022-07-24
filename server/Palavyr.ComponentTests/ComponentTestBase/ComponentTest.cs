@@ -118,7 +118,7 @@ namespace Palavyr.Component.ComponentTestBase
         {
             await Task.Yield();
 
-            // Container?.Dispose();
+            Container?.Dispose();
         }
 
         public IEntityStore<TEntity> ResolveStore<TEntity>() where TEntity : class, IEntity

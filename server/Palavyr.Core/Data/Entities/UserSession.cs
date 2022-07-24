@@ -23,7 +23,7 @@ namespace Palavyr.Core.Data.Entities
             SessionId = sessionId;
             AccountId = accountId;
             ApiKey = apiKey;
-            Expiration = DateTime.Now.Add(TimeSpan.FromHours(ExpirationPeriod));
+            Expiration = DateTime.UtcNow.Add(TimeSpan.FromHours(ExpirationPeriod));
         }
         
 

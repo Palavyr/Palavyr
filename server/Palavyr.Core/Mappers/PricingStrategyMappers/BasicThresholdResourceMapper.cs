@@ -12,7 +12,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers
             await Task.CompletedTask;
             return new SimpleThresholdResource
             {
-                Id = @from.Id,
+                Id = @from.Id.Value,
                 IntentId = @from.IntentId,
                 TableId = @from.TableId,
                 RowId = @from.RowId,
