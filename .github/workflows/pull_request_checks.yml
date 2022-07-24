@@ -96,7 +96,7 @@ jobs:
         run: dotnet test ./solution_output/Palavyr.ComponentTests.dll --verbosity normal --no-restore
 
       - name: Integration Tests
-        run: dotnet test ./solution_output/Palavyr.IntegrationTests.dll --verbositry normal --no-restore
+        run: dotnet test ./solution_output/Palavyr.IntegrationTests.dll --verbosity normal --no-restore
 
       - name: Delete the test dlls
         run: |
