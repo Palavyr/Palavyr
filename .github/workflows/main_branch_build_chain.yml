@@ -1,6 +1,6 @@
 name: Build and Run Tests on pull request
 on:
-  pull_request:
+  push:
     branches:
       - main
 
@@ -106,6 +106,20 @@ jobs:
       - name: Zip server into a package
         run: zip -r palavyr.server.${{ needs.generate-build-number.outputs.version }}.zip ./solution_output
 
+      - name: Install Octopus CLI 🐙
+        uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          version: latest
+
+      - name: Push a package to Octopus Deploy 🐙
+        uses: OctopusDeploy/push-package-action@v2
+        env:
+          OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
+          OCTOPUS_HOST: ${{ secrets.SERVER }}
+          OCTOPUS_SPACE: "Spaces-2"
+        with:
+          packages: ./server/palavyr.server.${{ needs.generate-build-number.outputs.version }}.zip
+
   build-frontend:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -138,6 +152,19 @@ jobs:
           zip -r palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip ./dist-frontend
           mv palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
 
+      - name: Install Octopus CLI 🐙
+        uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          version: latest
+      - name: Push a package to Octopus Deploy 🐙
+        uses: OctopusDeploy/push-package-action@v2
+        env:
+          OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
+          OCTOPUS_HOST: ${{ secrects.SERVER }}
+          OCTOPUS_SPACE: "Spaces-2"
+        with:
+          packages: palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip
+
   build-widget:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -169,3 +196,35 @@ jobs:
           ls -lath
           zip -r palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ./dist-widget
           mv palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
+
+      - name: Install Octopus CLI 🐙
+      - uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          version: latest
+
+      - name: Push a package to Octopus Deploy 🐙
+        uses: OctopusDeploy/push-package-action@v2
+        env:
+          OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
+          OCTOPUS_HOST: ${{ secrects.SERVER }}
+          OCTOPUS_SPACE: "Spaces-2"
+        with:
+          packages: palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: [build-and-test-server, build-frontend, build-widget]
+    steps:
+      - name: Install Octopus CLI 🐙
+        uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          version: latest
+
+      - name: Create a release in Octopus Deploy 🐙
+        uses: OctopusDeploy/create-release-action@v2
+        env:
+          OCTOPUS_API_KEY: ${{ secrets.API_KEY  }}
+          OCTOPUS_HOST: ${{ secrets.SERVER }}
+          OCTOPUS_SPACE: "Spaces-2"
+        with:
+          project: "Palavyr"
