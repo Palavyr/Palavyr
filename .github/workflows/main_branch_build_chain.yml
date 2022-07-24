@@ -1,11 +1,12 @@
 name: Build and Run Tests on pull request
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      - closed
 
 jobs:
   generate-build-number:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     name: Create next build number
 
@@ -35,7 +36,8 @@ jobs:
           echo ::set-output name=version::$(echo ${rawVersion} | tr "/" "-")
 
   build-and-test-server:
-    name: Build and test server
+    if: github.event.pull_request.merged == true
+    name: Server
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [generate-build-number]
@@ -121,9 +123,10 @@ jobs:
           packages: ./server/palavyr.server.${{ needs.generate-build-number.outputs.version }}.zip
 
   build-frontend:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    name: Build frontend
+    name: Frontend
     needs: [generate-build-number]
 
     steps:
@@ -166,9 +169,10 @@ jobs:
           packages: palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip
 
   build-widget:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    name: Build widget
+    name: Widget
     needs: [generate-build-number]
 
     steps:
