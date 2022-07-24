@@ -32,7 +32,7 @@ namespace Palavyr.Component.Tests.StripeWebhookHandlers
 
             await handler.Handle(@event, CancellationToken);
 
-            var result = ResolveType<ISesEmail>() as IGetEmailSent;
+            var result = (IGetEmailSent)ResolveType<ISesEmail>();
             this.PalavyrAssent(result.GetSentHtml(), ignoreLines: new List<int>() { 33 });
         }
 

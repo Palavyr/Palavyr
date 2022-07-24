@@ -45,7 +45,7 @@
 
     <ItemGroup>
         <Content Include="**\*.approved.*" Exclude="bin\**">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <EmbeddedResource>PreserveNewest</EmbeddedResource>
         </Content>
     </ItemGroup>
 </Project>
