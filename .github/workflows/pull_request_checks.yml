@@ -80,26 +80,24 @@ jobs:
       - name: Publish
         run: |
           cd ./server
-          echo ==========================
-          echo ${{ needs.generate-build-number.outputs.version }}
-          echo ==========================
           vers=${{ needs.generate-build-number.outputs.version }}
           dotnet publish -c Release /p:Version=${vers} --output ../solution_output
 
-      - name: Start Docker environment
-        run: docker compose -f ./docker-compose.ci.yml up -d
+      # - name: Start Docker environment
+      #   run: docker compose -f ./docker-compose.ci.yml up -d
 
-      - name: Pure Tests
-        run: dotnet test ./solution_output/Palavyr.PureTests.dll --verbosity normal --no-restore
+      # - name: Pure Tests
+      #   run: dotnet test ./solution_output/Palavyr.PureTests.dll --verbosity normal --no-restore
 
-      - name: Component Tests
-        run: dotnet test ./solution_output/Palavyr.ComponentTests.dll --verbosity normal --no-restore
+      # - name: Component Tests
+      #   run: dotnet test ./solution_output/Palavyr.ComponentTests.dll --verbosity normal --no-restore
 
-      - name: Integration Tests
-        run: dotnet test ./solution_output/Palavyr.IntegrationTests.dll --verbosity normal --no-restore
+      # - name: Integration Tests
+      #   run: dotnet test ./solution_output/Palavyr.IntegrationTests.dll --verbosity normal --no-restore
 
       - name: Delete the test dlls
         run: |
+          ls -lath ./solution_output
           rm ./solution_output/Palavyr.IntegrationTest.*
           rm ./solution_output/Palavyr.ComponentTests.*
           rm ./solution_output/Palavyr.PureTests.*
