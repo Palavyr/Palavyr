@@ -39,3 +39,5 @@ IPricingStrategyTable`1
 IHaveAPrettyNameAndTableType
 ICreatePricingStrategyTemplate`1
 IPalavyrClient
+IGetEmailSent
+IGetData

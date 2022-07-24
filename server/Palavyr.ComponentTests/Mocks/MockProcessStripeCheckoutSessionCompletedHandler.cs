@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Stores;
@@ -24,9 +25,13 @@ namespace Palavyr.Component.Mocks
                 .DangerousRawQuery()
                 .SingleOrDefaultAsync(x => x.StripeCustomerId == session.CustomerId);
 
+            if (account is null) throw new Exception($"The account was null! - this is the problem: StripeCustId: {session.CustomerId}");
+            
+            
+            
             account.PlanType = Account.PlanTypeEnum.Pro;
             account.HasUpgraded = true;
-            account.CurrentPeriodEnd = DateTime.Now.AddYears(100);
+            account.CurrentPeriodEnd = TimeUtils.CreateNewTimeStamp().AddYears(100);
         }
     }
 }
