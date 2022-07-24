@@ -7,6 +7,7 @@ using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Resources;
 using Palavyr.Core.Stores;
+using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
@@ -26,8 +27,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetAllIntentsResponse> Handle(GetAllIntentsRequest request, CancellationToken cancellationToken)
         {
             logger.LogDebug("Return all intents");
-            var intents = await intentStore.GetMany(intentStore.AccountId, s => s.AccountId);
-            var resource = await mapper.MapMany(intents, cancellationToken);
+            var allIntents = await intentStore.GetAllIntentsComplete();
+            var resource = await mapper.MapMany(allIntents, cancellationToken);
             return new GetAllIntentsResponse(resource);
         }
     }

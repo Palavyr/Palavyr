@@ -11,9 +11,7 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
     {
         private readonly IStripeSubscriptionSetter subscriptionSetter;
 
-        public ProcessStripeCheckoutSessionCompletedHandler(
-            IStripeSubscriptionSetter subscriptionSetter
-        )
+        public ProcessStripeCheckoutSessionCompletedHandler(IStripeSubscriptionSetter subscriptionSetter)
         {
             this.subscriptionSetter = subscriptionSetter;
         }
@@ -23,6 +21,8 @@ namespace Palavyr.Core.Handlers.StripeWebhookHandlers
         /// You should provision the subscription.
         /// </summary>
         /// <param name="session"></param>
+        /// <param name="notification"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task Handle(CheckoutSessionCompletedNotification notification, CancellationToken cancellationToken)

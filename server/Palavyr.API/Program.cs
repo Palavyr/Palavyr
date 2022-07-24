@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.GlobalConstants;
 using Serilog;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 

@@ -21,16 +21,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.Client", "Palavyr.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.ComponentTests", "Palavyr.ComponentTests\Palavyr.ComponentTests.csproj", "{3BA05E8C-FA85-4410-89C1-367536C4B68A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "..\build\_build.csproj", "{36BF1490-0858-421F-8519-9A487D336ABF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{36BF1490-0858-421F-8519-9A487D336ABF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{36BF1490-0858-421F-8519-9A487D336ABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F94028DC-D62A-40BB-AF9C-B90979A6E82A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F94028DC-D62A-40BB-AF9C-B90979A6E82A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F94028DC-D62A-40BB-AF9C-B90979A6E82A}.Release|Any CPU.ActiveCfg = Release|Any CPU

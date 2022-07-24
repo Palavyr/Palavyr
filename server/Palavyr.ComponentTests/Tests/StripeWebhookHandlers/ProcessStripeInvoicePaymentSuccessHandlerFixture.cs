@@ -6,6 +6,7 @@ using Palavyr.Component.Mocks;
 using Palavyr.Core.Data;
 using Palavyr.Core.Handlers.StripeWebhookHandlers.InvoicePaid;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Shouldly;
 using Test.Common.ApprovalTests;
 using Test.Common.Builders.Accounts;
 using Test.Common.Builders.StripeBuilders;
@@ -29,7 +30,7 @@ namespace Palavyr.Component.Tests.StripeWebhookHandlers
                 .WithCustomerId(customerId)
                 .WithCurrentPeriodEnd(DateTime.Now.AddDays(15))
                 .Build();
-            var invoice =  new StripeInvoiceBuilder(this)
+            var invoice = new StripeInvoiceBuilder(this)
                 .WithCustomerId(customerId)
                 .WithSubscription(subscription)
                 .Build();
@@ -38,8 +39,10 @@ namespace Palavyr.Component.Tests.StripeWebhookHandlers
             var handler = ResolveType<INotificationHandler<InvoicePaymentSuccessfulEvent>>();
             await handler.Handle(@event, CancellationToken);
 
-            var result = ResolveType<ISesEmail>() as IGetEmailSent;
-            this.PalavyrAssent(result?.GetSentHtml());
+            var result = (IGetEmailSent)ResolveType<ISesEmail>();
+
+            result?.GetSentHtml().ShouldContain("Thanks for recent payment. It really goes a long way to keeping Palavyr going.");   
+            // this.PalavyrAssent(result?.GetSentHtml());
         }
 
 

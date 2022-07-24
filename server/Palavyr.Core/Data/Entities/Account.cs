@@ -86,7 +86,7 @@ namespace Palavyr.Core.Data.Entities
             DefaultEmailIsVerified = false;
             AccountId = accountId;
             ApiKey = apiKey;
-            CreationDate = DateTime.Now;
+            CreationDate = TimeUtils.CreateNewTimeStamp();
             CompanyName = companyName;
             PhoneNumber = phoneNumber;
             Active = active;
@@ -100,7 +100,7 @@ namespace Palavyr.Core.Data.Entities
             AccountLogoUri = string.Empty;
             GeneralFallbackSubject = string.Empty;
             GeneralFallbackEmailTemplate = string.Empty;
-            CurrentPeriodEnd = DateTime.Now;
+            CurrentPeriodEnd = TimeUtils.CreateNewTimeStamp();
             ShowSeenEnquiries = false;
         }
 
@@ -114,7 +114,8 @@ namespace Palavyr.Core.Data.Entities
                 emailAddress,
                 password,
                 accountId,
-                apiKey
+                apiKey,
+                string.Empty
             );
         }
 

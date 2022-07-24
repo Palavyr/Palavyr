@@ -22,10 +22,6 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.WidgetLive
         [Fact]
         public async Task SendEmailWithoutPdfResponse()
         {
-            // TODO: NEED TO TRY AND MAKE A "MODIFY INTENT" Controller and have the consolidate all the intent pieces
-            // right now for w/e/ reason, we've got a separate controller for each piece of the intent.
-            // good god. review the UI code to check feasibility...
-            
             // create intent without response PDF set
             var intent = await this.CreateIntentBuilder()
                 .WithoutResponsePdf()

@@ -12,7 +12,7 @@ namespace Palavyr.Core.Mappers
             await Task.Yield();
             return new StaticFeeResource
             {
-                Id = from.Id,
+                Id = @from.Id.Value,
                 Max = from.Max,
                 Min = from.Min,
                 FeeId = from.FeeId,

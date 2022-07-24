@@ -49,7 +49,7 @@ namespace Test.Common.ApprovalTests
             testFixture.Assent(received.ScrubDates(), config, testName);
         }
 
-        public static Assent.Configuration UseNamer(this Assent.Configuration config, string? callerFilePath, string? testName = null)
+        public static Configuration UseNamer(this Configuration config, string? callerFilePath, string? testName = null)
         {
             return config.UsingNamer(
                 new DelegateNamer(

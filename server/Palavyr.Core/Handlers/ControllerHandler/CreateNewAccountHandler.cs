@@ -32,7 +32,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         public const string Route = "account/create/default";
 
-
         public string EmailAddress { get; set; }
         public string Password { get; set; }
     }

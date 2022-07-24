@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,23 +26,34 @@ namespace Palavyr.IntegrationTests.Tests
                 .Where(x => x.IsInterface)
                 .ToList();
 
-            var stringBuilder = new StringBuilder();
-
+            var badTypes = new List<Type>();
             foreach (var t in allTypes)
             {
                 try
                 {
                     var instance = Container.GetService(t);
                     if (instance is null)
-                        stringBuilder.Append($"{t.Name}\n");
+                    {
+                        badTypes.Add(t);
+                    }
                 }
                 catch (Exception)
                 {
-                    stringBuilder.Append($"{t.Name}\n");
+                    badTypes.Add(t);
                 }
             }
 
-            this.PalavyrAssent(stringBuilder.ToString());
+            var filteredBadTypes = badTypes
+                .Where(x => !x.IsInterface)
+                .DistinctBy(x => x.Name)
+                .Select(x => x.Name)
+                .ToList();
+            if (filteredBadTypes.Count > 0)
+            {
+                throw new Exception($"Unable to resolve types: {string.Join(", ", filteredBadTypes)}");
+            }
+
+            // this.PalavyrAssent(stringBuilder.ToString());
         }
 
         [Fact]

@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -44,6 +45,11 @@ namespace Palavyr.Core.Services.StripeServices.CoreServiceWrappers
                     throw new DomainException(message);
                 }
             }
+        }
+
+        public Task<Stream> RequestStreamingAsync(HttpMethod method, string path, BaseOptions options, RequestOptions requestOptions, CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new System.NotImplementedException();
         }
 
         public string ApiBase => inner.ApiBase;

@@ -2,7 +2,7 @@
 
 namespace Palavyr.Core.Resources
 {
-    public class EnquiryResource
+    public class EnquiryResource : IEntityResource
     {
         public int Id { get; set; }
         public string ConversationId { get; set; }

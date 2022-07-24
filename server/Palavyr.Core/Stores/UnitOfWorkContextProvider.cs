@@ -8,36 +8,34 @@ namespace Palavyr.Core.Stores
     // this must be registered as instance per lifetime scope as IUnitOfWorkContextProvider
     public class UnitOfWorkContextProvider : IUnitOfWorkContextProvider
     {
-        private readonly AppDataContexts appDataContexts;
         private readonly ICancellationTokenTransport cancellationTokenTransport;
 
-        public UnitOfWorkContextProvider(AppDataContexts appDataContexts, ICancellationTokenTransport cancellationTokenTransport)
+        public UnitOfWorkContextProvider(AppDataContexts data, ICancellationTokenTransport cancellationTokenTransport)
         {
-            this.appDataContexts = appDataContexts;
+            Data = data;
             this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
-        public AppDataContexts AppDataContexts()
-        {
-            return appDataContexts;
-        }
+        public AppDataContexts Data { get; set; }
+
 
         public async Task CloseUnitOfWork()
         {
             var token = GetOrCreateCancellationToken();
-            await appDataContexts.SaveChangesAsync(token);
+            await Data.SaveChangesAsync(token);
             await DisposeContexts();
         }
 
         public async Task DisposeContexts()
         {
-            await appDataContexts.DisposeAsync();
+            await Data.DisposeAsync();
         }
+
 
         public async Task DangerousCommitAllContexts()
         {
             var token = GetOrCreateCancellationToken();
-            await appDataContexts.SaveChangesAsync(token);
+            await Data.SaveChangesAsync(token);
         }
 
         private CancellationToken GetOrCreateCancellationToken()

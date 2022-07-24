@@ -39,7 +39,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                         var unitDefinition = unitRetriever.GetUnitDefinitionById(x.UnitIdEnum);
                         return new PricingStrategyTableMetaResource
                         {
-                            Id = x.Id,
+                            Id = x.Id.Value,
                             TableTag = x.TableTag,
                             TableType = x.TableType,
                             TableId = x.TableId,

@@ -304,9 +304,8 @@ namespace Palavyr.Component.Tests.Stores
             [Fact]
             public async Task InvalidOperationExceptionIsThrow()
             {
-                var newEntity = Account.CreateAccount(EmailAddress, Password, AccountId, ApiKey);
                 var store = ResolveStore<Account>();
-                await Should.ThrowAsync<InvalidOperationException>(async () => await store.Update(newEntity));
+                await Should.ThrowAsync<InvalidOperationException>(async () => await store.Update(new Account()));
             }
         }
 
