@@ -39,7 +39,7 @@ jobs:
           echo ::set-output name=version::$(echo ${rawVersion} | tr "/" "-")
 
   build-and-test-server:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     name: Server
     runs-on: ubuntu-latest
     timeout-minutes: 5
