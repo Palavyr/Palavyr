@@ -1,12 +1,14 @@
 name: Main Build and Push
 on:
+  # pull_request:
+  #   types: [closed]
   push:
     branches:
       - main
 
 jobs:
   generate-build-number:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     name: Create next build number
 
