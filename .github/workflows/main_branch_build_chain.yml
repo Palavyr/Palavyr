@@ -224,13 +224,13 @@ jobs:
         with:
           node-version: 12
 
-      # - name: Checkout repo
-      #   uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      # - name: Move into ui dir and install
-      #   run: |
-      #     cd ./ui
-      #     npm ci
+      - name: Move into ui dir and install
+        run: |
+          cd ./ui
+          npm ci
 
       # - name: Move into ui dir and Build
       #   run: |
