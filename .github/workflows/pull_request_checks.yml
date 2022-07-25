@@ -1,8 +1,8 @@
 name: Build and Run Tests on pull request
-# on:
-#   pull_request:
-#     branches:
-#       - main
+on:
+  pull_request:
+    branches:
+      - mrbuns
 
 jobs:
   generate-build-number:
