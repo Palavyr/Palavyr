@@ -1,4 +1,4 @@
-name: Build and Run Tests on pull request
+name: Main Build and Push
 on:
   pull_request:
     types: [closed]
