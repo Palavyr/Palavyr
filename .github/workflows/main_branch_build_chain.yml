@@ -2,7 +2,7 @@
 # on:
 #   pull_request:
 #     types: [closed]
-name: QUICK TEST
+name: QUICK TESTs
 on:
   pull_request:
     branches:
