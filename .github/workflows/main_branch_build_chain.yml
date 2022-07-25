@@ -1,8 +1,7 @@
 name: Build and Run Tests on pull request
 on:
   pull_request:
-    types:
-      - closed
+    types: [closed]
 
 jobs:
   generate-build-number:
