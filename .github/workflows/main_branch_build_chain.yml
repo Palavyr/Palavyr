@@ -244,19 +244,19 @@ jobs:
           zip -r palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ./dist-widget
           mv palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
 
-      # - name: Install Octopus CLI 🐙
-      # - uses: OctopusDeploy/install-octopus-cli-action@v1
-      #   with:
-      #     version: latest
+      - name: Install Octopus CLI 🐙
+      - uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          version: latest
 
-      # - name: Push a package to Octopus Deploy 🐙
-      #   uses: OctopusDeploy/push-package-action@v2
-      #   env:
-      #     OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
-      #     OCTOPUS_HOST: ${{ secrets.SERVER }}
-      #     OCTOPUS_SPACE: "Spaces-2"
-      #   with:
-      #     packages: palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip
+      - name: Push a package to Octopus Deploy 🐙
+        uses: OctopusDeploy/push-package-action@v2
+        env:
+          OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
+          OCTOPUS_HOST: ${{ secrets.SERVER }}
+          OCTOPUS_SPACE: "Spaces-2"
+        with:
+          packages: palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip
 
       # - name: Set up QEMU
       #   uses: docker/setup-qemu-action@v2
