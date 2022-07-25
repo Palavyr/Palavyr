@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="ConfigurationManager" uuid="b0a22727-dd08-430d-af2e-8d7af2538f2b" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
-  <name>Build</name>
-  <description>Build Artifacts</description>
-  <parameters />
-  <cleanup />
-  <buildTypesOrder order="ConfigurationManager_CreateVersionNumber,ConfigurationManager_Frontend,ConfigurationManager_BuildAndPackTheWidget,ConfigurationManager_BuildInternalExpressPdfServer,ConfigurationManager_BuildPalavyrServerWindows" />
-</project>
-
