@@ -1,8 +1,11 @@
 name: Build and Run Tests on pull request
+# on:
+#   pull_request:
+#     types: [closed]
 on:
   pull_request:
-    types: [closed]
-
+    branches:
+      - main
 jobs:
   generate-build-number:
     if: github.event.pull_request.merged == true
