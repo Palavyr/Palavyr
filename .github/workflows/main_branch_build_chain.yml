@@ -2,6 +2,9 @@ name: Main Build and Push
 on:
   pull_request:
     types: [closed]
+  push:
+    branches:
+      - main
 
 jobs:
   generate-build-number:
