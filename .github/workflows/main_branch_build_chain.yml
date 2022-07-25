@@ -241,7 +241,7 @@ jobs:
           mv palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
 
       - name: Install Octopus CLI 🐙
-      - uses: OctopusDeploy/install-octopus-cli-action@v1
+        uses: OctopusDeploy/install-octopus-cli-action@v1
         with:
           version: latest
 
