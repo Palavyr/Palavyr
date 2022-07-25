@@ -237,12 +237,12 @@ jobs:
           cd ./ui
           npm run build-widget
 
-      # - name: Move into ui dir and Zip the distribution
-      #   run: |
-      #     cd ./ui
-      #     ls -lath
-      #     zip -r palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ./dist-widget
-      #     mv palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
+      - name: Move into ui dir and Zip the distribution
+        run: |
+          cd ./ui
+          ls -lath
+          zip -r palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ./dist-widget
+          mv palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
 
       # - name: Install Octopus CLI 🐙
       # - uses: OctopusDeploy/install-octopus-cli-action@v1
