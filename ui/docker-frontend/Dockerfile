@@ -1,7 +1,11 @@
 FROM nginx:stable-alpine
 
-COPY dist-frontend /usr/share/nginx/html
-# new
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /usr/share/nginx/html
+RUN rm -rf ./*
+
+WORKDIR /app
+COPY ./ui/dist-frontend /usr/share/nginx/html
+
+COPY ./ui/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
