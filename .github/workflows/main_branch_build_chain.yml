@@ -232,10 +232,10 @@ jobs:
           cd ./ui
           npm ci
 
-      # - name: Move into ui dir and Build
-      #   run: |
-      #     cd ./ui
-      #     npm run build-widget
+      - name: Move into ui dir and Build
+        run: |
+          cd ./ui
+          npm run build-widget
 
       # - name: Move into ui dir and Zip the distribution
       #   run: |
