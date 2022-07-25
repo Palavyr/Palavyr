@@ -104,7 +104,7 @@ jobs:
           rm -rf ./server_build/Test.Common*
 
       - name: Zip server into a package
-        run: zip -r palavyr.server.${{ needs.generate-build-number.outputs.version }}.zip ./server_build
+        run: zip -r palavyr-server.${{ needs.generate-build-number.outputs.version }}.zip ./server_build
 
       - name: Install Octopus CLI 🐙
         uses: OctopusDeploy/install-octopus-cli-action@v1
@@ -118,7 +118,7 @@ jobs:
           OCTOPUS_HOST: ${{ secrets.SERVER }}
           OCTOPUS_SPACE: "Spaces-2"
         with:
-          packages: palavyr.server.${{ needs.generate-build-number.outputs.version }}.zip
+          packages: palavyr-server.${{ needs.generate-build-number.outputs.version }}.zip
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -136,7 +136,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./server/Dockerfile.server
+          file: ./server/Dockerfile
           push: true
           tags: palavyr/palavyr-server:latest
 
@@ -201,7 +201,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./ui/Dockerfile.frontend
+          file: ./ui/docker-frontend/Dockerfile
           push: true
           tags: palavyr/palavyr-frontend:latest
 
@@ -267,7 +267,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./ui/Dockerfile.widget
+          file: ./ui/docker-widget/Dockerfile
           push: true
           tags: palavyr/palavyr-widget:latest
 
