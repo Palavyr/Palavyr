@@ -169,3 +169,35 @@ jobs:
           ls -lath
           zip -r palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ./dist-widget
           mv palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
+
+  build-pdf-server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    name: Build pdf-server
+    needs: [generate-build-number]
+
+    steps:
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Move into pdf dir and install
+        run: |
+          cd ./pdf
+          npm ci
+
+      - name: Move into pdf dir and Build
+        run: |
+          cd ./pdf
+          npm run build
+
+      - name: Move into ui dir and Zip the distribution
+        run: |
+          cd ./pdf
+          ls -lath
+          zip -r palavyr-pdf-server.${{ needs.generate-build-number.outputs.version }}.zip ./dist-pdf-server
+          mv palavyr-pdf-server.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
