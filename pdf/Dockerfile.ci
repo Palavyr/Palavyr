@@ -1,13 +1,42 @@
-FROM public.ecr.aws/lambda/nodejs:12
+FROM mhart/alpine-node:12
 
-EXPOSE 8080
+USER root
+
+WORKDIR /app
+COPY . .
+
+RUN sudo chmod 777 ./*
+
+EXPOSE 5603
 
 ENV PORT=5603
 ENV VERSION=1
 
-WORKDIR /usr/src/app
+RUN sudo npm run build
 
-COPY . .
-RUN npm run build
+CMD sudo node ./dist/pdf-server.js
 
-CMD ["node", "dist/palavyr-pdf.server.js"]
+
+
+# FROM ubuntu:latest
+
+# WORKDIR /opt/backend
+# RUN su -
+# RUN  apt-get update
+# RUN apt-get install sudo -y
+# RUN sudo apt install curl -y
+# RUN curl -sL https://deb.nodesource.com/setup_17.x -o nodesource_setup.sh
+# RUN sudo bash nodesource_setup.sh
+# RUN sudo apt install nodejs -y
+# RUN sudo apt-get install -y fontconfig
+# RUN sudo apt-get install -y libfontconfig
+
+# COPY . .
+# # Rference [https://github.com/Medium/phantomjs#linux-note][1]
+# RUN sudo npm set strict-ssl false
+# RUN sudo npm install
+# RUN sudo npm install -g phantomjs-prebuilt
+# RUN sudo npm install -g html-pdf
+
+# RUN sudo npm rebuild
+# RUN sudo npm run build

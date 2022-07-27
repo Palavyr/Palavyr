@@ -1,11 +1,12 @@
 {
-  "name": "palavyr-pdf-service",
+  "name": "pdf-server",
   "version": "2.0.0",
   "private": true,
   "description": "A simple express server to convert html to pdf",
   "scripts": {
-    "build": "npm install && set NODE_ENV=development && npx webpack --config webpack.development.js ",
-    "run-dev": "npm install --no-save && set NODE_ENV=development && npx webpack --config webpack.development.js && node dist/palavyr-pdf.server.js",
+    "build": "npm install && set NODE_ENV=production && npx webpack --config webpack.production.js ",
+    "run": "node dist/pdf-server.js",
+    "run-dev": "npm install --no-save && set NODE_ENV=development && npx webpack --config webpack.development.js && node dist/pdf-server.js",
     "dev": "nodemon ./src/start_app.ts"
   },
   "keywords": [],
@@ -13,6 +14,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.16.0",
     "@aws-sdk/lib-storage": "^3.16.0",
+    "@aws-sdk/signature-v4-crt": "^3.130.0",
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.0.5",
@@ -126,8 +128,6 @@
     "sass": "^1.37.5",
     "sass-loader": "^10.2.0",
     "semver": "6.3.0",
-    "serverless": "^2.60.3",
-    "serverless-offline": "^8.2.0",
     "serverless-plugin-optimize": "^4.2.1-rc.1",
     "serverless-plugin-typescript": "^1.1.9",
     "serverless-webpack": "^5.5.4",

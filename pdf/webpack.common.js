@@ -28,7 +28,7 @@ module.exports = (ENV) => {
             }),
         ],
         output: {
-            filename: '[name].server.js',
+            filename: 'pdf-server.js',
             path: path.resolve(__dirname, './dist'),
             publicPath: '/',
         },

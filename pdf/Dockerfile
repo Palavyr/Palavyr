@@ -1,13 +1,14 @@
 FROM public.ecr.aws/lambda/nodejs:12
 
+USER root
+
 EXPOSE 8080
 
 ENV PORT=5603
 ENV VERSION=1
 
-WORKDIR /usr/src/app
+COPY . ${LAMBDA_TASK_ROOT}
 
-COPY . .
 RUN npm run build
 
-CMD ["lambda.handler"]
+ENTRYPOINT ["lambda.handler"]
