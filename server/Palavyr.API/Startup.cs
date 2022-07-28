@@ -46,6 +46,7 @@ namespace Palavyr.API
         {
             var config = new ConfigurationBuilder()
                 .AddEnvironmentVariables(prefix: "Palavyr_")
+                .AddEnvironmentVariables(prefix: "INPUT_Palavyr_")
                 .Build();
 
             configuration = config;
