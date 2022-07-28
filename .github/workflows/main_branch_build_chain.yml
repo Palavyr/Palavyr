@@ -269,7 +269,7 @@ jobs:
         run: |
           cd ./pdf
           ls -lath
-          mv ./dist-pdf-server ${{ github.workspace }}/dist-pdf-server
+          mv ./dist ${{ github.workspace }}/dist-pdf-server
       # zip -r palavyr-pdf-server.${{ needs.generate-build-number.outputs.version }}.zip ./dist-pdf-server
       # mv palavyr-pdf-server.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
 

@@ -1,67 +1,44 @@
-import { PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
-import PdfGenerator from 'pdf/pdfGenerator';
 import { Application, Request, Response, NextFunction } from 'express';
-import { pathToPhantom, pathToScript } from 'utils/pathUtils';
-import { ReadStream } from 'fs';
-import { FAIL_TO_STREAM_MESSAGE, SUFFIX_WAS_NOT_PDF } from 'http/responses/messages';
 import { S3RequestBody } from '@Palavyr-Types';
-import responses from 'http/responses/sendResponse';
-import { APPLICATION_PDF } from 'http/contentTypes';
-import { Upload } from '@aws-sdk/lib-storage';
 import { logTrace } from 'logging/logging';
+import pdf from 'html-pdf';
+import responses from 'http/responses/sendResponse';
+import aws from 'aws-sdk';
+import { ReadStream } from 'fs';
 
-export const createPutRequest = (bucket: string, key: string, stream: any): PutObjectCommandInput => {
-  return {
-    Bucket: bucket,
-    Key: key,
-    Body: stream,
-    ContentType: APPLICATION_PDF,
-  };
-};
+export const WriteToS3 = (html: string, options: S3RequestBody, response: Response) => {
+  const s3 = new aws.S3(options.s3ClientConfig as aws.S3.ClientConfiguration);
 
-export const configureUpload = (client: S3Client, target: PutObjectCommandInput): Upload => {
-  return new Upload({
-    client,
-    leavePartsOnError: false, // optional manually handle dropped parts
-    params: target,
-  });
-};
-
-const createSaveToS3Callback = (response: any, options: S3RequestBody) => {
-  logTrace('creating save to S3 callback');
-  return async (readStream?: ReadStream) => {
-    logTrace('Inside the s3 callback');
-
-    if (!options.key.endsWith('.pdf')) {
-      responses.createErrorResponse(response, SUFFIX_WAS_NOT_PDF);
-      return;
-    }
-
-    try {
-      logTrace('Attempting to save to S3...');
-      const putRequest = createPutRequest(options.bucket, options.key, readStream);
-      const parallelUpload = configureUpload(new S3Client(options.s3ClientConfig), putRequest);
-      await parallelUpload.done();
-    } catch (error) {
-      logTrace(error);
+  pdf.create(html).toStream(function(err: Error, stream: ReadStream) {
+    if (err) {
+      logTrace('Critical Error');
+      logTrace(err);
       responses.createInternalServerErrorResponse(response, null);
-      return;
     }
 
-    logTrace('Saved ' + options.key + ' to S3.');
-    responses.createSuccessResponse(response, {
-      s3Key: options.key,
-      fileNameWithExtension: options.identifier + '.pdf',
-      fileStem: options.identifier,
-    });
-  };
-};
+    logTrace('Created pdf stream...');
+    const params: aws.S3.PutObjectRequest = {
+      Key: options.key,
+      Body: stream,
+      Bucket: options.bucket,
+      ContentType: 'application/pdf',
+    };
 
-const createErrorCallback = (response: any) => async (error: Error | null): Promise<void> => {
-  logTrace(error);
-  logTrace(FAIL_TO_STREAM_MESSAGE);
-  responses.createErrorResponse(response, FAIL_TO_STREAM_MESSAGE);
-  return;
+    logTrace('Attempting to upload...not');
+    s3.upload(params, function(err: any, res: any) {
+      if (err) {
+        logTrace('ERROR: ');
+        responses.createInternalServerErrorResponse(response, null);
+      } else {
+        logTrace('Uploaded...');
+        responses.createSuccessResponse(response, {
+          s3Key: options.key,
+          fileNameWithExtension: options.identifier + '.pdf',
+          fileStem: options.identifier,
+        });
+      }
+    });
+  });
 };
 
 const unpackS3Request = (req: Request): S3RequestBody => {
@@ -86,14 +63,6 @@ export const create_pdf_on_s3_v1 = (app: Application) => {
     logTrace('Received request to create PDF on S3.');
 
     const options = unpackS3Request(request);
-    logTrace(options);
-    const pdf = new PdfGenerator(options.html, pathToPhantom, pathToScript, options.paper);
-    try {
-      logTrace('TRYING TO DO THE THING');
-      pdf.toStream(createSaveToS3Callback(response, options), createErrorCallback(response));
-    } catch (err) {
-      logTrace(err);
-      next(err);
-    }
+    WriteToS3(options.html, options, response);
   });
 };

@@ -1,5 +1,4 @@
-import { Express } from 'express';
-const express = require('serverless-express/express');
+import express, { Express } from 'express';
 import { configureMiddleware } from 'http/middleware';
 import { logTrace } from 'logging/logging';
 

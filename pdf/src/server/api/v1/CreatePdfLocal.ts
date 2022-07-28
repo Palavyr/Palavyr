@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { logDebug, logTrace } from 'logging/logging';
-import PdfGenerator from 'pdf/pdfGenerator';
 import { Application, Request, Response, NextFunction } from 'express';
 import { pathToPhantom, pathToScript } from 'utils/pathUtils';
 import { ReadStream } from 'fs';
@@ -31,13 +30,6 @@ const createSaveToLocalCallback = async (response: any) => async (filePath: stri
   }
 };
 
-const createErrorCallback = (response: any) => async (error: Error | null): Promise<void> => {
-  logDebug(error);
-  logDebug(FAIL_TO_STREAM_MESSAGE);
-  responses.createInternalServerErrorResponse(response, null);
-  return;
-};
-
 export const create_pdf_on_local_v1 = (app: Application) => {
   app.post('/api/v1/create-pdf-on-local', async (request: Request, response: Response, next: NextFunction) => {
     const { filePath, html, paper } = request.body as LocalRequestBody;
@@ -54,14 +46,6 @@ export const create_pdf_on_local_v1 = (app: Application) => {
     if (paper === undefined) {
       responses.createErrorResponse(response, 'Paper options were undefined');
       return;
-    }
-
-    const pdf = new PdfGenerator(html, pathToPhantom, pathToScript, paper);
-
-    try {
-      pdf.toFile(await createSaveToLocalCallback(response), createErrorCallback(response), filePath);
-    } catch (err) {
-      next(err);
     }
   });
 };

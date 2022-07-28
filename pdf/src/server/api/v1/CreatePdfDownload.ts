@@ -1,5 +1,4 @@
 import { logDebug, logTrace } from 'logging/logging';
-import PdfGenerator from 'pdf/pdfGenerator';
 import { Application, Request, Response, NextFunction } from 'express';
 import { pathToPhantom, pathToScript } from 'utils/pathUtils';
 import { ReadStream } from 'fs';

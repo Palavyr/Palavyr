@@ -7,5 +7,5 @@ export const logDebug = (content: any) => {
 };
 
 export const logTrace = (content: any) => {
-    console.log("TRACE: " + content);
+    console.log("TRACE: - " + content);
 };

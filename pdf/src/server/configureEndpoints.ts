@@ -8,8 +8,8 @@ export const configureEndpoints = (app: Application) => {
 
     // V1 API
     create_pdf_on_s3_v1(app);
-    create_pdf_on_local_v1(app);
-    create_pdf_download_v1(app);
+    // create_pdf_on_local_v1(app);
+    // create_pdf_download_v1(app);
 
     health_check(app);
     return app;
