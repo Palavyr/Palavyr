@@ -2,6 +2,7 @@ using System;
 using Amazon.Lambda.Core;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.Environment;
@@ -45,13 +46,18 @@ namespace Palavyr.API
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
+            var config = new ConfigurationBuilder()
+                .AddEnvironmentVariables(prefix: "Palavyr_")
+                .AddEnvironmentVariables(prefix: "INPUT_Palavyr_")
+                .Build();
+                
             var host = Host
                 .CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureLogging(
                     (hostingContext, logging) =>
                     {
-                        var envGetter = new DetermineCurrentEnvironment(hostingContext.Configuration);
+                        var envGetter = new DetermineCurrentEnvironment(config);
 
                         logging.ClearProviders();
                         logging.AddConfiguration(hostingContext.Configuration.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
@@ -85,13 +91,18 @@ namespace Palavyr.API
     {
         protected override void Init(IHostBuilder builder)
         {
+            var config = new ConfigurationBuilder()
+                .AddEnvironmentVariables(prefix: "Palavyr_")
+                .AddEnvironmentVariables(prefix: "INPUT_Palavyr_")
+                .Build();
+
             builder
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureLogging(
                     (hostingContext, logging) =>
                     {
                         logging.ClearProviders();
-                        logging.AddConfiguration(hostingContext.Configuration.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
+                        logging.AddConfiguration(config.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
                         logging.SetMinimumLevel(LogLevel.Trace);
                         logging.AddConsole();
                         logging.AddDebug();
