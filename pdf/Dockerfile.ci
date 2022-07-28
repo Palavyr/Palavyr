@@ -13,7 +13,7 @@ RUN apk update && apk add --no-cache fontconfig curl curl-dev && \
 
 WORKDIR /app/temp
 
-COPY ./pdf/* .
+COPY ./pdf .
 RUN echo "Hello World"
 RUN echo $(ls -lath)
 RUN npm run build
