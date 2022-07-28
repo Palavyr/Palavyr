@@ -1,8 +1,6 @@
 import { S3ClientConfig } from '@aws-sdk/client-s3';
 import { ReadStream } from 'fs';
-import { Dispatch, SetStateAction } from 'react';
 
-export type SetState<T> = Dispatch<SetStateAction<T>>;
 export type SnackbarPositions = 'tr' | 't' | 'tl' | 'bl' | 'b' | 'br';
 
 export type PdfErrorCallback = (error: Error | null) => void;
