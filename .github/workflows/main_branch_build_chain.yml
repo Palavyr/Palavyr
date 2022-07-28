@@ -41,8 +41,8 @@ jobs:
     needs: [generate-build-number]
 
     env:
-      STRIPE_API_KEY: ${{secrets.STRIPE_API_KEY}}
-      STRIPE_DEVICE_NAME: Palavyr
+      STRIPE_API_KEY: ${{secrets.Palavyr_STRIPE__SecretKey}}
+      STRIPE_DEVICE_NAME: ${{secrets.Palavyr_STRIPE__DEVICE_NAME}}
 
       Palavyr_AWS__AccessKey: ${{secrets.Palavyr_AWS__AccessKey}}
       Palavyr_AWS__SecretKey: ${{secrets.Palavyr_AWS__SecretKey}}
@@ -114,8 +114,8 @@ jobs:
       - name: Push a package to Octopus Deploy 🐙
         uses: OctopusDeploy/push-package-action@v2
         env:
-          OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
-          OCTOPUS_HOST: ${{ secrets.SERVER }}
+          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
+          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
           OCTOPUS_SPACE: "Spaces-2"
         with:
           packages: palavyr-server.${{ needs.generate-build-number.outputs.version }}.zip
@@ -168,8 +168,8 @@ jobs:
       - name: Push a package to Octopus Deploy 🐙
         uses: OctopusDeploy/push-package-action@v2
         env:
-          OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
-          OCTOPUS_HOST: ${{ secrets.SERVER }}
+          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
+          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
           OCTOPUS_SPACE: "Spaces-2"
         with:
           packages: palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip
@@ -224,8 +224,8 @@ jobs:
       - name: Push a package to Octopus Deploy 🐙
         uses: OctopusDeploy/push-package-action@v2
         env:
-          OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
-          OCTOPUS_HOST: ${{ secrets.SERVER }}
+          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
+          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
           OCTOPUS_SPACE: "Spaces-2"
         with:
           packages: palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip
@@ -281,8 +281,8 @@ jobs:
       # - name: Push a package to Octopus Deploy 🐙
       #   uses: OctopusDeploy/push-package-action@v2
       #   env:
-      #     OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
-      #     OCTOPUS_HOST: ${{ secrets.SERVER }}
+      #     OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
+      #     OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
       #     OCTOPUS_SPACE: "Spaces-2"
       #   with:
       #     packages: palavyr-pdf-server.${{ needs.generate-build-number.outputs.version }}.zip
@@ -310,8 +310,8 @@ jobs:
       - name: Create a release in Octopus Deploy 🐙
         uses: OctopusDeploy/create-release-action@v2
         env:
-          OCTOPUS_API_KEY: ${{ secrets.API_KEY  }}
-          OCTOPUS_HOST: ${{ secrets.SERVER }}
+          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY  }}
+          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
           OCTOPUS_SPACE: "Spaces-2"
         with:
           project: "Palavyr"
