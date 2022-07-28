@@ -5,6 +5,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
 COPY server_build/ App/
-COPY .local.env .
 WORKDIR /App
+
 ENTRYPOINT ["dotnet", "Palavyr.API.dll"]

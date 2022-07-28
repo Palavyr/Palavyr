@@ -1,4 +1,5 @@
 FROM node:14-alpine
+# https://github.com/marcbachmann/node-html-pdf/issues/612
 
 ENV PHANTOMJS_VERSION=2.1.1
 ENV PHANTOMJS_PATH=/usr/local/bin/phantomjs

@@ -129,6 +129,14 @@ jobs:
           dockerfile: ./server/Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+        env:
+          Palavyr_AWS__AccessKey: ${{secrets.Palavyr_AWS__AccessKey}}
+          Palavyr_AWS__SecretKey: ${{secrets.Palavyr_AWS__SecretKey}}
+          Palavyr_AWS__Region: ${{secrets.Palavyr_AWS__Region}}
+          Palavyr_ConnectionString: ${{secrets.Palavyr_ConnectionString}}
+          Palavyr_Environment: ${{secrets.Palavyr_Environment}}
+          Palavyr_JWT__SecretKey: ${{secrets.Palavyr_JWT__SecretKey}}
+          Palavyr_STRIPE__SecretKey: ${{secrets.Palavyr_STRIPE__SecretKey}}
 
   build-frontend:
     runs-on: ubuntu-latest
