@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "strict": false,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "strictNullChecks": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": false,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "checkJs": false,
+        "noUnusedLocals": false,
+        "strictPropertyInitialization": false,
+        "outDir": "./dist_ts/",
+        "noImplicitAny": true,
+        "module": "CommonJS",
+        "target": "eS5",
+        "allowJs": true,
+        "baseUrl": "src",
+        "types": ["node"],
+        "moduleResolution": "node",
+        "paths": {
+            "@Palavyr-Types": ["globalTypes.ts"],
+            "@components/*": ["ui/components/*"],
+            "@utils/*": ["ui/utils/*"]
+        },
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "noFallthroughCasesInSwitch": true,
+        "jsx": "react-jsx"
+    },
+    "include": ["src/**/*", "lambda.js"]
+}

@@ -95,17 +95,6 @@ jobs:
       - name: Integration Tests
         run: dotnet test ./solution_output/Palavyr.IntegrationTests.dll --verbosity normal --no-restore
 
-      - name: Delete the test dlls
-        run: |
-          ls -lath ./solution_output
-          rm -rf ./solution_output/Palavyr.IntegrationTests*
-          rm -rf ./solution_output/Palavyr.ComponentTests*
-          rm -rf ./solution_output/Palavyr.PureTests*
-          rm -rf ./solution_output/Test.Common*
-
-      - name: Zip server into a package
-        run: zip -r palavyr.server.${{ needs.generate-build-number.outputs.version }}.zip ./solution_output
-
   build-frontend:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -130,13 +119,6 @@ jobs:
         run: |
           cd ./ui
           npm run build
-
-      - name: Move into ui dir and Zip the distribution
-        run: |
-          cd ./ui
-          ls -lath
-          zip -r palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip ./dist-frontend
-          mv palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
 
   build-widget:
     runs-on: ubuntu-latest
@@ -163,9 +145,22 @@ jobs:
           cd ./ui
           npm run build-widget
 
-      - name: Move into ui dir and Zip the distribution
+  build-pdf-server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    name: Build pdf-server
+    needs: [generate-build-number]
+
+    steps:
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Move into pdf dir and install
         run: |
-          cd ./ui
-          ls -lath
-          zip -r palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ./dist-widget
-          mv palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
+          cd ./pdf
+          npm run build
