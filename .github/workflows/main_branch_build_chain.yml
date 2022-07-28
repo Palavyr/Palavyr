@@ -34,211 +34,211 @@ jobs:
           echo ${rawVersion}
           echo ::set-output name=version::$(echo ${rawVersion} | tr "/" "-")
 
-  # build-and-test-server:
-  #   name: Server
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
-  #   needs: [generate-build-number]
+  build-and-test-server:
+    name: Server
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [generate-build-number]
 
-  #   env:
-  #     STRIPE_API_KEY: ${{secrets.Palavyr_STRIPE__SecretKey}}
-  #     STRIPE_DEVICE_NAME: ${{secrets.Palavyr_STRIPE__DEVICE_NAME}}
+    env:
+      STRIPE_API_KEY: ${{secrets.Palavyr_STRIPE__SecretKey}}
+      STRIPE_DEVICE_NAME: ${{secrets.Palavyr_STRIPE__DEVICE_NAME}}
 
-  #     Palavyr_AWS__AccessKey: ${{secrets.Palavyr_AWS__AccessKey}}
-  #     Palavyr_AWS__SecretKey: ${{secrets.Palavyr_AWS__SecretKey}}
-  #     Palavyr_AWS__Region: ${{secrets.Palavyr_AWS__Region}}
-  #     Palavyr_ConnectionString: ${{secrets.Palavyr_ConnectionString}}
-  #     Palavyr_Environment: ${{secrets.Palavyr_Environment}}
-  #     Palavyr_JWT__SecretKey: ${{secrets.Palavyr_JWT__SecretKey}}
-  #     Palavyr_STRIPE__SecretKey: ${{secrets.Palavyr_STRIPE__SecretKey}}
+      Palavyr_AWS__AccessKey: ${{secrets.Palavyr_AWS__AccessKey}}
+      Palavyr_AWS__SecretKey: ${{secrets.Palavyr_AWS__SecretKey}}
+      Palavyr_AWS__Region: ${{secrets.Palavyr_AWS__Region}}
+      Palavyr_ConnectionString: ${{secrets.Palavyr_ConnectionString}}
+      Palavyr_Environment: ${{secrets.Palavyr_Environment}}
+      Palavyr_JWT__SecretKey: ${{secrets.Palavyr_JWT__SecretKey}}
+      Palavyr_STRIPE__SecretKey: ${{secrets.Palavyr_STRIPE__SecretKey}}
 
-  #   steps:
-  #     - name: Setup dotnet
-  #       uses: actions/setup-dotnet@v2
-  #       with:
-  #         dotnet-version: 6.x.x
+    steps:
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.x.x
 
-  #     - name: What I think the version number is
-  #       run: |
-  #         echo ==========================
-  #         echo ${{ needs.generate-build-number.outputs.version }}
-  #         echo ==========================
+      - name: What I think the version number is
+        run: |
+          echo ==========================
+          echo ${{ needs.generate-build-number.outputs.version }}
+          echo ==========================
 
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-  #     - name: Restore dependencies
-  #       run: |
-  #         cd ./server
-  #         dotnet restore
+      - name: Restore dependencies
+        run: |
+          cd ./server
+          dotnet restore
 
-  #     - name: Build
-  #       run: |
-  #         cd ./server
-  #         dotnet build --no-restore
+      - name: Build
+        run: |
+          cd ./server
+          dotnet build --no-restore
 
-  #     - name: Publish
-  #       run: |
-  #         cd ./server
-  #         vers=${{ needs.generate-build-number.outputs.version }}
-  #         dotnet publish -c Release /p:Version=${vers} --output ../server_build
+      - name: Publish
+        run: |
+          cd ./server
+          vers=${{ needs.generate-build-number.outputs.version }}
+          dotnet publish -c Release /p:Version=${vers} --output ../server_build
 
-  #     - name: Start Docker environment
-  #       run: docker compose -f ./docker-compose.ci.yml up -d
+      - name: Start Docker environment
+        run: docker compose -f ./docker-compose.ci.yml up -d
 
-  #     - name: Pure Tests
-  #       run: dotnet test ./server_build/Palavyr.PureTests.dll --verbosity normal --no-restore
+      - name: Pure Tests
+        run: dotnet test ./server_build/Palavyr.PureTests.dll --verbosity normal --no-restore
 
-  #     - name: Component Tests
-  #       run: dotnet test ./server_build/Palavyr.ComponentTests.dll --verbosity normal --no-restore
+      - name: Component Tests
+        run: dotnet test ./server_build/Palavyr.ComponentTests.dll --verbosity normal --no-restore
 
-  #     - name: Integration Tests
-  #       run: dotnet test ./server_build/Palavyr.IntegrationTests.dll --verbosity normal --no-restore
+      - name: Integration Tests
+        run: dotnet test ./server_build/Palavyr.IntegrationTests.dll --verbosity normal --no-restore
 
-  #     - name: Delete the test dlls
-  #       run: |
-  #         ls -lath ./server_build
-  #         rm -rf ./server_build/Palavyr.IntegrationTests*
-  #         rm -rf ./server_build/Palavyr.ComponentTests*
-  #         rm -rf ./server_build/Palavyr.PureTests*
-  #         rm -rf ./server_build/Test.Common*
+      - name: Delete the test dlls
+        run: |
+          ls -lath ./server_build
+          rm -rf ./server_build/Palavyr.IntegrationTests*
+          rm -rf ./server_build/Palavyr.ComponentTests*
+          rm -rf ./server_build/Palavyr.PureTests*
+          rm -rf ./server_build/Test.Common*
 
-  #     - name: Zip server into a package
-  #       run: zip -r palavyr-server.${{ needs.generate-build-number.outputs.version }}.zip ./server_build
+      - name: Zip server into a package
+        run: zip -r palavyr-server.${{ needs.generate-build-number.outputs.version }}.zip ./server_build
 
-  #     - name: Install Octopus CLI 🐙
-  #       uses: OctopusDeploy/install-octopus-cli-action@v1
-  #       with:
-  #         version: latest
+      - name: Install Octopus CLI 🐙
+        uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          version: latest
 
-  #     - name: Push a package to Octopus Deploy 🐙
-  #       uses: OctopusDeploy/push-package-action@v2
-  #       env:
-  #         OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
-  #         OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
-  #         OCTOPUS_SPACE: "Spaces-2"
-  #       with:
-  #         packages: palavyr-server.${{ needs.generate-build-number.outputs.version }}.zip
+      - name: Push a package to Octopus Deploy 🐙
+        uses: OctopusDeploy/push-package-action@v2
+        env:
+          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
+          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
+          OCTOPUS_SPACE: "Spaces-2"
+        with:
+          packages: palavyr-server.${{ needs.generate-build-number.outputs.version }}.zip
 
-  #     - uses: mr-smithers-excellent/docker-build-push@v5
-  #       name: Build & push Docker image
-  #       with:
-  #         image: palavyr/palavyr-server
-  #         tags: latest, ${{ needs.generate-build-number.outputs.version }}
-  #         registry: docker.io
-  #         dockerfile: ./server/Dockerfile
-  #         username: ${{ secrets.DOCKER_USERNAME }}
-  #         password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image
+        with:
+          image: palavyr/palavyr-server
+          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          registry: docker.io
+          dockerfile: ./server/Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-  # build-frontend:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
-  #   name: Frontend
-  #   needs: [generate-build-number]
+  build-frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    name: Frontend
+    needs: [generate-build-number]
 
-  #   steps:
-  #     - name: Set up node
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 12
+    steps:
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
 
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-  #     - name: Move into ui dir and install
-  #       run: |
-  #         cd ./ui
-  #         npm ci
+      - name: Move into ui dir and install
+        run: |
+          cd ./ui
+          npm ci
 
-  #     - name: Move into ui dir and Build
-  #       run: |
-  #         cd ./ui
-  #         npm run build
+      - name: Move into ui dir and Build
+        run: |
+          cd ./ui
+          npm run build
 
-  #     - name: Move into ui dir and Zip the distribution
-  #       run: |
-  #         cd ./ui
-  #         zip -r palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip ./dist-frontend
-  #         mv palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
+      - name: Move into ui dir and Zip the distribution
+        run: |
+          cd ./ui
+          zip -r palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip ./dist-frontend
+          mv palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
 
-  #     - name: Install Octopus CLI 🐙
-  #       uses: OctopusDeploy/install-octopus-cli-action@v1
-  #       with:
-  #         version: latest
-  #     - name: Push a package to Octopus Deploy 🐙
-  #       uses: OctopusDeploy/push-package-action@v2
-  #       env:
-  #         OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
-  #         OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
-  #         OCTOPUS_SPACE: "Spaces-2"
-  #       with:
-  #         packages: palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip
+      - name: Install Octopus CLI 🐙
+        uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          version: latest
+      - name: Push a package to Octopus Deploy 🐙
+        uses: OctopusDeploy/push-package-action@v2
+        env:
+          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
+          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
+          OCTOPUS_SPACE: "Spaces-2"
+        with:
+          packages: palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip
 
-  #     - uses: mr-smithers-excellent/docker-build-push@v5
-  #       name: Build & push Docker image
-  #       with:
-  #         image: palavyr/palavyr-frontend
-  #         tags: latest, ${{ needs.generate-build-number.outputs.version }}
-  #         registry: docker.io
-  #         dockerfile: ./ui/docker-frontend/Dockerfile
-  #         username: ${{ secrets.DOCKER_USERNAME }}
-  #         password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image
+        with:
+          image: palavyr/palavyr-frontend
+          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          registry: docker.io
+          dockerfile: ./ui/docker-frontend/Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-  # build-widget:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
-  #   name: Widget
-  #   needs: [generate-build-number]
+  build-widget:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    name: Widget
+    needs: [generate-build-number]
 
-  #   steps:
-  #     - name: Set up node
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 12
+    steps:
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
 
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-  #     - name: Move into ui dir and install
-  #       run: |
-  #         cd ./ui
-  #         npm ci
+      - name: Move into ui dir and install
+        run: |
+          cd ./ui
+          npm ci
 
-  #     - name: Move into ui dir and Build
-  #       run: |
-  #         cd ./ui
-  #         npm run build-widget
+      - name: Move into ui dir and Build
+        run: |
+          cd ./ui
+          npm run build-widget
 
-  #     - name: Move into ui dir and Zip the distribution
-  #       run: |
-  #         cd ./ui
-  #         ls -lath
-  #         zip -r palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ./dist-widget
-  #         mv palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
+      - name: Move into ui dir and Zip the distribution
+        run: |
+          cd ./ui
+          ls -lath
+          zip -r palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ./dist-widget
+          mv palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
 
-  #     - name: Install Octopus CLI 🐙
-  #       uses: OctopusDeploy/install-octopus-cli-action@v1
-  #       with:
-  #         version: latest
+      - name: Install Octopus CLI 🐙
+        uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          version: latest
 
-  #     - name: Push a package to Octopus Deploy 🐙
-  #       uses: OctopusDeploy/push-package-action@v2
-  #       env:
-  #         OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
-  #         OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
-  #         OCTOPUS_SPACE: "Spaces-2"
-  #       with:
-  #         packages: palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip
+      - name: Push a package to Octopus Deploy 🐙
+        uses: OctopusDeploy/push-package-action@v2
+        env:
+          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
+          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
+          OCTOPUS_SPACE: "Spaces-2"
+        with:
+          packages: palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip
 
-  #     - uses: mr-smithers-excellent/docker-build-push@v5
-  #       name: Build & push to Docker
-  #       with:
-  #         image: palavyr/palavyr-widget
-  #         tags: latest, ${{ needs.generate-build-number.outputs.version }}
-  #         registry: docker.io
-  #         dockerfile: ./ui/docker-widget/Dockerfile
-  #         username: ${{ secrets.DOCKER_USERNAME }}
-  #         password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push to Docker
+        with:
+          image: palavyr/palavyr-widget
+          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          registry: docker.io
+          dockerfile: ./ui/docker-widget/Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
   build-pdf-server:
     runs-on: ubuntu-latest
@@ -265,21 +265,21 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-  # create-release:
-  #   runs-on: ubuntu-latest
-  #   needs:
-  #     [build-and-test-server, build-frontend, build-widget, build-pdf-server]
-  #   steps:
-  #     - name: Install Octopus CLI 🐙
-  #       uses: OctopusDeploy/install-octopus-cli-action@v1
-  #       with:
-  #         version: latest
+  create-release:
+    runs-on: ubuntu-latest
+    needs:
+      [build-and-test-server, build-frontend, build-widget, build-pdf-server]
+    steps:
+      - name: Install Octopus CLI 🐙
+        uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          version: latest
 
-  #     - name: Create a release in Octopus Deploy 🐙
-  #       uses: OctopusDeploy/create-release-action@v2
-  #       env:
-  #         OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY  }}
-  #         OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
-  #         OCTOPUS_SPACE: "Spaces-2"
-  #       with:
-  #         project: "Palavyr"
+      - name: Create a release in Octopus Deploy 🐙
+        uses: OctopusDeploy/create-release-action@v2
+        env:
+          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY  }}
+          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
+          OCTOPUS_SPACE: "Spaces-2"
+        with:
+          project: "Palavyr"
