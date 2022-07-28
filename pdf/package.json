@@ -4,7 +4,7 @@
   "private": true,
   "description": "A simple express server to convert html to pdf",
   "scripts": {
-    "build": "npm ci && set NODE_ENV=production && npx webpack --config webpack.production.js ",
+    "build": "npm install && set NODE_ENV=production && npx webpack --config webpack.production.js ",
     "run": "node dist/pdf-server.js",
     "run-dev": "npm install --no-save && set NODE_ENV=development && npx webpack --config webpack.development.js && node dist/pdf-server.js",
     "dev": "nodemon ./src/start_app.ts"
