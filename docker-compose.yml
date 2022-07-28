@@ -11,7 +11,7 @@ services:
   stripe-cli:
     image: stripe/stripe-cli
     container_name: stripe-cli
-    command: "listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
+    command: "listen --api-key ${Palavyr_STRIPE__SecretKey} --device-name ${Palavyr_STRIPE__DEVICE_NAME} --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
     env_file:
       - local.env
 

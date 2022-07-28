@@ -6,17 +6,17 @@ services:
     ports:
       - '12111-12112:12111-12112'
     environment:
-      - STRIPE_API_KEY={{ secrets.STRIPE_API_KEY }}
-      - STRIPE_DEVICE_NAME={{ secrets.STRIPE_DEVICE_NAME }}
+      - STRIPE_API_KEY={{ secrets.Palavyr_STRIPE__SecretKey }}
+      - STRIPE_DEVICE_NAME={{ secrets.Palavyr_STRIPE__DEVICE_NAME }}
 
   stripe-cli:
     image: stripe/stripe-cli
     container_name: stripe-cli
-    command: "listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
+    command: "listen --api-key {{ secrets.Palavyr_STRIPE__SecretKey }} --device-name {{ secrets.Palavyr_STRIPE__DEVICE_NAME }} --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
 
     environment:
-      - STRIPE_API_KEY={{ secrets.STRIPE_API_KEY }}
-      - STRIPE_DEVICE_NAME={{ secrets.STRIPE_DEVICE_NAME }}
+      - STRIPE_API_KEY={{ secrets.Palavyr_STRIPE__SecretKey }}
+      - STRIPE_DEVICE_NAME={{ secrets.Palavyr_STRIPE__DEVICE_NAME }}
 
   postgres-server:
     image: postgres:14.1-alpine
