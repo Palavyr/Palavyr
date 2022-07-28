@@ -25,12 +25,4 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=Password01!
     ports:
-      - '5432:5432'
-
-  pdf-server:
-    image: pdf-server:latest
-    restart: always
-    environment:
-      - name=value
-    ports:
-      - ':8080'
+      - 5432:5432
