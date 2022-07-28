@@ -255,11 +255,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Move into pdf dir and install
-        run: |
-          cd ./pdf
-          npm ci
-
       - name: Move into pdf dir and Build
         run: |
           cd ./pdf
