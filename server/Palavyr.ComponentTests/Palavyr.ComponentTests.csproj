@@ -9,9 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0"/>
+        <PackageReference Include="xunit" Version="2.4.1"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
@@ -23,44 +23,37 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="7.2.0" />
+        <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="7.2.0"/>
         <PackageReference Include="AsyncFixer" Version="1.6.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="FluentValidation" Version="11.1.0" />
-        <PackageReference Include="MediatR" Version="10.0.1" />
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="6.0.7" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.7" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
-        <PackageReference Include="NSubstitute" Version="4.4.0" />
-        <PackageReference Include="Serilog" Version="2.11.0" />
-        <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
-        <PackageReference Include="Shouldly" Version="4.0.3" />
-        <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
-        <PackageReference Include="TestStack.ConventionTests.Autofac" Version="4.0.2" />
+        <PackageReference Include="FluentValidation" Version="11.1.0"/>
+        <PackageReference Include="MediatR" Version="10.0.1"/>
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="6.0.7"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.7"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1"/>
+        <PackageReference Include="NSubstitute" Version="4.4.0"/>
+        <PackageReference Include="Serilog" Version="2.11.0"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="6.0.1"/>
+        <PackageReference Include="Shouldly" Version="4.0.3"/>
+        <PackageReference Include="System.Net.Http.Json" Version="6.0.0"/>
+        <PackageReference Include="TestStack.ConventionTests.Autofac" Version="4.0.2"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="Microsoft.AspNetCore.Authentication" />
+        <Reference Include="Microsoft.AspNetCore.Authentication"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Palavyr.API\Palavyr.API.csproj" />
-      <ProjectReference Include="..\Palavyr.Client\Palavyr.Client.csproj" />
-      <ProjectReference Include="..\Test.Common\Test.Common.csproj" />
+        <ProjectReference Include="..\Palavyr.API\Palavyr.API.csproj"/>
+        <ProjectReference Include="..\Palavyr.Client\Palavyr.Client.csproj"/>
+        <ProjectReference Include="..\Test.Common\Test.Common.csproj"/>
     </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="appsettings.test.json" />
-      <EmbeddedResource Include="appsettings.test.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </EmbeddedResource>
-    </ItemGroup>
-
+    
     <ItemGroup>
         <Content Include="**\*.approved.*" Exclude="bin\**">
             <EmbeddedResource>PreserveNewest</EmbeddedResource>

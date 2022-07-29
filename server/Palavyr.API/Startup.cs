@@ -8,6 +8,7 @@ using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Registration.Configuration;
 using Palavyr.API.Registration.Container;
 using Palavyr.API.Registration.Container.MediatorModule;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API
@@ -44,10 +45,7 @@ namespace Palavyr.API
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            var config = new ConfigurationBuilder()
-                .AddEnvironmentVariables(prefix: "Palavyr_")
-                .AddEnvironmentVariables(prefix: "INPUT_Palavyr_")
-                .Build();
+            var config = ConfigurationGetter.GetConfiguration();
 
             configuration = config;
             AuthenticationConfiguration.AddAuthenticationSchemes(services, configuration);

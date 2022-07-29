@@ -93,9 +93,6 @@ namespace Palavyr.Component.ComponentTestBase
                 builder.RegisterGenericDecorator(typeof(IntegrationTestEntityStoreEagerSavingDecorator<>), typeof(IEntityStore<>));
             }
 
-            // builder.RegisterGenericDecorator(typeof(IntegrationTestMediatorNotificationHandlerDecorator<>), typeof(INotificationHandler<>));
-            // builder.RegisterGenericDecorator(typeof(IntegrationTestMediatorRequestHandlerDecorator<,>), typeof(IRequestHandler<,>));
-
             builder.RegisterType<MockEmailVerificationService>().As<IEmailVerificationService>();
             builder.RegisterType<MockStripeWebhookAuthService>().As<IStripeWebhookAuthService>();
             builder.RegisterType<MockStripeSubscriptionSetter>().As<IStripeSubscriptionSetter>();

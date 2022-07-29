@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.API;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Data;
 using Serilog;
 
@@ -19,9 +20,8 @@ namespace Palavyr.Component.ComponentTestBase
     {
         public IContainer ConfigureClassFixture(Action<ContainerBuilder> additionalConfiguration)
         {
-            var configurationBuilder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.test.json", false);
-            var config = configurationBuilder.Build();
+
+            var config = ConfigurationGetter.GetConfiguration();
 
             var services = new ServiceCollection();
             services.AddLogging(

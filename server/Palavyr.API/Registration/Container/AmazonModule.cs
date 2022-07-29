@@ -43,7 +43,7 @@ namespace Palavyr.API.Registration.Container
                 ServiceURL = s3serviceUrl
             };
 
-            var sesServiceUrl = configuration.GetAwsSESServiceUrl();
+            var sesServiceUrl = configuration.GetAwsSesServiceUrl();
             var sesConfig = new AmazonSimpleEmailServiceConfig()
             {
                 Timeout = TimeSpan.FromSeconds(100),

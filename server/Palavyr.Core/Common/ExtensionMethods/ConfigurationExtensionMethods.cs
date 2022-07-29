@@ -45,7 +45,7 @@ namespace Palavyr.Core.Common.ExtensionMethods
             return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.AwsS3ServiceUrl);
         }
 
-        public static string GetAwsSESServiceUrl(this IConfiguration configuration)
+        public static string GetAwsSesServiceUrl(this IConfiguration configuration)
         {
             return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.AwsSesServiceUrl);
         }

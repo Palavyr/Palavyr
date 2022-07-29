@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.Environment;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.GlobalConstants;
 using Serilog;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
@@ -46,11 +47,8 @@ namespace Palavyr.API
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var config = new ConfigurationBuilder()
-                .AddEnvironmentVariables(prefix: "Palavyr_")
-                .AddEnvironmentVariables(prefix: "INPUT_Palavyr_")
-                .Build();
-                
+            var config = ConfigurationGetter.GetConfiguration();
+
             var host = Host
                 .CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -91,10 +89,7 @@ namespace Palavyr.API
     {
         protected override void Init(IHostBuilder builder)
         {
-            var config = new ConfigurationBuilder()
-                .AddEnvironmentVariables(prefix: "Palavyr_")
-                .AddEnvironmentVariables(prefix: "INPUT_Palavyr_")
-                .Build();
+            var config = ConfigurationGetter.GetConfiguration();
 
             builder
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())

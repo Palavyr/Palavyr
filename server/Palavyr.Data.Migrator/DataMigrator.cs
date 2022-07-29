@@ -6,6 +6,7 @@ using DbUp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -47,9 +48,8 @@ namespace Palavyr.Data.Migrator
             Logger = loggerFactory.CreateLogger<DataMigrator>();
             Logger.LogDebug("{Message}", "This is the first thing that happens. A TEST");
 
-            var configurationBuilder = new ConfigurationBuilder()
-                .AddEnvironmentVariables(prefix: "Palavyr_");
-            var configuration = configurationBuilder.Build();
+            var configuration = ConfigurationGetter.GetConfiguration();
+
 
             Logger.LogInformation("This is a test of the logging system");
             var env = configuration.GetCurrentEnvironment();
