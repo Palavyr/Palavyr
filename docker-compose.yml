@@ -6,83 +6,76 @@ services:
     ports:
       - '12111-12112:12111-12112'
     env_file:
-      - local.env
+      - ./local.env
 
   stripe-cli:
     image: stripe/stripe-cli
     container_name: stripe-cli
     command: "listen --api-key ${Palavyr_STRIPE__SecretKey} --device-name ${Palavyr_STRIPE__DEVICE_NAME} --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
     env_file:
-      - local.env
+      - ./local.env
 
   postgres-server:
     image: postgres:14.1-alpine
+    container_name: Database
     restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=Password01!
     ports:
-      - '5432:5432'
+      - 5432:5432
 
   palavyr-server:
     image: palavyr/palavyr-server:latest
+    container_name: Server
     restart: always
     env_file:
-      - local.env
+      - ./local.env
     ports:
       - 5000:5000
       - 5001:5001
 
-  reverse-proxy:
-    image: nginx:alpine
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - palavyr-server
-    ports:
-      - 4000:4000
-
   palavyr-pdf-server:
     image: palavyr/palavyr-pdf-server:latest
+    container_name: Server-pdf
     restart: always
     env_file:
-      - local.env
+      - ./local.env
     ports:
       - 5603:5603
 
   palavyr-web-frontend:
     image: palavyr/palavyr-frontend:latest
+    container_name: Frontend
     restart: always
     env_file:
-      - local.env
+      - ./local.env
     ports:
-      - 8080:8080
+      - 8080:80
 
   palavyr-web-widget:
     image: palavyr/palavyr-widget:latest
+    container_name: Widget
     restart: always
     env_file:
-      - local.env
+      - ./local.env
     ports:
-      - 3400:3400
+      - 3400:80
 
-  # local-stack:
-  #   image: localstack/localstack
-  #   container_name: localstack-example
-  #   hostname: localstack
-  #   ports:
-  #     - "4566:4566"
-  #   environment:
-  #     # Declare which aws services will be used in localstack
-  #     - SERVICES=s3,lambda,ses
-  #     - DEBUG=1
-  #     # These variables are needed for localstack
-  #     - AWS_DEFAULT_REGION=us-east-1
-  #     - AWS_ACCESS_KEY_ID=testUser
-  #     - AWS_SECRET_ACCESS_KEY=testAccessKey
-  #     - DOCKER_HOST=unix:///var/run/docker.sock
-  #     - DATA_DIR=/tmp/localstack/data
-  #   volumes:
-  #     - "${TMPDIR:-/tmp}/localstack:/tmp/localstack"
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - ./create-resources.sh:/docker-entrypoint-initaws.d/create-resources.sh
+  local-stack:
+    image: localstack/localstack
+    container_name: Aws-Localstack
+    hostname: localstack
+    ports:
+      - 4566:4566
+    environment:
+      - SERVICES=s3,ses
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=testUser
+      - AWS_SECRET_ACCESS_KEY=testAccessKey
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initaws.d
+      - /var/run/docker.sock:/var/run/docker.sock

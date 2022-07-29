@@ -16,6 +16,10 @@
         public class ConfigSections
         {
             public const string LoggingSection = "Logging";
+
+            public const string AwsS3ServiceUrl = "AWS:AwsS3ServiceUrl";
+            public const string AwsSesServiceUrl = "AWS:AwsSESServiceUrl";
+
             public const string UserDataSection = "AWS:UserDataBucket";
 
             public const string ConnectionString = "ConnectionString";

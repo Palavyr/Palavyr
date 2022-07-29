@@ -26,40 +26,31 @@ namespace Palavyr.API.Registration.Container
         {
             var accessKey = configuration.GetAccessKey();
             var secretKey = configuration.GetSecretKey();
-
-            // var loggerFactory = new LoggerFactory().AddLambdaLogger();
-            // var logger = loggerFactory.CreateLogger<AmazonModule>();
-            // logger.LogDebug("LOGGING!");
-
-            // logger.LogDebug("====================================");
-            // Console.WriteLine("====================================");
-            //
-            // logger.LogDebug($"Access Key: {accessKey}");
-            // logger.LogDebug($"Secret Key: {string.Join("", secretKey.ToCharArray().Take(4).ToArray())}");
-            //
-            // Console.WriteLine($"Access Key: {accessKey}");
-            // Console.WriteLine($"Secret Key: {string.Join("", secretKey.ToCharArray().Take(4).ToArray())}");
-            //
-            // logger.LogDebug("====================================");
-            // Console.WriteLine("====================================");
+            
+            // default s3 endpoint is s3.amazonaws.com
+            // default ses endpoint is ses.amazonaws.com
 
             var credentials = new BasicAWSCredentials(accessKey, secretKey);
 
-            var s3Config = new AmazonS3Config()
+            var s3serviceUrl = configuration.GetAwsS3ServiceUrl();
+            var s3Config = new AmazonS3Config
             {
                 Timeout = TimeSpan.FromSeconds(10),
                 RetryMode = RequestRetryMode.Standard,
                 MaxErrorRetry = 5,
                 RegionEndpoint = RegionEndpoint.USEast1,
-                ForcePathStyle = true
+                ForcePathStyle = true,
+                ServiceURL = s3serviceUrl
             };
 
+            var sesServiceUrl = configuration.GetAwsSESServiceUrl();
             var sesConfig = new AmazonSimpleEmailServiceConfig()
             {
                 Timeout = TimeSpan.FromSeconds(100),
                 RetryMode = RequestRetryMode.Standard,
                 MaxErrorRetry = 5,
                 RegionEndpoint = RegionEndpoint.USEast1,
+                ServiceURL = sesServiceUrl
             };
 
             builder.Register(

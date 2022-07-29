@@ -40,6 +40,16 @@ namespace Palavyr.Core.Common.ExtensionMethods
             return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.SecretKeySection);
         }
 
+        public static string GetAwsS3ServiceUrl(this IConfiguration configuration)
+        {
+            return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.AwsS3ServiceUrl);
+        }
+
+        public static string GetAwsSESServiceUrl(this IConfiguration configuration)
+        {
+            return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.AwsSesServiceUrl);
+        }
+
         public static string GetPdfUrl(this IConfiguration configuration)
         {
             return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.PdfServerUrl);

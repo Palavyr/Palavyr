@@ -26,3 +26,21 @@ services:
       - POSTGRES_PASSWORD=Password01!
     ports:
       - 5432:5432
+
+  local-stack:
+    image: localstack/localstack
+    container_name: Aws-Localstack
+    hostname: localstack
+    ports:
+      - 4566:4566
+    environment:
+      - SERVICES=s3,ses
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=testUser
+      - AWS_SECRET_ACCESS_KEY=testAccessKey
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initaws.d
+      - /var/run/docker.sock:/var/run/docker.sock

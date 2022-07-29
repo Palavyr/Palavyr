@@ -5,7 +5,7 @@
 
 Palavyr is a fully containerized web app that allows users to configure a chat bot. The configuration is unique in that it allows users to set pricing strategies which return values that depend on user input. The output of the application is customizable emails with optional attachments and response PDFs that contain pricing details given a user's input.
 
-Anyone can use Palavyr - small businesses,
+Anyone can use Palavyr!
 
 # Getting Started
 

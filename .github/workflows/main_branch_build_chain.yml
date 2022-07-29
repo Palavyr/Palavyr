@@ -51,6 +51,9 @@ jobs:
       Palavyr_Environment: ${{secrets.Palavyr_Environment}}
       Palavyr_JWT__SecretKey: ${{secrets.Palavyr_JWT__SecretKey}}
       Palavyr_STRIPE__SecretKey: ${{secrets.Palavyr_STRIPE__SecretKey}}
+      Palavyr_AWS__UserDataBucket: ${{secrets.Palavyr_AWS__UserDataBucket}}
+      Palavyr_AWS__AwsS3ServiceUrl: ${{ secrets.Palavyr_AWS__AwsS3ServiceUrl }}
+      Palavyr_AWS__AwsSESServiceUrl: ${{ secrets.Palavyr_AWS__AwsSESServiceUrl }}
 
     steps:
       - name: Setup dotnet
