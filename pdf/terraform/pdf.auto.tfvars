@@ -1,2 +1,2 @@
-environment         = "#{Environment}"
-resource_group_name = "#{ResourceGroupName}"
+# environment         = "#{Environment}"
+# resource_group_name = "#{ResourceGroupName}"
