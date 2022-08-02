@@ -1,9 +1,8 @@
-resource "aws_s3_bucket" "tfer--production-002D-palavyr-002D-userdata" {
+resource "aws_s3_bucket" "data" {
   bucket        = var.bucket_name
   force_destroy = false
 
   grant {
-    id          = "1db2ccca6338f55bdbf819083cdc61ff572716bf2cbbcc6299f32a0dfd3faed9"
     permissions = ["FULL_CONTROL"]
     type        = "CanonicalUser"
   }
@@ -18,7 +17,7 @@ resource "aws_s3_bucket" "tfer--production-002D-palavyr-002D-userdata" {
   }
 
   versioning {
-    enabled    = "true"
+    enabled    = "false"
     mfa_delete = "false"
   }
 }

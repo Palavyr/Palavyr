@@ -17,6 +17,10 @@ variable "domain_name" {
 
 variable "vpc_cidr" {
   type        = string
-  default     = "10.10.0.0/16"
   description = "AWS VPC CIDR range"
+}
+
+variable "hosted_zone_domain_name" {
+  type = string
+  description = "value of the Hosted Zone Domain Name"
 }

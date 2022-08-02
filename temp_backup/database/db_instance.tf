@@ -1,4 +1,4 @@
-# resource "aws_db_instance" "tfer--palavyr-002D-production" {
+# resource "aws_db_instance" "db" {
 #   allocated_storage                     = "20"
 #   auto_minor_version_upgrade            = "true"
 #   availability_zone                     = "us-east-1b"
