@@ -15,6 +15,10 @@
 
         public class ConfigSections
         {
+            // WARNING: If you change this, you must also change:
+            // - github actions and the secrets in github
+            // -    - thats the main and pr actions! Add these to the env vars
+            // - 
             public const string LoggingSection = "Logging";
 
             public const string AwsS3ServiceUrl = "AWS:AwsS3ServiceUrl";

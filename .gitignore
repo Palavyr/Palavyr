@@ -253,5 +253,9 @@ local.env
 appsettings.development.json
 appsettings.migrator.development.json
 the--all-route.txt
-*terraform*
+.env
 
+*.bkup
+*.exe
+
+*terraform.tfstate*

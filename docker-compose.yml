@@ -6,14 +6,14 @@ services:
     ports:
       - '12111-12112:12111-12112'
     env_file:
-      - ./local.env
+      - ./.env
 
   stripe-cli:
     image: stripe/stripe-cli
     container_name: stripe-cli
     command: "listen --api-key ${Palavyr_STRIPE__SecretKey} --device-name ${Palavyr_STRIPE__DEVICE_NAME} --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
     env_file:
-      - ./local.env
+      - ./.env
 
   postgres-server:
     image: postgres:14.1-alpine
@@ -26,39 +26,39 @@ services:
       - 5432:5432
 
   palavyr-server:
-    image: palavyr/palavyr-server:latest
+    image: ${ECR_REGISTRY}/palavyr/palavyr-server:latest
     container_name: Server
     restart: always
     env_file:
-      - ./local.env
+      - ./.env
     ports:
       - 5000:5000
       - 5001:5001
 
   palavyr-pdf-server:
-    image: palavyr/palavyr-pdf-server:latest
+    image: ${ECR_REGISTRY}/palavyr/palavyr-pdf-server:latest
     container_name: Server-pdf
     restart: always
     env_file:
-      - ./local.env
+      - ./.env
     ports:
       - 5603:5603
 
   palavyr-web-frontend:
-    image: palavyr/palavyr-frontend:latest
+    image: ${ECR_REGISTRY}/palavyr/palavyr-frontend:latest
     container_name: Frontend
     restart: always
     env_file:
-      - ./local.env
+      - ./.env
     ports:
       - 8080:80
 
   palavyr-web-widget:
-    image: palavyr/palavyr-widget:latest
+    image: ${ECR_REGISTRY}/palavyr/palavyr-widget:latest
     container_name: Widget
     restart: always
     env_file:
-      - ./local.env
+      - ./.env
     ports:
       - 3400:80
 
