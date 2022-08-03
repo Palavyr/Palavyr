@@ -191,7 +191,7 @@ jobs:
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image
         with:
-          image: palavyr/palavyr-frontend
+          image: palavyr-frontend
           tags: latest, ${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./ui/docker-frontend/Dockerfile
           registry: ${{ secrets.ECR_REGISTRY }}
