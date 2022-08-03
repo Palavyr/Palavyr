@@ -131,8 +131,8 @@ jobs:
           registry: ${{ secrets.ECR_REGISTRY }}
           dockerfile: ./server/Dockerfile
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.Palavyr_AWS__AccessKey }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.Palavyr_AWS__SecretKey }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
           Palavyr_AWS__AccessKey: ${{secrets.Palavyr_AWS__AccessKey}}
           Palavyr_AWS__SecretKey: ${{secrets.Palavyr_AWS__SecretKey}}
           Palavyr_AWS__Region: ${{secrets.Palavyr_AWS__Region}}
@@ -196,8 +196,8 @@ jobs:
           dockerfile: ./ui/docker-frontend/Dockerfile
           registry: ${{ secrets.ECR_REGISTRY }}
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.Palavyr_AWS__AccessKey }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.Palavyr_AWS__SecretKey }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
 
   build-widget:
     runs-on: ubuntu-latest
@@ -253,8 +253,8 @@ jobs:
           dockerfile: ./ui/docker-widget/Dockerfile
           registry: ${{ secrets.ECR_REGISTRY }}
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.Palavyr_AWS__AccessKey }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.Palavyr_AWS__SecretKey }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
 
   build-pdf-server:
     runs-on: ubuntu-latest
@@ -279,8 +279,8 @@ jobs:
           dockerfile: ./pdf/Dockerfile.ci
           registry: ${{ secrets.ECR_REGISTRY }}
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.Palavyr_AWS__AccessKey }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.Palavyr_AWS__SecretKey }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
 
   create-release:
     runs-on: ubuntu-latest
