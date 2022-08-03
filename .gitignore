@@ -256,3 +256,5 @@ the--all-route.txt
 
 *.bkup
 *.exe
+
+*terraform.tfstate*
