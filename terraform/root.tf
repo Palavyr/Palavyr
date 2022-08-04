@@ -1,4 +1,40 @@
+#######################
+
+#  The initial block here defines this as a terraform file
+#  When this gets deployed, the first block with the backend "remote"
+#  code needs to be uncommented.
+
+
+#  Below, where it says "For dev time" - you can use this for local tracking if you wish
+#  Comment out remote terraform block, and uncomment the local block
+
+##################
+# terraform {
+#   backend "remote" {
+#     organization = "palavyr"
+#     token        = "#{TerraformCloudApiToken}"
+
+#     workspaces {
+#       name = "#{TerraformWorkspace}"
+#     }
+#   }
+
+#   required_providers {
+#     aws = {
+#       source  = "hashicorp/aws"
+#       version = "~> 4.0"
+#     }
+#   }
+# }
+
+#######
+# Uncomment the code below when working locally if you want to track your
+# own infra while testing in development
+#######
+
 terraform {
+  backend "local" {
+  }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -7,30 +43,14 @@ terraform {
   }
 }
 
+
 provider "aws" {
   alias  = "aws"
   region = "us-east-1"
 }
 
-# FOR REMOTE STATE MANAGEMENT
-# resource "aws_s3_bucket" "terraform_state" {
-#   bucket = "terraform-up-and-running-state"
-#   # Enable versioning so we can see the full revision history of our
-#   # state files
-#   versioning {
-#     enabled = true
-#   }
-#   # Enable server-side encryption by default
-#   server_side_encryption_configuration {
-#     rule {
-#       apply_server_side_encryption_by_default {
-#         sse_algorithm = "AES256"
-#       }
-#     }
-#   }
-# }
 
-
+####################################################################
 
 # resource "aws_cloudfront_origin_access_identity" "oai" {
 #   comment = "OAI for ${var.hosted_zone_domain_name}"
@@ -76,19 +96,15 @@ module "pdf_server" {
   lambda_handler_name = "lambda.handler"
   function_name       = "palavyr-pdf-server-${lower(var.environment)}"
   aws_iam_role_name   = "serverless_lambda_${var.environment}"
-  image_uri           = "palavyr/palavyr-pdf-server:latest"
+  region              = var.aws_region
+  gateway_name        = "api-gateway-pdf-server-${lower(var.environment)}"
+  gateway_stage_name  = lower(var.environment)
 
-  region         = var.aws_region
-  gateway_name       = "api-gateway-pdf-server-${lower(var.environment)}"
-  gateway_stage_name = lower(var.environment)
+  # image_uri = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-pdf-server-lambda:latest"
 
 }
 
-
-# module "palavyr_user_data_buckets" {
-#   source = "./modules/data_buckets"
-# }
-
-# module "palavyr_policies" {
-#   source = "./modules/policies"
-# }
+module "palavyr_user_data_bucket" {
+  source      = "./modules/data_buckets"
+  bucket_name = "palavyr-user-data-${lower(var.environment)}"
+}

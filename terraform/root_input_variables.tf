@@ -34,3 +34,8 @@ variable "can_destroy_data_buckets" {
   type        = bool
   description = "value to determine if data buckets can be destroyed"
 }
+
+variable "aws_account_id" {
+  type        = string
+  description = "value to determine the ECR AWS account ID"
+}
