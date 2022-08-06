@@ -39,10 +39,7 @@ resource "aws_cloudfront_distribution" "cf_dist" {
     }
   }
 
-  tags = {
-    "Project"   = "Palavyr-${var.environment}"
-    "ManagedBy" = "Terraform"
-  }
+  tags = var.tags
 
   viewer_certificate {
     acm_certificate_arn      = aws_acm_certificate.cert.arn

@@ -56,6 +56,12 @@ resource "aws_cloudfront_origin_access_identity" "oai" {
   comment = "OAI for ${var.hosted_zone_domain_name}"
 }
 
+locals {
+  tags = {
+    "Project"   = "Palavyr-${var.environment}"
+    "ManagedBy" = "Terraform"
+  }
+}
 module "configuration_app_website" {
   source                       = "./modules/website"
   aws_region                   = var.aws_region
@@ -64,6 +70,7 @@ module "configuration_app_website" {
   hosted_zone_domain_name      = var.hosted_zone_domain_name
   cloudfront_access_id_path    = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
   cloudfront_access_id_iam_arn = aws_cloudfront_origin_access_identity.oai.iam_arn
+  tags                         = local.tags
 }
 
 module "widget_app_website" {
@@ -74,16 +81,19 @@ module "widget_app_website" {
   hosted_zone_domain_name      = var.hosted_zone_domain_name
   cloudfront_access_id_path    = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
   cloudfront_access_id_iam_arn = aws_cloudfront_origin_access_identity.oai.iam_arn
+  tags                         = local.tags
 }
 
 module "vpc" {
   source = "./modules/vpc"
 
-  vpc_cidr   = "10.10.0.0/16"
   aws_region = var.aws_region
+  vpc_cidr   = "10.10.0.0/16"
+  vpc_name   = "palavyr-vpc-${lower(var.environment)}"
+  tags       = local.tags
 }
 
-module "instance_group" {
+module "server_group" {
   source = "./modules/server"
 
   application_load_balancer_name = "application-load-balancer-${lower(var.environment)}"
@@ -98,18 +108,27 @@ module "instance_group" {
   aws_account_id                 = var.aws_account_id
   ecr_access_key                 = var.ecr_access_key
   ecr_secret_key                 = var.ecr_secret_key
+  environment                    = var.environment
+  security_group_id              = module.vpc.security_group_id
+  tags                           = local.tags
 }
 
 module "database" {
   source = "./modules/database"
 
-  database_name         = "palavyr-${lower(var.environment)}"
-  database_username     = "palavyr-user-${lower(var.environment)}"
-  instance_class        = var.database_instance_type
-  public_subnets        = module.vpc.public_subnets
-  rds_param_group_name  = "palavyr-rds-param-group-${lower(var.environment)}"
-  protect_from_deletion = var.protect_from_deletion
-  aws_region            = var.aws_region
+  database_name              = "palavyr-${lower(var.environment)}"
+  database_username          = "palavyr-user-${lower(var.environment)}"
+  rds_param_group_name       = "palavyr-rds-param-group-${lower(var.environment)}"
+  database_subnet_group_name = "palavyr-rds-subnet-group-${lower(var.environment)}"
+  instance_class             = var.database_instance_type
+  protect_from_deletion      = var.protect_from_deletion
+  aws_region                 = var.aws_region
+  db_password                = var.database_password
+  public_subnets             = module.vpc.public_subnets
+  security_group_id          = module.vpc.security_group_id
+
+  tags = local.tags
+
 }
 
 
@@ -121,10 +140,12 @@ module "pdf_server" {
   lambda_handler_name = "lambda.handler"
   function_name       = "palavyr-pdf-server-${lower(var.environment)}"
   aws_iam_role_name   = "serverless_lambda_${var.environment}"
-  region              = var.aws_region
+  aws_region          = var.aws_region
   gateway_name        = "api-gateway-pdf-server-${lower(var.environment)}"
   gateway_stage_name  = lower(var.environment)
   image_uri           = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-pdf-server-lambda:${lower(var.environment)}-latest"
+  # tags                = local.tags
+
 }
 
 module "palavyr_user_data_bucket" {
@@ -132,4 +153,6 @@ module "palavyr_user_data_bucket" {
 
   bucket_name           = "palavyr-user-data-${lower(var.environment)}"
   protect_from_deletion = var.protect_from_deletion
+  tags                  = local.tags
+
 }

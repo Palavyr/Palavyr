@@ -27,3 +27,8 @@ variable "cloudfront_access_id_iam_arn" {
   type        = string
   description = "cloudfront_access_id_iam_arn"
 }
+
+variable "tags" {
+  type        = any
+  description = "The tags to use"
+}

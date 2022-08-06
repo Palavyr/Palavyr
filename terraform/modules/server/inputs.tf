@@ -27,8 +27,13 @@ variable "autoscale_group_name" {
   description = "The name for the autoscale group"
 }
 
-variable "private_subnets" {
+variable "security_group_id" {
   type        = string
+  description = "The security group id for the autoscale group"
+}
+
+variable "private_subnets" {
+  type        = list(string)
   description = "use module.vpc.private_subnets"
 }
 
@@ -67,3 +72,12 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
+variable "tags" {
+  type        = any
+  description = "The tags to use"
+}
+
+variable "environment" {
+  type        = string
+  description = "The environment in use"
+}

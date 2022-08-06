@@ -2,10 +2,7 @@
 resource "aws_s3_bucket" "bucket" {
   bucket = var.site_domain_name
 
-  tags = {
-    "Project"   = "Palavyr-${var.environment}"
-    "ManagedBy" = "Terraform"
-  }
+  tags = var.tags
 
   force_destroy = true
 }

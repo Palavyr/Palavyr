@@ -4,10 +4,7 @@ resource "aws_acm_certificate" "cert" {
   subject_alternative_names = ["*.${var.site_domain_name}"]
   validation_method         = "DNS"
 
-  tags = {
-    "Project"   = "Palavyr-${var.environment}"
-    "ManagedBy" = "Terraform"
-  }
+  tags = var.tags
 }
 
 # validate cert:

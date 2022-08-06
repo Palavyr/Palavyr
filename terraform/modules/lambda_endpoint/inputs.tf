@@ -28,7 +28,7 @@ variable "image_uri" {
   description = "image uri of the lambda container"
 }
 
-variable "region" {
+variable "aws_region" {
   type        = string
   description = "region of the lambda function"
 }

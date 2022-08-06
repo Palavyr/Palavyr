@@ -1,32 +1,11 @@
-# Create Security Group for ALB Ingress :
-resource "aws_security_group" "alb_ingress" {
-  name   = "alg_http_ingress"
-  vpc_id = var.vpc_id
 
-  # Allow ingress to http port 80 from anywhere
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# Create ALB :
 resource "aws_lb" "alb" {
   name            = var.application_load_balancer_name
   subnets         = var.public_subnets
-  security_groups = [aws_security_group.alb_ingress.id]
+  security_groups = [var.security_group_id]
   internal        = false
   idle_timeout    = 60
-  tags            = local.tags
+  tags            = var.tags
 }
 
 resource "aws_lb_target_group" "alb_tg" {
@@ -34,7 +13,7 @@ resource "aws_lb_target_group" "alb_tg" {
   port     = "80"
   protocol = "HTTP"
   vpc_id   = var.vpc_id
-  tags     = local.tags
+  tags     = var.tags
 
   health_check {
     healthy_threshold   = 3

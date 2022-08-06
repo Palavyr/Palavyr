@@ -39,3 +39,26 @@ variable "aws_account_id" {
   description = "value to determine the ECR AWS account ID"
   type        = string
 }
+
+variable "database_instance_type" {
+  description = "The type of instance that runs the database"
+  type        = string
+}
+
+variable "scale_group_instance_type" {
+  description = "the type of instance that runs the main server"
+  type        = string
+}
+
+variable "ecr_secret_key" {
+  type = string
+}
+
+variable "ecr_access_key" {
+  type = string
+}
+
+variable "database_password" {
+  type        = string
+  description = "password to connect to the RDS postgres database - this is stored in Octopus and Lastpass"
+}

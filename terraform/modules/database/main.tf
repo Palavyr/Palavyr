@@ -39,4 +39,5 @@ resource "aws_db_instance" "database" {
   port                                  = 5420
   storage_encrypted                     = true
 
+  tags = var.tags
 }

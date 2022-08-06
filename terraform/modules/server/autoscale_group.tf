@@ -51,6 +51,7 @@ resource "aws_autoscaling_group" "asg" {
 
   depends_on = [
     var.vpc_id,
+    var.private_subnets,
     aws_lb_target_group.alb_tg,
     aws_launch_configuration.asg_launch_conf
   ]

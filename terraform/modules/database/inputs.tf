@@ -4,8 +4,13 @@ variable "database_name" {
 }
 
 variable "database_username" {
-  type = string
-  description "username for the database"
+  type        = string
+  description = "username for the database"
+}
+
+variable "db_password" {
+  type        = string
+  description = "password for the database"
 }
 
 variable "instance_class" {
@@ -14,13 +19,18 @@ variable "instance_class" {
 }
 
 variable "public_subnets" {
-  type        = list(any)
+  type        = list(string)
   description = "list of subnets to use for the database"
 }
 
 variable "rds_param_group_name" {
   type        = string
   description = "name of the parameter group"
+}
+
+variable "database_subnet_group_name" {
+  type        = string
+  description = "name of the subnet group"
 }
 
 variable "protect_from_deletion" {
@@ -32,3 +42,11 @@ variable "aws_region" {
   description = "aws region"
 }
 
+variable "security_group_id" {
+  type        = string
+  description = "security group id"
+}
+
+variable "tags" {
+  type = any
+}
