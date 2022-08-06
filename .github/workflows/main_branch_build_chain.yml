@@ -76,7 +76,7 @@ jobs:
           OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
           OCTOPUS_SPACE: "Spaces-2"
         with:
-          packages: palavyr-server.${{ needs.generate-build-number.outputs.version }}.zip
+          packages: ${{ steps.build.outputs.packages_to_push }}
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push development Docker image
