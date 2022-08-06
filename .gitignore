@@ -228,7 +228,6 @@ archive/*
 /coverage
 
 # production
-/build
 widget/build/*
 # misc
 **/.DS_Store
