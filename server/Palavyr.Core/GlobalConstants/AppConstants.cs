@@ -31,7 +31,6 @@
             public const string UserDataSection = "AWS:UserDataBucket";
             public const string PdfServerUrl = "AWS:PdfUrl";
 
-            
             public const string LoggingSection = "Logging";
             public const string RandomString = "aT5jX*Y7fJEK";
         }
