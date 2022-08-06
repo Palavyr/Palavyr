@@ -64,6 +64,8 @@ jobs:
         run: |
           pwd
           ls -lath
+          ls -lath ..
+
           chmod 777 ./build.ci.sh
           ./build.ci.sh
         env:

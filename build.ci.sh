@@ -5,6 +5,10 @@ bash --version 2>&1 | head -n 1
 set -eo pipefail
 SCRIPT_DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 
+echo "SCRIPT DIR HERE"
+echo $SCRIPT_DIR
+echo "----------------"
+
 ###########################################################################
 # CONFIGURATION
 ###########################################################################
@@ -58,5 +62,9 @@ fi
 
 echo "Microsoft (R) .NET Core SDK version $("$DOTNET_EXE" --version)"
 
+docker compose -f ./docker-compose.ci.yml up -d
+
 "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
 "$DOTNET_EXE" run --project "$BUILD_PROJECT_FILE" --no-build -- "$@"
+
+docker compose -f ./docker-compose.ci.yml down
