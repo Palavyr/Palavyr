@@ -98,10 +98,10 @@ class Build : NukeBuild
             .DependsOn(PublishArtifacts)
             .Executes(() =>
             {
-                var palavyrApiPackageOutput = ArtifactsDirectory / $"Palavyr.API.{Version}.zip";
+                var palavyrApiPackageOutput = ArtifactsDirectory / $"palavyr-server.{Version}.zip";
                 Compress(TempOutputServer, palavyrApiPackageOutput);
 
-                var terraformPackageOutput = ArtifactsDirectory / $"Octopus.Palavyr.Terraform.{Version}.zip";
+                var terraformPackageOutput = ArtifactsDirectory / $"palavyr-terraform.{Version}.zip";
                 Compress(TerraformSourceDirectory, terraformPackageOutput);
 
                 Console.WriteLine($"::set-output name=packages_to_push::{palavyrApiPackageOutput},{terraformPackageOutput}");
