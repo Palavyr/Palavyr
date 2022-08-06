@@ -55,17 +55,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Start Docker environment
-        run: docker compose -f ./docker-compose.ci.yml up -d
-
       - name: Nuke Build 🏗
         id: build
         shell: bash
         run: |
-          pwd
-          ls -lath
-          ls -lath ..
-
           chmod 777 ./build.ci.sh
           ./build.ci.sh
         env:
