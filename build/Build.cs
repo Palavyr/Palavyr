@@ -80,6 +80,7 @@ class Build : NukeBuild
             .DependsOn(Compile)
             .Executes(() =>
             {
+                CopyFileToDirectory(".env", TempOutputServer);
                 DotNetPublish(_ => _
                     .SetProject(ServerSourceDirectory / "Palavyr.API")
                     .SetConfiguration(Configuration)
@@ -87,6 +88,9 @@ class Build : NukeBuild
                     .EnableNoBuild()
                     .AddProperty("Version", Version)
                 );
+
+                // TODO: Add publishing the npm packages here
+
             });
 
     Target Zip =>
