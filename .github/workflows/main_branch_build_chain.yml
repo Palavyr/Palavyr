@@ -34,26 +34,26 @@ jobs:
           echo ${rawVersion}
           echo ::set-output name=version::$(echo ${rawVersion} | tr "/" "-")
 
-  build-and-test-server:
+  test-and-build-server:
     name: Server
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [generate-build-number]
 
-    env:
-      STRIPE_API_KEY: ${{secrets.Palavyr_STRIPE__SecretKey}}
-      STRIPE_DEVICE_NAME: ${{secrets.Palavyr_STRIPE__DEVICE_NAME}}
+    # env:
+    #   STRIPE_API_KEY: ${{secrets.Palavyr_STRIPE__SecretKey}}
+    #   STRIPE_DEVICE_NAME: ${{secrets.Palavyr_STRIPE__DEVICE_NAME}}
 
-      Palavyr_AWS__AccessKey: ${{secrets.Palavyr_AWS__AccessKey}}
-      Palavyr_AWS__SecretKey: ${{secrets.Palavyr_AWS__SecretKey}}
-      Palavyr_AWS__Region: ${{secrets.Palavyr_AWS__Region}}
-      Palavyr_ConnectionString: ${{secrets.Palavyr_ConnectionString}}
-      Palavyr_Environment: ${{secrets.Palavyr_Environment}}
-      Palavyr_JWT__SecretKey: ${{secrets.Palavyr_JWT__SecretKey}}
-      Palavyr_STRIPE__SecretKey: ${{secrets.Palavyr_STRIPE__SecretKey}}
-      Palavyr_AWS__UserDataBucket: ${{secrets.Palavyr_AWS__UserDataBucket}}
-      Palavyr_AWS__AwsS3ServiceUrl: ${{ secrets.Palavyr_AWS__AwsS3ServiceUrl }}
-      Palavyr_AWS__AwsSESServiceUrl: ${{ secrets.Palavyr_AWS__AwsSESServiceUrl }}
+    #   Palavyr_AWS__AccessKey: ${{secrets.Palavyr_AWS__AccessKey}}
+    #   Palavyr_AWS__SecretKey: ${{secrets.Palavyr_AWS__SecretKey}}
+    #   Palavyr_AWS__Region: ${{secrets.Palavyr_AWS__Region}}
+    #   Palavyr_ConnectionString: ${{secrets.Palavyr_ConnectionString}}
+    #   Palavyr_Environment: ${{secrets.Palavyr_Environment}}
+    #   Palavyr_JWT__SecretKey: ${{secrets.Palavyr_JWT__SecretKey}}
+    #   Palavyr_STRIPE__SecretKey: ${{secrets.Palavyr_STRIPE__SecretKey}}
+    #   Palavyr_AWS__UserDataBucket: ${{secrets.Palavyr_AWS__UserDataBucket}}
+    #   Palavyr_AWS__AwsS3ServiceUrl: ${{ secrets.Palavyr_AWS__AwsS3ServiceUrl }}
+    #   Palavyr_AWS__AwsSESServiceUrl: ${{ secrets.Palavyr_AWS__AwsSESServiceUrl }}
 
     steps:
       - name: Setup dotnet
@@ -70,44 +70,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Restore dependencies
-        run: |
-          cd ./server
-          dotnet restore
-
-      - name: Build
-        run: |
-          cd ./server
-          dotnet build --no-restore
-
-      - name: Publish
-        run: |
-          cd ./server
-          vers=${{ needs.generate-build-number.outputs.version }}
-          dotnet publish -c Release /p:Version=${vers} --output ../server_build
-
       - name: Start Docker environment
         run: docker compose -f ./docker-compose.ci.yml up -d
 
-      - name: Pure Tests
-        run: dotnet test ./server_build/Palavyr.PureTests.dll --verbosity normal --no-restore
-
-      - name: Component Tests
-        run: dotnet test ./server_build/Palavyr.ComponentTests.dll --verbosity normal --no-restore
-
-      - name: Integration Tests
-        run: dotnet test ./server_build/Palavyr.IntegrationTests.dll --verbosity normal --no-restore
-
-      - name: Delete the test dlls
-        run: |
-          ls -lath ./server_build
-          rm -rf ./server_build/Palavyr.IntegrationTests*
-          rm -rf ./server_build/Palavyr.ComponentTests*
-          rm -rf ./server_build/Palavyr.PureTests*
-          rm -rf ./server_build/Test.Common*
-
-      - name: Zip server into a package
-        run: zip -r palavyr-server.${{ needs.generate-build-number.outputs.version }}.zip ./server_build
+      - name: Nuke Build 🏗
+        id: build
+        shell: bash
+        run: ./build.ci.sh
+        env:
+          Version: ${{ needs.generate-build-number.outputs.version }}
 
       - name: Install Octopus CLI 🐙
         uses: OctopusDeploy/install-octopus-cli-action@v1
@@ -124,25 +95,30 @@ jobs:
           packages: palavyr-server.${{ needs.generate-build-number.outputs.version }}.zip
 
       - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push Docker image
+        name: Build & push development Docker image
         with:
           image: palavyr/palavyr-server
-          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          tags: development-latest, ${{ needs.generate-build-number.outputs.version }}
           registry: ${{ secrets.ECR_REGISTRY }}
           dockerfile: ./server/Dockerfile
         env:
+          # for pushing to ECR
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
+
+          # For Palavyr Server
           Palavyr_AWS__AccessKey: ${{secrets.Palavyr_AWS__AccessKey}}
           Palavyr_AWS__SecretKey: ${{secrets.Palavyr_AWS__SecretKey}}
-          Palavyr_AWS__Region: ${{secrets.Palavyr_AWS__Region}}
           Palavyr_ConnectionString: ${{secrets.Palavyr_ConnectionString}}
-          Palavyr_Environment: ${{secrets.Palavyr_Environment}}
           Palavyr_JWT__SecretKey: ${{secrets.Palavyr_JWT__SecretKey}}
           Palavyr_STRIPE__SecretKey: ${{secrets.Palavyr_STRIPE__SecretKey}}
-          Palavyr_AWS__UserDataBucket: ${{secrets.Palavyr_AWS__UserDataBucket}}
-          Palavyr_AWS__AwsS3ServiceUrl: ${{ secrets.Palavyr_AWS__AwsS3ServiceUrl }}
-          Palavyr_AWS__AwsSESServiceUrl: ${{ secrets.Palavyr_AWS__AwsSESServiceUrl }}
+          Palavyr_AWS__UserDataBucket: palavyr-user-data-development
+          Palavyr_AWS__AwsS3ServiceUrl: http://localhost:4566
+          Palavyr_AWS__AwsSESServiceUrl: http://localhost:4566
+          Palavyr_AWS__Region: "us-east-1"
+          Palavyr_Environment: "development"
+          Palavyr_AWS__PdfUrl: http://localhost:5603/pdf
+
 
   build-frontend:
     runs-on: ubuntu-latest
@@ -192,7 +168,7 @@ jobs:
         name: Build & push Docker image
         with:
           image: palavyr/palavyr-frontend
-          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          tags: development-latest, ${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./ui/docker-frontend/Dockerfile
           registry: ${{ secrets.ECR_REGISTRY }}
         env:
@@ -249,7 +225,7 @@ jobs:
         name: Build & push to Docker
         with:
           image: palavyr/palavyr-widget
-          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          tags: development-latest, ${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./ui/docker-widget/Dockerfile
           registry: ${{ secrets.ECR_REGISTRY }}
         env:
@@ -275,7 +251,7 @@ jobs:
         name: Build & push to Docker
         with:
           image: palavyr/palavyr-pdf-server
-          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          tags: development-latest, ${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./pdf/Dockerfile.ci
           registry: ${{ secrets.ECR_REGISTRY }}
         env:
@@ -301,7 +277,7 @@ jobs:
         name: Build & push to Docker
         with:
           image: palavyr/palavyr-pdf-server-lambda
-          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          tags: development-latest, ${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./pdf/Dockerfile.lambda
           registry: ${{ secrets.ECR_REGISTRY }}
         env:

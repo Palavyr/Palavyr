@@ -12,6 +12,7 @@ resource "aws_kms_alias" "key_alias" {
 resource "aws_s3_bucket" "terraform-state" {
   bucket = var.bucket_name
   acl    = "private"
+  force_destroy = var.protect_from_deletion == true ? false : true
 
   versioning {
     enabled = true

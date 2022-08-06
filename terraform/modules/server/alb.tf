@@ -1,7 +1,7 @@
 # Create Security Group for ALB Ingress :
 resource "aws_security_group" "alb_ingress" {
   name   = "alg_http_ingress"
-  vpc_id = module.vpc.vpc_id
+  vpc_id = var.vpc_id
 
   # Allow ingress to http port 80 from anywhere
   ingress {
@@ -21,8 +21,8 @@ resource "aws_security_group" "alb_ingress" {
 
 # Create ALB :
 resource "aws_lb" "alb" {
-  name            = "tf-cloudfront-alb"
-  subnets         = module.vpc.public_subnets
+  name            = var.application_load_balancer_name
+  subnets         = var.public_subnets
   security_groups = [aws_security_group.alb_ingress.id]
   internal        = false
   idle_timeout    = 60
@@ -33,7 +33,7 @@ resource "aws_lb_target_group" "alb_tg" {
   name     = "tf-cloudfront-alb-tg"
   port     = "80"
   protocol = "HTTP"
-  vpc_id   = module.vpc.vpc_id
+  vpc_id   = var.vpc_id
   tags     = local.tags
 
   health_check {

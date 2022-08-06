@@ -1,8 +1,8 @@
-# Input variable definitions
+# Inputs. These must all be specified in the envs/{stage}.tfvars
+
 variable "aws_region" {
-  description = "AWS region for all resources."
+  description = "AWS region for all resources. e.g. us-east-1"
   type        = string
-  default     = "us-east-1"
 }
 
 variable "environment" {
@@ -11,8 +11,8 @@ variable "environment" {
 }
 
 variable "hosted_zone_domain_name" {
-  type        = string
   description = "The hosted zone domain name"
+  type        = string
 }
 
 variable "app_domain_name" {
@@ -26,16 +26,16 @@ variable "widget_domain_name" {
 }
 
 variable "server_domain_name" {
-  type        = string
   description = "The domain name for the server"
+  type        = string
 }
 
-variable "can_destroy_data_buckets" {
+variable "protect_from_deletion" {
+  description = "whether or not to protect from deletion"
   type        = bool
-  description = "value to determine if data buckets can be destroyed"
 }
 
 variable "aws_account_id" {
-  type        = string
   description = "value to determine the ECR AWS account ID"
+  type        = string
 }

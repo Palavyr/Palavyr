@@ -259,3 +259,12 @@ the--all-route.txt
 *.exe
 
 *terraform.tfstate*
+
+*dev.tfvars
+
+.terraform/
+.terraform*
+*.backup
+*.tfstate
+
+artifacts/*

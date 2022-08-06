@@ -65,7 +65,7 @@ namespace Palavyr.Core.Common.ExtensionMethods
             return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.CurrentEnvironment);
         }
 
-        private static string GetSectionOrThrow(this IConfiguration configuration, string sectionId)
+        private static string GetSectionOrThrow(this IConfiguration configuration, string sectionId, bool ignoreThrow = false)
         {
             var sectionVal = configuration.GetSection(sectionId).Value;
             if (sectionVal is null)
@@ -79,7 +79,11 @@ namespace Palavyr.Core.Common.ExtensionMethods
                 sb.AppendLine("__________________________");
 
                 sb.AppendLine($"Failed to load the configuration section: {sectionId}.");
-                throw new Exception(sb.ToString());
+
+                if (!ignoreThrow)
+                {
+                    throw new Exception(sb.ToString());
+                }
             }
 
             return sectionVal;

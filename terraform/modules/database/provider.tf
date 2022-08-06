@@ -1,9 +1,9 @@
-# provider "aws" {}
+provider "aws" {}
 
-# terraform {
-#   required_providers {
-#     aws = {
-#       version = "~> 4.24.0"
-#     }
-#   }
-# }
+terraform {
+  required_providers {
+    aws = {
+      version = "~> 4.24.0"
+    }
+  }
+}

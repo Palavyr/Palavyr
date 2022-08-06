@@ -2,7 +2,7 @@
 resource "aws_security_group" "ec2_ingress" {
   name        = "ec2_http_ingress"
   description = "Used for autoscale group"
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = var.vpc_id
 
   # HTTP access from anywhere
   ingress {
@@ -27,8 +27,8 @@ resource "aws_security_group" "ec2_ingress" {
 resource "aws_launch_configuration" "asg_launch_conf" {
   name_prefix     = "tf-cloufront-alb-"
   image_id        = data.aws_ami.ubuntu_ami.id
-  instance_type   = "t2.micro"
-  user_data       = data.template_cloudinit_config.user_data.rendered
+  instance_type   = var.instance_type
+  user_data       = data.template_cloudinit_config.deployment_data.rendered
   security_groups = [aws_security_group.ec2_ingress.id]
 
   lifecycle {
@@ -38,11 +38,11 @@ resource "aws_launch_configuration" "asg_launch_conf" {
 
 # create ASG with Launch Configuration :
 resource "aws_autoscaling_group" "asg" {
-  name                 = "tf-cloudfront-alb-asg"
+  name                 = var.autoscale_group_name
   launch_configuration = aws_launch_configuration.asg_launch_conf.name
   min_size             = 3
   max_size             = 10
-  vpc_zone_identifier  = module.vpc.private_subnets # placing asg in private subnet
+  vpc_zone_identifier  = var.private_subnets
   target_group_arns    = [aws_lb_target_group.alb_tg.arn]
 
   lifecycle {
@@ -50,7 +50,7 @@ resource "aws_autoscaling_group" "asg" {
   }
 
   depends_on = [
-    module.vpc,
+    var.vpc_id,
     aws_lb_target_group.alb_tg,
     aws_launch_configuration.asg_launch_conf
   ]

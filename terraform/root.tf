@@ -52,41 +52,66 @@ provider "aws" {
 
 ####################################################################
 
-# resource "aws_cloudfront_origin_access_identity" "oai" {
-#   comment = "OAI for ${var.hosted_zone_domain_name}"
-# }
+resource "aws_cloudfront_origin_access_identity" "oai" {
+  comment = "OAI for ${var.hosted_zone_domain_name}"
+}
 
-# module "configuration_app_website" {
-#   source                       = "./modules/website"
-#   aws_region                   = var.aws_region
-#   bucket_prefix                = "${lower(var.environment)}-${var.app_domain_name}-"
-#   site_domain_name             = var.app_domain_name
-#   environment                  = var.environment
-#   hosted_zone_domain_name      = var.hosted_zone_domain_name
-#   cloudfront_access_id_path    = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
-#   cloudfront_access_id_iam_arn = aws_cloudfront_origin_access_identity.oai.iam_arn
-# }
+module "configuration_app_website" {
+  source                       = "./modules/website"
+  aws_region                   = var.aws_region
+  site_domain_name             = var.app_domain_name
+  environment                  = var.environment
+  hosted_zone_domain_name      = var.hosted_zone_domain_name
+  cloudfront_access_id_path    = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
+  cloudfront_access_id_iam_arn = aws_cloudfront_origin_access_identity.oai.iam_arn
+}
 
-# module "widget_app_website" {
-#   source                       = "./modules/website"
-#   aws_region                   = var.aws_region
-#   bucket_prefix                = "${lower(var.environment)}-${var.widget_domain_name}"
-#   site_domain_name             = var.widget_domain_name
-#   environment                  = var.environment
-#   hosted_zone_domain_name      = var.hosted_zone_domain_name
-#   cloudfront_access_id_path    = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
-#   cloudfront_access_id_iam_arn = aws_cloudfront_origin_access_identity.oai.iam_arn
+module "widget_app_website" {
+  source                       = "./modules/website"
+  aws_region                   = var.aws_region
+  site_domain_name             = var.widget_domain_name
+  environment                  = var.environment
+  hosted_zone_domain_name      = var.hosted_zone_domain_name
+  cloudfront_access_id_path    = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
+  cloudfront_access_id_iam_arn = aws_cloudfront_origin_access_identity.oai.iam_arn
+}
 
-# }
+module "vpc" {
+  source = "./modules/vpc"
 
-# module "server" {
-#   source                  = "./modules/serving"
-#   region                  = var.aws_region
-#   domain_name             = var.server_domain_name
-#   vpc_cidr                = "10.10.0.0/16"
-#   environment             = var.environment
-#   hosted_zone_domain_name = var.hosted_zone_domain_name
-# }
+  vpc_cidr   = "10.10.0.0/16"
+  aws_region = var.aws_region
+}
+
+module "instance_group" {
+  source = "./modules/server"
+
+  application_load_balancer_name = "application-load-balancer-${lower(var.environment)}"
+  public_subnets                 = module.vpc.public_subnets
+  autoscale_group_name           = "autoscale-group-${lower(var.environment)}"
+  private_subnets                = module.vpc.private_subnets
+  vpc_id                         = module.vpc.vpc_id
+  instance_type                  = var.scale_group_instance_type
+  domain_name                    = var.server_domain_name
+  hosted_zone_domain_name        = var.hosted_zone_domain_name
+  aws_region                     = var.aws_region
+  aws_account_id                 = var.aws_account_id
+  ecr_access_key                 = var.ecr_access_key
+  ecr_secret_key                 = var.ecr_secret_key
+}
+
+module "database" {
+  source = "./modules/database"
+
+  database_name         = "palavyr-${lower(var.environment)}"
+  database_username     = "palavyr-user-${lower(var.environment)}"
+  instance_class        = var.database_instance_type
+  public_subnets        = module.vpc.public_subnets
+  rds_param_group_name  = "palavyr-rds-param-group-${lower(var.environment)}"
+  protect_from_deletion = var.protect_from_deletion
+  aws_region            = var.aws_region
+}
+
 
 module "pdf_server" {
   source = "./modules/lambda_endpoint"
@@ -99,12 +124,12 @@ module "pdf_server" {
   region              = var.aws_region
   gateway_name        = "api-gateway-pdf-server-${lower(var.environment)}"
   gateway_stage_name  = lower(var.environment)
-
-  # image_uri = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-pdf-server-lambda:latest"
-
+  image_uri           = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-pdf-server-lambda:${lower(var.environment)}-latest"
 }
 
 module "palavyr_user_data_bucket" {
-  source      = "./modules/data_buckets"
-  bucket_name = "palavyr-user-data-${lower(var.environment)}"
+  source = "./modules/data_buckets"
+
+  bucket_name           = "palavyr-user-data-${lower(var.environment)}"
+  protect_from_deletion = var.protect_from_deletion
 }
