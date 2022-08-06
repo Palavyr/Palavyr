@@ -62,6 +62,8 @@ jobs:
         id: build
         shell: bash
         run: |
+          pwd
+          ls -lath
           chmod 777 ./build.ci.sh
           ./build.ci.sh
         env:
