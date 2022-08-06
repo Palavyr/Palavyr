@@ -31,7 +31,7 @@ class Build : NukeBuild
     AbsolutePath UISourceDirectory => RootDirectory / "ui";
 
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
-    AbsolutePath TempOutputServer => ArtifactsDirectory / "tempserver";
+    AbsolutePath TempOutputServer => ArtifactsDirectory / "build";
 
     Target Clean =>
         _ => _
@@ -95,23 +95,15 @@ class Build : NukeBuild
             .Executes(() =>
             {
                 var pipelinesPackageOutput = ArtifactsDirectory / $"Palavyr.API.{Version}.zip";
-                Compress(ArtifactsDirectory, pipelinesPackageOutput);
+                Compress(TempOutputServer, pipelinesPackageOutput);
 
-                var terraformPackageOutput = ArtifactsDirectory / $"Octopus.CrowsNestPipelines.Terraform.{Version}.zip";
+                var terraformPackageOutput = ArtifactsDirectory / $"Octopus.Palavyr.Terraform.{Version}.zip";
                 Compress(TerraformSourceDirectory, terraformPackageOutput);
 
                 Console.WriteLine($"::set-output name=packages_to_push::{pipelinesPackageOutput},{terraformPackageOutput}");
             });
 
-    Target CleanUp =>
-        _ => _
-            .DependsOn(Zip)
-            .Executes(() =>
-            {
-                DeleteDirectory(TempOutputServer);
-            });
-
-    Target EntryPoint => _ => _.DependsOn(CleanUp);
+    Target EntryPoint => _ => _.DependsOn(Zip);
 
     public static int Main() => Execute<Build>(x => x.EntryPoint);
 }

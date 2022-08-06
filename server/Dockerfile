@@ -4,7 +4,9 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
-COPY server_build/ App/
+COPY artifacts/build App/
 WORKDIR /App
+
+RUN unzip -q -o -d /App /App/app.zip
 
 ENTRYPOINT ["dotnet", "Palavyr.API.dll"]
