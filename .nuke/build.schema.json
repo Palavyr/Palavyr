@@ -73,7 +73,6 @@
             "type": "string",
             "enum": [
               "Clean",
-              "CleanUp",
               "Compile",
               "EntryPoint",
               "PublishArtifacts",
@@ -94,7 +93,6 @@
             "type": "string",
             "enum": [
               "Clean",
-              "CleanUp",
               "Compile",
               "EntryPoint",
               "PublishArtifacts",
