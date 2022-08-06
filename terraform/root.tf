@@ -96,7 +96,7 @@ module "vpc" {
 module "server_group" {
   source = "./modules/server"
 
-  application_load_balancer_name = "application-load-balancer-${lower(var.environment)}"
+  application_load_balancer_name = "app-load-balancer-${lower(var.environment)}"
   public_subnets                 = module.vpc.public_subnets
   autoscale_group_name           = "autoscale-group-${lower(var.environment)}"
   private_subnets                = module.vpc.private_subnets
@@ -117,7 +117,7 @@ module "database" {
   source = "./modules/database"
 
   database_name              = "palavyr-${lower(var.environment)}"
-  database_username          = "palavyr-user-${lower(var.environment)}"
+  database_username          = "palavyruser${lower(var.environment)}"
   rds_param_group_name       = "palavyr-rds-param-group-${lower(var.environment)}"
   database_subnet_group_name = "palavyr-rds-subnet-group-${lower(var.environment)}"
   instance_class             = var.database_instance_type
@@ -128,7 +128,6 @@ module "database" {
   security_group_id          = module.vpc.security_group_id
 
   tags = local.tags
-
 }
 
 
@@ -136,16 +135,13 @@ module "pdf_server" {
   source = "./modules/lambda_endpoint"
 
   environment         = var.environment
-  lambda_runtime      = "nodejs12.x"
-  lambda_handler_name = "lambda.handler"
   function_name       = "palavyr-pdf-server-${lower(var.environment)}"
   aws_iam_role_name   = "serverless_lambda_${var.environment}"
   aws_region          = var.aws_region
   gateway_name        = "api-gateway-pdf-server-${lower(var.environment)}"
   gateway_stage_name  = lower(var.environment)
   image_uri           = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-pdf-server-lambda:${lower(var.environment)}-latest"
-  # tags                = local.tags
-
+  tags                = local.tags
 }
 
 module "palavyr_user_data_bucket" {
@@ -154,5 +150,4 @@ module "palavyr_user_data_bucket" {
   bucket_name           = "palavyr-user-data-${lower(var.environment)}"
   protect_from_deletion = var.protect_from_deletion
   tags                  = local.tags
-
 }

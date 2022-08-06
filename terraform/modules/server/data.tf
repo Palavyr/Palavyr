@@ -28,11 +28,19 @@ data "template_cloudinit_config" "deployment_data" {
     sudo service docker start
     sudo usermod -a -G docker ec2-user
 
-    AWS_ACCESS_KEY_ID=${var.ecr_access_key} AWS_SECRET_ACCESS_KEY=${var.ecr_secret_key} aws ecr get-login-password --region ${var.aws_region} | docker login --username AWS --password-stdin ${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com
+    apt-key adv --fetch-keys https://apt.octopus.com/public.key
+    apt-get update
+    apt-get install tentacle
 
-    # pull this stage image and
-    docker pull ${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-server:${lower(var.environment)}-latest
-    docker run -t palavyr/palavyr-server:${lower(var.environment)}-latest .
+    /opt/octopus/tentacle/configure-tentacle.sh
+
+    /opt/octopus/tentacle/Tentacle service --install --start
+
+    # AWS_ACCESS_KEY_ID=${var.ecr_access_key} AWS_SECRET_ACCESS_KEY=${var.ecr_secret_key} aws ecr get-login-password --region ${var.aws_region} | docker login --username AWS --password-stdin ${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com
+
+    # # pull this stage image and
+    # docker pull ${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-server:${lower(var.environment)}-latest
+    # docker run -t palavyr/palavyr-server:${lower(var.environment)}-latest .
 
     EOT
   }

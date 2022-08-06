@@ -94,13 +94,13 @@ class Build : NukeBuild
             .DependsOn(PublishArtifacts)
             .Executes(() =>
             {
-                var pipelinesPackageOutput = ArtifactsDirectory / $"Palavyr.API.{Version}.zip";
-                Compress(TempOutputServer, pipelinesPackageOutput);
+                var palavyrApiPackageOutput = ArtifactsDirectory / $"Palavyr.API.{Version}.zip";
+                Compress(TempOutputServer, palavyrApiPackageOutput);
 
                 var terraformPackageOutput = ArtifactsDirectory / $"Octopus.Palavyr.Terraform.{Version}.zip";
                 Compress(TerraformSourceDirectory, terraformPackageOutput);
 
-                Console.WriteLine($"::set-output name=packages_to_push::{pipelinesPackageOutput},{terraformPackageOutput}");
+                Console.WriteLine($"::set-output name=packages_to_push::{palavyrApiPackageOutput},{terraformPackageOutput}");
             });
 
     Target EntryPoint => _ => _.DependsOn(Zip);

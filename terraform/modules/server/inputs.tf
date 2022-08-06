@@ -2,7 +2,6 @@
 
 variable "application_load_balancer_name" {
   type = string
-
   description = "The name for the application load blancer"
 }
 

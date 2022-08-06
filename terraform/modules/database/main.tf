@@ -21,7 +21,7 @@ resource "aws_db_instance" "database" {
   password                              = var.db_password
   vpc_security_group_ids                = [var.security_group_id]
   deletion_protection                   = var.protect_from_deletion
-  availability_zone                     = var.aws_region
+  availability_zone                     = "${var.aws_region}a"
   allocated_storage                     = 10
   engine                                = "postgres"
   engine_version                        = "13.4"

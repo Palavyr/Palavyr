@@ -40,7 +40,7 @@ resource "aws_launch_configuration" "asg_launch_conf" {
 resource "aws_autoscaling_group" "asg" {
   name                 = var.autoscale_group_name
   launch_configuration = aws_launch_configuration.asg_launch_conf.name
-  min_size             = 3
+  min_size             = 1
   max_size             = 10
   vpc_zone_identifier  = var.private_subnets
   target_group_arns    = [aws_lb_target_group.alb_tg.arn]
