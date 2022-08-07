@@ -4,7 +4,7 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
-COPY artifacts/build App/
+COPY artifacts/serverbuild App/
 WORKDIR /App
 
 ENTRYPOINT ["dotnet", "Palavyr.API.dll"]
