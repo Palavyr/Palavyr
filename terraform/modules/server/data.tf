@@ -51,14 +51,14 @@ data "template_cloudinit_config" "deployment_data" {
 
     serverUrl="https://palavyr.octopus.app" # Url to our Octopus server
     serverCommsPort=10933 # Port to use for the Polling Tentacle
-
     apiKey="${var.octopus_api_key}" # API key that has permission to add machines
-
     name=$HOSTNAME # Name of the Linux machine
     environment="${var.environment}"
-    role="${var.environment}-${var.role}"
+    role="palavyr-autoscale"
     configFilePath="/etc/octopus/default/tentacle-default.config" # Location on disk to store the configuration
     applicationPath="/home/Octopus/Applications/" # Location where deployed applications will be installed to
+    policy="Clean up Autoscale Targets on Scale Down"
+    space="Palavyr"
 
     # Create a new Tentacle instance
     /opt/octopus/tentacle/Tentacle create-instance --config "$configFilePath"
@@ -71,7 +71,7 @@ data "template_cloudinit_config" "deployment_data" {
 
     echo "Registering the Tentacle $name with server $serverUrl in environment $environment with role $role"
 
-    /opt/octopus/tentacle/Tentacle register-with --server "$serverUrl" --apiKey "$apiKey" --name "$name" --env "$environment" --role "$role" --comms-style "TentacleActive" --server-comms-port $serverCommsPort
+    /opt/octopus/tentacle/Tentacle register-with --server "$serverUrl" --apiKey "$apiKey" --name "$name" --env "$environment" --role "$role" --comms-style "TentacleActive" --server-comms-port $serverCommsPort --policy $policy --space $space
 
     sudo /opt/octopus/tentacle/Tentacle service --install --start
     EOT
