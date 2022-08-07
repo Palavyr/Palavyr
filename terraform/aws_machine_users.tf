@@ -4,7 +4,8 @@
 resource "aws_iam_policy_attachment" "machine_user_policy_attachment" {
   name = "machine_user_policy_attachment"
   users = [
-    module.iam_iam-ecr.name,
+    module.i_am_ecr.iam_user_name,
+    module.i_am_palavyr.iam_user_name
     # add more machine users here
   ]
   groups     = [aws_iam_group.machine_users_group.name]
@@ -23,10 +24,13 @@ module "i_am_ecr" {
   tags                  = local.tags
 }
 output "i_am_ecr_access_key" {
-  value = module.i_am_ecr.iam_access_key_secret
+  value     = module.i_am_ecr.iam_access_key_id
+  sensitive = true
 }
+
 output "i_am_ecr_secret_key" {
-  value = module.i_am_ecr.iam_access_key_encrypted_secret
+  value     = module.i_am_ecr.iam_access_key_encrypted_secret
+  sensitive = true
 }
 #  --------------------------------------------------------
 module "i_am_palavyr" {
@@ -35,11 +39,16 @@ module "i_am_palavyr" {
 
   name                  = "palavyr-${lower(var.environment)}"
   create_iam_access_key = true
-  tags                  = local.tags
+
+  tags = local.tags
 }
+
 output "palavyr_access_key" {
-  value = module.i_am_palavyr.iam_access_key_secret
+  value     = module.i_am_palavyr.iam_access_key_id
+  sensitive = true
+
 }
 output "palavyr_secret_key" {
-  value = module.i_am_palavyr.iam_access_key_encrypted_secret
+  value     = module.i_am_palavyr.iam_access_key_secret
+  sensitive = true
 }

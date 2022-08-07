@@ -152,5 +152,6 @@ module "palavyr_user_data_bucket" {
 
   bucket_name           = "palavyr-user-data-${lower(var.environment)}"
   protect_from_deletion = var.protect_from_deletion
+  key_alias             =  "alias/terraform_user_bucket_key_${lower(var.environment)}"
   tags                  = local.tags
 }
