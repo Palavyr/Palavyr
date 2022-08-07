@@ -12,7 +12,7 @@ output "configuration_app_website_bucket" {
   description = "S3 bucket for the dashboard"
   value       = module.configuration_app_website.aws_s3_bucket_name
 }
-output "widget_app_website" {
+output "widget_app_website_bucket" {
   description = "S3 bucket for the dashboard"
   value       = module.widget_app_website.aws_s3_bucket_name
 }

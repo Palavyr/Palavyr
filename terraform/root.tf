@@ -97,10 +97,11 @@ module "server_group" {
   source = "./modules/server"
 
   application_load_balancer_name = "app-load-balancer-${lower(var.environment)}"
-  public_subnets                 = module.vpc.public_subnets
   autoscale_group_name           = "autoscale-group-${lower(var.environment)}"
+  public_subnets                 = module.vpc.public_subnets
   private_subnets                = module.vpc.private_subnets
   vpc_id                         = module.vpc.vpc_id
+  security_group_id              = module.vpc.security_group_id
   instance_type                  = var.scale_group_instance_type
   domain_name                    = var.server_domain_name
   hosted_zone_domain_name        = var.hosted_zone_domain_name
@@ -109,8 +110,10 @@ module "server_group" {
   ecr_access_key                 = var.ecr_access_key
   ecr_secret_key                 = var.ecr_secret_key
   environment                    = var.environment
-  security_group_id              = module.vpc.security_group_id
-  tags                           = local.tags
+  octopus_api_key                = var.octopus_api_key
+  role                           = "palavyr-autoscale" #var.role
+
+  tags = local.tags
 }
 
 module "database" {
@@ -134,14 +137,14 @@ module "database" {
 module "pdf_server" {
   source = "./modules/lambda_endpoint"
 
-  environment         = var.environment
-  function_name       = "palavyr-pdf-server-${lower(var.environment)}"
-  aws_iam_role_name   = "serverless_lambda_${var.environment}"
-  aws_region          = var.aws_region
-  gateway_name        = "api-gateway-pdf-server-${lower(var.environment)}"
-  gateway_stage_name  = lower(var.environment)
-  image_uri           = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-pdf-server-lambda:${lower(var.environment)}-latest"
-  tags                = local.tags
+  environment        = var.environment
+  function_name      = "palavyr-pdf-server-${lower(var.environment)}"
+  aws_iam_role_name  = "serverless_lambda_${var.environment}"
+  aws_region         = var.aws_region
+  gateway_name       = "api-gateway-pdf-server-${lower(var.environment)}"
+  gateway_stage_name = lower(var.environment)
+  image_uri          = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-pdf-server-lambda:${lower(var.environment)}-latest"
+  tags               = local.tags
 }
 
 module "palavyr_user_data_bucket" {

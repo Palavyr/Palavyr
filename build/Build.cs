@@ -31,8 +31,8 @@ class Build : NukeBuild
     AbsolutePath UISourceDirectory => RootDirectory / "ui";
 
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
-    AbsolutePath TempOutputServer => ArtifactsDirectory / "build";
-
+    AbsolutePath TempOutputServer => ArtifactsDirectory / "serverbuild";
+    AbsolutePath TempOutputMigrator => ArtifactsDirectory / "migratorbuild";
     Target Clean =>
         _ => _
             .Before(Restore)
@@ -81,10 +81,11 @@ class Build : NukeBuild
             .Executes(() =>
             {
                 CopyFileToDirectory(".env", TempOutputServer);
+ 
                 DotNetPublish(_ => _
                     .SetProject(ServerSourceDirectory / "Palavyr.API")
                     .SetConfiguration(Configuration)
-                    .SetOutput(TempOutputServer)
+                    .SetOutput(TempOutputMigrator)
                     .EnableNoBuild()
                     .AddProperty("Version", Version)
                 );
@@ -98,13 +99,16 @@ class Build : NukeBuild
             .DependsOn(PublishArtifacts)
             .Executes(() =>
             {
+                var migratorPackageOutput = ArtifactsDirectory / $"palavyr-migrator.{Version}.zip";
+                Compress(TempOutputMigrator, migratorPackageOutput);
+                
                 var palavyrApiPackageOutput = ArtifactsDirectory / $"palavyr-server.{Version}.zip";
                 Compress(TempOutputServer, palavyrApiPackageOutput);
 
                 var terraformPackageOutput = ArtifactsDirectory / $"palavyr-terraform.{Version}.zip";
                 Compress(TerraformSourceDirectory, terraformPackageOutput);
 
-                Console.WriteLine($"::set-output name=packages_to_push::{palavyrApiPackageOutput},{terraformPackageOutput}");
+                Console.WriteLine($"::set-output name=packages_to_push::{palavyrApiPackageOutput},{terraformPackageOutput},{migratorPackageOutput}");
             });
 
     Target EntryPoint => _ => _.DependsOn(Zip);

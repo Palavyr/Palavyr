@@ -26,7 +26,7 @@ resource "aws_security_group" "ec2_ingress" {
 # create launch configuration for ASG :
 resource "aws_launch_configuration" "asg_launch_conf" {
   name_prefix     = "tf-cloufront-alb-"
-  image_id        = data.aws_ami.ubuntu_ami.id
+  image_id        = data.aws_ami.my_ami.id
   instance_type   = var.instance_type
   user_data       = data.template_cloudinit_config.deployment_data.rendered
   security_groups = [aws_security_group.ec2_ingress.id]

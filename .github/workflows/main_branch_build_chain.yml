@@ -82,7 +82,7 @@ jobs:
         name: Build & push development Docker image
         with:
           image: palavyr/palavyr-server
-          tags: development-latest, ${{ needs.generate-build-number.outputs.version }}
+          tags: latest, ${{ needs.generate-build-number.outputs.version }}
           registry: ${{ secrets.ECR_REGISTRY }}
           dockerfile: ./server/Dockerfile
         env:
@@ -151,7 +151,7 @@ jobs:
         name: Build & push Docker image
         with:
           image: palavyr/palavyr-frontend
-          tags: development-latest, ${{ needs.generate-build-number.outputs.version }}
+          tags: latest, ${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./ui/docker-frontend/Dockerfile
           registry: ${{ secrets.ECR_REGISTRY }}
         env:
@@ -208,7 +208,7 @@ jobs:
         name: Build & push to Docker
         with:
           image: palavyr/palavyr-widget
-          tags: development-latest, ${{ needs.generate-build-number.outputs.version }}
+          tags: latest, ${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./ui/docker-widget/Dockerfile
           registry: ${{ secrets.ECR_REGISTRY }}
         env:
@@ -234,7 +234,7 @@ jobs:
         name: Build & push to Docker
         with:
           image: palavyr/palavyr-pdf-server
-          tags: development-latest, ${{ needs.generate-build-number.outputs.version }}
+          tags: latest, ${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./pdf/Dockerfile.ci
           registry: ${{ secrets.ECR_REGISTRY }}
         env:
@@ -260,7 +260,7 @@ jobs:
         name: Build & push to Docker
         with:
           image: palavyr/palavyr-pdf-server-lambda
-          tags: development-latest, ${{ needs.generate-build-number.outputs.version }}
+          tags: latest, ${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./pdf/Dockerfile.lambda
           registry: ${{ secrets.ECR_REGISTRY }}
         env:

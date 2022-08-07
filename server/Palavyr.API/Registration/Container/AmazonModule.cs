@@ -1,5 +1,4 @@
 using System;
-
 using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
@@ -26,7 +25,7 @@ namespace Palavyr.API.Registration.Container
         {
             var accessKey = configuration.GetAccessKey();
             var secretKey = configuration.GetSecretKey();
-            
+
             // default s3 endpoint is s3.amazonaws.com
             // default ses endpoint is ses.amazonaws.com
 

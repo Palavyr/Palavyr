@@ -62,3 +62,11 @@ variable "database_password" {
   type        = string
   description = "password to connect to the RDS postgres database - this is stored in Octopus and Lastpass"
 }
+
+variable "octopus_api_key" {
+  type = string
+}
+
+variable "role" {
+  type = string
+}

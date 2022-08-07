@@ -1,17 +1,29 @@
 # fetch ubuntu ami id:
-data "aws_ami" "ubuntu_ami" {
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
+# data "aws_ami" "my_ami" {
+#   filter {
+#     name   = "name"
+#     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+#   }
+
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+#   most_recent = true
+#   owners      = ["099720109477"]
+# }
+
+data "aws_ami" "my_ami" {
+  most_recent = true
+  owners      = ["amazon"]
 
   filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-ebs"]
   }
-  most_recent = true
-  owners      = ["099720109477"]
 }
+
+
 # generate user data script :
 data "template_cloudinit_config" "deployment_data" {
   gzip          = false
@@ -22,26 +34,46 @@ data "template_cloudinit_config" "deployment_data" {
     content      = <<-EOT
     #! /bin/bash
 
-    # install docker and start the server
+    # Install docker and start it
+    set -ex
     sudo yum update -y
-    sudo yum install docker -y
+    sudo amazon-linux-extras install docker -y
     sudo service docker start
     sudo usermod -a -G docker ec2-user
 
-    apt-key adv --fetch-keys https://apt.octopus.com/public.key
-    apt-get update
-    apt-get install tentacle
+    # Install tentacle
+    sudo apt-key adv --fetch-keys https://apt.octopus.com/public.key # Add Octopus public key to apt
+    sudo add-apt-repository "deb https://apt.octopus.com/ stretch main" # Add Octopus repository to apt
+    sudo apt-get update # Make sure everything else is up-to-date
+    sudo apt-get install tentacle # Install Tentacle for Linux
 
-    /opt/octopus/tentacle/configure-tentacle.sh
+    # Register the tentacle with Octopus
 
-    /opt/octopus/tentacle/Tentacle service --install --start
+    serverUrl="https://palavyr.octopus.app" # Url to our Octopus server
+    serverCommsPort=10933 # Port to use for the Polling Tentacle
 
-    # AWS_ACCESS_KEY_ID=${var.ecr_access_key} AWS_SECRET_ACCESS_KEY=${var.ecr_secret_key} aws ecr get-login-password --region ${var.aws_region} | docker login --username AWS --password-stdin ${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com
+    apiKey="${var.octopus_api_key}" # API key that has permission to add machines
 
-    # # pull this stage image and
-    # docker pull ${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-server:${lower(var.environment)}-latest
-    # docker run -t palavyr/palavyr-server:${lower(var.environment)}-latest .
+    name=$HOSTNAME # Name of the Linux machine
+    environment="${var.environment}"
+    role="${var.environment}-${var.role}"
+    configFilePath="/etc/octopus/default/tentacle-default.config" # Location on disk to store the configuration
+    applicationPath="/home/Octopus/Applications/" # Location where deployed applications will be installed to
 
+    # Create a new Tentacle instance
+    /opt/octopus/tentacle/Tentacle create-instance --config "$configFilePath"
+
+    # Create a new self-signed certificate for secure communication with Octopus server
+    /opt/octopus/tentacle/Tentacle new-certificate --if-blank
+
+    # Configure the Tentacle specifying it is not a listening Tentacle and setting where deployed applications go
+    /opt/octopus/tentacle/Tentacle configure --noListen False --reset-trust --app "$applicationPath"
+
+    echo "Registering the Tentacle $name with server $serverUrl in environment $environment with role $role"
+
+    /opt/octopus/tentacle/Tentacle register-with --server "$serverUrl" --apiKey "$apiKey" --name "$name" --env "$environment" --role "$role" --comms-style "TentacleActive" --server-comms-port $serverCommsPort
+
+    sudo /opt/octopus/tentacle/Tentacle service --install --start
     EOT
   }
 }

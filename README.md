@@ -79,3 +79,8 @@ CSS                              1              0              7             21
 SUM:                          1671          32584           2203         116721
 -------------------------------------------------------------------------------
 ```
+
+#### Additional Note
+
+Terraformer import all [nicely](https://www.youtube.com/watch?v=GpjCF4yZU9A&ab_channel=NedintheCloud)
+`terraformer import aws --resources="*" --compact --path-pattern "{output}/{provider}" --output hcl`

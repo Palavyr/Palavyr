@@ -1,7 +1,7 @@
 #  Application load balancer inputs
 
 variable "application_load_balancer_name" {
-  type = string
+  type        = string
   description = "The name for the application load blancer"
 }
 
@@ -79,4 +79,13 @@ variable "tags" {
 variable "environment" {
   type        = string
   description = "The environment in use"
+}
+
+variable "octopus_api_key" {
+  type = string
+}
+
+variable "role" {
+  type = string
+  description = "The role which will be used when deploying to autoscale"
 }
