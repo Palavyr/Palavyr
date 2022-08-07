@@ -43,10 +43,10 @@ terraform {
   }
 }
 
-
+#################################################################
 provider "aws" {
   alias  = "aws"
-  region = "us-east-1"
+  region = var.aws_region
 }
 
 
@@ -111,7 +111,7 @@ module "server_group" {
   ecr_secret_key                 = var.ecr_secret_key
   environment                    = var.environment
   octopus_api_key                = var.octopus_api_key
-  role                           = "palavyr-autoscale" #var.role
+  role                           = "palavyr-autoscale"
 
   tags = local.tags
 }
