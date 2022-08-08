@@ -96,8 +96,8 @@ module "vpc" {
 module "server_group" {
   source = "./modules/server"
 
-  application_load_balancer_name = "app-load-balancer-${lower(var.environment)}"
-  autoscale_group_name           = "autoscale-group-${lower(var.environment)}"
+  application_load_balancer_name = "palavyr-load-balancer-${lower(var.environment)}"
+  autoscale_group_name           = "palavyr-autoscale-group-${lower(var.environment)}"
   public_subnets                 = module.vpc.public_subnets
   private_subnets                = module.vpc.private_subnets
   vpc_id                         = module.vpc.vpc_id
@@ -143,7 +143,7 @@ module "pdf_server" {
   aws_region         = var.aws_region
   gateway_name       = "api-gateway-pdf-server-${lower(var.environment)}"
   gateway_stage_name = lower(var.environment)
-  image_uri          = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-pdf-server-lambda:${lower(var.environment)}-latest"
+  image_uri          = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-pdf-server-lambda:latest"
   tags               = local.tags
 }
 

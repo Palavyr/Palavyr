@@ -24,7 +24,7 @@ output "user_data_bucket" {
 
 output "migrator_function_name" {
   description = "name of the migration lambda function"
-  value       = aws_lambda_function.migrator
+  value       = aws_lambda_function.migrator.function_name
 }
 
 output "migrator_function_role_arn" {

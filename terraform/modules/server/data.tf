@@ -13,6 +13,12 @@
 #   owners      = ["099720109477"]
 # }
 
+# data source to fetch hosted zone info from domain name:
+data "aws_route53_zone" "hosted_zone" {
+  name = var.hosted_zone_domain_name
+}
+
+
 data "aws_ami" "my_ami" {
   most_recent = true
   owners      = ["amazon"]
@@ -21,6 +27,7 @@ data "aws_ami" "my_ami" {
     name   = "name"
     values = ["amzn2-ami-hvm-*-x86_64-ebs"]
   }
+
 }
 
 
@@ -32,53 +39,42 @@ data "template_cloudinit_config" "deployment_data" {
   part {
     content_type = "text/x-shellscript"
     content      = <<-EOT
-    #! /bin/bash
+      #!/bin/bash
 
-    # Install docker and start it
-    set -ex
-    sudo yum update -y
-    sudo amazon-linux-extras install docker -y
-    sudo service docker start
-    sudo usermod -a -G docker ec2-user
+      serverUrl="https://palavyr.octopus.app"  # The url of your Octopus server
+      thumbprint="#{OCTOPUS_THUMBPRINT}"       # The thumbprint of your Octopus Server
+      apiKey="#{OCTOPUS_API_KEY}"           # An Octopus Server api key with permission to add machines
+      spaceName="Palavyr" # The name of the space to register the Tentacle in
+      name=$HOSTNAME      # The name of the Tentacle at is will appear in the Octopus portal
+      environment="#{Environment}"  # The environment to register the Tentacle in
+      role="palavyr-autoscale"   # The role to assign to the Tentacle
+      machinePolicy="Clean up Autoscale Targets on Scale Down"
+      configFilePath="/etc/octopus/default/tentacle-default.config"
+      applicationPath="/home/Octopus/Applications/"
 
-    # Install tentacle
-    sudo apt-key adv --fetch-keys https://apt.octopus.com/public.key # Add Octopus public key to apt
-    sudo add-apt-repository "deb https://apt.octopus.com/ stretch main" # Add Octopus repository to apt
-    sudo apt-get update # Make sure everything else is up-to-date
-    sudo apt-get install tentacle # Install Tentacle for Linux
+      curl -L https://octopus.com/downloads/latest/Linux_x64TarGz/OctopusTentacle --output tentacle-linux_x64.tar.gz
 
-    # Register the tentacle with Octopus
+      mkdir /opt/octopus
+      tar xvzf tentacle-linux_x64.tar.gz -C /opt/octopus
 
-    serverUrl="https://palavyr.octopus.app" # Url to our Octopus server
-    serverCommsPort=10933 # Port to use for the Polling Tentacle
-    apiKey="${var.octopus_api_key}" # API key that has permission to add machines
-    name=$HOSTNAME # Name of the Linux machine
-    environment="${var.environment}"
-    role="palavyr-autoscale"
-    configFilePath="/etc/octopus/default/tentacle-default.config" # Location on disk to store the configuration
-    applicationPath="/home/Octopus/Applications/" # Location where deployed applications will be installed to
-    policy="Clean up Autoscale Targets on Scale Down"
-    space="Palavyr"
+      /opt/octopus/tentacle/Tentacle create-instance --config "$configFilePath"
+      /opt/octopus/tentacle/Tentacle new-certificate --if-blank
+      /opt/octopus/tentacle/Tentacle configure --port 10933 --noListen False --reset-trust --app "$applicationPath"
+      /opt/octopus/tentacle/Tentacle configure --trust $thumbprint
+      echo "Registering the Tentacle $name with server $serverUrl in environment $environment with role $role"
+      /opt/octopus/tentacle/Tentacle register-with --server "$serverUrl" --apiKey "$apiKey" --space "$spaceName" --name "$name" --env "$environment" --role "$role" --policy "$machinePolicy"
 
-    # Create a new Tentacle instance
-    /opt/octopus/tentacle/Tentacle create-instance --config "$configFilePath"
+      /opt/octopus/tentacle/Tentacle service --install --start
 
-    # Create a new self-signed certificate for secure communication with Octopus server
-    /opt/octopus/tentacle/Tentacle new-certificate --if-blank
+      ###########################
 
-    # Configure the Tentacle specifying it is not a listening Tentacle and setting where deployed applications go
-    /opt/octopus/tentacle/Tentacle configure --noListen False --reset-trust --app "$applicationPath"
-
-    echo "Registering the Tentacle $name with server $serverUrl in environment $environment with role $role"
-
-    /opt/octopus/tentacle/Tentacle register-with --server "$serverUrl" --apiKey "$apiKey" --name "$name" --env "$environment" --role "$role" --comms-style "TentacleActive" --server-comms-port $serverCommsPort --policy $policy --space $space
-
-    sudo /opt/octopus/tentacle/Tentacle service --install --start
-    EOT
+      # Install docker and start it
+      set -ex
+      sudo yum update -y
+      sudo amazon-linux-extras install docker -y
+      sudo service docker start
+      sudo usermod -a -G docker ec2-user
+      EOT
   }
 }
 
-# data source to fetch hosted zone info from domain name:
-data "aws_route53_zone" "hosted_zone" {
-  name = var.hosted_zone_domain_name
-}
