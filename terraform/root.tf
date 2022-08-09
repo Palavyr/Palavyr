@@ -9,32 +9,16 @@
 #  Comment out remote terraform block, and uncomment the local block
 
 ##################
-# terraform {
-#   backend "remote" {
-#     organization = "palavyr"
-#     token        = "#{TerraformCloudApiToken}"
-
-#     workspaces {
-#       name = "#{TerraformWorkspace}"
-#     }
-#   }
-
-#   required_providers {
-#     aws = {
-#       source  = "hashicorp/aws"
-#       version = "~> 4.0"
-#     }
-#   }
-# }
-
-#######
-# Uncomment the code below when working locally if you want to track your
-# own infra while testing in development
-#######
-
 terraform {
-  backend "local" {
+  backend "remote" {
+    organization = "palavyr"
+    token        = "#{TerraformCloudApiToken}"
+
+    workspaces {
+      name = "#{TerraformWorkspace}"
+    }
   }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -42,6 +26,22 @@ terraform {
     }
   }
 }
+
+#######
+# Uncomment the code below when working locally if you want to track your
+# own infra while testing in development
+#######
+
+# terraform {
+#   backend "local" {
+#   }
+#   required_providers {
+#     aws = {
+#       source  = "hashicorp/aws"
+#       version = "~> 4.0"
+#     }
+#   }
+# }
 
 #################################################################
 provider "aws" {
@@ -147,11 +147,16 @@ module "pdf_server" {
   tags               = local.tags
 }
 
+
+resource "random_id" "randid" {
+  byte_length = 6
+}
+
 module "palavyr_user_data_bucket" {
   source = "./modules/data_buckets"
 
   bucket_name           = "palavyr-user-data-${lower(var.environment)}"
   protect_from_deletion = var.protect_from_deletion
-  key_alias             =  "alias/terraform_user_bucket_key_${lower(var.environment)}"
+  key_alias             = "alias/palavyr_${random_id.randid.hex}_key_${lower(var.environment)}"
   tags                  = local.tags
 }

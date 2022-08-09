@@ -1,6 +1,6 @@
 # This group will have this policy attached to it
 resource "aws_iam_policy" "human_full_access_user_policy" {
-  name        = "human_full_access_policy-${lower(var.environment)}"
+  name        = "human-full-access-policy-${lower(var.environment)}"
   description = "General human user access"
 
   policy = jsonencode({

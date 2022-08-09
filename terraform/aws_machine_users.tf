@@ -2,7 +2,7 @@
 # create your user below, make sure you link it to this resource by
 # adding `module.iam_iam-[your_user_name].name` to the `users` array.
 resource "aws_iam_policy_attachment" "machine_user_policy_attachment" {
-  name = "machine_user_policy_attachment"
+  name = "machine-user-policy-attachment"
   users = [
     module.i_am_ecr.iam_user_name,
     module.i_am_palavyr.iam_user_name

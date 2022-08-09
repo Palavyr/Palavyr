@@ -1,0 +1,16 @@
+# aws-nuke -c ./aws-nuke.config --profile aws-nuke-example
+
+regions:
+  - us-east-1
+
+# account-blocklist:
+#   - "999999999999" # production
+
+accounts:
+  "306885252482": {} # aws-nuke-example
+
+  resource-types:
+  # don't nuke IAM users
+  excludes:
+    - IAMUser
+    - ECR
