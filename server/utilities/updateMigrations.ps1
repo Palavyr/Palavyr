@@ -73,6 +73,12 @@ function CheckDirForExistingVersions([string]$directory_path, [string]$currentVe
     }
     else {
         Write-Host "Perhaps $directory_path does not exist..."
+        Write-Output "Lets make that for you."
+
+        # create the directory
+        New-Item -ItemType Directory -Path $directory_path
+        CheckDirForExistingVersions $directory_path $currentVersion
+
         exit
     }
 }
@@ -110,6 +116,7 @@ function GetNextMigrationScriptVersion() {
 # Set-Variable Palavyr_ConnectionString="Server=localhost<SplitMe>Port=5432<SplitMe>Database=AppDatabase<SplitMe>User Id=postgres<SplitMe>Password=Password01!"
 # Set-Variable Palavyr_AWS__Region=$region
 # Set-Variable Palavyr_JWT__SecretKey=SomeWOwowow
+
 $nextMigrationScriptVersion = GetNextMigrationScriptVersion;
 $scriptDir = ".\\Palavyr.Data.Migrator\\Scripts\\"
 

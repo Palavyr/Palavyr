@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Amazon.Lambda.Core;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
@@ -19,6 +20,14 @@ namespace Palavyr.API
     {
         public static int Main(string[] args)
         {
+            DotEnv.Load(".env");
+
+            if (File.Exists("../.env.local"))
+            {
+                Console.WriteLine("YAHOOOOO");
+                DotEnv.Load(".env.local");
+            }
+
             // The initial "bootstrap" logger is able to log errors during start-up. It's completely replaced by the
             // logger configured in `UseSerilog()` below, once configuration and dependency-injection have both been
             // set up successfully.
@@ -89,8 +98,10 @@ namespace Palavyr.API
     {
         protected override void Init(IHostBuilder builder)
         {
-            var config = ConfigurationGetter.GetConfiguration();
 
+            DotEnv.Load("./env");
+
+            var config = ConfigurationGetter.GetConfiguration();
             builder
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureLogging(
@@ -108,6 +119,8 @@ namespace Palavyr.API
 
         protected override void Init(IWebHostBuilder builder)
         {
+            DotEnv.Load("./env");
+
             builder.UseStartup<Startup>();
         }
     }

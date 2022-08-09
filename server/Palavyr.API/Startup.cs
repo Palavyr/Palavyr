@@ -45,9 +45,7 @@ namespace Palavyr.API
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            var config = ConfigurationGetter.GetConfiguration();
-
-            configuration = config;
+            configuration = ConfigurationGetter.GetConfiguration();
             AuthenticationConfiguration.AddAuthenticationSchemes(services, configuration);
             SetServices(services, configuration, env);
         }

@@ -71,5 +71,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Palavyr.Core\Palavyr.Core.csproj" />
     </ItemGroup>
+    
+    
 
 </Project>
