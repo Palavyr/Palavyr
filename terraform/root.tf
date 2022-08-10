@@ -12,10 +12,10 @@
 terraform {
   backend "remote" {
     organization = "palavyr"
-    token        = "#{TerraformCloudApiToken}"
+    token        = "${var.terraform_api_key}"
 
     workspaces {
-      name = "#{TerraformWorkspace}"
+      name = "${var.terraform_workspace}"
     }
   }
 

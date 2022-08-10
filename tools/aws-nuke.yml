@@ -1,7 +1,7 @@
 # aws-nuke -c ./aws-nuke.config --profile aws-nuke-example
 
 regions:
-  - us-east-1
+  - "global"
 
 # account-blocklist:
 #   - "999999999999" # production
