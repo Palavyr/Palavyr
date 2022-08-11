@@ -1,6 +1,6 @@
 # Create a security group for EC2 instances to allow ingress on port 80 :
 resource "aws_security_group" "this" {
-  name        = "sg-${var.autoscale_group_name}"
+  name        = "secgrp-${var.autoscale_group_name}"
   description = "Used for autoscale group"
   vpc_id      = var.vpc_id
 

@@ -7,16 +7,18 @@ terraform {
     hostname     = "app.terraform.io"
 
     workspaces {
-      name = "paulg-local-dev"
+      name = "palavyr-local-dev"
     }
 
   }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 4.0"
     }
   }
+
 }
 
 provider "aws" {

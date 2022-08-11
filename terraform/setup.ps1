@@ -29,48 +29,44 @@ $help = @"
 
 if ("" -eq $workspacename) {
     Write-Error "You must provide a workspace name"
-    Write-Error ""
-    Write-Error $help;
+    Write-Information $help;
     exit 1
 }
 
 if ("" -eq $env:TF_TOKEN_app_terraform_io) {
     Write-Error "You must set the terraform cloud api token"
     Write-Error "TF_TOKEN_app_terraform_io=<your-token>"
-    Write-Error ""
-    Write-Error $help;
+    Write-Information $help;
     exit 1
 }
 
 if ("" -eq $env:CorePlatformSandboxSubId) {
     Write-Error "You must set the sandbox subscription id"
     Write-Error "CorePlatformSandboxSubId=<subscription-id>"
-    Write-Error ""
-    Write-Error $help;
+    Write-Information $help;
     exit 1
 }
 
-Write-Host "\nCreating new workspace: $workspacename"\n
+Write-Host 'Creating new workspace: $workspacename'
+terraform workspace new $workspacename
+terraform workspace select $workspacename
+# try {
 
-try {
+#     Invoke-WebRequest "https://app.terraform.io/api/v2/organizations/octopus-deploy/workspaces" `
+#         -Method POST `
+#         -Headers @{'Content-Type' = 'application/vnd.api+json'; 'Accept' = 'application/json'; "Authorization" = "Bearer $env:TF_TOKEN_app_terraform_io" } `
+#         -Body '{"data":{"attributes":{"name":"'$workspacename'","execution-mode":"local"}},"type":"workspaces"}'
+# }
+# catch {
+#     Write-Error $_.Exception.Message
+#     exit 1
+# }
 
-    Invoke-WebRequest "https://app.terraform.io/api/v2/organizations/octopus-deploy/workspaces" `
-        -Method POST `
-        -Headers @{'Content-Type' = 'application/vnd.api+json'; 'Accept' = 'application/json'; "Authorization" = "Bearer $env:TF_TOKEN_app_terraform_io" } `
-        -Body '{"data":{"attributes":{"name":"'$workspacename'","execution-mode":"local"}},"type":"workspaces"}'
-}
-catch {
-    Write-Error $_.Exception.Message
-    exit 1
-}
+# terraform init
 
-az login
-az account set --subscription $env:CorePlatformSandboxSubId
-terraform init
+# # Do a round of checks to make sure everything is running correctly
+# terraform validate
+# terraform apply --var-file .\envs\other.tfvars
+# terraform destroy -var-file .\envs\other.tfvars
 
-# Do a round of checks to make sure everything is running correctly
-terraform validate
-terraform apply --var-file .\envs\dev\dev.tfvars -auto-approve
-terraform destroy -var-file .\envs\dev\dev.tfvars
-
-Write-Host "\nCongradulations, you're environment is all set up!\n"
+Write-Host "Congradulations, you're environment is all set up!"

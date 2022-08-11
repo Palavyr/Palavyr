@@ -60,7 +60,7 @@ module "database" {
   source = "./modules/database"
 
   database_name              = "palavyr-${lower(var.environment)}-${random_id.rand.hex}"
-  database_username          = "palavyr-${lower(var.environment)}-${random_id.rand.hex}"
+  database_username          = "palavyr"
   rds_param_group_name       = "palavyr-rds-pgroup-${lower(var.environment)}-${random_id.rand.hex}"
   database_subnet_group_name = "palavyr-rds-sgroup-${lower(var.environment)}-${random_id.rand.hex}"
   instance_class             = var.database_instance_type
