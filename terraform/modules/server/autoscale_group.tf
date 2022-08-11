@@ -1,13 +1,13 @@
 # Create a security group for EC2 instances to allow ingress on port 80 :
 resource "aws_security_group" "this" {
-  name        = "ec2_http_ingress"
+  name        = "sg-${var.autoscale_group_name}"
   description = "Used for autoscale group"
   vpc_id      = var.vpc_id
 
   # HTTP access from anywhere
   ingress {
     from_port   = 80
-    to_port     = 5001
+    to_port     = 4001
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -29,7 +29,7 @@ resource "random_id" "this" {
 
 # create launch configuration for ASG :
 resource "aws_launch_configuration" "this" {
-  name          = "agm-${random_id.this.hex}-${lower(var.environment)}"
+  name          = "agm-${var.autoscale_group_name}"
   image_id      = data.aws_ami.my_ami.id
   instance_type = var.instance_type
 
@@ -52,7 +52,6 @@ resource "aws_autoscaling_group" "asg" {
   health_check_grace_period = 300
   health_check_type         = "EC2"
   force_delete              = true
-
 
   lifecycle {
     create_before_destroy = true

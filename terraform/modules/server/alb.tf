@@ -9,7 +9,7 @@ resource "aws_lb" "alb" {
 }
 
 resource "aws_lb_target_group" "alb_tg" {
-  name     = "palavyr-lb-tg-${lower(var.environment)}"
+  name     = "tg-${var.application_load_balancer_name}"
   port     = "80"
   protocol = "HTTP"
   vpc_id   = var.vpc_id

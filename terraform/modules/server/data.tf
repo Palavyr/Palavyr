@@ -74,6 +74,12 @@ data "template_cloudinit_config" "deployment_data" {
       sudo amazon-linux-extras install docker -y
       sudo service docker start
       sudo usermod -a -G docker ec2-user
+
+      ############################
+
+
+
+
       EOT
   }
 }

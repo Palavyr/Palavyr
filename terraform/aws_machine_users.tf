@@ -2,7 +2,7 @@
 # create your user below, make sure you link it to this resource by
 # adding `module.iam_iam-[your_user_name].name` to the `users` array.
 resource "aws_iam_policy_attachment" "machine_user_policy_attachment" {
-  name = "machine-user-policy-attachment"
+  name = "machine-upa-${lower(var.environment)}-${lower(random_id.rand.hex)}"
   users = [
     module.i_am_ecr.iam_user_name,
     module.i_am_palavyr.iam_user_name
@@ -19,7 +19,7 @@ module "i_am_ecr" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-user"
   version = "5.2.0"
 
-  name                  = "ecr-registry-${lower(var.environment)}"
+  name                  = "ecr-registry-${lower(var.environment)}-${lower(random_id.rand.hex)}"
   create_iam_access_key = true
   tags                  = local.tags
 }
@@ -37,7 +37,7 @@ module "i_am_palavyr" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-user"
   version = "5.2.0"
 
-  name                  = "palavyr-${lower(var.environment)}"
+  name                  = "palavyr-${lower(var.environment)}-${lower(random_id.rand.hex)}"
   create_iam_access_key = true
 
   tags = local.tags

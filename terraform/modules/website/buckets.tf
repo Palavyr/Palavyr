@@ -1,6 +1,10 @@
+resource "random_id" "rand" {
+  byte_length = 4
+}
+
 # create S3 Bucket:
 resource "aws_s3_bucket" "bucket" {
-  bucket = var.site_domain_name
+  bucket = "${var.site_domain_name}-${random_id.rand.hex}"
 
   tags = var.tags
 
@@ -50,5 +54,3 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.bucket.id
   policy = data.aws_iam_policy_document.bucket_policy_document.json
 }
-
-### Thats it -  upload files to the aws_s3_bucket

@@ -1,5 +1,5 @@
 resource "aws_iam_role" "migrator_role" {
-  name = "migrator_role-${lower(var.environment)}"
+  name = "migrator-role-${lower(var.environment)}-${lower(random_id.rand.hex)}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -14,7 +14,7 @@ resource "aws_iam_role" "migrator_role" {
 }
 
 resource "aws_iam_role_policy" "migrator_role_policy" {
-  name   = "migrator_role_policy-${lower(var.environment)}"
+  name   = "migrator-${lower(var.environment)}-${lower(random_id.rand.hex)}"
   role   = aws_iam_role.migrator_role.id
   policy = aws_iam_policy.machine_full_access_user_policy.policy
 }
