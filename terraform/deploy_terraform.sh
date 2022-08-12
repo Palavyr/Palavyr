@@ -14,8 +14,8 @@ case "${2}" in
     esac
 
 
-export TF_WORKSPACE="${Workspace}"
-export TF_TOKEN_app_terraform_io="${TerraformApiKey}"
+export TF_WORKSPACE=${Workspace}
+export TF_TOKEN_app_terraform_io=${TerraformApiKey}
 
 cat ./envs/deployment.tfvars
 terraform init
