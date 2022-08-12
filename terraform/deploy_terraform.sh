@@ -14,9 +14,7 @@ case "${2}" in
     esac
 
 
-export TF_WORKSPACE=${Workspace}
-export TF_TOKEN_app_terraform_io=${TerraformApiKey}
+TF_WORKSPACE=#{TF_WORKSPACE} TF_TOKEN_app_terraform_io=#{TerraformApiKey} AWS_ACCESS_KEY_ID=#{AWS_PALAVYR_ACCESS_KEY} AWS_SECRET_ACCESS_KEY=#{AWS_PALAVYR_SECRET_KEY} AWS_DEFAULT_REGION=#{AWS_REGION}
 
-cat ./envs/deployment.tfvars
-terraform init
-terraform apply --var-file ./envs/deployment.tfvars
+TF_WORKSPACE=#{TF_WORKSPACE} TF_TOKEN_app_terraform_io=#{TerraformApiKey} AWS_ACCESS_KEY_ID=#{AWS_PALAVYR_ACCESS_KEY} AWS_SECRET_ACCESS_KEY=#{AWS_PALAVYR_SECRET_KEY} AWS_DEFAULT_REGION=#{AWS_REGION} terraform init
+TF_WORKSPACE=#{TF_WORKSPACE} TF_TOKEN_app_terraform_io=#{TerraformApiKey} AWS_ACCESS_KEY_ID=#{AWS_PALAVYR_ACCESS_KEY} AWS_SECRET_ACCESS_KEY=#{AWS_PALAVYR_SECRET_KEY} AWS_DEFAULT_REGION=#{AWS_REGION} terraform apply --var-file ./envs/deployment.tfvars
