@@ -34,33 +34,6 @@ jobs:
           echo ${rawVersion}
           echo ::set-output name=version::$(echo ${rawVersion} | tr "/" "-")
 
-  # create-terraform-image:
-  #   name: Create custom docker image to use with octopus deploy
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
-
-  #   steps:
-  #     - name: What I think the version number is
-  #       run: |
-  #         echo ==========================
-  #         echo ${{ needs.generate-build-number.outputs.version }}
-  #         echo ==========================
-
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #     - uses: mr-smithers-excellent/docker-build-push@v5
-  #       name: Build & push development Docker image
-  #       with:
-  #         image: palavyr/palavyr-terraform
-  #         tags: latest, ${{ needs.generate-build-number.outputs.version }}
-  #         registry: ${{ secrets.ECR_REGISTRY }}
-  #         dockerfile: ./terraform/Dockerfile
-  #         buildArgs: TF_TOKEN_app_terraform_io="{{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}"
-  #       env:
-  #         # for pushing to ECR
-  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
-  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
-
   test-and-build-server:
     name: Server
     runs-on: ubuntu-latest
@@ -113,22 +86,8 @@ jobs:
           registry: ${{ secrets.ECR_REGISTRY }}
           dockerfile: ./server/Dockerfile
         env:
-          # for pushing to ECR
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
-
-          # For Palavyr Server
-          # Palavyr_AWS__AccessKey: ${{secrets.Palavyr_AWS__AccessKey}}
-          # Palavyr_AWS__SecretKey: ${{secrets.Palavyr_AWS__SecretKey}}
-          # Palavyr_ConnectionString: ${{secrets.Palavyr_ConnectionString}}
-          # Palavyr_JWT__SecretKey: ${{secrets.Palavyr_JWT__SecretKey}}
-          # Palavyr_STRIPE__SecretKey: ${{secrets.Palavyr_STRIPE__SecretKey}}
-          # Palavyr_AWS__UserDataBucket: palavyr-user-data-development
-          # Palavyr_AWS__AwsS3ServiceUrl: http://localhost:4566
-          # Palavyr_AWS__AwsSESServiceUrl: http://localhost:4566
-          # Palavyr_AWS__Region: "us-east-1"
-          # Palavyr_Environment: "development"
-          # Palavyr_AWS__PdfUrl: http://localhost:5603/pdf
 
   build-frontend:
     runs-on: ubuntu-latest
