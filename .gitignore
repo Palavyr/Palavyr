@@ -256,13 +256,13 @@ the--all-route.txt
 
 *.bkup
 *.exe
-
+.terraform.lock.hcl
 *terraform.tfstate*
 
 *dev.tfvars
 
 .terraform/
-.terraform*
+.terraform/*
 *.backup
 *.tfstate
 
