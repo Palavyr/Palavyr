@@ -17,5 +17,6 @@ case "${2}" in
 export TF_WORKSPACE="${Workspace}"
 export TF_TOKEN_app_terraform_io="${TerraformApiKey}"
 
+cat ./envs/deployment.tfvars
 terraform init
-terraform apply --var-file ".\envs\deployment.tfvars"
+terraform apply --var-file ./envs/deployment.tfvars
