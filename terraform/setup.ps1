@@ -61,17 +61,16 @@ if ("" -eq $env:CorePlatformSandboxSubId) {
 # }
 
 $API_KEY = $env:TERRAFORM_API_KEY;
-Write-Host $API_KEY
 
 (Get-Content ./backend.tf).replace('#{TERRAFORM_WORKSPACE}', 'palavyr-local-dev') | Set-Content ./backend.tf
 (Get-Content ./backend.tf).replace('#{TERRAFORM_API_KEY}', $API_KEY) | Set-Content ./backend.tf
 
-terraform init
+# terraform init
 
-# Do a round of checks to make sure everything is running correctly
-terraform validate
-terraform apply --var-file .\envs\dev.tfvars
-terraform destroy -var-file .\envs\dev.tfvars
+# # Do a round of checks to make sure everything is running correctly
+# terraform validate
+# terraform apply --var-file .\envs\dev.tfvars
+# terraform destroy -var-file .\envs\dev.tfvars
 
 (Get-Content ./backend.tf).replace('palavyr-local-dev', '#{TERRAFORM_WORKSPACE}') | Set-Content ./backend.tf
 (Get-Content ./backend.tf).replace( $API_KEY, '#{TERRAFORM_API_KEY}') | Set-Content ./backend.tf

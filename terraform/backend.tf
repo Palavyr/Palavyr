@@ -5,7 +5,7 @@ terraform {
   cloud {
     organization = "palavyr"
     hostname     = "app.terraform.io"
-    token = ""
+    token = "#{TERRAFORM_API_KEY}"
     workspaces {
       name = "#{TERRAFORM_WORKSPACE}"
 
