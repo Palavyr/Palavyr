@@ -1,4 +1,4 @@
-!#bin/bash
+#!bin/bash
 
 TerraformApiKey=$1
 Workspace=$2
