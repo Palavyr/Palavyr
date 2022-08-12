@@ -16,7 +16,7 @@ $help = @"
         You MUST set two environment variables:
             - a terraform cloud api token
 
-                TF_TOKEN_app_terraform_io=<your-api-key>
+                TERRAFORM_API_KEY=<your-api-key>
 
             - the sandbox subscription id
 
@@ -27,15 +27,15 @@ $help = @"
 "@;
 
 
-if ("" -eq $workspacename) {
-    Write-Error "You must provide a workspace name"
-    Write-Information $help;
-    exit 1
-}
+# if ("" -eq $workspacename) {
+#     Write-Error "You must provide a workspace name"
+#     Write-Information $help;
+#     exit 1
+# }
 
-if ("" -eq $env:TF_TOKEN_app_terraform_io) {
+if ("" -eq $env:TERRAFORM_API_KEY) {
     Write-Error "You must set the terraform cloud api token"
-    Write-Error "TF_TOKEN_app_terraform_io=<your-token>"
+    Write-Error "TERRAFORM_API_KEY=<your-token>"
     Write-Information $help;
     exit 1
 }
@@ -47,14 +47,12 @@ if ("" -eq $env:CorePlatformSandboxSubId) {
     exit 1
 }
 
-Write-Host 'Creating new workspace: $workspacename'
-terraform workspace new $workspacename
-terraform workspace select $workspacename
+# Write-Host 'Creating new workspace: $workspacename'
 # try {
 
 #     Invoke-WebRequest "https://app.terraform.io/api/v2/organizations/octopus-deploy/workspaces" `
 #         -Method POST `
-#         -Headers @{'Content-Type' = 'application/vnd.api+json'; 'Accept' = 'application/json'; "Authorization" = "Bearer $env:TF_TOKEN_app_terraform_io" } `
+#         -Headers @{'Content-Type' = 'application/vnd.api+json'; 'Accept' = 'application/json'; "Authorization" = "Bearer $env:TERRAFORM_API_KEY" } `
 #         -Body '{"data":{"attributes":{"name":"'$workspacename'","execution-mode":"local"}},"type":"workspaces"}'
 # }
 # catch {
@@ -62,11 +60,20 @@ terraform workspace select $workspacename
 #     exit 1
 # }
 
-# terraform init
+$API_KEY = $env:TERRAFORM_API_KEY;
+Write-Host $API_KEY
 
-# # Do a round of checks to make sure everything is running correctly
-# terraform validate
-# terraform apply --var-file .\envs\other.tfvars
-# terraform destroy -var-file .\envs\other.tfvars
+(Get-Content ./backend.tf).replace('#{TERRAFORM_WORKSPACE}', 'palavyr-local-dev') | Set-Content ./backend.tf
+(Get-Content ./backend.tf).replace('#{TERRAFORM_API_KEY}', $API_KEY) | Set-Content ./backend.tf
+
+terraform init
+
+# Do a round of checks to make sure everything is running correctly
+terraform validate
+terraform apply --var-file .\envs\dev.tfvars
+terraform destroy -var-file .\envs\dev.tfvars
+
+(Get-Content ./backend.tf).replace('palavyr-local-dev', '#{TERRAFORM_WORKSPACE}') | Set-Content ./backend.tf
+(Get-Content ./backend.tf).replace( $API_KEY, '#{TERRAFORM_API_KEY}') | Set-Content ./backend.tf
 
 Write-Host "Congradulations, you're environment is all set up!"

@@ -14,7 +14,7 @@ Required:
 
     You MUST set a terraform cloud api token in your environment variables.
 
-    TF_TOKEN_app_terraform_io=<your-api-key>
+    TERRAFORM_API_KEY=<your-api-key>
 
 
 Description:
@@ -27,30 +27,33 @@ case "${1}" in
     '') echo "You must provide a workspace name\n\n${help}"; exit 1;;
     esac
 
-case "${TF_TOKEN_app_terraform_io}" in
-    '') echo "You must set the terraform cloud api token.\n\nTF_TOKEN_app_terraform_io=<your-token>\n\n ${help}"; exit 1;;
+case "${TERRAFORM_API_KEY}" in
+    '') echo "You must set the terraform cloud api token.\n\nTERRAFORM_API_KEY=<your-token>\n\n ${help}"; exit 1;;
     esac
 
 case "${CorePlatformSandboxSubId}" in
-    '') echo "You must set the sandbox subscription id.\n\nTF_TOKEN_app_terraform_io=<your-token>\n\n ${help}"; exit 1;;
+    '') echo "You must set the sandbox subscription id.\n\nTERRAFORM_API_KEY=<your-token>\n\n ${help}"; exit 1;;
     esac
 
 echo "\nCreating new workspace: $workspacename"\n
 
 
-curl \
-  --fail --silent --show-error \
-  --header "Authorization: Bearer $TF_TOKEN_app_terraform_io" \
-  --header "Content-Type: application/vnd.api+json" \
-  --request POST \
-  --data '{"data":{"attributes":{"name":"'$workspacename'","execution-mode":"local"}},"type":"workspaces"}' \
-  https://app.terraform.io/api/v2/organizations/octopus-deploy/workspaces
+# curl \
+#   --fail --silent --show-error \
+#   --header "Authorization: Bearer $TERRAFORM_API_KEY" \
+#   --header "Content-Type: application/vnd.api+json" \
+#   --request POST \
+#   --data '{"data":{"attributes":{"name":"'$workspacename'","execution-mode":"local"}},"type":"workspaces"}' \
+#   https://app.terraform.io/api/v2/organizations/octopus-deploy/workspaces
 
 
 
 az login
 az account set --subscription $env:CorePlatformSandboxSubId
 terraform init
+
+sed -i 's/#{TERRAFORM_WORKSPACE}/palavyr-local-dev/' backend.tf
+sed -i 's/#{TERRAFORM_API_KEY}/'+$env:TERRAFORM_API_KEY+'/' backend.tf
 
 echo "\n\nDo a round of checks to make sure everything is running correctly\n\n"
 terraform validate
@@ -59,3 +62,5 @@ terraform destroy -var-file ".\envs\dev\dev.tfvars" -auto-approve
 
 echo "\nCongradulations, you're environment is all set up!\n"
 
+sed -i 's/palavyr-local-dev/#{TERRAFORM_WORKSPACE}/' backend.tf
+sed -i 's/'+$env:TERRAFORM_API_KEY+'/#{TERRAFORM_API_KEY}/' backend.tf

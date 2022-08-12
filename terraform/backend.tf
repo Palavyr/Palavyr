@@ -5,11 +5,11 @@ terraform {
   cloud {
     organization = "palavyr"
     hostname     = "app.terraform.io"
-
+    token = ""
     workspaces {
-      name = "palavyr-local-dev"
-    }
+      name = "#{TERRAFORM_WORKSPACE}"
 
+    }
   }
 
   required_providers {
@@ -18,7 +18,6 @@ terraform {
       version = "~> 4.0"
     }
   }
-
 }
 
 provider "aws" {
