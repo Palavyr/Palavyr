@@ -56,7 +56,7 @@ module "server_group" {
   octopus_api_key                = var.octopus_api_key
   role                           = "palavyr-autoscale"
 
-  tags = local.tags
+  tags = local.autoscale_tags
 }
 
 module "database" {
