@@ -30,7 +30,6 @@ data "aws_ami" "my_ami" {
 
 }
 
-
 # generate user data script :
 data "template_cloudinit_config" "deployment_data" {
   gzip          = false

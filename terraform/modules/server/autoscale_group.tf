@@ -29,7 +29,6 @@ resource "random_id" "this" {
 
 # create launch configuration for ASG :
 resource "aws_launch_configuration" "this" {
-  name          = "agm-${var.autoscale_group_name}"
   image_id      = data.aws_ami.my_ami.id
   instance_type = var.instance_type
 
@@ -57,10 +56,10 @@ resource "aws_autoscaling_group" "asg" {
     create_before_destroy = true
   }
 
-  depends_on = [
-    var.vpc_id,
-    var.private_subnets,
-    aws_lb_target_group.alb_tg,
-    aws_launch_configuration.this
-  ]
+  # depends_on = [
+  #   var.vpc_id,
+  #   var.private_subnets,
+  #   aws_lb_target_group.alb_tg,
+  #   aws_launch_configuration.this
+  # ]
 }
