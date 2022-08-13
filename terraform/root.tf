@@ -34,7 +34,9 @@ module "vpc" {
 
 
 resource "random_id" "server_id" {
-  byte_length = 4}
+  byte_length = 4
+}
+
 module "server_group" {
   source = "./modules/server"
 
