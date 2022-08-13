@@ -52,6 +52,10 @@ data "template_cloudinit_config" "deployment_data" {
       configFilePath="/etc/octopus/default/tentacle-default.config"
       applicationPath="/home/Octopus/Applications/"
 
+
+      publicIp=$(curl -s https://ifconfig.info)
+
+
       curl -L https://octopus.com/downloads/latest/Linux_x64TarGz/OctopusTentacle --output tentacle-linux_x64.tar.gz
 
       mkdir /opt/octopus
@@ -62,7 +66,7 @@ data "template_cloudinit_config" "deployment_data" {
       /opt/octopus/tentacle/Tentacle configure --port 10933 --noListen False --reset-trust --app "$applicationPath"
       /opt/octopus/tentacle/Tentacle configure --trust $thumbprint
       echo "Registering the Tentacle $name with server $serverUrl in environment $environment with role $role"
-      /opt/octopus/tentacle/Tentacle register-with --server "$serverUrl" --apiKey "$apiKey" --space "$spaceName" --name "$name" --env "$environment" --role "$role" --policy "$machinePolicy"
+      /opt/octopus/tentacle/Tentacle register-with --server "$serverUrl" --apiKey "$apiKey" --space "$spaceName" --name "$name" --env "$environment" --role "$role" --policy "$machinePolicy" --publicHostName $publicIp
 
       /opt/octopus/tentacle/Tentacle service --install --start
 
