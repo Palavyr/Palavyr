@@ -76,10 +76,6 @@ data "template_cloudinit_config" "deployment_data" {
       sudo usermod -a -G docker ec2-user
 
       ############################
-
-
-
-
       EOT
   }
 }

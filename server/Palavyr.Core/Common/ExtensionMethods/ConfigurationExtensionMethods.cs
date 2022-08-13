@@ -15,6 +15,11 @@ namespace Palavyr.Core.Common.ExtensionMethods
                 .Replace("<SplitMe>", ";");
         }
 
+        public static string GetStripeWebhookKey(this IConfiguration configuration)
+        {
+            return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.StripeWebhookKey);
+        }
+
         public static string GetUserDataBucket(this IConfiguration configuration)
         {
             return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.UserDataSection);

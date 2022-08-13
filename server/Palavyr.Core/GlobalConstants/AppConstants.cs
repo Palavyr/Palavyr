@@ -26,6 +26,7 @@
             public const string CurrentEnvironment = "Environment";
             public const string JwtSecretKey = "JWT:SecretKey";
             public const string StripeKeySection = "STRIPE:SecretKey";
+            public const string StripeWebhookKey = "STRIPE:WebhookKey";
             public const string AwsS3ServiceUrl = "AWS:AwsS3ServiceUrl";
             public const string AwsSesServiceUrl = "AWS:AwsSESServiceUrl";
             public const string UserDataSection = "AWS:UserDataBucket";
