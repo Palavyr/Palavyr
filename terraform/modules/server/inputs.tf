@@ -76,6 +76,12 @@ variable "tags" {
   description = "The tags to use"
 }
 
+variable "autoscale_tags" {
+  type        = any
+  description = "The tags to use for the autoscale group"
+}
+
+
 variable "environment" {
   type        = string
   description = "The environment in use"
@@ -86,6 +92,6 @@ variable "octopus_api_key" {
 }
 
 variable "role" {
-  type = string
+  type        = string
   description = "The role which will be used when deploying to autoscale"
 }

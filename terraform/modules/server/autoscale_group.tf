@@ -52,7 +52,7 @@ resource "aws_autoscaling_group" "asg" {
   health_check_type         = "EC2"
   force_delete              = true
 
-  tags = var.tags
+  tags = var.autoscale_tags
 
   # lifecycle {
   #   create_before_destroy = true
