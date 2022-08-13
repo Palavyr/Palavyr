@@ -32,11 +32,14 @@ module "vpc" {
   tags       = local.tags
 }
 
+
+resource "random_id" "server_id" {
+  byte_length = 4}
 module "server_group" {
   source = "./modules/server"
 
-  application_load_balancer_name = "palavyr-lb-${lower(var.environment)}-${random_id.rand.hex}"
-  autoscale_group_name           = "palavyr-ag-${lower(var.environment)}-${random_id.rand.hex}"
+  application_load_balancer_name = "palavyr-lb-${lower(var.environment)}-${random_id.server_id.hex}"
+  autoscale_group_name           = "palavyr-ag-${lower(var.environment)}-${random_id.server_id.hex}"
   public_subnets                 = module.vpc.public_subnets
   private_subnets                = module.vpc.private_subnets
   vpc_id                         = module.vpc.vpc_id
