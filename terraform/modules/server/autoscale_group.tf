@@ -52,8 +52,15 @@ resource "aws_autoscaling_group" "asg" {
   health_check_type         = "EC2"
   force_delete              = true
 
-  lifecycle {
-    create_before_destroy = true
+  # lifecycle {
+  #   create_before_destroy = true
+  # }
+
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50
+    }
   }
 
   # depends_on = [
