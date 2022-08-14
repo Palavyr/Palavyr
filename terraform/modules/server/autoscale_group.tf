@@ -1,36 +1,12 @@
-# Create a security group for EC2 instances to allow ingress on port 80 :
+
 resource "aws_security_group" "this" {
-  name        = "secgrp-${var.autoscale_group_name}"
-  description = "Used for autoscale group"
+  name        = "sg-http-${var.autoscale_group_name}"
+  description = "Open a port for tentacle to connect to the instance"
   vpc_id      = var.vpc_id
 
   # HTTP access from anywhere
   ingress {
-    from_port   = 80
-    to_port     = 4001
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-# Create a security group for EC2 instances to allow ingress on port 10933 :
-resource "aws_security_group" "tent" {
-  name        = "secgrp-t-${var.autoscale_group_name}"
-  description = "Used for autoscale group"
-  vpc_id      = var.vpc_id
-
-  # HTTP access from anywhere
-  ingress {
-    from_port   = 0
+    from_port   = 10933
     to_port     = 10933
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
@@ -46,6 +22,32 @@ resource "aws_security_group" "tent" {
     create_before_destroy = true
   }
 }
+
+resource "aws_security_group" "this" {
+  name        = "sg-https-${var.autoscale_group_name}"
+  description = "Connect the load balancer to the nginx port for the server"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 443
+    to_port     = 4001
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+
 
 resource "random_id" "this" {
   byte_length = 6
@@ -91,21 +93,14 @@ resource "aws_autoscaling_group" "asg" {
     propagate_at_launch = true
   }
 
-  # lifecycle {
-  #   create_before_destroy = true
-  # }
+  lifecycle {
+    create_before_destroy = true
+  }
 
   instance_refresh {
     strategy = "Rolling"
     preferences {
-      min_healthy_percentage = 50
+      min_healthy_percentage = 0
     }
   }
-
-  # depends_on = [
-  #   var.vpc_id,
-  #   var.private_subnets,
-  #   aws_lb_target_group.alb_tg,
-  #   aws_launch_configuration.this
-  # ]
 }
