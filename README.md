@@ -3,9 +3,19 @@
 
 ## Overview
 
-Palavyr is a fully containerized web app that allows users to configure a chat bot. The configuration is unique in that it allows users to set pricing strategies which return values that depend on user input. The output of the application is customizable emails with optional attachments and response PDFs that contain pricing details given a user's input.
+Palavyr is a fully containerized web app that allows users to configure a chat bot.  The configuration is unique in that it allows users to set pricing strategies which return values that depend on user input. The output of the application is customizable emails with optional attachments and response PDFs that contain pricing details given a user's input.
 
-Anyone can use Palavyr!
+There are two ways to access the chatbot:
+ - Throught the widget app (a full page react app)
+
+In this case, users will load the widget through an IFrame (see palavyr-chat-widget) project. This app uses a backend that provides the entire conversation on the initial request and traverses its tree structure depending on the responses provided by the user.
+
+ - (WIP) directly from the API
+
+In this case, users are free to present widget data however they'd like. The API exposes as backend the provides a single node at a time, depending on what is requested. Users will create an initial request for a convo, and then each subsequent request returns the next node.
+
+Palavyr is intended to be used by any small business that wishes to automate some of their custer engagement.
+
 
 # Getting Started
 
@@ -13,11 +23,13 @@ Since the application is dockerized, there are only a couple steps to get going.
 
 1. Ensure you've got a docker daemon installed (You'll be running docker commands)
 2. Copy the local.env.template to local.env and set your environment variables
-   1. If you are using local stack to simulate AWS you'll have an easier time getting going. Otherwise see Paul about an API key
-   2. Stripe is also dockerized. You can use a fake test key.
 3. Run `docker compose up`
 4. Run the tests to make sure everything works.
 5. Get crackin'!
+
+
+
+
 
 
 ## Dev Tools
