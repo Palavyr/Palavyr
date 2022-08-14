@@ -69,12 +69,7 @@ data "template_cloudinit_config" "deployment_data" {
 
       ###########################
 
-      # Install docker and start it
-      set -ex
-      sudo yum update -y
-      sudo amazon-linux-extras install docker -y
-      sudo service docker start
-      sudo usermod -a -G docker ec2-user
+      # TODO: Add docekr isntall back in
 
       ############################
       EOT
