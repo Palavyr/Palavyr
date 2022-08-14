@@ -35,6 +35,8 @@ resource "aws_launch_configuration" "this" {
   user_data       = data.template_cloudinit_config.deployment_data.rendered
   security_groups = [aws_security_group.this.id]
 
+  associate_public_ip_address = true
+
   lifecycle {
     create_before_destroy = true
   }
