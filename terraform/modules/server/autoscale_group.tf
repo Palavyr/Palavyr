@@ -48,7 +48,7 @@ resource "aws_security_group" "tent" {
 }
 
 resource "aws_security_group" "tenta" {
-  name        = "secgrp-t-${var.autoscale_group_name}"
+  name        = "secgrp-st-${var.autoscale_group_name}"
   description = "Used for autoscale group"
   vpc_id      = var.vpc_id
 
