@@ -1,4 +1,3 @@
-
 resource "aws_lb" "alb" {
   name            = var.application_load_balancer_name
   subnets         = var.public_subnets
@@ -34,4 +33,17 @@ resource "aws_lb_listener" "alb_listener" {
     target_group_arn = aws_lb_target_group.alb_tg.arn
     type             = "forward"
   }
+}
+
+# resource "aws_acm_certificate" "lb_cert" {
+#   domain_name               = var.site_domain_name
+#   subject_alternative_names = ["*.${var.site_domain_name}"]
+#   validation_method         = "DNS"
+
+#   tags = var.tags
+# }
+
+resource "aws_lb_listener_certificate" "lb_cert" {
+  listener_arn    = aws_lb_listener.alb_listener.arn
+  certificate_arn = aws_acm_certificate.cert.arn
 }
