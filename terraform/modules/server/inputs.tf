@@ -26,11 +26,6 @@ variable "autoscale_group_name" {
   description = "The name for the autoscale group"
 }
 
-variable "security_group_id" {
-  type        = string
-  description = "The security group id for the autoscale group"
-}
-
 variable "private_subnets" {
   type        = list(string)
   description = "use module.vpc.private_subnets"

@@ -1,10 +1,11 @@
 resource "aws_lb" "alb" {
   name            = var.application_load_balancer_name
   subnets         = var.public_subnets
-  security_groups = [var.security_group_id]
+  security_groups = [aws_security_group.this.id]
   internal        = false
   idle_timeout    = 60
-  tags            = var.tags
+
+  tags = var.tags
 }
 
 resource "aws_lb_target_group" "alb_tg" {

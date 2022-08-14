@@ -44,7 +44,6 @@ module "server_group" {
   public_subnets                 = module.vpc.public_subnets
   private_subnets                = module.vpc.private_subnets
   vpc_id                         = module.vpc.vpc_id
-  security_group_id              = module.vpc.security_group_id
   instance_type                  = var.scale_group_instance_type
   domain_name                    = var.server_domain_name
   hosted_zone_domain_name        = var.hosted_zone_domain_name
