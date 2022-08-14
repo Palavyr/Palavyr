@@ -46,6 +46,7 @@ resource "aws_security_group" "tent" {
     create_before_destroy = true
   }
 }
+
 resource "aws_security_group" "tenta" {
   name        = "secgrp-t-${var.autoscale_group_name}"
   description = "Used for autoscale group"
@@ -105,6 +106,12 @@ resource "aws_autoscaling_group" "asg" {
   tag {
     key                 = "name"
     value               = "palavyr-autoscale"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "env"
+    value               = var.environment
     propagate_at_launch = true
   }
 
