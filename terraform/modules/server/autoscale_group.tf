@@ -1,10 +1,9 @@
 
-resource "aws_security_group" "this" {
-  name        = "sg-http-${var.autoscale_group_name}"
+resource "aws_security_group" "tent" {
+  name        = "sg-t-${var.autoscale_group_name}"
   description = "Open a port for tentacle to connect to the instance"
   vpc_id      = var.vpc_id
 
-  # HTTP access from anywhere
   ingress {
     from_port   = 10933
     to_port     = 10933
@@ -25,7 +24,7 @@ resource "aws_security_group" "this" {
 
 resource "aws_security_group" "this" {
   name        = "sg-https-${var.autoscale_group_name}"
-  description = "Connect the load balancer to the nginx port for the server"
+  description = "Allow incoming traffic from the load balancer to the nginx port for the server"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -45,9 +44,6 @@ resource "aws_security_group" "this" {
     create_before_destroy = true
   }
 }
-
-
-
 
 resource "random_id" "this" {
   byte_length = 6
