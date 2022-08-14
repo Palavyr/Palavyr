@@ -52,7 +52,11 @@ resource "aws_autoscaling_group" "asg" {
   health_check_type         = "EC2"
   force_delete              = true
 
-  tags = var.autoscale_tags
+  tag {
+    key                 = "name"
+    value               = "palavyr-autoscale"
+    propagate_at_launch = true
+  }
 
   # lifecycle {
   #   create_before_destroy = true

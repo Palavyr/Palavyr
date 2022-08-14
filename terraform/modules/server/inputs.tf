@@ -76,11 +76,6 @@ variable "tags" {
   description = "The tags to use"
 }
 
-variable "autoscale_tags" {
-  type        = any
-  description = "The tags to use for the autoscale group"
-}
-
 
 variable "environment" {
   type        = string

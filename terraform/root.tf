@@ -57,7 +57,6 @@ module "server_group" {
   role                           = "palavyr-autoscale"
 
   tags           = local.tags
-  autoscale_tags = local.autoscale_tags
 }
 
 module "database" {
