@@ -52,8 +52,8 @@ data "template_cloudinit_config" "deployment_data" {
       applicationPath="/home/Octopus/Applications/"
 
 
-      publicIp=$(curl -s https://ifconfig.info)
-
+      # publicIp=$(curl -s https://ifconfig.info)
+      publicIp=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
 
       curl -L https://octopus.com/downloads/latest/Linux_x64TarGz/OctopusTentacle --output tentacle-linux_x64.tar.gz
 
