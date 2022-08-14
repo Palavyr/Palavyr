@@ -20,7 +20,7 @@ resource "aws_lb_target_group" "alb_tg" {
     unhealthy_threshold = 10
     timeout             = 5
     interval            = 10
-    path                = "/"
+    path                = "/healthcheck"
     port                = 443
   }
 }
