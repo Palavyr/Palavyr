@@ -22,10 +22,58 @@ resource "aws_security_group" "this" {
     create_before_destroy = true
   }
 }
+# Create a security group for EC2 instances to allow ingress on port 10933 :
+resource "aws_security_group" "tent" {
+  name        = "secgrp-t-${var.autoscale_group_name}"
+  description = "Used for autoscale group"
+  vpc_id      = var.vpc_id
+
+  # HTTP access from anywhere
+  ingress {
+    from_port   = 0
+    to_port     = 10933
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+resource "aws_security_group" "tenta" {
+  name        = "secgrp-t-${var.autoscale_group_name}"
+  description = "Used for autoscale group"
+  vpc_id      = var.vpc_id
+
+  # HTTP access from anywhere
+  ingress {
+    from_port   = 443
+    to_port     = 10933
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
 
 resource "random_id" "this" {
   byte_length = 6
 }
+
 
 # create launch configuration for ASG :
 resource "aws_launch_configuration" "this" {
@@ -33,7 +81,7 @@ resource "aws_launch_configuration" "this" {
   instance_type = var.instance_type
 
   user_data       = data.template_cloudinit_config.deployment_data.rendered
-  security_groups = [aws_security_group.this.id]
+  security_groups = [aws_security_group.this.id, aws_security_group.tent.id, aws_security_group.tenta.id]
 
   associate_public_ip_address = true
 
