@@ -20,7 +20,7 @@ namespace Palavyr.API
     {
         public static int Main(string[] args)
         {
-            DotEnv.Load(".env");
+            DotEnv.Load("env");
 
             if (File.Exists("../.env.local"))
             {
