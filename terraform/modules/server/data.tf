@@ -40,16 +40,13 @@ data "template_cloudinit_config" "deployment_data" {
     content      = <<-EOT
       #!/bin/bash
 
-      # echo "-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 10933 -j ACCEPT" >> /etc/sysconfig/iptables
-      # service iptables restart
-      sudo ufw disable
+      echo "-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 10933 -j ACCEPT" >> /etc/sysconfig/iptables
+      service iptables restart
+      # sudo ufw disable
 
-
-
-      thumbprint="89C073C42A111FA88576048A40BD1D9D96B91AC0"   #"#{OCTOPUS_THUMBPRINT}"       # The thumbprint of your Octopus Server
-      apiKey="API-G7RYEBFLWSZ0VE8B0LF6KV4VFMTFVPN"    # "#{OCTOPUS_API_KEY}"           # An Octopus Server api key with permission to add machines
-      environment="dev"   # "#{Environment}"  # The environment to register the Tentacle in
-
+      thumbprint="#{OCTOPUS_THUMBPRINT}"  # The thumbprint of your Octopus Server
+      apiKey="#{OCTOPUS_API_KEY}"         # An Octopus Server api key with permission to add machines
+      environment="#{Environment}"        # The environment to register the Tentacle in
 
       serverUrl="https://palavyr.octopus.app"  # The url of your Octopus server
       spaceName="Palavyr" # The name of the space to register the Tentacle in
@@ -77,7 +74,12 @@ data "template_cloudinit_config" "deployment_data" {
 
       ###########################
 
-      # TODO: Add docekr isntall back in
+      # Install docker and start it
+      set -ex
+      sudo yum update -y
+      sudo amazon-linux-extras install docker -y
+      sudo service docker start
+      sudo usermod -a -G docker ec2-user
 
       ############################
       EOT
