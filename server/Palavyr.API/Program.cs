@@ -19,12 +19,16 @@ namespace Palavyr.API
     {
         public static int Main(string[] args)
         {
-            DotEnv.Load("env");
+            // try to load some env variables from env files
+            // if (File.Exists("env"))
+            // {
+            //     DotEnv.Load("env");
+            // }
 
             if (File.Exists("../.env.local"))
             {
-                Console.WriteLine("YAHOOOOO");
-                DotEnv.Load(".env.local");
+                Console.WriteLine("YAHOOOOO for local");
+                DotEnv.Load("../.env.local");
             }
 
             // The initial "bootstrap" logger is able to log errors during start-up. It's completely replaced by the
@@ -97,8 +101,7 @@ namespace Palavyr.API
     {
         protected override void Init(IHostBuilder builder)
         {
-
-            DotEnv.Load("./env");
+            // DotEnv.Load("./env");
 
             var config = ConfigurationGetter.GetConfiguration();
             builder
@@ -118,7 +121,7 @@ namespace Palavyr.API
 
         protected override void Init(IWebHostBuilder builder)
         {
-            DotEnv.Load("./env");
+            // DotEnv.Load("./env");
 
             builder.UseStartup<Startup>();
         }
