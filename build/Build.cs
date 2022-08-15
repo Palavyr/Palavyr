@@ -28,11 +28,15 @@ class Build : NukeBuild
 
     AbsolutePath TerraformSourceDirectory => RootDirectory / "terraform";
     AbsolutePath ServerSourceDirectory => RootDirectory / "server";
-    AbsolutePath UISourceDirectory => RootDirectory / "ui";
+    AbsolutePath ServerEnvFile => ServerSourceDirectory / "Palavyr.API" / "env";
+
+
+    // AbsolutePath UISourceDirectory => RootDirectory / "ui";
 
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
     AbsolutePath TempOutputServer => ArtifactsDirectory / "serverbuild";
     AbsolutePath TempOutputMigrator => ArtifactsDirectory / "migratorbuild";
+
     Target Clean =>
         _ => _
             .Before(Restore)
@@ -74,14 +78,13 @@ class Build : NukeBuild
                     .EnableNoRestore());
             });
 
-
     Target PublishArtifacts =>
         _ => _
             .DependsOn(Compile)
             .Executes(() =>
             {
-                CopyFileToDirectory(".env", TempOutputServer);
- 
+                CopyFileToDirectory(ServerEnvFile, TempOutputServer);
+
                 DotNetPublish(_ => _
                     .SetProject(ServerSourceDirectory / "Palavyr.API")
                     .SetConfiguration(Configuration)
@@ -91,7 +94,6 @@ class Build : NukeBuild
                 );
 
                 // TODO: Add publishing the npm packages here
-
             });
 
     Target Zip =>
@@ -101,7 +103,7 @@ class Build : NukeBuild
             {
                 var migratorPackageOutput = ArtifactsDirectory / $"palavyr-migrator.{Version}.zip";
                 Compress(TempOutputMigrator, migratorPackageOutput);
-                
+
                 var palavyrApiPackageOutput = ArtifactsDirectory / $"palavyr-server.{Version}.zip";
                 Compress(TempOutputServer, palavyrApiPackageOutput);
 

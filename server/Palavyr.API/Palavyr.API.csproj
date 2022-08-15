@@ -9,6 +9,10 @@
 
     <ItemGroup>
         <Content Remove="nlog.config" />
+        <None Remove="env" />
+        <Content Include="env">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
@@ -18,8 +22,8 @@
     <ItemGroup>
         <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="7.2.0" />
         <PackageReference Include="AsyncFixer" Version="1.6.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.2" />
@@ -71,7 +75,5 @@
     <ItemGroup>
         <ProjectReference Include="..\Palavyr.Core\Palavyr.Core.csproj" />
     </ItemGroup>
-    
-    
 
 </Project>
