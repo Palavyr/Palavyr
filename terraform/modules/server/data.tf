@@ -51,7 +51,7 @@ data "template_cloudinit_config" "deployment_data" {
       serverUrl="https://palavyr.octopus.app"  # The url of your Octopus server
       spaceName="Palavyr" # The name of the space to register the Tentacle in
       name=$HOSTNAME      # The name of the Tentacle at is will appear in the Octopus portal
-      role="palavyr-autoscale"   # The role to assign to the Tentacle
+      role="#{SERVER_DEPLOYMENT_TARGET_ROLE}"   # The role to assign to the Tentacle
       machinePolicy="Clean up Autoscale Targets on Scale Down"
       configFilePath="/etc/octopus/default/tentacle-default.config"
       applicationPath="/home/Octopus/Applications/"
