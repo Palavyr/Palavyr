@@ -22,14 +22,37 @@ resource "aws_security_group" "tent" {
   }
 }
 
+resource "aws_security_group" "ssh" {
+  name        = "secg-ssh-${var.autoscale_group_name}"
+  description = "Open a port for ssh"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_security_group" "this" {
-  name        = "secg-https-${var.autoscale_group_name}"
+  name        = "secg-lc-https-${var.autoscale_group_name}"
   description = "Allow incoming traffic from the load balancer to the nginx port for the server"
   vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 443
-    to_port     = 4001
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -49,7 +72,6 @@ resource "random_id" "this" {
   byte_length = 6
 }
 
-
 # create launch configuration for ASG :
 resource "aws_launch_configuration" "this" {
   image_id      = data.aws_ami.my_ami.id
@@ -59,6 +81,8 @@ resource "aws_launch_configuration" "this" {
   security_groups = [aws_security_group.this.id, aws_security_group.tent.id]
 
   associate_public_ip_address = true
+
+  key_name = "palavyr-autoscale"
 
   lifecycle {
     create_before_destroy = true
@@ -71,7 +95,7 @@ resource "aws_autoscaling_group" "asg" {
   launch_configuration      = aws_launch_configuration.this.name
   min_size                  = 1
   max_size                  = 2
-  vpc_zone_identifier       = var.private_subnets
+  vpc_zone_identifier       = [var.public_subnets[0], var.public_subnets[1]]
   target_group_arns         = [aws_lb_target_group.alb_tg.arn]
   health_check_grace_period = 300
   health_check_type         = "EC2"
