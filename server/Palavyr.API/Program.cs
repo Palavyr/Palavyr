@@ -3,7 +3,6 @@ using System.IO;
 using Amazon.Lambda.Core;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.Environment;
