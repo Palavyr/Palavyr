@@ -4,21 +4,19 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
-COPY artifacts/serverbuild App/
-WORKDIR /App
+COPY artifacts/serverbuild/* .
 
+ENV Palavyr_STRIPE__SecretKey ""
+ENV Palavyr_AWS__AccessKey ""
+ENV Palavyr_AWS__SecretKey ""
+ENV Palavyr_AWS__Region ""
+ENV Palavyr_AWS__UserDataBucket ""
+ENV Palavyr_AWS__PdfUrl ""
+ENV Palavyr_ConnectionString ""
+ENV Palavyr_Environment ""
+ENV Palavyr_JWT__SecretKey ""
 
-ENV STRIPE__SecretKey ""
-ENV AWS__AccessKey ""
-ENV AWS__SecretKey ""
-ENV AWS__Region ""
-ENV AWS__UserDataBucket ""
-ENV AWS__PdfUrl ""
-ENV ConnectionString ""
-ENV Environment ""
-ENV JWT__SecretKey ""
-
-ENV AWS__AwsS3ServiceUrl=s3.amazonaws.com
-ENV AWS__AwsSESServiceUrl=ses.amazonaws.com
+ENV Palavyr_AWS__AwsS3ServiceUrl ""
+ENV Palavyr_AWS__AwsSESServiceUrl ""
 
 ENTRYPOINT ["dotnet", "Palavyr.API.dll"]

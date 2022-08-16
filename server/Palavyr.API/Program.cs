@@ -51,11 +51,7 @@ namespace Palavyr.API
 
         private static void LoadEnvironmentVariablesFromEnvFile()
         {
-            if (File.Exists("env"))
-            {
-                DotEnv.Load("env");
-            }
-
+            Log.Information(string.Join(", ", Directory.GetFiles(".")));
             if (File.Exists(LocalEnvFile))
             {
                 DotEnv.Load(LocalEnvFile);

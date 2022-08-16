@@ -64,7 +64,7 @@ else {
 }
 
 Write-Output "Set up docker compose ci"
-docker compose -f ./docker-compose.ci.yml up -d
+docker compose -f ./docker-compose.ci.yml up -d --remove-orphans
 
 
 Write-Output "Microsoft (R) .NET Core SDK version $(& $env:DOTNET_EXE --version)"
@@ -74,3 +74,9 @@ ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $Buil
 
 Write-Output "docker compose down"
 docker compose -f ./docker-compose.ci.yml down
+
+# TODO copy artifacts to api folder
+
+# rmdir -r ./server/Palavyr.API/artifacts
+# mkdir -p ./server/Palavyr.API/artifacts
+# cp ./artifacts/* ./server/Palavyr.API/artifacts/*
