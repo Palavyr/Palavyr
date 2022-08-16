@@ -23,9 +23,11 @@ namespace Palavyr.API.Registration.Container
 
         protected override void Load(ContainerBuilder builder)
         {
-            var currentEnv = configuration.GetCurrentEnvironment();
+            var runningEnvironment = new DetermineCurrentEnvironment(configuration);
+            
+            // var currentEnv = configuration.GetCurrentEnvironment();
             var stripeKey = configuration.GetStripeKey();
-            if (currentEnv != DetermineCurrentEnvironment.Production && stripeKey.ToLowerInvariant().StartsWith("sk_live_"))
+            if (!runningEnvironment.IsProduction() && stripeKey.ToLowerInvariant().StartsWith("sk_live_"))
             {
                 throw new Exception("CRITICAL ERROR - attempting to use a production stripe API key in test environment - CRITICAL");
             }
@@ -45,7 +47,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<StripeSubscriptionRetriever>().As<IStripeSubscriptionRetriever>();
             builder.RegisterType<StripeWebhookAccountGetter>().As<IStripeWebhookAccountGetter>();
             builder.RegisterType<StripeSubscriptionSetter>().As<IStripeSubscriptionSetter>();
-            
+
             builder.Register(
                     context =>
                     {

@@ -17,19 +17,11 @@ namespace Palavyr.API
 {
     public class Program
     {
+        private static readonly string LocalEnvFile = "../../.env.local";
+
         public static int Main(string[] args)
         {
-            // try to load some env variables from env files
-            // if (File.Exists("env"))
-            // {
-            //     DotEnv.Load("env");
-            // }
-
-            if (File.Exists("../.env.local"))
-            {
-                Console.WriteLine("YAHOOOOO for local");
-                DotEnv.Load("../.env.local");
-            }
+            LoadEnvironmentVariablesFromEnvFile();
 
             // The initial "bootstrap" logger is able to log errors during start-up. It's completely replaced by the
             // logger configured in `UseSerilog()` below, once configuration and dependency-injection have both been
@@ -54,6 +46,19 @@ namespace Palavyr.API
             finally
             {
                 Log.CloseAndFlush();
+            }
+        }
+
+        private static void LoadEnvironmentVariablesFromEnvFile()
+        {
+            if (File.Exists("env"))
+            {
+                DotEnv.Load("env");
+            }
+
+            if (File.Exists(LocalEnvFile))
+            {
+                DotEnv.Load(LocalEnvFile);
             }
         }
 

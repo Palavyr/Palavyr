@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
 
 namespace Palavyr.Core.Common.Environment
@@ -17,9 +18,9 @@ namespace Palavyr.Core.Common.Environment
     {
         private readonly IConfiguration configuration;
 
-        public const string Development = "Development";
-        public const string Staging = "Staging";
-        public const string Production = "Production";
+        public static List<string> Development = new() { "Development", "Dev", "development", "dev" };
+        public static List<string> Staging = new() { "Staging", "staging", "test", "Test" };
+        public static List<string> Production = new() { "Production", "production", "Prod", "prod" };
 
         public DetermineCurrentEnvironment(IConfiguration configuration)
         {
@@ -28,25 +29,22 @@ namespace Palavyr.Core.Common.Environment
 
         public bool IsDevelopment()
         {
-            var currentEnv = configuration.GetCurrentEnvironment();
-            return currentEnv == Development;
+            return Development.Contains(Environment);
         }
+
         public bool IsStaging()
         {
-            var currentEnv = configuration.GetCurrentEnvironment();
-            return currentEnv == Staging;
+            return Staging.Contains(Environment);
         }
 
         public bool IsProduction()
         {
-            var currentEnv = configuration.GetCurrentEnvironment();
-            return currentEnv == Production;
+            return Production.Contains(Environment);
         }
 
         public string GetCurrentEnvironment()
         {
-            var currentEnv = configuration.GetCurrentEnvironment();
-            return currentEnv;
+            return configuration.GetCurrentEnvironment();
         }
 
         public string Environment
