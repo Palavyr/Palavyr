@@ -4,7 +4,7 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
-COPY artifacts/serverbuild/* .
+COPY artifacts/serverbuild/ .
 
 ENV Palavyr_STRIPE__SecretKey ""
 ENV Palavyr_AWS__AccessKey ""
