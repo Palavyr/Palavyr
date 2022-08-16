@@ -42,11 +42,10 @@ variable "aws_region" {
   description = "aws region"
 }
 
-variable "security_group_id" {
-  type        = string
-  description = "security group id"
-}
-
 variable "tags" {
   type = any
+}
+
+variable "vpc_id" {
+  type = string
 }

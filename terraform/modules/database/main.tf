@@ -1,3 +1,27 @@
+resource "aws_security_group" "db" {
+  name        = "secg-db-https-${var.database_name}"
+  description = "Allow incoming traffic from the load balancer to the nginx port for the server"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
 resource "aws_db_subnet_group" "database" {
   description = "RDS subnet group for ${var.database_name}"
   name        = var.database_subnet_group_name
@@ -19,7 +43,7 @@ resource "aws_db_instance" "database" {
   instance_class                        = var.instance_class
   username                              = var.database_username
   password                              = var.db_password
-  vpc_security_group_ids                = [var.security_group_id]
+  vpc_security_group_ids                = [aws_security_group.db.id]
   deletion_protection                   = var.protect_from_deletion
   availability_zone                     = "${var.aws_region}a"
   allocated_storage                     = 10

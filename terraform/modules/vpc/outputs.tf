@@ -9,6 +9,6 @@ output "public_subnets" {
   value = module.vpc.public_subnets
 }
 
-output "security_group_id" {
-  value = aws_security_group.sec_group.id
+output "database_security_group_id" {
+  value = module.database.database_security_group_id
 }

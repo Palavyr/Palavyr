@@ -38,6 +38,6 @@ output "database_subnets" {
 }
 
 output "database_security_group_id" {
-  description = "the security group the database is currently using"
+  description = "the security group id of the database"
   value       = module.database.database_security_group_id
 }
