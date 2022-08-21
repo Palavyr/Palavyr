@@ -10,7 +10,7 @@ resource "aws_lb" "alb" {
 
 resource "aws_lb_target_group" "alb_tg" {
   name     = "tg-https-${var.application_load_balancer_name}"
-  port     = 443
+  port     = 5001
   protocol = "HTTPS"
   vpc_id   = var.vpc_id
   tags     = var.tags
@@ -21,7 +21,7 @@ resource "aws_lb_target_group" "alb_tg" {
     timeout             = 5
     interval            = 10
     path                = "/healthcheck"
-    port                = 443
+    port                = 5001
   }
 }
 
