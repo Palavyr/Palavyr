@@ -78,7 +78,7 @@ resource "aws_launch_configuration" "this" {
   instance_type = var.instance_type
 
   user_data       = data.template_cloudinit_config.deployment_data.rendered
-  security_groups = [aws_security_group.this.id, aws_security_group.tent.id]
+  security_groups = [aws_security_group.this.id, aws_security_group.tent.id, aws_security_group.ssh.id]
 
   associate_public_ip_address = true
 
