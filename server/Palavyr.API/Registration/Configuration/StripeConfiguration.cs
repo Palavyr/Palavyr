@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 using Stripe;
 
 namespace Palavyr.API.Registration.Configuration
@@ -8,9 +8,9 @@ namespace Palavyr.API.Registration.Configuration
     {
         private static readonly int stripeRetriesCount = 3;
 
-        public static void ConfigureStripe(IConfiguration configuration)
+        public static void ConfigureStripe(ConfigurationContainer configuration)
         {
-            StripeConfiguration.ApiKey = configuration.GetStripeKey();
+            StripeConfiguration.ApiKey = configuration.StripeSecret;
             StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
         }
     }

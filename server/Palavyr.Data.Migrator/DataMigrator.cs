@@ -52,20 +52,21 @@ namespace Palavyr.Data.Migrator
 
 
             Logger.LogInformation("This is a test of the logging system");
-            var env = configuration.GetCurrentEnvironment();
-            var connectionString = configuration.CorrectConnectionString();
+
+            var env = configuration.Environment;
+            var connectionString = configuration.DbConnectionString;
 
             Logger.LogDebug("This is a debug test to print the env... printing: {Environment}", env);
             Logger.LogInformation("Data Migrations being performed in {Environment}", env);
 
-            var result = ApplyMigrations(env, connectionString, configuration);
+            var result = ApplyMigrations(env, connectionString);
             if (result == -1) return -1;
 
             Logger.LogInformation("Successfully updated the database!");
             return 0;
         }
 
-        private static int ApplyMigrations(string env, string connectionString, IConfiguration config)
+        private static int ApplyMigrations(string env, string connectionString)
         {
             Logger.LogInformation("Deploying migration for in {Environment}", env);
             Logger.LogInformation("Connection String: {ConnectionString}", connectionString);

@@ -19,7 +19,7 @@ namespace Palavyr.Component.Tests.StripeWebhookHandlers
     {
         public const string RoundingString = "M/d/yyyy hh:00:00";
 
-        [Fact]
+        // [Fact]
         public async Task TheProcessCheckoutSessionCompletedUpdatesTheAccount()
         {
             var subscriptionId = A.RandomId();

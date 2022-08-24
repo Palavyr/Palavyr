@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Stores;
 using Stripe;
@@ -21,13 +22,13 @@ namespace Palavyr.Core.Services.StripeServices
     {
         private readonly IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore;
         private ILogger<StripeWebhookAuthService> logger;
-        private IConfiguration configuration;
+        private ConfigurationContainer configuration;
         private const string StripeSignature = "Stripe-Signature";
 
         public StripeWebhookAuthService(
             IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore,
             ILogger<StripeWebhookAuthService> logger,
-            IConfiguration configuration
+            ConfigurationContainer configuration
         )
         {
             this.stripeWebhookStore = stripeWebhookStore;
@@ -41,7 +42,7 @@ namespace Palavyr.Core.Services.StripeServices
 
             try
             {
-                var webhookSecret = configuration.GetStripeWebhookKey();
+                var webhookSecret = configuration.StripeWebhookSecret;
                 var signatureItems = context.Request.Headers[StripeSignature]
                     .ToString()
                     .Trim()

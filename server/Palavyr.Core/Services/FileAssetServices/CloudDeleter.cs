@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.GlobalConstants;
@@ -18,15 +19,15 @@ namespace Palavyr.Core.Services.FileAssetServices
     public class CloudDeleter : ICloudDeleter
     {
         private readonly IS3FileDeleter is3FileDeleter;
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
 
-        public CloudDeleter(IS3FileDeleter is3FileDeleter, IConfiguration configuration)
+        public CloudDeleter(IS3FileDeleter is3FileDeleter, ConfigurationContainer configuration)
         {
             this.is3FileDeleter = is3FileDeleter;
             this.configuration = configuration;
         }
 
-        public string UserDataBucket => configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
+        public string UserDataBucket => configuration.AwsUserDataBucket;
 
         public async Task Delete(FileAsset fileAsset)
         {

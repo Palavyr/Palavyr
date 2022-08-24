@@ -21,6 +21,16 @@ Palavyr is intended to be used by any small business that wishes to automate som
 
 Since the application is dockerized, there are only a couple steps to get going.
 
+### 1. Set environment variables on your system
+
+All you need to set is the `ECR_REGISTRY` variable in your system
+
+### 2. Set up the .env.local file
+
+Make a copy of `.env.local.template` and provide the values.
+
+
+
 1. Ensure you've got a docker daemon installed (You'll be running docker commands)
 2. Copy the local.env.template to local.env and set your environment variables
 3. Run `docker compose up`

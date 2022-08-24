@@ -4,6 +4,7 @@ using Amazon.S3;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 
 namespace Palavyr.Core.Services.AmazonServices
 {
@@ -16,11 +17,11 @@ namespace Palavyr.Core.Services.AmazonServices
     {
         private readonly IAmazonS3 s3Client;
         private readonly ILogger<IS3PreSignedUrlCreator> logger;
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
 
         private readonly DateTime defaultExpiration = DateTime.Now.AddHours(AmazonConstants.PreSignedUrlExpiration);
 
-        public S3PreSignedUrlCreator(IAmazonS3 s3Client, ILogger<IS3PreSignedUrlCreator> logger, IConfiguration configuration)
+        public S3PreSignedUrlCreator(IAmazonS3 s3Client, ILogger<S3PreSignedUrlCreator> logger, ConfigurationContainer configuration)
         {
             this.s3Client = s3Client;
             this.logger = logger;
@@ -34,7 +35,7 @@ namespace Palavyr.Core.Services.AmazonServices
             try
             {
                 preSignedUrl = s3Client.GeneratePreSignedURL(
-                    configuration.GetUserDataBucket(),
+                    configuration.AwsUserDataBucket,
                     fileKey,
                     expiration,
                     new Dictionary<string, object>());

@@ -18,7 +18,14 @@
             public const string AccessKeySection = "AWS:AccessKey";
             public const string SecretKeySection = "AWS:SecretKey";
             public const string RegionSection = "AWS:Region";
+            
+            public const string DbHost = "DB:Host";
+            public const string DbPort = "DB:Port";
+            public const string DbName = "DB:DbName";
+            public const string DbUserName = "DB:DbName";
+            public const string DbPassword = "DB:Password";
             public const string ConnectionString = "ConnectionString";
+
             public const string CurrentEnvironment = "Environment";
             public const string JwtSecretKey = "JWT:SecretKey";
             public const string StripeKeySection = "STRIPE:SecretKey";

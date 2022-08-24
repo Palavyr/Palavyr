@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Services.AmazonServices.S3Service;
@@ -19,13 +20,13 @@ namespace Palavyr.Core.Services.FileAssetServices
         private readonly IS3FileUploader is3FileUploader;
         private readonly IFileAssetKeyResolver keyResolver;
 
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
         private readonly IAccountIdTransport accountIdTransport;
 
         public AwsCloudFileSaver(
             IS3FileUploader is3FileUploader,
             IFileAssetKeyResolver keyResolver,
-            IConfiguration configuration,
+            ConfigurationContainer configuration,
             IAccountIdTransport accountIdTransport
         )
         {
@@ -37,7 +38,7 @@ namespace Palavyr.Core.Services.FileAssetServices
 
         public async Task<FileAsset> SaveFile(FileName fileName, IFormFile fileData)
         {
-            var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
+            var userDataBucket = configuration.AwsUserDataBucket;
             var awsFileKey = keyResolver.Resolve(fileName);
 
             await is3FileUploader.StreamObjectToS3(userDataBucket, fileData, awsFileKey);
@@ -46,7 +47,7 @@ namespace Palavyr.Core.Services.FileAssetServices
             {
                 AccountId = accountIdTransport.AccountId,
                 Extension = fileName.Extension,
-                FileId = fileName.FileId,
+                FileId = fileName.FileId ?? string.Empty,
                 LocationKey = awsFileKey,
                 RiskyNameStem = fileName.FileStem
             };

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Test.Common.Random;
 
@@ -18,9 +19,9 @@ namespace Test.Common
     public class CreateS3TempFile : ICreateS3TempFile
     {
         private readonly IS3FileUploader saver;
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
 
-        public CreateS3TempFile(IS3FileUploader saver, IConfiguration configuration)
+        public CreateS3TempFile(IS3FileUploader saver, ConfigurationContainer configuration)
         {
             this.saver = saver;
             this.configuration = configuration;
@@ -42,7 +43,7 @@ namespace Test.Common
         {
             var fileStem = A.RandomName();
             var temps3Key = TempS3Utils.CreateTempS3Key(fileStem);
-            var bucket = configuration.GetUserDataBucket();
+            var bucket = configuration.AwsUserDataBucket;
 
             var stream = new MemoryStream(new byte[] { }, 0, 0);
 

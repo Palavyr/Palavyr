@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Services.PdfService.PdfServer;
 
 namespace Palavyr.Core.Services.PdfService
@@ -11,19 +12,19 @@ namespace Palavyr.Core.Services.PdfService
 
     public class CompilePdfServerRequest : ICompilePdfServerRequest
     {
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
 
-        public CompilePdfServerRequest(IConfiguration configuration)
+        public CompilePdfServerRequest(ConfigurationContainer configuration)
         {
             this.configuration = configuration;
         }
 
         public PdfServerRequest Compile(string key, string html, string identifier, Paper paperOptions)
         {
-            var accessKey = configuration.GetAccessKey();
-            var secretKey = configuration.GetSecretKey();
-            var bucket = configuration.GetUserDataBucket();
-            var region = configuration.GetRegion();
+            var accessKey = configuration.AwsAccessKey;
+            var secretKey = configuration.AwsSecretKey;
+            var bucket = configuration.AwsUserDataBucket;
+            var region = configuration.AwsRegion;
 
             return new PdfServerRequest
             {

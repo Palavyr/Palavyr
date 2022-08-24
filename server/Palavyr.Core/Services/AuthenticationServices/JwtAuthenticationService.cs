@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 
 namespace Palavyr.Core.Services.AuthenticationServices
 {
@@ -16,10 +17,10 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
     public class JwtAuthenticationService : IJwtAuthenticationService
     {
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
         private readonly ILogger<JwtAuthenticationService> logger;
 
-        public JwtAuthenticationService(IConfiguration configuration, ILogger<JwtAuthenticationService> logger)
+        public JwtAuthenticationService(ConfigurationContainer configuration, ILogger<JwtAuthenticationService> logger)
         {
             this.configuration = configuration;
             this.logger = logger;
@@ -28,7 +29,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
         public string GenerateJwtTokenAfterAuthentication(string username)
         {
             logger.LogDebug("Creating JWT token... ");
-            var key = configuration.GetJwtKey();//["JWT:SecretKey"] ?? throw new ArgumentNullException("Configuration[\"JWTSecretKey\"]");
+            var key = configuration.JwtSecretKey;//["JWT:SecretKey"] ?? throw new ArgumentNullException("Configuration[\"JWTSecretKey\"]");
 
             logger.LogDebug("Using the JWT SecretKey: {key}");
             var tokenHandler = new JwtSecurityTokenHandler();

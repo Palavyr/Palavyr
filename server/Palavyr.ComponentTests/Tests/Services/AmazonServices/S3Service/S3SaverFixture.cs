@@ -67,7 +67,7 @@
 //             is3FileUploader = Container.GetService<IS3FileUploader>();
 //             is3Downloader = Container.GetService<IS3Downloader>();
 //             is3FileDeleter = Container.GetService<IS3FileDeleter>();
-//             var config = Container.GetService<IConfiguration>();
+//             var config = Container.GetService<ConfigurationContainer>();
 //             testUserDataBucket = config.GetUserDataBucket();
 //             return Task.CompletedTask;
 //         }

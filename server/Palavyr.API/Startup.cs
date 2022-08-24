@@ -15,7 +15,7 @@ namespace Palavyr.API
 {
     public class Startup
     {
-        private IConfiguration configuration;
+        private ConfigurationContainer configuration;
         private readonly IWebHostEnvironment env;
 
         public Startup(IWebHostEnvironment env)
@@ -30,15 +30,15 @@ namespace Palavyr.API
             ContainerSetup(builder, configuration);
         }
 
-        public static void ContainerSetup(ContainerBuilder builder, IConfiguration configuration)
+        public static void ContainerSetup(ContainerBuilder builder, ConfigurationContainer configuration)
         {
             builder.RegisterModule(new AmazonModule(configuration));
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
-            builder.RegisterInstance(configuration).As<IConfiguration>();
+            builder.RegisterInstance(configuration).AsSelf();
         }
 
-        public static void RegisterStores(IServiceCollection services, IConfiguration configuration)
+        public static void RegisterStores(IServiceCollection services, ConfigurationContainer configuration)
         {
             ServiceRegistry.RegisterDatabaseContexts(services, configuration);
         }
@@ -51,7 +51,7 @@ namespace Palavyr.API
         }
 
 
-        public static void SetServices(IServiceCollection services, IConfiguration config, IWebHostEnvironment environ)
+        public static void SetServices(IServiceCollection services, ConfigurationContainer config, IWebHostEnvironment environ)
         {
             services.AddHttpContextAccessor();
             services.AddControllers().AddControllersAsServices();
@@ -62,7 +62,7 @@ namespace Palavyr.API
             NonWebHostConfiguration(services, config);
         }
 
-        public static void NonWebHostConfiguration(IServiceCollection services, IConfiguration config)
+        public static void NonWebHostConfiguration(IServiceCollection services, ConfigurationContainer config)
         {
             RegisterStores(services, config);
             ServiceRegistry.RegisterHealthChecks(services);

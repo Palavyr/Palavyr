@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,12 +8,13 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Palavyr.API;
 using Palavyr.Client;
+using Palavyr.Core;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Handlers.ControllerHandler;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.FileAssetServices;
@@ -43,6 +45,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         protected IntegrationTestBase(ITestOutputHelper testOutputHelper, ServerFactory factory)
         {
+
             TestOutputHelper = testOutputHelper;
             WebHostFactory = factory
                 .WithWebHostBuilder(
@@ -50,8 +53,14 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
                     {
                         builder
                             .ConfigureAppConfiguration(
-                                (context, configBuilder) => { configBuilder.AddConfiguration(TestConfiguration.GetTestConfiguration(Assembly.GetExecutingAssembly())); })
-                            .ConfigureTestContainer<ContainerBuilder>(b => CustomizeContainer(b));
+                                (context, configBuilder) =>
+                                {
+                                    // configBuilder.AddConfiguration(TestConfiguration.GetTestConfiguration(Assembly.GetExecutingAssembly()));
+                                })
+                            .ConfigureTestContainer<ContainerBuilder>(b =>
+                            {
+                                CustomizeContainer(b);
+                            });
                         if (typeof(DbType).Name == nameof(DbTypes.Real))
                         {
                             builder.ConfigureAndCreateRealTestDatabase();
@@ -92,11 +101,14 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         }
 
         public AutofacServiceProvider Container => ServiceProvider.Value;
-        public IConfiguration Configuration => TestConfiguration.GetTestConfiguration(Assembly.GetExecutingAssembly());
+        public ConfigurationContainer Configuration => ConfigurationGetter.GetConfiguration();
 
 
         public virtual ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
+            var config = ConfigurationGetter.GetConfiguration();
+            builder.RegisterInstance(config).AsSelf();
+
             builder.RegisterType<IntegrationTestFileSaver>().As<IntegrationTestFileSaver>();
             builder.RegisterType<IntegrationTestFileDelete>().As<IFileAssetDeleter>();
 

@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.Environment;
+using Palavyr.Core.Configuration;
 
 namespace Palavyr.Core.Services.EmailService.SmtpEmail
 {
@@ -22,7 +23,7 @@ namespace Palavyr.Core.Services.EmailService.SmtpEmail
 
     public class SmtpEmailClient : ISmtpEmailClient, IDisposable
     {
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
         private readonly IDetermineCurrentOperatingSystem determineCurrentOperatingSystem;
         private readonly string SMTP_USERNAME;
         private readonly string SMTP_PASSWORD;
@@ -31,7 +32,7 @@ namespace Palavyr.Core.Services.EmailService.SmtpEmail
 
         private readonly SmtpClient smtpClient;
 
-        public SmtpEmailClient(IConfiguration configuration, IDetermineCurrentOperatingSystem determineCurrentOperatingSystem)
+        public SmtpEmailClient(ConfigurationContainer configuration, IDetermineCurrentOperatingSystem determineCurrentOperatingSystem)
         {
             this.configuration = configuration;
             this.determineCurrentOperatingSystem = determineCurrentOperatingSystem;

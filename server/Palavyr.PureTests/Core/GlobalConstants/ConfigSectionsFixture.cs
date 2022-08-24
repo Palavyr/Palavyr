@@ -12,7 +12,7 @@ namespace Palavyr.PureTests.Core.GlobalConstants
             ApplicationConstants.ConfigSections.LoggingSection.ShouldBe("Logging");
             ApplicationConstants.ConfigSections.UserDataSection.ShouldBe("AWS:UserDataBucket");
 
-            ApplicationConstants.ConfigSections.ConnectionString.ShouldBe("ConnectionString");
+            // ApplicationConstants.ConfigSections.ConnectionString.ShouldBe("ConnectionString");
 
             ApplicationConstants.ConfigSections.StripeKeySection.ShouldBe("STRIPE:SecretKey");
             ApplicationConstants.ConfigSections.JwtSecretKey.ShouldBe("JWT:SecretKey");
@@ -21,7 +21,7 @@ namespace Palavyr.PureTests.Core.GlobalConstants
             ApplicationConstants.ConfigSections.SecretKeySection.ShouldBe("AWS:SecretKey");
             ApplicationConstants.ConfigSections.RegionSection.ShouldBe("AWS:Region");
 
-            ApplicationConstants.ConfigSections.PdfServerUrl.ShouldBe("PDFSERVER:Url");
+            // ApplicationConstants.ConfigSections.PdfServerUrl.ShouldBe("PDFSERVER:Url");
 
             ApplicationConstants.ConfigSections.RandomString.ShouldBe("aT5jX*Y7fJEK");
             ApplicationConstants.ConfigSections.CurrentEnvironment.ShouldBe("Environment");

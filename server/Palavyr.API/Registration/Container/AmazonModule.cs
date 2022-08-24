@@ -4,8 +4,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.SimpleEmail;
 using Autofac;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Services.EmailService.SmtpEmail;
 
 //https://stackoverflow.com/questions/59200028/registering-more-amazons3client-with-configurations-on-autofac
@@ -14,24 +13,17 @@ namespace Palavyr.API.Registration.Container
 {
     public class AmazonModule : Module
     {
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
 
-        public AmazonModule(IConfiguration configuration)
+        public AmazonModule(ConfigurationContainer configuration)
         {
             this.configuration = configuration;
         }
 
         protected override void Load(ContainerBuilder builder)
         {
-            var accessKey = configuration.GetAccessKey();
-            var secretKey = configuration.GetSecretKey();
+            var credentials = new BasicAWSCredentials(configuration.AwsAccessKey, configuration.AwsSecretKey);
 
-            // default s3 endpoint is s3.amazonaws.com
-            // default ses endpoint is ses.amazonaws.com
-
-            var credentials = new BasicAWSCredentials(accessKey, secretKey);
-
-            var s3serviceUrl = configuration.GetAwsS3ServiceUrl();
             var s3Config = new AmazonS3Config
             {
                 Timeout = TimeSpan.FromSeconds(10),
@@ -39,17 +31,16 @@ namespace Palavyr.API.Registration.Container
                 MaxErrorRetry = 5,
                 RegionEndpoint = RegionEndpoint.USEast1,
                 ForcePathStyle = true,
-                ServiceURL = s3serviceUrl
+                ServiceURL = configuration.AwsS3ServiceUrl
             };
 
-            var sesServiceUrl = configuration.GetAwsSesServiceUrl();
             var sesConfig = new AmazonSimpleEmailServiceConfig()
             {
                 Timeout = TimeSpan.FromSeconds(100),
                 RetryMode = RequestRetryMode.Standard,
                 MaxErrorRetry = 5,
                 RegionEndpoint = RegionEndpoint.USEast1,
-                ServiceURL = sesServiceUrl
+                ServiceURL = configuration.AwsSesServiceUrl
             };
 
             builder.Register(

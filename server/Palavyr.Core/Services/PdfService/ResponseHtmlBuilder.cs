@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Requests;
 using Palavyr.Core.Services.AmazonServices;
@@ -18,13 +19,13 @@ namespace Palavyr.Core.Services.PdfService
     {
         private readonly IEntityStore<Logo> logoStore;
         private readonly ILinkCreator linkCreator;
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
         private readonly IEntityStore<Account> accountStore;
         private readonly IEntityStore<Intent> intentStore;
 
         public ResponseHtmlBuilder(
             ILinkCreator linkCreator,
-            IConfiguration configuration,
+            ConfigurationContainer configuration,
             IEntityStore<Logo> logoStore,
             IEntityStore<Account> accountStore,
             IEntityStore<Intent> intentStore)
@@ -76,7 +77,7 @@ namespace Palavyr.Core.Services.PdfService
                         </head>
                         <body>
                             <div>");
-            var userDataBucket = configuration.GetUserDataBucket();
+            var userDataBucket = configuration.AwsUserDataBucket;
             previewBuilder.Append(HeaderSection.GetHeader(options, linkCreator, userDataBucket));
             previewBuilder.Append(IntentTitleSection.GetIntentDisplayTitle(intent.IntentName, emailRequest.ConversationId));
             previewBuilder.Append(PrologueSection.GetPrologue(intent.Prologue));

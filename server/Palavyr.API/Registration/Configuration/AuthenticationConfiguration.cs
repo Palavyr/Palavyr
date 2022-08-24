@@ -1,10 +1,9 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Palavyr.API.CustomMiddleware;
-using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Services.AuthenticationServices;
 
 //https://adamstorr.azurewebsites.net/blog/integration-testing-with-aspnetcore-3-1-remove-the-boiler-plate
@@ -22,7 +21,7 @@ namespace Palavyr.API.Registration.Configuration
 
     public static class AuthenticationConfiguration
     {
-        public static void AddAuthenticationSchemes(IServiceCollection services, IConfiguration configuration)
+        public static void AddAuthenticationSchemes(IServiceCollection services, ConfigurationContainer configuration)
         {
             // var jwtTokenConfig = configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
             //https://wildermuth.com/2018/04/10/Using-JwtBearer-Authentication-in-an-API-only-ASP-NET-Core-Project
@@ -32,7 +31,7 @@ namespace Palavyr.API.Registration.Configuration
             //         cfg.User.RequireUniqueEmail = true;
             //     });
 
-            var key = configuration.GetJwtKey();
+            var key = configuration.JwtSecretKey;
             
             services
                 .AddAuthentication(

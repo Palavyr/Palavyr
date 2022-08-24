@@ -3,6 +3,7 @@ using Autofac;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
 using Palavyr.Core.Services.StripeServices.Products;
@@ -12,9 +13,9 @@ namespace Palavyr.API.Registration.Container
 {
     public class StripeModule : Module
     {
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
 
-        public StripeModule(IConfiguration configuration)
+        public StripeModule(ConfigurationContainer configuration)
         {
             this.configuration = configuration;
         }
@@ -24,9 +25,9 @@ namespace Palavyr.API.Registration.Container
         protected override void Load(ContainerBuilder builder)
         {
             var runningEnvironment = new DetermineCurrentEnvironment(configuration);
-            
+
             // var currentEnv = configuration.GetCurrentEnvironment();
-            var stripeKey = configuration.GetStripeKey();
+            var stripeKey = configuration.StripeSecret;
             if (!runningEnvironment.IsProduction() && stripeKey.ToLowerInvariant().StartsWith("sk_live_"))
             {
                 throw new Exception("CRITICAL ERROR - attempting to use a production stripe API key in test environment - CRITICAL");

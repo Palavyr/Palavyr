@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data.Entities;
@@ -21,7 +20,6 @@ namespace Palavyr.Core.Services.PdfService
     public class PreviewResponseGenerator : IPreviewResponseGenerator
     {
         private readonly IEntityStore<Intent> intentStore;
-        private readonly IConfiguration configuration;
         private readonly ILogger<PreviewResponseGenerator> logger;
         private readonly IHtmlToPdfClient htmlToPdfClient;
         private readonly IResponseHtmlBuilder responseHtmlBuilder;
@@ -34,7 +32,6 @@ namespace Palavyr.Core.Services.PdfService
 
         public PreviewResponseGenerator(
             IEntityStore<Intent> intentStore,
-            IConfiguration configuration,
             ILogger<PreviewResponseGenerator> logger,
             IHtmlToPdfClient htmlToPdfClient,
             IResponseHtmlBuilder responseHtmlBuilder,
@@ -47,7 +44,6 @@ namespace Palavyr.Core.Services.PdfService
         )
         {
             this.intentStore = intentStore;
-            this.configuration = configuration;
             this.logger = logger;
             this.htmlToPdfClient = htmlToPdfClient;
             this.responseHtmlBuilder = responseHtmlBuilder;

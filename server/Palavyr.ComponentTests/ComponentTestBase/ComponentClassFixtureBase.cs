@@ -37,18 +37,18 @@ namespace Palavyr.Component.ComponentTestBase
             var builder = new ContainerBuilder();
             builder.Populate(services);
             RegisterContainerTypes(builder, config);
-            builder.RegisterInstance(config).As<IConfiguration>();
+            builder.RegisterInstance(config).AsSelf();
             additionalConfiguration(builder);
             return builder.Build();
         }
 
 
-        public void RegisterServices(IServiceCollection serviceCollection, IConfiguration config)
+        public void RegisterServices(IServiceCollection serviceCollection, ConfigurationContainer config)
         {
             Startup.NonWebHostConfiguration(serviceCollection, config);
         }
 
-        public void RegisterContainerTypes(ContainerBuilder builder, IConfiguration config)
+        public void RegisterContainerTypes(ContainerBuilder builder, ConfigurationContainer config)
         {
             Startup.ContainerSetup(builder, config);
         }
@@ -68,6 +68,7 @@ namespace Palavyr.Component.ComponentTestBase
             var scopedServices = scope.ServiceProvider;
 
             var dataContexts = scopedServices.GetService<AppDataContexts>();
+            if (dataContexts is null) throw new Exception("AppDataContexts not registered?");
             dataContexts.Database.EnsureDeleted();
             dataContexts.Database.EnsureCreated();
         }

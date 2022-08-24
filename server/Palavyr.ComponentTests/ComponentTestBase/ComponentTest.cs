@@ -1,9 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using NSubstitute;
+using Palavyr.API;
 using Palavyr.Component.Mocks;
+using Palavyr.Core;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
@@ -35,14 +38,12 @@ namespace Palavyr.Component.ComponentTestBase
         public static string ConfirmationToken { get; set; } = Guid.NewGuid().ToString();
         public string StripeCustomerId { get; set; } = A.RandomId();
         public string AccountId { get; set; } = A.RandomId();
-        
-        
+
         public DateTime CreatedAt = DateTime.Now;
 
         public virtual async Task InitializeAsync()
         {
             await Task.Yield();
-
             Container = Fixture.ConfigureClassFixture(
                 builder =>
                 {

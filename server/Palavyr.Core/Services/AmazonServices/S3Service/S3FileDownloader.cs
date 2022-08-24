@@ -9,6 +9,7 @@ using Amazon.S3.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.TemporaryPaths;
 
@@ -24,16 +25,16 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
     {
         private readonly ITemporaryPath temporaryPath;
         private readonly IAmazonS3 s3Client;
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
         private readonly ILogger<IS3Downloader> logger;
 
-        private string UserDataBucket => configuration.GetUserDataBucket();
+        private string UserDataBucket => configuration.AwsUserDataBucket;
 
         public S3Downloader(
             ITemporaryPath temporaryPath,
             IAmazonS3 s3Client,
-            IConfiguration configuration,
-            ILogger<IS3Downloader> logger
+            ConfigurationContainer configuration,
+            ILogger<S3Downloader> logger
         )
         {
             this.temporaryPath = temporaryPath;

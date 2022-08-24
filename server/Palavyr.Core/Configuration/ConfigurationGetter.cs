@@ -1,17 +1,23 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace Palavyr.Core.Configuration;
 
 public static class ConfigurationGetter
 {
-    public static IConfiguration GetConfiguration()
+    public static ConfigurationContainer GetConfiguration()
     {
-        // We'll need to get the env vars set on lambda in the terraform.
+        var LocalEnvFile = "../../../../../.env.local";
 
+        // We'll need to get the env vars set on lambda in the terraform.
+        if (File.Exists(LocalEnvFile))
+        {
+            DotEnv.Load(LocalEnvFile);
+        }
         var config = new ConfigurationBuilder()
             .AddEnvironmentVariables(prefix: "Palavyr_")
             .Build();
 
-        return config;
+        return new ConfigurationContainer(config);
     }
 }

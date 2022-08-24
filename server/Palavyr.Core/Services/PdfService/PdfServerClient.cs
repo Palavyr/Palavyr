@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.PdfService.PdfServer;
@@ -23,10 +24,10 @@ namespace Palavyr.Core.Services.PdfService
         private readonly HttpClient httpClient = new HttpClient(new HttpClientHandler());
         private readonly ILogger<PdfServerClient> logger;
         private readonly IS3Downloader is3Downloader;
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
         private readonly int retryCount = 60; // number of half seconds
 
-        public PdfServerClient(ILogger<PdfServerClient> logger, IS3Downloader is3Downloader, IConfiguration configuration)
+        public PdfServerClient(ILogger<PdfServerClient> logger, IS3Downloader is3Downloader, ConfigurationContainer configuration)
         {
             this.logger = logger;
             this.is3Downloader = is3Downloader;
@@ -41,13 +42,10 @@ namespace Palavyr.Core.Services.PdfService
 
         public async Task<PdfServerResponse> PostToPdfServer(PdfServerRequest requestObject)
         {
-            // var host = configuration.GetPdfServerHost();
-            // var port = configuration.GetPdfServerPort();
-            var fullPdfServerUrl = configuration.GetPdfUrl();
-            
+            var fullPdfServerUrl = configuration.AwsPdfUrl;
+
             var requestBody = SerializeRequestObject(requestObject);
 
-            // var pdfServerUri = PdfServerConstants.PdfServiceUrl(host, port);
             logger.LogDebug("Attempting to post to pdf service at {FullPdfServerUrl}", fullPdfServerUrl);
 
             HttpResponseMessage response;
@@ -69,7 +67,7 @@ namespace Palavyr.Core.Services.PdfService
             }
 
             var result = JsonConvert.DeserializeObject<PdfServerResponse>(await response.Content.ReadAsStringAsync());
-            
+
             var count = 0;
             var found = false;
             while (!found)

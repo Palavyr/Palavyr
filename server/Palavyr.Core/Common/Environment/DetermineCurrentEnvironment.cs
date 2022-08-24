@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Configuration;
 
 namespace Palavyr.Core.Common.Environment
 {
@@ -16,13 +15,13 @@ namespace Palavyr.Core.Common.Environment
 
     public class DetermineCurrentEnvironment : IDetermineCurrentEnvironment
     {
-        private readonly IConfiguration configuration;
+        private readonly ConfigurationContainer configuration;
 
         public static List<string> Development = new() { "Development", "Dev", "development", "dev" };
         public static List<string> Staging = new() { "Staging", "staging", "test", "Test" };
         public static List<string> Production = new() { "Production", "production", "Prod", "prod" };
 
-        public DetermineCurrentEnvironment(IConfiguration configuration)
+        public DetermineCurrentEnvironment(ConfigurationContainer configuration)
         {
             this.configuration = configuration;
         }
@@ -44,7 +43,7 @@ namespace Palavyr.Core.Common.Environment
 
         public string GetCurrentEnvironment()
         {
-            return configuration.GetCurrentEnvironment();
+            return configuration.Environment;
         }
 
         public string Environment

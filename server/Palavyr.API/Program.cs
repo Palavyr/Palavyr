@@ -5,9 +5,9 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Configuration;
-using Palavyr.Core.GlobalConstants;
 using Serilog;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
@@ -106,7 +106,7 @@ namespace Palavyr.API
                     (hostingContext, logging) =>
                     {
                         logging.ClearProviders();
-                        logging.AddConfiguration(config.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
+                        // logging.AddConfiguration(config.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
                         logging.SetMinimumLevel(LogLevel.Trace);
                         logging.AddConsole();
                         logging.AddDebug();
