@@ -7,7 +7,7 @@ services:
       - '12111-12112:12111-12112'
     environment:
       - STRIPE_API_KEY={{ secrets.Palavyr_STRIPE__SecretKey }}
-      - STRIPE_DEVICE_NAME={{ secrets.Palavyr_STRIPE__DEVICE_NAME }}
+      # - STRIPE_DEVICE_NAME={{ secrets.Palavyr_STRIPE__DEVICE_NAME }}
 
   stripe-cli:
     image: stripe/stripe-cli
@@ -16,7 +16,7 @@ services:
 
     environment:
       - STRIPE_API_KEY={{ secrets.Palavyr_STRIPE__SecretKey }}
-      - STRIPE_DEVICE_NAME={{ secrets.Palavyr_STRIPE__DEVICE_NAME }}
+      # - STRIPE_DEVICE_NAME={{ secrets.Palavyr_STRIPE__DEVICE_NAME }}
 
   postgres-server:
     image: postgres:14.1-alpine
