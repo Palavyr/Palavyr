@@ -7,6 +7,5 @@ namespace Palavyr.API.Controllers
     public abstract class PalavyrBaseController : ControllerBase
     {
         public const string BaseRoute = "api";
-
     }
 }

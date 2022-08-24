@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
 
 namespace Palavyr.API.Controllers.Obsolete
@@ -12,7 +11,7 @@ namespace Palavyr.API.Controllers.Obsolete
     {
         private readonly IMediator mediator;
         public const string Route = "configure-conversations/check-multi-option/{nodeType}";
-        
+
 
         public GetIsMultiOptionTypeController(
             IMediator mediator

@@ -12,7 +12,6 @@ using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Nodes;
-using Palavyr.Core.Resources;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AccountServices.PlanTypes;

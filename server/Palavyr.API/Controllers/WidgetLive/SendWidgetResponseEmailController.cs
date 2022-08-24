@@ -24,7 +24,8 @@ namespace Palavyr.API.Controllers.WidgetLive
         public async Task<SendLiveEmailResultResource> SendEmail(
             [FromRoute]
             string intentId,
-            [FromQuery] bool demo,
+            [FromQuery]
+            bool demo,
             [FromBody]
             EmailRequest emailRequest,
             CancellationToken cancellationToken

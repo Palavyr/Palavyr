@@ -20,7 +20,6 @@ namespace Palavyr.API.Controllers.Response
         [HttpGet(Route)]
         public async Task<IntentResource> Get([FromRoute] string intentId, CancellationToken cancellationToken)
         {
-            
             var response = await mediator.Send(new GetResponseConfigurationRequest(intentId), cancellationToken);
             return response.Response;
         }

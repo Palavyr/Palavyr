@@ -11,6 +11,7 @@ namespace Palavyr.API.Controllers.Intents
     public class GetAllIntentsShallowController : PalavyrBaseController
     {
         private readonly IMediator mediator;
+
         public GetAllIntentsShallowController(IMediator mediator)
         {
             this.mediator = mediator;

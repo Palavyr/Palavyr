@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Requests;
-using Palavyr.Core.Resources;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Stores;
 

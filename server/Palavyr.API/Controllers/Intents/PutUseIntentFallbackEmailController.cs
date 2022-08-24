@@ -6,7 +6,6 @@ using Palavyr.Core.Handlers.ControllerHandler;
 
 namespace Palavyr.API.Controllers.Intents
 {
-
     public class PutUseIntentFallbackEmailController : PalavyrBaseController
     {
         private readonly IMediator mediator;
@@ -21,7 +20,6 @@ namespace Palavyr.API.Controllers.Intents
         {
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;
-
         }
     }
 }

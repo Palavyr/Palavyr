@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers.ControllerHandler;
-using Palavyr.Core.Resources;
 using ConversationHistoryRowResource = Palavyr.Core.Resources.ConversationHistoryRowResource;
 
 namespace Palavyr.API.Controllers.Enquiries

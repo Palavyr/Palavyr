@@ -51,7 +51,7 @@ namespace Palavyr.API
 
         private static void LoadEnvironmentVariablesFromEnvFile()
         {
-            Log.Information(string.Join(", ", Directory.GetFiles(".")));
+            Log.Information("{Files}", string.Join(", ", Directory.GetFiles(".")));
             if (File.Exists(LocalEnvFile))
             {
                 DotEnv.Load(LocalEnvFile);
@@ -71,7 +71,7 @@ namespace Palavyr.API
                         var envGetter = new DetermineCurrentEnvironment(config);
 
                         logging.ClearProviders();
-                        logging.AddConfiguration(hostingContext.Configuration.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
+                        // logging.AddConfiguration(hostingContext.Configuration.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
 
                         if (envGetter.IsDevelopment())
                         {
@@ -84,10 +84,7 @@ namespace Palavyr.API
 
                         logging.AddSeq();
                     })
-                .ConfigureWebHostDefaults(
-                    webBuilder => webBuilder
-                        .UseIIS()
-                        .UseStartup<Startup>());
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
             return host;
         }
     }
@@ -102,8 +99,6 @@ namespace Palavyr.API
     {
         protected override void Init(IHostBuilder builder)
         {
-            // DotEnv.Load("./env");
-
             var config = ConfigurationGetter.GetConfiguration();
             builder
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -122,8 +117,6 @@ namespace Palavyr.API
 
         protected override void Init(IWebHostBuilder builder)
         {
-            // DotEnv.Load("./env");
-
             builder.UseStartup<Startup>();
         }
     }

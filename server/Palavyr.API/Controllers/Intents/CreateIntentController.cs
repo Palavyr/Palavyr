@@ -10,6 +10,7 @@ namespace Palavyr.API.Controllers.Intents
     public class CreateNewIntentController : PalavyrBaseController
     {
         private readonly IMediator mediator;
+
         public CreateNewIntentController(IMediator mediator)
         {
             this.mediator = mediator;

@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.Core.Exceptions;
 
 namespace Palavyr.Core.Handlers.Pipelines

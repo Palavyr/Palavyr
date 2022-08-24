@@ -1,6 +1,3 @@
-using Palavyr.Core.Mappers;
-
-
 namespace Palavyr.Core.Resources
 {
     public class SendLiveEmailResultResource

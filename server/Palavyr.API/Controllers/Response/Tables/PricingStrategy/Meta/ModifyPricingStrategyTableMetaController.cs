@@ -10,7 +10,7 @@ namespace Palavyr.API.Controllers.Response.Tables.PricingStrategy.Meta
     public class ModifyPricingStrategyTableMetaController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        
+
 
         public ModifyPricingStrategyTableMetaController(IMediator mediator)
         {

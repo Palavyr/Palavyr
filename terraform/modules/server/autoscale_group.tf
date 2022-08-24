@@ -94,7 +94,7 @@ resource "aws_autoscaling_group" "asg" {
   name                      = var.autoscale_group_name
   launch_configuration      = aws_launch_configuration.this.name
   min_size                  = 1
-  max_size                  = 2
+  max_size                  = 1
   vpc_zone_identifier       = [var.public_subnets[0], var.public_subnets[1]]
   target_group_arns         = [aws_lb_target_group.alb_tg.arn]
   health_check_grace_period = 300

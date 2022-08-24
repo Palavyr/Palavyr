@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -7,7 +6,6 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data.Entities;
 using Palavyr.Core.Mappers;
 using Palavyr.Core.Resources;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {

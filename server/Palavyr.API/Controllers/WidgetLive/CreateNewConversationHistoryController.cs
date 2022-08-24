@@ -13,7 +13,7 @@ namespace Palavyr.API.Controllers.WidgetLive
     public class CreateNewConversationHistoryController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        
+
 
         public CreateNewConversationHistoryController(IMediator mediator)
         {

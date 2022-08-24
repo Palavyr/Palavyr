@@ -12,10 +12,8 @@ namespace Palavyr.API
 
             foreach (var line in File.ReadAllLines(filePath))
             {
-                var parts = line.Split(
-                    '=',
-                    StringSplitOptions.RemoveEmptyEntries);
-
+                var parts = line.Split(new[] { '=' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                Console.WriteLine($"{parts[0]} - {parts[1]}");
                 if (parts.Length != 2)
                     continue;
 

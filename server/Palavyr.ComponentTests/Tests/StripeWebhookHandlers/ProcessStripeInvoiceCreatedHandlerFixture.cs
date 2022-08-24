@@ -7,7 +7,6 @@ using Palavyr.Core.Data;
 using Palavyr.Core.Handlers.StripeWebhookHandlers.InvoiceCreated;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Shouldly;
-using Test.Common.ApprovalTests;
 using Test.Common.Builders.Accounts;
 using Test.Common.Builders.StripeBuilders;
 using Test.Common.Random;

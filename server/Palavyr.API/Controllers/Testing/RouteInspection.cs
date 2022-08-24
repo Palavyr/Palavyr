@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Palavyr.API.Controllers.Testing
 {
@@ -100,7 +98,7 @@ namespace Palavyr.API.Controllers.Testing
         public static void WriteResourceType(Type resourceType, Type? outerArg, RouteEndpoint route)
         {
             var sb = new StringBuilder();
-            
+
             var properties = resourceType.GetProperties();
             sb.AppendLine($"export type {resourceType.Name} = {{");
 
@@ -108,15 +106,15 @@ namespace Palavyr.API.Controllers.Testing
             {
                 ;
             }
-            
+
             foreach (var propertyInfo in properties)
             {
-
                 var propType = propertyInfo.PropertyType;
                 if (propertyInfo.Name == "IsFixedSize")
                 {
                     ;
                 }
+
                 if (propType.IsGenericType)
                 {
                     // nullable!
@@ -128,7 +126,6 @@ namespace Palavyr.API.Controllers.Testing
 
                     if (outerArg != null)
                     {
-
                         var name = $"{propertyInfo.Name.FirstCharToLowerCase()}: {nullableArg[0].Name}[]";
                         sb.AppendLine(name);
                     }

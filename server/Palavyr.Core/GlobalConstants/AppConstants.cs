@@ -15,10 +15,6 @@
 
         public class ConfigSections
         {
-            // WARNING: If you change this, you must also change:
-            // - github actions and the secrets in github
-            // -    - thats the main and pr actions! Add these to the env vars
-            // - 
             public const string AccessKeySection = "AWS:AccessKey";
             public const string SecretKeySection = "AWS:SecretKey";
             public const string RegionSection = "AWS:Region";
