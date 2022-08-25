@@ -49,18 +49,18 @@ services:
     container_name: Frontend
     restart: always
     env_file:
-      - .env.local
+      - ./ui/.env.frontend.development
     ports:
-      - 8080:80
+      - 8080:8080
 
   palavyr-web-widget:
     image: ${ECR_REGISTRY}/palavyr/palavyr-widget:latest
     container_name: Widget
     restart: always
     env_file:
-      - .env.local
+      - ./ui/.env.widget.development
     ports:
-      - 3400:80
+      - 3400:3400
 
   local-stack:
     image: localstack/localstack

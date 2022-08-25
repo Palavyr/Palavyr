@@ -4,6 +4,8 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
+WORKDIR /app
+
 COPY artifacts/serverbuild/ .
 
 ENV Palavyr_STRIPE__SecretKey ""
@@ -16,7 +18,6 @@ ENV Palavyr_AWS__SecretKey ""
 
 ENV Palavyr_AWS__Region ""
 ENV Palavyr_AWS__UserDataBucket ""
-
 
 ENV Palavyr_ConnectionString ""
 ENV Palavyr_DB__Host ""
