@@ -13,6 +13,7 @@ Write-Output ""
 
 Get-Content .env.local | ForEach-Object {
     $name, $value = $_.split('=')
+    if(string.$name )
     Set-Content env:\$name $value
 }
 
@@ -22,7 +23,7 @@ Write-Output ""
 
 
 Write-Output "Composing your docker environment..."
-docker compose up -d
+docker compose -f ./docker-compose.yml up -d --remove-orphans
 Write-Output ""
 
 Write-Output "Moving to the utilities directory"
