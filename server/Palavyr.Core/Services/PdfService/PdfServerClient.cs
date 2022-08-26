@@ -26,6 +26,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IS3Downloader is3Downloader;
         private readonly ConfigurationContainer configuration;
         private readonly int retryCount = 60; // number of half seconds
+        private readonly string serverUrl = "localhost:5603";
 
         public PdfServerClient(ILogger<PdfServerClient> logger, IS3Downloader is3Downloader, ConfigurationContainer configuration)
         {
@@ -42,21 +43,21 @@ namespace Palavyr.Core.Services.PdfService
 
         public async Task<PdfServerResponse> PostToPdfServer(PdfServerRequest requestObject)
         {
-            var fullPdfServerUrl = configuration.AwsPdfUrl;
+            // var fullPdfServerUrl = configuration.AwsPdfUrl;
 
             var requestBody = SerializeRequestObject(requestObject);
 
-            logger.LogDebug("Attempting to post to pdf service at {FullPdfServerUrl}", fullPdfServerUrl);
+            logger.LogDebug("Attempting to post to pdf service at {FullPdfServerUrl}", serverUrl);
 
             HttpResponseMessage response;
             try
             {
-                response = await httpClient.PostAsync(fullPdfServerUrl, requestBody);
+                response = await httpClient.PostAsync(serverUrl, requestBody);
             }
             catch (HttpRequestException ex)
             {
                 logger.LogCritical("Failed to convert and write the HTML to PDF using the express server");
-                logger.LogCritical("Attempted to use url: {pdfServerUri}", fullPdfServerUrl);
+                logger.LogCritical("Attempted to use url: {pdfServerUri}", serverUrl);
                 logger.LogCritical("Encountered Error: {Message}", ex.Message);
                 throw new MicroserviceException("The PDF service was unreachable.", ex);
             }

@@ -98,18 +98,18 @@ module "database" {
 }
 
 
-module "pdf_server" {
-  source = "./modules/lambda_endpoint"
+# module "pdf_server" {
+#   source = "./modules/lambda_endpoint"
 
-  environment        = var.environment
-  function_name      = "palavyr-pdf-server-${lower(var.environment)}-${random_id.rand.hex}"
-  aws_iam_role_name  = "pdflambda-${var.environment}-${random_id.rand.hex}"
-  aws_region         = var.aws_region
-  gateway_name       = "agw-pdf-server-${lower(var.environment)}-${random_id.rand.hex}"
-  gateway_stage_name = lower(var.environment)
-  image_uri          = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-pdf-server-lambda:latest"
-  tags               = local.tags
-}
+#   environment        = var.environment
+#   function_name      = "palavyr-pdf-server-${lower(var.environment)}-${random_id.rand.hex}"
+#   aws_iam_role_name  = "pdflambda-${var.environment}-${random_id.rand.hex}"
+#   aws_region         = var.aws_region
+#   gateway_name       = "agw-pdf-server-${lower(var.environment)}-${random_id.rand.hex}"
+#   gateway_stage_name = lower(var.environment)
+#   image_uri          = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/palavyr/palavyr-pdf-server-lambda:latest"
+#   tags               = local.tags
+# }
 
 
 

@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+
+  palavyr-server:
+    image: ${ECR_REGISTRY}/palavyr/palavyr-server:latest
+    container_name: Server
+    restart: always
+    env_file:
+      - ./production.env
+    ports:
+      - 5000:5000
+
+  palavyr-pdf-server:
+    image: ${ECR_REGISTRY}/palavyr/palavyr-pdf-server:latest
+    container_name: Server-PDF
+    restart: always
+    env_file:
+      - ./production.env
+    ports:
+      - 5603:5603

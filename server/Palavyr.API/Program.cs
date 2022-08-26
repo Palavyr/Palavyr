@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Configuration;
+using Palavyr.Core.GlobalConstants;
 using Serilog;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
@@ -17,7 +18,7 @@ namespace Palavyr.API
 {
     public class Program
     {
-        private static readonly string LocalEnvFile = "../../.env.local";
+        private static readonly string LocalEnvFile = "../../local.env";
 
         public static int Main(string[] args)
         {
@@ -61,7 +62,6 @@ namespace Palavyr.API
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             var config = ConfigurationGetter.GetConfiguration();
-
             var host = Host
                 .CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -71,20 +71,23 @@ namespace Palavyr.API
                         var envGetter = new DetermineCurrentEnvironment(config);
 
                         logging.ClearProviders();
-                        // logging.AddConfiguration(hostingContext.Configuration.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
-
                         if (envGetter.IsDevelopment())
                         {
                             logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
-                            // logging.AddDebug();
+                            logging.AddDebug();
                             logging.AddSerilog();
-                            // logging.SetMinimumLevel(LogLevel.Trace);
-                            // logging.AddConsole();
+                            logging.SetMinimumLevel(LogLevel.Trace);
+                            logging.AddConsole();
                         }
 
                         logging.AddSeq();
                     })
-                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
+                .ConfigureWebHostDefaults(
+                    webBuilder =>
+                    {
+                        webBuilder.UseStartup<Startup>();
+                        webBuilder.UseUrls("http://localhost:5000");
+                    });
             return host;
         }
     }
@@ -99,7 +102,7 @@ namespace Palavyr.API
     {
         protected override void Init(IHostBuilder builder)
         {
-            var config = ConfigurationGetter.GetConfiguration();
+            // var config = ConfigurationGetter.GetConfiguration();
             builder
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureLogging(

@@ -23,7 +23,9 @@ class Build : NukeBuild
 
     AbsolutePath TerraformSourceDirectory => RootDirectory / "terraform";
     AbsolutePath ServerSourceDirectory => RootDirectory / "server";
-    AbsolutePath ServerEnvFile => RootDirectory / ".env";
+    AbsolutePath ServerEnvFile => RootDirectory / "production.env";
+    AbsolutePath ServerDockerComposeFile => RootDirectory / "docker-compose.prod.yml";
+
 
     // AbsolutePath UISourceDirectory => RootDirectory / "ui";
 
@@ -79,7 +81,9 @@ class Build : NukeBuild
             .Executes(() =>
             {
                 CopyFileToDirectory(ServerEnvFile, TempOutputServerEnvFile);
-
+                CopyFileToDirectory(ServerDockerComposeFile, TempOutputServerEnvFile);
+                    
+                
                 DotNetPublish(_ => _
                     .SetProject(ServerSourceDirectory / "Palavyr.API")
                     .SetConfiguration(Configuration)

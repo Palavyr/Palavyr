@@ -3,10 +3,10 @@ FROM node:14-alpine
 
 ENV PHANTOMJS_VERSION=2.1.1
 ENV PHANTOMJS_PATH=/usr/local/bin/phantomjs
-ENV PORT ""
-ENV SERVER_URL ""
-ENV VERSION ""
 
+ENV PORT 5603
+ENV SERVER_URL "localhost:5603"
+ENV VERSION 1
 
 RUN apk update && apk add --no-cache fontconfig curl curl-dev && \
     cd /tmp && curl -Ls https://github.com/dustinblackman/phantomized/releases/download/${PHANTOMJS_VERSION}/dockerized-phantomjs.tar.gz | tar xz && \

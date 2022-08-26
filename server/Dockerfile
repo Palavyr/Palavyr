@@ -31,8 +31,6 @@ ENV Palavyr_JWT__SecretKey=""
 ENV Palavyr_AWS__AwsS3ServiceUrl=""
 ENV Palavyr_AWS__AwsSESServiceUrl=""
 
-
 ENV DOTNET_URLS=http://+:5000
-ENV DOTNET_URLS=https://+:5001
 
 ENTRYPOINT ["dotnet", "Palavyr.API.dll"]

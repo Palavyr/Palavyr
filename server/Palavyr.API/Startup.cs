@@ -73,8 +73,6 @@ namespace Palavyr.API
         {
             PalavyrAccessChecker.AssertEnvironmentsDoNoOverlap();
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
             app.UseCors();
             app.UseMiddleware<ErrorHandlingMiddleware>();
