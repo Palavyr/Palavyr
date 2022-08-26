@@ -2,14 +2,12 @@ using System;
 using System.IO;
 using Amazon.Lambda.Core;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Configuration;
-using Palavyr.Core.GlobalConstants;
 using Serilog;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 

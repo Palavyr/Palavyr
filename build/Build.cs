@@ -26,7 +26,6 @@ class Build : NukeBuild
     AbsolutePath ServerEnvFile => RootDirectory / "production.env";
     AbsolutePath ServerDockerComposeFile => RootDirectory / "docker-compose.prod.yml";
 
-
     // AbsolutePath UISourceDirectory => RootDirectory / "ui";
 
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
@@ -82,8 +81,8 @@ class Build : NukeBuild
             {
                 CopyFileToDirectory(ServerEnvFile, TempOutputServerEnvFile);
                 CopyFileToDirectory(ServerDockerComposeFile, TempOutputServerEnvFile);
-                    
-                
+
+
                 DotNetPublish(_ => _
                     .SetProject(ServerSourceDirectory / "Palavyr.API")
                     .SetConfiguration(Configuration)
