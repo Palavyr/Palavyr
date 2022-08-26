@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Amazon.Lambda.Core;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -74,7 +75,7 @@ namespace Palavyr.API
                         if (envGetter.IsDevelopment())
                         {
                             logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
-                            logging.AddDebug();
+                            // logging.AddDebug();
                             logging.AddSerilog();
                             logging.SetMinimumLevel(LogLevel.Trace);
                             logging.AddConsole();
@@ -83,16 +84,8 @@ namespace Palavyr.API
                         logging.AddSeq();
                     })
                 .ConfigureWebHostDefaults(
-                    webBuilder =>
-                    {
-                        webBuilder.UseStartup<Startup>();
-                        webBuilder.UseKestrel(
-                            opts =>
-                            {
-                                // TODO 
-                            });
-                        // webBuilder.UseUrls("http://localhost:5000");
-                    });
+                    webBuilder => webBuilder.UseStartup<Startup>()
+                );
             return host;
         }
     }

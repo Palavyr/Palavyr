@@ -11,8 +11,10 @@ Write-Output ""
 # If you haven't, make a copy of the .env.Template file and populate it
 
 
-Get-Content .env.local | ForEach-Object {
+Get-Content local.env | ForEach-Object {
+    Write-Host $_
     $name, $value = $_.split('=')
+
     # if(string.$name )
     Set-Content env:\$name $value
 }
@@ -23,7 +25,8 @@ Write-Output ""
 
 
 Write-Output "Composing your docker environment..."
-docker compose -f ./docker-compose.yml up -d --remove-orphans
+docker compose pull
+docker compose -f ./docker-compose.yml up -d --remove-orphans --force-recreate
 Write-Output ""
 
 Write-Output "Moving to the utilities directory"
@@ -31,7 +34,7 @@ Set-Location ./server
 Write-Output ""
 
 Write-Output "Applying migrations..."
-./utilities/StartMigrator.ps1
+# ./utilities/StartMigrator.ps1
 Write-Output ""
 
 Set-Location ..
