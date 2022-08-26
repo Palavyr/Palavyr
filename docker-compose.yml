@@ -50,7 +50,7 @@ services:
     env_file:
       - ./ui/.env.frontend.development
     ports:
-      - 8080:8080
+      - 8080:8090
 
   palavyr-web-widget:
     image: ${ECR_REGISTRY}/palavyr/palavyr-widget:latest
@@ -59,7 +59,7 @@ services:
     env_file:
       - ./ui/.env.widget.development
     ports:
-      - 3400:3400
+      - 3400:8090
 
   local-stack:
     image: localstack/localstack

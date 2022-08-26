@@ -32,5 +32,6 @@ ENV Palavyr_AWS__AwsS3ServiceUrl=""
 ENV Palavyr_AWS__AwsSESServiceUrl=""
 
 ENV DOTNET_URLS=http://+:5000
+EXPOSE 5000
 
 ENTRYPOINT ["dotnet", "Palavyr.API.dll"]
