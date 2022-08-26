@@ -13,12 +13,12 @@ Write-Output ""
 
 Get-Content .env.local | ForEach-Object {
     $name, $value = $_.split('=')
-    if(string.$name )
+    # if(string.$name )
     Set-Content env:\$name $value
 }
 
 Write-Output "Grabbing your AWS Elastic Container Registry credentials... assuming you've set up your .env file"
-aws ecr get-login-password --region $env:Palavyr_AWS__Region | docker login --username AWS --password-stdin $env:ECR_REGISTRY
+aws ecr get-login-password --region "us-east-1" | docker login --username AWS --password-stdin $env:ECR_REGISTRY
 Write-Output ""
 
 
