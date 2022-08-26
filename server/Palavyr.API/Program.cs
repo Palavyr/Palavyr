@@ -86,6 +86,11 @@ namespace Palavyr.API
                     webBuilder =>
                     {
                         webBuilder.UseStartup<Startup>();
+                        webBuilder.UseKestrel(
+                            opts =>
+                            {
+                                // TODO 
+                            });
                         // webBuilder.UseUrls("http://localhost:5000");
                     });
             return host;
