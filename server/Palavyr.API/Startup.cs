@@ -15,7 +15,7 @@ namespace Palavyr.API
 {
     public class Startup
     {
-        private ConfigurationContainer configuration;
+        private ConfigContainerServer config;
         private readonly IWebHostEnvironment env;
 
         public Startup(IWebHostEnvironment env)
@@ -27,31 +27,31 @@ namespace Palavyr.API
 
         public virtual void ConfigureContainer(ContainerBuilder builder)
         {
-            ContainerSetup(builder, configuration);
+            ContainerSetup(builder, config);
         }
 
-        public static void ContainerSetup(ContainerBuilder builder, ConfigurationContainer configuration)
+        public static void ContainerSetup(ContainerBuilder builder, ConfigContainerServer config)
         {
-            builder.RegisterModule(new AmazonModule(configuration));
+            builder.RegisterModule(new AmazonModule(config));
             builder.RegisterModule(new GeneralModule());
-            builder.RegisterModule(new StripeModule(configuration));
-            builder.RegisterInstance(configuration).AsSelf();
+            builder.RegisterModule(new StripeModule(config));
+            builder.RegisterInstance(config).AsSelf();
         }
 
-        public static void RegisterStores(IServiceCollection services, ConfigurationContainer configuration)
+        public static void RegisterStores(IServiceCollection services, ConfigContainerServer config)
         {
-            ServiceRegistry.RegisterDatabaseContexts(services, configuration);
+            ServiceRegistry.RegisterDatabaseContexts(services, config);
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            configuration = ConfigurationGetter.GetConfiguration();
-            AuthenticationConfiguration.AddAuthenticationSchemes(services, configuration);
-            SetServices(services, configuration, env);
+            config = ConfigurationGetter.GetConfiguration();
+            AuthenticationConfiguration.AddAuthenticationSchemes(services, config);
+            SetServices(services, config, env);
         }
 
 
-        public static void SetServices(IServiceCollection services, ConfigurationContainer config, IWebHostEnvironment environ)
+        public static void SetServices(IServiceCollection services, ConfigContainerServer config, IWebHostEnvironment environ)
         {
             services.AddHttpContextAccessor();
             services.AddControllers().AddControllersAsServices();
@@ -62,7 +62,7 @@ namespace Palavyr.API
             NonWebHostConfiguration(services, config);
         }
 
-        public static void NonWebHostConfiguration(IServiceCollection services, ConfigurationContainer config)
+        public static void NonWebHostConfiguration(IServiceCollection services, ConfigContainerServer config)
         {
             RegisterStores(services, config);
             ServiceRegistry.RegisterHealthChecks(services);

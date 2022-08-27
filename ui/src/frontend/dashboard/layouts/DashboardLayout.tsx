@@ -240,12 +240,17 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         };
     }, [intentId, loadIntents]);
 
-    const setNewIntent = (newIntent: IntentResource) => {
-        const newNames = cloneDeep(intentNameDetails);
+    const setNewIntent = async () => {
+        const oldIntentIds = intentNameDetails.map(d => d.intentId);
 
-        newNames.push({ intentName: newIntent.intentName, intentId: newIntent.intentId });
-        setIntentNameDetails(newNames);
-        history.push(defaultUrlForNewIntent(newIntent.intentId));
+        const intents = await repository.Intent.GetAllIntents();
+        const newInt = intents.filter(x => !oldIntentIds.includes(x.intentId))[0];
+        const udpatedIntents = intents.map(i => {
+            return { intentName: i.intentName, intentId: i.intentId };
+        });
+
+        setIntentNameDetails(udpatedIntents);
+        history.push(defaultUrlForNewIntent(newInt.intentId));
     };
 
     const handleDrawerClose: () => void = () => {

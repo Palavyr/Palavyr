@@ -24,15 +24,15 @@ namespace Palavyr.Core.Services.PdfService
         private readonly HttpClient httpClient = new HttpClient(new HttpClientHandler());
         private readonly ILogger<PdfServerClient> logger;
         private readonly IS3Downloader is3Downloader;
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
         private readonly int retryCount = 60; // number of half seconds
         private readonly string serverUrl = "localhost:5603";
 
-        public PdfServerClient(ILogger<PdfServerClient> logger, IS3Downloader is3Downloader, ConfigurationContainer configuration)
+        public PdfServerClient(ILogger<PdfServerClient> logger, IS3Downloader is3Downloader, ConfigContainerServer config)
         {
             this.logger = logger;
             this.is3Downloader = is3Downloader;
-            this.configuration = configuration;
+            this.config = config;
         }
 
         private StringContent SerializeRequestObject(PdfServerRequest requestObject)

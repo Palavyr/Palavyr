@@ -17,15 +17,15 @@ namespace Palavyr.Core.Services.AmazonServices
     {
         private readonly IAmazonS3 s3Client;
         private readonly ILogger<IS3PreSignedUrlCreator> logger;
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
 
         private readonly DateTime defaultExpiration = DateTime.Now.AddHours(AmazonConstants.PreSignedUrlExpiration);
 
-        public S3PreSignedUrlCreator(IAmazonS3 s3Client, ILogger<S3PreSignedUrlCreator> logger, ConfigurationContainer configuration)
+        public S3PreSignedUrlCreator(IAmazonS3 s3Client, ILogger<S3PreSignedUrlCreator> logger, ConfigContainerServer config)
         {
             this.s3Client = s3Client;
             this.logger = logger;
-            this.configuration = configuration;
+            this.config = config;
         }
 
         public string GenericCreatePreSignedUrl(string fileKey, DateTime? expiry = null)
@@ -35,7 +35,7 @@ namespace Palavyr.Core.Services.AmazonServices
             try
             {
                 preSignedUrl = s3Client.GeneratePreSignedURL(
-                    configuration.AwsUserDataBucket,
+                    config.AwsUserDataBucket,
                     fileKey,
                     expiration,
                     new Dictionary<string, object>());

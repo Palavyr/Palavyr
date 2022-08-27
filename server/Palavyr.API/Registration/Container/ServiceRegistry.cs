@@ -27,13 +27,13 @@ namespace Palavyr.API.Registration.Container
             }
         }
 
-        public static void RegisterDatabaseContexts(IServiceCollection services, ConfigurationContainer configuration)
+        public static void RegisterDatabaseContexts(IServiceCollection services, ConfigContainerServer config)
         {
             services.AddDbContext<AppDataContexts>(
                 opt =>
                 {
                     // var conString = "Server=localhost;Port=5432;Database=AppDatabase;User Id=postgres;Password=Password01!";
-                    opt.UseNpgsql(configuration.DbConnectionString);
+                    opt.UseNpgsql(config.DbConnectionString);
                 });
         }
     }

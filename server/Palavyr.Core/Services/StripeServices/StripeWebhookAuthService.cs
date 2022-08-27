@@ -22,18 +22,18 @@ namespace Palavyr.Core.Services.StripeServices
     {
         private readonly IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore;
         private ILogger<StripeWebhookAuthService> logger;
-        private ConfigurationContainer configuration;
+        private ConfigContainerServer config;
         private const string StripeSignature = "Stripe-Signature";
 
         public StripeWebhookAuthService(
             IEntityStore<StripeWebhookReceivedRecord> stripeWebhookStore,
             ILogger<StripeWebhookAuthService> logger,
-            ConfigurationContainer configuration
+            ConfigContainerServer config
         )
         {
             this.stripeWebhookStore = stripeWebhookStore;
             this.logger = logger;
-            this.configuration = configuration;
+            this.config = config;
         }
 
         public async Task<(Event? eventPayload, string? payloadSignature)> AuthenticateWebhookRequest(HttpContext context)
@@ -42,7 +42,7 @@ namespace Palavyr.Core.Services.StripeServices
 
             try
             {
-                var webhookSecret = configuration.StripeWebhookSecret;
+                var webhookSecret = config.StripeWebhookSecret;
                 var signatureItems = context.Request.Headers[StripeSignature]
                     .ToString()
                     .Trim()

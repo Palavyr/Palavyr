@@ -41,43 +41,30 @@ namespace Palavyr.Data.Migrator
                     }
                 });
             Logger = loggerFactory.CreateLogger<DataMigrator>();
-            Logger.LogDebug("{Message}", "This is the first thing that happens. A TEST");
 
-            var configuration = ConfigurationGetter.GetConfiguration("../../../../../local.env");
+            var configuration = ConfigurationGetter.GetConfigurationForMigrator();
 
-            Logger.LogInformation("This is a test of the logging system");
-
-            var env = configuration.Environment;
             var connectionString = configuration.DbConnectionString;
 
-            Logger.LogDebug("This is a debug test to print the env... printing: {Environment}", env);
-            Logger.LogInformation("Data Migrations being performed in {Environment}", env);
-
-            var result = ApplyMigrations(env, connectionString);
+            var result = ApplyMigrations(connectionString);
             if (result == -1) return -1;
 
             Logger.LogInformation("Successfully updated the database!");
             return 0;
         }
 
-        private static int ApplyMigrations(string env, string connectionString)
+        private static int ApplyMigrations(string connectionString)
         {
-            Logger.LogInformation("Deploying migration for in {Environment}", env);
             Logger.LogInformation("Connection String: {ConnectionString}", connectionString);
-            EnsureDatabase.For.PostgresqlDatabase(connectionString);
-            return DeployMigration(connectionString);
-        }
-
-        private static int DeployMigration(string connectionString)
-        {
+            // EnsureDatabase.For.PostgresqlDatabase(connectionString);
             var upgrader =
                 DeployChanges
                     .To
                     .PostgresqlDatabase(connectionString)
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .LogToConsole()
-                    // .WithVariablesDisabled()
                     .WithTransactionPerScript()
+                    .WithVariablesDisabled()
                     .Build();
 
             var result = upgrader.PerformUpgrade();

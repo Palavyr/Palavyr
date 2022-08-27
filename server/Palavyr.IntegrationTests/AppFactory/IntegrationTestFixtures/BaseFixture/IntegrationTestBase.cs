@@ -101,7 +101,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         }
 
         public AutofacServiceProvider Container => ServiceProvider.Value;
-        public ConfigurationContainer Configuration => ConfigurationGetter.GetConfiguration();
+        public ConfigContainerServer Config => ConfigurationGetter.GetConfiguration();
 
 
         public virtual ContainerBuilder CustomizeContainer(ContainerBuilder builder)

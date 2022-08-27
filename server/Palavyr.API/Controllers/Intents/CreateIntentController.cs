@@ -17,13 +17,12 @@ namespace Palavyr.API.Controllers.Intents
         }
 
         [HttpPost(CreateIntentRequest.Route)]
-        public async Task<IntentResource> Create(
+        public async Task Create(
             [FromBody]
             CreateIntentRequest request,
             CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(request, cancellationToken);
-            return response.Response;
+            await mediator.Send(request, cancellationToken);
         }
     }
 }

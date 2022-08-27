@@ -20,25 +20,25 @@ namespace Palavyr.Core.Services.FileAssetServices
         private readonly IS3FileUploader is3FileUploader;
         private readonly IFileAssetKeyResolver keyResolver;
 
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
         private readonly IAccountIdTransport accountIdTransport;
 
         public AwsCloudFileSaver(
             IS3FileUploader is3FileUploader,
             IFileAssetKeyResolver keyResolver,
-            ConfigurationContainer configuration,
+            ConfigContainerServer config,
             IAccountIdTransport accountIdTransport
         )
         {
             this.is3FileUploader = is3FileUploader;
             this.keyResolver = keyResolver;
-            this.configuration = configuration;
+            this.config = config;
             this.accountIdTransport = accountIdTransport;
         }
 
         public async Task<FileAsset> SaveFile(FileName fileName, IFormFile fileData)
         {
-            var userDataBucket = configuration.AwsUserDataBucket;
+            var userDataBucket = config.AwsUserDataBucket;
             var awsFileKey = keyResolver.Resolve(fileName);
 
             await is3FileUploader.StreamObjectToS3(userDataBucket, fileData, awsFileKey);

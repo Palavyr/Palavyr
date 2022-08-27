@@ -12,19 +12,19 @@ namespace Palavyr.Core.Services.PdfService
 
     public class CompilePdfServerRequest : ICompilePdfServerRequest
     {
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
 
-        public CompilePdfServerRequest(ConfigurationContainer configuration)
+        public CompilePdfServerRequest(ConfigContainerServer config)
         {
-            this.configuration = configuration;
+            this.config = config;
         }
 
         public PdfServerRequest Compile(string key, string html, string identifier, Paper paperOptions)
         {
-            var accessKey = configuration.AwsAccessKey;
-            var secretKey = configuration.AwsSecretKey;
-            var bucket = configuration.AwsUserDataBucket;
-            var region = configuration.AwsRegion;
+            var accessKey = config.AwsAccessKey;
+            var secretKey = config.AwsSecretKey;
+            var bucket = config.AwsUserDataBucket;
+            var region = config.AwsRegion;
 
             return new PdfServerRequest
             {

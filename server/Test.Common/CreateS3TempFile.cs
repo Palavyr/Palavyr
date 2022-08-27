@@ -19,12 +19,12 @@ namespace Test.Common
     public class CreateS3TempFile : ICreateS3TempFile
     {
         private readonly IS3FileUploader saver;
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
 
-        public CreateS3TempFile(IS3FileUploader saver, ConfigurationContainer configuration)
+        public CreateS3TempFile(IS3FileUploader saver, ConfigContainerServer config)
         {
             this.saver = saver;
-            this.configuration = configuration;
+            this.config = config;
         }
 
         public async Task<List<TempS3FileMeta>> CreateTempFilesOnS3(int numFiles)
@@ -43,7 +43,7 @@ namespace Test.Common
         {
             var fileStem = A.RandomName();
             var temps3Key = TempS3Utils.CreateTempS3Key(fileStem);
-            var bucket = configuration.AwsUserDataBucket;
+            var bucket = config.AwsUserDataBucket;
 
             var stream = new MemoryStream(new byte[] { }, 0, 0);
 

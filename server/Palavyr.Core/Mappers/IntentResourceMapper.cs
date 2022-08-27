@@ -33,7 +33,6 @@ namespace Palavyr.Core.Mappers
             var pricingStrategyTableMetaResources = await pricingStrategyTableMetaResourceMapper.MapMany(@from.PricingStrategyTableMetas, cancellationToken);
             var attachmentRecordResources = await attachmentRecordResourceMapper.MapMany(@from.AttachmentRecords, cancellationToken);
 
-
             return new IntentResource
             {
                 Id = @from.Id.Value,

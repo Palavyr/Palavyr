@@ -4,14 +4,15 @@ services:
   stripe:
     image: stripe/stripe-mock:latest
     ports:
-      - '12111-12112:12111-12112'
+      - 12111:12111
+      - 12112:12112
     env_file:
       - ./local.env
 
   stripe-cli:
     image: stripe/stripe-cli
     container_name: stripe-cli
-    command: "listen --api-key sk_test_DOESNOTEXIST --device-name Palavyr --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
+    command: "listen --api-key sk_test_DOESNOTEXIST --device-name Palavyr --forward-to https://localhost:5001/api/payments/payments-webhook --forward-connect-to http://localhost:12111 --skip-verify"
     env_file:
       - ./local.env
 
@@ -24,42 +25,8 @@ services:
       - POSTGRES_PASSWORD=Password01!
     ports:
       - 5432:5432
-
-  palavyr-server:
-    image: ${ECR_REGISTRY}/palavyr/palavyr-server:latest
-    container_name: Server
-    restart: always
-    env_file:
-      - ./local.env
-    ports:
-      - 5000:5000
-
-  palavyr-pdf-server:
-    image: ${ECR_REGISTRY}/palavyr/palavyr-pdf-server:latest
-    container_name: Server-PDF
-    restart: always
-    env_file:
-      - ./local.env
-    ports:
-      - 5603:5603
-
-  palavyr-web-frontend:
-    image: ${ECR_REGISTRY}/palavyr/palavyr-frontend:latest
-    container_name: Frontend
-    restart: always
-    env_file:
-      - ./ui/.env.frontend.development
-    ports:
-      - 8080:8090
-
-  palavyr-web-widget:
-    image: ${ECR_REGISTRY}/palavyr/palavyr-widget:latest
-    container_name: Widget
-    restart: always
-    env_file:
-      - ./ui/.env.widget.development
-    ports:
-      - 3400:8090
+    volumes:
+      - postgres-server:/var/lib/postgresql/data
 
   local-stack:
     image: localstack/localstack
@@ -78,3 +45,7 @@ services:
     volumes:
       - ./init-scripts:/docker-entrypoint-initaws.d
       - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  postgres-server:
+    driver: local

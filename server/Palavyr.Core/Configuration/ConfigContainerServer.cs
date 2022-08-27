@@ -2,16 +2,24 @@
 
 namespace Palavyr.Core.Configuration;
 
-public class ConfigurationContainer
+public class ConfigContainerMigrator
+{
+    public ConfigContainerMigrator(IConfiguration configuration)
+    {
+        DbConnectionString = configuration.CorrectConnectionString();
+    }
+
+    public string DbConnectionString { get; set; }
+}
+
+public class ConfigContainerServer
 {
     // This is the one place where we'll be handling all of the env variables
     // so help me god if I find a call to 'configuration.get' outside of this class....
-    public ConfigurationContainer(IConfiguration configuration)
+    public ConfigContainerServer(IConfiguration configuration)
     {
-        
         StripeSecret = configuration.GetStripeKey();
         StripeWebhookSecret = configuration.GetStripeWebhookKey();
-        
         AwsAccessKey = configuration.GetAccessKey();
         AwsSecretKey = configuration.GetSecretKey();
         AwsRegion = configuration.GetRegion();

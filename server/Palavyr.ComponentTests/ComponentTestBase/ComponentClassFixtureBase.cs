@@ -43,12 +43,12 @@ namespace Palavyr.Component.ComponentTestBase
         }
 
 
-        public void RegisterServices(IServiceCollection serviceCollection, ConfigurationContainer config)
+        public void RegisterServices(IServiceCollection serviceCollection, ConfigContainerServer config)
         {
             Startup.NonWebHostConfiguration(serviceCollection, config);
         }
 
-        public void RegisterContainerTypes(ContainerBuilder builder, ConfigurationContainer config)
+        public void RegisterContainerTypes(ContainerBuilder builder, ConfigContainerServer config)
         {
             Startup.ContainerSetup(builder, config);
         }

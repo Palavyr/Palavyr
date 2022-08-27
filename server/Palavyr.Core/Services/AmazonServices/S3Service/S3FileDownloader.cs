@@ -25,21 +25,21 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
     {
         private readonly ITemporaryPath temporaryPath;
         private readonly IAmazonS3 s3Client;
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
         private readonly ILogger<IS3Downloader> logger;
 
-        private string UserDataBucket => configuration.AwsUserDataBucket;
+        private string UserDataBucket => config.AwsUserDataBucket;
 
         public S3Downloader(
             ITemporaryPath temporaryPath,
             IAmazonS3 s3Client,
-            ConfigurationContainer configuration,
+            ConfigContainerServer config,
             ILogger<S3Downloader> logger
         )
         {
             this.temporaryPath = temporaryPath;
             this.s3Client = s3Client;
-            this.configuration = configuration;
+            this.config = config;
             this.logger = logger;
         }
 

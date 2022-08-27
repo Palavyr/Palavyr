@@ -23,7 +23,7 @@ namespace Palavyr.Core.Services.EmailService.SmtpEmail
 
     public class SmtpEmailClient : ISmtpEmailClient, IDisposable
     {
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
         private readonly IDetermineCurrentOperatingSystem determineCurrentOperatingSystem;
         private readonly string SMTP_USERNAME;
         private readonly string SMTP_PASSWORD;
@@ -32,9 +32,9 @@ namespace Palavyr.Core.Services.EmailService.SmtpEmail
 
         private readonly SmtpClient smtpClient;
 
-        public SmtpEmailClient(ConfigurationContainer configuration, IDetermineCurrentOperatingSystem determineCurrentOperatingSystem)
+        public SmtpEmailClient(ConfigContainerServer config, IDetermineCurrentOperatingSystem determineCurrentOperatingSystem)
         {
-            this.configuration = configuration;
+            this.config = config;
             this.determineCurrentOperatingSystem = determineCurrentOperatingSystem;
             // SMTP_USERNAME = "";//configuration.GetSmtpUsername();
             // SMTP_PASSWORD = "";//configuration.GetSmtpPassword();

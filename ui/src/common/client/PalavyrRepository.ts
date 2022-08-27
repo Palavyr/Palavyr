@@ -94,13 +94,7 @@ export class PalavyrRepository extends ApiRoutes {
         SetShowDynamicTotals: (intentId: string, shouldShow: boolean) => this.client.put<boolean, {}>(this.Routes.SetShowricingStrategyTotals(), { ShowDynamicTotals: shouldShow, IntentId: intentId }),
         ToggleuseIntentFallbackEmail: async (useIntentFallbackEmailUpdate: boolean, intentId: string) =>
             this.client.put<boolean, {}>(this.Routes.ToggleUseIntentFallbackEmail(), { UseFallback: useIntentFallbackEmailUpdate, IntentId: intentId }),
-        CreateIntent: async (intentName: string) => {
-            const newIntent = await this.client.post<IntentResource, {}>(this.Routes.CreateIntent(), { intentName });
-            const intents = SessionStorage.getCacheValue(CacheIds.Intents) as IntentResources;
-            intents.push(newIntent);
-            SessionStorage.setCacheValue(CacheIds.Intents, intents);
-            return newIntent;
-        },
+        CreateIntent: async (intentName: string) => await this.client.post<{}, {}>(this.Routes.CreateIntent(), { intentName }),
         UpdateIntentName: (intentId: string, intentName: string) => {
             const result = this.client.put<string, {}>(this.Routes.UpdateIntentName(intentId), { intentName });
             SessionStorage.clearCacheValue(CacheIds.Intents);

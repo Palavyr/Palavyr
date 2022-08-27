@@ -13,21 +13,21 @@ namespace Palavyr.API.Registration.Container
 {
     public class StripeModule : Module
     {
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
 
-        public StripeModule(ConfigurationContainer configuration)
+        public StripeModule(ConfigContainerServer config)
         {
-            this.configuration = configuration;
+            this.config = config;
         }
 
         private static readonly int stripeRetriesCount = 3;
 
         protected override void Load(ContainerBuilder builder)
         {
-            var runningEnvironment = new DetermineCurrentEnvironment(configuration);
+            var runningEnvironment = new DetermineCurrentEnvironment(config);
 
             // var currentEnv = configuration.GetCurrentEnvironment();
-            var stripeKey = configuration.StripeSecret;
+            var stripeKey = config.StripeSecret;
             if (!runningEnvironment.IsProduction() && stripeKey.ToLowerInvariant().StartsWith("sk_live_"))
             {
                 throw new Exception("CRITICAL ERROR - attempting to use a production stripe API key in test environment - CRITICAL");

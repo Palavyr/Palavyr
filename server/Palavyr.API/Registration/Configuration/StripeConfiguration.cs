@@ -8,9 +8,9 @@ namespace Palavyr.API.Registration.Configuration
     {
         private static readonly int stripeRetriesCount = 3;
 
-        public static void ConfigureStripe(ConfigurationContainer configuration)
+        public static void ConfigureStripe(ConfigContainerServer config)
         {
-            StripeConfiguration.ApiKey = configuration.StripeSecret;
+            StripeConfiguration.ApiKey = config.StripeSecret;
             StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
         }
     }

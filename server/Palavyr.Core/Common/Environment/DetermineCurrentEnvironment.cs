@@ -15,15 +15,15 @@ namespace Palavyr.Core.Common.Environment
 
     public class DetermineCurrentEnvironment : IDetermineCurrentEnvironment
     {
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
 
         public static List<string> Development = new() { "Development", "Dev", "development", "dev" };
         public static List<string> Staging = new() { "Staging", "staging", "test", "Test" };
         public static List<string> Production = new() { "Production", "production", "Prod", "prod" };
 
-        public DetermineCurrentEnvironment(ConfigurationContainer configuration)
+        public DetermineCurrentEnvironment(ConfigContainerServer config)
         {
-            this.configuration = configuration;
+            this.config = config;
         }
 
         public bool IsDevelopment()
@@ -43,7 +43,7 @@ namespace Palavyr.Core.Common.Environment
 
         public string GetCurrentEnvironment()
         {
-            return configuration.Environment;
+            return config.Environment;
         }
 
         public string Environment

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Sessions;
+using Stripe.Sigma;
 
 namespace Palavyr.Core.Stores
 {
@@ -86,7 +87,6 @@ namespace Palavyr.Core.Stores
             var entityEntry = await QueryExecutor.AddAsync(entity, CancellationToken);
             return entityEntry.Entity;
         }
-
 
         public async Task CreateMany(IEnumerable<TEntity> entities)
         {

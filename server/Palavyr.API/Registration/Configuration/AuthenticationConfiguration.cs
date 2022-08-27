@@ -21,7 +21,7 @@ namespace Palavyr.API.Registration.Configuration
 
     public static class AuthenticationConfiguration
     {
-        public static void AddAuthenticationSchemes(IServiceCollection services, ConfigurationContainer configuration)
+        public static void AddAuthenticationSchemes(IServiceCollection services, ConfigContainerServer config)
         {
             // var jwtTokenConfig = configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
             //https://wildermuth.com/2018/04/10/Using-JwtBearer-Authentication-in-an-API-only-ASP-NET-Core-Project
@@ -31,7 +31,7 @@ namespace Palavyr.API.Registration.Configuration
             //         cfg.User.RequireUniqueEmail = true;
             //     });
 
-            var key = configuration.JwtSecretKey;
+            var key = config.JwtSecretKey;
             
             services
                 .AddAuthentication(

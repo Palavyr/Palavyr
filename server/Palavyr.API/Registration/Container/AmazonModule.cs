@@ -13,16 +13,16 @@ namespace Palavyr.API.Registration.Container
 {
     public class AmazonModule : Module
     {
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
 
-        public AmazonModule(ConfigurationContainer configuration)
+        public AmazonModule(ConfigContainerServer config)
         {
-            this.configuration = configuration;
+            this.config = config;
         }
 
         protected override void Load(ContainerBuilder builder)
         {
-            var credentials = new BasicAWSCredentials(configuration.AwsAccessKey, configuration.AwsSecretKey);
+            var credentials = new BasicAWSCredentials(config.AwsAccessKey, config.AwsSecretKey);
 
             var s3Config = new AmazonS3Config
             {
@@ -31,7 +31,7 @@ namespace Palavyr.API.Registration.Container
                 MaxErrorRetry = 5,
                 RegionEndpoint = RegionEndpoint.USEast1,
                 ForcePathStyle = true,
-                ServiceURL = configuration.AwsS3ServiceUrl
+                ServiceURL = config.AwsS3ServiceUrl
             };
 
             var sesConfig = new AmazonSimpleEmailServiceConfig()
@@ -40,7 +40,7 @@ namespace Palavyr.API.Registration.Container
                 RetryMode = RequestRetryMode.Standard,
                 MaxErrorRetry = 5,
                 RegionEndpoint = RegionEndpoint.USEast1,
-                ServiceURL = configuration.AwsSesServiceUrl
+                ServiceURL = config.AwsSesServiceUrl
             };
 
             builder.Register(

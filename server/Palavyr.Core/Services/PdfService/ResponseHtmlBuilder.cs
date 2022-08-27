@@ -19,20 +19,20 @@ namespace Palavyr.Core.Services.PdfService
     {
         private readonly IEntityStore<Logo> logoStore;
         private readonly ILinkCreator linkCreator;
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
         private readonly IEntityStore<Account> accountStore;
         private readonly IEntityStore<Intent> intentStore;
 
         public ResponseHtmlBuilder(
             ILinkCreator linkCreator,
-            ConfigurationContainer configuration,
+            ConfigContainerServer config,
             IEntityStore<Logo> logoStore,
             IEntityStore<Account> accountStore,
             IEntityStore<Intent> intentStore)
         {
             this.logoStore = logoStore;
             this.linkCreator = linkCreator;
-            this.configuration = configuration;
+            this.config = config;
             this.accountStore = accountStore;
             this.intentStore = intentStore;
         }
@@ -77,7 +77,7 @@ namespace Palavyr.Core.Services.PdfService
                         </head>
                         <body>
                             <div>");
-            var userDataBucket = configuration.AwsUserDataBucket;
+            var userDataBucket = config.AwsUserDataBucket;
             previewBuilder.Append(HeaderSection.GetHeader(options, linkCreator, userDataBucket));
             previewBuilder.Append(IntentTitleSection.GetIntentDisplayTitle(intent.IntentName, emailRequest.ConversationId));
             previewBuilder.Append(PrologueSection.GetPrologue(intent.Prologue));

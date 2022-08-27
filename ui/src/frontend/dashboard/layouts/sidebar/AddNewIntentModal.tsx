@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 export interface AddNewIntentModalProps {
     open: boolean;
     handleClose(): void;
-    setNewIntent(newIntentObject: IntentResource): void;
+    setNewIntent(): void;
 }
 
 export const AddNewIntentModal = ({ open, handleClose, setNewIntent }: AddNewIntentModalProps) => {
@@ -45,8 +45,8 @@ export const AddNewIntentModal = ({ open, handleClose, setNewIntent }: AddNewInt
     const onAdd = async () => {
         setButtonDisabled(true);
         if (intentName.trim() !== "") {
-            const newIntent = await repository.Intent.CreateIntent(intentName);
-            setNewIntent(newIntent);
+            await repository.Intent.CreateIntent(intentName);
+            setNewIntent();
         }
         handleClose();
         setIntentName("");

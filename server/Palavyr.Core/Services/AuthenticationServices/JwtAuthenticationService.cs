@@ -17,19 +17,19 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
     public class JwtAuthenticationService : IJwtAuthenticationService
     {
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
         private readonly ILogger<JwtAuthenticationService> logger;
 
-        public JwtAuthenticationService(ConfigurationContainer configuration, ILogger<JwtAuthenticationService> logger)
+        public JwtAuthenticationService(ConfigContainerServer config, ILogger<JwtAuthenticationService> logger)
         {
-            this.configuration = configuration;
+            this.config = config;
             this.logger = logger;
         }
 
         public string GenerateJwtTokenAfterAuthentication(string username)
         {
             logger.LogDebug("Creating JWT token... ");
-            var key = configuration.JwtSecretKey;//["JWT:SecretKey"] ?? throw new ArgumentNullException("Configuration[\"JWTSecretKey\"]");
+            var key = config.JwtSecretKey;//["JWT:SecretKey"] ?? throw new ArgumentNullException("Configuration[\"JWTSecretKey\"]");
 
             logger.LogDebug("Using the JWT SecretKey: {key}");
             var tokenHandler = new JwtSecurityTokenHandler();

@@ -19,15 +19,15 @@ namespace Palavyr.Core.Services.FileAssetServices
     public class CloudDeleter : ICloudDeleter
     {
         private readonly IS3FileDeleter is3FileDeleter;
-        private readonly ConfigurationContainer configuration;
+        private readonly ConfigContainerServer config;
 
-        public CloudDeleter(IS3FileDeleter is3FileDeleter, ConfigurationContainer configuration)
+        public CloudDeleter(IS3FileDeleter is3FileDeleter, ConfigContainerServer config)
         {
             this.is3FileDeleter = is3FileDeleter;
-            this.configuration = configuration;
+            this.config = config;
         }
 
-        public string UserDataBucket => configuration.AwsUserDataBucket;
+        public string UserDataBucket => config.AwsUserDataBucket;
 
         public async Task Delete(FileAsset fileAsset)
         {
