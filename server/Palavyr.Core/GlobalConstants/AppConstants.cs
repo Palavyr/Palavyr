@@ -22,7 +22,7 @@
             public const string DbHost = "DB:Host";
             public const string DbPort = "DB:Port";
             public const string DbName = "DB:DbName";
-            public const string DbUserName = "DB:DbName";
+            public const string DbUserName = "DB:Username";
             public const string DbPassword = "DB:Password";
             public const string ConnectionString = "ConnectionString";
 

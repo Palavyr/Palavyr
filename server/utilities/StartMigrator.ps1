@@ -5,7 +5,6 @@ param([string]$environment = "Development")
 $env:ASPNETCORE_ENVIRONMENT = $environment
 dotnet clean
 dotnet build
-$databaseProcess = Start-Process Palavyr.Data.Migrator\bin\Debug\netcoreapp3.1\Palavyr.Data.Migrator.exe -PassThru -Wait -NoNewWindow
+$databaseProcess = Start-Process Palavyr.Data.Migrator\bin\Debug\net6.0\Palavyr.Data.Migrator.exe -PassThru -Wait -NoNewWindow
 
 exit $databaseProcess.ExitCode
-

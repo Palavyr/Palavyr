@@ -23,6 +23,7 @@ ENV Palavyr_ConnectionString=""
 ENV Palavyr_DB__Host=""
 ENV Palavyr_DB__Port=""
 ENV Palavyr_DB__DbName=""
+ENV Palavyr_DB_Username ""
 ENV Palavyr_DB__Password=""
 
 ENV Palavyr_Environment=""

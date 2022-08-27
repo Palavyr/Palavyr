@@ -3,9 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using Amazon.Lambda.Core;
 using DbUp;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Configuration;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
@@ -26,9 +24,6 @@ namespace Palavyr.Data.Migrator
 
     public class DataMigrator
     {
-        private const string ConnectionStringAppSettingsKey = "ConnectionString";
-        private const string Environment = "Environment";
-
         private static ILogger<DataMigrator> Logger { get; set; }
 
         public static int Main(string[] args)
@@ -48,8 +43,7 @@ namespace Palavyr.Data.Migrator
             Logger = loggerFactory.CreateLogger<DataMigrator>();
             Logger.LogDebug("{Message}", "This is the first thing that happens. A TEST");
 
-            var configuration = ConfigurationGetter.GetConfiguration();
-
+            var configuration = ConfigurationGetter.GetConfiguration("../../../../../local.env");
 
             Logger.LogInformation("This is a test of the logging system");
 

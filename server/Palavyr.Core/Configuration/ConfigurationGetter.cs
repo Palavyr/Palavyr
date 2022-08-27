@@ -5,14 +5,13 @@ namespace Palavyr.Core.Configuration;
 
 public static class ConfigurationGetter
 {
-    public static ConfigurationContainer GetConfiguration()
+    public static ConfigurationContainer GetConfiguration(string envFilePath = "../../local.env")
     {
-        var LocalEnvFile = "../../../../../.env.local";
 
         // We'll need to get the env vars set on lambda in the terraform.
-        if (File.Exists(LocalEnvFile))
+        if (File.Exists(envFilePath))
         {
-            DotEnv.Load(LocalEnvFile);
+            DotEnv.Load(envFilePath);
         }
         var config = new ConfigurationBuilder()
             .AddEnvironmentVariables(prefix: "Palavyr_")

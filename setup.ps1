@@ -10,16 +10,14 @@ Write-Output ""
 # Please ensure you've populated your local .env file
 # If you haven't, make a copy of the .env.Template file and populate it
 
-
+Write-Host "Using the following env variables"
 Get-Content local.env | ForEach-Object {
     Write-Host $_
     $name, $value = $_.split('=')
-
-    # if(string.$name )
     Set-Content env:\$name $value
 }
 
-Write-Output "Grabbing your AWS Elastic Container Registry credentials... assuming you've set up your .env file"
+Write-Output "Grabbing your AWS Elastic Container Registry credentials... if this fails, you'll need to request aws credentials to access ECR"
 aws ecr get-login-password --region "us-east-1" | docker login --username AWS --password-stdin $env:ECR_REGISTRY
 Write-Output ""
 
@@ -34,7 +32,8 @@ Set-Location ./server
 Write-Output ""
 
 Write-Output "Applying migrations..."
-# ./utilities/StartMigrator.ps1
+dotnet build
+./utilities/StartMigrator.ps1
 Write-Output ""
 
 Set-Location ..
