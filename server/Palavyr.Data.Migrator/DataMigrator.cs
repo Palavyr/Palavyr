@@ -71,10 +71,12 @@ namespace Palavyr.Data.Migrator
         private static int DeployMigration(string connectionString)
         {
             var upgrader =
-                DeployChanges.To
+                DeployChanges
+                    .To
                     .PostgresqlDatabase(connectionString)
-                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly()) // reflection used to get the db context
+                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .LogToConsole()
+                    // .WithVariablesDisabled()
                     .WithTransactionPerScript()
                     .Build();
 

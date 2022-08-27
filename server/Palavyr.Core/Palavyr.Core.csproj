@@ -63,8 +63,19 @@
 
     <ItemGroup>
       <Folder Include="Data\CodeFirstMigrations" />
-      <Folder Include="Models\Accounts" />
       <Folder Include="Models\Configuration\Schemas" />
       <Folder Include="Models\Conversation\Schemas" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Models\Accounts\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Models\Accounts\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Models\Accounts\**" />
     </ItemGroup>
 </Project>

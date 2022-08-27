@@ -12,7 +12,7 @@ using Palavyr.Core.Data;
 namespace Palavyr.Core.Data.CodeFirstMigrations
 {
     [DbContext(typeof(AppDataContexts))]
-    [Migration("20220809101004_InitialMigration")]
+    [Migration("20220827022144_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -60,10 +60,7 @@
         <PackageReference Include="TestStack.ConventionTests.Autofac" Version="4.0.2" />
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Include="Scripts\*\*.sql" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Scripts" />
+        <EmbeddedResource Include="Scripts\*.sql" CopyToOutputDirectory="Always"/>
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Palavyr.Core\Palavyr.Core.csproj" />

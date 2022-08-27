@@ -24,7 +24,6 @@ namespace Palavyr.API.Controllers.Accounts.Setup
             CreateNewAccountRequest request,
             CancellationToken cancellationToken)
         {
-            
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;
         }
