@@ -19,7 +19,7 @@ namespace Palavyr.Core.Sessions
 
         public async Task CleanSessionDb(string accountId)
         {
-            var now = DateTime.Now;
+            var now = DateTime.Now.ToUniversalTime();
 
             var expiredSessions = await sessionStore.RawReadonlyQuery()
                 .Where(sess => now >= sess.Expiration)

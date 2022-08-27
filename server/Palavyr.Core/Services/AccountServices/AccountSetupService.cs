@@ -90,7 +90,7 @@ namespace Palavyr.Core.Services.AccountServices
 
             var introId = account.IntroIntentId;
             var ok = await accountRegistrationMaker.TryRegisterAccountAndSendEmailVerificationToken(accountId, apiKey, emailAddress, introId, cancellationToken);
-            logger.LogDebug("Send Email result was " + (ok ? "OK" : " a FAIL"));
+            logger.LogDebug("Send Email result was {Result}", (ok ? "OK" : " a FAIL"));
 
             if (!ok) return CredentialsResource.CreateUnauthenticatedResponse(EmailAddressNotFound);
 
