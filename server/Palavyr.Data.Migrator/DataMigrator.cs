@@ -3,8 +3,10 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using Amazon.Lambda.Core;
 using DbUp;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Configuration;
+using Palavyr.Core.Data;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -56,7 +58,9 @@ namespace Palavyr.Data.Migrator
         private static int ApplyMigrations(string connectionString)
         {
             Logger.LogInformation("Connection String: {ConnectionString}", connectionString);
-            // EnsureDatabase.For.PostgresqlDatabase(connectionString);
+            EnsureDatabase.For.PostgresqlDatabase(connectionString);
+            // EnsureDatabaseCustom(connectionString);
+
             var upgrader =
                 DeployChanges
                     .To
@@ -76,6 +80,17 @@ namespace Palavyr.Data.Migrator
             Console.ReadLine();
 #endif
             return -1;
+        }
+
+        private static void EnsureDatabaseCustom(string connectionString)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<AppDataContexts>();
+            optionsBuilder.UseNpgsql(connectionString);
+
+            using (var dbContext = new AppDataContexts(optionsBuilder.Options))
+            {
+                dbContext.Database.EnsureCreated();
+            }
         }
     }
 }

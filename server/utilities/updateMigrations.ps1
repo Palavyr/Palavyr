@@ -134,7 +134,8 @@ if ($version -eq "") {
 
 ## make sure the tool is installed globally
 try {
-    dotnet tool install --global dotnet-ef --version=3.1.0
+    # https://docs.microsoft.com/en-us/ef/core/cli/dotnet
+    dotnet tool install --global dotnet-ef --version=6.0.8
 }
 catch {
     Write-Host "dotnet ef tool already installed" -ForegroundColor Green
@@ -149,7 +150,7 @@ $Migrations = "Data\\CodeFirstMigrations"
 # Execute the migrations on the local space
 try {
     Write-Host "`r`nAdding new migration..."
-    dotnet ef migrations add $name --project .\\Palavyr.Core --startup-project .\\Palavyr.API --output-dir "$Migrations" --context AppDataContexts
+    dotnet ef migrations add $name --project .\\Palavyr.Core --startup-project .\\Palavyr.API --output-dir "$Migrations" --context AppDataContexts --no-transactions
     $result = $?;
 }
 catch {

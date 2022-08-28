@@ -10,7 +10,6 @@ $env:Palavyr_DB__DbName = "AppDatabase"
 $env:Palavyr_DB__Username = "postgres"
 $env:Palavyr_DB__Password = "Password01!"
 
-
 dotnet clean
 dotnet build
 

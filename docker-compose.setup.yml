@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  stripe:
+    image: stripe/stripe-mock:latest
+    ports:
+      - 12111:12111
+      - 12112:12112
+    env_file:
+      - ./local.env
+
+  palavyr-server:
+    image: ${ECR_REGISTRY}/palavyr/palavyr-server:latest
+    container_name: Server
+    restart: always
+    env_file:
+      - ./local.env
+    ports:
+      - 5000:5000
+
+  postgres-server:
+    image: postgres:14.1-alpine
+    container_name: Database
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Password01!
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-server:/var/lib/postgresql/data
+
+  local-stack:
+    image: localstack/localstack
+    container_name: Aws-Localstack
+    hostname: localstack
+    ports:
+      - 4566:4566
+    environment:
+      - SERVICES=s3,ses
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=testUser
+      - AWS_SECRET_ACCESS_KEY=testAccessKey
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initaws.d
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  postgres-server:
+    driver: local

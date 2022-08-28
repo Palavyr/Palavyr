@@ -4,9 +4,6 @@
     CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ("MigrationId")
 );
 
-START TRANSACTION;
-
-
 DO $EF$
 BEGIN
     IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20220827022144_InitialMigration') THEN
@@ -499,5 +496,3 @@ BEGIN
     VALUES ('20220827022144_InitialMigration', '6.0.7');
     END IF;
 END $EF$;
-COMMIT;
-
