@@ -1,7 +1,7 @@
-output "pdf_server_url" {
-  description = "URL for the PDF server"
-  value       = module.pdf_server.base_url
-}
+# output "pdf_server_url" {
+#   description = "URL for the PDF server"
+#   value       = module.pdf_server.base_url
+# }
 
 output "database_connection_string" {
   description = "value of the database_connection_string output"
