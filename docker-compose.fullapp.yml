@@ -39,7 +39,7 @@ services:
     container_name: Server-PDF
     restart: always
     env_file:
-      - ./local.env
+      - ./pdf/production.pdf.env
     ports:
       - 5603:5603
 
