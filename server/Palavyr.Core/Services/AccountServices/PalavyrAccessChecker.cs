@@ -1,5 +1,4 @@
 ﻿using Palavyr.Core.Common.Environment;
-using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
 
 namespace Palavyr.Core.Services.AccountServices
@@ -13,25 +12,6 @@ namespace Palavyr.Core.Services.AccountServices
             this.determineCurrentEnvironment = determineCurrentEnvironment;
         }
 
-
-        public static void AssertEnvironmentsDoNoOverlap()
-        {
-            foreach (var email in EmailIdentityList.AllowedEmailsInDevelopment)
-            {
-                if (EmailIdentityList.AllowedEmailsInStaging.Contains(email))
-                {
-                    throw new PalavyrStartupException($"The allowed email lists in {nameof(PalavyrAccessChecker)} contain overlapped emails. This will cause stripe to blow up since they only offer dev and live.");
-                }
-            }
-        }
-
-        private static bool MatchesTestEmail(string email)
-        {
-            var guidUtils = new GuidFinder();
-            var result = guidUtils.FindFirstGuidSuffixOrNull(email);
-            return result != null;
-        }
-
         private void ThrowException(string emailAddress)
         {
             throw new DomainException($"The email address {emailAddress} is not allowed to be created in {determineCurrentEnvironment.Environment}");
@@ -39,14 +19,7 @@ namespace Palavyr.Core.Services.AccountServices
 
         public void CheckAccountAccess(string emailAddress)
         {
-            if (determineCurrentEnvironment.IsDevelopment())
-            {
-                if (!EmailIdentityList.AllowedEmailsInDevelopment.Contains(emailAddress) && !emailAddress.StartsWith("test"))
-                {
-                    ThrowException(emailAddress);
-                }
-            }
-            else if (determineCurrentEnvironment.IsStaging())
+            if (determineCurrentEnvironment.IsStaging())
             {
                 if (!EmailIdentityList.AllowedEmailsInStaging.Contains(emailAddress))
                 {
@@ -61,7 +34,7 @@ namespace Palavyr.Core.Services.AccountServices
 
         public bool IsATestStripeEmail(string emailAddress)
         {
-            return (EmailIdentityList.AllowedEmailsInDevelopment.Contains(emailAddress) || EmailIdentityList.AllowedEmailsInStaging.Contains(emailAddress));
+            return EmailIdentityList.AllowedEmailsInStaging.Contains(emailAddress);
         }
     }
 }

@@ -71,8 +71,6 @@ namespace Palavyr.API
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            PalavyrAccessChecker.AssertEnvironmentsDoNoOverlap();
-
             app.UseRouting();
             app.UseCors();
             app.UseMiddleware<ErrorHandlingMiddleware>();
@@ -80,7 +78,6 @@ namespace Palavyr.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // app.UseMiddleware<RequestResponseLoggingMiddleware>();
             app.UseMiddleware<SetCancellationTokenTransportMiddleware>();
             app.UseMiddleware<UnitOfWorkMiddleware>();
             app.UseMiddleware<SetAccountIdContextMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests

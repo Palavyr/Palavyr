@@ -10,8 +10,10 @@ $env:Palavyr_DB__DbName = "AppDatabase"
 $env:Palavyr_DB__Username = "postgres"
 $env:Palavyr_DB__Password = "Password01!"
 
-dotnet clean
-dotnet build
+# https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/errors-warnings
+dotnet clean --verbosity q
+dotnet build --verbosity q -noConsoleLogger
+
 
 $databaseProcess = Start-Process Palavyr.Data.Migrator\bin\Debug\net6.0\Palavyr.Data.Migrator.exe -PassThru -Wait -NoNewWindow
 

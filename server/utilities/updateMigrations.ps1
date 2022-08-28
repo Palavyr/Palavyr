@@ -142,8 +142,8 @@ catch {
 }
 
 ## CLEAN AND BUILD
-dotnet clean
-dotnet build
+dotnet clean --verbosity q
+dotnet build --verbosity q -noConsoleLogger
 
 $Migrations = "Data\\CodeFirstMigrations"
 
