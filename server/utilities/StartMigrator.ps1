@@ -15,6 +15,7 @@ dotnet clean --verbosity q
 dotnet build --verbosity q -noConsoleLogger
 
 
+
 $databaseProcess = Start-Process Palavyr.Data.Migrator\bin\Debug\net6.0\Palavyr.Data.Migrator.exe -PassThru -Wait -NoNewWindow
 
 exit $databaseProcess.ExitCode
