@@ -1,4 +1,27 @@
 
+resource "aws_security_group" "all_open_temp" {
+  name        = "secg-aot-${var.autoscale_group_name}"
+  description = "All ports open temporarily for testing"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_security_group" "tent" {
   name        = "secg-t-${var.autoscale_group_name}"
   description = "Open a port for tentacle to connect to the instance"
@@ -46,13 +69,13 @@ resource "aws_security_group" "ssh" {
 }
 
 resource "aws_security_group" "this" {
-  name        = "secg-lc-https-${var.autoscale_group_name}"
+  name        = "secg-lc-http-${var.autoscale_group_name}"
   description = "Allow incoming traffic from the load balancer to the nginx port for the server"
   vpc_id      = var.vpc_id
 
   ingress {
-    from_port   = 443
-    to_port     = 443
+    from_port   = 5000
+    to_port     = 5000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -77,8 +100,13 @@ resource "aws_launch_configuration" "this" {
   image_id      = data.aws_ami.my_ami.id
   instance_type = var.instance_type
 
-  user_data       = data.template_cloudinit_config.deployment_data.rendered
-  security_groups = [aws_security_group.this.id, aws_security_group.tent.id, aws_security_group.ssh.id]
+  user_data = data.template_cloudinit_config.deployment_data.rendered
+  security_groups = [
+    aws_security_group.this.id,
+    aws_security_group.tent.id,
+    aws_security_group.ssh.id,
+    aws_security_group.all_open_temp.id
+  ]
 
   associate_public_ip_address = true
 
