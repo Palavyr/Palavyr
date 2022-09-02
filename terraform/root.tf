@@ -124,7 +124,7 @@ module "palavyr_user_data_bucket" {
 resource "aws_lambda_function" "migrator" {
   function_name = "palavyr-db-migrator-${lower(var.environment)}-${lower(random_id.rand.hex)}"
   runtime       = "dotnet6"
-  handler       = "Palavyr.Data.Migrator::Palavyr.Data.Migrator.MigratorLambdaHandler::MigratorHandler"
+  handler       = "#{Palavyr.Migrator.Handler}"
   role          = aws_iam_role.migrator_role.arn
 
   environment {
