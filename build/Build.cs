@@ -23,16 +23,17 @@ class Build : NukeBuild
 
     AbsolutePath TerraformSourceDirectory => RootDirectory / "terraform";
     AbsolutePath ServerSourceDirectory => RootDirectory / "server";
+
+    // Server Deployment Files
     AbsolutePath ServerEnvFile => RootDirectory / "production.env";
-    AbsolutePath ServerDockerComposeFile => RootDirectory / "docker-compose.prod.yml";
-    
     AbsolutePath ServerPdfServerDockerFile => RootDirectory / "production.pdf.env";
+
     // AbsolutePath UISourceDirectory => RootDirectory / "ui";
 
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
-    AbsolutePath TempOutputServerEnvFile => ArtifactsDirectory / "serverenv";
-    AbsolutePath TempOutputMigrator => ArtifactsDirectory / "migratorbuild";
-    AbsolutePath TempOutputServer => ArtifactsDirectory / "serverbuild";
+    AbsolutePath ServerDeploymentFilesZipDir => ArtifactsDirectory / "server-deployment-files";
+    AbsolutePath ServerBuildForZipping => ArtifactsDirectory / "serverbuild";
+    AbsolutePath MigratorBuildForZipping => ArtifactsDirectory / "migratorbuild";
 
     Target Clean =>
         _ => _
@@ -48,8 +49,7 @@ class Build : NukeBuild
             .DependsOn(Clean)
             .Executes(() =>
             {
-                DotNetRestore(s => s
-                    .SetProjectFile(Solution));
+                DotNetRestore(s => s.SetProjectFile(Solution));
             });
 
     Target Compile =>
@@ -80,26 +80,24 @@ class Build : NukeBuild
             .DependsOn(Compile)
             .Executes(() =>
             {
-                CopyFileToDirectory(ServerEnvFile, TempOutputServerEnvFile);
-                CopyFileToDirectory(ServerDockerComposeFile, TempOutputServerEnvFile);
-                CopyFileToDirectory(ServerPdfServerDockerFile, TempOutputServerEnvFile);
+                CopyFileToDirectory(ServerEnvFile, ServerDeploymentFilesZipDir);
+                CopyFileToDirectory(ServerPdfServerDockerFile, ServerDeploymentFilesZipDir);
 
                 DotNetPublish(_ => _
                     .SetProject(ServerSourceDirectory / "Palavyr.API")
                     .SetConfiguration(Configuration)
-                    .SetOutput(TempOutputMigrator)
+                    .SetOutput(ServerBuildForZipping)
                     .EnableNoBuild()
                     .AddProperty("Version", Version)
                 );
 
                 DotNetPublish(_ => _
-                    .SetProject(ServerSourceDirectory / "Palavyr.API")
+                    .SetProject(ServerSourceDirectory / "Palavyr.Data.Migrator")
                     .SetConfiguration(Configuration)
-                    .SetOutput(TempOutputServer)
+                    .SetOutput(MigratorBuildForZipping)
                     .EnableNoBuild()
                     .AddProperty("Version", Version)
                 );
-
                 // TODO: Add publishing the npm packages here
             });
 
@@ -109,13 +107,13 @@ class Build : NukeBuild
             .Executes(() =>
             {
                 var serverPackageOutput = ArtifactsDirectory / $"palavyr-server.{Version}.zip";
-                Compress(TempOutputMigrator, serverPackageOutput);
+                Compress(MigratorBuildForZipping, serverPackageOutput);
 
                 var migratorPackageOutput = ArtifactsDirectory / $"palavyr-migrator.{Version}.zip";
-                Compress(TempOutputMigrator, migratorPackageOutput);
+                Compress(MigratorBuildForZipping, migratorPackageOutput);
 
-                var serverEnvfilePackageOutput = ArtifactsDirectory / $"palavyr-server-envfile.{Version}.zip";
-                Compress(TempOutputServerEnvFile, serverEnvfilePackageOutput);
+                var serverEnvfilePackageOutput = ArtifactsDirectory / $"palavyr-server-deployment-files.{Version}.zip";
+                Compress(ServerDeploymentFilesZipDir, serverEnvfilePackageOutput);
 
                 var terraformPackageOutput = ArtifactsDirectory / $"palavyr-terraform.{Version}.zip";
                 Compress(TerraformSourceDirectory, terraformPackageOutput);

@@ -90,7 +90,9 @@ data "template_cloudinit_config" "deployment_data" {
       sudo service docker start
       sudo usermod -a -G docker ec2-user
 
+      ############    Install Powershell     ###############
 
+      curl https://packages.microsoft.com/config/rhel/7/prod.repo | sudo tee /etc/yum.repos.d/microsoft.repo
 
       ############    Install docker compose    ###############
       sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
@@ -104,7 +106,6 @@ data "template_cloudinit_config" "deployment_data" {
       sudo ./aws/install
 
       ############# Create Aws Profile ###############
-      ECRREGISTRY="#{ECR_REGISTRY}"
 
       mkdir ~/.aws -p
 

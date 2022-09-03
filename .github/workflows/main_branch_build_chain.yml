@@ -79,12 +79,23 @@ jobs:
           packages: ${{ steps.build.outputs.packages_to_push }}
 
       - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push development Docker image
+        name: Build & push Server Docker image
         with:
           image: palavyr/palavyr-server
           tags: latest, ${{ needs.generate-build-number.outputs.version }}
           registry: ${{ secrets.ECR_REGISTRY }}
           dockerfile: ./server/Dockerfile
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
+
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Migrator Docker image
+        with:
+          image: palavyr/palavyr-data-migrator
+          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          registry: ${{ secrets.ECR_REGISTRY }}
+          dockerfile: ./server/Dockerfile.Migrator
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
