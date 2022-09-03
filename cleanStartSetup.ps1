@@ -1,17 +1,28 @@
 param([bool]$showEnv = $false)
 
 Clear-Host
-
 Write-Host ""
 Write-Host "PALAVYR DEVELOPMENT ENVIRONMENT SETUP SCRIPT" -ForegroundColor DarkYellow
 Write-Host ""
 
 try {
+    Get-Module -Name AWSPowerShell.NetCore
+} catch{
+    Write-Host "AWSPowerShell.NetCore is already installed (⊙o⊙)"
+}
+$awsCreds = Get-AWSCredential -ProfileName "palavyr_ecr";
+
+if ($env:ECR_REGISTRY -eq ""){
+    Write-Error "You need to set '$ env: ECR_REGISTRY' "
+}
+
+if ($null -eq $awsCreds){
+    Write-Error "Ensure you'set your .aws/credentials with a [palavyr_ecr] profile and a ./aws/config with region=us-east-1"
+}
+
+try {
     $processes = Get-Process "*docker desktop*"
     if ($processes.Count -eq 0) {
-        #     $processes[0].CloseMainWindow();
-        #     $processes[0].Kill();
-        #     $processes[0].WaitForExit();
         Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe" -NoNewWindow -WindowStyle Hidden
     }
 }
@@ -36,11 +47,6 @@ catch {
     $env:Path += ";C:\Program Files\Amazon\AWSCLI\bin"
 }
 
-# Log in to the ECR registry
-# Please ensure you've populated your local .env file
-# If you haven't, make a copy of the .env.Template file and populate it
-
-
 if ($showEnv -eq $true) {
 
     Write-Host "Using the following env variables" -ForegroundColor DarkYellow
@@ -56,7 +62,7 @@ if ($showEnv -eq $true) {
 Write-Host ""
 Write-Host "Grabbing your AWS Elastic Container Registry credentials... if this fails, you'll need to request aws credentials to access ECR" -ForegroundColor DarkYellow
 Write-Host ""
-aws ecr get-login-password --region "us-east-1" | docker login --username AWS --password-stdin $env:ECR_REGISTRY
+aws ecr get-login-password --region "us-east-1" --profile "palavyr_ecr" | docker login --username AWS --password-stdin $env:ECR_REGISTRY
 Write-Host ""
 
 

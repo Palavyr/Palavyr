@@ -9,7 +9,6 @@ if ($name -eq "") {
     exit 1
 }
 
-
 Write-Host "Run this script from the server directory (next to the project)"
 Write-Host "ONLY RUN THIS IN DEV TO PRODUCE MIGRATION SCRIPTS!!"
 ## This script is used to produce a unified migration script for each of contexts used with Palavyr ##
