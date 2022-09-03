@@ -1,43 +1,3 @@
-# fetch ubuntu ami id:
-# data "aws_ami" "my_ami" {
-#   filter {
-#     name   = "name"
-#     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-#   }
-
-#   filter {
-#     name   = "virtualization-type"
-#     values = ["hvm"]
-#   }
-#   most_recent = true
-#   owners      = ["099720109477"]
-# }
-
-# data source to fetch hosted zone info from domain name:
-data "aws_route53_zone" "hosted_zone" {
-  name = var.hosted_zone_domain_name
-}
-
-
-data "aws_ami" "my_ami" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-ebs"]
-  }
-
-}
-
-# generate user data script :
-data "template_cloudinit_config" "deployment_data" {
-  gzip          = false
-  base64_encode = true
-
-  part {
-    content_type = "text/x-shellscript"
-    content      = <<-EOT
       #!/bin/bash
 
       ############    Open Firewall ports  ###############
@@ -61,7 +21,7 @@ data "template_cloudinit_config" "deployment_data" {
 
       serverUrl="https://palavyr.octopus.app"  # The url of your Octopus server
       spaceName="Palavyr" # The name of the space to register the Tentacle in
-      name=$HOSTNAME      # The name of the Tentacle at is will appear in the Octopus portal
+      name=$HOSTNAME     # The name of the Tentacle at is will appear in the Octopus portal
       role="#{SERVER_DEPLOYMENT_TARGET_ROLE}"   # The role to assign to the Tentacle
       machinePolicy="Clean up Autoscale Targets on Scale Down"
       configFilePath="/etc/octopus/default/tentacle-default.config"
@@ -119,7 +79,3 @@ output = text
       ############# Log in docker to the ECR registery ###############
 
       /usr/local/bin/aws ecr get-login-password --region "#{AWS_REGION}" | docker login --username AWS --password-stdin $env:ECR_REGISTRY
-
-      EOT
-  }
-}
