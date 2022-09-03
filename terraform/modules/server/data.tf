@@ -89,6 +89,10 @@ data "template_cloudinit_config" "deployment_data" {
       sudo amazon-linux-extras install docker -y
       sudo service docker start
       sudo usermod -a -G docker ec2-user
+
+
+
+      ############    Install docker compose    ###############
       sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
       sudo chmod +x /usr/local/bin/docker-compose
 
@@ -105,7 +109,7 @@ data "template_cloudinit_config" "deployment_data" {
       mkdir ~/.aws -p
 
       echo "
-[Palavyr_ecr]
+[default]
 aws_access_key_id = #{AWS_ECR_ACCESS_KEY}
 aws_secret_access_key = #{AWS_ECR_SECRET_KEY}
 " >> ~/.aws/credentials
@@ -118,7 +122,7 @@ output = text
 
       ############# Log in docker to the ECR registery ###############
 
-      /usr/local/bin/aws ecr get-login-password --region "#{AWS_REGION}" | docker login --username AWS --password-stdin $env:ECR_REGISTRY
+      /usr/local/bin/aws ecr get-login-password --region "#{AWS_REGION}" --profile default | docker login --username AWS --password-stdin "#{ECR_REGISTRY}"
 
       EOT
   }
