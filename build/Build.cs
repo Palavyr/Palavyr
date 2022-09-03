@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
@@ -106,19 +107,27 @@ class Build : NukeBuild
             .DependsOn(PublishArtifacts)
             .Executes(() =>
             {
-                var serverPackageOutput = ArtifactsDirectory / $"palavyr-server.{Version}.zip";
-                Compress(MigratorBuildForZipping, serverPackageOutput);
+                // var serverPackageOutput = ArtifactsDirectory / $"palavyr-server.{Version}.zip";
+                // Compress(MigratorBuildForZipping, serverPackageOutput);
 
-                var migratorPackageOutput = ArtifactsDirectory / $"palavyr-migrator.{Version}.zip";
-                Compress(MigratorBuildForZipping, migratorPackageOutput);
+                // var migratorPackageOutput = ArtifactsDirectory / $"palavyr-migrator.{Version}.zip";
+                // Compress(MigratorBuildForZipping, migratorPackageOutput);
 
-                var serverEnvfilePackageOutput = ArtifactsDirectory / $"palavyr-server-deployment-files.{Version}.zip";
-                Compress(ServerDeploymentFilesZipDir, serverEnvfilePackageOutput);
+                var serverEnvFilePackageOutput = ArtifactsDirectory / $"palavyr-server-deployment-files.{Version}.zip";
+                Compress(ServerDeploymentFilesZipDir, serverEnvFilePackageOutput);
 
                 var terraformPackageOutput = ArtifactsDirectory / $"palavyr-terraform.{Version}.zip";
                 Compress(TerraformSourceDirectory, terraformPackageOutput);
 
-                Console.WriteLine($"::set-output name=packages_to_push::{serverPackageOutput},{serverEnvfilePackageOutput},{terraformPackageOutput},{migratorPackageOutput}");
+                var packages = string.Join(",", new List<string>()
+                {
+                    serverEnvFilePackageOutput,
+                    terraformPackageOutput,
+                    // serverPackageOutput,
+                    // migratorPackageOutput
+                });
+
+                Console.WriteLine($"::set-output name=packages_to_push::{packages}");
             });
 
     Target EntryPoint => _ => _.DependsOn(Zip);
