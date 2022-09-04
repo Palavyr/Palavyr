@@ -1,26 +1,26 @@
 
-resource "aws_security_group" "all_open_temp" {
-  name        = "secg-aot-${var.autoscale_group_name}"
-  description = "All ports open temporarily for testing"
-  vpc_id      = var.vpc_id
+# resource "aws_security_group" "all_open_temp" {
+#   name        = "secg-aot-${var.autoscale_group_name}"
+#   description = "All ports open temporarily for testing"
+#   vpc_id      = var.vpc_id
 
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+#   ingress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+#   egress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
 
 resource "aws_security_group" "tent" {
   name        = "secg-t-${var.autoscale_group_name}"
@@ -68,7 +68,7 @@ resource "aws_security_group" "ssh" {
   }
 }
 
-resource "aws_security_group" "this" {
+resource "aws_security_group" "listener_forward" {
   name        = "secg-lc-http-${var.autoscale_group_name}"
   description = "Allow incoming traffic from the load balancer to the nginx port for the server"
   vpc_id      = var.vpc_id
@@ -102,10 +102,11 @@ resource "aws_launch_configuration" "this" {
 
   user_data = data.template_cloudinit_config.deployment_data.rendered
   security_groups = [
-    aws_security_group.this.id,
+    # aws_security_group.listener.id,
+    aws_security_group.listener_forward.id,
     aws_security_group.tent.id,
-    aws_security_group.ssh.id,
-    aws_security_group.all_open_temp.id
+    aws_security_group.ssh.id
+    # aws_security_group.all_open_temp.id
   ]
 
   associate_public_ip_address = true

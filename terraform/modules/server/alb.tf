@@ -1,9 +1,58 @@
+resource "aws_security_group" "listener_https" {
+  name        = "secg-lb-https-${var.autoscale_group_name}"
+  description = "Allow traffic to port 443 listener"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+resource "aws_security_group" "listener_http" {
+  name        = "secg-lb-http-${var.autoscale_group_name}"
+  description = "Allow traffic to port 80 listener"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
 resource "aws_lb" "alb" {
-  name            = var.application_load_balancer_name
-  subnets         = var.public_subnets
-  security_groups = [aws_security_group.this.id]
-  internal        = false
-  idle_timeout    = 60
+  name    = var.application_load_balancer_name
+  subnets = var.public_subnets
+  security_groups = [
+    aws_security_group.listener_https.id,
+    aws_security_group.listener_http.id
+  ]
+  internal     = false
+  idle_timeout = 60
 
   tags = var.tags
 }
