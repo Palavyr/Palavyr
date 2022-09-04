@@ -69,7 +69,7 @@ resource "aws_security_group" "ssh" {
 }
 
 resource "aws_security_group" "listener_forward" {
-  name        = "secg-lc-http-${var.autoscale_group_name}"
+  name        = "secg-lf-http-${var.autoscale_group_name}"
   description = "Allow incoming traffic from the load balancer to the nginx port for the server"
   vpc_id      = var.vpc_id
 
