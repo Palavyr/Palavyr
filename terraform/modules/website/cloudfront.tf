@@ -21,6 +21,7 @@ resource "aws_cloudfront_distribution" "cf_dist" {
     target_origin_id       = aws_s3_bucket.bucket.id
     viewer_protocol_policy = "redirect-to-https" # other options - https only, http
 
+
     forwarded_values {
       headers      = []
       query_string = true
@@ -29,7 +30,13 @@ resource "aws_cloudfront_distribution" "cf_dist" {
         forward = "all"
       }
     }
+  }
 
+  custom_error_response {
+    error_code            = 403
+    response_code         = 200
+    error_caching_min_ttl = 300
+    response_page_path    = "index.html"
   }
 
   restrictions {

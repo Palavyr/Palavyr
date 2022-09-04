@@ -1,27 +1,3 @@
-
-# resource "aws_security_group" "all_open_temp" {
-#   name        = "secg-aot-${var.autoscale_group_name}"
-#   description = "All ports open temporarily for testing"
-#   vpc_id      = var.vpc_id
-
-#   ingress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "tcp"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
-
 resource "aws_security_group" "tent" {
   name        = "secg-t-${var.autoscale_group_name}"
   description = "Open a port for tentacle to connect to the instance"
