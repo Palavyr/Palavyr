@@ -41,7 +41,7 @@ resource "aws_security_group" "tent" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = false
   }
 }
 
@@ -64,7 +64,7 @@ resource "aws_security_group" "ssh" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = false
   }
 }
 
@@ -87,7 +87,7 @@ resource "aws_security_group" "listener_forward" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = false
   }
 }
 
@@ -114,7 +114,7 @@ resource "aws_launch_configuration" "this" {
   key_name = "palavyr-autoscale"
 
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = false
   }
 }
 
