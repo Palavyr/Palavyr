@@ -78,3 +78,11 @@ services:
     volumes:
       - ./init-scripts:/docker-entrypoint-initaws.d
       - /var/run/docker.sock:/var/run/docker.sock
+
+  palavyr-data-migrator:
+    image: ${ECR_REGISTRY}/palavyr/palavyr-data-migrator:latest
+    container_name: Server
+    env_file:
+      - ./local.env
+    ports:
+      - 5100:5100

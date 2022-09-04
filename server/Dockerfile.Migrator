@@ -4,11 +4,11 @@ WORKDIR /app
 
 COPY artifacts/migratorbuild/ .
 
-ENV Palavyr_ConnectionString=""
-ENV Palavyr_DB__Host=""
-ENV Palavyr_DB__Port=""
-ENV Palavyr_DB__DbName=""
+ENV Palavyr_ConnectionString ""
+ENV Palavyr_DB__Host host.docker.internal
+ENV Palavyr_DB__Port ""
+ENV Palavyr_DB__DbName ""
 ENV Palavyr_DB__Username ""
-ENV Palavyr_DB__Password=""
+ENV Palavyr_DB__Password ""
 
 ENTRYPOINT ["dotnet", "Palavyr.Data.Migrator.dll"]

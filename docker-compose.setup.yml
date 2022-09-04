@@ -9,14 +9,13 @@ services:
     env_file:
       - ./local.env
 
-  palavyr-server:
-    image: ${ECR_REGISTRY}/palavyr/palavyr-server:latest
+  palavyr-data-migrator:
+    image: ${ECR_REGISTRY}/palavyr/palavyr-data-migrator:latest
     container_name: Server
-    restart: always
     env_file:
       - ./local.env
     ports:
-      - 5000:5000
+      - 5100:5100
 
   postgres-server:
     image: postgres:14.1-alpine

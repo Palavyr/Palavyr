@@ -19,3 +19,11 @@ services:
       - ./pdf/production.pdf.env
     ports:
       - 5603:5603
+
+  palavyr-data-migrator:
+    image: ${ECR_REGISTRY}/palavyr/palavyr-data-migrator:latest
+    container_name: Server
+    env_file:
+      - ./local.env
+    ports:
+      - 5100:5100

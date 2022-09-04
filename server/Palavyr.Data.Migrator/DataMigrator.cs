@@ -59,7 +59,6 @@ namespace Palavyr.Data.Migrator
         {
             Logger.LogInformation("Connection String: {ConnectionString}", connectionString);
             EnsureDatabase.For.PostgresqlDatabase(connectionString);
-            // EnsureDatabaseCustom(connectionString);
 
             var upgrader =
                 DeployChanges
