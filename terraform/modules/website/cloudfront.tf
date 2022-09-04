@@ -1,6 +1,3 @@
-
-
-# cloudfront terraform - creating AWS Cloudfront distribution :
 resource "aws_cloudfront_distribution" "cf_dist" {
   enabled             = true
   aliases             = [var.site_domain_name]
@@ -36,7 +33,7 @@ resource "aws_cloudfront_distribution" "cf_dist" {
     error_code            = 403
     response_code         = 200
     error_caching_min_ttl = 300
-    response_page_path    = "index.html"
+    response_page_path    = "/index.html"
   }
 
   restrictions {
