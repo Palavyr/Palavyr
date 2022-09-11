@@ -5,17 +5,15 @@ services:
     image: stripe/stripe-mock:latest
     ports:
       - '12111-12112:12111-12112'
-    environment:
-      - STRIPE_API_KEY=sk_test_DOESNOTEXIST
-      - STRIPE_DEVICE_NAME=Palavyr
+    env_file:
+      - ./local.env
 
   stripe-cli:
     image: stripe/stripe-cli
     container_name: stripe-cli
-    command: "listen --api-key sk_test_DOESNOTEXIST --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
-    environment:
-      - STRIPE_API_KEY=sk_test_DOESNOTEXIST
-      - STRIPE_DEVICE_NAME=Palavyr
+    command: "listen --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
+    env_file:
+      - ./local.env
 
   postgres-server:
     image: postgres:14.1-alpine

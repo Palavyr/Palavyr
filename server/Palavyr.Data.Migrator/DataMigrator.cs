@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Configuration;
 using Palavyr.Core.Data;
+using Polly;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -48,7 +49,14 @@ namespace Palavyr.Data.Migrator
 
             var connectionString = configuration.DbConnectionString;
 
-            var result = ApplyMigrations(connectionString);
+            var result = -1;
+            Policy.Handle<Exception>().WaitAndRetry(retryCount: 5, i => TimeSpan.FromSeconds(i * 5)).Execute(
+                () =>
+                {
+                    Logger.LogInformation($"Attempting to apply migrations...");
+                    result = ApplyMigrations(connectionString);
+                });
+
             if (result == -1) return -1;
 
             Logger.LogInformation("Successfully updated the database!");
@@ -60,17 +68,16 @@ namespace Palavyr.Data.Migrator
             Logger.LogInformation("Connection String: {ConnectionString}", connectionString);
             EnsureDatabase.For.PostgresqlDatabase(connectionString);
 
-            var upgrader =
-                DeployChanges
-                    .To
-                    .PostgresqlDatabase(connectionString)
-                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                    .LogToConsole()
-                    .WithTransactionPerScript()
-                    .WithVariablesDisabled()
-                    .Build();
+            var upgradeEngine = DeployChanges
+                .To
+                .PostgresqlDatabase(connectionString)
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                .LogToConsole()
+                .WithTransactionPerScript()
+                .WithVariablesDisabled()
+                .Build();
 
-            var result = upgrader.PerformUpgrade();
+            var result = upgradeEngine.PerformUpgrade();
 
             if (result.Successful) return 0;
             Logger.LogCritical("Encountered error while running migration for {ConnectionString}. Error: {Error}", result.Error, connectionString);

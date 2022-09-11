@@ -1,7 +1,6 @@
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
@@ -9,7 +8,6 @@ using Palavyr.API.Registration.Configuration;
 using Palavyr.API.Registration.Container;
 using Palavyr.API.Registration.Container.MediatorModule;
 using Palavyr.Core.Configuration;
-using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API
 {

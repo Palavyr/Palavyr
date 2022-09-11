@@ -1,5 +1,4 @@
 using System;
-using Amazon.Lambda.Core;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -8,8 +7,6 @@ using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Configuration;
 using Serilog;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
-
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
 namespace Palavyr.API
 {
@@ -60,7 +57,7 @@ namespace Palavyr.API
                         if (envGetter.IsDevelopment())
                         {
                             logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
-                            // logging.AddDebug();
+                            logging.AddDebug();
                             logging.AddSerilog();
                             logging.SetMinimumLevel(LogLevel.Trace);
                             logging.AddConsole();
@@ -72,39 +69,6 @@ namespace Palavyr.API
                     webBuilder => webBuilder.UseStartup<Startup>()
                 );
             return host;
-        }
-    }
-    //For ASP.NET Core 3.1 the pattern shifted to use the more generic host builder, IHostBuilder
-    //https://aws.amazon.com/blogs/developer/one-month-update-to-net-core-3-1-lambda/
-
-
-    // On Lambda, Program.Main is **not** executed. Instead, Lambda loads this DLL
-    // into its own app and uses the following class to translate from the Lambda
-    // protocol to the standard ASP.Net Core web host and middleware pipeline.
-    public class LambdaHandler : Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction
-    {
-        protected override void Init(IHostBuilder builder)
-        {
-            ConfigurationGetter.GetConfiguration();
-
-            builder
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureLogging(
-                    (hostingContext, logging) =>
-                    {
-                        logging.ClearProviders();
-                        // logging.AddConfiguration(config.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
-                        logging.SetMinimumLevel(LogLevel.Trace);
-                        logging.AddConsole();
-                        logging.AddDebug();
-                        logging.AddEventSourceLogger();
-                        logging.AddSeq();
-                    });
-        }
-
-        protected override void Init(IWebHostBuilder builder)
-        {
-            builder.UseStartup<Startup>();
         }
     }
 }

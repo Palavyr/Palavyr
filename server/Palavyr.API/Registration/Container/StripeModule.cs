@@ -1,8 +1,6 @@
 using System;
 using Autofac;
-using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.Environment;
-using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Configuration;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.CoreServiceWrappers;
@@ -28,6 +26,7 @@ namespace Palavyr.API.Registration.Container
 
             // var currentEnv = configuration.GetCurrentEnvironment();
             var stripeKey = config.StripeSecret;
+
             if (!runningEnvironment.IsProduction() && stripeKey.ToLowerInvariant().StartsWith("sk_live_"))
             {
                 throw new Exception("CRITICAL ERROR - attempting to use a production stripe API key in test environment - CRITICAL");
@@ -52,7 +51,16 @@ namespace Palavyr.API.Registration.Container
             builder.Register(
                     context =>
                     {
-                        var stripeClient = new StripeClient(StripeConfiguration.ApiKey, apiBase: StripeClient.DefaultApiBase);
+                        var apiBase =
+                            runningEnvironment.IsDevelopment()
+                                ? "http://localhost:12111"
+                                : StripeClient.DefaultApiBase;
+                        var apiKey =
+                            runningEnvironment.IsDevelopment()
+                                ? "sk_test_123"
+                                : StripeConfiguration.ApiKey;
+
+                        var stripeClient = new StripeClient(apiKey, apiBase: apiBase);
                         return stripeClient;
                     }).As<IStripeClient>()
                 .InstancePerLifetimeScope();

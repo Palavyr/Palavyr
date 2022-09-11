@@ -2,18 +2,22 @@ version: "3.9"
 
 services:
   stripe:
+    container_name: Mock-Stripe
     image: stripe/stripe-mock:latest
     ports:
-      - '12111-12112:12111-12112'
+      - 12111-12112
     env_file:
       - ./local.env
 
   stripe-cli:
     image: stripe/stripe-cli
-    container_name: stripe-cli
-    command: "listen --api-key sk_test_DOESNOTEXIST --device-name Palavyr --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
+    container_name: Stripe-CLI
+    command: "listen --device-name Palavyr --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
     env_file:
       - ./local.env
+    depends_on:
+      stripe:
+        condition: service_completed_successfully
 
   postgres-server:
     image: postgres:14.1-alpine
@@ -34,21 +38,12 @@ services:
     ports:
       - 5000:5000
 
-  palavyr-pdf-server:
-    image: ${ECR_REGISTRY}/palavyr/palavyr-pdf-server:latest
-    container_name: Server-PDF
-    restart: always
-    env_file:
-      - ./pdf/production.pdf.env
-    ports:
-      - 5603:5603
-
   palavyr-web-frontend:
     image: ${ECR_REGISTRY}/palavyr/palavyr-frontend:latest
     container_name: Frontend
     restart: always
     env_file:
-      - ./ui/.env.frontend.development
+      - ./ui/.env.frontend.development.docker
     ports:
       - 8080:8090
 
@@ -57,32 +52,48 @@ services:
     container_name: Widget
     restart: always
     env_file:
-      - ./ui/.env.widget.development
+      - ./ui/.env.widget.development.docker
     ports:
       - 3400:8090
 
-  local-stack:
-    image: localstack/localstack
-    container_name: Aws-Localstack
-    hostname: localstack
-    ports:
-      - 4566:4566
-    environment:
-      - SERVICES=s3,ses
-      - DEBUG=1
-      - DATA_DIR=/tmp/localstack/data
-      - DOCKER_HOST=unix:///var/run/docker.sock
-      - AWS_DEFAULT_REGION=us-east-1
-      - AWS_ACCESS_KEY_ID=testUser
-      - AWS_SECRET_ACCESS_KEY=testAccessKey
-    volumes:
-      - ./init-scripts:/docker-entrypoint-initaws.d
-      - /var/run/docker.sock:/var/run/docker.sock
+  # local-stack:
+  #   image: localstack/localstack
+  #   container_name: Aws-Localstack
+  #   hostname: localstack
+  #   ports:
+  #     - 4566:4566
+  #   environment:
+  #     - SERVICES=s3,ses
+  #     - DEBUG=1
+  #     - DATA_DIR=/tmp/localstack/data
+  #     - DOCKER_HOST=unix:///var/run/docker.sock
+  #     - AWS_DEFAULT_REGION=us-east-1
+  #     - AWS_ACCESS_KEY_ID=testUser
+  #     - AWS_SECRET_ACCESS_KEY=testAccessKey
+  #   volumes:
+  #     - ./init-scripts:/docker-entrypoint-initaws.d
+  #     - /var/run/docker.sock:/var/run/docker.sock
 
   palavyr-data-migrator:
     image: ${ECR_REGISTRY}/palavyr/palavyr-data-migrator:latest
-    container_name: Server
+    container_name: Data-Migrator
     env_file:
       - ./local.env
+    environment:
+      - Palavyr_DB__Host=host.docker.internal
     ports:
       - 5100:5100
+    depends_on:
+      - Database
+
+  palavyr-seq:
+    image: datalust/seq:latest
+    container_name: Seq
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 80:80
+      - 5341:5341
+      # volumes:
+      # /path/to/seq/data:/data
