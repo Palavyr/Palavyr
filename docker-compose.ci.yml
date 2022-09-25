@@ -5,25 +5,11 @@ services:
     image: stripe/stripe-mock:latest
     ports:
       - '12111-12112:12111-12112'
-    env_file:
-      - ./local.env
-    environment:
-      - Palavyr_AWS__AwsS3ServiceUrl=http://host.internal.docker:4566
-      - Palavyr_AWS__AwsSESServiceUrl=http://host.internal.docker:4566
-      - Palavyr_DB__Host=host.internal.docker
-      - Palavyr_AWS__PdfUrl=http://host.internal.docker:5603/pdf
 
   stripe-cli:
     image: stripe/stripe-cli
     container_name: stripe-cli
-    command: "listen --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
-    env_file:
-      - ./local.env
-    environment:
-      - Palavyr_AWS__AwsS3ServiceUrl=http://host.internal.docker:4566
-      - Palavyr_AWS__AwsSESServiceUrl=http://host.internal.docker:4566
-      - Palavyr_DB__Host=host.internal.docker
-      - Palavyr_AWS__PdfUrl=http://host.internal.docker:5603/pdf
+    command: "listen --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify --device-name Palavyr"
 
   postgres-server:
     image: postgres:14.1-alpine
