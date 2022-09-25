@@ -7,16 +7,17 @@ Write-Host ""
 
 try {
     Get-Module -Name AWSPowerShell.NetCore
-} catch{
+}
+catch {
     Write-Host "AWSPowerShell.NetCore is already installed (⊙o⊙)"
 }
 $awsCreds = Get-AWSCredential -ProfileName "palavyr_ecr";
 
-if ($env:ECR_REGISTRY -eq ""){
+if ($env:ECR_REGISTRY -eq "") {
     Write-Error "You need to set '$ env: ECR_REGISTRY' "
 }
 
-if ($null -eq $awsCreds){
+if ($null -eq $awsCreds) {
     Write-Error "Ensure you'set your .aws/credentials with a [palavyr_ecr] profile and a ./aws/config with region=us-east-1"
 }
 
@@ -96,37 +97,57 @@ Write-Host "Tearing down docker environment temporarily so we can set up dev acc
 docker compose down
 docker compose -f ./docker-compose.setup.yml up -d
 
-Write-Host "Attempting to create your admin dev account" -ForegroundColor DarkYellow
+Write-Host "Waiting for the Server to start responding" -ForegroundColor DarkYellow
 
-try {
-    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-    $headers.Add("action", "login")
-    $headers.Add("Content-Type", "application/json")
-
-    $body = "{
-    `n    `"EmailAddress`": `"admin@palavyr.com`",
-    `n    `"Password`": `"123`"
-    `n}"
+$ready = $false;
+do {
 
     try {
-        $response = Invoke-RestMethod 'http://localhost:5000/api/account/create/default' -Method 'POST' -Headers $headers -Body $body
+
+        $response = Invoke-WebRequest 'http://localhost:5000/healthcheck' -Method GET
+    }
+    catch {
+        # do nothing
+    }
+
+    if ($response.Content -eq "Healthy") {
+        $ready = $true;
+        Write-Host $response
+    }
+
+    Start-Sleep -Second 5
+
+} while ($ready -eq $false)
+
+
+Write-Host "Attempting to create your admin dev account" -ForegroundColor DarkYellow
+
+$created = $false
+$headers = @{
+    "Content-Type" = "application/json"
+    "action"       = "login"
+}
+
+$body = @{EmailAddress = 'admin@palavyr.com'; Password = "123" } | ConvertTo-Json
+do {
+    try {
+
+        $response = Invoke-WebRequest 'http://localhost:5000/api/account/create/default' -Method POST -Headers $headers -Body $body
         $response | ConvertTo-Json | Write-Host -ForegroundColor Gray
     }
     catch {
-        $_.Exception.Message
+        Write-Host $_.Exception.Message
+        $r = $_.Exception
+        Write-Error $r;
+        exit 1
     }
-}
-catch {
-    $r = $_.Exception
-    Write-Error $r;
-    exit 1
-}
 
+} while ($created -eq $true)
 
 try {
     # If this does not work, then
     $sesResultsUri = "http://localhost:4566/_localstack/ses/"
-    $response = Invoke-WebRequest -Method "GET" -Uri $sesResultsUri
+    $response = Invoke-WebRequest -Method GET -Uri $sesResultsUri
     Write-Host "Retrieving the registration email from localstack..." -ForegroundColor DarkYellow
     Write-Host $response -ForegroundColor DarkCyan
 }

@@ -63,7 +63,7 @@ namespace Palavyr.API
                             logging.AddConsole();
                         }
 
-                        logging.AddSeq();
+                        logging.AddSeq(serverUrl: config.SeqUrl);
                     })
                 .ConfigureWebHostDefaults(
                     webBuilder => webBuilder.UseStartup<Startup>()

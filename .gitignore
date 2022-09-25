@@ -267,3 +267,4 @@ the--all-route.txt
 *.tfstate
 
 artifacts/*
+local.docker.env

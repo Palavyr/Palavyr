@@ -30,8 +30,10 @@ public class ConfigContainerServer
         DbConnectionString = configuration.CorrectConnectionString();
         Environment = configuration.GetCurrentEnvironment();
         JwtSecretKey = configuration.GetJwtKey();
+        SeqUrl = configuration.GetSeqUrl();
     }
 
+    public string SeqUrl { get; set; }
     public string JwtSecretKey { get; set; }
 
     public string Environment { get; set; }

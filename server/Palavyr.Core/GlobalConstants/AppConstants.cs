@@ -37,6 +37,8 @@
 
             public const string LoggingSection = "Logging";
             public const string RandomString = "aT5jX*Y7fJEK";
+
+            public const string SeqUrl = "Seq:Url";
         }
     }
 }

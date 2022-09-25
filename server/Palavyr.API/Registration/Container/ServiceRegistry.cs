@@ -33,6 +33,10 @@ namespace Palavyr.API.Registration.Container
                 opt =>
                 {
                     // var conString = "Server=localhost;Port=5432;Database=AppDatabase;User Id=postgres;Password=Password01!";
+                    Console.WriteLine("=====================================");
+                    Console.WriteLine($"{config.DbConnectionString}");
+                    Console.WriteLine("=====================================");
+
                     opt.UseNpgsql(config.DbConnectionString);
                 });
         }

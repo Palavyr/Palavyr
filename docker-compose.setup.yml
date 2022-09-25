@@ -9,13 +9,35 @@ services:
     env_file:
       - ./local.env
 
-  palavyr-data-migrator:
-    image: ${ECR_REGISTRY}/palavyr/palavyr-data-migrator:latest
+  palavyr-server:
+    image: ${ECR_REGISTRY}/palavyr/palavyr-server:latest
     container_name: Server
+    restart: always
     env_file:
       - ./local.env
     ports:
+      - 5000:5000
+    environment:
+      - Palavyr_AWS__AwsS3ServiceUrl=host.internal.docker:4566
+      - Palavyr_AWS__AwsSESServiceUrl=host.internal.docker:4566
+      - Palavyr_AWS__PdfUrl=host.internal.docker:5603/pdf
+      - Palavyr_DB__Host=host.internal.docker
+      - Palavyr_DB__Port=5432
+      - Palavyr_DB__DbName=AppDatabase
+      - Palavyr_DB__Username=postgres
+      - Palavyr_DB__Password=Password01!
+
+  palavyr-data-migrator:
+    image: ${ECR_REGISTRY}/palavyr/palavyr-data-migrator:latest
+    container_name: Database-Migrator
+    ports:
       - 5100:5100
+    environment:
+      - Palavyr_DB__Host=host.internal.docker
+      - Palavyr_DB__Port=5432
+      - Palavyr_DB__DbName=AppDatabase
+      - Palavyr_DB__Username=postgres
+      - Palavyr_DB__Password=Password01!
 
   postgres-server:
     image: postgres:14.1-alpine
@@ -46,6 +68,16 @@ services:
     volumes:
       - ./init-scripts:/docker-entrypoint-initaws.d
       - /var/run/docker.sock:/var/run/docker.sock
+
+  palavyr-seq:
+    image: datalust/seq:latest
+    container_name: Seq
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 80:80
+      - 5341:5341
 
 volumes:
   postgres-server:

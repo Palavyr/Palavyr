@@ -7,8 +7,8 @@ cd .aws
 touch credentials
 echo "
 [default]
-aws_access_key_id = AKHJKASFDLHJASFLHJASLFH
-aws_secret_access_key = sggjkekfgkgsiufhiuse
+aws_access_key_id = testUser
+aws_secret_access_key = testAccessKey
 region = us-east-1
 " > credentials
 aws configure set aws_access_key_id default_access_key --profile=localstack

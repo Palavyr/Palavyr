@@ -1,5 +1,5 @@
 version: "3.9"
-
+# a full working local app
 services:
   stripe:
     container_name: Mock-Stripe
@@ -8,6 +8,11 @@ services:
       - 12111-12112
     env_file:
       - ./local.env
+    environment:
+      - Palavyr_AWS__AwsS3ServiceUrl=http://host.internal.docker:4566
+      - Palavyr_AWS__AwsSESServiceUrl=http://host.internal.docker:4566
+      - Palavyr_DB__Host=host.internal.docker
+      - Palavyr_AWS__PdfUrl=http://host.internal.docker:5603/pdf
 
   stripe-cli:
     image: stripe/stripe-cli
@@ -15,6 +20,11 @@ services:
     command: "listen --device-name Palavyr --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
     env_file:
       - ./local.env
+    environment:
+      - Palavyr_AWS__AwsS3ServiceUrl=http://host.internal.docker:4566
+      - Palavyr_AWS__AwsSESServiceUrl=http://host.internal.docker:4566
+      - Palavyr_DB__Host=host.internal.docker
+      - Palavyr_AWS__PdfUrl=http://host.internal.docker:5603/pdf
     depends_on:
       stripe:
         condition: service_completed_successfully
@@ -37,6 +47,11 @@ services:
       - ./local.env
     ports:
       - 5000:5000
+    environment:
+      - Palavyr_AWS__AwsS3ServiceUrl=http://host.internal.docker:4566
+      - Palavyr_AWS__AwsSESServiceUrl=http://host.internal.docker:4566
+      - Palavyr_DB__Host=host.internal.docker
+      - Palavyr_AWS__PdfUrl=http://host.internal.docker:5603/pdf
 
   palavyr-web-frontend:
     image: ${ECR_REGISTRY}/palavyr/palavyr-frontend:latest
@@ -56,23 +71,23 @@ services:
     ports:
       - 3400:8090
 
-  # local-stack:
-  #   image: localstack/localstack
-  #   container_name: Aws-Localstack
-  #   hostname: localstack
-  #   ports:
-  #     - 4566:4566
-  #   environment:
-  #     - SERVICES=s3,ses
-  #     - DEBUG=1
-  #     - DATA_DIR=/tmp/localstack/data
-  #     - DOCKER_HOST=unix:///var/run/docker.sock
-  #     - AWS_DEFAULT_REGION=us-east-1
-  #     - AWS_ACCESS_KEY_ID=testUser
-  #     - AWS_SECRET_ACCESS_KEY=testAccessKey
-  #   volumes:
-  #     - ./init-scripts:/docker-entrypoint-initaws.d
-  #     - /var/run/docker.sock:/var/run/docker.sock
+  local-stack:
+    image: localstack/localstack
+    container_name: Aws-Localstack
+    hostname: localstack
+    ports:
+      - 4566:4566
+    environment:
+      - SERVICES=s3,ses
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=testUser
+      - AWS_SECRET_ACCESS_KEY=testAccessKey
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initaws.d
+      - /var/run/docker.sock:/var/run/docker.sock
 
   palavyr-data-migrator:
     image: ${ECR_REGISTRY}/palavyr/palavyr-data-migrator:latest
@@ -80,11 +95,15 @@ services:
     env_file:
       - ./local.env
     environment:
-      - Palavyr_DB__Host=host.docker.internal
+      - Palavyr_AWS__AwsS3ServiceUrl=http://host.internal.docker:4566
+      - Palavyr_AWS__AwsSESServiceUrl=http://host.internal.docker:4566
+      - Palavyr_DB__Host=host.internal.docker
+      - Palavyr_AWS__PdfUrl=http://host.internal.docker:5603/pdf
     ports:
       - 5100:5100
     depends_on:
-      - Database
+      Database:
+        condition: service_healthy
 
   palavyr-seq:
     image: datalust/seq:latest
