@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Palavyr.Core.Configuration;
 using Palavyr.Core.Data;
+using Serilog;
 
 namespace Palavyr.API.Registration.Container
 {
@@ -36,7 +37,10 @@ namespace Palavyr.API.Registration.Container
                     Console.WriteLine("=====================================");
                     Console.WriteLine($"{config.DbConnectionString}");
                     Console.WriteLine("=====================================");
-
+                    
+                    Log.Debug("=====================================");
+                    Log.Debug("{ConnectionString}", config.DbConnectionString);
+                    Log.Debug("=====================================");
                     opt.UseNpgsql(config.DbConnectionString);
                 });
         }

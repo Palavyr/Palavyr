@@ -16,7 +16,7 @@ namespace Palavyr.Core.Configuration
             var dbUserName = configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.DbUserName, ignoreThrow: true);
             var password = configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.DbPassword, ignoreThrow: true);
 
-            if (host is null)
+            if (string.IsNullOrEmpty(host))
             {
                 var cs = configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.ConnectionString, ignoreThrow: false)!;
                 return cs;
