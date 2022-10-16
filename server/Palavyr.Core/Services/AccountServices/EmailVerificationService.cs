@@ -56,7 +56,7 @@ namespace Palavyr.Core.Services.AccountServices
 
         public async Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken)
         {
-            logger.LogDebug("Attempting to confirm email via auth Token.");
+            logger.LogDebug("Attempting to confirm email via auth Token");
             var emailVerification = await emailVerificationsStore.GetOrNull(authToken.Trim(), s => s.AuthenticationToken);
 
             if (emailVerification == null)
@@ -64,7 +64,7 @@ namespace Palavyr.Core.Services.AccountServices
                 return false;
             }
 
-            logger.LogDebug("Email Address found.");
+            logger.LogDebug("Email Address found");
 
             var account = await accountStore.GetOrNull(emailVerification.AccountId, s => s.AccountId);
             if (account == null)
@@ -76,7 +76,7 @@ namespace Palavyr.Core.Services.AccountServices
 
             await emailVerificationsStore.Delete(emailVerification);
 
-            logger.LogDebug("Verifying email address. Already verified using an authtoken, so this is okay");
+            logger.LogDebug("Verifying email address. Already verified using an auth token, so this is okay");
 
             bool emailVerified;
             var alreadyVerified = await emailVerificationStatus.CheckVerificationStatus(account.EmailAddress);
@@ -89,16 +89,13 @@ namespace Palavyr.Core.Services.AccountServices
                 emailVerified = await requestEmailVerification.VerifyEmailAddressAsync(emailVerification.EmailAddress);
             }
 
-            if (emailVerified)
-            {
-                var customer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress, cancellationToken);
+            if (!emailVerified) return false;
 
-                account.StripeCustomerId = customer.Id;
+            var customer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress, cancellationToken);
+            account.StripeCustomerId = customer.Id;
 
-                return true;
-            }
+            return true;
 
-            return false;
         }
 
         public async Task<bool> SendConfirmationTokenEmail(string emailAddress, CancellationToken cancellationToken)

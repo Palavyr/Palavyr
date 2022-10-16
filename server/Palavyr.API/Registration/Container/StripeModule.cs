@@ -18,7 +18,7 @@ namespace Palavyr.API.Registration.Container
             this.config = config;
         }
 
-        private static readonly int stripeRetriesCount = 3;
+        private const int stripeRetriesCount = 3;
 
         protected override void Load(ContainerBuilder builder)
         {
@@ -48,22 +48,18 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<StripeWebhookAccountGetter>().As<IStripeWebhookAccountGetter>();
             builder.RegisterType<StripeSubscriptionSetter>().As<IStripeSubscriptionSetter>();
 
-            builder.Register(
-                    context =>
-                    {
-                        var apiBase =
-                            runningEnvironment.IsDevelopment()
-                                ? "http://localhost:12111"
-                                : StripeClient.DefaultApiBase;
-                        var apiKey =
-                            runningEnvironment.IsDevelopment()
-                                ? "sk_test_123"
-                                : StripeConfiguration.ApiKey;
+            var apiBase =
+                runningEnvironment.IsDevelopment()
+                    ? "http://host.docker.internal:12111"
+                    : StripeClient.DefaultApiBase;
+            var apiKey =
+                runningEnvironment.IsDevelopment()
+                    ? "sk_test_123"
+                    : StripeConfiguration.ApiKey;
 
-                        var stripeClient = new StripeClient(apiKey, apiBase: apiBase);
-                        return stripeClient;
-                    }).As<IStripeClient>()
+            builder.Register(_ => new StripeClient(apiKey, apiBase: apiBase)).As<IStripeClient>()
                 .InstancePerLifetimeScope();
+
             builder.RegisterDecorator<StripeClientDecorator, IStripeClient>();
 
             builder.Register<IProductRegistry>(

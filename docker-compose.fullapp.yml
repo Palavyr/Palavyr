@@ -9,10 +9,10 @@ services:
     env_file:
       - ./local.env
     environment:
-      - Palavyr_AWS__AwsS3ServiceUrl=http://host.internal.docker:4566
-      - Palavyr_AWS__AwsSESServiceUrl=http://host.internal.docker:4566
-      - Palavyr_DB__Host=host.internal.docker
-      - Palavyr_AWS__PdfUrl=http://host.internal.docker:5603/pdf
+      - Palavyr_AWS__AwsS3ServiceUrl=http://host.docker.internal:4566
+      - Palavyr_AWS__AwsSESServiceUrl=http://host.docker.internal:4566
+      - Palavyr_DB__Host=http://host.docker.internal
+      - Palavyr_AWS__PdfUrl=http://host.docker.internal:5603/pdf
 
   stripe-cli:
     image: stripe/stripe-cli
@@ -21,10 +21,10 @@ services:
     env_file:
       - ./local.env
     environment:
-      - Palavyr_AWS__AwsS3ServiceUrl=http://host.internal.docker:4566
-      - Palavyr_AWS__AwsSESServiceUrl=http://host.internal.docker:4566
-      - Palavyr_DB__Host=host.internal.docker
-      - Palavyr_AWS__PdfUrl=http://host.internal.docker:5603/pdf
+      - Palavyr_AWS__AwsS3ServiceUrl=http://host.docker.internal:4566
+      - Palavyr_AWS__AwsSESServiceUrl=http://host.docker.internal:4566
+      - Palavyr_DB__Host=http://host.docker.internal
+      - Palavyr_AWS__PdfUrl=http://host.docker.internal:5603/pdf
     depends_on:
       stripe:
         condition: service_completed_successfully
@@ -48,10 +48,10 @@ services:
     ports:
       - 5000:5000
     environment:
-      - Palavyr_AWS__AwsS3ServiceUrl=http://host.internal.docker:4566
-      - Palavyr_AWS__AwsSESServiceUrl=http://host.internal.docker:4566
-      - Palavyr_DB__Host=host.internal.docker
-      - Palavyr_AWS__PdfUrl=http://host.internal.docker:5603/pdf
+      - Palavyr_AWS__AwsS3ServiceUrl=http://host.docker.internal:4566
+      - Palavyr_AWS__AwsSESServiceUrl=http://host.docker.internal:4566
+      - Palavyr_DB__Host=http://host.docker.internal
+      - Palavyr_AWS__PdfUrl=http://host.docker.internal:5603/pdf
 
   palavyr-web-frontend:
     image: ${ECR_REGISTRY}/palavyr/palavyr-frontend:latest
@@ -96,10 +96,10 @@ services:
     env_file:
       - ./local.env
     environment:
-      - Palavyr_AWS__AwsS3ServiceUrl=http://host.internal.docker:4566
-      - Palavyr_AWS__AwsSESServiceUrl=http://host.internal.docker:4566
-      - Palavyr_DB__Host=host.internal.docker
-      - Palavyr_AWS__PdfUrl=http://host.internal.docker:5603/pdf
+      - Palavyr_AWS__AwsS3ServiceUrl=http://host.docker.internal:4566
+      - Palavyr_AWS__AwsSESServiceUrl=http://host.docker.internal:4566
+      - Palavyr_DB__Host=http://host.docker.internal
+      - Palavyr_AWS__PdfUrl=http://host.docker.internal:5603/pdf
     ports:
       - 5100:5100
     depends_on:

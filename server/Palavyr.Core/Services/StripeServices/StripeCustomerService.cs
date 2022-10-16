@@ -131,7 +131,7 @@ namespace Palavyr.Core.Services.StripeServices
         public async Task<Customer> CreateNewStripeCustomer(string emailAddress, CancellationToken cancellationToken)
         {
             var existing = await GetCustomerByEmailAddress(emailAddress, cancellationToken);
-            if (existing.Count() != 0)
+            if (existing.Any())
             {
                 throw new DomainException("Attempting to create a Stripe Customer using an email address that already exists in Stripe.");
             }
@@ -141,7 +141,7 @@ namespace Palavyr.Core.Services.StripeServices
                 Description = $"Customer automatically added for {(IsTest ? determineCurrentEnvironment.IsStaging() ? "testing-staging" : "testing-dev" : "production")}.",
                 Email = emailAddress
             };
-            var customer = await customerSessionService.CreateAsync(createOptions);
+            var customer = await customerSessionService.CreateAsync(createOptions, cancellationToken);
             return customer;
         }
 

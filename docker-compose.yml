@@ -57,9 +57,9 @@ services:
       - 5000:5000
     environment:
       - Palavyr_Environment=Development
-      - Palavyr_AWS__AwsS3ServiceUrl=local-stack:4566
-      - Palavyr_AWS__AwsSESServiceUrl=local-stack:4566
-      - Palavyr_AWS__PdfUrl=localhost
+      - Palavyr_AWS__AwsS3ServiceUrl=http://host.docker.internal:4566
+      - Palavyr_AWS__AwsSESServiceUrl=http://host.docker.internal:4566
+      - Palavyr_AWS__PdfUrl=host.docker.internal
       - Palavyr_DB__Host=postgres-server
       - Palavyr_DB__Port=5432
       - Palavyr_DB__DbName=AppDatabase
@@ -72,7 +72,7 @@ services:
     ports:
       - 5100:5100
     environment:
-      - Palavyr_DB__Host=host.internal.docker
+      - Palavyr_DB__Host=host.docker.internal
       - Palavyr_DB__Port=5432
       - Palavyr_DB__DbName=AppDatabase
       - Palavyr_DB__Username=postgres

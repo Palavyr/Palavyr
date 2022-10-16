@@ -116,7 +116,6 @@ do {
 } while ($ready -eq $false)
 
 
-
 Write-Host "Creating local stack resources and email identities" -ForegroundColor DarkYellow
 aws --endpoint-url=http://localhost:4566 s3 mb s3://palavyr-user-data-development
 aws ses verify-email-identity --endpoint-url=http://localhost:4566 --email-address palavyr@gmail.com
@@ -124,6 +123,7 @@ aws ses verify-email-identity --endpoint-url=http://localhost:4566 --email-addre
 
 Write-Host "Listing Current identities for debug"
 aws ses list-identities --endpoint-url=http://localhost:4566
+Start-Sleep -Second 2
 
 Write-Host "Preparing request for dev account creation..." -ForegroundColor DarkYellow
 $created = $false
@@ -137,37 +137,22 @@ Write-Host "Attempting to create your dev account" -ForegroundColor DarkYellow
 $response = Invoke-WebRequest 'http://localhost:5000/api/account/create/default' -Method POST -Headers $headers -Body $body
 Write-Host $response -ForegroundColor Gray
 
-$ready = $false;
-do {
-
-    try {
-
-        $response = Invoke-WebRequest 'http://localhost:5000/healthcheck' -Method GET
-    }
-    catch {
-        # do nothing
-    }
-
-    if ($response.Content -eq "Healthy") {
-        $ready = $true;
-        Write-Host $response
-    }
-
-    Start-Sleep -Second 5
-
-} while ($ready -eq $false)
-
-
-
+$token = $null;
 try {
     # If this does not work, then
     $sesResultsUri = "http://localhost:4566/_localstack/ses/"
     $response = Invoke-WebRequest -Method GET -Uri $sesResultsUri
     Write-Host "Retrieving the registration email from localstack..." -ForegroundColor DarkYellow
-    Write-Host $response -ForegroundColor DarkCyan
+    $token = $response.Content.Split("palavyr.com after you sign in.\n\n")[1].split("\n\nWith that, its smooth sailing!")[0]
+    Write-Host "Provide this to your confirmation page when you first log in: $token" -ForegroundColor DarkCyan
 }
 catch {
+
     Write-Error "The account was requested successfully, but we weren't able to retrieve the ses email from storage. Retrieve this manually to determine your auth token when loggingin with admin@palavyr.com, password: 123"
+    Write-Host $_.Exception.Message
+    $r = $_.Exception
+    Write-Error $r;
+    exit 1
 }
 
 docker stop Server
@@ -175,6 +160,10 @@ docker stop Database-Migrator
 
 Write-Host "You're good to go start the app now!" -ForegroundColor DarkYellow
 Write-Host ""
-Write-Host "If the dev account request succeeded, use the auth token to activate your dev account. TODO: Make the account full access" -ForegroundColor DarkYellow
-Write-Host "If the dev account request failed, you'll to manually retrieve the ses email record from local stack. Check this script for details." -ForegroundColor DarkYellow
+if ($null -eq $token)
+{
+
+    Write-Host "If the dev account request succeeded, use the auth token to activate your dev account. TODO: Make the account full access" -ForegroundColor DarkYellow
+    Write-Host "If the dev account request failed, you'll to manually retrieve the ses email record from local stack. Check this script for details." -ForegroundColor DarkYellow
+}
 
