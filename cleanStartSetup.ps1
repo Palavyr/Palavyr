@@ -6,15 +6,25 @@ Write-Host "PALAVYR DEVELOPMENT ENVIRONMENT SETUP SCRIPT" -ForegroundColor DarkY
 Write-Host ""
 
 try {
-    Get-Module -Name AWSPowerShell.NetCore
+    Install-Module -name AWSPowerShell.NetCore -Confirm A -Force -PassThru
 }
 catch {
     Write-Host "AWSPowerShell.NetCore is already installed (⊙o⊙)"
+} finally {
+    Import-Module AWSPowerShell.NetCore
 }
-$awsCreds = Get-AWSCredential -ProfileName "palavyr_ecr";
+
+try {
+    $awsCreds = Get-AWSCredential -ProfileName "palavyr_ecr";
+} catch {
+    $r = $_.Exception
+    Write-Error $r;
+    exit 1
+}
 
 if ($env:ECR_REGISTRY -eq "") {
     Write-Error "You need to set '$ env: ECR_REGISTRY' "
+    exit 1
 }
 
 if ($null -eq $awsCreds) {

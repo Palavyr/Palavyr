@@ -87,6 +87,16 @@ services:
     ports:
       - 80:80
       - 5341:5341
+
+  palavyr-pdf-server:
+    image: ${ECR_REGISTRY}/palavyr/palavyr-pdf-server:latest
+    container_name: Server-PDF
+    restart: always
+    env_file:
+      - ./pdf/production.pdf.env
+    ports:
+      - 5603:5603
+
 volumes:
   postgres-server:
     driver: local
