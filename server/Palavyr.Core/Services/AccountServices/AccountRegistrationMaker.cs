@@ -42,7 +42,7 @@ namespace Palavyr.Core.Services.AccountServices
             await CreateNewSubscription(accountId, apiKey);
             await InitializeWidgetPreferences(accountId);
 
-            await mediator.Send(new CreateIntentRequest { IntentName = "My Example Intent" });
+            await mediator.Send(new CreateIntentRequest { IntentName = "My Example Intent" }, cancellationToken);
 
             var result = await emailVerificationService.SendConfirmationTokenEmail(emailAddress, cancellationToken);
             return result;

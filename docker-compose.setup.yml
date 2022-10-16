@@ -61,6 +61,7 @@ services:
     environment:
       - SERVICES=s3,ses
       - DEBUG=1
+      - PERSISTENCE=1
       - DATA_DIR=/tmp/localstack/data
       - DOCKER_HOST=unix:///var/run/docker.sock
       - AWS_DEFAULT_REGION=us-east-1
@@ -82,4 +83,6 @@ services:
 
 volumes:
   postgres-server:
+    driver: local
+  local-stack:
     driver: local

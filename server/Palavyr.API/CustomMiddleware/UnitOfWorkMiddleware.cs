@@ -11,7 +11,7 @@ namespace Palavyr.API.CustomMiddleware
         private readonly RequestDelegate next;
         private ILogger<UnitOfWorkMiddleware> logger;
 
-        private Dictionary<string, string> ResponseHeaders = new Dictionary<string, string>
+        private Dictionary<string, string> ResponseHeaders = new()
         {
             { "Access-Control-Allow-Origin", "*" }
         };
@@ -26,9 +26,7 @@ namespace Palavyr.API.CustomMiddleware
             HttpContext context,
             IUnitOfWorkContextProvider unitOfWorkContextProvider)
         {
-            // context.Response.OnCompleted(
-            //     async o => { await unitOfWorkContextProvider.CloseUnitOfWork(); }, context);
-            ;
+
             await next(context);
 
             await unitOfWorkContextProvider.CloseUnitOfWork();

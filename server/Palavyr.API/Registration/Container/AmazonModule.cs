@@ -44,12 +44,12 @@ namespace Palavyr.API.Registration.Container
             };
 
             builder.Register(
-                    context => { return new AmazonS3Client(credentials, s3Config); })
+                    _ => new AmazonS3Client(credentials, s3Config))
                 .As<IAmazonS3>()
                 .InstancePerLifetimeScope();
 
             builder.Register(
-                    context => { return new AmazonSimpleEmailServiceClient(credentials, sesConfig); })
+                    _ => new AmazonSimpleEmailServiceClient(credentials, sesConfig))
                 .As<IAmazonSimpleEmailService>()
                 .InstancePerLifetimeScope();
 

@@ -8,7 +8,7 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
 {
     public partial class SesEmail
     {
-        private Body CreatePlainBody(string htmlBody, string textBody)
+        private static Body CreatePlainBody(string htmlBody, string textBody)
         {
             return new Body
             {
@@ -72,8 +72,8 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             }
             catch (Exception ex)
             {
-                logger.LogDebug("SES Email was not sent. ");
-                logger.LogDebug($"Error: {ex.Message}");
+                logger.LogDebug("SES Email was not sent");
+                logger.LogDebug(ex, "Error: {Message}", ex.Message);
                 //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
                 return false;
             }

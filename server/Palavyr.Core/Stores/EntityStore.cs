@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Sessions;
-using Stripe.Sigma;
 
 namespace Palavyr.Core.Stores
 {

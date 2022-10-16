@@ -92,10 +92,6 @@ finally {
     Set-Location ..
 }
 
-Write-Host "Tearing down docker environment temporarily so we can set up dev account..." -ForegroundColor DarkYellow
-
-docker compose down
-docker compose -f ./docker-compose.setup.yml up -d
 
 Write-Host "Waiting for the Server to start responding" -ForegroundColor DarkYellow
 
@@ -120,29 +116,48 @@ do {
 } while ($ready -eq $false)
 
 
-Write-Host "Attempting to create your admin dev account" -ForegroundColor DarkYellow
 
+Write-Host "Creating local stack resources and email identities" -ForegroundColor DarkYellow
+aws --endpoint-url=http://localhost:4566 s3 mb s3://palavyr-user-data-development
+aws ses verify-email-identity --endpoint-url=http://localhost:4566 --email-address palavyr@gmail.com
+aws ses verify-email-identity --endpoint-url=http://localhost:4566 --email-address admin@palavyr.com
+
+Write-Host "Listing Current identities for debug"
+aws ses list-identities --endpoint-url=http://localhost:4566
+
+Write-Host "Preparing request for dev account creation..." -ForegroundColor DarkYellow
 $created = $false
 $headers = @{
     "Content-Type" = "application/json"
     "action"       = "login"
 }
 
-$body = @{EmailAddress = 'admin@palavyr.com'; Password = "123" } | ConvertTo-Json
+$body = @{EmailAddress = 'dev@palavyr.com'; Password = "123" } | ConvertTo-Json
+Write-Host "Attempting to create your dev account" -ForegroundColor DarkYellow
+$response = Invoke-WebRequest 'http://localhost:5000/api/account/create/default' -Method POST -Headers $headers -Body $body
+Write-Host $response -ForegroundColor Gray
+
+$ready = $false;
 do {
+
     try {
 
-        $response = Invoke-WebRequest 'http://localhost:5000/api/account/create/default' -Method POST -Headers $headers -Body $body
-        $response | ConvertTo-Json | Write-Host -ForegroundColor Gray
+        $response = Invoke-WebRequest 'http://localhost:5000/healthcheck' -Method GET
     }
     catch {
-        Write-Host $_.Exception.Message
-        $r = $_.Exception
-        Write-Error $r;
-        exit 1
+        # do nothing
     }
 
-} while ($created -eq $true)
+    if ($response.Content -eq "Healthy") {
+        $ready = $true;
+        Write-Host $response
+    }
+
+    Start-Sleep -Second 5
+
+} while ($ready -eq $false)
+
+
 
 try {
     # If this does not work, then
@@ -155,8 +170,8 @@ catch {
     Write-Error "The account was requested successfully, but we weren't able to retrieve the ses email from storage. Retrieve this manually to determine your auth token when loggingin with admin@palavyr.com, password: 123"
 }
 
-docker compose down
-docker compose -f ./docker-compose.yml up -d --remove-orphans --force-recreate
+docker stop Server
+docker stop Database-Migrator
 
 Write-Host "You're good to go start the app now!" -ForegroundColor DarkYellow
 Write-Host ""

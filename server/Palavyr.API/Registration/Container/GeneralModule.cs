@@ -79,7 +79,7 @@ namespace Palavyr.API.Registration.Container
             builder
                 .RegisterGeneric(typeof(PricingStrategyTemplateCreator<>))
                 .As(typeof(IPricingStrategyTemplateCreator<>))
-                .AsImplementedInterfaces()
+                .AsImplementedInterfaces() 
                 .InstancePerLifetimeScope();
 
             builder.RegisterAssemblyTypes(typeof(Startup).Assembly)
