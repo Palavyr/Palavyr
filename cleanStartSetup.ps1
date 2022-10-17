@@ -6,12 +6,16 @@ Write-Host "PALAVYR DEVELOPMENT ENVIRONMENT SETUP SCRIPT" -ForegroundColor DarkY
 Write-Host ""
 
 try {
-    Install-Module -name AWSPowerShell.NetCore -Confirm A -Force -PassThru
+    Get-Module -name AWSPowerShell.NetCore -Confirm A -Force -PassThru
 }
 catch {
     Write-Host "AWSPowerShell.NetCore is already installed (⊙o⊙)"
 } finally {
-    Import-Module AWSPowerShell.NetCore
+    try {
+        Import-Module AWSPowerShell.NetCore
+    } catch {
+        # do nothing
+    }
 }
 
 try {
@@ -28,7 +32,8 @@ if ($env:ECR_REGISTRY -eq "") {
 }
 
 if ($null -eq $awsCreds) {
-    Write-Error "Ensure you'set your .aws/credentials with a [palavyr_ecr] profile and a ./aws/config with region=us-east-1"
+    Write-Error "Ensure you'set your .aws/credentials with a [palavyr_ecr] profile and an ./aws/config with region=us-east-1"
+    exit 1
 }
 
 try {
@@ -39,7 +44,6 @@ try {
 }
 catch {
     Write-Error "Couldn't auto-start docker - make sure thats running or this script will fail."
-    # exit 1
 }
 
 try {
@@ -172,7 +176,6 @@ Write-Host "You're good to go start the app now!" -ForegroundColor DarkYellow
 Write-Host ""
 if ($null -eq $token)
 {
-
     Write-Host "If the dev account request succeeded, use the auth token to activate your dev account. TODO: Make the account full access" -ForegroundColor DarkYellow
     Write-Host "If the dev account request failed, you'll to manually retrieve the ses email record from local stack. Check this script for details." -ForegroundColor DarkYellow
 }

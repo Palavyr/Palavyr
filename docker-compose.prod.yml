@@ -24,6 +24,6 @@ services:
     image: ${ECR_REGISTRY}/palavyr/palavyr-data-migrator:latest
     container_name: Server
     env_file:
-      - ./production.env
+      - ./.env.production
     ports:
       - 5100:5100

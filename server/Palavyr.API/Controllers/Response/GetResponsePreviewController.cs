@@ -10,7 +10,6 @@ namespace Palavyr.API.Controllers.Response
     public class GetResponsePreviewController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "preview/estimate/{intentId}";
 
 
         public GetResponsePreviewController(
@@ -20,7 +19,7 @@ namespace Palavyr.API.Controllers.Response
             this.mediator = mediator;
         }
 
-        [HttpGet(Route)]
+        [HttpGet(GetResponsePreviewRequest.Route)]
         public async Task<FileAssetResource> GetConfigurationPreview(string intentId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetResponsePreviewRequest(intentId), cancellationToken);

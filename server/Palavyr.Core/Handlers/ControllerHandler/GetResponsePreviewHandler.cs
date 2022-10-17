@@ -38,8 +38,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             try
             {
-                var fileAsset = await previewPdfGenerator.CreatePdfResponsePreviewAsync(request.IntentId, culture);
-                var resource = await resourceMapper.Map(fileAsset);
+                var fileAsset = await previewPdfGenerator.CreatePdfResponsePreviewAsync(request.IntentId, culture, cancellationToken);
+                var resource = await resourceMapper.Map(fileAsset, cancellationToken);
 
                 return new GetResponsePreviewResponse(resource);
             }
@@ -59,6 +59,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetResponsePreviewRequest : IRequest<GetResponsePreviewResponse>
     {
+        public const string Route = "preview/estimate/{intentId}";
+
         public GetResponsePreviewRequest(string intentId)
         {
             IntentId = intentId;

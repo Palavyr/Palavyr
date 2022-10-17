@@ -248,7 +248,6 @@ ui/dist*
 
 *HTMLTEST.html
 
-local.env
 appsettings.development.json
 appsettings.migrator.development.json
 the--all-route.txt

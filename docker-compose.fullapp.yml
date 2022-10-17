@@ -1,4 +1,5 @@
 version: "3.9"
+
 # a full working local app
 services:
   stripe:
@@ -105,6 +106,15 @@ services:
     depends_on:
       Database:
         condition: service_healthy
+
+  palavyr-pdf-server:
+    image: ${ECR_REGISTRY}/palavyr/palavyr-pdf-server:latest
+    container_name: Server-PDF
+    restart: always
+    env_file:
+      - ./pdf/.env.development
+    ports:
+      - 5603:5603
 
   palavyr-seq:
     image: datalust/seq:latest

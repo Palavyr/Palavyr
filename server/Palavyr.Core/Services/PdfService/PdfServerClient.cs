@@ -3,10 +3,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Configuration;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Services.AmazonServices.S3Service;
@@ -25,8 +23,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly ILogger<PdfServerClient> logger;
         private readonly IS3Downloader is3Downloader;
         private readonly ConfigContainerServer config;
-        private readonly int retryCount = 60; // number of half seconds
-        private readonly string serverUrl = "localhost:5603";
+        private const int retryCount = 60; // number of half seconds
 
         public PdfServerClient(ILogger<PdfServerClient> logger, IS3Downloader is3Downloader, ConfigContainerServer config)
         {
@@ -35,7 +32,7 @@ namespace Palavyr.Core.Services.PdfService
             this.config = config;
         }
 
-        private StringContent SerializeRequestObject(PdfServerRequest requestObject)
+        private static StringContent SerializeRequestObject(PdfServerRequest requestObject)
         {
             var serialized = JsonConvert.SerializeObject(requestObject);
             return new StringContent(serialized, Encoding.UTF8, "application/json");
@@ -43,21 +40,19 @@ namespace Palavyr.Core.Services.PdfService
 
         public async Task<PdfServerResponse> PostToPdfServer(PdfServerRequest requestObject)
         {
-            // var fullPdfServerUrl = configuration.AwsPdfUrl;
-
             var requestBody = SerializeRequestObject(requestObject);
 
-            logger.LogDebug("Attempting to post to pdf service at {FullPdfServerUrl}", serverUrl);
+            logger.LogDebug("Attempting to post to pdf service at {FullPdfServerUrl}", config.AwsPdfUrl);
 
             HttpResponseMessage response;
             try
             {
-                response = await httpClient.PostAsync(serverUrl, requestBody);
+                response = await httpClient.PostAsync(config.AwsPdfUrl, requestBody);
             }
             catch (HttpRequestException ex)
             {
                 logger.LogCritical("Failed to convert and write the HTML to PDF using the express server");
-                logger.LogCritical("Attempted to use url: {pdfServerUri}", serverUrl);
+                logger.LogCritical("Attempted to use url: {PdfServerUri}", config.AwsPdfUrl);
                 logger.LogCritical("Encountered Error: {Message}", ex.Message);
                 throw new MicroserviceException("The PDF service was unreachable.", ex);
             }
@@ -77,7 +72,7 @@ namespace Palavyr.Core.Services.PdfService
                 if (count > retryCount)
                 {
                     logger.LogDebug("PDF File not written correctly");
-                    throw new IOException($"Pdf file not written correctly to {result.S3Key}");
+                    throw new IOException($"Pdf file not written correctly to {result?.S3Key}");
                 }
 
                 if (!found)

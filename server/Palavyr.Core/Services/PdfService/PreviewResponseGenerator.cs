@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
@@ -55,7 +56,7 @@ namespace Palavyr.Core.Services.PdfService
             this.guidUtils = guidUtils;
         }
 
-        public async Task<FileAsset> CreatePdfResponsePreviewAsync(string intentId, CultureInfo culture)
+        public async Task<FileAsset> CreatePdfResponsePreviewAsync(string intentId, CultureInfo culture, CancellationToken cancellationToken)
         {
             var fakeResponses = CreateFakeResponses();
 
@@ -92,9 +93,12 @@ namespace Palavyr.Core.Services.PdfService
             return criticalResponses.Compile(
                 new List<Dictionary<string, string>>()
                 {
-                    new Dictionary<string, string>() { { "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam" } },
-                    new Dictionary<string, string>() { { "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam" } },
-                    new Dictionary<string, string>() { { "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam" } },
+                    new Dictionary<string, string>()
+                        { { "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam" } },
+                    new Dictionary<string, string>()
+                        { { "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam" } },
+                    new Dictionary<string, string>()
+                        { { "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam" } },
                 });
         }
 
