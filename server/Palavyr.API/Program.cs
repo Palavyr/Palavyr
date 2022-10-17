@@ -2,11 +2,8 @@ using System;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Configuration;
 using Serilog;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Palavyr.API
 {
@@ -44,30 +41,10 @@ namespace Palavyr.API
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var config = ConfigurationGetter.GetConfiguration();
             var host = Host
                 .CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureLogging(
-                    (hostingContext, logging) =>
-                    {
-                        var envGetter = new DetermineCurrentEnvironment(config);
-
-                        logging.ClearProviders();
-                        if (envGetter.IsDevelopment())
-                        {
-                            logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
-                            logging.AddDebug();
-                            logging.AddSerilog();
-                            logging.SetMinimumLevel(LogLevel.Trace);
-                            logging.AddConsole();
-                        }
-
-                        logging.AddSeq(serverUrl: config.SeqUrl);
-                    })
-                .ConfigureWebHostDefaults(
-                    webBuilder => webBuilder.UseStartup<Startup>()
-                );
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
             return host;
         }
     }

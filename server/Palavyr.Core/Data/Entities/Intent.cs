@@ -13,10 +13,10 @@ namespace Palavyr.Core.Data.Entities
         public string Epilogue { get; set; }
         public string EmailTemplate { get; set; }
         public bool IsEnabled { get; set; }
-        public List<StaticTablesMeta> StaticTablesMetas { get; set; } = new List<StaticTablesMeta>();
-        public List<ConversationNode> ConversationNodes { get; set; } = new List<ConversationNode>();
+        public List<StaticTablesMeta> StaticTablesMetas { get; set; } = new();
+        public List<ConversationNode> ConversationNodes { get; set; } = new();
         public string AccountId { get; set; }
-        public List<PricingStrategyTableMeta> PricingStrategyTableMetas { get; set; } = new List<PricingStrategyTableMeta>();
+        public List<PricingStrategyTableMeta> PricingStrategyTableMetas { get; set; } = new();
         public string IntentSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
         public List<AttachmentLinkRecord> AttachmentRecords { get; set; }

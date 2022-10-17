@@ -8,10 +8,11 @@ using Palavyr.API.Registration.Configuration;
 using Palavyr.API.Registration.Container;
 using Palavyr.API.Registration.Container.MediatorModule;
 using Palavyr.Core.Configuration;
+using Serilog;
 
 namespace Palavyr.API;
 
-public class Startup
+public sealed class Startup
 {
     private ConfigContainerServer config;
     private readonly IWebHostEnvironment env;
@@ -23,7 +24,7 @@ public class Startup
 
     public ILifetimeScope AutofacContainer { get; private set; } = null!;
 
-    public virtual void ConfigureContainer(ContainerBuilder builder)
+    public void ConfigureContainer(ContainerBuilder builder)
     {
         ContainerSetup(builder, config);
     }
@@ -41,13 +42,12 @@ public class Startup
         ServiceRegistry.RegisterDatabaseContexts(services, config);
     }
 
-    public virtual void ConfigureServices(IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services)
     {
         config = ConfigurationGetter.GetConfiguration();
         AuthenticationConfiguration.AddAuthenticationSchemes(services, config);
         SetServices(services, config, env);
     }
-
 
     public static void SetServices(IServiceCollection services, ConfigContainerServer config, IWebHostEnvironment environ)
     {
@@ -58,6 +58,19 @@ public class Startup
         CorsConfiguration.ConfigureCorsService(services, environ);
         ServiceRegistry.RegisterIisConfiguration(services, environ);
         NonWebHostConfiguration(services, config);
+
+        services.AddLogging(builder =>
+        {
+            const LogLevel loglevel = LogLevel.Warning;
+            builder.AddFilter("Microsoft", loglevel)
+                .AddFilter("System", loglevel)
+                .AddConsole();
+
+
+            builder.AddSerilog();
+            builder.AddSeq(serverUrl: config.SeqUrl);
+            builder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", loglevel);
+        });
     }
 
     public static void NonWebHostConfiguration(IServiceCollection services, ConfigContainerServer config)

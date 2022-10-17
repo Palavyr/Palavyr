@@ -110,15 +110,14 @@ namespace Palavyr.Core.Stores
             var entity = await RestrictToCurrentAccount(QueryExecutor)
                 .CustomWhere(id, propertySelectorExpression)
                 .SingleOrDefaultAsync(CancellationToken);
+
+            if (entity is not null) return entity;
+
+            entity = RestrictToCurrentAccount(QueryExecutor.Local).SingleOrDefault();
+
             if (entity is null)
             {
-                entity = RestrictToCurrentAccount(QueryExecutor.Local).SingleOrDefault();
-                if (entity is null)
-                {
-                    throw new EntityNotFoundException("Entity not found");
-                }
-
-                return entity;
+                throw new EntityNotFoundException("Entity not found");
             }
 
             return entity;

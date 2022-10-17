@@ -77,7 +77,7 @@ namespace Palavyr.Core.Configuration
         {
             return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.SeqUrl)!;
         }
-        
+
         public static string GetJwtKey(this IConfiguration configuration)
         {
             return configuration.GetSectionOrThrow(ApplicationConstants.ConfigSections.JwtSecretKey)!;

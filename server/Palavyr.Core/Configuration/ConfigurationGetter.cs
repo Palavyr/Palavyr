@@ -7,7 +7,7 @@ public static class ConfigurationGetter
 {
     public static ConfigContainerServer GetConfiguration()
     {
-        var envFilePath = "../../local.env";
+        const string envFilePath = "../../local.env";
 
         // We'll need to get the env vars set on lambda in the terraform.
         if (File.Exists(envFilePath))
@@ -24,7 +24,7 @@ public static class ConfigurationGetter
 
     public static ConfigContainerMigrator GetConfigurationForMigrator()
     {
-        var envFilePath = "../../../../../local.env";
+        const string envFilePath = "../../../../../local.env"; // TODO: recurse
 
         // We'll need to get the env vars set on lambda in the terraform.
         if (File.Exists(envFilePath))

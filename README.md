@@ -11,28 +11,63 @@ Palavyr is intended to be used by any small business that wishes to automate som
 
 Since the application is dockerized, there are only a couple steps to get going.
 
-### 1. Set environment variables on your system
+### 1. Set an environment variable
 
-All you need to set is the `ECR_REGISTRY` environemtn variable. This points your docker compose to the ECR registry.
+All you need to set is the `ECR_REGISTRY` environment variable. This points your docker compose to the ECR registry.
+This is a secret, so you'll need to get that from someone who has the registry address.
 
-### 2. Set up the .env.local file
+It will look like `[account_number].dkr.ecr.[aws_region].amazonaws.com`
 
-Make a copy of `.env.local.template` and remove the `.template` suffix.
+### 2. Create an aws profile
+
+Use the following script to guide you to how to make the required profile:
+
+```
+#!bin/bash
+
+mkdir ~/.aws && cd ~/.aws
+
+touch credentials
+
+echo "
+[palavyr_ecr]
+aws_access_key_id = [ECR AWS KEY ID]
+aws_secret_access_key = [ECR AWS KEY]
+region = [AWS REGION]
+" > credentials
+
+touch config
+
+echo "
+[default]
+region = eu-west-1
+output = text
+" > config
+
+exit 0
+```
+
+### 3. Run a command
+
+From the repo root directory, run:
+
+```
+./cleanStartSetup.ps1   // (sorry, I don't have an .sh handy. Could you transcribe it?)
+```
 
 
 
-1. Ensure you've got a docker daemon installed (You'll be running docker commands)
-2. Copy the local.env.template to local.env and set your environment variables
-3. Run `docker compose up`
-4. Run the tests to make sure everything works.
-5. Get crackin'!
+...and you're off to the races. You can start the ui (portal and widget) services by running:
+
+```
+./startServices.ps1
+```
+
+From here, you can debug the server via the IDE, and then use the token provided from the setup to unlock the dev account.
 
 
 
-
-
-
-## Dev Tools
+# Dev Tools
 
 #### Github Actions
 

@@ -6,7 +6,7 @@ using Palavyr.Core.Stores;
 
 namespace Palavyr.Core.Handlers.ControllerHandler
 {
-    public class GetShowPricingStrategyTotalsHandlerHandler : IRequestHandler<GetShowPricingStrategyTotalsHandlerRequest, GetShowPricingStrategyTotalsHandlerResponse>
+    public class GetShowPricingStrategyTotalsHandlerHandler : IRequestHandler<GetShowPricingStrategyTotalsRequest, GetShowPricingStrategyTotalsHandlerResponse>
     {
         private readonly IEntityStore<Intent> intentStore;
 
@@ -15,7 +15,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             this.intentStore = intentStore;
         }
 
-        public async Task<GetShowPricingStrategyTotalsHandlerResponse> Handle(GetShowPricingStrategyTotalsHandlerRequest request, CancellationToken cancellationToken)
+        public async Task<GetShowPricingStrategyTotalsHandlerResponse> Handle(GetShowPricingStrategyTotalsRequest request, CancellationToken cancellationToken)
         {
             var intent = await intentStore.Get(request.IntentId, s => s.IntentId);
             return new GetShowPricingStrategyTotalsHandlerResponse(intent.IncludePricingStrategyTableTotals);
@@ -28,11 +28,12 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public bool Response { get; set; }
     }
 
-    public class GetShowPricingStrategyTotalsHandlerRequest : IRequest<GetShowPricingStrategyTotalsHandlerResponse>
+    public class GetShowPricingStrategyTotalsRequest : IRequest<GetShowPricingStrategyTotalsHandlerResponse>
     {
+        public const string Route = "intent/pricing-strategy-totals/{intentId}";
         public string IntentId { get; set; }
 
-        public GetShowPricingStrategyTotalsHandlerRequest(string intentId)
+        public GetShowPricingStrategyTotalsRequest(string intentId)
         {
             IntentId = intentId;
         }

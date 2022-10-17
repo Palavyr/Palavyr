@@ -23,7 +23,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
         public async Task<GetResponseConfigurationResponse> Handle(GetResponseConfigurationRequest request, CancellationToken cancellationToken)
         {
             var intentDeep = await intentStore.GetIntentComplete(request.IntentId);
-            var resource = await mapper.Map(intentDeep);
+            var resource = await mapper.Map(intentDeep, cancellationToken);
             return new GetResponseConfigurationResponse(resource);
         }
     }
@@ -36,6 +36,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetResponseConfigurationRequest : IRequest<GetResponseConfigurationResponse>
     {
+        public const string Route = "response/configuration/{intentId}";
+
         public GetResponseConfigurationRequest(string intentId)
         {
             IntentId = intentId;

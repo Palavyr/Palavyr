@@ -10,14 +10,13 @@ namespace Palavyr.API.Controllers.Response
     public class GetResponseConfigurationController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        public const string Route = "response/configuration/{intentId}";
 
         public GetResponseConfigurationController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpGet(Route)]
+        [HttpGet(GetResponseConfigurationRequest.Route)]
         public async Task<IntentResource> Get([FromRoute] string intentId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetResponseConfigurationRequest(intentId), cancellationToken);
