@@ -45,7 +45,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             }
             catch (Exception e)
             {
-                logger.LogDebug("Failed to Create a preview! Error: {ErrorMessage}", e.Message);
+                logger.LogDebug(e, "Failed to Create a preview! Error: {ErrorMessage}", e.Message);
                 throw new DomainException(e.Message);
             }
         }

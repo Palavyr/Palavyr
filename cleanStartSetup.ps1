@@ -140,7 +140,6 @@ aws ses list-identities --endpoint-url=http://localhost:4566
 Start-Sleep -Second 2
 
 Write-Host "Preparing request for dev account creation..." -ForegroundColor DarkYellow
-$created = $false
 $headers = @{
     "Content-Type" = "application/json"
     "action"       = "login"

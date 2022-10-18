@@ -59,7 +59,7 @@ PALAVYR__Environment=
 },
 "JWTSecretKey": "SomeSecretKeyagasgasghery336356345345",
 "Previews": "dev-palavyr-previews",
-"Userdata": "dev-palavyr-userdata",
+"Userdata": "palavyr-user-data-development",
 "jwtTokenConfig": {
 "secret": "1234567890123456789",
 "issuer": "https://mywebapi.com",
