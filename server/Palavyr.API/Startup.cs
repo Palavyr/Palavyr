@@ -32,8 +32,9 @@ public sealed class Startup
     public static void ContainerSetup(ContainerBuilder builder, ConfigContainerServer config)
     {
         builder.RegisterModule(new AmazonModule(config));
-        builder.RegisterModule(new GeneralModule());
         builder.RegisterModule(new StripeModule(config));
+        builder.RegisterModule<GeneralModule>();
+        builder.RegisterModule<LoggingModule>();
         builder.RegisterInstance(config).AsSelf();
     }
 
@@ -65,9 +66,6 @@ public sealed class Startup
             builder.AddFilter("Microsoft", loglevel)
                 .AddFilter("System", loglevel)
                 .AddConsole();
-
-
-            builder.AddSerilog();
             builder.AddSeq(serverUrl: config.SeqUrl);
             builder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", loglevel);
         });

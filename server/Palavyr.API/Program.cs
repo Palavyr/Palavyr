@@ -2,6 +2,7 @@ using System;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Palavyr.API.Registration.Container;
 using Palavyr.Core.Configuration;
 using Serilog;
 
@@ -11,15 +12,9 @@ namespace Palavyr.API
     {
         public static int Main(string[] args)
         {
-            ConfigurationGetter.GetConfiguration();
-
-            // The initial "bootstrap" logger is able to log errors during start-up. It's completely replaced by the
-            // logger configured in `UseSerilog()` below, once configuration and dependency-injection have both been
-            // set up successfully.
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console()
-                .CreateBootstrapLogger();
-
+            var config = ConfigurationGetter.GetConfiguration();
+            LoggingModule.BootstrapLogger(config);
+            
             Log.Information("Starting Palavyr Server!");
 
             try

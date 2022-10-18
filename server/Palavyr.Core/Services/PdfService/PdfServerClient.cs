@@ -17,7 +17,7 @@ namespace Palavyr.Core.Services.PdfService
         Task<PdfServerResponse> PostToPdfServer(PdfServerRequest request);
     }
 
-    public class PdfServerClient : IPdfServerClient
+    public class PdfServerClient : IPdfServerClient 
     {
         private readonly HttpClient httpClient = HttpClientFactory.Create();
         private readonly ILogger logger;
@@ -55,9 +55,10 @@ namespace Palavyr.Core.Services.PdfService
                 throw new MicroserviceException("The PDF service was unreachable.", ex);
             }
 
-            if (response.StatusCode == HttpStatusCode.BadRequest)
+            if (!response.IsSuccessStatusCode)
             {
-                throw new MicroserviceException($"Unable to create PDF file: {response.RequestMessage}");
+                var content = await response.Content.ReadAsStringAsync();
+                throw new MicroserviceException($"Unable to create PDF file: {content}");
             }
 
             var result = JsonSerializer.Deserialize<PdfServerResponse>(await response.Content.ReadAsStringAsync());

@@ -25,10 +25,10 @@ export const WriteToS3 = (html: string, options: S3RequestBody, response: Respon
       ContentType: APPLICATION_PDF,
     };
 
-    logTrace('Attempting to upload...not');
+    logTrace('Attempting to upload to s3, using '+ options.key + ' and ' + options.bucket)
     s3.upload(params, function(err: any, res: any) {
       if (err) {
-        logTrace('ERROR: ');
+        logTrace('ERROR: ' + err);
         responses.createInternalServerErrorResponse(response, null);
       } else {
         logTrace('Uploaded...');
