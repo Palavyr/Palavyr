@@ -49,6 +49,7 @@ const unpackS3Request = (req: Request): S3RequestBody => {
     html: req.body.Html,
     identifier: req.body.Id,
     s3ClientConfig: {
+      forcePathStyle: true,
       region: req.body.Region,
       credentials: {
         secretAccessKey: req.body.SecretKey,
