@@ -9,7 +9,7 @@ import { APPLICATION_PDF } from 'http/contentTypes';
 
 export const WriteToS3 = (html: string, options: S3RequestBody, response: Response) => {
   const s3 = new aws.S3(options.s3ClientConfig as aws.S3.ClientConfiguration);
-
+  logTrace("Using aws credentials - id: " + options.s3ClientConfig.credentials)
   pdf.create(html).toStream(function(err: Error, stream: ReadStream) {
     if (err) {
       logTrace('Critical Error');
