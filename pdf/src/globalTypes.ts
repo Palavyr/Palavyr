@@ -31,9 +31,13 @@ export type S3RequestBody = {
     key: string;
     html: string;
     identifier: string;
-    s3ClientConfig: S3ClientConfig;
+    region: string;
+    accesskey: string;
+    secretkey: string;
     paper: CreateOptions;
+    endpoint: string;
 };
+
 export type S3ResponseBody = {
     s3Key: string;
     fileNameWithExtension: string;

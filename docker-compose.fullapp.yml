@@ -85,8 +85,8 @@ services:
       - DATA_DIR=/tmp/localstack/data
       - DOCKER_HOST=unix:///var/run/docker.sock
       - AWS_DEFAULT_REGION=us-east-1
-      - AWS_ACCESS_KEY_ID=testUser
-      - AWS_SECRET_ACCESS_KEY=testAccessKey
+      - AWS_ACCESS_KEY_ID=default_access_key
+      - AWS_SECRET_ACCESS_KEY=default_secret_key
     volumes:
       - ./init-scripts:/docker-entrypoint-initaws.d
       - /var/run/docker.sock:/var/run/docker.sock

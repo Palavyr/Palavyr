@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Configuration;
+﻿using Palavyr.Core.Configuration;
 using Palavyr.Core.Services.PdfService.PdfServer;
 
 namespace Palavyr.Core.Services.PdfService
@@ -25,17 +23,19 @@ namespace Palavyr.Core.Services.PdfService
             var secretKey = config.AwsSecretKey;
             var bucket = config.AwsUserDataBucket;
             var region = config.AwsRegion;
+            var endpoint = config.AwsS3ServiceUrl;
 
             return new PdfServerRequest
             {
                 Bucket = bucket,
                 Key = key,
                 Html = html,
-                Id = identifier,
+                Identifier = identifier,
                 Paper = paperOptions,
                 AccessKey = accessKey,
                 SecretKey = secretKey,
-                Region = region
+                Region = region,
+                Endpoint = endpoint
             };
         }
     }

@@ -3,14 +3,36 @@ import { S3RequestBody } from '@Palavyr-Types';
 import { logTrace } from 'logging/logging';
 import pdf from 'html-pdf';
 import responses from 'http/responses/sendResponse';
-import aws from 'aws-sdk';
+import AWS from 'aws-sdk';
 import { ReadStream } from 'fs';
 import { APPLICATION_PDF } from 'http/contentTypes';
 
+export const create_pdf_on_s3_v1 = (app: Application) => {
+  app.post('/api/v1/create-pdf-on-s3', async (request: Request, response: Response, next: NextFunction) => {
+
+    logTrace('Received request to create PDF on S3.');
+
+    const options = unpackS3Request(request);
+
+    WriteToS3(options.html, options, response);
+  });
+};
+
+
 export const WriteToS3 = (html: string, options: S3RequestBody, response: Response) => {
-  const s3 = new aws.S3(options.s3ClientConfig as aws.S3.ClientConfiguration);
-  logTrace("Using aws credentials - id: " + options.s3ClientConfig.credentials)
-  pdf.create(html).toStream(function(err: Error, stream: ReadStream) {
+
+  const credentials = {
+    accessKeyId: options.accesskey,
+    secretAccessKey: options.secretkey,
+  }
+
+  const S3 = new AWS.S3({
+    credentials,
+    endpoint: options.endpoint,
+    s3ForcePathStyle: true
+  });
+
+  pdf.create(html).toStream(function (err: Error, stream: ReadStream) {
     if (err) {
       logTrace('Critical Error');
       logTrace(err);
@@ -18,15 +40,15 @@ export const WriteToS3 = (html: string, options: S3RequestBody, response: Respon
     }
 
     logTrace('Created pdf stream...');
-    const params: aws.S3.PutObjectRequest = {
+    const params: AWS.S3.PutObjectRequest = {
       Key: options.key,
       Body: stream,
       Bucket: options.bucket,
       ContentType: APPLICATION_PDF,
     };
 
-    logTrace('Attempting to upload to s3, using '+ options.key + ' and ' + options.bucket)
-    s3.upload(params, function(err: any, res: any) {
+    logTrace('Attempting to upload to s3, using ' + options.key + ' and ' + options.bucket)
+    S3.upload(params, function (err: any, res: any) {
       if (err) {
         logTrace('ERROR: ' + err);
         responses.createInternalServerErrorResponse(response, null);
@@ -43,27 +65,43 @@ export const WriteToS3 = (html: string, options: S3RequestBody, response: Respon
 };
 
 const unpackS3Request = (req: Request): S3RequestBody => {
-  return {
-    bucket: req.body.Bucket,
-    key: req.body.Key,
-    html: req.body.Html,
-    identifier: req.body.Id,
-    s3ClientConfig: {
-      forcePathStyle: true,
-      region: req.body.Region,
-      credentials: {
-        secretAccessKey: req.body.SecretKey,
-        accessKeyId: req.body.AccessKey,
-      },
-    },
-    paper: req.body.Paper, // TODO: provide defaults
-  };
-};
 
-export const create_pdf_on_s3_v1 = (app: Application) => {
-  app.post('/api/v1/create-pdf-on-s3', async (request: Request, response: Response, next: NextFunction) => {
-    logTrace('Received request to create PDF on S3.');
-    const options = unpackS3Request(request);
-    WriteToS3(options.html, options, response);
-  });
+  const bucket = req.body.bucket;
+  logTrace("Bucket: " + bucket)
+
+  const key = req.body.key;
+  logTrace("key: " + key)
+
+  const html = req.body.html;
+  logTrace("html: " + html)
+
+  const identifier = req.body.identifier;
+  logTrace("identifier: " + identifier)
+
+  const paper = req.body.Paper;
+  logTrace("paper: " + paper)
+
+  const accesskey = req.body.accesskey;
+  logTrace("accesskey: " + accesskey)
+
+  const secretkey = req.body.secretkey;
+  logTrace("secretkey: " + secretkey)
+
+  const region = req.body.region;
+  logTrace("region: " + region)
+
+  const endpoint = req.body.endpoint;
+  logTrace("Endpoint: " + endpoint)
+
+  return {
+    bucket,
+    key,
+    html,
+    identifier,
+    paper,
+    accesskey,
+    secretkey,
+    region,
+    endpoint
+  };
 };

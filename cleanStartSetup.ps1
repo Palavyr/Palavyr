@@ -129,6 +129,13 @@ do {
 
 } while ($ready -eq $false)
 
+Write-Host "Creating local stack configuration identity and secret" -ForegroundColor DarkYellow
+aws configure set aws_access_key_id default_access_key --profile=localstack --endpoint-url=http://localhost:4566
+aws configure set aws_secret_access_key default_secret_key --profile=localstack  --endpoint-url=http://localhost:4566
+aws configure set region us-east-1 --profile=localstack  --endpoint-url=http://localhost:4566
+
+Write-Host "########### Listing profile ###########" -ForegroundColor DarkYellow
+aws configure list --profile=localstack  --endpoint-url=http://localhost:4566
 
 Write-Host "Creating local stack resources and email identities" -ForegroundColor DarkYellow
 aws --endpoint-url=http://localhost:4566 s3 mb s3://palavyr-user-data-development

@@ -34,7 +34,14 @@ echo "
 aws_access_key_id = [ECR AWS KEY ID]
 aws_secret_access_key = [ECR AWS KEY]
 region = [AWS REGION]
-" > credentials
+" >> credentials
+
+echo "
+[localstack]
+aws_access_key_id = default_access_key
+aws_secret_access_key = default_secret_key
+region = us-east-1
+" >> credentials
 
 touch config
 
@@ -57,26 +64,7 @@ From the repo root directory, run:
 
 
 
-...and you're off to the races. You can start the ui (portal and widget) services by running:
-
-```
-./startServices.ps1
-```
-
-From here, you can debug the server via the IDE, and then use the token provided from the setup to unlock the dev account.
-
-
-
-# Dev Tools
-
-#### Github Actions
-
-To test github actions locally:
- - https://github.com/nektos/act
-
-.e.g act pull_request -W ./.github/workflows/server_PR_checks.yml -j build-frontend
-This will trigger a pull_request, executing the given yml, and then specifically execute the build-frontend job. Too easy.
-
+...and you're off to the races. From here, you can debug the server via the IDE, and then use the token provided from the setup to unlock the dev account.
 
 ## Project organization
 
@@ -93,6 +81,17 @@ Palavyr is a monorepo that includes 2 subprojects:
 The architecture of Palavyr is as follows:
 
 ![Palavyr](./assets/architecture.PNG)
+
+# Dev Tools
+
+#### Github Actions
+
+To test github actions locally:
+ - https://github.com/nektos/act
+
+.e.g act pull_request -W ./.github/workflows/server_PR_checks.yml -j build-frontend
+This will trigger a pull_request, executing the given yml, and then specifically execute the build-frontend job. Too easy.
+
 
 ## Legal
 
