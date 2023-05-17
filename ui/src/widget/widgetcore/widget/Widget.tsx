@@ -29,7 +29,6 @@ export const useWidgetStyles = makeStyles(theme => ({
         display: "flex",
         flex: "0 1 30px",
         flexFlow: "row",
-        // justifyContent: "space-between",
     },
 }));
 
