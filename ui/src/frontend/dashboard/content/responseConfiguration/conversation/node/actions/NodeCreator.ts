@@ -1,5 +1,5 @@
 import { ConversationDesignerNodeResource, NodeTypeCodeEnum, NodeTypeOptionResources } from "@Palavyr-Types";
-import { v4 as uuid } from "uuid";
+import { uuid } from "uuidv4";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { IPalavyrNode, IPalavyrLinkedList, INodeReferences } from "@Palavyr-Types";
 import { DEFAULT_NODE_TEXT } from "@constants";

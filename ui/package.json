@@ -48,42 +48,23 @@
     "fs-extra": "^8.1.0",
     "ga-4-react": "^0.1.281",
     "highlight.js": "^10.1.2",
-    "jquery": "^3.5.1",
-    "js-cookie": "^2.2.1",
-    "less": "^3.12.2",
-    "lodash": "^4.17.21",
-    "markdown-it": "^8.4.1",
-    "markdown-it-link-attributes": "^2.1.0",
-    "markdown-it-sanitizer": "^0.4.3",
-    "markdown-it-sup": "^1.0.0",
-    "material-ui-dropzone": "^3.3.1",
     "palavyr-chat-widget": "^1.3.0",
-    "react": "^16.8.6",
+    "react": "^17.0.0",
     "react-app-polyfill": "^1.0.6",
-    "react-awesome-loaders": "^0.1.37",
-    "react-chartjs-2": "^3.0.4",
-    "react-color": "^2.18.1",
-    "react-dom": "^16.8.6",
+    "react-dom": "^17.0.0",
     "react-error-boundary": "^3.1.3",
     "react-flow-renderer": "^9.6.6",
     "react-ga": "^3.3.0",
-    "react-hooks-form": "^2.0.1",
     "react-number-format": "^4.7.3",
     "react-query": "^2.26.2",
     "react-query-devtools": "^2.6.3",
-    "react-reveal": "^1.2.2",
     "react-router-dom": "^5.1.2",
     "react-scroll": "^1.8.0",
     "react-select": "^4.3.1",
     "react-spring": "^8.0.27",
     "react-stripe-checkout": "^2.6.3",
-    "react-swipeable": "^6.2.0",
-    "react-tracking": "^8.1.0",
-    "react-window": "^1.8.5",
     "reactour": "^1.18.6",
     "seedrandom": "^3.0.5",
-    "styled-components": "^4.0.0",
-    "uuid": "^8.3.2",
     "uuidv4": "^6.2.2"
   },
   "browserslist": {
@@ -121,14 +102,12 @@
     "@types/body-scroll-lock": "^2.6.2",
     "@types/classnames": "^2.2.10",
     "@types/dagre": "^0.7.46",
-    "@types/enzyme": "^3.10.5",
     "@types/highlight.js": "^9.12.4",
-    "@types/jest": "^25.2.3",
     "@types/js-cookie": "^2.2.7",
     "@types/jsonwebtoken": "^8.5.4",
     "@types/lodash": "^4.14.178",
     "@types/markdown-it": "^12.0.1",
-    "@types/node": "^14.0.5",
+    "@types/node": "^16.17.1",
     "@types/react": "^17.0.34",
     "@types/react-color": "^3.0.4",
     "@types/react-dom": "^17.0.9",
@@ -163,8 +142,6 @@
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "dotenv-webpack": "^2.0.0",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-react-app": "^5.2.1",
@@ -181,10 +158,6 @@
     "html-webpack-plugin": "^4.4.1",
     "husky": "^4.2.3",
     "identity-obj-proxy": "3.0.0",
-    "jest": "24.9.0",
-    "jest-environment-jsdom-fourteen": "1.0.1",
-    "jest-resolve": "24.9.0",
-    "jest-watch-typeahead": "0.4.2",
     "jss-loader": "^1.0.0",
     "less-loader": "^7.0.0",
     "mini-css-extract-plugin": "^0.9.0",
@@ -197,7 +170,6 @@
     "postcss-safe-parser": "^4.0.1",
     "prettier": "^1.1.0",
     "prettier-eslint": "^5.1.0",
-    "react": "^16.13.1",
     "react-dev-utils": "^10.2.1",
     "react-is": "^16.13.1",
     "react-refresh": "^0.9.0",
@@ -223,55 +195,6 @@
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-merge": "^5.1.4",
     "workbox-webpack-plugin": "4.3.1"
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/src/setupTests.js"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jest-environment-jsdom-fourteen",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
-    ]
   },
   "babel": {
     "presets": [

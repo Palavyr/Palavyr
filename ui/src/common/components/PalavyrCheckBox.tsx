@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 import { FormControlLabel, Checkbox } from "@material-ui/core";
-import { v4 as uuid } from "uuid";
+import { uuid } from "uuidv4";
 
 type StyleProps = {
     checked: boolean;

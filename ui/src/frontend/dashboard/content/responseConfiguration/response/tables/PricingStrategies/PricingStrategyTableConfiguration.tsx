@@ -8,7 +8,6 @@ import { isDevelopmentStage } from "@common/client/clientUtils";
 import { OsTypeToggle } from "frontend/dashboard/content/responseConfiguration/intentSettings/enableIntents/OsTypeToggle";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import Fade from "react-reveal/Fade";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 export interface IPricingStrategy {
@@ -157,22 +156,20 @@ export const PricingStrategyConfiguration = ({ title, intentId, children, initia
                         };
 
                         return (
-                            <Fade key={["Fade", tableIndex, table.tableMeta.tableId].join("-")}>
-                                <PricingStrategyTable
-                                    key={[tableIndex, table.tableMeta.tableId].join("-")}
-                                    table={table}
-                                    tables={tables}
-                                    setTables={setTables}
-                                    unitTypes={unitTypes}
-                                    tableIndex={tableIndex}
-                                    availablePricingStrategyOptions={availableTables}
-                                    tableNameMap={tableNameMap}
-                                    intentId={intentId}
-                                    showDebug={showDebug}
-                                    inUse={inUse}
-                                    deleteAction={onDelete}
-                                />
-                            </Fade>
+                            <PricingStrategyTable
+                                key={[tableIndex, table.tableMeta.tableId].join("-")}
+                                table={table}
+                                tables={tables}
+                                setTables={setTables}
+                                unitTypes={unitTypes}
+                                tableIndex={tableIndex}
+                                availablePricingStrategyOptions={availableTables}
+                                tableNameMap={tableNameMap}
+                                intentId={intentId}
+                                showDebug={showDebug}
+                                inUse={inUse}
+                                deleteAction={onDelete}
+                            />
                         );
                     })}
             </Suspense>
