@@ -10,7 +10,7 @@ module.exports = () => {
         plugins: [
             new MiniCssExtractPlugin({
                 filename: "styles.css",
-                chunkFileName: "[id].css",
+                chunkFilename: "[id].css",
             }),
         ],
         optimization: {
