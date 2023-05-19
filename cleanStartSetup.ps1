@@ -44,10 +44,10 @@ finally {
     }
 }
 
-if ($null -eq $awsCreds) {
-    Write-Error "Ensure you'set your .aws/credentials with a [palavyr_ecr] profile and an ./aws/config with region=us-east-1"
-    exit 1
-}
+# if ($null -eq $awsCreds) {
+#     Write-Error "Ensure you'set your .aws/credentials with a [palavyr_ecr] profile and an ./aws/config with region=us-east-1"
+#     exit 1
+# }
 
 try {
     $processes = Get-Process "*docker desktop*"

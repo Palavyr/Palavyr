@@ -41,7 +41,7 @@ services:
       - 5432:5432
 
   palavyr-server:
-    image: palavyr/server-latest
+    image: paulegradie/palavyr:server-latest
     container_name: Server
     restart: always
     env_file:
@@ -55,22 +55,22 @@ services:
       - Palavyr_AWS__PdfUrl=http://host.docker.internal:5603/pdf
 
   palavyr-web-frontend:
-    image: palavyr/frontend-latest
+    image: paulegradie/palavyr:frontend-latest
     container_name: Frontend
     restart: always
     env_file:
       - ./ui/.env.frontend.development.docker
     ports:
-      - 8080:8090
+      - 8080:8080
 
   palavyr-web-widget:
-    image: palavyr/widget-latest
+    image: paulegradie/palavyr:widget-latest
     container_name: Widget
     restart: always
     env_file:
       - ./ui/.env.widget.development.docker
     ports:
-      - 3400:8090
+      - 3400:8080
 
   local-stack:
     image: localstack/localstack
@@ -92,7 +92,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   palavyr-data-migrator:
-    image: palavyr/data-migrator-latest
+    image: paulegradie/palavyr:migrator-latest
     container_name: Data-Migrator
     env_file:
       - ./local.env
@@ -104,11 +104,11 @@ services:
     ports:
       - 5100:5100
     depends_on:
-      Database:
+      postgres-server:
         condition: service_healthy
 
   palavyr-pdf-server:
-    image: palavyr/pdf-server-latest
+    image: paulegradie/palavyr:pdf-server-latest
     container_name: Server-PDF
     restart: always
     env_file:
