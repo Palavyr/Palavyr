@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "start": "npm install --no-save && cross-env NODE_ENV=development webpack-dev-server --open --config frontend-webpack.config.dev.js --hot --progress",
-    "build": "cross-env NODE_ENV=production webpack --config frontend-webpack.config.prod.js --production",
+    "build": "cross-env NODE_ENV=production webpack --config frontend-webpack.config.prod.js",
     "test": "jest --coverage",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
