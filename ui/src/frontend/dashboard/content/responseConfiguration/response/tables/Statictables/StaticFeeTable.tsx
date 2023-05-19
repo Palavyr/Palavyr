@@ -1,5 +1,5 @@
-import React from "react";
-import { makeStyles, TextField, Button, TableRow, Table, TableHead, TableBody, TableCell, Checkbox, FormControlLabel } from "@material-ui/core";
+import React, { CSSProperties } from "react";
+import { makeStyles, TextField, Button, TableRow, Table, TableHead, TableBody, TableCell, Checkbox, FormControlLabel, Theme } from "@material-ui/core";
 import { StaticTableMetaResources, StaticTableMetaResource, StaticTableRowResource } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { StaticRow } from "./StaticRow";
@@ -8,36 +8,36 @@ import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: any) => ({
     staticFees: {
-        margin: "1.2rem",
-        background: theme.palette.secondary.light,
-        color: theme.palette.getContrastText(theme.palette.secondary.light),
-        padding: "1.3rem",
-        border: `1px solid ${theme.palette.common.black}`,
-        borderRadius: "7px",
+        // margin: "1.2rem",
+        // background: theme.palette.secondary.light,
+        // color: theme.palette.getContrastText(theme.palette.secondary.light),
+        // padding: "1.3rem",
+        // border: `1px solid ${theme.palette.common.black}`,
+        // borderRadius: "7px",
     },
     tableDescription: {
         marginBottom: "0.3rem",
         paddingBottom: "1.5rem",
         borderRadius: "3px",
-        minWidth: "50%",
+        // minWidth: "50%",
     },
     buttonWrapper: {
-        marginTop: "1.5rem",
-        marginBottom: "0.5rem",
+        // marginTop: "1.5rem",
+        // marginBottom: "0.5rem",
     },
     feeTableButton: {
-        marginLeft: "0.6rem",
-        marginRight: "0.6rem",
-        padding: "0.4rem",
-        paddingLeft: "0.6rem",
-        paddingRight: "0.6rem",
+        // marginLeft: "0.6rem",
+        // marginRight: "0.6rem",
+        // padding: "0.4rem",
+        // paddingLeft: "0.6rem",
+        // paddingRight: "0.6rem",
     },
     headerText: {
-        fontSize: theme.typography.body1.fontSize,
-        fontWeight: theme.typography.fontWeightBold,
-    },
+        fontSize: theme.typography.body1.fontSize as any,
+        fontWeight: theme.typography.fontWeightBold as any
+      },
 }));
 
 export interface IStaticFeeTable {

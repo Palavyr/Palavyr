@@ -2,7 +2,7 @@
     import classNames from "classnames";
     import React from "react";
 
-    const useStyles = makeStyles((theme) => ({
+    const useStyles = makeStyles<{}>((theme: any) => ({
         line: {
             flexGrow: 1,
             height: "1px",

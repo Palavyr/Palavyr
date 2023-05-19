@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles<{}>(() => ({
     center: {
         display: "flex",
         textAlign: "center",

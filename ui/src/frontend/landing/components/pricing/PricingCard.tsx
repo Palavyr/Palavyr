@@ -1,7 +1,7 @@
 import { makeStyles, Table, TableBody } from "@material-ui/core";
 import React from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     tablecontainer: {
         marginRight: "10%",
         marginLeft: "10%",

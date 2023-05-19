@@ -12,7 +12,8 @@ export interface ConvoHeaderProps {
     titleAvatar?: string;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     header: (props: WidgetPreferencesResource) => ({
         backgroundColor: props.headerColor,
         color: props.headerFontColor,

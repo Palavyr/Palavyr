@@ -24,7 +24,8 @@ export interface IntentContentInnerProps extends IntentContentProps {
     setLoaded: SetState<boolean>;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     root: {},
     appbar: {
         backgroundColor: theme.palette.secondary.main,

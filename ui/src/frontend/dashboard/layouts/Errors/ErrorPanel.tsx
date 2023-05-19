@@ -4,7 +4,8 @@ import { DashboardContext } from "../DashboardContext";
 import { Align } from "../../../../common/positioning/Align";
 import CloseIcon from "@material-ui/icons/Close";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     container: {
         width: "100%",
         paddingTop: "0.8rem",

@@ -14,7 +14,7 @@ const SLIDE_DISTANCE = 8;
 const SWITCH_HEIGHT = CONTAINER_HEIGHT - 2;
 const SWITCH_WIDTH = SWITCH_HEIGHT;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     root: {
         width: CONTAINER_WIDTH,
         height: CONTAINER_HEIGHT,

@@ -7,7 +7,8 @@ import { HeaderStrip } from "@common/components/HeaderStrip";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     titleText: {
         fontWeight: "bold",
     },

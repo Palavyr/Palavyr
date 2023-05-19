@@ -10,7 +10,8 @@ type StyleProps = {
     preview: boolean;
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     paper: (props: StyleProps) => ({
         backgroundColor: theme.palette.secondary.light,
         alignContent: "center",

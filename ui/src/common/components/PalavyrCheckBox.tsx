@@ -7,7 +7,7 @@ type StyleProps = {
     checked: boolean;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     formstyle: {
         fontSize: "12px",
         alignSelf: "bottom",

@@ -32,7 +32,8 @@ const MAIN_DIV = `#${MAIN_CONTENT_DIV_ID}`;
 type StyleProps = {
     useNewEditor: boolean;
 };
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     conversation: {
         position: "static",
         overflow: "auto",

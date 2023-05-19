@@ -8,7 +8,7 @@ import { CustomFade } from "./CustomFade";
 import { AlertType } from "@Palavyr-Types";
 import { Link } from "react-router-dom";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles<{}>((theme: Theme) => ({
     modal: {
         display: "flex",
         alignItems: "center",

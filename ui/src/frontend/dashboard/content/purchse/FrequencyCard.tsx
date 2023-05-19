@@ -11,7 +11,7 @@ export interface IFrequencyCard {
     onClick(): void;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     outerCard: {
         margin: "2rem",
         padding: "1rem",

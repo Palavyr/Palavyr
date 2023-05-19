@@ -24,7 +24,7 @@ export interface IPercentOfThresholdRow {
 type StyleProps = {
     isTrue: boolean;
 };
-export const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     number: {
         border: "1px solid lightgray",
         padding: "1.2rem",

@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core";
 import { TextInputProps } from "@widgetcore/BotResponse/number/TextInput";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import React, { useContext } from "react";
-import NumberFormat from "react-number-format";
+import { NumericFormat, PatternFormat } from "react-number-format";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserPhone, INVALID_PHONE } from "../UserDetailsCheck";
 
@@ -14,7 +14,8 @@ export interface PhoneFormProps extends BaseFormProps {
     phonePattern: string;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     phone: (props: WidgetPreferencesResource) => ({
         width: "100%",
         marginTop: "1.3rem",
@@ -83,11 +84,11 @@ export const PhoneForm = ({ phonePattern, status, setStatus }: PhoneFormProps) =
     const { context, preferences } = useContext(WidgetContext);
     const cls = useStyles(preferences);
     return (
-        <NumberFormat
+        <PatternFormat
             customInput={CustomInput}
             style={status === INVALID_PHONE ? { border: "3px solid red" } : {}}
             onError={() => setStatus(INVALID_PHONE)}
-            error={status === INVALID_PHONE ? "Error" : ""}
+            error={status === INVALID_PHONE}
             className={cls.phone}
             format={phonePattern}
             mask={MASKCHAR}

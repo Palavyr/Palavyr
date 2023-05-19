@@ -1,7 +1,7 @@
 import { makeStyles, TableCell } from "@material-ui/core";
 import React from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     tableCell: {
         textAlign: "center",
         fontSize: "6pt",

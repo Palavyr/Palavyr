@@ -12,7 +12,7 @@ export interface IIntroSteps {
     onBlur(): void;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     tour: {
         backgroundColor: theme.palette.common.white,
         padding: "2.2rem",

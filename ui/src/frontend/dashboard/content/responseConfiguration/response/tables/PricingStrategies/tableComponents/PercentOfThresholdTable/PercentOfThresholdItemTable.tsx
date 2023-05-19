@@ -24,7 +24,8 @@ interface IPercentOfThreshold {
     unitPrettyName?: UnitPrettyNames;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     input: {
         margin: "0.6rem",
         width: "30ch",

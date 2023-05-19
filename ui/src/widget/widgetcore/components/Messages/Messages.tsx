@@ -17,7 +17,8 @@ export interface MessageProps {
     profileAvatar?: string;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     message: (prefs: WidgetPreferencesResource) => ({
         backgroundColor: prefs.chatBubbleColor,
         overflowY: "hidden",

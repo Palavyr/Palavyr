@@ -9,7 +9,8 @@ export interface ILoginActions {
     openChangePasswordDialog: any;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     forgotPassword: {
         marginTop: theme.spacing(2),
         color: theme.palette.primary.main,

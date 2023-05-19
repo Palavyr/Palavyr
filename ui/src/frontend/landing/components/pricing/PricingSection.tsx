@@ -2,7 +2,7 @@ import React from "react";
 import { Hidden, makeStyles } from "@material-ui/core";
 import { Free, Lyte, Premium, Pro } from "./Cards";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     body: {
         display: "flex",
         justifyContent: "space-evenly",

@@ -1,6 +1,6 @@
 const path = require("path");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-const ManifestPlugin = require("webpack-manifest-plugin");
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -25,7 +25,7 @@ module.exports = envPath => {
             new webpack.ProvidePlugin({
                 React: "react",
             }),
-            new ManifestPlugin({
+            new WebpackManifestPlugin({
                 fileName: "manifest.json",
             }),
             new CleanWebpackPlugin(),

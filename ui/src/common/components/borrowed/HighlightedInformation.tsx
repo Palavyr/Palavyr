@@ -7,7 +7,7 @@ export interface IHighlightedInformation {
 }
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     main: {
         backgroundColor: theme.palette.warning.light,
         border: "2px solid black",

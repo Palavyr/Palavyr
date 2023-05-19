@@ -20,7 +20,7 @@ export interface IFormDialogContent {
     setRememberMe(rememberMe: boolean): void;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles<{}>({
     formControlLabel: {
         marginRight: 0,
     },

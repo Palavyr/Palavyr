@@ -10,7 +10,7 @@ import { EditorDetails } from "./EditorDetails";
 import { EmailEditor } from "./EmailEditor";
 import { ViewEmailTemplate } from "./ViewTemplate";
 
-const useEmailStyles = makeStyles(() => ({
+const useEmailStyles = makeStyles<{}>(() => ({
     saveOrCancel: {
         marginTop: "2rem",
         textAlign: "right",

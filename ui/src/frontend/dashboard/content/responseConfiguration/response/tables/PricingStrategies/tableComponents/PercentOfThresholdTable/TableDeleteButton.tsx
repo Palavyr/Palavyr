@@ -2,7 +2,7 @@ import React from "react";
 import { Button, makeStyles } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-export const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     deleteIcon: {
         borderRadius: "5px",
     },

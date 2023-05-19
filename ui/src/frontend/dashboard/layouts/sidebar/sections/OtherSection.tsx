@@ -10,7 +10,8 @@ import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     icon: {
         color: theme.palette.secondary.light,
     },

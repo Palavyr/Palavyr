@@ -20,7 +20,7 @@ import { CurrencyTextField } from "@widgetcore/BotResponse/numbers/CurrencyTextF
 import { widgetSelection } from "@common/Analytics/gtag";
 import { WidgetPreferencesResource, IntentResource, WidgetNodeResource, FileAssetResource } from "@common/types/api/EntityResources";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     tableCell: {
         display: "flex",
         flexDirection: "column",
@@ -359,20 +359,20 @@ export class StandardComponents {
                     message={node.text}
                     input={
                         <CurrencyTextField
-                            InputProps={{
-                                className: cls.textField,
-                            }}
-                            InputLabelProps={{
-                                className: cls.textLabel,
-                            }}
+                            // InputProps={{
+                            //     className: cls.textField,
+                            // }}
+                            // InputLabelProps={{
+                            //     className: cls.textLabel,
+                            // }}
                             className={cls.tableCell}
                             label="Amount"
                             disabled={inputDisabled}
-                            variant="standard"
+                            // variant="standard"
                             value={response}
                             currencySymbol="$"
                             minimumValue="0"
-                            outputFormat="number"
+                            // outputFormat="number"
                             decimalCharacter="."
                             digitGroupSeparator=","
                             onValueChange={(values: NumberFormatValues) => {

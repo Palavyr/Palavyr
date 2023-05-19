@@ -26,7 +26,7 @@ type PositionStyles = {
     transformOrigin: string;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     line: {
         display: "flex",
         flexDirection: "column",

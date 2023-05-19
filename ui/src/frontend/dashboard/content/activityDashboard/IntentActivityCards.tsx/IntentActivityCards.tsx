@@ -6,7 +6,8 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { IntentActivityCard } from "./IntentActivityCard";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     container: {
         display: "flex",
         flexDirection: "row",

@@ -12,7 +12,8 @@ type StyleProps = {
     buffer: number;
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     treeItem: {
         display: "flex",
         flexDirection: "column",

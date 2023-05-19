@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export const useHeaderStyles = makeStyles((theme) => ({
+export const useHeaderStyles = makeStyles<{}>((theme: any) => ({
     extraLargeButtonLabel: {
       fontSize: theme.typography.body1.fontSize,
       [theme.breakpoints.up("sm")]: {

@@ -14,7 +14,8 @@ type StyleProps = {
     widgetState: boolean | undefined;
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     text: {
         color: "black",
     },

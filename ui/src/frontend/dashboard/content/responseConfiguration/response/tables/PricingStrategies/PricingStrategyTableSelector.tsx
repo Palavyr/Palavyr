@@ -14,7 +14,8 @@ export interface PricingStrategySelectorProps {
     helperText?: string;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     selector: {
         marginLeft: "1rem",
         marginRight: "1rem",

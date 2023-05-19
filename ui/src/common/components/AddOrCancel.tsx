@@ -17,7 +17,7 @@ export interface ISaveOrCancel {
     disabled?: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     saveButton: {
         border: `1px solid ${theme.palette.primary}`,
         borderRadius: "10px",

@@ -8,7 +8,7 @@ export interface ITermsOfServiceDialog {
     onClose: any;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     termsConditionsListitem: {
         marginLeft: theme.spacing(3),
         marginTop: theme.spacing(1),

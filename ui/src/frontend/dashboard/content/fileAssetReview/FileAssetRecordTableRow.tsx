@@ -15,7 +15,8 @@ export interface FileAssetRecordTableRowProps {
     setShowSpinner: SetState<boolean>;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     delete: {
         backgroundColor: theme.palette.warning.main,
         border: "none",

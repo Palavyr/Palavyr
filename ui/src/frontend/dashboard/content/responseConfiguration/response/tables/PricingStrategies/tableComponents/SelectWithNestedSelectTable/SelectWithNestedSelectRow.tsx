@@ -22,7 +22,8 @@ export interface TwoNestedCategoriesRowProps {
 type StyleProps = {
     isTrue: boolean;
 };
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     number: {
         padding: "1.2rem",
         fontSize: `${theme.typography.fontSize}`,

@@ -7,7 +7,8 @@ import { DialogTypes } from "@landing/components/dialogSelector/dialogTypes";
 import { YellowStrip } from "@common/components/YellowStrip";
 import { useLocation } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     wrapper: {
         backgroundColor: theme.palette.common.white,
         overflowX: "hidden",

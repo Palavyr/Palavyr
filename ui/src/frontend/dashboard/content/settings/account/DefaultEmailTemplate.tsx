@@ -7,7 +7,7 @@ import { EmailConfigurationComponent } from "frontend/dashboard/content/response
 import { Align } from "@common/positioning/Align";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles<{}>(() => ({
     root: {
         width: "100%",
         height: "100%",

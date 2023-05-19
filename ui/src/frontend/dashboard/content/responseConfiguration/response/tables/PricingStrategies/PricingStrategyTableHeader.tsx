@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { TextInput } from "@common/components/TextField/TextInput";
-import { useStyles, includesUnit } from "./PricingStrategyTable";
+import { includesUnit, useStyles } from "./PricingStrategyTable";
 import { QuantUnitDefinition } from "@common/types/api/ApiContracts";
 import { PricingStrategySelector, UnitSelector } from "./PricingStrategyTableSelector";
 

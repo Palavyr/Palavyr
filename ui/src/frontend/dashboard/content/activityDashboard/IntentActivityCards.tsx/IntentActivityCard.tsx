@@ -9,7 +9,8 @@ import AnimatedLines from "../images/animated-lines.gif";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { EnquiryInsightsResource } from "@Palavyr-Types";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     root: {
         maxWidth: 345,
         margin: "1rem",

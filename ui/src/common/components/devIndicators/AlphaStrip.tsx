@@ -1,7 +1,7 @@
 import { makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     devStripContainer: {
         paddingTop: "1rem",
         paddingBottom: "1rem",

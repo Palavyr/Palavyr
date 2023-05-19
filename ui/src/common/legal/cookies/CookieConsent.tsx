@@ -5,7 +5,7 @@ import { europeanCountryCodes } from "./CountryCodes";
 import fetchIpData from "./FetchIP";
 import { makeStyles, Snackbar, Typography, Box, Button } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     snackbarContent: {
         borderBotttomLeftRadius: 0,
         borderBottomRightRadius: 0,

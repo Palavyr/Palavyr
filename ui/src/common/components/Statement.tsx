@@ -24,7 +24,7 @@ type StyleProps = {
     margin: number;
 }
 
-const useStyle = makeStyles(theme => ({
+const useStyle = makeStyles<{}>(theme => ({
     div: (props: StyleProps) => ({
         margin: `${props.margin}rem`,
         border: "2px solid darkgrey",

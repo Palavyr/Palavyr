@@ -12,7 +12,7 @@ export interface IEdit {
     uploadDetails: JSX.Element;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles<{}>(() => ({
     heading: {
         fontWeight: "bold",
     },

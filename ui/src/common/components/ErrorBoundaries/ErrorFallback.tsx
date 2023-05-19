@@ -4,7 +4,7 @@ import { Align } from "@common/positioning/Align";
 import React from "react";
 import { SinglePurposeButton } from "../SinglePurposeButton";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles<{}>({
     error: {
         marginBottom: "1rem",
     },

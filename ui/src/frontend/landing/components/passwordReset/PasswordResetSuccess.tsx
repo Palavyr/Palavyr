@@ -2,7 +2,7 @@ import { makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     root: {
         textAlign: "center",
         padding: "2rem",

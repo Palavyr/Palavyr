@@ -25,7 +25,8 @@ export interface CategoryNestedThresholdProps {
 type StyleProps = {
     isTrue: boolean;
 };
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     number: {
         border: "1px solid lightgray",
         padding: "1.2rem",

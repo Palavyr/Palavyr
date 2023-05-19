@@ -48,7 +48,7 @@ type StyleProps = {
     helpOpen: boolean;
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     root: {
         display: "flex",
     },

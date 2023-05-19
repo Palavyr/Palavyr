@@ -9,7 +9,8 @@ import { DashboardContext } from "../DashboardContext";
 import { ADD_NEW_INTENT_BACKDROP_zINDEX, ADD_NEW_INTENT_DIALOG_BOX_zINDEX } from "@constants";
 import { IntentResource } from "@common/types/api/EntityResources";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     dialog: {
         zIndex: ADD_NEW_INTENT_DIALOG_BOX_zINDEX,
     },

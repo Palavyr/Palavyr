@@ -11,7 +11,8 @@ import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { PricingStrategyHeader } from "../../PricingStrategyTableHeader";
 import { TwoNestedCategoryResource } from "@common/types/api/EntityResources";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     root: {
         borderTop: "3px solid red",
     },

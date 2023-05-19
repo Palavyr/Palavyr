@@ -2,7 +2,8 @@ import { makeStyles, TableCell, TableHead, TableRow } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     cell: {
         fontSize: theme.typography.body1.fontSize,
         fontWeight: theme.typography.fontWeightBold,

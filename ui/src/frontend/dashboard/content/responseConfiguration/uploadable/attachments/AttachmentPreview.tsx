@@ -10,7 +10,7 @@ type StyleProps = {
     preview: boolean;
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     divStyle: (props: StyleProps) => ({
         alignContent: "center",
         padding: "2.5rem",

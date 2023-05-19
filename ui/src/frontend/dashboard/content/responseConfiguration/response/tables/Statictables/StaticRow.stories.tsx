@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import { StaticRow, IStaticRow } from "./StaticRow";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { StaticTableRowResource, StaticTableMetaResource } from "@Palavyr-Types";

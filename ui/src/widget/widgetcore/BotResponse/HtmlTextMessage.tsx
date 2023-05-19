@@ -4,7 +4,8 @@ import classNames from "classnames";
 import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     outer: (widgetPreferences: WidgetPreferencesResource) => ({
         fontFamily: widgetPreferences.fontFamily,
     }),

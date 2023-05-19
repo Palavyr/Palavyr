@@ -2,7 +2,7 @@ import React from "react";
 import { Typography, Chip, makeStyles, Divider } from "@material-ui/core";
 import { TreeErrorsResource } from "@Palavyr-Types";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     missingNodeText: {
         marginBottom: "1rem",
         fontWeight: "bolder",

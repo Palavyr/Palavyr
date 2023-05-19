@@ -20,7 +20,8 @@ type StyleProps = {
     accountTypeNeedsPassword: boolean;
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     root: {
         flexGrow: 1,
     },

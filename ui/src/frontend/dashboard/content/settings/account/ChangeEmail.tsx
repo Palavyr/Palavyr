@@ -15,7 +15,8 @@ type GeneralSettings = {
     awaitingVerification: boolean;
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     titleText: {
         fontWeight: "bold",
     },

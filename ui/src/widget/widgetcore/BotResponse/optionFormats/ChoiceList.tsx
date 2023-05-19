@@ -7,7 +7,7 @@ import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles<{}>(() => ({
     selectListBgColor: (prefs: WidgetPreferencesResource) => ({
         backgroundColor: prefs.selectListColor,
         fontFamily: prefs.fontFamily,

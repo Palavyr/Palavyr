@@ -4,7 +4,8 @@ import { Autocomplete, AutocompleteProps, AutocompleteRenderInputParams, UseAuto
 import classNames from "classnames";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     formControl: {
         minWidth: 120,
         width: "100%",

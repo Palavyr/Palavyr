@@ -1,15 +1,17 @@
 import { makeStyles, TextField } from "@material-ui/core";
 import classNames from "classnames";
 import React, { useEffect } from "react";
-import CurrencyFormat, { NumberFormatProps, NumberFormatValues } from "react-number-format";
+// import CurrencyFormat, { NumberFormatProps, NumberFormatValues } from "react-number-format";
+import { NumericFormat, NumericFormatProps, NumberFormatValues } from "react-number-format";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     styles: {
         marginTop: "15px",
         width: "12ch"
     },
 }));
-export interface CurrencyTextFieldProps extends NumberFormatProps {
+export interface CurrencyTextFieldProps extends NumericFormatProps {
     label: string;
     currencySymbol: string;
     value?: number | string;
@@ -40,7 +42,7 @@ export const CurrencyTextField = ({
     const cls = useStyles();
 
     return (
-        <CurrencyFormat
+        <NumericFormat
             id={id}
             fixedDecimalScale={true}
             className={classNames(className, cls.styles)}
@@ -53,10 +55,10 @@ export const CurrencyTextField = ({
             prefix={currencySymbol}
             allowLeadingZeros={false}
             allowNegative={false}
-            allowEmptyFormatting={false}
-            customInput={TextField}
+            // allowEmptyFormatting={false}
+            // customInput={TextField}
             decimalScale={2}
-            isNumericString={true}
+            // isNumericString={true}
             onValueChange={onValueChange}
             {...rest}
         />

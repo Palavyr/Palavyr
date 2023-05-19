@@ -2,7 +2,7 @@ import { makeStyles, Typography } from "@material-ui/core";
 import { Align } from "@common/positioning/Align";
 import React from "react";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles<{}>({
     error: {
         margin: "2rem",
     },

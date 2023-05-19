@@ -7,7 +7,7 @@ import { DrawerProps } from "@material-ui/core";
 import classNames from "classnames";
 import { LineSpacer } from "@common/components/typography/LineSpacer";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     closeIcon: {
         marginRight: theme.spacing(0.5),
     },

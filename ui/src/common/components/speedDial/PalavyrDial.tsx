@@ -5,7 +5,7 @@ import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 import { Action } from "@Palavyr-Types";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles<{}>((theme: Theme) =>
     createStyles({
         root: {
             height: 380,

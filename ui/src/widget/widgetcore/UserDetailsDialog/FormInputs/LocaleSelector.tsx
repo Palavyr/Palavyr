@@ -15,7 +15,8 @@ export interface LocaleSelectorProps {
     disabled: boolean;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     select: (props: WidgetPreferencesResource) => ({
         backgroundColor: props.selectListColor,
     }),

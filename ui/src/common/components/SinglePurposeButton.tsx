@@ -13,7 +13,7 @@ export interface ISinglePurposeButton {
     disabled?: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     singlePurposeButton: {
         marginTop: "1rem",
         color: "black",

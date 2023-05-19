@@ -1,7 +1,7 @@
 import React from "react";
 import { TableRow, TableCell, makeStyles, Typography } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     tableRow: {
         borderBottom: "2px solid lightgray",
         margin: "0px",

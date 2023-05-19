@@ -11,7 +11,8 @@ import { IntentNameDetail, IntentNameDetails } from "@Palavyr-Types";
 import classNames from "classnames";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     icon: {
         color: theme.palette.secondary.light,
     },
