@@ -1,4 +1,3 @@
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const common = require("./widget-webpack.common.js");
@@ -18,10 +17,6 @@ module.exports = () => {
         ],
         optimization: {
             minimizer: [
-                // new UglifyJsPlugin({
-                //     cache: true,
-                //     parallel: true,
-                // }),
                 new OptimizeCSSAssetsPlugin({}),
             ],
         },
