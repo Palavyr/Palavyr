@@ -10,8 +10,10 @@ const autoprefixer = require("autoprefixer");
 
 const webpack = require("webpack");
 
-module.exports = envPath => {
-    console.log("Building in: " + envPath);
+module.exports = env => {
+    const envPath = env === "production" ? ".env.frontend.production" : ".env.frontend.development";
+
+    console.log("Building in: " + env);
     return {
         plugins: [
             new Dotenv({ path: envPath }),

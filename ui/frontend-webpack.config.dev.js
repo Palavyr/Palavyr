@@ -1,9 +1,9 @@
 const { merge } = require('webpack-merge');
 const common = require('./frontend-webpack.common.js');
 
-module.exports = (ENV) => {
+module.exports = (_) => {
 
-    return merge(common(ENV), {
+    return merge(common('development'), {
         mode: 'development',
         devtool: 'inline-source-map',
         devServer: {

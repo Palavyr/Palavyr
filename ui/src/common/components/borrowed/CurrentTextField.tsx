@@ -55,10 +55,7 @@ export const CurrencyTextField = ({
             prefix={currencySymbol}
             allowLeadingZeros={false}
             allowNegative={false}
-            // allowEmptyFormatting={false}
-            // customInput={TextField}
             decimalScale={2}
-            // isNumericString={true}
             onValueChange={onValueChange}
             {...rest}
         />
