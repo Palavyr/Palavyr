@@ -24,7 +24,8 @@ interface IFeeConfiguration {
     initialState?: boolean;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     buttonContainer: {
         width: "100%",
         display: "flex",

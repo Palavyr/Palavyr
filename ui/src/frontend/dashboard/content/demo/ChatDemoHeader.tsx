@@ -2,7 +2,8 @@ import React from "react";
 import { makeStyles } from "@material-ui/core";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     customizetext: {
         paddingTop: "1.rem",
     },

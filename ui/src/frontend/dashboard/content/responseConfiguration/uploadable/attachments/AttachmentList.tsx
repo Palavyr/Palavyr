@@ -9,7 +9,8 @@ interface AttachmentList {
     removeAttachment: (fileId: string) => void;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     paper: {
         paddingTop: "0.5rem",
         paddingBottom: "0.5rem",

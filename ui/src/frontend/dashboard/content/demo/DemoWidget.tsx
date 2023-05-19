@@ -6,7 +6,8 @@ import { Align } from "@common/positioning/Align";
 import React from "react";
 import { IFrame } from "./IFrame";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     paper: {
         display: "flex",
         justifyContent: "center",

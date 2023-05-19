@@ -36,7 +36,8 @@ function a11yProps(index: number) {
     };
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     outerdiv: {
         padding: "3rem",
         textAlign: "center",

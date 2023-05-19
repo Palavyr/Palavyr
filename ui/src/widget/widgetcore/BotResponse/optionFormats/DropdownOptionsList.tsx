@@ -11,7 +11,7 @@ import classNames from "classnames";
 import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles<{}>(() => ({
     container: {
         display: "flex",
         flexDirection: "column",

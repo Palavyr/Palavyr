@@ -21,7 +21,7 @@ export interface ISensitiveGridRowText {
 }
 
 
-const useStyles = makeStyles((theme => ({
+const useStyles = makeStyles<{}>(((theme: any) => ({
     root: {
         display: 'flex',
         flexWrap: 'wrap',

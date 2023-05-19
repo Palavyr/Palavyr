@@ -5,7 +5,7 @@ export interface IHelpSubtitle {
     subtitle: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     body: {
         paddingTop: "1rem",
         paddingBottom: "1rem",

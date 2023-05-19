@@ -1,7 +1,7 @@
 import React from "react";
 import { Backdrop, makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles<{}>({
     backdrop: {
         top: 0,
         left: 0,

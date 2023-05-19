@@ -10,7 +10,7 @@ export interface IChangePasswordDialog {
     setLoginStatus: any;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     dialogContent: {
         paddingTop: theme.spacing(2),
     },

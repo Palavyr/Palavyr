@@ -64,41 +64,39 @@ jobs:
         env:
           Version: ${{ needs.generate-build-number.outputs.version }}
 
-      - name: Install Octopus CLI 🐙
-        uses: OctopusDeploy/install-octopus-cli-action@v1
-        with:
-          version: latest
+      # - name: Install Octopus CLI 🐙
+      #   uses: OctopusDeploy/install-octopus-cli-action@v1
+      #   with:
+      #     version: latest
 
-      - name: Push a package to Octopus Deploy 🐙
-        uses: OctopusDeploy/push-package-action@v2
-        env:
-          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
-          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
-          OCTOPUS_SPACE: "Spaces-2"
-        with:
-          packages: ${{ steps.build.outputs.packages_to_push }}
+      # - name: Push a package to Octopus Deploy 🐙
+      #   uses: OctopusDeploy/push-package-action@v2
+      #   env:
+      #     OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
+      #     OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
+      #     OCTOPUS_SPACE: "Spaces-2"
+      #   with:
+      #     packages: ${{ steps.build.outputs.packages_to_push }}
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Server Docker image
         with:
-          image: palavyr/palavyr-server
-          tags: latest, ${{ needs.generate-build-number.outputs.version }}
-          registry: ${{ secrets.ECR_REGISTRY }}
+          image: paulegradie/palavyr
+          tags: server-latest, server-${{ needs.generate-build-number.outputs.version }}
+          registry: docker.io
           dockerfile: ./server/Dockerfile
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Migrator Docker image
         with:
-          image: palavyr/palavyr-data-migrator
-          tags: latest, ${{ needs.generate-build-number.outputs.version }}
-          registry: ${{ secrets.ECR_REGISTRY }}
+          image: paulegradie/palavyr
+          tags: migrator-latest, migrator-${{ needs.generate-build-number.outputs.version }}
+          registry: docker.io
           dockerfile: ./server/Dockerfile.Migrator
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
   build-frontend:
     runs-on: ubuntu-latest
@@ -110,7 +108,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
 
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -131,29 +129,30 @@ jobs:
           zip -r palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip ./dist-frontend
           mv palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
 
-      - name: Install Octopus CLI 🐙
-        uses: OctopusDeploy/install-octopus-cli-action@v1
-        with:
-          version: latest
-      - name: Push a package to Octopus Deploy 🐙
-        uses: OctopusDeploy/push-package-action@v2
-        env:
-          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
-          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
-          OCTOPUS_SPACE: "Spaces-2"
-        with:
-          packages: palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip
+      # TODO: uncomment when productionizing
+      # - name: Install Octopus CLI 🐙
+      #   uses: OctopusDeploy/install-octopus-cli-action@v1
+      #   with:
+      #     version: latest
+
+      # - name: Push a package to Octopus Deploy 🐙
+      #   uses: OctopusDeploy/push-package-action@v2
+      #   env:
+      #     OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
+      #     OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
+      #     OCTOPUS_SPACE: "Spaces-2"
+      #   with:
+      #     packages: palavyr-frontend.${{ needs.generate-build-number.outputs.version }}.zip
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image
         with:
-          image: palavyr/palavyr-frontend
-          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          image: paulegradie/palavyr
+          tags: frontend-latest, frontend-${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./ui/docker-frontend/Dockerfile
-          registry: ${{ secrets.ECR_REGISTRY }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
   build-widget:
     runs-on: ubuntu-latest
@@ -165,7 +164,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
 
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -187,30 +186,30 @@ jobs:
           zip -r palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ./dist-widget
           mv palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip ${{ github.workspace }}
 
-      - name: Install Octopus CLI 🐙
-        uses: OctopusDeploy/install-octopus-cli-action@v1
-        with:
-          version: latest
+      # TODO: Uncomment when productionizing
+      # - name: Install Octopus CLI 🐙
+      #   uses: OctopusDeploy/install-octopus-cli-action@v1
+      #   with:
+      #     version: latest
 
-      - name: Push a package to Octopus Deploy 🐙
-        uses: OctopusDeploy/push-package-action@v2
-        env:
-          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
-          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
-          OCTOPUS_SPACE: "Spaces-2"
-        with:
-          packages: palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip
+      # - name: Push a package to Octopus Deploy 🐙
+      #   uses: OctopusDeploy/push-package-action@v2
+      #   env:
+      #     OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}
+      #     OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
+      #     OCTOPUS_SPACE: "Spaces-2"
+      #   with:
+      #     packages: palavyr-widget.${{ needs.generate-build-number.outputs.version }}.zip
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push to Docker
         with:
-          image: palavyr/palavyr-widget
-          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          image: paulegradie/palavyr
+          tags: widget-latest, widget-${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./ui/docker-widget/Dockerfile
-          registry: ${{ secrets.ECR_REGISTRY }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
   build-pdf-server:
     runs-on: ubuntu-latest
@@ -230,29 +229,29 @@ jobs:
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push to Docker
         with:
-          image: palavyr/palavyr-pdf-server
-          tags: latest, ${{ needs.generate-build-number.outputs.version }}
+          image: paulegradie/palavyr
+          tags: pdf-server-latest, pdf-server-${{ needs.generate-build-number.outputs.version }}
           dockerfile: ./pdf/Dockerfile.prod
-          registry: ${{ secrets.ECR_REGISTRY }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_CONTROL_Access_Key_Id }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_CONTROL_Secret_Key_Id }}
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-  create-release:
-    runs-on: ubuntu-latest
-    needs:
-      [test-and-build-server, build-frontend, build-widget, build-pdf-server]
-    steps:
-      - name: Install Octopus CLI 🐙
-        uses: OctopusDeploy/install-octopus-cli-action@v1
-        with:
-          version: latest
+# TODO: Uncomment when productionizing
+# create-release:
+#   runs-on: ubuntu-latest
+#   needs:
+#     [test-and-build-server, build-frontend, build-widget, build-pdf-server]
+#   steps:
+#     - name: Install Octopus CLI 🐙
+#       uses: OctopusDeploy/install-octopus-cli-action@v1
+#       with:
+#         version: latest
 
-      - name: Create a release in Octopus Deploy 🐙
-        uses: OctopusDeploy/create-release-action@v2
-        env:
-          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY  }}
-          OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
-          OCTOPUS_SPACE: "Spaces-2"
-        with:
-          project: "Palavyr"
+#     - name: Create a release in Octopus Deploy 🐙
+#       uses: OctopusDeploy/create-release-action@v2
+#       env:
+#         OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_DEPLOY_API_KEY  }}
+#         OCTOPUS_HOST: ${{ secrets.OCTOPUS_DEPLOY_URL }}
+#         OCTOPUS_SPACE: "Spaces-2"
+#       with:
+#         project: "Palavyr"

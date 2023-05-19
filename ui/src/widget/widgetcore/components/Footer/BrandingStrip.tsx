@@ -17,7 +17,8 @@ type StyleProps = {
     resetEnabled: boolean;
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     leadingText: {},
     wrapper: {
         fontFamily: theme.typography.fontFamily,

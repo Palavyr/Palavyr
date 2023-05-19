@@ -12,7 +12,8 @@ import Pagination from "@material-ui/lab/Pagination";
 import { EnquiryBehaviorButtons } from "./EnquiryBehaviorButtons";
 import { cloneDeep } from "lodash";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     title: {
         padding: "1rem",
     },

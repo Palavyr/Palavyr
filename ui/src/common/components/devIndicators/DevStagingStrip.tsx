@@ -4,7 +4,7 @@ import { SetState } from "@Palavyr-Types";
 import React from "react";
 import { SinglePurposeButton } from "../SinglePurposeButton";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     devStripContainer: {
         paddingTop: "1rem",
         paddingBottom: "1rem",

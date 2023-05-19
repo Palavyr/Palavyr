@@ -48,7 +48,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   palavyr-server:
-    image: ${ECR_REGISTRY}/palavyr/palavyr-server:latest
+    image: palavyr/server-latest
     container_name: Server
     restart: always
     env_file:
@@ -67,7 +67,7 @@ services:
       - Palavyr_DB__Password=Password01!
 
   palavyr-data-migrator:
-    image: ${ECR_REGISTRY}/palavyr/palavyr-data-migrator:latest
+    image: palavyr/data-migrator-latest
     container_name: Database-Migrator
     ports:
       - 5100:5100
@@ -89,7 +89,7 @@ services:
       - 5341:5341
 
   palavyr-pdf-server:
-    image: ${ECR_REGISTRY}/palavyr/palavyr-pdf-server:latest
+    image: palavyr/pdf-server-latest
     container_name: Server-PDF
     restart: always
     env_file:

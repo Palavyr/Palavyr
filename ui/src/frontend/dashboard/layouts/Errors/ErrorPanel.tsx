@@ -2,10 +2,10 @@ import { makeStyles, Typography } from "@material-ui/core";
 import React, { useContext, useEffect } from "react";
 import { DashboardContext } from "../DashboardContext";
 import { Align } from "../../../../common/positioning/Align";
-import Fade from "react-reveal/Fade";
 import CloseIcon from "@material-ui/icons/Close";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     container: {
         width: "100%",
         paddingTop: "0.8rem",
@@ -42,47 +42,45 @@ const useStyles = makeStyles(theme => ({
 export const ErrorPanel = () => {
     const { panelErrors, setPanelErrors } = useContext(DashboardContext);
     const cls = useStyles();
-    useEffect(() => {}, []);
+    useEffect(() => { }, []);
     return panelErrors !== null ? (
-        <Fade>
-            <>
-                <div className={cls.container}>
-                    <Typography gutterBottom align="center" variant="h5">
-                        Error
-                    </Typography>
-                    <div className={cls.innerContainer}>
-                        <Align direction="flex-start">
-                            <div className={cls.panelIntent}>
-                                {panelErrors.message && (
-                                    <Typography variant="body1" align="center" gutterBottom className={cls.errorTitle}>
-                                        {panelErrors.message}
-                                    </Typography>
-                                )}
-                                {panelErrors && panelErrors.additionalMessages && panelErrors.additionalMessages.length > 0 && (
-                                    <>
-                                        <Typography align="left">{panelErrors.additionalMessages.length === 1 ? "Reason" : "Reasons"}</Typography>
-                                        <ul className={cls.ul}>
-                                            {panelErrors.additionalMessages.map((message: string, key: number) => {
-                                                return (
-                                                    <li key={key} className={cls.item}>
-                                                        <Typography variant="body2">{message}</Typography>
-                                                    </li>
-                                                );
-                                            })}
-                                        </ul>
-                                    </>
-                                )}
-                            </div>
-                        </Align>
-                    </div>
-                    <Align direction="flex-end">
-                        <div className={cls.close} onClick={() => setPanelErrors(null)}>
-                            <CloseIcon fontSize="large" />
+        <>
+            <div className={cls.container}>
+                <Typography gutterBottom align="center" variant="h5">
+                    Error
+                </Typography>
+                <div className={cls.innerContainer}>
+                    <Align direction="flex-start">
+                        <div className={cls.panelIntent}>
+                            {panelErrors.message && (
+                                <Typography variant="body1" align="center" gutterBottom className={cls.errorTitle}>
+                                    {panelErrors.message}
+                                </Typography>
+                            )}
+                            {panelErrors && panelErrors.additionalMessages && panelErrors.additionalMessages.length > 0 && (
+                                <>
+                                    <Typography align="left">{panelErrors.additionalMessages.length === 1 ? "Reason" : "Reasons"}</Typography>
+                                    <ul className={cls.ul}>
+                                        {panelErrors.additionalMessages.map((message: string, key: number) => {
+                                            return (
+                                                <li key={key} className={cls.item}>
+                                                    <Typography variant="body2">{message}</Typography>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </>
+                            )}
                         </div>
                     </Align>
                 </div>
-            </>
-        </Fade>
+                <Align direction="flex-end">
+                    <div className={cls.close} onClick={() => setPanelErrors(null)}>
+                        <CloseIcon fontSize="large" />
+                    </div>
+                </Align>
+            </div>
+        </>
     ) : (
         <></>
     );

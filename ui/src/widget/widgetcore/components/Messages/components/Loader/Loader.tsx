@@ -8,7 +8,8 @@ import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 import clss from "./Loader.module.scss";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     loaderContainer: (props: WidgetPreferencesResource) => ({
         backgroundColor: props.chatBubbleColor,
         borderRadius: "10px",

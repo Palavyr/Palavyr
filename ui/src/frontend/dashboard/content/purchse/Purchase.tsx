@@ -17,7 +17,7 @@ import { Align } from "@common/positioning/Align";
 import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     container: {
         backgroundColor: theme.palette.background.default,
         marginTop: theme.spacing(2),

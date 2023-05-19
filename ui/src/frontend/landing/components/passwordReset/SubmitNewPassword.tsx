@@ -9,7 +9,7 @@ import { useRef } from "react";
 import { useState } from "react";
 import { Redirect, useHistory, useLocation } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     resetButton: {
         color: "white",
         backgroundColor: "#3e5f82",

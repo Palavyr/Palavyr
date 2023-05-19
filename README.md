@@ -11,14 +11,7 @@ Palavyr is intended to be used by any small business that wishes to automate som
 
 Since the application is dockerized, there are only a couple steps to get going.
 
-### 1. Set an environment variable
-
-All you need to set is the `ECR_REGISTRY` environment variable. This points your docker compose to the ECR registry.
-This is a secret, so you'll need to get that from someone who has the registry address.
-
-It will look like `[account_number].dkr.ecr.[aws_region].amazonaws.com`
-
-### 2. Create an aws profile
+### 1. Create an aws profile for local-stack (local aws emulation)
 
 Use the following script to guide you to how to make the required profile:
 
@@ -28,13 +21,6 @@ Use the following script to guide you to how to make the required profile:
 mkdir ~/.aws && cd ~/.aws
 
 touch credentials
-
-echo "
-[palavyr_ecr]
-aws_access_key_id = [ECR AWS KEY ID]
-aws_secret_access_key = [ECR AWS KEY]
-region = [AWS REGION]
-" >> credentials
 
 echo "
 [localstack]
@@ -54,15 +40,13 @@ output = text
 exit 0
 ```
 
-### 3. Run a command
+### 2. Run a command
 
 From the repo root directory, run:
 
 ```
 ./cleanStartSetup.ps1   // (sorry, I don't have an .sh handy. Could you transcribe it?)
 ```
-
-
 
 ...and you're off to the races. From here, you can debug the server via the IDE, and then use the token provided from the setup to unlock the dev account.
 
@@ -125,8 +109,3 @@ CSS                              1              0              7             21
 SUM:                          1671          32584           2203         116721
 -------------------------------------------------------------------------------
 ```
-
-#### Additional Note
-
-Terraformer import all [nicely](https://www.youtube.com/watch?v=GpjCF4yZU9A&ab_channel=NedintheCloud)
-`terraformer import aws --resources="*" --compact --path-pattern "{output}/{provider}" --output hcl`

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { Variant } from "@material-ui/core/styles/createTypography";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     accordian: {
         width: "100%",
     },

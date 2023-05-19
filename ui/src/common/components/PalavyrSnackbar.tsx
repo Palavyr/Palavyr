@@ -21,7 +21,7 @@ export interface PalavyrSnackbarProps {
     autoHideDuration?: number;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     bar: {
         zIndex: 99999,
     },

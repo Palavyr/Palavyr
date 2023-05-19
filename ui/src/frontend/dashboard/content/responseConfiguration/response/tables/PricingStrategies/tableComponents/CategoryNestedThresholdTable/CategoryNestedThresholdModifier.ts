@@ -3,7 +3,7 @@ import { CategoryNestedThresholdResource, TableData } from "@common/types/api/En
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { Modifier, SetState, TableGroup } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, uniq } from "lodash";
-import { v4 as uuid } from "uuid";
+import { uuid } from "uuidv4";
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 
 export class CategoryNestedThresholdModifier implements Modifier {

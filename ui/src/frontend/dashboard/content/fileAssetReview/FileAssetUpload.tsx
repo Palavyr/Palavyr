@@ -6,7 +6,8 @@ import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
 import { Upload } from "../responseConfiguration/uploadable/Upload";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     imageBlock: {
         padding: "1rem",
         marginBottom: "0.5rem",

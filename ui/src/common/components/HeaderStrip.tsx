@@ -12,7 +12,8 @@ type StyleProps = {
     light: boolean;
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     container: (props: StyleProps) => ({
         backgroundColor: props.light ? theme.palette.common.white : theme.palette.background.default,
         paddingTop: "1.2rem",

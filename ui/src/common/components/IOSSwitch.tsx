@@ -1,7 +1,8 @@
 import * as React from "react";
 import { makeStyles, Switch, SwitchProps } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     root: {
         width: 42,
         height: 26,

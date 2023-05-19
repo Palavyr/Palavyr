@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core";
 import { PricingStrategyComponentMap } from "./PricingStrategyRegistry";
 import { QuantUnitDefinition } from "@common/types/api/ApiContracts";
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles<{}>((theme: any) => ({
     headerCol: {
         textAlign: "center",
         fontSize: "16pt",

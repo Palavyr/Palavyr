@@ -10,7 +10,8 @@ type styleProps = {
     iconSize: string;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     icon: (props: styleProps) => ({
         textAlign: "center",
         marginBottom: "1.2rem",

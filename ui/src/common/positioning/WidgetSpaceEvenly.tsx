@@ -7,7 +7,8 @@ type StyleProps = {
     center?: boolean;
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     align: (props: StyleProps) => ({
         display: "flex",
         flexDirection: props.vertical ? "column" : "row",

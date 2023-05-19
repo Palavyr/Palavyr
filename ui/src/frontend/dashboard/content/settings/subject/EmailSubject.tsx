@@ -11,7 +11,7 @@ export interface IUploadAttachment {
     children: React.ReactNode;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     textdiv: {},
     textfield: {},
     table: {

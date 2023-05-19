@@ -14,7 +14,8 @@ export interface ISettingsGridRow {
     loading?: boolean;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     row: {
         padding: "1rem",
         margin: "1rem",

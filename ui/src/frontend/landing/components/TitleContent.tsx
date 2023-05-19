@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Card, Grid, Divider, makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     card: {
         boxShadow: "0 0 white",
         background: "none",

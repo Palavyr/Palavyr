@@ -1,7 +1,8 @@
 import { makeStyles, TableCell, TableRow } from "@material-ui/core";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     row: {
         width: "100%",
         margin: "0px",

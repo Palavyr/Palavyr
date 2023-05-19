@@ -19,7 +19,8 @@ const formConversationReviewPath = (conversationId: string) => {
     return CONVERSATION_REVIEW + `?${CONVERSATION_REVIEW_PARAMNAME}=${conversationId}`;
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     headerRow: {
         borderBottom: theme.palette.common.black,
     },

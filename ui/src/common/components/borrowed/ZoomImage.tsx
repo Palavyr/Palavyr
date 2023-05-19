@@ -3,7 +3,8 @@ import { Portal, Backdrop, makeStyles } from "@material-ui/core";
 import ScrollbarSize from "@material-ui/core/Tabs/ScrollbarSize";
 import classNames from "classnames";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     backdrop: {
         zIndex: theme.zIndex.modal,
         backgroundColor: "rgba(0, 0, 0, 0.8)",

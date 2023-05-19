@@ -11,7 +11,8 @@ type StyleProps = {
     maxWidth?: number;
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     formControl: (props: StyleProps) => {
         let styles = {};
         if (props.minWidth) {

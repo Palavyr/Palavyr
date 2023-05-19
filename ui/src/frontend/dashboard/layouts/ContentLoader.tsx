@@ -12,7 +12,8 @@ interface IContentLoader {
     children: React.ReactNode;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     toolbar: {
         display: "flex",
         alignItems: "center",

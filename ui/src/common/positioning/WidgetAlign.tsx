@@ -16,7 +16,7 @@ export type StyleProps = {
     verticalCenter?: boolean;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     align: (props: StyleProps) => {
         let styles = {};
         styles = {

@@ -12,7 +12,7 @@ import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { PurchaseTypes } from "@common/types/api/Enums";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     body: {
         display: "flex",
         justifyContent: "space-evenly",

@@ -11,7 +11,8 @@ interface IOptionSelector {
     disabled: boolean;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     optionsContainer: {
         position: "fixed",
         display: "flex",

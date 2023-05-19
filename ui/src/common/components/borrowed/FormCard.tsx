@@ -8,7 +8,8 @@ export interface IFormDialog {
     actions: React.ReactElement;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     dialogPaper: {
         display: "flex",
         flexDirection: "column",

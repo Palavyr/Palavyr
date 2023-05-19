@@ -2,18 +2,17 @@ const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-const ManifestPlugin = require("webpack-manifest-plugin");
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
-const { TypeScriptLoaderRule, BabelLoaderRule, StylesLoader, URLLoaderRule, SVGRLoader, ScssLoaderRule, WidgetSassRule } = require("./webpack/rules-frontend");
+const { TypeScriptLoaderRule, BabelLoaderRule, StylesLoader, URLLoaderRule, SVGRLoader, ScssLoaderRule } = require("./webpack/rules-frontend");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = ENV => {
-    const envPath = ENV.production ? ".env.frontend.production" : ".env.frontend.development";
-    console.log("Building in.... " + envPath);
-    const title = ENV.production ? "Palavyr Prod" : "Palavyr Dev";
 
+    const envPath = ENV === "production" ? ".env.frontend.production" : ".env.frontend.development";
+    console.log("Building in.... " + envPath);
     return {
         entry: {
             "palavyr-build": "./src/frontend/index.tsx",
@@ -22,7 +21,7 @@ module.exports = ENV => {
             new MiniCssExtractPlugin(),
             new Dotenv({ path: envPath }),
             new CleanWebpackPlugin(), //for < v2 versions of CleanWebpackPlugin
-            new ManifestPlugin({
+            new WebpackManifestPlugin({
                 fileName: "manifest.json",
             }),
             new HtmlWebpackPlugin({

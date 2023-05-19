@@ -1,7 +1,8 @@
 import { makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     primaryText: {
         color: theme.palette.success.main,
     },

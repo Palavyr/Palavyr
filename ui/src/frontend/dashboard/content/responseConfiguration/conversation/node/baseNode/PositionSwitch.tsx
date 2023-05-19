@@ -142,7 +142,8 @@ export const PositionSwitcher = ({ currentNode }: IPositionSwitcherProps) => {
     );
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     arrows: {
         display: "flex",
         justifyContent: "space-between",

@@ -20,7 +20,7 @@ export type StyleProps = {
     orientation?: "row" | "column";
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     align: (props: StyleProps) => {
         let styles = {};
         styles = {

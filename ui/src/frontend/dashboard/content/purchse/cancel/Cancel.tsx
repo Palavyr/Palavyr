@@ -3,7 +3,8 @@ import { makeStyles } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     outer: {
         margin: "3rem",
         padding: "3rem",

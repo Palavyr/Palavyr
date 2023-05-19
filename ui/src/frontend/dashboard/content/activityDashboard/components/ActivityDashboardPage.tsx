@@ -40,7 +40,7 @@ function a11yProps(index: any) {
     };
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     root: {
         width: "100%",
         height: "50%",

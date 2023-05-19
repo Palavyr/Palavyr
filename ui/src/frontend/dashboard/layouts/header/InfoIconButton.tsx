@@ -5,7 +5,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import { routesToExclude } from "./DashboardHeader";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
-const useStyle = makeStyles(theme => ({
+const useStyle = makeStyles<{}>((theme: any) => ({
     icon: {
         "&:hover": {
             backgroundColor: theme.palette.primary.light,

@@ -6,29 +6,42 @@ Write-Host "PALAVYR DEVELOPMENT ENVIRONMENT SETUP SCRIPT" -ForegroundColor DarkY
 Write-Host ""
 
 try {
-    Get-Module -name AWSPowerShell.NetCore -Confirm A -Force -PassThru
+    Import-Module AWSPowerShell.NetCore
 }
 catch {
-    Write-Host "AWSPowerShell.NetCore is already installed (⊙o⊙)"
-} finally {
+    Write-Error "AWSPowerShell.NetCore is not installed (⊙o⊙)"
+    Install-Module -Name AWSPowerShell.NetCore
+}
+finally {
     try {
         Import-Module AWSPowerShell.NetCore
-    } catch {
-        # do nothing
+    }
+    catch {
+        Write-Error "Failed to import AwsPowershell.NetCore, even after installing it"
+        exit 1
     }
 }
 
 try {
-    $awsCreds = Get-AWSCredential -ProfileName "palavyr_ecr";
-} catch {
-    $r = $_.Exception
-    Write-Error $r;
+    pip --version
+}
+catch {
+    Write-Error "You need to install python for this script to work"
     exit 1
 }
 
-if ($env:ECR_REGISTRY -eq "") {
-    Write-Error "You need to set '$ env: ECR_REGISTRY' "
-    exit 1
+$awslocalFound = 0
+try {
+    awslocal --version
+    $awslocalFound = 1
+}
+catch {
+    pip install awscli-local
+}
+finally {
+    if ($awslocalFound -eq 0) {
+        awslocal --version
+    }
 }
 
 if ($null -eq $awsCreds) {
@@ -39,7 +52,8 @@ if ($null -eq $awsCreds) {
 try {
     $processes = Get-Process "*docker desktop*"
     if ($processes.Count -eq 0) {
-        Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe" -NoNewWindow -WindowStyle Hidden
+        Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe" -NoNewWindow
+
     }
 }
 catch {
@@ -52,13 +66,11 @@ try {
     Write-Host "Found $(aws --version)"
 }
 catch {
-    # https://docs.aws.amazon.com/cli/latest/userguide/awscli-install-windows.html
-    $dlurl = "https://s3.amazonaws.com/aws-cli/AWSCLI64PY3.msi"
-    $installerPath = Join-Path $env:TEMP (Split-Path $dlurl -Leaf)
-    $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest $dlurl -OutFile $installerPath
-    Start-Process -FilePath msiexec -Args "/i $installerPath /passive" -Verb RunAs -Wait
-    Remove-Item $installerPath
+
+    Invoke-WebRequest -Uri https://awscli.amazonaws.com/AWSCLIV2.msi -OutFile awscliv2.msi
+    Start-Process msiexec.exe -Wait -ArgumentList '/I awscliv2.msi'
+    Remove-Item -Force awscliv2.msi
+
     $env:Path += ";C:\Program Files\Amazon\AWSCLI\bin"
 }
 
@@ -73,13 +85,6 @@ if ($showEnv -eq $true) {
         Set-Content env:\$name $value
     }
 }
-
-Write-Host ""
-Write-Host "Grabbing your AWS Elastic Container Registry credentials... if this fails, you'll need to request aws credentials to access ECR" -ForegroundColor DarkYellow
-Write-Host ""
-aws ecr get-login-password --region "us-east-1" --profile "palavyr_ecr" | docker login --username AWS --password-stdin $env:ECR_REGISTRY
-Write-Host ""
-
 
 Write-Host "Composing your docker environment..." -ForegroundColor DarkYellow
 docker compose down
@@ -138,12 +143,12 @@ Write-Host "########### Listing profile ###########" -ForegroundColor DarkYellow
 aws configure list --profile=localstack  --endpoint-url=http://localhost:4566
 
 Write-Host "Creating local stack resources and email identities" -ForegroundColor DarkYellow
-aws --endpoint-url=http://localhost:4566 s3 mb s3://palavyr-user-data-development
-aws ses verify-email-identity --endpoint-url=http://localhost:4566 --email-address palavyr@gmail.com
-aws ses verify-email-identity --endpoint-url=http://localhost:4566 --email-address admin@palavyr.com
+awslocal --endpoint-url=http://localhost:4566 s3 mb s3://palavyr-user-data-development
+awslocal ses verify-email-identity --endpoint-url=http://localhost:4566 --email-address palavyr@gmail.com
+awslocal ses verify-email-identity --endpoint-url=http://localhost:4566 --email-address admin@palavyr.com
 
 Write-Host "Listing Current identities for debug"
-aws ses list-identities --endpoint-url=http://localhost:4566
+awslocal ses list-identities --endpoint-url=http://localhost:4566
 Start-Sleep -Second 2
 
 Write-Host "Preparing request for dev account creation..." -ForegroundColor DarkYellow
@@ -159,7 +164,7 @@ Write-Host $response -ForegroundColor Gray
 
 $token = $null;
 try {
-    # If this does not work, then
+    # If this does not work, then problem
     $sesResultsUri = "http://localhost:4566/_localstack/ses/"
     $response = Invoke-WebRequest -Method GET -Uri $sesResultsUri
     Write-Host "Retrieving the registration email from localstack..." -ForegroundColor DarkYellow
@@ -180,9 +185,7 @@ docker stop Database-Migrator
 
 Write-Host "You're good to go start the app now!" -ForegroundColor DarkYellow
 Write-Host ""
-if ($null -eq $token)
-{
+if ($null -eq $token) {
     Write-Host "If the dev account request succeeded, use the auth token to activate your dev account. TODO: Make the account full access" -ForegroundColor DarkYellow
     Write-Host "If the dev account request failed, you'll to manually retrieve the ses email record from local stack. Check this script for details." -ForegroundColor DarkYellow
 }
-

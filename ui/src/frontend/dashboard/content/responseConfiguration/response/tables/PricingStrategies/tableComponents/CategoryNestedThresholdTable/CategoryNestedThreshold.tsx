@@ -13,7 +13,8 @@ import { PricingStrategyHeader } from "../../PricingStrategyTableHeader";
 import { cloneDeep } from "lodash";
 import { useIsMounted } from "@common/hooks/useIsMounted";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     root: {
         borderTop: "3px solid red",
     },

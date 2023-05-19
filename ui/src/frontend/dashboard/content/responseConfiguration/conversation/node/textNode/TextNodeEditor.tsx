@@ -19,7 +19,7 @@ export interface TextNodeEditorProps {
     isAnabranchLocked: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     editor: {
         minHeight: "250px",
         margin: "1rem",

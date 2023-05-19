@@ -5,7 +5,7 @@ import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
 import { TodoCard } from "./TodoCard";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     list: {
         textAlign: "left",
     },

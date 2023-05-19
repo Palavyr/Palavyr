@@ -9,7 +9,7 @@ import { HeaderStrip } from "@common/components/HeaderStrip";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles<{}>((theme: any) =>
     createStyles({
         root: {
             display: "flex",

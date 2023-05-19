@@ -6,7 +6,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import { Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles<{}>((theme: any) =>
     createStyles({
         text: {
             color: theme.palette.common.white

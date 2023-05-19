@@ -43,7 +43,7 @@ export class PalavyrRepository extends ApiRoutes {
         super();
         this.client = new AxiosClient(apiErrors, loaders, undefined, getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
     }
-
+ 
     public AuthenticationCheck = {
         check: async () => {
             let result: boolean;

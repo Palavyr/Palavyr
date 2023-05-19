@@ -1,14 +1,15 @@
 import { makeStyles, TextField } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
-import CurrencyFormat, { NumberFormatProps, NumberFormatValues } from "react-number-format";
+import { NumericFormat, NumericFormatProps, NumberFormatValues } from "react-number-format";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     styles: {
         padding: "40px",
     },
 }));
-export interface CurrencyTextFieldProps extends NumberFormatProps {
+
+export interface CurrencyTextFieldProps extends NumericFormatProps {
     label: string;
     currencySymbol: string;
     value?: number | string;
@@ -37,7 +38,7 @@ export const CurrencyTextField = ({
 }: CurrencyTextFieldProps) => {
     const cls = useStyles();
     return (
-        <CurrencyFormat
+        <NumericFormat
             fixedDecimalScale={true}
             className={classNames(className, cls.styles)}
             min={minimumValue}
@@ -49,10 +50,11 @@ export const CurrencyTextField = ({
             prefix={currencySymbol}
             allowLeadingZeros={false}
             allowNegative={false}
-            allowEmptyFormatting={false}
-            customInput={TextField}
+            // allowedDecimalSeparators={true}
+            // allowEmptyFormatting={false}
+            // customInput={TextField}
             decimalScale={2}
-            isNumericString={true}
+            // isNumericString={true}
             onValueChange={onValueChange}
             {...rest}
         />

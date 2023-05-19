@@ -7,7 +7,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { cloneDeep } from "lodash";
 import { SetState } from "@Palavyr-Types";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles<{}>(() => ({
     editorContainer: {
         width: "100%",
         zIndex: 99999,

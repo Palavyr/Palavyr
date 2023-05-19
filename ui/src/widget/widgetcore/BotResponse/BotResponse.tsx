@@ -4,12 +4,12 @@ import { makeStyles, Table, TableBody, TableRow } from "@material-ui/core";
 import classNames from "classnames";
 import { HtmlTextMessage } from "@widgetcore/BotResponse/HtmlTextMessage";
 import { SingleRowSingleCell } from "@widgetcore/BotResponse/TableCell";
-import Fade from "react-reveal/Fade";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     textField: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,
     }),
@@ -89,9 +89,7 @@ export const BotResponse = ({ message, input, button, buttons, pdfLink = null }:
                     <>
                         {message && (
                             <SingleRowSingleCell>
-                                <Fade left>
-                                    <HtmlTextMessage message={message} className={cls.textField} />
-                                </Fade>
+                                <HtmlTextMessage message={message} className={cls.textField} />
                             </SingleRowSingleCell>
                         )}
                         {pdfLink && (
@@ -103,13 +101,11 @@ export const BotResponse = ({ message, input, button, buttons, pdfLink = null }:
                                 </PalavyrText>
                             </div>
                         )}
-                        <Fade right>
-                            <TableRow className={classNames("rcw-timestamp", cls.timeStamp)}>{format(new Date(), "hh:mm")}</TableRow>
-                        </Fade>
+                        <TableRow className={classNames("rcw-timestamp", cls.timeStamp)}>{format(new Date(), "hh:mm")}</TableRow>
                     </>
                     {input && (
                         <SingleRowSingleCell>
-                            <Fade bottom>{input}</Fade>
+                            {input}
                         </SingleRowSingleCell>
                     )}
                     {button && (
@@ -118,11 +114,9 @@ export const BotResponse = ({ message, input, button, buttons, pdfLink = null }:
                         </SingleRowSingleCell>
                     )}
                     {buttons && (
-                        <Fade bottom>
-                            <div className={classNames(cls.marginTop)} style={{ marginRight: "0.3rem", width: "100%" }}>
-                                <div style={{ flexWrap: "wrap", display: "flex", flexDirection: "row", width: "100%", justifyContent: "evenly" }}>{buttons}</div>
-                            </div>
-                        </Fade>
+                        <div className={classNames(cls.marginTop)} style={{ marginRight: "0.3rem", width: "100%" }}>
+                            <div style={{ flexWrap: "wrap", display: "flex", flexDirection: "row", width: "100%", justifyContent: "evenly" }}>{buttons}</div>
+                        </div>
                     )}
                 </TableBody>
             </Table>

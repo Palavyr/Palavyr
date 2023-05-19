@@ -2,7 +2,7 @@ import * as React from "react";
 import { Paper, Grid, TextField, makeStyles, Typography, CircularProgress } from "@material-ui/core";
 import { useState } from "react";
 import { SinglePurposeButton } from "./SinglePurposeButton";
-import NumberFormat from "react-number-format";
+import { PatternFormat } from "react-number-format";
 import { PalavyrSnackbar } from "./PalavyrSnackbar";
 import classNames from "classnames";
 
@@ -22,7 +22,8 @@ export interface ISettingsGridRow {
     loading?: boolean;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     row: {
         paddingTop: "1rem",
         paddingBottom: "1rem",
@@ -108,11 +109,11 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
                             )}
                             {inputType === "number" && null}
                             {inputType === "phone" && (
-                                <NumberFormat
+                                <PatternFormat
                                     format={locale === "en-AU" ? "+61 (##) ####-####" : "+1 (###) ###-####"}
                                     mask="_"
                                     type="tel"
-                                    onValueChange={values => setInputVal(values.formattedValue)}
+                                    onValueChange={(values: { formattedValue: React.SetStateAction<string | undefined>; }) => setInputVal(values.formattedValue)}
                                     className={cls.phone}
                                 />
                             )}

@@ -61,7 +61,8 @@ export const UploadOrSelectFromExisting = ({
     );
 };
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     imageBlock: {
         padding: "1rem",
         marginBottom: "0.5rem",

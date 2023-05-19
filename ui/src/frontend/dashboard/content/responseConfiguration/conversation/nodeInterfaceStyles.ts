@@ -10,7 +10,7 @@ type StyleProps = {
     isFileAssetNode?: boolean;
 };
 
-export const useNodeInterfaceStyles = makeStyles(theme => ({
+export const useNodeInterfaceStyles = makeStyles<{}>((theme: any) => ({
     root: (props: StyleProps) => ({
         minWidth: "275px",
         maxWidth: props.debugOn ? "600px" : "250px",

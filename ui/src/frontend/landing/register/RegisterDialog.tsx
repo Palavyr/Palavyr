@@ -7,7 +7,8 @@ import { useHistory } from "react-router-dom";
 import { ACCOUNT_ALREADY_EXISTS, ACCOUNT_ALREADY_EXISTS_MESSAGE, INVALID_EMAIL, PASSWORDS_DONT_MATCH } from "@constants";
 import Auth from "@auth/Auth";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     link: {
         transition: theme.transitions.create(["background-color"], {
             duration: theme.transitions.duration.complex,

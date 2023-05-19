@@ -3,7 +3,7 @@ import { Divider, makeStyles, Typography } from "@material-ui/core";
 import classNames from "classnames";
 import { DividerWithText } from "@common/components/DividerWithText";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     title: {
         paddingTop: "1rem",
         paddingBottom: "1rem",

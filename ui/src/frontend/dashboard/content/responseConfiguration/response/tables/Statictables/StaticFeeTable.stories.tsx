@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import { StaticFeeTable, IStaticFeeTable } from "./StaticFeeTable";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { MockStaticTablesMetas, MockStaticTablesMeta } from "frontend/test/dummyNodeData/dummyTables";

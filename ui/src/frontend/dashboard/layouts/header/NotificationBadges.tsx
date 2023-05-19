@@ -3,7 +3,8 @@ import { IconButton, makeStyles, Badge, Tooltip } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     icon: {
         "&:hover": {
             backgroundColor: theme.palette.primary.light,

@@ -8,7 +8,7 @@ import { renderNextBotMessage } from "@widgetcore/BotResponse/utils/renderBotMes
 import "@widgetcore/widget/widget.module.scss";
 import { IAppContext } from "widget/hook";
 
-export const useWidgetStyles = makeStyles(theme => ({
+export const useWidgetStyles = makeStyles<{}>(theme => ({
     pwbox: {
         display: "flex",
         flexFlow: "column",
@@ -29,7 +29,6 @@ export const useWidgetStyles = makeStyles(theme => ({
         display: "flex",
         flex: "0 1 30px",
         flexFlow: "row",
-        // justifyContent: "space-between",
     },
 }));
 

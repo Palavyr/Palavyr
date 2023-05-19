@@ -9,7 +9,8 @@ export interface DesignHeadersProps {
     setWidgetPreferences: SetState<WidgetPreferencesResource>;
 }
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     wrapper: {
         marginTop: "2rem",
         marginBottom: "2rem",

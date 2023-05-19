@@ -1,6 +1,6 @@
 const path = require("path");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-const ManifestPlugin = require("webpack-manifest-plugin");
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -10,8 +10,10 @@ const autoprefixer = require("autoprefixer");
 
 const webpack = require("webpack");
 
-module.exports = envPath => {
-    console.log("Building in: " + envPath);
+module.exports = env => {
+    const envPath = env === "production" ? ".env.frontend.production" : ".env.frontend.development";
+
+    console.log("Building in: " + env);
     return {
         plugins: [
             new Dotenv({ path: envPath }),
@@ -25,7 +27,7 @@ module.exports = envPath => {
             new webpack.ProvidePlugin({
                 React: "react",
             }),
-            new ManifestPlugin({
+            new WebpackManifestPlugin({
                 fileName: "manifest.json",
             }),
             new CleanWebpackPlugin(),

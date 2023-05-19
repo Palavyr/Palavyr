@@ -13,7 +13,8 @@ import { InitializeFonts } from "./fonts/Initializer";
 
 const drawerWidth = 440;
 
-const useStyles = makeStyles(theme => ({
+import { Theme } from "@material-ui/core";
+const useStyles = makeStyles<{}>((theme: any) => ({
     paper: {
         padding: theme.spacing(5),
         marginTop: theme.spacing(3),

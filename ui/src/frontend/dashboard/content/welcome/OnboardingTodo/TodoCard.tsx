@@ -7,7 +7,7 @@ export interface TodoCardProps {
     text: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<{}>((theme: any) => ({
     card: {
         backgroundColor: theme.palette.warning.main,
         padding: "1.2rem",
