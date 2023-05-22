@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  stripe:
+  palavyr-stripe:
     container_name: Palavyr-Mock-Stripe
     image: stripe/stripe-mock:latest
     ports:
@@ -10,7 +10,7 @@ services:
     env_file:
       - ./local.env
 
-  stripe-cli:
+  palavyr-stripe-cli:
     image: stripe/stripe-cli
     container_name: Palavyr-Stripe-CLI
     command: "listen --api-key sk_test_DOESNOTEXIST --device-name Palavyr --forward-to https://localhost:5001/api/payments/payments-webhook --forward-connect-to http://localhost:12111 --skip-verify"

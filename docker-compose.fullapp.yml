@@ -2,7 +2,7 @@ version: "3.9"
 
 # a full working local app
 services:
-  stripe:
+  palavyr-stripe:
     container_name: Palavyr-Mock-Stripe
     image: stripe/stripe-mock:latest
     ports:
@@ -15,7 +15,7 @@ services:
       - Palavyr_DB__Host=http://host.docker.internal
       - Palavyr_AWS__PdfUrl=http://host.docker.internal:5603/pdf
 
-  stripe-cli:
+  palavyr-stripe-cli:
     image: stripe/stripe-cli
     container_name: palavyr-stripe-cli
     command: "listen --device-name Palavyr --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
@@ -77,7 +77,7 @@ services:
     ports:
       - 3400:8080
 
-  local-stack:
+  palavyr-local-stack:
     image: localstack/localstack
     container_name: Aws-Localstack
     hostname: localstack

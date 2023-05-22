@@ -1,17 +1,17 @@
 version: "3.9"
 # use in github action
 services:
-  stripe:
+  palavyr-stripe:
     image: stripe/stripe-mock:latest
     ports:
       - '12111-12112:12111-12112'
 
-  stripe-cli:
+  palavyr-stripe-cli:
     image: stripe/stripe-cli
     container_name: stripe-cli
     command: "listen --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify --device-name Palavyr"
 
-  postgres-server:
+  palavyr-postgres-server:
     image: postgres:14.1-alpine
     restart: always
     environment:
@@ -20,7 +20,7 @@ services:
     ports:
       - 5432:5432
 
-  local-stack:
+  palavyr-local-stack:
     image: localstack/localstack
     container_name: Aws-Localstack
     hostname: localstack
