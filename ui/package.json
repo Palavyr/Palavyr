@@ -78,7 +78,7 @@
     "react-stripe-checkout": "^2.6.3",
     "reactour": "^1.19.0",
     "seedrandom": "^3.0.5",
-    "uuidv4": "^6.2.13"
+    "uuid": "^9.0.0"
   },
   "browserslist": {
     "production": [

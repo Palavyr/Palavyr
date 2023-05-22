@@ -1,7 +1,7 @@
 import { cloneDeep, findIndex, groupBy, max, uniq } from "lodash";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { Modifier, SetState, TableGroup } from "@Palavyr-Types";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from 'uuid';
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { TableData, TwoNestedCategoryResource } from "@common/types/api/EntityResources";
 
