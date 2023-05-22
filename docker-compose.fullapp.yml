@@ -3,7 +3,7 @@ version: "3.9"
 # a full working local app
 services:
   stripe:
-    container_name: Mock-Stripe
+    container_name: Palavyr-Mock-Stripe
     image: stripe/stripe-mock:latest
     ports:
       - 12111-12112
@@ -17,7 +17,7 @@ services:
 
   stripe-cli:
     image: stripe/stripe-cli
-    container_name: Stripe-CLI
+    container_name: palavyr-stripe-cli
     command: "listen --device-name Palavyr --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify"
     env_file:
       - ./local.env
@@ -30,9 +30,9 @@ services:
       stripe:
         condition: service_completed_successfully
 
-  postgres-server:
+  palavyr-postgres-server:
     image: postgres:14.1-alpine
-    container_name: Database
+    container_name: Palavyr-Database
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -49,10 +49,15 @@ services:
     ports:
       - 5000:5000
     environment:
+      - Palavyr_Environment=Development
       - Palavyr_AWS__AwsS3ServiceUrl=http://host.docker.internal:4566
       - Palavyr_AWS__AwsSESServiceUrl=http://host.docker.internal:4566
-      - Palavyr_DB__Host=http://host.docker.internal
-      - Palavyr_AWS__PdfUrl=http://host.docker.internal:5603/pdf
+      - Palavyr_AWS__PdfUrl=host.docker.internal
+      - Palavyr_DB__Host=palavyr-postgres-server
+      - Palavyr_DB__Port=5432
+      - Palavyr_DB__DbName=AppDatabase
+      - Palavyr_DB__Username=postgres
+      - Palavyr_DB__Password=Password01!
 
   palavyr-web-frontend:
     image: paulegradie/palavyr:frontend-latest

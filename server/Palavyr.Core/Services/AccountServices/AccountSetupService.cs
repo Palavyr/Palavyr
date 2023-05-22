@@ -104,7 +104,7 @@ namespace Palavyr.Core.Services.AccountServices
         private async Task<bool> AccountExists(string emailAddress)
         {
             var account = await accountStore.RawReadonlyQuery().SingleOrDefaultAsync(s => emailAddress == s.EmailAddress);
-            return !(account is null);
+            return account is not null;
         }
     }
 }

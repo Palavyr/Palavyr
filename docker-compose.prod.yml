@@ -21,7 +21,7 @@ services:
 
   palavyr-data-migrator:
     image: paulegradie/palavyr:migrator-latest
-    container_name: Server
+    container_name: Data-Migrator
     env_file:
       - ./.env.production
     ports:
