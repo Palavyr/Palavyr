@@ -49,9 +49,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<StripeSubscriptionSetter>().As<IStripeSubscriptionSetter>();
 
             var apiBase =
-                runningEnvironment.IsDevelopment()
-                    ? "http://host.docker.internal:12111"
-                    : StripeClient.DefaultApiBase;
+                runningEnvironment.IsDevelopment() ? config.StripeApiBase : StripeClient.DefaultApiBase;
             var apiKey =
                 runningEnvironment.IsDevelopment()
                     ? "sk_test_123"

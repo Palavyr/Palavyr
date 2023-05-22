@@ -18,7 +18,7 @@
             public const string AccessKeySection = "AWS:AccessKey";
             public const string SecretKeySection = "AWS:SecretKey";
             public const string RegionSection = "AWS:Region";
-            
+
             public const string DbHost = "DB:Host";
             public const string DbPort = "DB:Port";
             public const string DbName = "DB:DbName";
@@ -30,6 +30,8 @@
             public const string JwtSecretKey = "JWT:SecretKey";
             public const string StripeKeySection = "STRIPE:SecretKey";
             public const string StripeWebhookKey = "STRIPE:WebhookKey";
+            public const string StripeApiBase = "STRIPE:StripeApiBase";
+
             public const string AwsS3ServiceUrl = "AWS:AwsS3ServiceUrl";
             public const string AwsSesServiceUrl = "AWS:AwsSESServiceUrl";
             public const string UserDataSection = "AWS:UserDataBucket";

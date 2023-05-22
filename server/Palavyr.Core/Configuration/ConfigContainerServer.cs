@@ -31,6 +31,7 @@ public class ConfigContainerServer
         Environment = configuration.GetCurrentEnvironment();
         JwtSecretKey = configuration.GetJwtKey();
         SeqUrl = configuration.GetSeqUrl();
+        StripeApiBase = configuration.GetStripeApiBase();
     }
 
     public string SeqUrl { get; set; }
@@ -57,4 +58,6 @@ public class ConfigContainerServer
     public string StripeSecret { get; set; }
 
     public string StripeWebhookSecret { get; set; }
+
+    public string StripeApiBase { get; set; }
 }

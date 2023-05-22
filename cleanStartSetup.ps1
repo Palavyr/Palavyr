@@ -94,7 +94,6 @@ docker compose pull
 docker compose -f ./docker-compose.yml up -d --remove-orphans --force-recreate
 Write-Host ""
 
-
 Write-Host "Moving to the utilities directory" -ForegroundColor DarkYellow
 Set-Location ./server
 Write-Host ""
@@ -149,7 +148,7 @@ awslocal ses verify-email-identity --endpoint-url=http://localhost:4566 --email-
 
 Write-Host "Listing Current identities for debug"
 awslocal ses list-identities --endpoint-url=http://localhost:4566
-Start-Sleep -Second 2
+Start-Sleep -Second 5
 
 Write-Host "Preparing request for dev account creation..." -ForegroundColor DarkYellow
 $headers = @{
@@ -159,7 +158,14 @@ $headers = @{
 
 $body = @{EmailAddress = 'dev@palavyr.com'; Password = "123" } | ConvertTo-Json
 Write-Host "Attempting to create your dev account" -ForegroundColor DarkYellow
+
 $response = Invoke-WebRequest 'http://localhost:5000/api/account/create/default' -Method POST -Headers $headers -Body $body
+if ($response.StatusCode -eq 500)
+{
+    Write-Error "Failed to read the web server!"
+    Write-Error $response.Message
+    exit 1
+}
 Write-Host $response -ForegroundColor Gray
 
 $token = $null;
