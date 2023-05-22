@@ -5,7 +5,7 @@ import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField"
 import { UnitGroups, UnitPrettyNames } from "@Palavyr-Types";
 import { FormControl, FormHelperText, Input, InputAdornment, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from 'uuid';
 
 import { Theme } from "@material-ui/core";
 const useStyles = makeStyles<{}>((theme: any) => ({
