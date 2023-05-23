@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet(Route)]
-        public async Task<IEnumerable<ConversationDesignerNodeResource>> Get()
+        public async Task<IEnumerable<ConversationNodeResource>> Get()
         {
             var response = await mediator.Send(new GetIntroductionSequenceRequest());
             return response.Response;

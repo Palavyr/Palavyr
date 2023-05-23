@@ -11,7 +11,7 @@ namespace Palavyr.Core.Resources
         public string EmailTemplate { get; set; }
         public bool IsEnabled { get; set; }
         public List<StaticTableMetaResource> StaticTablesMetaResources { get; set; } = new List<StaticTableMetaResource>();
-        public List<ConversationDesignerNodeResource> ConversationNodeResources { get; set; } = new List<ConversationDesignerNodeResource>();
+        public List<ConversationNodeResource> ConversationNodeResources { get; set; } = new List<ConversationNodeResource>();
         public List<PricingStrategyTableMetaResource> PricingStrategyTableMetaResources { get; set; } = new List<PricingStrategyTableMetaResource>();
         public string IntentSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }

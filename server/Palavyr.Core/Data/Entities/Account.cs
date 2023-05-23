@@ -139,25 +139,8 @@ namespace Palavyr.Core.Data.Entities
                 PaymentIntervalEnum.Null,
                 false)
             {
-                StripeCustomerId = stripeCustomerId
+                StripeCustomerId = stripeCustomerId,
             };
-        }
-
-        public static Account CreateAccount(
-            string userName,
-            string emailAddress,
-            string password,
-            string accountId,
-            string apiKey,
-            string companyName,
-            string phoneNumber,
-            bool active,
-            string locale
-        )
-        {
-            return new Account(
-                emailAddress.ToLowerInvariant(), password, accountId, apiKey, companyName, phoneNumber,
-                active, "en-AU", PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
     }
 }

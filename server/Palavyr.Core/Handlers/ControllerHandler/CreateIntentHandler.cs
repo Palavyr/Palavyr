@@ -38,9 +38,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
             logger.LogInformation("Creating new intent for account: {Account} called {IntentName}", accountIdTransport.AccountId, request.IntentName);
             var newIntent = Intent.CreateNewIntent(request.IntentName, accountIdTransport.AccountId, defaultEmail, isVerified);
-            await intentStore.Create(newIntent);
+            if (request.IntentId is not null)
+            {
+                newIntent.UpdateIntentId(request.IntentId);
+            }
 
-            return new CreateIntentResponse();
+            await intentStore.Create(newIntent);
+            return new CreateIntentResponse(newIntent.IntentId);
         }
     }
 
@@ -48,12 +52,16 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         public const string Route = "intents/create";
         public string IntentName { get; set; }
+        public string? IntentId { get; set; }
     }
 
     public class CreateIntentResponse
     {
-        public CreateIntentResponse()
+        public string IntentId { get; }
+
+        public CreateIntentResponse(string intentId)
         {
+            IntentId = intentId;
         }
     }
 }

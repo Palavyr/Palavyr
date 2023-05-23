@@ -12,9 +12,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class ModifyConversationNodeTextHandler : IRequestHandler<ModifyConversationNodeTextRequest, ModifyConversationNodeTextResponse>
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper;
+        private readonly IMapToNew<ConversationNode, ConversationNodeResource> mapper;
 
-        public ModifyConversationNodeTextHandler(IEntityStore<ConversationNode> convoNodeStore, IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper)
+        public ModifyConversationNodeTextHandler(IEntityStore<ConversationNode> convoNodeStore, IMapToNew<ConversationNode, ConversationNodeResource> mapper)
         {
             this.convoNodeStore = convoNodeStore;
             this.mapper = mapper;
@@ -30,8 +30,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyConversationNodeTextResponse
     {
-        public ModifyConversationNodeTextResponse(ConversationDesignerNodeResource response) => Response = response;
-        public ConversationDesignerNodeResource Response { get; set; }
+        public ModifyConversationNodeTextResponse(ConversationNodeResource response) => Response = response;
+        public ConversationNodeResource Response { get; set; }
     }
 
     public class ModifyConversationNodeTextRequest : IRequest<ModifyConversationNodeTextResponse>

@@ -7,7 +7,7 @@ using Palavyr.Core.Stores.StoreExtensionMethods;
 
 namespace Palavyr.Core.Mappers
 {
-    public class ConversationNodeMapper : IMapToNew<ConversationDesignerNodeResource, ConversationNode>
+    public class ConversationNodeMapper : IMapToNew<ConversationNodeResource, ConversationNode>
     {
         private readonly IEntityStore<Account> accountStore;
 
@@ -16,7 +16,7 @@ namespace Palavyr.Core.Mappers
             this.accountStore = accountStore;
         }
 
-        public async Task<ConversationNode> Map(ConversationDesignerNodeResource from, CancellationToken cancellationToken = default)
+        public async Task<ConversationNode> Map(ConversationNodeResource from, CancellationToken cancellationToken = default)
         {
             var account = await accountStore.GetAccount();
 

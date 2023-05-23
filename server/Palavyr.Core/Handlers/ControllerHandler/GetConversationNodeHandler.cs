@@ -11,9 +11,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class GetConversationNodeHandler : IRequestHandler<GetConversationNodeRequest, GetConversationNodeResponse>
     {
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper;
+        private readonly IMapToNew<ConversationNode, ConversationNodeResource> mapper;
 
-        public GetConversationNodeHandler(IEntityStore<ConversationNode> convoNodeStore, IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper)
+        public GetConversationNodeHandler(IEntityStore<ConversationNode> convoNodeStore, IMapToNew<ConversationNode, ConversationNodeResource> mapper)
         {
             this.convoNodeStore = convoNodeStore;
             this.mapper = mapper;
@@ -31,8 +31,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetConversationNodeResponse
     {
-        public GetConversationNodeResponse(ConversationDesignerNodeResource response) => Response = response;
-        public ConversationDesignerNodeResource Response { get; set; }
+        public GetConversationNodeResponse(ConversationNodeResource response) => Response = response;
+        public ConversationNodeResource Response { get; set; }
     }
 
     public class GetConversationNodeRequest : IRequest<GetConversationNodeResponse>

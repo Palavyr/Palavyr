@@ -1,4 +1,5 @@
-param([bool]$showEnv = $false)
+param([switch]$showEnv = $false)
+param([switch]$local = $true)
 
 Clear-Host
 Write-Host ""
@@ -43,11 +44,6 @@ finally {
         awslocal --version
     }
 }
-
-# if ($null -eq $awsCreds) {
-#     Write-Error "Ensure you'set your .aws/credentials with a [palavyr_ecr] profile and an ./aws/config with region=us-east-1"
-#     exit 1
-# }
 
 try {
     $processes = Get-Process "*docker desktop*"
@@ -94,6 +90,14 @@ docker compose pull
 docker compose -f ./docker-compose.yml up -d --remove-orphans --force-recreate
 Write-Host ""
 
+Write-Host $local
+Read-Host
+if ($local -eq $true)
+{
+    Read-Host "Please stop your local running server (if its on)..."
+}
+
+
 Write-Host "Moving to the utilities directory" -ForegroundColor DarkYellow
 Set-Location ./server
 Write-Host ""
@@ -108,6 +112,29 @@ catch {
 }
 finally {
     Set-Location ..
+}
+
+
+Write-Host "Creating local stack configuration identity and secret" -ForegroundColor DarkYellow
+aws configure set aws_access_key_id default_access_key --profile=localstack --endpoint-url=http://localhost:4566
+aws configure set aws_secret_access_key default_secret_key --profile=localstack  --endpoint-url=http://localhost:4566
+aws configure set region us-east-1 --profile=localstack  --endpoint-url=http://localhost:4566
+
+Write-Host "########### Listing profile ###########" -ForegroundColor DarkYellow
+aws configure list --profile=localstack  --endpoint-url=http://localhost:4566
+
+Write-Host "Creating local stack resources and email identities" -ForegroundColor DarkYellow
+awslocal --endpoint-url=http://localhost:4566 s3 mb s3://palavyr-user-data-development
+awslocal ses verify-email-identity --endpoint-url=http://localhost:4566 --email-address palavyr@gmail.com
+awslocal ses verify-email-identity --endpoint-url=http://localhost:4566 --email-address admin@palavyr.com
+
+Write-Host "Listing Current identities for debug"
+awslocal ses list-identities --endpoint-url=http://localhost:4566
+Start-Sleep -Second 5
+
+if ($local -eq $true)
+{
+    Read-Host "Please start your local running server (if its off)..."
 }
 
 
@@ -132,23 +159,6 @@ do {
     Start-Sleep -Second 5
 
 } while ($ready -eq $false)
-
-Write-Host "Creating local stack configuration identity and secret" -ForegroundColor DarkYellow
-aws configure set aws_access_key_id default_access_key --profile=localstack --endpoint-url=http://localhost:4566
-aws configure set aws_secret_access_key default_secret_key --profile=localstack  --endpoint-url=http://localhost:4566
-aws configure set region us-east-1 --profile=localstack  --endpoint-url=http://localhost:4566
-
-Write-Host "########### Listing profile ###########" -ForegroundColor DarkYellow
-aws configure list --profile=localstack  --endpoint-url=http://localhost:4566
-
-Write-Host "Creating local stack resources and email identities" -ForegroundColor DarkYellow
-awslocal --endpoint-url=http://localhost:4566 s3 mb s3://palavyr-user-data-development
-awslocal ses verify-email-identity --endpoint-url=http://localhost:4566 --email-address palavyr@gmail.com
-awslocal ses verify-email-identity --endpoint-url=http://localhost:4566 --email-address admin@palavyr.com
-
-Write-Host "Listing Current identities for debug"
-awslocal ses list-identities --endpoint-url=http://localhost:4566
-Start-Sleep -Second 5
 
 Write-Host "Preparing request for dev account creation..." -ForegroundColor DarkYellow
 $headers = @{

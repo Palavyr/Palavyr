@@ -14,9 +14,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class ModifyConversationNodeHandler : IRequestHandler<ModifyConversationNodeRequest, ModifyConversationNodeResponse>
     {
         private readonly IEntityStore<Intent> intentStore;
-        private readonly IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper;
+        private readonly IMapToNew<ConversationNode, ConversationNodeResource> mapper;
 
-        public ModifyConversationNodeHandler(IEntityStore<Intent> intentStore, IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper)
+        public ModifyConversationNodeHandler(IEntityStore<Intent> intentStore, IMapToNew<ConversationNode, ConversationNodeResource> mapper)
         {
             this.intentStore = intentStore;
             this.mapper = mapper;
@@ -56,13 +56,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyConversationNodeResponse
     {
-        public ModifyConversationNodeResponse(IEnumerable<ConversationDesignerNodeResource> response) => Response = response;
-        public IEnumerable<ConversationDesignerNodeResource> Response { get; set; }
+        public ModifyConversationNodeResponse(IEnumerable<ConversationNodeResource> response) => Response = response;
+        public IEnumerable<ConversationNodeResource> Response { get; set; }
     }
 
     public class ModifyConversationNodeRequest : IRequest<ModifyConversationNodeResponse>
     {
-        public ModifyConversationNodeRequest(string nodeId, string intentId, ConversationDesignerNodeResource nodeUpdate)
+        public ModifyConversationNodeRequest(string nodeId, string intentId, ConversationNodeResource nodeUpdate)
         {
             NodeId = nodeId;
             IntentId = intentId;
@@ -71,6 +71,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
         public string NodeId { get; set; }
         public string IntentId { get; set; }
-        public ConversationDesignerNodeResource NodeUpdate { get; set; }
+        public ConversationNodeResource NodeUpdate { get; set; }
     }
 }

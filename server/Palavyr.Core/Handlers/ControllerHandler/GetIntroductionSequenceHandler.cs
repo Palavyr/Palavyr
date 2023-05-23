@@ -17,9 +17,9 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     {
         private readonly IEntityStore<Account> accountStore;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
-        private readonly IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper;
+        private readonly IMapToNew<ConversationNode, ConversationNodeResource> mapper;
 
-        public GetIntroductionSequenceHandler(IEntityStore<Account> accountStore, IEntityStore<ConversationNode> convoNodeStore, IMapToNew<ConversationNode, ConversationDesignerNodeResource> mapper)
+        public GetIntroductionSequenceHandler(IEntityStore<Account> accountStore, IEntityStore<ConversationNode> convoNodeStore, IMapToNew<ConversationNode, ConversationNodeResource> mapper)
         {
             this.accountStore = accountStore;
             this.convoNodeStore = convoNodeStore;
@@ -41,8 +41,8 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class GetIntroductionSequenceResponse
     {
-        public GetIntroductionSequenceResponse(IEnumerable<ConversationDesignerNodeResource> response) => Response = response;
-        public IEnumerable<ConversationDesignerNodeResource> Response { get; set; }
+        public GetIntroductionSequenceResponse(IEnumerable<ConversationNodeResource> response) => Response = response;
+        public IEnumerable<ConversationNodeResource> Response { get; set; }
     }
 
     public class GetIntroductionSequenceRequest : IRequest<GetIntroductionSequenceResponse>
