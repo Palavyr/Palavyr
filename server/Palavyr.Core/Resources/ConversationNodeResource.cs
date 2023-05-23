@@ -2,9 +2,9 @@
 
 namespace Palavyr.Core.Resources
 {
-    public class ConversationDesignerNodeResource : NullableEntityResource
+    public class ConversationNodeResource : NullableEntityResource
     {
-        public ConversationDesignerNodeResource()
+        public ConversationNodeResource()
         {
         }
 

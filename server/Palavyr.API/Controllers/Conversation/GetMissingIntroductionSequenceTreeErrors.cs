@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.Conversation
         }
 
         [HttpPost(Route)]
-        public async Task<TreeErrorsResource> GetIntro(
+        public async Task<TreeErrorsResource> GetIntroErrors(
             [FromBody]
             GetMissingIntroductionSequenceTreeErrorsRequest request,
             CancellationToken cancellationToken)

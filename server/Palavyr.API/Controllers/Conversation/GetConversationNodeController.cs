@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Conversation
         }
 
         [HttpGet(Route)]
-        public async Task<ConversationDesignerNodeResource> Get([FromRoute] string nodeId, CancellationToken cancellationToken)
+        public async Task<ConversationNodeResource> Get([FromRoute] string nodeId, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetConversationNodeRequest(nodeId), cancellationToken);
             return response.Response;

@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.Conversation
         }
 
         [HttpPut(Route)]
-        public async Task<ConversationDesignerNodeResource> Modify(
+        public async Task<ConversationNodeResource> Modify(
             [FromBody]
             ModifyConversationNodeTextRequest request,
             CancellationToken cancellationToken)

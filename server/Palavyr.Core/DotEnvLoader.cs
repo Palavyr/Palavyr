@@ -12,15 +12,15 @@ namespace Palavyr.Core
 
             foreach (var line in File.ReadAllLines(filePath))
             {
-                Console.WriteLine(line);
+                // Console.WriteLine(line);
                 var parts = line.Split(new[] { '=' }, 2, StringSplitOptions.RemoveEmptyEntries);
                 try
                 {
-                    Console.WriteLine($"{parts[0]} + {parts[1]}");
+                    // Console.WriteLine($"{parts[0]} + {parts[1]}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(string.Join("-- ERROR --", parts));
+                    // Console.WriteLine(string.Join("-- ERROR --", parts));
                 }
                 if (parts.Length != 2)
                     continue;

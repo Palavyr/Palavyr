@@ -23,13 +23,13 @@ namespace Palavyr.API.Controllers.Conversation
         }
 
         [HttpPut(Route)]
-        public async Task<IEnumerable<ConversationDesignerNodeResource>> Modify(
+        public async Task<IEnumerable<ConversationNodeResource>> Modify(
             [FromRoute]
             string nodeId,
             [FromRoute]
             string intentId,
             [FromBody]
-            ConversationDesignerNodeResource newNode,
+            ConversationNodeResource newNode,
             CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new ModifyConversationNodeRequest(nodeId, intentId, newNode), cancellationToken);

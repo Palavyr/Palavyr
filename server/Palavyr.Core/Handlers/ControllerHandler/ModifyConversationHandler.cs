@@ -12,13 +12,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
     public class ModifyConversationHandler : IRequestHandler<ModifyConversationRequest, ModifyConversationResponse>
     {
         private readonly IConversationNodeUpdater conversationNodeUpdater;
-        private readonly IMapToNew<ConversationNode, ConversationDesignerNodeResource> resourceMapper;
-        private readonly IMapToNew<ConversationDesignerNodeResource, ConversationNode> modelMapper;
+        private readonly IMapToNew<ConversationNode, ConversationNodeResource> resourceMapper;
+        private readonly IMapToNew<ConversationNodeResource, ConversationNode> modelMapper;
 
         public ModifyConversationHandler(
             IConversationNodeUpdater conversationNodeUpdater,
-            IMapToNew<ConversationDesignerNodeResource, ConversationNode> modelMapper,
-            IMapToNew<ConversationNode, ConversationDesignerNodeResource> resourceMapper // TODO: This should be a IMapToExisting
+            IMapToNew<ConversationNodeResource, ConversationNode> modelMapper,
+            IMapToNew<ConversationNode, ConversationNodeResource> resourceMapper // TODO: This should be a IMapToExisting
         )
         {
             this.conversationNodeUpdater = conversationNodeUpdater;
@@ -39,13 +39,13 @@ namespace Palavyr.Core.Handlers.ControllerHandler
 
     public class ModifyConversationResponse
     {
-        public ModifyConversationResponse(IEnumerable<ConversationDesignerNodeResource> response) => Response = response;
-        public IEnumerable<ConversationDesignerNodeResource> Response { get; set; }
+        public ModifyConversationResponse(IEnumerable<ConversationNodeResource> response) => Response = response;
+        public IEnumerable<ConversationNodeResource> Response { get; set; }
     }
 
     public class ModifyConversationRequest : IRequest<ModifyConversationResponse>
     {
-        public IEnumerable<ConversationDesignerNodeResource> Transactions { get; set; }
+        public IEnumerable<ConversationNodeResource> Transactions { get; set; }
         public string IntentId { get; set; }
     }
 }

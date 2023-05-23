@@ -137,14 +137,7 @@ namespace Palavyr.Core.Models
 
             if (generalError.Reasons.Count > 0)
             {
-                if (introError.Reasons.Count > 0)
-                {
-                    errors.Insert(1, generalError);
-                }
-                else
-                {
-                    errors.Insert(0, generalError);
-                }
+                errors.Insert(introError.Reasons.Count > 0 ? 1 : 0, generalError);
             }
 
             logger.LogDebug("Pre-check Complete. Returning result");
@@ -160,11 +153,9 @@ namespace Palavyr.Core.Models
                 logger.LogDebug("WidgetState is true");
                 return PreCheckResultResource.CreateConvoResult(isReady, errors);
             }
-            else
-            {
-                logger.LogDebug("WidgetState is false");
-                return PreCheckResultResource.CreateConvoResult(false, errors);
-            }
+
+            logger.LogDebug("WidgetState is false");
+            return PreCheckResultResource.CreateConvoResult(false, errors);
         }
 
 
@@ -216,7 +207,7 @@ namespace Palavyr.Core.Models
             var count = 0;
             foreach (var imageNode in imageNodes)
             {
-                if (imageNode.FileId == null)
+                if (string.IsNullOrEmpty(imageNode.FileId))
                 {
                     count++;
                 }

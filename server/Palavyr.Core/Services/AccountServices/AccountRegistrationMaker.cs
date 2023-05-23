@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IEntityStore<Subscription> subscriptionStore;
         private readonly IEntityStore<WidgetPreference> widgetPreferenceStore;
         private readonly IMediator mediator;
+        private readonly IEntityStore<Account> accountStore;
         private readonly ILogger<AccountRegistrationMaker> logger;
         private readonly IEmailVerificationService emailVerificationService;
         private readonly IPalavyrAccessChecker accessChecker;
@@ -24,28 +26,30 @@ namespace Palavyr.Core.Services.AccountServices
             IPalavyrAccessChecker accessChecker,
             IEntityStore<Subscription> subscriptionStore,
             IEntityStore<WidgetPreference> widgetPreferenceStore,
-            IMediator mediator
-        )
+            IMediator mediator,
+            IEntityStore<Account> accountStore)
         {
             this.subscriptionStore = subscriptionStore;
             this.widgetPreferenceStore = widgetPreferenceStore;
             this.mediator = mediator;
+            this.accountStore = accountStore;
             this.logger = logger;
             this.emailVerificationService = emailVerificationService;
             this.accessChecker = accessChecker;
         }
 
-        public async Task<bool> TryRegisterAccountAndSendEmailVerificationToken(string accountId, string apiKey, string emailAddress, string introId, CancellationToken cancellationToken)
+        public async Task<bool> TryRegisterAccountAndSendEmailVerificationToken(string accountId, string apiKey, string emailAddress, string introId,
+            CancellationToken cancellationToken)
         {
             accessChecker.CheckAccountAccess(emailAddress);
 
             await CreateNewSubscription(accountId, apiKey);
             await InitializeWidgetPreferences(accountId);
 
+            await mediator.Send(new CreateIntentRequest { IntentName = "Introduction", IntentId = introId }, cancellationToken);
             await mediator.Send(new CreateIntentRequest { IntentName = "My Example Intent" }, cancellationToken);
 
-            var result = await emailVerificationService.SendConfirmationTokenEmail(emailAddress, cancellationToken);
-            return result;
+            return await emailVerificationService.SendConfirmationTokenEmail(emailAddress, cancellationToken);
         }
 
         private async Task InitializeWidgetPreferences(string accountId)

@@ -14,13 +14,13 @@ namespace Palavyr.Core.Models.Conversation
         private readonly IEntityStore<Intent> intentStore;
         private readonly IEntityStore<ConversationNode> convoNodeStore;
         private readonly IOrphanRemover orphanRemover;
-        private readonly IMapToNew<ConversationDesignerNodeResource, ConversationNode> mapper;
+        private readonly IMapToNew<ConversationNodeResource, ConversationNode> mapper;
 
         public ConversationUpdater(
             IEntityStore<Intent> intentStore,
             IEntityStore<ConversationNode> convoNodeStore,
             IOrphanRemover orphanRemover,
-            IMapToNew<ConversationDesignerNodeResource, ConversationNode> mapper) // TODO: This is not idea. We shouldn't be deleting the entire conversation - instead refactor to identify the same nodes and just update instead of delete and add.
+            IMapToNew<ConversationNodeResource, ConversationNode> mapper) // TODO: This is not idea. We shouldn't be deleting the entire conversation - instead refactor to identify the same nodes and just update instead of delete and add.
         {
             this.intentStore = intentStore;
             this.convoNodeStore = convoNodeStore;

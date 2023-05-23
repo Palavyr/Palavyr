@@ -85,11 +85,10 @@ namespace Palavyr.Core.Services.AccountServices
                 accountId,
                 apiKey
             );
-            logger.LogDebug("Adding new account via DEFAULT...");
             await accountStore.Create(account);
+            logger.LogDebug("Adding new account via DEFAULT...");
 
-            var introId = account.IntroIntentId;
-            var ok = await accountRegistrationMaker.TryRegisterAccountAndSendEmailVerificationToken(accountId, apiKey, emailAddress, introId, cancellationToken);
+            var ok = await accountRegistrationMaker.TryRegisterAccountAndSendEmailVerificationToken(accountId, apiKey, emailAddress, account.IntroIntentId, cancellationToken);
             logger.LogDebug("Send Email result was {Result}", (ok ? "OK" : " a FAIL"));
 
             if (!ok) return CredentialsResource.CreateUnauthenticatedResponse(EmailAddressNotFound);

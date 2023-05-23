@@ -35,6 +35,12 @@ namespace Palavyr.Core.Data.Entities
         {
         }
 
+        public Intent UpdateIntentId(string intentId)
+        {
+            IntentId = intentId;
+            return this;
+        }
+        
         public static Intent CreateNewIntent(string intentName, string accountId, string emailAddress, bool emailIsVerified)
         {
             var intentId = Guid.NewGuid().ToString();

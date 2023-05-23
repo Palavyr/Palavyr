@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpPost(Route)]
-        public async Task<IEnumerable<ConversationDesignerNodeResource>> Post(
+        public async Task<IEnumerable<ConversationNodeResource>> Post(
             [FromBody]
             ModifyIntroductionSequenceRequest request,
             CancellationToken cancellationToken)

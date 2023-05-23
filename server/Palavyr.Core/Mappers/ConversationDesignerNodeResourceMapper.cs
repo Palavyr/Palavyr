@@ -5,12 +5,12 @@ using Palavyr.Core.Resources;
 
 namespace Palavyr.Core.Mappers
 {
-    public class ConversationDesignerNodeResourceMapper : IMapToNew<ConversationNode, ConversationDesignerNodeResource>
+    public class ConversationDesignerNodeResourceMapper : IMapToNew<ConversationNode, ConversationNodeResource>
     {
-        public async Task<ConversationDesignerNodeResource> Map(ConversationNode @from, CancellationToken cancellationToken)
+        public async Task<ConversationNodeResource> Map(ConversationNode @from, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
-            return new ConversationDesignerNodeResource
+            return new ConversationNodeResource
             {
                 Id = @from.Id,
                 NodeId = @from.NodeId,
