@@ -54,7 +54,7 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
         ];
     };
 
-    const colors = ["#000000", "#264653", "#2A9D8F", "#E9C46A", "#F4A261", "#E9C46A", "#118AB2", "#83C5BE", "#FFE8D6", "#FFDDD2", "#E29578", "#006D77", "#FFFFFF", "#F1FAEE", "#EDF6F9", "#FDFFB6"];
+    const colors = ["#000000", "#264653", "#2A9D8F", "#E9C46A", "#F4A261", "#E9C46B", "#118AB2", "#83C5BE", "#FFE8D6", "#FFDDD2", "#E29578", "#006D77", "#FFFFFF", "#F1FAEE", "#EDF6F9", "#FDFFB6"];
     return (
         <>
             <div className={cls.gridList}>

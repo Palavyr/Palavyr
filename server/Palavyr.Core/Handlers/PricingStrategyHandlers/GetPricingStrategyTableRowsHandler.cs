@@ -30,7 +30,7 @@ namespace Palavyr.Core.Handlers.PricingStrategyHandlers
 
         public async Task<GetPricingStrategyTableRowsResponse<TR>> Handle(GetPricingStrategyTableRowsRequest<T, TR, TCompiler> request, CancellationToken cancellationToken)
         {
-            var data = await executor.GetTableRows(request.IntentId, request.TableId);
+            var data = await executor.GetOrCreateTableRows(request.IntentId, request.TableId);
             var mapped = await entityMapper.MapMany(data.TableRows, cancellationToken);
             var resource = new PricingStrategyTableDataResource<TR>(tableRows: mapped.ToList(), data.TableTag, isInUse: data.IsInUse);
             return new GetPricingStrategyTableRowsResponse<TR>(resource);

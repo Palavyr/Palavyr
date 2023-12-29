@@ -22,7 +22,7 @@ export interface TwoNestedCategoriesRowProps {
 type StyleProps = {
     isTrue: boolean;
 };
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     number: {
         padding: "1.2rem",

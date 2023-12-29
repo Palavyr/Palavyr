@@ -10,7 +10,7 @@ import { useContext } from "react";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Align } from "@common/positioning/Align";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     paper: {
         padding: theme.spacing(5),

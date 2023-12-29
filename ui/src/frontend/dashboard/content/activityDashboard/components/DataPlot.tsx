@@ -31,7 +31,7 @@ export interface DataPlotProps {
     subtitle?: string;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     title: {
         padding: "1rem",

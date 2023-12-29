@@ -11,7 +11,7 @@ import { HeaderStrip } from "@common/components/HeaderStrip";
 import { QuickStartCard } from "./QuickStartCard";
 import { useHistory } from "react-router-dom";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     background: {
         paddingTop: "3rem",

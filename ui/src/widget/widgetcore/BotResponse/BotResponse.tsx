@@ -8,7 +8,7 @@ import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     textField: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,

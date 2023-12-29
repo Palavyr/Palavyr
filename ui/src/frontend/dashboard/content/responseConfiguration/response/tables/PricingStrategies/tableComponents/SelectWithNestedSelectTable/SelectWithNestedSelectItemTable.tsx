@@ -18,7 +18,7 @@ interface ITwoNestedCategoriesItemTable {
     addInnerCategory(): void;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     input: {
         margin: "0.6rem",

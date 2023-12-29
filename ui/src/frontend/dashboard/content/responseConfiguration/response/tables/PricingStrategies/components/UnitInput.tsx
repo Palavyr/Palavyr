@@ -7,7 +7,7 @@ import { FormControl, FormHelperText, Input, InputAdornment, makeStyles } from "
 import classNames from "classnames";
 import { v4 as uuid } from 'uuid';
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     root: {
         display: "flex",

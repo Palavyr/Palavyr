@@ -2,7 +2,7 @@ import { Card, Divider, makeStyles, Typography } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     sectionDiv: {
         width: "100%",

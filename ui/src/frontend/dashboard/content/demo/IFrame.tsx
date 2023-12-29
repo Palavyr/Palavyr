@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import PalavyrChatWidget from "palavyr-chat-widget";
 import { PreCheckErrorResource } from "@common/types/api/ApiContracts";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     frame: {
         height: "100%",

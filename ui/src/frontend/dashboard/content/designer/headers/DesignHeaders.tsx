@@ -9,7 +9,7 @@ export interface DesignHeadersProps {
     setWidgetPreferences: SetState<WidgetPreferencesResource>;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     wrapper: {
         marginTop: "2rem",

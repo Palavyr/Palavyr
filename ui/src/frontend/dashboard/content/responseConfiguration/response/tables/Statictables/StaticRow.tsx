@@ -15,7 +15,7 @@ type styleProp = {
     rangeState: boolean;
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     tableInputs: {
         margin: "0.6rem",

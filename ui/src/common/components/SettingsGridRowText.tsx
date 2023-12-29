@@ -22,7 +22,7 @@ export interface ISettingsGridRow {
     loading?: boolean;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     row: {
         paddingTop: "1rem",

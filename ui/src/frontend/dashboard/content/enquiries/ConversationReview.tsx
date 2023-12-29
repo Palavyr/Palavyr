@@ -12,7 +12,7 @@ import { formatLegitTimeStamp } from "./enquiriesUtils";
 import { EnquiryTimeStamp } from "./EnquiryTimeStamp";
 import { ConversationHistoryRowResource, ConversationHistoryRowResources } from "@Palavyr-Types";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     headerCell: {
         fontWeight: "bold",

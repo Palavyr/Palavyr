@@ -4,7 +4,7 @@ import { IPricingStrategyBody, PercentOfThresholdResource } from "@Palavyr-Types
 import { PercentOfThresholdItemTable } from "./PercentOfThresholdItemTable";
 import { makeStyles } from "@material-ui/core";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     container: {
         // borderTop: `4px solid ${theme.palette.primary.main}`,

@@ -14,7 +14,7 @@ type StyleProps = {
     registerDisabled: boolean;
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     navButtons: {
         display: "flex",

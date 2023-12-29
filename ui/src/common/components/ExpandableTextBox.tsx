@@ -12,7 +12,7 @@ export interface IExpandableTextBox {
     initialState?: boolean;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     textField: {
         padding: "1rem",

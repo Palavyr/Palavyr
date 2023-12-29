@@ -11,7 +11,7 @@ import TrendingUpIcon from "@material-ui/icons/TrendingUp";
 import BrushIcon from "@material-ui/icons/Brush";
 import MotorcycleIcon from "@material-ui/icons/Motorcycle";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     icon: {
         color: theme.palette.secondary.light,

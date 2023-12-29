@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 // import CurrencyFormat, { NumberFormatProps, NumberFormatValues } from "react-number-format";
 import { NumericFormat, NumericFormatProps, NumberFormatValues } from "react-number-format";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     styles: {
         marginTop: "15px",

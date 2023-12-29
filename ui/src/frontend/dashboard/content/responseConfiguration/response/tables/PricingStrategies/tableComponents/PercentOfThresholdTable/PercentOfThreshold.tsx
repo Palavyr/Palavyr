@@ -11,7 +11,7 @@ import { PricingStrategyHeader } from "../../PricingStrategyTableHeader";
 
 import { cloneDeep } from "lodash";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     root: {},
     tableStyles: {

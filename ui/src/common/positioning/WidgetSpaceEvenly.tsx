@@ -7,7 +7,7 @@ type StyleProps = {
     center?: boolean;
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     align: (props: StyleProps) => ({
         display: "flex",

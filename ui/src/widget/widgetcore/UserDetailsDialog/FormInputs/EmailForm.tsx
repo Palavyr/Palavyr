@@ -7,7 +7,7 @@ import { checkUserEmail, checkUserName, INVALID_EMAIL, INVALID_PHONE } from "../
 
 export interface EmailFormProps extends BaseFormProps {}
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     helperTextRoot: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,

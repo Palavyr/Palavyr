@@ -4,7 +4,7 @@ import { CategorySelectRow } from "./CategorySelectRow";
 import { IPricingStrategyBody, CategorySelectTableRowResource } from "@Palavyr-Types";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     body: {
         border: "0px solid black",

@@ -25,7 +25,7 @@ const makeChatBodyColor = (props: StyleProps) => {
     return chatBodyStyles;
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     messageText: (props: StyleProps) => makeChatBodyColor(props),
     layout: {

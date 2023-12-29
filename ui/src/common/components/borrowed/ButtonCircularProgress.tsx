@@ -5,7 +5,7 @@ export interface IButtonCircularProgress {
     size?: number;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     circularProgress: {
         color: theme.palette.secondary.main,

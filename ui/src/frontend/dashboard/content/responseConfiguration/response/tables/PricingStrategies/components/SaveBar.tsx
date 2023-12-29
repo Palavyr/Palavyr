@@ -6,7 +6,7 @@ interface SaveBarProps {
     addInnerButton: JSX.Element;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     savebar: {
         border: "none",

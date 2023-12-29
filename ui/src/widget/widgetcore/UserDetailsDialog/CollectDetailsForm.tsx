@@ -26,7 +26,7 @@ export interface BaseFormProps {
     setStatus: Dispatch<SetStateAction<string>>;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     baseDialogCollectionForm: {
         position: "absolute",

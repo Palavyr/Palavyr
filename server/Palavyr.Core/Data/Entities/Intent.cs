@@ -19,7 +19,7 @@ namespace Palavyr.Core.Data.Entities
         public List<PricingStrategyTableMeta> PricingStrategyTableMetas { get; set; } = new();
         public string IntentSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
-        public List<AttachmentLinkRecord> AttachmentRecords { get; set; }
+        public List<AttachmentLinkRecord> AttachmentRecords { get; set; } = new();
         public bool UseIntentFallbackEmail { get; set; }
         public string FallbackSubject { get; set; }
         public string FallbackEmailTemplate { get; set; }

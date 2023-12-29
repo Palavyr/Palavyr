@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { NavBar } from "../navbar/NavBar";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     container: {
         display: "flex",

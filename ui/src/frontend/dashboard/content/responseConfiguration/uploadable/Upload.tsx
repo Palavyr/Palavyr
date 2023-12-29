@@ -24,7 +24,7 @@ export type FileUpload = Blob & {
     readonly name: string;
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     snackbarProps: {
         color: theme.palette.common.black,

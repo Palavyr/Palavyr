@@ -10,7 +10,7 @@ import { webUrl } from "@common/client/clientUtils";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { GeneralSettingsLoc } from "@common/types/api/Enums";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     icon: {
         color: theme.palette.secondary.light,

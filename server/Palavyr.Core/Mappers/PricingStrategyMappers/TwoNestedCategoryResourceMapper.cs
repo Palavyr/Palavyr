@@ -12,7 +12,7 @@ namespace Palavyr.Core.Mappers.PricingStrategyMappers
             await Task.CompletedTask;
             return new SelectWithNestedSelectResource
             {
-                Id = @from.Id.Value,
+                Id = @from.Id,
                 IntentId = @from.IntentId,
                 TableId = @from.TableId,
                 ValueMin = @from.ValueMin,

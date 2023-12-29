@@ -5,7 +5,7 @@ interface IViewEmailTemplate {
     emailTemplate: string;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     paper: {
         marginTop: "2rem",

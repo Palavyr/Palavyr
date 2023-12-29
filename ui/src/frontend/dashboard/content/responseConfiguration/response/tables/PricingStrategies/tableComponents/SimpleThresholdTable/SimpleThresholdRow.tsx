@@ -14,7 +14,7 @@ import { BasicThresholdResource } from "@common/types/api/EntityResources";
 type StyleProps = {
     isTrue: boolean;
 };
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     number: {
         border: "1px solid lightgray",

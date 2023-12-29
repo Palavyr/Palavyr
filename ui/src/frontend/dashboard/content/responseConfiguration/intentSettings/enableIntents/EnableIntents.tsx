@@ -9,7 +9,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useCallback } from "react";
 import { EnableIntentRow } from "./EnableIntentRow";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     paper: {
         backgroundColor: "rgb(0, 0, 0 ,0)",

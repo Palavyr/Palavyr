@@ -19,7 +19,7 @@ import scrollToTop from "@common/utils/scrollToTop";
 
 const drawerWidth = 400;
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     drawer: {
         width: drawerWidth,

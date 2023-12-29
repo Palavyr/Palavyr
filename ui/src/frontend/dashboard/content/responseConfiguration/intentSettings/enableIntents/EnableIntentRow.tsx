@@ -9,7 +9,7 @@ type styleProps = {
     isEnabled?: boolean | null;
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     center: {
         textAlign: "center",

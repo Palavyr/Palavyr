@@ -84,7 +84,10 @@ namespace Palavyr.Core.Stores
         {
             AssertAccountIsCorrect(entity);
             var entityEntry = await QueryExecutor.AddAsync(entity, CancellationToken);
-            return entityEntry.Entity;
+            var id = entityEntry.Property(x => x.Id).CurrentValue;
+            var e = entityEntry.Entity;
+            e.Id = id;
+            return e;
         }
 
         public async Task CreateMany(IEnumerable<TEntity> entities)

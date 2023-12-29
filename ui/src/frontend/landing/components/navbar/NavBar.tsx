@@ -3,7 +3,7 @@ import { AppBar, Toolbar, makeStyles } from "@material-ui/core";
 import { BrandName } from "@landing/branding/BrandName";
 import { NavigationDrawer } from "./NavigationDrawer";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     clear: {
         border: "0px solid white",

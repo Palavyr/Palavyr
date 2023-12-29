@@ -37,7 +37,7 @@ const getStaticTableValidationResult = (staticTables: StaticTableMetaResources):
     }
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     paper: {
         marginLeft: "2.5rem",

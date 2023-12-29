@@ -11,7 +11,7 @@ export interface SidebarSectionHeaderProps {
     className?: string;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     listItemText: {
         textAlign: "center",

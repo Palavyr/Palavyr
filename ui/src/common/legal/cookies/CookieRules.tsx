@@ -4,7 +4,7 @@ import { makeStyles, useTheme, Dialog, DialogTitle, DialogContent, Typography, D
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     dialogActions: {
         justifyContent: "flex-start",

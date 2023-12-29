@@ -14,7 +14,7 @@ export interface IResponseButton {
     type?: "button" | "submit";
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     button: (prefs: WidgetPreferencesResource) => ({
         display: 'flex',

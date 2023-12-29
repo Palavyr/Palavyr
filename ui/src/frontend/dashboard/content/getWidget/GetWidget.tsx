@@ -36,7 +36,7 @@ function a11yProps(index: number) {
     };
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     outerdiv: {
         padding: "3rem",

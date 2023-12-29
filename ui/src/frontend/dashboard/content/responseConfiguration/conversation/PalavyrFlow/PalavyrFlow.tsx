@@ -57,7 +57,7 @@ const getLayoutedElements = (elements, direction = "TB") => {
     return mapped;
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     minimap: { marginBottom: "6.5rem", marginRight: "2rem" },
     controls: { marginBottom: "4rem" },

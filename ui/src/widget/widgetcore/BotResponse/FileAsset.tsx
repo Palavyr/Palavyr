@@ -11,7 +11,7 @@ export interface FileAssetProps {
     fileAsset: FileAssetResource;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     display: {
         height: "100%",

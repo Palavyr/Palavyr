@@ -8,7 +8,7 @@ import "./styles.scss";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { WidgetPreferencesResource } from "@common/types/api/EntityResources";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     timeStamp: (prefs: WidgetPreferencesResource) => ({
         fontSize: "9px",

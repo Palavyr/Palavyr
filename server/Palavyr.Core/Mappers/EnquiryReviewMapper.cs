@@ -28,7 +28,7 @@ namespace Palavyr.Core.Mappers
 
             return new EnquiryResource
             {
-                Id = @from.Id.Value,
+                Id = @from.Id,
                 ConversationId = @from.ConversationId,
                 FileAssetResource = fileAssetResource,
                 TimeStamp = @from.TimeStamp.ToString(),

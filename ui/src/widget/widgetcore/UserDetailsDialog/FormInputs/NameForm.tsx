@@ -9,7 +9,7 @@ export interface NameFormProps extends BaseFormProps {
     disabled: boolean;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     helperTextRoot: (props: WidgetPreferencesResource) => ({
         color: props.chatFontColor,

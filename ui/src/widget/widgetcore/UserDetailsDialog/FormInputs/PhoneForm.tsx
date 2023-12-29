@@ -14,7 +14,7 @@ export interface PhoneFormProps extends BaseFormProps {
     phonePattern: string;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     phone: (props: WidgetPreferencesResource) => ({
         width: "100%",

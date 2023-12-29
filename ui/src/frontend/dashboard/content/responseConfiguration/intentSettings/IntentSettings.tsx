@@ -10,7 +10,7 @@ import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { OsTypeToggle } from "./enableIntents/OsTypeToggle";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     alert: {
         // borderTop: `2px solid ${theme.palette.common.black}`,

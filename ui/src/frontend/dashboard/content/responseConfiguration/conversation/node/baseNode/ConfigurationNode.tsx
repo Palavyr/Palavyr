@@ -12,7 +12,7 @@ type StyleProps = {
     buffer: number;
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     treeItem: {
         display: "flex",

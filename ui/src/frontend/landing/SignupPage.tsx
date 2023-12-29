@@ -7,7 +7,7 @@ AOS.init({
     duration: 1000,
 });
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     wrapper: {
         backgroundColor: theme.palette.common.white,

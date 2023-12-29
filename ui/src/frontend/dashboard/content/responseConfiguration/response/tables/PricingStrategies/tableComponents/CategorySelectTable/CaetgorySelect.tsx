@@ -13,7 +13,7 @@ import { CategorySelectTableRowResource } from "@common/types/api/EntityResource
 import { PricingStrategyTypes } from "../../PricingStrategyRegistry";
 import { PricingStrategyHeader } from "../../PricingStrategyTableHeader";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     tableStyles: {
         width: "100%",

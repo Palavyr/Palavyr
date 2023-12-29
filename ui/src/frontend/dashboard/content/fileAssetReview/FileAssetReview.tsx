@@ -10,7 +10,7 @@ import { ZoomImage } from "@common/components/borrowed/ZoomImage";
 
 type StyleProps = { showSpinner: boolean };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     display: {
         display: "flex",

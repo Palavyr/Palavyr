@@ -13,7 +13,7 @@ import { UploadOrSelectFromExisting } from "@common/uploads/UploadOrChooseFromEx
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { ZoomImage } from "@common/components/borrowed/ZoomImage";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     paper: {
         backgroundColor: "rgb(0, 0, 0 ,0)", //theme.palette.secondary.light,

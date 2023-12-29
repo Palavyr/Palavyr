@@ -15,7 +15,7 @@ export interface ISideBarMenu {
     menuOpen: boolean;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     sidebarlist: {
         color: theme.palette.getContrastText(theme.palette.primary.dark),

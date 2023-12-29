@@ -18,7 +18,7 @@ import Filter4Icon from "@material-ui/icons/Filter4";
 import Filter8Icon from "@material-ui/icons/Filter8";
 import ExposureZeroIcon from "@material-ui/icons/ExposureZero";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     yes: {
         color: green,

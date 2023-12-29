@@ -31,7 +31,6 @@ namespace Palavyr.Core.Handlers.ControllerHandler
             logger.LogDebug("Retrieve Pricing Strategy Table Metas");
             var tableTypes = await pricingStrategyTableMetaStore.GetMany(request.IntentId, s => s.IntentId);
 
-            
             // TODO: Write a mapper for this
             var tableResources = tableTypes.Select(
                     x =>
@@ -39,7 +38,7 @@ namespace Palavyr.Core.Handlers.ControllerHandler
                         var unitDefinition = unitRetriever.GetUnitDefinitionById(x.UnitIdEnum);
                         return new PricingStrategyTableMetaResource
                         {
-                            Id = x.Id.Value,
+                            Id = x.Id,
                             TableTag = x.TableTag,
                             TableType = x.TableType,
                             TableId = x.TableId,

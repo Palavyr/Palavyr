@@ -15,7 +15,7 @@ import { useIsMounted } from "@common/hooks/useIsMounted";
 import { PricingStrategyHeader } from "../../PricingStrategyTableHeader";
 import { BasicThresholdResource } from "@common/types/api/EntityResources";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     alignLeft: {
         position: "relative",

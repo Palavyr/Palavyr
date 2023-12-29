@@ -7,7 +7,7 @@ import { TwoNestedCategoriesModifier } from "./SelectWithNestedSelectModifier";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { makeStyles } from "@material-ui/core";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     container: {
         border: "0px solid black",

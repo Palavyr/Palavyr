@@ -23,7 +23,7 @@ interface DashboardHeaderProps {
     dashboardIntentsLoading: boolean;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     icon: {
         borderRadius: "10px",

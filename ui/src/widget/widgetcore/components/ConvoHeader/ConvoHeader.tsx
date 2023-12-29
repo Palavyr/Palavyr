@@ -12,7 +12,7 @@ export interface ConvoHeaderProps {
     titleAvatar?: string;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     header: (props: WidgetPreferencesResource) => ({
         backgroundColor: props.headerColor,
@@ -95,7 +95,6 @@ export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
 
     const cls = useStyles(preferences);
     const wcls = useWidgetStyles();
-    console.log("ICON: " + context.detailsIconEnabled);
     return (
         <div className={classNames(wcls.pwrow, wcls.pheader, cls.header)}>
             {context.detailsIconEnabled && (

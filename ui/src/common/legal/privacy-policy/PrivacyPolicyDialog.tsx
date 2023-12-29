@@ -8,7 +8,7 @@ export interface IPrivacyPolicyDialog {
     onClose: any;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     termsConditionsListitem: {
         marginLeft: theme.spacing(3),

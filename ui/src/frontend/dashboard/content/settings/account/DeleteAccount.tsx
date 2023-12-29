@@ -14,7 +14,7 @@ import { ALL_COOKIE_NAMES } from "@constants";
 import ErrorIcon from "@material-ui/icons/Error";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     titleText: {
         fontWeight: "bold",

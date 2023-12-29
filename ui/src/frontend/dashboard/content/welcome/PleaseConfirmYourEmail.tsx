@@ -16,7 +16,7 @@ import Cookies from "js-cookie";
 import Auth from "@auth/Auth";
 import { useHistory } from "react-router-dom";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     contentRoot: {
         display: "flex",

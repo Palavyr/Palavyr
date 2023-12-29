@@ -30,7 +30,7 @@ export interface ISaveOrCancel {
     zIndex?: number;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     saveButton: {
         border: `1px solid ${theme.palette.primary}`,

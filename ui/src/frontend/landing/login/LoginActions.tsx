@@ -9,7 +9,7 @@ export interface ILoginActions {
     openChangePasswordDialog: any;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     forgotPassword: {
         marginTop: theme.spacing(2),

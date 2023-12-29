@@ -3,7 +3,7 @@ import { Fade, Grid, makeStyles, Table, TableBody, TableCell, TableHead, TableRo
 import { PreCheckErrorResource } from "@Palavyr-Types";
 import { useEffect } from "react";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     uppercell: {
         paddingTop: "1rem",

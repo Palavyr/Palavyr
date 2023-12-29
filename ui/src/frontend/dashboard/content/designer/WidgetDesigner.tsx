@@ -13,7 +13,7 @@ import { InitializeFonts } from "./fonts/Initializer";
 
 const drawerWidth = 440;
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     paper: {
         padding: theme.spacing(5),
@@ -123,7 +123,7 @@ export const WidgetDesignerPage = () => {
                             </Align>
                         </div>
                     </div>
-                    <Box sx={{ width: "100%" }}>
+                    <Box component={'div'} sx={{ width: "100%" }}>
                         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
                                 <Tab label="Colors" {...a11yProps(0)} />

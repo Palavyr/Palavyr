@@ -12,7 +12,7 @@ export interface FileAssetDisplayProps {
     titleVariant?: Variant;
 }
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     display: {
         height: "100%",

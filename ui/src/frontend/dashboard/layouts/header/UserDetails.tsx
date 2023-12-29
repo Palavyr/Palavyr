@@ -17,7 +17,7 @@ import { GeneralSettingsLoc, PurchaseTypes } from "@common/types/api/Enums";
 
 const DETAILS_MAX_HEIGHT = TOPBAR_MAX_HEIGHT - 10;
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     logwrapper: {
         maxHeight: `${DETAILS_MAX_HEIGHT}px`,

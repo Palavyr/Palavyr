@@ -8,7 +8,7 @@ type StyleProps = {
     isFileAssetNode?: boolean;
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     interfaceElement: {
         paddingBottom: "1rem",

@@ -8,7 +8,7 @@ export const createNavLink = (intentId: string) => {
     return `/dashboard/editor/pricing/${intentId}?tab=${0}`;
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     icon: {
         color: theme.palette.secondary.light,

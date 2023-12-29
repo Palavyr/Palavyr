@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data.Entities;
+using Palavyr.Core.Data.Entities.PricingStrategyTables;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Resources.PricingStrategyResources;
 using Palavyr.Core.Sessions;
@@ -24,7 +25,7 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
         where TR : class, IPricingStrategyTableRowResource
     {
         Task DeleteTable(string intentId, string tableId);
-        Task<PricingStrategyTableData<TEntity>> GetTableRows(string intentId, string tableId); // TODO: return new object with 'is in use in palavyr tree'
+        Task<PricingStrategyTableData<TEntity>> GetOrCreateTableRows(string intentId, string tableId); // TODO: return new object with 'is in use in palavyr tree'
         TEntity GetRowTemplate(string intentId, string tableId);
         Task<IEnumerable<TEntity>> SaveTable(string intentId, string tableId, string? tableTag, List<TEntity> pricingStrategyTable);
     }
@@ -68,15 +69,29 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
             this.logger = logger;
         }
 
-        public async Task<PricingStrategyTableData<TEntity>> GetTableRows(string intentId, string tableId)
+        public async Task<PricingStrategyTableData<TEntity>> GetOrCreateTableRows(string intentId, string tableId)
         {
             logger.LogInformation("Getting pricing strategy table rows: {TableId}", tableId);
+            var meta = await psMetaStore.GetOrNull(tableId, s => s.TableId);
+
+            if (meta is null)
+            {
+                meta = await psMetaStore.Create(PricingStrategyTableMeta.CreateNew(
+                    "Default Table Tag",
+                    new CategorySelectTableRow().GetPrettyName(),
+                    new CategorySelectTableRow().GetTableType(),
+                    tableId,
+                    intentId,
+                    AccountId,
+                    UnitIdEnum.Currency));
+            }
+
             var tableRows = await pricingStrategyStore.GetMany(tableId, s => s.TableId);
             if (tableRows.ToList().Count == 0)
             {
                 var newEntity = (new TEntity()).CreateTemplate(AccountId, intentId, tableId);
                 await pricingStrategyStore.Create(newEntity);
-                tableRows = new List<TEntity>()
+                tableRows = new List<TEntity>() 
                 {
                     newEntity
                 };
@@ -88,15 +103,14 @@ namespace Palavyr.Core.Services.PricingStrategyTableServices
                 x =>
                 {
                     if (!x.IsPricingStrategyTableNode) return false;
-                    if (x.PricingStrategyType == null) return false;
+                    if (string.IsNullOrEmpty(x.PricingStrategyType)) return false;
                     return x.PricingStrategyType.EndsWith(tableId);
                 });
-            var meta = await psMetaStore.Get(tableId, s => s.TableId);
 
             return new PricingStrategyTableData<TEntity>
             {
                 TableRows = tableRows,
-                IsInUse = currentPricingStrategy.Count() > 0,
+                IsInUse = currentPricingStrategy.Any(),
                 TableTag = meta.TableTag
             };
         }

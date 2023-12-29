@@ -5,7 +5,6 @@ import { Align } from "@common/positioning/Align";
 import React from "react";
 import { WidgetColorOptions } from "../WidgetColorOptions";
 
-import { Theme } from "@material-ui/core";
 const useStyles = makeStyles<{}>((theme: any) => ({
     colorstext: {
         paddingTop: "1.2rem",

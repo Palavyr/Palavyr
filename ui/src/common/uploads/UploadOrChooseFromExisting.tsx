@@ -61,7 +61,7 @@ export const UploadOrSelectFromExisting = ({
     );
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     imageBlock: {
         padding: "1rem",

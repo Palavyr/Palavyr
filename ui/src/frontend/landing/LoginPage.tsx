@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core";
 import { LandingPage } from "./components/LandingPage";
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     wrapper: {
         backgroundColor: theme.palette.common.white,

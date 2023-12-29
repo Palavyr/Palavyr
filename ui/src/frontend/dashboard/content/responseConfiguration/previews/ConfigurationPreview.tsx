@@ -10,7 +10,7 @@ type StyleProps = {
     preview: boolean;
 };
 
-import { Theme } from "@material-ui/core";
+
 const useStyles = makeStyles<{}>((theme: any) => ({
     paper: (props: StyleProps) => ({
         backgroundColor: theme.palette.secondary.light,
